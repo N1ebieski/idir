@@ -23,8 +23,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "N1ebieski\\IDir\\": "src",
-            "N1ebieski\\IDir\\Seeds\\": "database/seeds"
+            "N1ebieski\\IDir\\": "src"
         }
     },
     "autoload-dev": {

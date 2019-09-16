@@ -1,0 +1,26 @@
+{
+    "Verify Email Address" : "Zweryfikuj adres e-mail",
+    "Please click the button below to verify your email address." : "Proszę kliknąć na przycisk poniżej aby zweryfikować swój adres email powiązany z kontem.",
+    "If you did not create an account, no further action is required." : "Jeśli w ostatnim czasie nie rejestrowałeś u nas konta, zignoruj tę wiadomość.",
+    "You are receiving this email because we received a password reset request for your account." : "Otrzymujesz ten email, ponieważ użyto opcji zresetowania hasła do twojego konta.",
+    "This password reset link will expire in :count minutes." : "Link do zmiany hasła ważny jest przez :count minut.",
+    "If you did not request a password reset, no further action is required." : "Jeśli w ostatnim czasie nie używałeś opcji resetowania hasła, zignoruj tę wiadomość.",
+    "Before proceeding, please check your email for a verification link." : "Aby mieć dostęp do tej strony proszę najpierw kliknąć w link weryfikacyjny, który został wysłany na twój adres e-mail.",
+    "If you did not receive the email" : "Jeśli nie otrzymałeś jeszcze od nas wiadomości mailowej",
+    "click here to request another" : "kliknij tutaj by wysłać wiadomość jeszcze raz",
+    "Reset Password" : "Zresetuj hasło",
+    "Reset Password Notification" : "Zresetuj swoje hasło",
+    "Hello!" : "Witaj!",
+    "Regards" : "Pozdrawiamy",
+    "If you’re having trouble clicking the \":actionText\" button, copy and paste the URL below\ninto your web browser: [:actionURL](:actionURL)" : "Jeśli twój klient pocztowy nie obsługuje przycisku \":actionText\", skopiuj poniższy adres i wklej\nw polu adresowym swojej przeglądarki: [:actionURL](:actionURL)",
+
+    "additional link on the friends subpage": "dodatkowy link na podstronie przyjaciół",
+    "direct link nofollow": "bezpośredni link do strony z atrybutem nofollow",
+    "direct link on listings": "bezpośredni link do strony na liście wpisów",
+    "highest position in ancestor categories": "najwyższa pozycja we wszystkich kategoriach nadrzędnych",
+    "highest position in search results": "najwyższa pozycja w wynikach wyszukiwania",
+    "highest position in their categories": "najwyższa pozycja w swoich kategoriach",
+    "highest position on homepage": "najwyższa pozycja na stronie głównej",
+    "place in the links component": "miejsce w komponencie linków",
+    "place in the advertising component": "miejsce w komponencie reklamowym"
+}
