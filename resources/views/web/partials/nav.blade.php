@@ -32,7 +32,7 @@
                     class="form-control border-right-0" placeholder="{{ trans('icore::search.search') }}"
                     value="{{ $search ?? null }}">
                     <select class="custom-select" name="source">
-                        <option value="post" @activeRouteContains('post', 'selected')>{{ trans('icore::search.type.post') }}</option>
+                        <option value="post" @isRouteContains('post', 'selected')>{{ trans('icore::search.type.post') }}</option>
                     </select>
                     <span class="input-group-append">
                         <button class="btn btn-outline-secondary border border-left-0"
@@ -64,7 +64,10 @@
                 </li>
                 @endif
                 <li class="nav-item mr-sm-0 mr-md-2 mb-2 mb-md-0">
-                    <a class="nav-link text-primary btn btn-sm btn-outline-primary" href="{{ route('web.dir.select') }}" role="button">Dodaj stronę</a>
+                    <a class="nav-link text-primary btn btn-sm btn-outline-primary"
+                    href="{{ route('web.dir.create_group') }}" role="button">
+                        {{ trans('idir::dirs.page.create.index') }}
+                    </a>
                 </li>
                 <li class="nav-item dropdown">
                     @auth

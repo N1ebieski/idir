@@ -28,6 +28,7 @@ class GroupsAndPrivilegesSeeder extends Seeder
         Privilege::create(['name' => 'direct link on listings']);
         Privilege::create(['name' => 'place in the links component']);
         Privilege::create(['name' => 'place in the advertising component']);
+        Privilege::create(['name' => 'additional options for editing content']);
 
         $standard = Group::create([
             'model_type' => 'N1ebieski\IDir\Models\Dir',

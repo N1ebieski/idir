@@ -1,23 +1,44 @@
 <?php
 
-namespace N1ebieski\ICore\Http\Controllers\Admin\Category;
+namespace N1ebieski\IDir\Http\Controllers\Admin\Group;
 
-use N1ebieski\ICore\Models\Category\Category;
-use N1ebieski\ICore\Http\Requests\Admin\Category\IndexRequest;
-use N1ebieski\ICore\Http\Requests\Admin\Category\StoreRequest;
-use N1ebieski\ICore\Http\Requests\Admin\Category\StoreGlobalRequest;
-use N1ebieski\ICore\Http\Requests\Admin\Category\SearchRequest;
-use N1ebieski\ICore\Filters\Admin\Category\IndexFilter;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
+use N1ebieski\IDir\Models\Group\Group;
+use N1ebieski\IDir\Models\Privilege;
+use N1ebieski\IDir\Http\Requests\Admin\Group\IndexRequest;
+use N1ebieski\IDir\Http\Requests\Admin\Group\StoreRequest;
 
+/**
+ * [interface description]
+ * @var [type]
+ */
 interface Polymorphic
 {
-    public function index(Category $category, IndexRequest $request, IndexFilter $filter);
+    /**
+     * Display a listing of the Group.
+     *
+     * @param  Group      $group      [description]
+     * @param  IndexRequest  $request       [description]
+     * @return View                         [description]
+     */
+    public function index(Group $group, IndexRequest $request) : View;
 
-    public function create(Category $category);
+    /**
+     * Show the form for creating a new Group.
+     *
+     * @param  Group      $group      [description]
+     * @param  Privilege  $privilege  [description]
+     * @return View
+     */
+    public function create(Group $group, Privilege $privilege) : View;
 
-    public function store(Category $category, StoreRequest $request);
-
-    public function storeGlobal(Category $category, StoreGlobalRequest $request);
-
-    public function search(Category $category, SearchRequest $request);
+    /**
+     * Store a newly created Group in storage.
+     *
+     * @param  Group      $group      [description]
+     * @param  StoreRequest  $request
+     * @return RedirectResponse
+     */
+    public function store(Group $group, StoreRequest $request) : RedirectResponse;
 }

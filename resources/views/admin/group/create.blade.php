@@ -1,12 +1,12 @@
 @extends(config('idir.layout') . '::admin.layouts.layout', [
     'title' => [trans('idir::groups.page.create')],
-    'desc' => [trans('icore::groups.page.create')],
-    'keys' => [trans('icore::groups.page.create')]
+    'desc' => [trans('idir::groups.page.create')],
+    'keys' => [trans('idir::groups.page.create')]
 ])
 
 @section('breadcrumb')
 <li class="breadcrumb-item"><a href="{{ route('admin.home.index') }}">{{ trans('icore::home.page.index') }}</a></li>
-<li class="breadcrumb-item"><a href="{{ route("admin.group.{$model->poli}.index") }}">{{ trans('idir::groups.page.index') }}</a></li>
+<li class="breadcrumb-item"><a href="{{ route("admin.group.{$group->poli}.index") }}">{{ trans('idir::groups.page.index') }}</a></li>
 <li class="breadcrumb-item active" aria-current="page">{{ trans('idir::groups.page.create') }}</li>
 @endsection
 
@@ -16,7 +16,7 @@
         <i class="far fa-plus-square"></i>
         <span> {{ trans('idir::groups.page.create') }}:</span>
     </h1>
-    <form class="mb-3" method="post" action="{{ route("admin.group.{$model->poli}.store") }}" id="createGroup">
+    <form class="mb-3" method="post" action="{{ route("admin.group.{$group->poli}.store") }}" id="createGroup">
         @csrf
         <div class="row">
             <div class="col-lg-6 order-lg-last">
@@ -43,25 +43,19 @@
                     @includeWhen($errors->has('max_cats'), 'icore::admin.partials.errors', ['name' => 'max_cats'])
                 </div>
                 <div class="form-group">
-                    <label for="max_dirs">{{ trans('idir::groups.max_dirs') }}:</label>
-                    <input type="text" value="{{ old('max_dirs') }}" name="max_dirs"
-                    id="max_dirs" class="form-control @isValid('max_dirs')">
-                    @includeWhen($errors->has('max_dirs'), 'icore::admin.partials.errors', ['name' => 'max_dirs'])
+                    <label for="url">{{ trans('idir::groups.url') }}:</label>
+                    <select class="form-control @isValid('url')" id="url" name="url">
+                        <option value="0" {{ old('url') === "0" ? 'selected' : null }}>{{ trans('idir::groups.url_0') }}</option>
+                        <option value="1" {{ (!old('url') || old('url') === "1") ? 'selected' : null }}>{{ trans('idir::groups.url_1') }}</option>
+                        <option value="2" {{ old('url') === "2" ? 'selected' : null }}>{{ trans('idir::groups.url_2') }}</option>
+                    </select>
+                    @includeWhen($errors->has('url'), 'icore::admin.partials.errors', ['name' => 'url'])
                 </div>
                 <div class="form-group">
                     <label for="days">{{ trans('idir::groups.days') }}:</label>
                     <input type="text" value="{{ old('days') }}" name="days"
                     id="days" class="form-control @isValid('days')">
                     @includeWhen($errors->has('days'), 'icore::admin.partials.errors', ['name' => 'days'])
-                </div>
-                <div class="form-group">
-                    <label for="backlink">{{ trans('idir::groups.backlink') }}:</label>
-                    <select class="form-control @isValid('backlink')" id="backlink" name="backlink">
-                        <option value="0" {{ (!old('backlink') || old('backlink') === "0") ? 'selected' : null }}>{{ trans('idir::groups.backlink_0') }}</option>
-                        <option value="1" {{ old('backlink') === "1" ? 'selected' : null }}>{{ trans('idir::groups.backlink_1') }}</option>
-                        <option value="2" {{ old('backlink') === "2" ? 'selected' : null }}>{{ trans('idir::groups.backlink_2') }}</option>
-                    </select>
-                    @includeWhen($errors->has('backlink'), 'icore::admin.partials.errors', ['name' => 'backlink'])
                 </div>
             </div>
             <div class="col-lg-6 order-lg-first">
@@ -92,6 +86,27 @@
                     <label for="desc">{{ trans('idir::groups.desc') }}:</label>
                     <textarea class="form-control @isValid('desc')" id="desc" name="desc" rows="3">{{ old('desc') }}</textarea>
                     @includeWhen($errors->has('desc'), 'icore::admin.partials.errors', ['name' => 'desc'])
+                </div>
+                <div class="form-group">
+                    <label for="max_dirs">{{ trans('idir::groups.max_dirs') }}:</label>
+                    <input type="text" value="{{ old('max_dirs') }}" name="max_dirs"
+                    id="max_dirs" class="form-control @isValid('max_dirs')">
+                    @includeWhen($errors->has('max_dirs'), 'icore::admin.partials.errors', ['name' => 'max_dirs'])
+                </div>
+                <div class="form-group">
+                    <label for="max_dirs_daily">{{ trans('idir::groups.max_dirs_daily') }}:</label>
+                    <input type="text" value="{{ old('max_dirs_daily') }}" name="max_dirs_daily"
+                    id="max_dirs_daily" class="form-control @isValid('max_dirs_daily')">
+                    @includeWhen($errors->has('max_dirs_daily'), 'icore::admin.partials.errors', ['name' => 'max_dirs_daily'])
+                </div>
+                <div class="form-group">
+                    <label for="backlink">{{ trans('idir::groups.backlink') }}:</label>
+                    <select class="form-control @isValid('backlink')" id="backlink" name="backlink">
+                        <option value="0" {{ (!old('backlink') || old('backlink') === "0") ? 'selected' : null }}>{{ trans('idir::groups.backlink_0') }}</option>
+                        <option value="1" {{ old('backlink') === "1" ? 'selected' : null }}>{{ trans('idir::groups.backlink_1') }}</option>
+                        <option value="2" {{ old('backlink') === "2" ? 'selected' : null }}>{{ trans('idir::groups.backlink_2') }}</option>
+                    </select>
+                    @includeWhen($errors->has('backlink'), 'icore::admin.partials.errors', ['name' => 'backlink'])
                 </div>
                 <hr>
                 <button type="submit" class="btn btn-primary">{{ trans('icore::default.save') }}</button>

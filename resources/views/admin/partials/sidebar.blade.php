@@ -56,7 +56,10 @@
         </li>
         @endcan
         @can('index categories')
-        <li class="nav-item dropdown @isUrl([route('admin.category.post.index')])">
+        <li class="nav-item dropdown @isUrl([
+            route('admin.category.post.index'),
+            route('admin.category.dir.index')
+        ])">
             <a class="nav-link dropdown-toggle"
             href="#" id="pagesDropdown" role="button"
             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -67,6 +70,10 @@
                 <a class="dropdown-item @isUrl(route('admin.category.post.index'))"
                 href="{{ route('admin.category.post.index') }}">
                     {{ trans('icore::categories.page.type.post') }}
+                </a>
+                <a class="dropdown-item @isUrl(route('admin.category.dir.index'))"
+                href="{{ route('admin.category.dir.index') }}">
+                    {{ trans('idir::categories.page.type.dir') }}
                 </a>
             </div>
         </li>

@@ -12,11 +12,12 @@
 @section('content')
 <h1 class="h5 border-bottom pb-2 d-flex">
     <div class="mr-auto my-auto">
-        <i class="fas fa-fw fa-object-group"></i>&nbsp;{{ trans('idir::groups.page.index') }}
+        <i class="fas fa-fw fa-object-group"></i>
+        <span> {{ trans('idir::groups.page.index') }}</span>
     </div>
     @can('create groups')
     <div class="ml-auto text-right responsive-btn-group">
-        <a href="{{ route("admin.group.{$model->poli}.create") }}" role="button" class="btn btn-primary text-nowrap">
+        <a href="{{ route("admin.group.{$group->poli}.create") }}" role="button" class="btn btn-primary text-nowrap">
             <i class="far fa-plus-square"></i>
             <span class="d-none d-sm-inline"> {{ trans('icore::default.create') }}</span>
         </a>

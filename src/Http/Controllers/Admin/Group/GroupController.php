@@ -5,13 +5,9 @@ namespace N1ebieski\IDir\Http\Controllers\Admin\Group;
 use N1ebieski\IDir\Models\Group\Group;
 use N1ebieski\IDir\Models\Privilege;
 use N1ebieski\IDir\Http\Requests\Admin\Group\IndexRequest;
-use N1ebieski\IDir\Http\Requests\Admin\Group\UpdateStatusRequest;
 use N1ebieski\IDir\Http\Requests\Admin\Group\UpdatePositionRequest;
 use N1ebieski\IDir\Http\Requests\Admin\Group\UpdateRequest;
 use N1ebieski\IDir\Http\Requests\Admin\Group\StoreRequest;
-use N1ebieski\IDir\Http\Requests\Admin\Group\StoreGlobalRequest;
-use N1ebieski\IDir\Http\Requests\Admin\Group\SearchRequest;
-use N1ebieski\IDir\Http\Requests\Admin\Group\DestroyGlobalRequest;
 use Illuminate\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -20,7 +16,7 @@ use N1ebieski\IDir\Http\Controllers\Admin\Group\Polymorphic;
 /**
  * Base Group Controller
  */
-class GroupController
+class GroupController implements Polymorphic
 {
     /**
      * Model. Must be protected!
@@ -47,26 +43,8 @@ class GroupController
     public function index(Group $group, IndexRequest $request) : View
     {
         return view('idir::admin.group.index', [
-            'model' => $group,
+            'group' => $group,
             'groups' => $group->getRepo()->paginate()
-        ]);
-    }
-
-    /**
-     * Search Categories for specified name.
-     *
-     * @param  Group      $group [description]
-     * @param  SearchRequest $request  [description]
-     * @return JsonResponse                [description]
-     */
-    public function search(Group $group, SearchRequest $request) : JsonResponse
-    {
-        return response()->json([
-            'success' => '',
-            'view' => view('icore::admin.group.partials.search', [
-                'categories' => $group->getRepo()->getBySearch($request->get('name')),
-                'checked' => false
-            ])->render()
         ]);
     }
 
@@ -80,7 +58,7 @@ class GroupController
     public function create(Group $group, Privilege $privilege) : View
     {
         return view('idir::admin.group.create', [
-            'model' => $group,
+            'group' => $group,
             'privileges' => $privilege->orderBy('name', 'asc')->get()
         ]);
     }
@@ -101,22 +79,6 @@ class GroupController
     }
 
     /**
-     * Store collection of Categories with childrens in storage.
-     *
-     * @param  Group      $group      [description]
-     * @param  StoreGlobalRequest  $request
-     * @return JsonResponse
-     */
-    public function storeGlobal(Group $group, StoreGlobalRequest $request) : JsonResponse
-    {
-        $group->getService()->createGlobal($request->only(['names', 'parent_id', 'clear']));
-
-        $request->session()->flash('success', trans('icore::categories.success.store_global'));
-
-        return response()->json(['success' => '' ]);
-    }
-
-    /**
      * Display the specified resource.
      *
      * @param  int  $id
@@ -130,17 +92,15 @@ class GroupController
     /**
      * Show the form for editing the specified Group.
      *
-     * @param  Group $group
-     * @return JsonResponse
+     * @param  Group       $group
+     * @param  Privilege   $privilege  [description]
+     * @return View
      */
-    public function edit(Group $group) : JsonResponse
+    public function edit(Group $group, Privilege $privilege) : View
     {
-        return response()->json([
-            'success' => '',
-            'view' => view('icore::admin.group.edit', [
-                'group' => $group,
-                'categories' => $group->getService()->getAsFlatTreeExceptSelf()
-            ])->render()
+        return view('idir::admin.group.edit', [
+            'group' => $group,
+            'privileges' => $privilege->getRepo()->getWithGroup($group->id)
         ]);
     }
 
@@ -149,20 +109,14 @@ class GroupController
      *
      * @param  Group      $group [description]
      * @param  UpdateRequest $request  [description]
-     * @return JsonResponse                [description]
+     * @return RedirectResponse
      */
-    public function update(Group $group, UpdateRequest $request) : JsonResponse
+    public function update(Group $group, UpdateRequest $request) : RedirectResponse
     {
-        $group->getService()->update($request->only(['parent_id', 'icon', 'name']));
+        $group->getService()->update($request->all());
 
-        return response()->json([
-            'success' => '',
-            'view' => view('icore::admin.group.group', [
-                // Niezbyt ładny hook, ale trzeba na nowo pobrać ancestory
-                'group' => $group->resolveRouteBinding($group->id),
-                'show_ancestors' => true
-            ])->render()
-        ]);
+        return redirect()->route('admin.group.edit', [$group->id])
+            ->with('success', trans('idir::groups.success.update') );
     }
 
     /**
@@ -197,59 +151,16 @@ class GroupController
     }
 
     /**
-     * Update Status attribute the specified Comment in storage.
-     *
-     * @param  Group            $group [description]
-     * @param  UpdateStatusRequest $request  [description]
-     * @return JsonResponse                        [description]
-     */
-    public function updateStatus(Group $group, UpdateStatusRequest $request) : JsonResponse
-    {
-        $group->getService()->updateStatus($request->only('status'));
-
-        $groupRepo = $group->getRepo();
-
-        return response()->json([
-            'success' => '',
-            'status' => $group->status,
-            // Na potrzebę jQuery pobieramy potomków i przodków, żeby na froncie
-            // zaznaczyć odpowiednie rowsy jako aktywowane bądź nieaktywne
-            'ancestors' => $groupRepo->getAncestorsAsArray(),
-            'descendants' => $groupRepo->getDescendantsAsArray(),
-        ]);
-    }
-
-    /**
      * Remove the specified Group from storage.
      *
      * @param  Group $group
-     * @return JsonResponse
+     * @return RedirectResponse
      */
-    public function destroy(Group $group) : JsonResponse
+    public function destroy(Group $group) : RedirectResponse
     {
-        // Pobieramy potomków aby na froncie jQuery wiedział jakie rowsy usunąć
-        $descendants = $group->getRepo()->getDescendantsAsArray();
-
         $group->getService()->delete();
 
-        return response()->json([
-            'success' => '',
-            'descendants' => $descendants,
-        ]);
-    }
-
-    /**
-     * Remove the collection of Categories from storage.
-     *
-     * @param  Group             $group [description]
-     * @param  DestroyGlobalRequest $request  [description]
-     * @return RedirectResponse               [description]
-     */
-    public function destroyGlobal(Group $group, DestroyGlobalRequest $request) : RedirectResponse
-    {
-        $deleted = $group->getService()->deleteGlobal($request->get('select'));
-        //$deleted = $group->whereIn('id', $request->get('select'))->delete();
-
-        return redirect()->back()->with('success', trans('icore::categories.success.destroy_global', ['affected' => $deleted]));
+        return redirect()->route("admin.group.{$group->poli}.index")
+            ->with('success', trans('idir::groups.success.destroy'));
     }
 }

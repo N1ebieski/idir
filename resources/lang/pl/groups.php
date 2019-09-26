@@ -3,8 +3,8 @@
 return [
     'success' => [
         'store' => 'Grupa została dodana.',
-        'store_global' => 'Drzewo kategorii zostało dodane.',
-        'destroy_global' => 'Pomyślnie usunięto :affected kategorii wraz z kategoriami podrzędnymi.'
+        'update' => 'Grupa została edytowana.',
+        'destroy' => 'Pomyślnie usunięto grupę.'
     ],
     'page' => [
         'index' => 'Grupy',
@@ -31,8 +31,14 @@ return [
     'backlink_0' => 'brak',
     'backlink_1' => 'nieobowiązkowy',
     'backlink_2' => 'obowiązkowy',
+    'url' => 'Adres strony',
+    'url_0' => 'brak',
+    'url_1' => 'nieobowiązkowy',
+    'url_2' => 'obowiązkowy',
     'days' => 'Ilość dni obowiązywania przywilejów',
     'max_dirs' => 'Maksymalna ilość wpisów w grupie',
+    'max_dirs_daily' => 'Dzienna maksymalna ilość wpisów w grupie',
+    'empty' => 'Brak dostępnych grup',
 
     'clear' => 'Usuń wszystkie dotychczasowe kategorie przed importem?',
     'parent_id' => 'Kategoria nadrzędna',

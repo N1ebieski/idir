@@ -11,6 +11,7 @@ $factory->define(Group::class, function(Faker $faker) {
         'visible' => rand(0, 1),
         'backlink' => rand(0, 1),
         'days' => rand(30, 365),
-        'max_dirs' => $faker->randomElement([rand(10, 50), null])
+        'max_dirs' => $faker->randomElement([rand(10, 50), null]),
+        'max_dirs_daily' => $faker->randomElement([rand(5, 10), null])
     ];
 });

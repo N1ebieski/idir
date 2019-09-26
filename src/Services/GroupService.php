@@ -46,7 +46,7 @@ class GroupService implements Serviceable
             $this->collect->make($attributes)->except('priv')->toArray()
         );
 
-        $group->privileges()->attach($attributes['priv']);
+        $group->privileges()->attach(array_filter($attributes['priv']) ?? []);
 
         return $group;
     }
@@ -58,7 +58,11 @@ class GroupService implements Serviceable
      */
     public function update(array $attributes) : bool
     {
+        $this->group->privileges()->sync(array_filter($attributes['priv']) ?? []);
 
+        return $this->group->update(
+            $this->collect->make($attributes)->except('priv')->toArray()
+        );
     }
 
     /**
@@ -87,7 +91,7 @@ class GroupService implements Serviceable
      */
     public function delete() : bool
     {
-
+        return $this->group->delete();
     }
 
     /**

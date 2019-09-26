@@ -4,6 +4,7 @@ namespace N1ebieski\IDir\Models\Group;
 
 use Illuminate\Database\Eloquent\Model;
 use Cviebrock\EloquentSluggable\Sluggable;
+use Illuminate\Database\Eloquent\Builder;
 use N1ebieski\ICore\Traits\Carbonable;
 use N1ebieski\ICore\Traits\Polymorphic;
 use N1ebieski\IDir\Traits\Positionable;
@@ -32,6 +33,7 @@ class Group extends Model
         'max_cats',
         'max_dirs',
         'visible',
+        'url',
         'backlink',
         'days'
     ];
@@ -96,12 +98,29 @@ class Group extends Model
             $group->position = $group->position ?? $group->getNextAfterLastPosition();
         });
 
+        // Everytime the model is removed, we have to decrement siblings position by 1
+        static::deleted(function(Group $group) {
+            $group->decrementSiblings($group->position, null);
+        });
+
         // Everytime the model's position
         // is changed, all siblings reordering will happen,
         // so they will always keep the proper order.
         static::saved(function(Group $group) {
             $group->reorderSiblings();
         });
+    }
+
+    // Scopes
+
+    /**
+     * [scopePublic description]
+     * @param  Builder $query [description]
+     * @return Builder        [description]
+     */
+    public function scopePublic(Builder $query) : Builder
+    {
+        return $query->whereVisible(1);
     }
 
     // Getters

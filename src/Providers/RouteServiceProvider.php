@@ -2,7 +2,6 @@
 
 namespace N1ebieski\IDir\Providers;
 
-use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 
 class RouteServiceProvider extends ServiceProvider
@@ -24,6 +23,11 @@ class RouteServiceProvider extends ServiceProvider
     public function boot()
     {
         parent::boot();
+
+        $this->app['router']->bind('group_dir_available', function($value) {
+            return $this->app->make(\N1ebieski\IDir\Models\Group\Dir\Group::class)->getRepo()
+                ->firstPublicById($value) ?? abort(404);
+        });
     }
 
     /**
@@ -49,7 +53,7 @@ class RouteServiceProvider extends ServiceProvider
      */
     protected function mapWebRoutes()
     {
-        Route::middleware(['icore.web', 'icore.force.verified'])
+        $this->app['router']->middleware(['icore.web', 'icore.force.verified'])
              ->as('web.')
              ->namespace($this->namespace.'\Web')
              ->group(function ($router) {
@@ -93,7 +97,7 @@ class RouteServiceProvider extends ServiceProvider
      */
     protected function mapAdminRoutes()
     {
-        Route::middleware([
+        $this->app['router']->middleware([
                 'icore.web',
                 'auth',
                 'verified',

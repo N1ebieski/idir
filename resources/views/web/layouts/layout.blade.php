@@ -20,12 +20,12 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <!-- Styles -->
-    <link href="{{ asset('css/vendor/icore/vendor/vendor.css') }}" rel="stylesheet">
-    <link href="{{ app('Helpers\View')->getStylesheet() }}" rel="stylesheet">
+    <link href="{{ mix('css/vendor/idir/vendor/vendor.css') }}" rel="stylesheet">
+    <link href="{{ mix(app('Helpers\View')->getStylesheet('css/vendor/idir')) }}" rel="stylesheet">
 
     <!-- Scripts -->
-    <script src="{{ asset('js/vendor/icore/vendor/vendor.js') }}"></script>
-    <script src="{{ asset('js/vendor/icore/web/web.js') }}"></script>
+    <script src="{{ mix('js/vendor/idir/vendor/vendor.js') }}"></script>
+    <script src="{{ mix('js/vendor/idir/web/web.js') }}"></script>
 </head>
 <body>
 
@@ -42,7 +42,7 @@
         <i class="fas fa-angle-up"></i>
     </a>
 
-    <script src="{{ asset('js/vendor/icore/web/scripts.js') }}" defer></script>
+    <script src="{{ mix('js/vendor/idir/web/scripts.js') }}" defer></script>
     @stack('script')
 
 </body>

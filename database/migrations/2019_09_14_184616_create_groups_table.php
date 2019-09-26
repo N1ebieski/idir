@@ -4,6 +4,9 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
+/**
+ * [CreateGroupsTable description]
+ */
 class CreateGroupsTable extends Migration
 {
     /**
@@ -23,9 +26,11 @@ class CreateGroupsTable extends Migration
             $table->integer('max_cats')->unsigned();
             $table->integer('position')->unsigned();
             $table->integer('visible')->unsigned();
+            $table->unsignedInteger('url');            
             $table->integer('backlink')->unsigned();
             $table->integer('days')->unsigned()->nullable();
             $table->integer('max_dirs')->unsigned()->nullable();
+            $table->integer('max_dirs_daily')->unsigned()->nullable();
             $table->timestamps();
 
             $table->index(['id', 'model_type']);
