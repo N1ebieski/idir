@@ -34,9 +34,9 @@ class CreateSummaryRequest extends StoreFormRequest
      * @return void
      */
     protected function prepareForValidation()
-    {        
+    {
         if ($this->session()->has('dir')) {
-            $this->merge($this->session()->get('dir')->getAttributes());
+            $this->merge($this->session()->get('dir'));
         }
 
         parent::prepareForValidation();

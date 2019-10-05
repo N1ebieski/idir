@@ -1,12 +1,13 @@
 <?php
 
-namespace N1ebieski\IDir\Models\Group;
+namespace N1ebieski\IDir\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Builder;
 use N1ebieski\ICore\Traits\Carbonable;
-use N1ebieski\ICore\Traits\Polymorphic;
+use N1ebieski\ICore\Traits\Filterable;
+use N1ebieski\ICore\Traits\FullTextSearchable;
 use N1ebieski\IDir\Traits\Positionable;
 use N1ebieski\IDir\Repositories\GroupRepo;
 use N1ebieski\IDir\Services\GroupService;
@@ -16,7 +17,7 @@ use N1ebieski\IDir\Services\GroupService;
  */
 class Group extends Model
 {
-    use Sluggable, Carbonable, Polymorphic, Positionable;
+    use Sluggable, Carbonable, Positionable, Filterable, FullTextSearchable;
 
     // Configuration
 
@@ -27,16 +28,25 @@ class Group extends Model
      */
     protected $fillable = [
         'name',
+        'alt_id',
         'desc',
         'border',
         'position',
         'max_cats',
-        'max_dirs',
+        'max_models',
+        'max_models_daily',
         'visible',
+        'apply_status',
         'url',
-        'backlink',
-        'days'
+        'backlink'
     ];
+
+    /**
+     * The columns of the full text index
+     *
+     * @var array
+     */
+    protected $searchable = ['name'];
 
     /**
      * Return the sluggable configuration array for this model.
@@ -58,9 +68,7 @@ class Group extends Model
      * @var array
      */
     protected $attributes = [
-        'max_dirs' => null,
-        'border' => null,
-        'days' => null
+        'alt_id' => 1
     ];
 
     // Relations
@@ -75,12 +83,21 @@ class Group extends Model
     }
 
     /**
+     * [prices description]
+     * @return [type] [description]
+     */
+    public function prices()
+    {
+        return $this->hasMany('N1ebieski\IDir\Models\Price');
+    }
+
+    /**
      * [siblings description]
      * @return [type] [description]
      */
     public function siblings()
     {
-        return $this->hasMany('N1ebieski\iDir\Models\Group\Group', 'model_type', 'model_type');
+        return $this;
     }
 
     // Overrides
@@ -121,6 +138,19 @@ class Group extends Model
     public function scopePublic(Builder $query) : Builder
     {
         return $query->whereVisible(1);
+    }
+
+    /**
+     * [scopeFilterVisible description]
+     * @param  Builder $query  [description]
+     * @param  int|null  $visible [description]
+     * @return Builder|null          [description]
+     */
+    public function scopeFilterVisible(Builder $query, int $visible = null) : ?Builder
+    {
+        return $query->when($visible !== null, function($query) use ($visible) {
+            return $query->where('visible', $visible);
+        });
     }
 
     // Getters

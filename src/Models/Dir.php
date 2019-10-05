@@ -27,11 +27,10 @@ class Dir extends Model
      */
     protected $fillable = [
         'title',
+        'content',
         'content_html',
         'notes',
-        'url',
-        'categories',
-        'tags'
+        'url'
     ];
 
     /**
@@ -117,7 +116,7 @@ class Dir extends Model
      */
     public function group()
     {
-        return $this->belongsTo('N1ebieski\IDir\Models\Group\Dir\Group');
+        return $this->belongsTo('N1ebieski\IDir\Models\Group');
     }
 
     /**
@@ -127,6 +126,17 @@ class Dir extends Model
     public function categories()
     {
         return $this->morphToMany('N1ebieski\IDir\Models\Category\Dir\Category', 'model', 'categories_models', 'model_id', 'category_id');
+    }
+
+    // Mutators
+
+    /**
+     * [setContentAttribute description]
+     * @param string $value [description]
+     */
+    public function setContentAttribute(string $value) : void
+    {
+        $this->attributes['content'] = strip_tags($value);
     }
 
     // Getters

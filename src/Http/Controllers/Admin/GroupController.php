@@ -1,50 +1,39 @@
 <?php
 
-namespace N1ebieski\IDir\Http\Controllers\Admin\Group;
+namespace N1ebieski\IDir\Http\Controllers\Admin;
 
-use N1ebieski\IDir\Models\Group\Group;
+use N1ebieski\IDir\Models\Group;
 use N1ebieski\IDir\Models\Privilege;
 use N1ebieski\IDir\Http\Requests\Admin\Group\IndexRequest;
 use N1ebieski\IDir\Http\Requests\Admin\Group\UpdatePositionRequest;
 use N1ebieski\IDir\Http\Requests\Admin\Group\UpdateRequest;
 use N1ebieski\IDir\Http\Requests\Admin\Group\StoreRequest;
+use N1ebieski\IDir\Http\Requests\Admin\Group\CreateRequest;
+use N1ebieski\IDir\Http\Requests\Admin\Group\EditRequest;
+use N1ebieski\IDir\Filters\Admin\Group\IndexFilter;
 use Illuminate\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
-use N1ebieski\IDir\Http\Controllers\Admin\Group\Polymorphic;
 
 /**
  * Base Group Controller
  */
-class GroupController implements Polymorphic
+class GroupController
 {
-    /**
-     * Model. Must be protected!
-     * @var Group
-     */
-    protected $group;
-
-    /**
-     * [__construct description]
-     * @param Group        $group        [description]
-     */
-    public function __construct(Group $group)
-    {
-        $this->group = $group;
-    }
-
     /**
      * Display a listing of the Group.
      *
      * @param  Group      $group      [description]
      * @param  IndexRequest  $request       [description]
+     * @param  IndexFilter   $filter        [description]
      * @return View                         [description]
      */
-    public function index(Group $group, IndexRequest $request) : View
+    public function index(Group $group, IndexRequest $request, IndexFilter $filter) : View
     {
         return view('idir::admin.group.index', [
-            'group' => $group,
-            'groups' => $group->getRepo()->paginate()
+            'groups' => $group->getRepo()->paginateByFilter($filter->all()),
+            'filter' => $filter->all(),
+            'paginate' => config('database.paginate')
         ]);
     }
 
@@ -53,13 +42,14 @@ class GroupController implements Polymorphic
      *
      * @param  Group      $group      [description]
      * @param Privilege   $privilege  [description]
+     * @param CreateRequest $request  [description]
      * @return View
      */
-    public function create(Group $group, Privilege $privilege) : View
+    public function create(Group $group, Privilege $privilege, CreateRequest $request) : View
     {
         return view('idir::admin.group.create', [
-            'group' => $group,
-            'privileges' => $privilege->orderBy('name', 'asc')->get()
+            'privileges' => $privilege->orderBy('name', 'asc')->get(),
+            'groups' => $group->orderBy('id', 'asc')->get()
         ]);
     }
 
@@ -74,7 +64,7 @@ class GroupController implements Polymorphic
     {
         $group->getService()->create($request->all());
 
-        return redirect()->route("admin.group.{$group->poli}.index")
+        return redirect()->route("admin.group.index")
             ->with('success', trans('idir::groups.success.store') );
     }
 
@@ -94,12 +84,14 @@ class GroupController implements Polymorphic
      *
      * @param  Group       $group
      * @param  Privilege   $privilege  [description]
+     * @param  EditRequest $request    [description]
      * @return View
      */
-    public function edit(Group $group, Privilege $privilege) : View
+    public function edit(Group $group, Privilege $privilege, EditRequest $request) : View
     {
         return view('idir::admin.group.edit', [
-            'group' => $group,
+            'group' => $group->load('prices'),
+            'groups' => $group->orderBy('id', 'asc')->get(),
             'privileges' => $privilege->getRepo()->getWithGroup($group->id)
         ]);
     }
@@ -129,7 +121,8 @@ class GroupController implements Polymorphic
         return response()->json([
             'success' => '',
             'view' => view('idir::admin.group.edit_position', [
-                'group' => $group->loadCount('siblings')
+                'group' => $group,
+                'siblings_count' => $group->count()
             ])->render()
         ]);
     }
@@ -160,7 +153,7 @@ class GroupController implements Polymorphic
     {
         $group->getService()->delete();
 
-        return redirect()->route("admin.group.{$group->poli}.index")
+        return redirect()->route("admin.group.index")
             ->with('success', trans('idir::groups.success.destroy'));
     }
 }

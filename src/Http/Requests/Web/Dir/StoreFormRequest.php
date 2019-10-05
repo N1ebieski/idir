@@ -39,11 +39,11 @@ class StoreFormRequest extends FormRequest
      */
     protected function prepareUrlAttribute() : void
     {
-        if ($this->has('url')) {
+        if ($this->has('url') && $this->input('url') !== null) {
             if ($this->group_dir_available->url === 0) {
                 $this->merge(['url' => null]);
             } else {
-                $this->merge(['url' => preg_replace('/(\/)$/', '', $this->input('url'))]);
+                $this->merge(['url' => preg_replace('/(\/)$/', null, $this->input('url'))]);
             }
         }
     }
@@ -146,6 +146,18 @@ class StoreFormRequest extends FormRequest
                 'regex:/^(https|http):\/\/([\da-z\.-]+)(\.[a-z]{2,6})\/?$/',
                 'unique:dirs,url'
             ]
+        ];
+    }
+
+    /**
+     * Get custom attributes for validator errors.
+     *
+     * @return array
+     */
+    public function attributes()
+    {
+        return [
+            'content_html' => 'content'
         ];
     }
 }

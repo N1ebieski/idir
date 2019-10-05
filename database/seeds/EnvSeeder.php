@@ -1,0 +1,23 @@
+<?php
+
+namespace N1ebieski\IDir\Seeds;
+
+use Illuminate\Database\Seeder;
+
+/**
+ * [DatabaseSeeder description]
+ */
+class EnvSeeder extends Seeder
+{
+    /**
+     * Seed the application's database.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        $this->call(RolesAndPermissionsSeeder::class);
+        $this->call(CategoriesSeeder::class);
+        $this->call(GroupsAndPrivilegesSeeder::class);
+    }
+}

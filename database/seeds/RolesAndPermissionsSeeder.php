@@ -4,12 +4,12 @@ namespace N1ebieski\IDir\Seeds;
 
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
-use N1ebieski\ICore\Seeds\RolesAndPermissionsSeeder as BaseRolesAndPermissionsSeeder;
+use Illuminate\Database\Seeder;
 
 /**
  * [RolesAndPermissionsSeeder description]
  */
-class RolesAndPermissionsSeeder extends BaseRolesAndPermissionsSeeder
+class RolesAndPermissionsSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -18,8 +18,6 @@ class RolesAndPermissionsSeeder extends BaseRolesAndPermissionsSeeder
      */
     public function run()
     {
-        //parent::run();
-
         // create permdissions
         Permission::create(['name' => 'index groups']);
         Permission::create(['name' => 'create groups']);
@@ -27,6 +25,7 @@ class RolesAndPermissionsSeeder extends BaseRolesAndPermissionsSeeder
         Permission::create(['name' => 'destroy groups']);
 
         $role = Role::whereName('admin')
+            ->first()
             ->givePermissionTo([
                 'index groups',
                 'create groups',

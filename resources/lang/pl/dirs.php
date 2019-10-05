@@ -12,7 +12,10 @@ return [
         'step' => 'Krok :step'
     ],
     'success' => [
-        'store' => 'Wpis został dodany i oczekuje na moderację.'
+        'store' => [
+            'status_0' => 'Wpis został dodany i oczekuje na moderację.',
+            'status_1' => 'Wpis został dodany.'
+        ]
     ],
     'categories' => 'Kategorie',
     'tags' => 'Tagi',

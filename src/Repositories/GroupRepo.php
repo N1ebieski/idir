@@ -3,7 +3,7 @@
 namespace N1ebieski\IDir\Repositories;
 
 use Illuminate\Database\Eloquent\Collection;
-use N1ebieski\IDir\Models\Group\Group;
+use N1ebieski\IDir\Models\Group;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\Config\Repository as Config;
 
@@ -37,13 +37,15 @@ class GroupRepo
 
     /**
      * [paginate description]
+     * @param  array        $filter [description]
      * @return LengthAwarePaginator [description]
      */
-    public function paginate() : LengthAwarePaginator
+    public function paginateByFilter(array $filter) : LengthAwarePaginator
     {
-        return $this->group->orderBy('position', 'asc')
-            ->poliType()
-            ->paginate($this->paginate);
+        return $this->group->filterSearch($filter['search'])
+            ->filterVisible($filter['visible'])
+            ->filterOrderBy($filter['orderby'] ?? 'position|asc')
+            ->filterPaginate($filter['paginate']);
     }
 
     /**
@@ -52,8 +54,10 @@ class GroupRepo
      */
     public function getSiblingsAsArray() : array
     {
-        return $this->group->siblings()->get(['id', 'position'])
-            ->pluck('position', 'id')->toArray();
+        return $this->group->siblings()
+            ->get(['id', 'position'])
+            ->pluck('position', 'id')
+            ->toArray();
     }
 
     /**
@@ -69,6 +73,19 @@ class GroupRepo
     }
 
     /**
+     * [getPricesByType description]
+     * @param  string     $type [description]
+     * @return Collection       [description]
+     */
+    public function getPricesByType(string $type) : Collection
+    {
+        return $this->group->prices()
+            ->where('type', $type)
+            ->orderBy('price', 'asc')
+            ->get(['id', 'price', 'days']);
+    }
+
+    /**
      * [firstPublicById description]
      * @param  int    $id [description]
      * @return Group|null     [description]
@@ -77,7 +94,6 @@ class GroupRepo
     {
         return $this->group->where('id', $id)
             ->public()
-            ->poliType()
             ->first();
     }
 }

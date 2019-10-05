@@ -2,7 +2,8 @@
 
 namespace N1ebieski\IDir\Services;
 
-use N1ebieski\IDir\Models\Group\Group;
+use N1ebieski\IDir\Models\Group;
+use N1ebieski\IDir\Models\Price;
 use N1ebieski\ICore\Services\Serviceable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection as Collect;
@@ -19,6 +20,12 @@ class GroupService implements Serviceable
     private $group;
 
     /**
+     * Model
+     * @var Price
+     */
+    private $price;
+
+    /**
      * [private description]
      * @var Collect
      */
@@ -27,11 +34,13 @@ class GroupService implements Serviceable
     /**
      * [__construct description]
      * @param Group     $group     [description]
+     * @param Price     $price     [description]
      * @param Collect   $collect   [description]
      */
-    public function __construct(Group $group, Collect $collect)
+    public function __construct(Group $group, Price $price, Collect $collect)
     {
         $this->group = $group;
+        $this->price = $price;
         $this->collect = $collect;
     }
 
@@ -42,13 +51,16 @@ class GroupService implements Serviceable
      */
     public function create(array $attributes) : Model
     {
-        $group = $this->group->create(
-            $this->collect->make($attributes)->except('priv')->toArray()
+        $this->group->fill(
+            $this->collect->make($attributes)->except(['priv', 'prices'])->toArray()
         );
+        $this->group->save();
 
-        $group->privileges()->attach(array_filter($attributes['priv']) ?? []);
+        $this->group->privileges()->attach(array_filter($attributes['priv'] ?? []));
 
-        return $group;
+        $this->price->getService()->setGroup($this->group)->createOrUpdateGlobal(array_filter($attributes['prices'] ?? []));
+
+        return $this->group;
     }
 
     /**
@@ -58,11 +70,16 @@ class GroupService implements Serviceable
      */
     public function update(array $attributes) : bool
     {
-        $this->group->privileges()->sync(array_filter($attributes['priv']) ?? []);
-
-        return $this->group->update(
-            $this->collect->make($attributes)->except('priv')->toArray()
+        $this->group->fill(
+            $this->collect->make($attributes)->except(['priv', 'prices'])->toArray()
         );
+        $result = $this->group->save();
+
+        $this->group->privileges()->sync(array_filter($attributes['priv'] ?? []));
+
+        $this->price->getService()->setGroup($this->group)->organizeGlobal(array_filter($attributes['prices'] ?? []));
+
+        return $result;
     }
 
     /**
@@ -91,6 +108,9 @@ class GroupService implements Serviceable
      */
     public function delete() : bool
     {
+        // W przypadku usuwania grupy trzeba zmienić alternative innych grup na Default 1
+        $this->group->where('alt_id', $this->group->id)->update(['alt_id' => 1]);
+
         return $this->group->delete();
     }
 

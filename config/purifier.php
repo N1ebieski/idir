@@ -32,10 +32,10 @@ return [
         ],
         'dir' => [
             'HTML.Doctype'             => 'HTML 4.01 Transitional',
-            'HTML.Allowed'             => 'div,b,strong,i,em,u,ul,ol,li,p[style],br,span[style],sub,sup,h1,h2,h3,h4,h5,blockquote,del',
+            'HTML.Allowed'             => 'div,b,strong,i,em,u,ul,ol,li,p[style],br,span[style],h1,h2,h3,h4,h5,blockquote,del',
             'CSS.AllowedProperties'    => 'font,font-size,font-weight,font-style,font-family,text-decoration,padding-left,color,background-color,text-align',
             'AutoFormat.AutoParagraph' => true,
-            'AutoFormat.RemoveEmpty'   => true,            
+            'AutoFormat.RemoveEmpty'   => true,
         ],
         'test'    => [
             'Attr.EnableID' => 'true',

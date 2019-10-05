@@ -1,6 +1,6 @@
 <?php
 
-namespace N1ebieski\iDir\Http\Controllers\Web\Category\Dir;
+namespace N1ebieski\IDir\Http\Controllers\Web\Category\Dir;
 
 use N1ebieski\ICore\Models\Category\Category;
 use N1ebieski\IDir\Models\Category\Dir\Category as DirCategory;

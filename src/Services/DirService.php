@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection as Collect;
 use N1ebieski\IDir\Models\Dir;
 use Illuminate\Contracts\Session\Session;
-use N1ebieski\IDir\Models\Group\Dir\Group;
+use N1ebieski\IDir\Models\Group;
 
 /**
  * [DirService description]
@@ -84,7 +84,7 @@ class DirService implements Serviceable
      */
     public function createSession(array $attributes) : void
     {
-        $this->session->put('dir', $this->dir->fill($attributes));
+        $this->session->put('dir', $attributes);
     }
 
     /**
@@ -94,9 +94,18 @@ class DirService implements Serviceable
      */
     public function updateSession(array $attributes) : void
     {
-        if (($dir = $this->session->get('dir')) instanceof Dir) {
-            $this->session->put('dir', $dir->fill($attributes));
+        if (is_array($dir = $this->session->get('dir'))) {
+            $this->session->put('dir', array_merge($dir, $attributes));
         }
+    }
+
+    /**
+     * [getStatus description]
+     * @return int [description]
+     */
+    protected function getStatus() : int
+    {
+        return $this->group->apply_status === 1 ? 1 : 0;
     }
 
     /**
@@ -106,15 +115,11 @@ class DirService implements Serviceable
      */
     public function create(array $attributes) : Model
     {
-        $this->dir->fill(
-            $this->collect->make($attributes)
-                ->except(['categories', 'tags'])
-                ->toArray()
-        );
+        $this->dir->fill($attributes);
         $this->dir->user()->associate(auth()->user());
         $this->dir->group()->associate($this->group);
-        $this->dir->content_html = $this->dir->content;
-        $this->dir->status = 0;
+        $this->dir->content = $this->dir->content_html;
+        $this->dir->status = $this->getStatus();
         $this->dir->save();
 
         $this->dir->categories()->attach($attributes['categories']);

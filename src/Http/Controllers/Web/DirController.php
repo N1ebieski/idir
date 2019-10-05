@@ -3,13 +3,12 @@
 namespace N1ebieski\IDir\Http\Controllers\Web;
 
 use Illuminate\Http\RedirectResponse;
-
 use Illuminate\View\View;
 use N1ebieski\IDir\Http\Requests\Web\Dir\CreateFormRequest;
 use N1ebieski\IDir\Http\Requests\Web\Dir\StoreFormRequest;
 use N1ebieski\IDir\Http\Requests\Web\Dir\CreateSummaryRequest;
 use N1ebieski\IDir\Http\Requests\Web\Dir\StoreSummaryRequest;
-use N1ebieski\IDir\Models\Group\Dir\Group;
+use N1ebieski\IDir\Models\Group;
 use N1ebieski\IDir\Models\Dir;
 use N1ebieski\IDir\Models\Category\Dir\Category;
 use N1ebieski\IDir\Events\DirStore;
@@ -93,7 +92,12 @@ class DirController
 
         event(new DirStore($dir));
 
+        if ($dir->status === 1) {
+            return redirect()->route('web.dir.show', [$dir->slug])
+                ->with('success', trans('idir::dirs.success.store.status_1'));
+        }
+
         return redirect()->route('web.dir.create_group')
-            ->with('success', trans('idir::dirs.success.store'));
+            ->with('success', trans('idir::dirs.success.store.status_0'));
     }
 }

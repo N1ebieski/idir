@@ -3,7 +3,7 @@
 namespace N1ebieski\IDir\Policies;
 
 use N1ebieski\ICore\Models\User;
-use N1ebieski\IDir\Models\Group\Group;
+use N1ebieski\IDir\Models\Group;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 /**

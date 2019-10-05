@@ -80,7 +80,7 @@
         @endcan
         @can('index groups')
         <li class="nav-item @isUrlContains(['*/groups', '*/groups/*'])">
-            <a class="nav-link" href="{{ route('admin.group.dir.index') }}">
+            <a class="nav-link" href="{{ route('admin.group.index') }}">
                 <i class="fas fa-fw fa-object-group"></i><span> {{ trans('idir::groups.page.index') }}</span>
             </a>
         </li>

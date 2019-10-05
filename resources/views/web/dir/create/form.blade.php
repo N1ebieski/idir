@@ -14,7 +14,7 @@
 
 @section('content')
 <div class="container">
-    <h3 class="h5 border-bottom pb-2">{{ trans('idir::dirs.page.create.group') }}</h3>
+    <h3 class="h5 border-bottom pb-2">{{ trans('idir::dirs.page.create.form') }}</h3>
     <div class="row mb-4">
         <div class="col-md-8">
             <form method="post" action="{{ route('web.dir.store_form', [$group->id]) }}" id="createForm">

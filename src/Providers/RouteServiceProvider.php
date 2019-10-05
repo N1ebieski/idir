@@ -25,7 +25,7 @@ class RouteServiceProvider extends ServiceProvider
         parent::boot();
 
         $this->app['router']->bind('group_dir_available', function($value) {
-            return $this->app->make(\N1ebieski\IDir\Models\Group\Dir\Group::class)->getRepo()
+            return $this->app->make(\N1ebieski\IDir\Models\Group::class)->getRepo()
                 ->firstPublicById($value) ?? abort(404);
         });
     }

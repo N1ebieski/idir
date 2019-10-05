@@ -4,7 +4,7 @@ namespace N1ebieski\IDir\Seeds;
 
 use Illuminate\Database\Seeder;
 use N1ebieski\IDir\Models\Privilege;
-use N1ebieski\IDir\Models\Group\Group;
+use N1ebieski\IDir\Models\Group;
 
 /**
  * [GroupSeeder description]
@@ -30,13 +30,25 @@ class GroupsAndPrivilegesSeeder extends Seeder
         Privilege::create(['name' => 'place in the advertising component']);
         Privilege::create(['name' => 'additional options for editing content']);
 
-        $standard = Group::create([
-            'model_type' => 'N1ebieski\IDir\Models\Dir',
+        $default = Group::create([
             'name' => 'Default',
-            'max_categories' => 3,
+            'max_cats' => 3,
             'position' => 0,
             'visible' => 0,
-            'backlink' => 0
+            'backlink' => 0,
+            'apply_status' => 0,
+            'url' => 1
         ]);
+
+        $privileges = Privilege::all();
+
+        $groups = factory(Group::class, 5)
+            ->create()
+            ->each(function($group) use ($privileges) {
+                $group->privileges()->attach(
+                    $privileges->random(rand(0, $privileges->count()))
+                        ->pluck('id')->toArray()
+                );
+            });
     }
 }

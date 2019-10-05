@@ -18,23 +18,25 @@ class CreateGroupsTable extends Migration
     {
         Schema::create('groups', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('model_type');
+            $table->bigInteger('alt_id')->unsigned()->default(1);
             $table->string('slug')->unique();
             $table->string('name')->unique();
             $table->text('desc')->nullable();
             $table->string('border')->nullable();
             $table->integer('max_cats')->unsigned();
+            $table->integer('max_models')->unsigned()->nullable();
+            $table->integer('max_models_daily')->unsigned()->nullable();
             $table->integer('position')->unsigned();
             $table->integer('visible')->unsigned();
-            $table->unsignedInteger('url');            
-            $table->integer('backlink')->unsigned();
-            $table->integer('days')->unsigned()->nullable();
-            $table->integer('max_dirs')->unsigned()->nullable();
-            $table->integer('max_dirs_daily')->unsigned()->nullable();
-            $table->timestamps();
+            $table->unsignedInteger('apply_status');
+            $table->unsignedInteger('url')->nullable();
+            $table->unsignedInteger('backlink')->nullable();
 
-            $table->index(['id', 'model_type']);
+            $table->timestamps();
         });
+
+        // Full Text Index
+        DB::statement('ALTER TABLE `groups` ADD FULLTEXT fulltext_index (name)');
 
         Schema::create('privileges', function (Blueprint $table) {
             $table->bigIncrements('id');

@@ -17,7 +17,7 @@
     </div>
     @can('create groups')
     <div class="ml-auto text-right responsive-btn-group">
-        <a href="{{ route("admin.group.{$group->poli}.create") }}" role="button" class="btn btn-primary text-nowrap">
+        <a href="{{ route("admin.group.create") }}" role="button" class="btn btn-primary text-nowrap">
             <i class="far fa-plus-square"></i>
             <span class="d-none d-sm-inline"> {{ trans('icore::default.create') }}</span>
         </a>
@@ -25,6 +25,7 @@
     @endcan
 </h1>
 <div id="filterContent">
+    @include('idir::admin.group.filter')    
     @if ($groups->isNotEmpty())
     <div id="infinite-scroll">
         @foreach ($groups as $group)

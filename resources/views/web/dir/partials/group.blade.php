@@ -13,11 +13,9 @@
         <li class="list-group-item">{{ __($privilege->name) }}</li>
         @endforeach
         @endif
-        @if ($group->days > 0)
         <li class="list-group-item">
-            {{ strtolower(trans('idir::groups.days')) }}: {{ $group->days }}
+            {{ strtolower(trans('idir::groups.apply_status')) }}: {{ trans("idir::groups.apply_status_{$group->apply_status}") }}
         </li>
-        @endif
         <li class="list-group-item">
             {{ strtolower(trans('idir::groups.max_cats')) }}: {{ $group->max_cats }}
         </li>

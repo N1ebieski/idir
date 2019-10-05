@@ -5068,13 +5068,15 @@ readers do not read off random characters that represent icons */
   font-weight: 900;
 }
 
-.trumbowyg-undo-button:after {
+.trumbowyg-undo-button:after,
+.trumbowyg-historyUndo-button:after {
   font-family: "Font Awesome 5 Free";
   content: "\F0E2";
   font-weight: 900;
 }
 
-.trumbowyg-redo-button:after {
+.trumbowyg-redo-button:after,
+.trumbowyg-historyRedo-button:after {
   font-family: "Font Awesome 5 Free";
   content: "\F01E";
   font-weight: 900;

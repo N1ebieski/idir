@@ -2,6 +2,10 @@
 
 use Illuminate\Support\Facades\Route;
 
+Route::get('dirs/{dir_cache}', 'DirController@show')
+    ->name('dir.show')
+    ->where('dir_cache', '[0-9A-Za-z,_-]+');
+
 Route::group(['middleware' => 'auth'], function() {
     Route::get('dirs/create/group', 'DirController@createGroup')
         ->name('dir.create_group');
@@ -19,5 +23,4 @@ Route::group(['middleware' => 'auth'], function() {
     Route::post('dirs/group/{group_dir_available}/summary', 'DirController@storeSummary')
         ->where('group_dir_available', '[0-9]+')
         ->name('dir.store_summary');
-
 });

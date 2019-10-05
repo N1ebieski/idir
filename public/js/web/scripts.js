@@ -826,11 +826,12 @@ jQuery(document).on('readyAndAjax', function() {
             btnsDef: {},
             btns: [
                 ['viewHTML'],
-                ['undo', 'redo'], // Only supported in Blink browsers
+                ['historyUndo', 'historyRedo'],
+                // ['undo', 'redo'], // Only supported in Blink browsers
                 ['formatting'],
                 ['foreColor', 'backColor'],
                 ['strong', 'em', 'del'],
-                ['superscript', 'subscript'],
+                // ['superscript', 'subscript'],
                 // ['link'],
                 // ['insertImage'],
                 // ['justifyLeft', 'justifyCenter', 'justifyRight', 'justifyFull'],

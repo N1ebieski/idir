@@ -14,7 +14,7 @@ class Privilege extends Model
 
     public function groups()
     {
-        return $this->belongsToMany('N1ebieski\IDir\Models\Group\Group', 'groups_privileges');
+        return $this->belongsToMany('N1ebieski\IDir\Models\Group', 'groups_privileges');
     }
 
     // Getters

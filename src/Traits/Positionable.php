@@ -84,6 +84,6 @@ trait Positionable
             ->orderBy('position', 'desc')
             ->first('position');
 
-        return is_int($last->position) ? $last->position + 1 : 0;
+        return is_int(optional($last)->position) ? $last->position + 1 : 0;
     }
 }
