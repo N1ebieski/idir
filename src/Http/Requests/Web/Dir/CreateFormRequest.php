@@ -44,6 +44,12 @@ class CreateFormRequest extends FormRequest
                 )
             );
         }
+
+        if ($this->old('content_html')) {
+            if (!$this->group_dir_available->privileges->contains('name', 'additional options for editing content')) {
+                session()->flash('_old_input.content_html', strip_tags($this->old('content_html')));
+            }
+        }
     }
 
     /**

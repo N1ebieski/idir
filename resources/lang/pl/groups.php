@@ -51,6 +51,8 @@ return [
     ],
     'payment_0' => 'darmowy',
     'payment_1' => 'płatny',
+    'price_from' => 'płatny już od :price PLN / :days :limit',
+    'unlimited' => 'nieograniczony czasowo',
     'alt' => 'Alternatywna grupa',
     'alt_tooltip' => 'Grupa do której spadnie wpis w przypadku braku przedłużenia okresu czasowego.'
 ];

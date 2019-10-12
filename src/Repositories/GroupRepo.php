@@ -61,13 +61,13 @@ class GroupRepo
     }
 
     /**
-     * [getAvailable description]
+     * [getPublicWithRels description]
      * @return Collection [description]
      */
-    public function getPublicWithPrivileges() : Collection
+    public function getPublicWithRels() : Collection
     {
         return $this->group->public()
-            ->with('privileges')
+            ->with('privileges', 'prices')
             ->orderBy('position', 'asc')
             ->get();
     }

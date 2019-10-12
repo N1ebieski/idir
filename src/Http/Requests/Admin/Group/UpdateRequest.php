@@ -50,6 +50,7 @@ class UpdateRequest extends FormRequest
             'max_models_daily' => 'bail|nullable|integer',
             'apply_status' => 'bail|required|in:0,1',
             'backlink' => 'bail|required|in:0,1,2',
+            'payment' => 'bail|required|in:0,1',
             'url' => 'bail|required|in:0,1,2',
             'priv' => 'array|no_js_validation',
             'priv.*' => [

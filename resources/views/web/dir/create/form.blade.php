@@ -116,6 +116,6 @@
 
 @push('script')
 @component('icore::admin.partials.jsvalidation')
-{!! JsValidator::formRequest('N1ebieski\IDir\Http\Requests\Web\Dir\StoreFormRequest', '#createForm'); !!}
+{!! str_replace('"content"', '"content_html"', JsValidator::formRequest('N1ebieski\IDir\Http\Requests\Web\Dir\StoreFormRequest', '#createForm')); !!}
 @endcomponent
 @endpush

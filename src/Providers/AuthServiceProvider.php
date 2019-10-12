@@ -16,6 +16,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         \N1ebieski\IDir\Models\Group::class => \N1ebieski\IDir\Policies\GroupPolicy::class,
+        \N1ebieski\IDir\Models\Payment\Dir\Payment::class => \N1ebieski\IDir\Policies\PaymentPolicy::class
     ];
 
     /**

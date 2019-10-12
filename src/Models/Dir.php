@@ -120,6 +120,15 @@ class Dir extends Model
     }
 
     /**
+     * [payments description]
+     * @return [type] [description]
+     */
+    public function payments()
+    {
+        return $this->morphMany('N1ebieski\IDir\Models\Payment\Payment', 'model');
+    }
+
+    /**
      * [categories description]
      * @return [type] [description]
      */

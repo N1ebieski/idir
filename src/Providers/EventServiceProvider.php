@@ -17,7 +17,8 @@ class EventServiceProvider extends ServiceProvider
      */
     protected $listen = [
         \N1ebieski\IDir\Events\DirStore::class => [
-            \N1ebieski\IDir\Listeners\ClearDirSession::class
+            // \N1ebieski\IDir\Listeners\ClearDirSession::class
+            \N1ebieski\IDir\Listeners\CheckoutDir::class
         ],
     ];
 

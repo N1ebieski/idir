@@ -23,7 +23,7 @@ class DirStore
     /**
      * Create a new event instance.
      *
-     * @param Dir    $dir    [description]
+     * @param Dir         $dir    [description]
      * @return void
      */
     public function __construct(Dir $dir)

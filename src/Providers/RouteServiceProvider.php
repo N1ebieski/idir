@@ -28,6 +28,13 @@ class RouteServiceProvider extends ServiceProvider
             return $this->app->make(\N1ebieski\IDir\Models\Group::class)->getRepo()
                 ->firstPublicById($value) ?? abort(404);
         });
+
+        $this->app['router']->bind('payment_dir_pending', function($value) {
+            return \N1ebieski\IDir\Models\Payment\Dir\Payment::where([
+                    ['status', 2],
+                    ['id', $value]
+                ])->with(['morph', 'price_morph'])->firstOrFail();
+        });
     }
 
     /**

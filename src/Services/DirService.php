@@ -8,6 +8,7 @@ use Illuminate\Support\Collection as Collect;
 use N1ebieski\IDir\Models\Dir;
 use Illuminate\Contracts\Session\Session;
 use N1ebieski\IDir\Models\Group;
+use Carbon\Carbon;
 
 /**
  * [DirService description]
@@ -100,11 +101,16 @@ class DirService implements Serviceable
     }
 
     /**
-     * [getStatus description]
+     * [makeStatus description]
+     * @param  string|null  $payment_type  [description]
      * @return int [description]
      */
-    protected function getStatus() : int
+    protected function makeStatus(string $payment_type = null) : int
     {
+        if ($payment_type === 'transfer') {
+            return 2;
+        }
+
         return $this->group->apply_status === 1 ? 1 : 0;
     }
 
@@ -119,7 +125,7 @@ class DirService implements Serviceable
         $this->dir->user()->associate(auth()->user());
         $this->dir->group()->associate($this->group);
         $this->dir->content = $this->dir->content_html;
-        $this->dir->status = $this->getStatus();
+        $this->dir->status = $this->makeStatus($attributes['payment_type'] ?? null);
         $this->dir->save();
 
         $this->dir->categories()->attach($attributes['categories']);
@@ -137,6 +143,24 @@ class DirService implements Serviceable
     public function update(array $attributes) : bool
     {
 
+    }
+
+    /**
+     * Update Status attribute the specified Dir in storage.
+     *
+     * @param  array $attributes [description]
+     * @return bool              [description]
+     */
+    public function updatePrivileged(array $attributes) : bool
+    {
+        return $this->dir->update([
+            'privileged_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'privileged_to' => is_int($attributes['days']) ?
+                $this->dir->privileged_to !== null ?
+                    Carbon::parse($this->dir->privileged_to)->addDays($attributes['days'])
+                    : Carbon::now()->addDays($attributes['days'])
+                : null
+        ]);
     }
 
     /**

@@ -1247,16 +1247,12 @@ jQuery(document).on('change', 'div[id^=prices] div.price:last-child input[type="
         let $price = $(this).closest('div.price').clone();
         $price.id = parseInt($(this).attr('id').match(/\d+/), 10) + 1;
 
-        $price.find('[id^=price], [for^=price], [name^=prices]').each(function() {
-            if ($(this).attr('id')) {
-                $(this).attr('id', $(this).attr('id').replace(/(\d+)/, $price.id));
-            }
-            if ($(this).attr('for')) {
-                $(this).attr('for', $(this).attr('for').replace(/(\d+)/, $price.id));
-            }
-            if ($(this).attr('name')) {
-                $(this).attr('name', $(this).attr('name').replace(/(\d+)/, $price.id));
-            }
+        $price.find('[id^=price], [for^=price], [name^=prices]').each(function(index, element) {
+            $.each(['id', 'for', 'name'], function(key, value) {
+                if ($(element).attr(value)) {
+                    $(element).attr(value, $(element).attr(value).replace(/(\d+)/, $price.id));
+                }
+            });
         });
 
         $(this).closest('div[id^=prices]').append($.sanitize('<div class="price">' + $price.html() + '</div>'));

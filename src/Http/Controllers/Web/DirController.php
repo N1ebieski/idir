@@ -10,8 +10,11 @@ use N1ebieski\IDir\Http\Requests\Web\Dir\CreateSummaryRequest;
 use N1ebieski\IDir\Http\Requests\Web\Dir\StoreSummaryRequest;
 use N1ebieski\IDir\Models\Group;
 use N1ebieski\IDir\Models\Dir;
+use N1ebieski\IDir\Models\Price;
 use N1ebieski\IDir\Models\Category\Dir\Category;
 use N1ebieski\IDir\Events\DirStore;
+use N1ebieski\IDir\Models\Payment\Dir\Payment;
+use N1ebieski\IDir\Responses\Web\Dir\StoreSummaryResponse;
 
 /**
  * [DirController description]
@@ -26,7 +29,7 @@ class DirController
     public function createGroup(Group $group) : View
     {
         return view('idir::web.dir.create.group', [
-            'groups' => $group->getRepo()->getPublicWithPrivileges()
+            'groups' => $group->getRepo()->getPublicWithRels()
         ]);
     }
 
@@ -76,28 +79,45 @@ class DirController
             $request->session()->get('dir.categories')
         );
 
-        return view('idir::web.dir.create.summary', compact('group', 'categories'));
+        return view('idir::web.dir.create.summary', [
+            'group' => $group,
+            'categories' => $categories,
+            'transfer_driver' => config('idir.payment.transfer.driver'),
+            'auto_sms_driver' => config('idir.payment.auto_sms.driver')
+        ]);
     }
 
     /**
      * [storeSummary description]
-     * @param  Group               $group   [description]
-     * @param  Dir                 $dir     [description]
-     * @param  StoreSummaryRequest $request [description]
-     * @return RedirectResponse             [description]
+     * @param  Group                $group    [description]
+     * @param  Dir                  $dir      [description]
+     * @param  Price                $price    [description]
+     * @param  Payment              $payment  [description]
+     * @param  StoreSummaryRequest  $request  [description]
+     * @param  StoreSummaryResponse $response [description]
+     * @return RedirectResponse               [description]
      */
-    public function storeSummary(Group $group, Dir $dir, StoreSummaryRequest $request) : RedirectResponse
+    public function storeSummary(
+        Group $group,
+        Dir $dir,
+        Price $price,
+        Payment $payment,
+        StoreSummaryRequest $request,
+        StoreSummaryResponse $response
+    ) : RedirectResponse
     {
         $dir->getService()->setGroup($group)->create($request->validated());
 
-        event(new DirStore($dir));
+        if ($request->has('payment_type')) {
+            $payment->setMorph($dir)->setPriceMorph(
+                $price->find($request->input("payment_{$request->get('payment_type')}"))
+            )->getService()->create($request->only('payment_type'));
 
-        if ($dir->status === 1) {
-            return redirect()->route('web.dir.show', [$dir->slug])
-                ->with('success', trans('idir::dirs.success.store.status_1'));
+            $response->setPayment($payment);
         }
 
-        return redirect()->route('web.dir.create_group')
-            ->with('success', trans('idir::dirs.success.store.status_0'));
+        event(new DirStore($dir));
+
+        return $response->setDir($dir)->response();
     }
 }

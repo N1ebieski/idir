@@ -125,13 +125,7 @@ class StoreFormRequest extends FormRequest
                     ]);
                 })
             ],
-            // Wyłącznie na potrzeby jsvalidation
-            'content_html' => [
-                'bail',
-                'required',
-                'string',
-                'between:' . config('idir.dir.min_content') . ',' . config('idir.dir.max_content')
-            ],
+            'content_html' => 'bail|required|string|no_js_validation',
             'content' => [
                 'bail',
                 'required',

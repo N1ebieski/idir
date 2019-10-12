@@ -10,7 +10,9 @@
     <ul class="list-group list-group-flush">
         @if ($group->privileges->isNotEmpty())
         @foreach ($group->privileges as $privilege)
-        <li class="list-group-item">{{ __($privilege->name) }}</li>
+        <li class="list-group-item">
+            {{ __($privilege->name) }}
+        </li>
         @endforeach
         @endif
         <li class="list-group-item">
@@ -24,6 +26,16 @@
         </li>
         <li class="list-group-item">
             {{ strtolower(trans('idir::groups.backlink')) }}: {{ trans("idir::groups.backlink_{$group->backlink}") }}
+        </li>
+        <li class="list-group-item">
+            {{ strtolower(trans('idir::groups.price')) }}:
+            <span class="font-weight-bold">
+                {{ $group->prices->isNotEmpty() ? trans('idir::groups.price_from', [
+                    'price' => $group->prices->sortBy('price')->first()->price,
+                    'days' => $days = $group->prices->sortBy('price')->first()->days,
+                    'limit' => $days !== null ? strtolower(trans('idir::groups.days')) : strtolower(trans('idir::groups.unlimited'))
+                ]) : trans('idir::groups.payment_0') }}
+            </span>
         </li>
     </ul>
 </div>

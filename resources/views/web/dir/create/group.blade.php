@@ -19,12 +19,12 @@
     @if ($groups->isNotEmpty())
     <div class="row">
         @foreach($groups as $group)
-        <div class="col-lg col-md-6 mb-4">
+        <div class="col-lg-3 col-md-6 mb-4">
             <div class="card h-100">
                 @include('idir::web.dir.partials.group')
                 <div class="card-footer mt-auto">
                     <a href="{{ route('web.dir.create_form', [$group->id]) }}" class="btn btn-link">
-                        {{ trans('idir::dirs.page.create.index') }} &raquo;
+                        {{ trans('idir::dirs.choose_group') }} &raquo;
                     </a>
                 </div>
             </div>

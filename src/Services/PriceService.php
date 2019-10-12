@@ -32,12 +32,6 @@ class PriceService implements Serviceable
     private $collect;
 
     /**
-     * [protected description]
-     * @var Collect
-     */
-    protected $prices;
-
-    /**
      * [__construct description]
      * @param Price       $price   [description]
      * @param Collect   $collect   [description]
@@ -61,24 +55,16 @@ class PriceService implements Serviceable
     }
 
     /**
-     * [setPrices description]
-     * @param  array      $items [description]
-     * @return Collect        [description]
-     */
-    protected function flattenPrices(array $items) : Collect
-    {
-        return $this->prices = $this->collect->make($items)->flatten(1);
-    }
-
-    /**
      * [organize description]
-     * @param array $items [description]
+     * @param array $prices [description]
      */
-    public function organizeGlobal(array $items) : void
+    public function organizeGlobal(array $prices) : void
     {
-        $this->deleteNotExistsGlobal($items);
+        $this->deleteExceptGlobal(
+            $this->collect->make($prices)->pluck('id')->toArray()
+        );
 
-        $this->createOrUpdateGlobal($items);
+        $this->createOrUpdateGlobal($prices);
     }
 
     /**
@@ -88,9 +74,7 @@ class PriceService implements Serviceable
      */
     public function findById(int $id) : ?Price
     {
-        $price = $this->price->find($id);
-
-        if ($price) {
+        if ($price = $this->price->find($id)) {
             return $this->price = $price;
         }
 
@@ -99,13 +83,11 @@ class PriceService implements Serviceable
 
     /**
      * [createOrUpdateGlobal description]
-     * @param array $items [description]
+     * @param array $prices [description]
      */
-    public function createOrUpdateGlobal(array $items) : void
+    public function createOrUpdateGlobal(array $prices) : void
     {
-        $this->flattenPrices($items);
-
-        foreach ($this->prices as $price) {
+        foreach ($prices as $price) {
             if (isset($price['id']) && $this->findById((int)$price['id'])) {
                 $this->update($price);
             } else {
@@ -122,6 +104,7 @@ class PriceService implements Serviceable
     public function create(array $attributes) : Model
     {
         $this->price = $this->price->make($attributes);
+
         $this->price->group()->associate($this->group);
         $this->price->save();
 
@@ -158,17 +141,14 @@ class PriceService implements Serviceable
     }
 
     /**
-     * [deleteNotExistsGlobal description]
-     * @param  array $items [description]
+     * [deleteNotExists description]
+     * @param  array $ids [description]
      * @return int          [description]
      */
-    public function deleteNotExistsGlobal(array $items) : int
+    public function deleteExceptGlobal(array $ids) : int
     {
-        $this->flattenPrices($items);
-
-        return $this->price->whereNotIn('id',
-            $this->prices->pluck('id')->toArray()
-        )->where('group_id', $this->group->id)->delete();
+        return $this->price->whereNotIn('id', $ids)
+            ->where('group_id', $this->group->id)->delete();
     }
 
     /**
