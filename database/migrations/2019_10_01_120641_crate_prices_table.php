@@ -22,6 +22,8 @@ class CratePricesTable extends Migration
             $table->string('type');
             $table->decimal('price', 8, 2);
             $table->integer('days')->unsigned()->nullable();
+            $table->string('code')->nullable();
+            $table->integer('number')->unsigned()->nullable();
             $table->timestamps();
 
             $table->foreign('group_id')

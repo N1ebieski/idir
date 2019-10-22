@@ -4,6 +4,7 @@ namespace N1ebieski\IDir\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use N1ebieski\IDir\Services\PriceService;
+use Illuminate\Database\Eloquent\Collection;
 
 /**
  * [Price description]
@@ -20,7 +21,9 @@ class Price extends Model
     protected $fillable = [
         'type',
         'price',
-        'days'
+        'days',
+        'code',
+        'number'
     ];
 
     // Relations
@@ -33,6 +36,36 @@ class Price extends Model
     {
         return $this->belongsTo('N1ebieski\IDir\Models\Group');
     }
+
+    /**
+     * [codes description]
+     * @return [type] [description]
+     */
+    public function codes()
+    {
+        return $this->hasMany('N1ebieski\IDir\Models\Code');
+    }
+
+    // Accessors
+
+    /**
+     * [getCodesAsStringAttribute description]
+     * @return string|null [description]
+     */
+    public function getCodesAsStringAttribute() : ?string
+    {
+        if ($this->codes instanceof Collection && $this->codes->isNotEmpty()) {
+            foreach ($this->codes as $code) {
+                $codes[] = $code->code . ($code->quantity !== null ? '|' . $code->quantity : null);
+            }
+
+            return (string)implode("\r\n", $codes);
+        }
+
+        return $this->codes['codes'] ?? null;
+    }
+
+    // Getters
 
     /**
      * [getService description]

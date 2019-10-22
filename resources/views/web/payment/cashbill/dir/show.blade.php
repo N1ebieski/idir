@@ -10,7 +10,7 @@
                 <div class="card-body text-center">
                     @include('icore::web.partials.alerts')
                     <form action="{{ $payment['transfer_url'] }}" method="POST" id="transfer_redirect">
-                        <p>{{ trans('idir::payments.redirect', ['provider' => config("idir.payment.{$payment['driver']}.name")]) }}:</p>
+                        <p>{{ trans('idir::payments.redirect', ['provider' => config("idir.payment.cashbill.name")]) }}:</p>
                         <div class="loader mb-3">
                             <div class="spinner-border">
                                 <span class="sr-only">Loading...</span>

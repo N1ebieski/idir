@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection as Collect;
 use N1ebieski\IDir\Models\Price;
 use N1ebieski\IDir\Models\Group;
+use N1ebieski\IDir\Models\Code;
 
 /**
  * [PriceService description]
@@ -18,6 +19,12 @@ class PriceService implements Serviceable
      * @var Price
      */
     private $price;
+
+    /**
+     * [private description]
+     * @var Code
+     */
+    private $code;
 
     /**
      * [private description]
@@ -34,11 +41,13 @@ class PriceService implements Serviceable
     /**
      * [__construct description]
      * @param Price       $price   [description]
+     * @param Code        $code    [description]
      * @param Collect   $collect   [description]
      */
-    public function __construct(Price $price, Collect $collect)
+    public function __construct(Price $price, Code $code, Collect $collect)
     {
         $this->price = $price;
+        $this->code = $code;
         $this->collect = $collect;
     }
 
@@ -108,6 +117,9 @@ class PriceService implements Serviceable
         $this->price->group()->associate($this->group);
         $this->price->save();
 
+        $this->code->getService()->setPrice($this->price)
+            ->organizeGlobal($attributes['codes'] ?? []);
+
         return $this->price;
     }
 
@@ -118,6 +130,9 @@ class PriceService implements Serviceable
      */
     public function update(array $attributes) : bool
     {
+        $this->code->getService()->setPrice($this->price)
+            ->organizeGlobal($attributes['codes'] ?? []);
+
         return $this->price->update($attributes);
     }
 

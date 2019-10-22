@@ -5,6 +5,7 @@ namespace N1ebieski\IDir\Services;
 use N1ebieski\ICore\Services\Serviceable;
 use Illuminate\Database\Eloquent\Model;
 use N1ebieski\IDir\Models\Payment\Payment;
+use Carbon\Carbon;
 
 /**
  * [PaymentService description]
@@ -73,6 +74,19 @@ class PaymentService implements Serviceable
     public function updateStatus(array $attributes) : bool
     {
         return $this->payment->update(['status' => $attributes['status']]);
+    }
+
+    /**
+     * Update Logs attribute the specified Payment in storage.
+     *
+     * @param  array $attributes [description]
+     * @return bool              [description]
+     */
+    public function updateLogs(array $attributes) : bool
+    {
+        return $this->payment->update([
+            'logs' => $this->payment->logs . "\r\n" . Carbon::now() . "\r\n" . $attributes['logs']
+        ]);
     }
 
     /**

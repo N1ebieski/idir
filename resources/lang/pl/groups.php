@@ -39,7 +39,6 @@ return [
     'apply_status_0' => 'oczekujący na moderację',
     'apply_status_1' => 'natychmiast aktywny',
     'days' => 'Dni',
-    'days_placeholder' => 'Ilość dni obowiązywania przywilejów',
     'price' => 'Cena',
     'max_models' => 'Maksymalna ilość wpisów w grupie',
     'max_models_daily' => 'Dzienna maksymalna ilość wpisów w grupie',
@@ -47,12 +46,18 @@ return [
     'payment' => [
         'index' => 'Płatność',
         'transfer' => 'Płatności przelewem',
-        'auto_sms' => 'Płatności przez kody automatyczne'
+        'code_sms' => 'Płatności przez kody SMS',
+        'code_transfer' => 'Płatności przez kody przelewem'
     ],
     'payment_0' => 'darmowy',
     'payment_1' => 'płatny',
     'price_from' => 'płatny już od :price PLN / :days :limit',
     'unlimited' => 'nieograniczony czasowo',
     'alt' => 'Alternatywna grupa',
-    'alt_tooltip' => 'Grupa do której spadnie wpis w przypadku braku przedłużenia okresu czasowego.'
+    'alt_tooltip' => 'Grupa do której spadnie wpis w przypadku braku przedłużenia okresu czasowego.',
+    'code_sms' => 'Kod SMS',
+    'code_transfer' => 'Kod ID',
+    'number' => 'Numer',
+    'codes' => 'Kody manualne',
+    'sync_codes' => 'Synchronizuj kody'
 ];

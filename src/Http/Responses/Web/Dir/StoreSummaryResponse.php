@@ -1,6 +1,6 @@
 <?php
 
-namespace N1ebieski\IDir\Responses\Web\Dir;
+namespace N1ebieski\IDir\Http\Responses\Web\Dir;
 
 use N1ebieski\IDir\Models\Dir;
 use N1ebieski\IDir\Models\Payment\Payment;
@@ -85,7 +85,7 @@ class StoreSummaryResponse
                 return $this->response->redirectToRoute('web.dir.show', [$this->dir->slug])
                     ->with('success', trans('idir::dirs.success.store.status_1'));
             case 2:
-                return $this->response->redirectToRoute('web.payment.show', [$this->payment->id]);
+                return $this->response->redirectToRoute('web.payment.dir.show', [$this->payment->id]);
         }
     }
 }

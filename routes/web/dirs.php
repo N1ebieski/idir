@@ -25,7 +25,7 @@ Route::group(['middleware' => 'auth'], function() {
         ->where('group_dir_available', '[0-9]+')
         ->name('dir.create_summary');
     Route::post('dirs/group/{group_dir_available}/summary', 'DirController@storeSummary')
-        ->middleware(['icore.ban.user', 'icore.ban.ip'])    
+        ->middleware(['icore.ban.user', 'icore.ban.ip'])
         ->where('group_dir_available', '[0-9]+')
         ->name('dir.store_summary');
 });

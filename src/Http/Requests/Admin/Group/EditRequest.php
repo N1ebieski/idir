@@ -4,6 +4,7 @@ namespace N1ebieski\IDir\Http\Requests\Admin\Group;
 
 use Illuminate\Foundation\Http\FormRequest;
 use N1ebieski\IDir\Models\Price;
+use Illuminate\Database\Eloquent\Collection;
 
 class EditRequest extends FormRequest
 {
@@ -12,6 +13,12 @@ class EditRequest extends FormRequest
      * @var Price
      */
     private $price;
+
+    /**
+     * [protected description]
+     * @var array
+     */
+    protected $types = ['transfer', 'code_sms', 'code_transfer'];
 
     /**
      * [__construct description]
@@ -24,16 +31,34 @@ class EditRequest extends FormRequest
 
     public function prepareForValidation()
     {
-        foreach (['transfer', 'auto_sms'] as $type) {
+        $this->group->load(['prices', 'prices.codes']);
+
+        foreach ($this->types as $type) {
             session()->flash("_old_input.prices_collection.{$type}",
                 is_array($this->old("prices.{$type}")) ?
                     $this->price->hydrate(array_merge(
-                        collect($this->old("prices.{$type}"))->filter(function($item) {
+                        collect($this->old("prices.{$type}"))
+                            ->filter(function($item) {
                                 return isset($item['select']) && $item['price'] !== null;
                             })->toArray(), [['type' => $type]]
-                    )) : $this->group->getRepo()->getPricesByType($type)->add($this->price->make(['type' => $type]))
+                    )) : $this->group->prices->where('type', $type)->sortBy('price')
+                        ->add($this->price->make(['type' => $type]))
             );
         }
+    }
+
+    /**
+     * [prepareCodesAttribute description]
+     * @param  Collection $codes [description]
+     * @return string            [description]
+     */
+    public static function prepareCodes(Collection $codes) : string
+    {
+        foreach ($codes->codes as $code) {
+            $_codes[] = $code->code . ($code->quantity !== null ? '|' . $code->quantity : null);
+        }
+
+        return (string)implode("\r\n", $_codes);
     }
 
     /**

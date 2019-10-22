@@ -136,8 +136,9 @@
                         </select>
                         @includeWhen($errors->has('alt_id'), 'icore::admin.partials.errors', ['name' => 'alt_id'])
                     </div>
-                    @include('idir::admin.group.partials.payment', ['prices' => old('prices_collection.transfer'), 'type' => 'transfer'])
-                    @include('idir::admin.group.partials.payment', ['prices' => old('prices_collection.auto_sms'), 'type' => 'auto_sms'])
+                    @include('idir::admin.group.partials.payment.transfer', ['prices' => old('prices_collection.transfer')])
+                    @include('idir::admin.group.partials.payment.code_sms', ['prices' => old('prices_collection.code_sms')])
+                    @include('idir::admin.group.partials.payment.code_transfer', ['prices' => old('prices_collection.code_transfer')])
                 </div>
                 <hr>
                 <button type="submit" class="btn btn-primary">{{ trans('icore::default.save') }}</button>
@@ -147,8 +148,8 @@
 </div>
 @endsection
 
-{{-- @push('script')
+@push('script')
 @component('icore::admin.partials.jsvalidation')
 {!! JsValidator::formRequest('N1ebieski\IDir\Http\Requests\Admin\Group\UpdateRequest', '#editGroup'); !!}
 @endcomponent
-@endpush --}}
+@endpush

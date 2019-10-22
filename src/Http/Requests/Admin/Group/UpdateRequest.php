@@ -2,10 +2,16 @@
 
 namespace N1ebieski\IDir\Http\Requests\Admin\Group;
 
-use Illuminate\Foundation\Http\FormRequest;
+use N1ebieski\IDir\Http\Requests\Admin\Group\Request;
 
-class UpdateRequest extends FormRequest
+class UpdateRequest extends Request
 {
+    /**
+     * [protected description]
+     * @var array
+     */
+    protected $types = ['transfer', 'code_sms', 'code_transfer'];
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -19,12 +25,17 @@ class UpdateRequest extends FormRequest
     public function prepareForValidation()
     {
         if ($this->has('prices')) {
-            foreach (['transfer', 'auto_sms'] as $type) {
+            foreach ($this->types as $type) {
                 if ($this->has("prices.{$type}") && is_array($this->input("prices.{$type}"))) {
                     $this->merge([
                         'prices' => [
                             $type => collect($this->input("prices.{$type}"))->filter(function($item) {
                                 return isset($item['select']) && $item['price'] !== null;
+                            })->map(function($item) {
+                                if (isset($item['codes']['codes']) && is_string($item['codes']['codes'])) {
+                                    $item['codes']['codes'] = $this->prepareCodes($item['codes']['codes']);
+                                }
+                                return $item;
                             })->values()->toArray()
                         ] + $this->input("prices")
                     ]);
@@ -65,7 +76,10 @@ class UpdateRequest extends FormRequest
             'prices.*.*.id' => 'bail|nullable|integer|exists:prices,id|no_js_validation',
             'prices.*.*.price' => 'bail|numeric|between:0,9999.99|no_js_validation',
             'prices.*.*.days' => 'bail|nullable|integer|no_js_validation',
-            'prices.*.*.type' => 'bail|in:transfer,auto_sms|no_js_validation'
+            'prices.*.*.type' => 'bail|in:transfer,code_sms,code_transfer|no_js_validation',
+            'prices.*.*.code' => 'bail|nullable|string|no_js_validation',
+            'prices.*.*.number' => 'bail|nullable|integer|no_js_validation',
+            'prices.*.*.codes.codes' => 'bail|nullable|array|no_js_validation',
         ];
     }
 }

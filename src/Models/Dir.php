@@ -29,8 +29,11 @@ class Dir extends Model
         'title',
         'content',
         'content_html',
+        'status',
         'notes',
-        'url'
+        'url',
+        'privileged_at',
+        'privileged_to'
     ];
 
     /**
@@ -135,6 +138,19 @@ class Dir extends Model
     public function categories()
     {
         return $this->morphToMany('N1ebieski\IDir\Models\Category\Dir\Category', 'model', 'categories_models', 'model_id', 'category_id');
+    }
+
+    // Loads
+
+    /**
+     * [loadCheckoutPayments description]
+     * @return self [description]
+     */
+    public function loadCheckoutPayments() : self
+    {
+        return $this->load(['payments' => function($query) {
+            $query->with('price_morph')->where('status', 0);
+        }]);
     }
 
     // Mutators

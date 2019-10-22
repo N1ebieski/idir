@@ -10867,6 +10867,11 @@ a.text-dark:focus {
   line-height: calc(67px - 17px);
 }
 
+.navbar-search {
+  height: calc(67px - 17px);
+  line-height: calc(67px - 17px);
+}
+
 .navbar-toggler {
   border: 0;
   margin-top: calc(67px - 60px);
@@ -10930,7 +10935,7 @@ span.twitter-typeahead .navbar-nav .nav-item.tt-suggestion.tt-cursor .nav-link {
 }
 
 .search-toggler {
-  height: 37px;
+  line-height: initial;
 }
 
 .search-toggler i {

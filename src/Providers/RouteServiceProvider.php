@@ -30,10 +30,8 @@ class RouteServiceProvider extends ServiceProvider
         });
 
         $this->app['router']->bind('payment_dir_pending', function($value) {
-            return \N1ebieski\IDir\Models\Payment\Dir\Payment::where([
-                    ['status', 2],
-                    ['id', $value]
-                ])->with(['morph', 'price_morph'])->firstOrFail();
+            return $this->app->make(\N1ebieski\IDir\Models\Payment\Dir\Payment::class)
+                ->getRepo()->firstPendingById($value) ?? abort(404);
         });
     }
 
@@ -60,7 +58,7 @@ class RouteServiceProvider extends ServiceProvider
      */
     protected function mapWebRoutes()
     {
-        $this->app['router']->middleware(['icore.web', 'icore.force.verified'])
+        $this->app['router']->middleware(['idir.web', 'icore.force.verified'])
              ->as('web.')
              ->namespace($this->namespace.'\Web')
              ->group(function ($router) {
@@ -105,7 +103,7 @@ class RouteServiceProvider extends ServiceProvider
     protected function mapAdminRoutes()
     {
         $this->app['router']->middleware([
-                'icore.web',
+                'idir.web',
                 'auth',
                 'verified',
                 'permission:access admin'

@@ -34,7 +34,7 @@ class CreateRequest extends FormRequest
 
     public function prepareForValidation()
     {
-        foreach (['transfer', 'auto_sms'] as $type) {
+        foreach (['transfer', 'code_sms', 'code_transfer'] as $type) {
             session()->flash("_old_input.prices_collection.{$type}",
                 $this->price->hydrate(array_merge(
                     is_array($this->old("prices.{$type}")) ?

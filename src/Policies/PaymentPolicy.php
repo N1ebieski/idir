@@ -31,4 +31,15 @@ class PaymentPolicy
     {
         return $current_user->id === $payment->model->user_id;
     }
+
+    /**
+     * [complete description]
+     * @param  User    $current_user [description]
+     * @param  Payment $payment      [description]
+     * @return bool                  [description]
+     */
+    public function complete(User $current_user, Payment $payment) : bool
+    {
+        return $current_user->id === $payment->model->user_id;
+    }
 }

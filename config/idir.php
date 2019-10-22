@@ -15,7 +15,11 @@ return [
             'driver' => 'cashbill'
         ],
 
-        'auto_sms' => [
+        'code_sms' => [
+            'driver' => 'cashbill'
+        ],
+
+        'code_transfer' => [
             'driver' => 'cashbill'
         ],
 

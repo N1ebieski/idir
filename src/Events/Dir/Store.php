@@ -1,6 +1,6 @@
 <?php
 
-namespace N1ebieski\IDir\Events;
+namespace N1ebieski\IDir\Events\Dir;
 
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Foundation\Events\Dispatchable;
@@ -10,7 +10,7 @@ use N1ebieski\IDir\Models\Dir;
 /**
  * [DirStore description]
  */
-class DirStore
+class Store
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 

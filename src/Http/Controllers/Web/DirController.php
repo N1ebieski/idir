@@ -12,9 +12,10 @@ use N1ebieski\IDir\Models\Group;
 use N1ebieski\IDir\Models\Dir;
 use N1ebieski\IDir\Models\Price;
 use N1ebieski\IDir\Models\Category\Dir\Category;
-use N1ebieski\IDir\Events\DirStore;
+use N1ebieski\IDir\Events\Dir\Store as DirStore;
+use N1ebieski\IDir\Events\Payment\Dir\Store as PaymentStore;
 use N1ebieski\IDir\Models\Payment\Dir\Payment;
-use N1ebieski\IDir\Responses\Web\Dir\StoreSummaryResponse;
+use N1ebieski\IDir\Http\Responses\Web\Dir\StoreSummaryResponse;
 
 /**
  * [DirController description]
@@ -82,8 +83,11 @@ class DirController
         return view('idir::web.dir.create.summary', [
             'group' => $group,
             'categories' => $categories,
-            'transfer_driver' => config('idir.payment.transfer.driver'),
-            'auto_sms_driver' => config('idir.payment.auto_sms.driver')
+            'driver' => [
+                'transfer' => config('idir.payment.transfer.driver'),
+                'code_sms' => config('idir.payment.code_sms.driver'),
+                'code_transfer' => config('idir.payment.code_transfer.driver'),
+            ]
         ]);
     }
 
@@ -113,6 +117,7 @@ class DirController
                 $price->find($request->input("payment_{$request->get('payment_type')}"))
             )->getService()->create($request->only('payment_type'));
 
+            event(new PaymentStore($payment));
             $response->setPayment($payment);
         }
 

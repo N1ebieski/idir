@@ -2,8 +2,14 @@
 
 namespace N1ebieski\IDir\Http\Controllers\Web\Payment\Cashbill\Dir;
 
+use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
-use N1ebieski\IDir\Models\Payment\Payment;
+use N1ebieski\IDir\Http\Requests\Web\Payment\Cashbill\CompleteRequest;
+use N1ebieski\IDir\Http\Requests\Web\Payment\Cashbill\VerifyRequest;
+use N1ebieski\IDir\Libs\Cashbill\Transfer as Cashbill;
+use N1ebieski\IDir\Models\Payment\Dir\Payment;
+use N1ebieski\IDir\Events\Payment\Dir\VerifyAttempt;
+use N1ebieski\IDir\Events\Payment\Dir\VerifySuccessful;
 
 /**
  * [PaymentController description]
@@ -12,22 +18,70 @@ class PaymentController
 {
     /**
      * [show description]
-     * @param  Payment $payment [description]
-     * @return View           [description]
+     * @param  Payment  $payment  [description]
+     * @param  Cashbill $cashbill [description]
+     * @return View               [description]
      */
-    public function show(Payment $payment) : View
+    public function show(Payment $payment, Cashbill $cashbill) : View
     {
-        $driver = 'cashbill';
-        $service = config("services.cashbill.service");
-        $transfer_url = config("services.cashbill.transfer_url");
-        $key = config("services.cashbill.key");
-        $amount = $payment->price->price;
-        $desc = $payment->model->title . ' | ' . $payment->price->group->name . ' | ' . $payment->price->days;
-        $userdata = $payment->id;
-        $sign = md5($service.'|'.$amount.'||'.$desc.'||'.$userdata.'||||||||||||'.$key);
-
         return view('idir::web.payment.cashbill.dir.show', [
-            'payment' => compact('driver', 'service', 'transfer_url', 'key', 'amount', 'desc', 'userdata', 'sign')
+            'payment' => $cashbill->setup([
+                    'amount' => $payment->price->price,
+                    'desc' => trans('idir::payments.desc.dir', [
+                        'title' => $payment->model->title,
+                        'group' => $payment->price->group->name,
+                        'days' => $days = $payment->price->days,
+                        'limit' => $days !== null ? strtolower(trans('idir::groups.days'))
+                            : strtolower(trans('idir::groups.dunlimited'))
+                    ]),
+                    'userdata' => $payment->id
+                ])->all()
         ]);
+    }
+
+    /**
+     * [complete description]
+     * @param  CompleteRequest  $request  [description]
+     * @param  Cashbill         $cashbill [description]
+     * @return RedirectResponse           [description]
+     */
+    public function complete(CompleteRequest $request, Cashbill $cashbill) : RedirectResponse
+    {
+        if (!$cashbill->isSign($request->validated())) {
+            abort(403, 'Invalid signature of payment.');
+        }
+
+        return redirect()->route('web.dir.create_group')->with(
+                $request->input('status') === 'ok' ? 'success' : 'danger',
+                $request->input('status') === 'ok' ? trans('idir::payments.success.complete')
+                    : trans('idir::payments.error.complete')
+            );
+    }
+
+    /**
+     * [verify description]
+     * @param  Payment       $payment  [description]
+     * @param  VerifyRequest $request  [description]
+     * @param  Cashbill      $cashbill [description]
+     * @return string                  [description]
+     */
+    public function verify(Payment $payment, VerifyRequest $request, Cashbill $cashbill) : string
+    {
+        // I can't' use the route binding, because cashbill returns id payment as $_GET variable
+        $payment = $payment->getRepo()->firstPendingById($request->input('userdata')) ?? abort(404);
+
+        event(new VerifyAttempt($payment));
+
+        try {
+            $cashbill->setup(['amount' => $payment->price->price])->verify($request->validated());
+        } catch (\Exception $e) {
+            throw $e->setPayment($payment);
+        }
+
+        $payment->getService()->updateStatus(['status' => 0]);
+
+        event(new VerifySuccessful($payment));
+
+        return 'OK';
     }
 }

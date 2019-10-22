@@ -14,6 +14,7 @@
 
 @section('content')
 <div class="container">
+    @include('icore::web.partials.alerts')
     <h3 class="h5 border-bottom pb-2">{{ trans('idir::dirs.page.create.form') }}</h3>
     <div class="row mb-4">
         <div class="col-md-8">

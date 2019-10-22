@@ -1,4 +1,4 @@
-jQuery(document).on('change', 'div[id^=prices] div.price:last-child input[type="checkbox"]', function() {
+jQuery(document).on('change', 'div[id^=prices] div.price:last-child input[name*="select"]', function() {
     if ($(this).prop('checked') === true) {
         let $price = $(this).closest('div.price').clone();
         $price.id = parseInt($(this).attr('id').match(/\d+/), 10) + 1;
@@ -15,8 +15,20 @@ jQuery(document).on('change', 'div[id^=prices] div.price:last-child input[type="
     }
 });
 
-jQuery(document).on('change', 'div[id^=prices] div.price:not(:first-child) input[type="checkbox"]', function() {
+jQuery(document).on('change', 'div[id^=prices] div.price:not(:first-child) input[name*="select"]', function() {
     if ($(this).prop('checked') === false) {
         $(this).closest('div.price').remove();
+    }
+});
+
+jQuery(document).on('change', 'div[id^=prices] input[name*="sync"]', function() {
+    let $price = {
+        textarea: $(this).closest('div.price').find('textarea[name*="codes"]')
+    };
+
+    if ($(this).prop('checked') === true) {
+        $price.textarea.prop('readonly', false);
+    } else {
+        $price.textarea.prop('readonly', true);
     }
 });

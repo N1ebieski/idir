@@ -24,7 +24,7 @@
 <nav class="navbar navbar-expand-md navbar-light bg-light fixed-top border-bottom">
     <div class="container">
         @if (!app('Helpers\Active')->isUrl(route('web.home.index')))
-        <div class="d-flex flex-grow-1">
+        <div class="d-flex flex-grow-1 navbar-search">
             @yield('logo')
             <form id="searchForm" method="GET" action="{{ route('web.search.index') }}" class="my-auto w-100 hide search">
                 <div class="input-group">

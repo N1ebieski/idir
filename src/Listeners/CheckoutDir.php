@@ -28,7 +28,7 @@ class CheckoutDir
         if ($event->dir->status === 1) {
             $event->dir->loadCheckoutPayments();
 
-            $event->dir->payments->each(function($payment) {
+            $event->dir->payments->each(function($payment) use ($event) {
                 if ($payment->price->group_id === $event->dir->group_id) {
                     $event->dir->getService()->updatePrivileged(['days' => $payment->price->days]);
                     $payment->getService()->updateStatus(['status' => 1]);

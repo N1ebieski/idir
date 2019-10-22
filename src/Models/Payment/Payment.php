@@ -4,6 +4,8 @@ namespace N1ebieski\IDir\Models\Payment;
 
 use Illuminate\Database\Eloquent\Model;
 use N1ebieski\IDir\Services\PaymentService;
+use N1ebieski\IDir\Repositories\PaymentRepo;
+use Illuminate\Database\Eloquent\Builder;
 
 /**
  * [Payment description]
@@ -19,6 +21,7 @@ class Payment extends Model
      */
     protected $fillable = [
         'status',
+        'logs'
     ];
 
     // Relations
@@ -50,17 +53,16 @@ class Payment extends Model
         return $this->morphTo('price');
     }
 
-    // Loads
+    // Scopes
 
     /**
-     * [loadCheckoutPayments description]
-     * @return self [description]
+     * [scopePublic description]
+     * @param  Builder $query [description]
+     * @return Builder        [description]
      */
-    public function loadCheckoutPayments() : self
+    public function scopePending(Builder $query) : Builder
     {
-        return $this->load(['payments' => function($query) {
-            $query->with('price_morph')->where('status', 0);
-        }]);
+        return $query->where('status', 2);
     }
 
     // Getters
@@ -72,5 +74,14 @@ class Payment extends Model
     public function getService() : PaymentService
     {
         return app()->make(PaymentService::class, ['payment' => $this]);
+    }
+
+    /**
+     * [getRepo description]
+     * @return PaymentRepo [description]
+     */
+    public function getRepo() : PaymentRepo
+    {
+        return app()->make(PaymentRepo::class, ['payment' => $this]);
     }
 }

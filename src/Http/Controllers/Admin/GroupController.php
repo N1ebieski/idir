@@ -90,7 +90,7 @@ class GroupController
     public function edit(Group $group, Privilege $privilege, EditRequest $request) : View
     {
         return view('idir::admin.group.edit', [
-            'group' => $group->load('prices'),
+            'group' => $group,
             'groups' => $group->orderBy('id', 'asc')->get(),
             'privileges' => $privilege->getRepo()->getWithGroup($group->id)
         ]);

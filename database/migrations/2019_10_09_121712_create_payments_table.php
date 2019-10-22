@@ -23,6 +23,7 @@ class CreatePaymentsTable extends Migration
             $table->unsignedInteger('price_id');
             $table->string('price_type');
             $table->integer('status')->unsigned();
+            $table->longText('logs')->nullable();
             $table->timestamps();
 
             $table->index(['model_type', 'model_id']);

@@ -82,7 +82,7 @@ class GroupRepo
         return $this->group->prices()
             ->where('type', $type)
             ->orderBy('price', 'asc')
-            ->get(['id', 'price', 'days']);
+            ->get();
     }
 
     /**

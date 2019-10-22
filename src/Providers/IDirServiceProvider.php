@@ -21,6 +21,20 @@ class IDirServiceProvider extends ServiceProvider
         $this->app->register(RouteServiceProvider::class);
         $this->app->register(AuthServiceProvider::class);
         $this->app->register(EventServiceProvider::class);
+
+        $this->app['router']->middlewareGroup('idir.web', [
+            'throttle:60,1',
+            \N1ebieski\ICore\Http\Middleware\EncryptCookies::class,
+            \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
+            \Illuminate\Session\Middleware\StartSession::class,
+            \Illuminate\Session\Middleware\AuthenticateSession::class,
+            \Illuminate\View\Middleware\ShareErrorsFromSession::class,
+            \N1ebieski\IDir\Http\Middleware\VerifyCsrfToken::class,
+            \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            \N1ebieski\ICore\Http\Middleware\XSSProtection::class,
+            \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
+            \Nckg\Minify\Middleware\MinifyResponse::class
+        ]);
     }
 
     /**
