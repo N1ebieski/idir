@@ -46,7 +46,7 @@ class DirRepo
         return $this->dir->with('backlink')
             ->whereIn('status', [1, 3])
             ->whereHas('group', function($query) {
-                $query->where('backlink', 2);
+                $query->obligatoryBacklink();
             })
             ->whereHas('backlink', function($query) {
                 $query->where(function($query) {
@@ -63,5 +63,23 @@ class DirRepo
                 ->orWhere('attempted_at', null);
             })
             ->get();
+    }
+
+    /**
+     * [deactivateByBacklink description]
+     * @return bool [description]
+     */
+    public function deactivateByBacklink() : bool
+    {
+        return $this->dir->update(['status' => 3]);
+    }
+
+    /**
+     * [activate description]
+     * @return bool [description]
+     */
+    public function activate() : bool
+    {
+        return $this->dir->update(['status' => 1]);
     }
 }
