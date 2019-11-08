@@ -3,6 +3,7 @@
 namespace N1ebieski\IDir\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use N1ebieski\IDir\Repositories\DirBacklinkRepo;
 use Carbon\Carbon;
 
 /**
@@ -55,4 +56,16 @@ class DirBacklink extends Model
     {
         return $this->belongsTo('N1ebieski\ICore\Models\Link');
     }
+
+    // Getters
+
+    /**
+     * [getRepo description]
+     * @return DirBacklinkRepo [description]
+     */
+    public function getRepo() : DirBacklinkRepo
+    {
+        return app()->make(DirBacklinkRepo::class, ['dirBacklink' => $this]);
+    }
+
 }

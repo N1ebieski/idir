@@ -18,7 +18,7 @@ class BacklinkNotFound extends Mailable
      * [public description]
      * @var DirBacklink
      */
-    public $dirBacklink;
+    protected $dirBacklink;
 
     /**
      * Create a new event instance.
@@ -38,14 +38,12 @@ class BacklinkNotFound extends Mailable
      */
     public function build() : self
     {
+        $this->dirBacklink->load(['link', 'dir', 'dir.user']);
+
         return $this->subject(trans('idir::backlinks.not_found'))
             ->from(config('mail.from.address'))
             ->to($this->dirBacklink->dir->user->email)
             ->markdown('idir::mails.backlink.not_found')
-            ->with([
-                'actionUrl' => route('web.dir.edit_group', [$this->dirBacklink->dir->id]),
-                'actionText' => trans('idir::backlinks.edit_dir'),
-                'backlinkAsLink' => $this->dirBacklink->link->linkAsHtml
-            ]);
+            ->with(['dirBacklink' => $this->dirBacklink]);
     }
 }

@@ -73,51 +73,52 @@ class CheckBacklink implements ShouldQueue
     }
 
     /**
-     * Execute the job.
-     *
-     * @return void
+     * [validateBacklink description]
+     * @return bool [description]
      */
-    public function handle()
+    protected function validateBacklink() : bool
     {
-        if ($this->isAttempt()) {
-            $this->dirBacklink->update(['attempted_at' => Carbon::now()]);
+        $validator = Validator::make(['backlink_url' => $this->dirBacklink->url], [
+            'backlink_url' => app()->make('N1ebieski\\IDir\\Rules\\Backlink', [
+                'link' => $this->dirBacklink->link->url
+            ])
+        ]);
 
-            $validator = Validator::make(['backlink_url' => $this->dirBacklink->url], [
-                'backlink_url' => app()->make('N1ebieski\\IDir\\Rules\\Backlink', [
-                    'link' => $this->dirBacklink->link->url
-                ])
-            ]);
+        return $validator->fails();
+    }
 
-            if ($validator->fails()) {
-                $this->incrementAttempts();
-
-                $this->dirBacklink->dir->update(['status' => 3]);
-
-                if ($this->dirBacklink->attempts === $this->max_attempts) {
-                    Mail::send(app()->makeWith(BacklinkNotFound::class, ['dirBacklink' => $this->dirBacklink]));
-                }
-            } else {
-                $this->resetAttempts();
-
-                $this->dirBacklink->dir->update(['status' => 1]);
-            }
+    /**
+     * [sendMail description]
+     */
+    protected function sendMailToUser() : void
+    {
+        if ($this->dirBacklink->attempts === $this->max_attempts) {
+            Mail::send(app()->makeWith(BacklinkNotFound::class, ['dirBacklink' => $this->dirBacklink]));
         }
     }
 
     /**
-     * [resetAttempts description]
+     * Execute the job.
+     *
+     * @return void
      */
-    protected function resetAttempts() : void
+    public function handle() : void
     {
-        $this->dirBacklink->update(['attempts' => 0]);
-    }
+        if ($this->isAttempt()) {
+            $this->dirBacklink->getRepo()->attemptedNow();
 
-    /**
-     * [incrementAttempt description]
-     */
-    protected function incrementAttempts() : void
-    {
-        $this->dirBacklink->increment('attempts');
+            if ($this->validateBacklink()) {
+                $this->dirBacklink->getRepo()->incrementAttempts();
+
+                $this->dirBacklink->dir->getRepo()->deactivateByBacklink();
+
+                $this->sendMailToUser();
+            } else {
+                $this->dirBacklink->getRepo()->resetAttempts();
+
+                $this->dirBacklink->dir->getRepo()->activate();
+            }
+        }
     }
 
     /**

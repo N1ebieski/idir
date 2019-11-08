@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 
+use N1ebieski\IDir\Models\DirBacklink;
+
 Route::get('dirs/{dir_cache}', 'DirController@show')
     ->name('dir.show')
     ->where('dir_cache', '[0-9A-Za-z,_-]+');
@@ -33,4 +35,10 @@ Route::group(['middleware' => 'auth'], function() {
         ->middleware(['icore.ban.user', 'icore.ban.ip'])
         ->name('dir.edit_group')
         ->where('dir', '[0-9]+');
+});
+
+Route::get('test', function() {
+    $dupa = app()->make(\N1ebieski\IDir\Jobs\CheckBacklink::class, ['dirBacklink' => DirBacklink::first()]);
+
+    $dupa->handle();
 });

@@ -137,7 +137,17 @@ class Group extends Model
      */
     public function scopePublic(Builder $query) : Builder
     {
-        return $query->whereVisible(1);
+        return $query->where('visible', 1);
+    }
+
+    /**
+     * [scopeObligatoryBacklink description]
+     * @param  Builder $query [description]
+     * @return Builder        [description]
+     */
+    public function scopeObligatoryBacklink(Builder $query) : Builder
+    {
+        return $query->where('backlink', 2);
     }
 
     /**
