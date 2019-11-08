@@ -14,6 +14,7 @@ use Illuminate\View\View;
 use Illuminate\Http\JsonResponse;
 use N1ebieski\ICore\Http\Controllers\Admin\Category\Polymorphic;
 use N1ebieski\ICore\Http\Controllers\Admin\Category\CategoryController as CategoryBaseController;
+use N1ebieski\ICore\Http\Responses\Admin\Category\SearchResponse;
 
 /**
  * [CategoryController description]
@@ -100,10 +101,11 @@ class CategoryController extends CategoryBaseController implements Polymorphic
      *
      * @param  Category      $category [description]
      * @param  SearchRequest $request  [description]
+     * @param  SearchResponse $response [description]
      * @return JsonResponse                [description]
      */
-    public function search(Category $category, SearchRequest $request) : JsonResponse
+    public function search(Category $category, SearchRequest $request, SearchResponse $response) : JsonResponse
     {
-        return parent::search($this->category, $request);
+        return parent::search($this->category, $request, $response);
     }
 }

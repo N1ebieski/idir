@@ -16,13 +16,13 @@ class GroupRepo
      * [private description]
      * @var Group
      */
-    private $group;
+    protected $group;
 
     /**
      * Config
      * @var int
      */
-    private $paginate;
+    protected $paginate;
 
     /**
      * [__construct description]

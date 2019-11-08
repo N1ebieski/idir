@@ -20,7 +20,7 @@ class Transfer
      * [protected description]
      * @var object
      */
-    private $response;
+    protected $response;
 
     /**
      * [__construct description]

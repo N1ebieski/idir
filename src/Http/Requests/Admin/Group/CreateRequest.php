@@ -11,7 +11,7 @@ class CreateRequest extends FormRequest
      * [private description]
      * @var Price
      */
-    private $price;
+    protected $price;
 
     /**
      * [__construct description]

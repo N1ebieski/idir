@@ -77,7 +77,7 @@
                         data-route="{{ route('web.category.dir.search') }}" data-max="{{ $group->max_cats }}"
                         class="position-relative">
                             <div class="input-group">
-                                <input type="text" class="form-control border border-right-0 @isValid('category')"
+                                <input type="text" class="form-control @isValid('category')"
                                 placeholder="{{ trans('icore::categories.search_categories') }}">
                                 <span class="input-group-append">
                                     <button class="btn btn-outline-secondary border border-left-0"

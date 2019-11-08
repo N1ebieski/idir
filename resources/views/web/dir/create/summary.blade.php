@@ -66,8 +66,31 @@
                 </div>
                 @endif
             </div>
-            <form method="post" action="{{ route('web.dir.store_summary', ['group' => $group->id]) }}">
+            <form method="post" action="{{ route('web.dir.store_summary', [$group->id]) }}" id="createSummary">
                 @csrf
+                @if ($group->backlink > 0 && $backlinks->isNotEmpty())
+                <div class="form-group">
+                    <label for="backlink">{{ trans('idir::dirs.choose_backlink') }}:</label>
+                    <select class="form-control @isValid('backlink')" id="backlink" name="backlink">
+                        @foreach ($backlinks as $backlink)
+                        <option value="{{ $backlink->id }}" {{ old('backlink') == $backlink->id ? 'selected' : null }}
+                        data="{{ json_encode($backlink->only(['name', 'url', 'img_url_from_storage'])) }}">
+                            {{ $backlink->name }} [{{ $backlink->url }}]
+                        </option>
+                        @endforeach
+                    </select>
+                    @includeWhen($errors->has('backlink'), 'icore::admin.partials.errors', ['name' => 'backlink'])
+                </div>
+                <div class="form-group">
+                    <textarea class="form-control" id="backlink_code" rows="5" readonly>{{ old('backlink_model', $backlinks->first())->link_as_html }}</textarea>
+                </div>
+                <div class="form-group">
+                    <label for="backlink_url">{{ trans('idir::dirs.backlink_url') }}:</label>
+                    <input type="text" name="backlink_url" id="backlink_url"
+                    value="{{ old('backlink_url') }}" class="form-control @isValid('backlink_url')">
+                    @includeWhen($errors->has('backlink_url'), 'icore::admin.partials.errors', ['name' => 'backlink_url'])
+                </div>
+                @endif
                 @if ($group->prices->isNotEmpty())
                 <div class="form-group">
                     <label for="payment">{{ trans('idir::dirs.choose_payment_type') }}:</label>
@@ -93,7 +116,7 @@
                             id="nav-transfer" role="tabpanel" aria-labelledby="nav-transfer-tab">
                                 <div class="form-group">
                                     <label for="payment_transfer" class="sr-only"> {{ trans('idir::dirs.payment_transfer') }}</label>
-                                    <select class="form-control @isValid('visible')" id="payment_transfer" name="payment_transfer">
+                                    <select class="form-control @isValid('payment_transfer')" id="payment_transfer" name="payment_transfer">
                                         @foreach ($transfers = $group->prices->where('type', 'transfer')->sortBy('price') as $transfer)
                                             <option value="{{ $transfer->id }}" {{ old('payment_transfer') == $transfer->id ? 'selected' : null }}>
                                                 {{ trans('idir::dirs.price', [
@@ -122,7 +145,7 @@
                             id="nav-code_transfer" role="tabpanel" aria-labelledby="nav-code_transfer-tab">
                                 <div class="form-group">
                                     <label for="payment_code_transfer" class="sr-only"> {{ trans('idir::dirs.payment_code_transfer') }}</label>
-                                    <select class="form-control @isValid('visible')" id="payment_code_transfer" name="payment_code_transfer">
+                                    <select class="form-control @isValid('payment_code_transfer')" id="payment_code_transfer" name="payment_code_transfer">
                                         @foreach ($codes = $group->prices->where('type', 'code_transfer')->sortBy('price') as $code)
                                             <option value="{{ $code->id }}" {{ old('payment_code_transfer') == $code->id ? 'selected' : null }}
                                             data="{{ json_encode($code->only(['code', 'price'])) }}">
@@ -144,8 +167,8 @@
                                 <p>
                                     {!! trans('idir::dirs.payment.code_transfer_info', [
                                         'code_transfer_url' => config("services.{$driver['code_transfer']}.code_transfer.url")
-                                        . (optional(old('payment_code_transfer_model'))->code ?? $codes->first()->code),
-                                        'price' => optional(old('payment_code_transfer_model'))->price ?? $codes->first()->price,
+                                        . old('payment_code_transfer_model', $codes->first())->code,
+                                        'price' => old('payment_code_transfer_model', $codes->first())->price,
                                         'provider_url' => config("idir.payment.{$driver['code_transfer']}.url"),
                                         'provider_name' => config("idir.payment.{$driver['code_transfer']}.name"),
                                         'provider_docs_url' => config("idir.payment.{$driver['code_transfer']}.docs_url"),
@@ -160,7 +183,7 @@
                             id="nav-code_sms" role="tabpanel" aria-labelledby="nav-code_sms-tab">
                                 <div class="form-group">
                                     <label for="payment_code_sms" class="sr-only"> {{ trans('idir::dirs.payment_code_sms') }}</label>
-                                    <select class="form-control @isValid('visible')" id="payment_code_sms" name="payment_code_sms">
+                                    <select class="form-control @isValid('payment_code_sms')" id="payment_code_sms" name="payment_code_sms">
                                         @foreach ($codes = $group->prices->where('type', 'code_sms')->sortBy('price') as $code)
                                             <option value="{{ $code->id }}" {{ old('payment_code_sms') == $code->id ? 'selected' : null }}
                                             data="{{ json_encode($code->only(['code', 'price', 'number'])) }}">
@@ -181,9 +204,9 @@
                                 </div>
                                 <p>
                                     {!! trans('idir::dirs.payment.code_sms_info', [
-                                        'number' => optional(old('payment_code_sms_model'))->number ?? $codes->first()->number,
-                                        'code_sms' => optional(old('payment_code_sms_model'))->code ?? $codes->first()->code,
-                                        'price' => optional(old('payment_code_sms_model'))->price ?? $codes->first()->price,
+                                        'number' => old('payment_code_sms_model', $codes->first())->number,
+                                        'code_sms' => old('payment_code_sms_model', $codes->first())->code,
+                                        'price' => old('payment_code_sms_model', $codes->first())->price,
                                         'provider_url' => config("idir.payment.{$driver['code_sms']}.url"),
                                         'provider_name' => config("idir.payment.{$driver['code_sms']}.name"),
                                         'provider_docs_url' => config("idir.payment.{$driver['code_sms']}.docs_url"),
@@ -224,6 +247,6 @@
 
 {{-- @push('script')
 @component('icore::admin.partials.jsvalidation')
-{!! JsValidator::formRequest('N1ebieski\IDir\Http\Requests\Web\Dir\StoreFormRequest', '#createForm'); !!}
+{!! JsValidator::formRequest('N1ebieski\IDir\Http\Requests\Web\Dir\StoreSummaryRequest', '#createSummary'); !!}
 @endcomponent
 @endpush --}}

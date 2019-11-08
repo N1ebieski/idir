@@ -45,5 +45,7 @@ return [
     ],
     'price' => ':price PLN / :days :limit',
     'rules' => 'Regulamin',
-    'code' => 'Wpisz kod'
+    'code' => 'Wpisz kod',
+    'choose_backlink' => 'Wybierz link zwrotny',
+    'backlink_url' => 'Adres z linkiem'
 ];

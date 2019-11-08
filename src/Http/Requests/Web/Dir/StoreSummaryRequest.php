@@ -5,24 +5,13 @@ namespace N1ebieski\IDir\Http\Requests\Web\Dir;
 use N1ebieski\IDir\Http\Requests\Web\Dir\StoreFormRequest;
 use N1ebieski\ICore\Http\ViewComponents\CaptchaComponent as Captcha;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Str;
+use N1ebieski\ICore\Models\Link;
+// use Illuminate\Contracts\Validation\Validator;
+// use Illuminate\Http\Exceptions\HttpResponseException;
 
 class StoreSummaryRequest extends StoreFormRequest
 {
-    /**
-     * [protected description]
-     * @var Captcha
-     */
-    protected $captcha;
-
-    /**
-     * [__construct description]
-     * @param Captcha $captcha [description]
-     */
-    public function __construct(Captcha $captcha)
-    {
-        $this->captcha = $captcha;
-    }
-
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -51,14 +40,6 @@ class StoreSummaryRequest extends StoreFormRequest
             $this->merge($this->session()->get('dir'));
         }
 
-        // if ($this->has('payment_type') && $this->input('payment_type') !== 'code_sms') {
-        //     $this->merge(['code_sms' => null]);
-        // }
-        //
-        // if ($this->has('payment_type') && $this->input('payment_type') !== 'code_transfer') {
-        //     $this->merge(['code_transfer' => null]);
-        // }
-
         parent::prepareForValidation();
     }
 
@@ -70,7 +51,43 @@ class StoreSummaryRequest extends StoreFormRequest
     public function rules()
     {
         return array_merge(
+
             parent::rules(),
+
+            [
+                'backlink' => [
+                    'bail',
+                    'integer',
+                    $this->group_dir_available->backlink === 2 ? 'required' : 'nullable',
+                    Rule::exists('links', 'id')->where(function($query) {
+                        $query->where('links.type', 'backlink')
+                            ->whereNotExists(function ($query) {
+                                $query->from('categories_models')
+                                    ->whereRaw('links.id = categories_models.model_id')
+                                    ->where('categories_models.model_type', 'N1ebieski\\ICore\\Models\\Link');
+                            })->orWhereExists(function($query) {
+                                $query->from('categories_models')
+                                    ->whereRaw('links.id = categories_models.model_id')
+                                    ->where('categories_models.model_type', 'N1ebieski\\ICore\\Models\\Link')
+                                    ->whereIn('categories_models.category_id', $this->input('categories'));
+                            });
+                    }),
+                    'no_js_validation'
+                ],
+                'backlink_url' => [
+                    'bail',
+                    'string',
+                    $this->group_dir_available->backlink === 2 ? 'required' : 'nullable',
+                    $this->input('url') !== null ?
+                        'regex:/^' . Str::escaped($this->input('url')) . '/'
+                        : 'regex:/^(https|http):\/\/([\da-z\.-]+)(\.[a-z]{2,6})/',
+                    $this->group_dir_available->backlink === 2 ?
+                        app()->make('N1ebieski\\IDir\\Rules\\Backlink', [
+                            'link' => Link::find($this->input('backlink'))->url
+                        ]) : null,
+                    'no_js_validation'
+                ]
+            ],
 
             $this->group_dir_available->prices->isNotEmpty() ?
             [
@@ -85,8 +102,7 @@ class StoreSummaryRequest extends StoreFormRequest
                             ['type', 'transfer'],
                             ['group_id', $this->group_dir_available->id]
                         ]);
-                    }),
-                    'no_js_validation'
+                    })
                 ] : ['no_js_validation'],
                 'payment_code_sms' => $this->input('payment_type') === 'code_sms' ?
                  [
@@ -98,8 +114,7 @@ class StoreSummaryRequest extends StoreFormRequest
                             ['type', 'code_sms'],
                             ['group_id', $this->group_dir_available->id]
                         ]);
-                    }),
-                    'no_js_validation'
+                    })
                 ] : ['no_js_validation'],
                 'payment_code_transfer' => $this->input('payment_type') === 'code_transfer' ?
                 [
@@ -111,47 +126,38 @@ class StoreSummaryRequest extends StoreFormRequest
                             ['type', 'code_transfer'],
                             ['group_id', $this->group_dir_available->id]
                         ]);
-                    }),
-                    'no_js_validation'
+                    })
                 ] : ['no_js_validation']
-            ] : $this->captcha->toRules()
+            ] :  app()->make(Captcha::class)->toRules()
         );
     }
 
     /**
-     * Configure the validator instance.
+     * Get the error messages for the defined validation rules.
      *
-     * @param  \Illuminate\Validation\Validator  $validator
-     * @return void
+     * @return array
      */
-    public function withValidator($validator)
+    public function messages()
     {
-        if (!$validator->fails()) {
-            $validator->after(function($validator) {
-                $this->validate([
-                    'code_sms' => $this->input('payment_type') === 'code_sms' ?
-                    [
-                        'bail',
-                        'nullable',
-                        'required_if:payment_type,code_sms',
-                        'string',
-                        app()->make('N1ebieski\\IDir\\Rules\\Codes\\' . ucfirst(config('idir.payment.code_sms.driver')) . '\\SMS')
-                    ] : [],
-                    'code_transfer' => $this->input('payment_type') === 'code_transfer' ?
-                    [
-                        'bail',
-                        'nullable',
-                        'required_if:payment_type,code_transfer',
-                        'string',
-                        app()->make('N1ebieski\\IDir\\Rules\\Codes\\' . ucfirst(config('idir.payment.code_transfer.driver')) . '\\Transfer')
-                    ] : []
-                ]);
-            });
-        }
+        return [
+            'backlink_url.regex' => __('validation.regex') . ' ' . trans('idir::validation.backlink_url'),
+            'body.required'  => 'A message is required',
+        ];
     }
+
+    // /**
+    //  * Failed validation disable redirect
+    //  *
+    //  * @param Validator $validator
+    //  */
+    // protected function failedValidation(Validator $validator)
+    // {
+    //     throw new HttpResponseException(response()->view('icore::web.home.index'));
+    //     // throw new HttpResponseException(response()->json($validator->errors(), 422));
+    // }
 
     public function attributes()
     {
-        return array_merge(parent::attributes(), $this->captcha->toAttributes());
+        return array_merge(parent::attributes(), app()->make(Captcha::class)->toAttributes());
     }
 }

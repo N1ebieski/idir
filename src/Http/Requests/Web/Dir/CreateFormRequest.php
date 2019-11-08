@@ -11,7 +11,7 @@ class CreateFormRequest extends FormRequest
      * [private description]
      * @var Category
      */
-    private $category;
+    protected $category;
 
     /**
      * [__construct description]

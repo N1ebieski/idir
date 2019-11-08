@@ -19,5 +19,6 @@ class EnvSeeder extends Seeder
         $this->call(RolesAndPermissionsSeeder::class);
         $this->call(CategoriesSeeder::class);
         $this->call(GroupsAndPrivilegesSeeder::class);
+        $this->call(LinksSeeder::class);
     }
 }

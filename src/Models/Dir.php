@@ -10,6 +10,9 @@ use N1ebieski\ICore\Traits\Filterable;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use N1ebieski\ICore\Services\TagService;
 use N1ebieski\IDir\Services\DirService;
+use N1ebieski\IDir\Cache\DirCache;
+use N1ebieski\IDir\Repositories\DirRepo;
+use Illuminate\Database\Eloquent\Builder;
 
 /**
  * [Dir description]
@@ -140,6 +143,47 @@ class Dir extends Model
         return $this->morphToMany('N1ebieski\IDir\Models\Category\Dir\Category', 'model', 'categories_models', 'model_id', 'category_id');
     }
 
+    /**
+     * [backlink description]
+     * @return [type] [description]
+     */
+    public function backlink()
+    {
+        return $this->hasOne('N1ebieski\IDir\Models\DirBacklink');
+    }
+
+    // Scopes
+
+    /**
+     * [scopeActive description]
+     * @param  Builder $query [description]
+     * @return Builder        [description]
+     */
+    public function scopeActive(Builder $query) : Builder
+    {
+        return $query->where('dirs.status', 1);
+    }
+
+    /**
+     * [scopeActiveHasLinkPriviligeByComponent description]
+     * @param  Builder $query     [description]
+     * @param  array   $component [description]
+     * @return Builder            [description]
+     */
+    public function scopeActiveHasLinkPriviligeByComponent(Builder $query, array $component) : Builder
+    {
+        return $query->selectRaw('id, url, title AS name, NULL')
+            ->whereHas('group', function($query) {
+                $query->whereHas('privileges', function($query) {
+                    $query->where('name', 'place in the links component');
+                });
+            })->whereHas('categories', function ($query) use ($component) {
+                $query->whereIn('id', $component['cats']);
+            })->where('url', '<>', null)
+            ->active();
+    }
+
+
     // Loads
 
     /**
@@ -166,14 +210,23 @@ class Dir extends Model
 
     // Getters
 
-    // /**
-    //  * [getRepo description]
-    //  * @return DirRepo [description]
-    //  */
-    // public function getRepo() : DirRepo
-    // {
-    //     return app()->make(DirRepo::class, ['dir' => $this]);
-    // }
+    /**
+     * [getRepo description]
+     * @return DirRepo [description]
+     */
+    public function getRepo() : DirRepo
+    {
+        return app()->make(DirRepo::class, ['dir' => $this]);
+    }
+
+    /**
+     * [getCache description]
+     * @return DirCache [description]
+     */
+    public function getCache() : DirCache
+    {
+        return app()->make(DirCache::class, ['dir' => $this]);
+    }
 
     /**
      * [getService description]

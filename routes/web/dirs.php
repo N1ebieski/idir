@@ -28,4 +28,9 @@ Route::group(['middleware' => 'auth'], function() {
         ->middleware(['icore.ban.user', 'icore.ban.ip'])
         ->where('group_dir_available', '[0-9]+')
         ->name('dir.store_summary');
+
+    Route::get('dirs/{dir}/edit/group', 'DirController@editGroup')
+        ->middleware(['icore.ban.user', 'icore.ban.ip'])
+        ->name('dir.edit_group')
+        ->where('dir', '[0-9]+');
 });

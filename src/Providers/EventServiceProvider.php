@@ -40,5 +40,7 @@ class EventServiceProvider extends ServiceProvider
     public function boot()
     {
         parent::boot();
+
+        \N1ebieski\IDir\Models\Dir::observe(\N1ebieski\IDir\Observers\DirObserver::class);
     }
 }

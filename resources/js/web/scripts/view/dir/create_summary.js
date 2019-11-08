@@ -14,3 +14,18 @@ jQuery(document).on('change', 'select#payment_code_transfer', function() {
     });
     $('div#nav-code_transfer p span#price').text($select.price);
 });
+
+jQuery(document).on('change', 'select#backlink', function() {
+    let $select = $.parseJSON($(this).find('option:selected').attr('data'));
+    let link_as_html = '<a href="' + $select.url + '" title="' + $select.name + '">';
+
+    if ($select.img_url_from_storage !== null) {
+        link_as_html += '<img src="' + $select.img_url_from_storage + '" alt="' + $select.name + '">';
+    } else {
+        link_as_html += $select.name;
+    }
+
+    link_as_html += '</a>';
+
+    $('#backlink_code').val($.sanitize(link_as_html));
+});

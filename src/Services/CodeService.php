@@ -16,13 +16,13 @@ class CodeService implements Serviceable
      * [private description]
      * @var Code
      */
-    private $code;
+    protected $code;
 
     /**
      * Model
      * @var Price
      */
-    private $price;
+    protected $price;
 
     /**
      * @param Code $code

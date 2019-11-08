@@ -19,7 +19,7 @@
     @if ($groups->isNotEmpty())
     <div class="row">
         @foreach($groups as $group)
-        <div class="col-lg-3 col-md-6 mb-4">
+        <div class="col-lg-4 col-md-6 mb-4">
             <div class="card h-100">
                 @include('idir::web.dir.partials.group')
                 <div class="card-footer mt-auto">

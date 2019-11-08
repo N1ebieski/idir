@@ -34,6 +34,26 @@ class CreateDirsTable extends Migration
 
         // Full Text Index
         DB::statement("ALTER TABLE dirs ADD FULLTEXT fulltext_index (title, content, url)");
+
+        Schema::create('dirs_backlinks', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->bigInteger('dir_id')->unsigned()->index();
+            $table->bigInteger('link_id')->unsigned()->index();
+            $table->string('url');
+            $table->integer('attempts')->unsigned();
+            $table->timestamp('attempted_at')->nullable();
+            $table->timestamps();
+
+            $table->foreign('dir_id')
+                ->references('id')
+                ->on('dirs')
+                ->onDelete('cascade');
+
+            $table->foreign('link_id')
+                ->references('id')
+                ->on('links')
+                ->onDelete('cascade');
+        });
     }
 
     /**
@@ -44,5 +64,6 @@ class CreateDirsTable extends Migration
     public function down()
     {
         Schema::dropIfExists('dirs');
+        Schema::dropIfExists('dirs_backlinks');
     }
 }

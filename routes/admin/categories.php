@@ -3,6 +3,9 @@
 Route::get('categories/dir/search', 'Category\Dir\CategoryController@search')
     ->middleware(['permission:create dirs|edit dirs'])
     ->name('category.dir.search');
+Route::get('categories/backlink/search', 'Category\Dir\CategoryController@search')
+    ->middleware('permission:index categories')
+    ->name('category.backlink.search');
 
 Route::get('categories/dir', 'Category\Dir\CategoryController@index')
     ->name('category.dir.index')

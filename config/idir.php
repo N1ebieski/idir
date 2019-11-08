@@ -7,7 +7,12 @@ return [
     'dir' => [
         'max_tags' => env('IDIR_DIR_MAX_TAGS', 10),
         'min_content' => env('IDIR_DIR_MIN_CONTENT', 255),
-        'max_content' => env('IDIR_DIR_MAX_CONTENT', 500)
+        'max_content' => env('IDIR_DIR_MAX_CONTENT', 500),
+
+        'backlink' => [
+            'check_hours' => env('IDIR_DIR_BACKLINK_CHECK_HOURS', 24),
+            'max_attempts' => env('IDIR_DIR_BACKLINK_MAX_ATTEMPTS', 3),
+        ]
     ],
 
     'payment' => [

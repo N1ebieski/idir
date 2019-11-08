@@ -17,19 +17,19 @@ class GroupService implements Serviceable
      * Model
      * @var Group
      */
-    private $group;
+    protected $group;
 
     /**
      * Model
      * @var Price
      */
-    private $price;
+    protected $price;
 
     /**
      * [private description]
      * @var Collect
      */
-    private $collect;
+    protected $collect;
 
     /**
      * [__construct description]

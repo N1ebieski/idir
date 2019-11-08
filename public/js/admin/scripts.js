@@ -6,73 +6,6 @@ jQuery(document).ajaxComplete(function() {
     $(document).trigger('readyAndAjax');
 });
 
-(function($) {
-    $.fn.removeClassStartingWith = function(begin) {
-        this.removeClass(function(index, className) {
-            return (className.match(new RegExp("\\b" + begin + "\\S+", "g")) || []).join(' ');
-        });
-    };
-
-    $.sanitize = function(html) {
-        let $output = $($.parseHTML('<div>' + html + '</div>', null, false));
-
-        $output.find('*').each(function(index, node) {
-            $.each(node.attributes, function() {
-                let attrName = this.name;
-                let attrValue = this.value;
-
-                if (attrName.indexOf('on') == 0 || attrValue.indexOf('javascript:') == 0) {
-                    $(node).removeAttr(attrName);
-                }
-            });
-        });
-
-        return $output.html();
-    };
-
-    $.getUrlParameter = function(url, name) {
-        return (RegExp(name + '=' + '(.+?)(&|$)').exec(url)||[,null])[1];
-    };
-
-    $.getLoader = function(type, loader = 'loader-absolute') {
-        return '<div class="'+loader+'"><div class="'+type+'"><span class="sr-only">Loading...</span></div></div>';
-    };
-
-    $.getAlert = function(response, type) {
-        return $.sanitize('<div class="alert alert-'+type+'" role="alert">'+response+'</div>');
-    };
-
-    $.getError = function(key, value) {
-        return $.sanitize('<span class="invalid-feedback d-block font-weight-bold" id="error-'+ key+'">'+value+'</span>');
-    };
-})(jQuery);
-
-// // jQuery(document).ready(function() {
-// //     var button = $('#buttonFilters');
-// //
-// //     $('#collapseFilters').on('show.bs.collapse', function() {
-// //         $(button).html($(button).attr('data-name-up') + ' <i class="fas fa-angle-up"></i>');
-// //     });
-// //     $('#collapseFilters').on('hide.bs.collapse', function() {
-// //         $(button).html($(button).attr('data-name-down') + ' <i class="fas fa-angle-down"></i>');
-// //     });
-// // });
-//
-// (function($) {
-//     "use strict"; // Start of use strict
-//
-//     // // Prevent the content wrapper from scrolling when the fixed side navigation hovered over
-//     // $('body.fixed-nav .sidebar').on('mousewheel DOMMouseScroll wheel', function(e) {
-//     //     if ($(window).width() > 768) {
-//     //         var e0 = e.originalEvent,
-//     //             delta = e0.wheelDelta || -e0.detail;
-//     //         this.scrollTop += (delta < 0 ? 1 : -1) * 30;
-//     //         e.preventDefault();
-//     //     }
-//     // });
-//
-// })(jQuery); // End of use strict
-
 jQuery(document).on('click', 'button.storeBanUser', function(e) {
     e.preventDefault();
 
@@ -161,18 +94,19 @@ jQuery(document).on('click', '#searchCategory .btn', function(e) {
     let $searchCategory = $('#searchCategory');
     $searchCategory.url = $searchCategory.attr('data-route');
     $searchCategory.btn = $searchCategory.find('.btn');
-    $searchCategory.input = {
-        val: $('#searchCategory input').val()
-    };
+    $searchCategory.input = $searchCategory.find('input');
 
     $.ajax({
-        url: $searchCategory.url+'?name='+$searchCategory.input.val,
+        url: $searchCategory.url+'?name='+$searchCategory.input.val(),
         method: 'get',
         dataType: 'json',
         beforeSend: function() {
             $searchCategory.btn.prop('disabled', true);
             $('#searchCategoryOptions').empty();
             $searchCategory.append($.getLoader('spinner-border'));
+            $('.invalid-feedback').remove();
+            $searchCategory.input.removeClass('is-valid');
+            $searchCategory.input.removeClass('is-invalid');
         },
         complete: function() {
             $searchCategory.btn.prop('disabled', false);
@@ -182,6 +116,14 @@ jQuery(document).on('click', '#searchCategory .btn', function(e) {
             let $response = $(response.view).find(categorySelect().join(',')).remove().end();
 
             $searchCategory.find('#searchCategoryOptions').html($.sanitize($response.html()));
+        },
+        error: function(response) {
+            var errors = response.responseJSON;
+
+            $.each(errors.errors, function( key, value ) {
+                $searchCategory.input.addClass('is-invalid');
+                $searchCategory.input.parent().after($.getError(key, value));
+            });
         }
     });
 });
@@ -198,20 +140,24 @@ jQuery(document).on('change', '.categoryOption', function() {
         $input.remove();
     }
 
-    if ($searchCategory.is(':visible') && categorySelect().length >= $searchCategory.max) {
-        $searchCategory.fadeOut();
-    }
+    if ($.isInteger($searchCategory.max)) {
+        if ($searchCategory.is(':visible') && categorySelect().length >= $searchCategory.max) {
+            $searchCategory.fadeOut();
+        }
 
-    if (!$searchCategory.is(':visible') && categorySelect().length < $searchCategory.max) {
-        $searchCategory.fadeIn();
+        if (!$searchCategory.is(':visible') && categorySelect().length < $searchCategory.max) {
+            $searchCategory.fadeIn();
+        }
     }
 });
 
-$('#searchCategory input').keypress(function(e) {
-    if (e.which == 13) {
-        $('#searchCategory .btn').trigger('click');
-        return false;
-    }
+jQuery(document).on('readyAndAjax', function() {
+    $('#searchCategory input').keypress(function(e) {
+        if (e.which == 13) {
+            $('#searchCategory .btn').trigger('click');
+            return false;
+        }
+    });
 });
 
 jQuery(document).on('click', 'button.statusCategory', function(e) {
@@ -666,7 +612,10 @@ jQuery(document).on('click', '.store', function(e) {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
         method: 'post',
-        data: $form.serialize(),
+        // data: $form.serialize(),
+        data: new FormData($form[0]),
+        processData: false,
+        contentType: false,
         dataType: 'json',
         beforeSend: function() {
             $form.btn.prop('disabled', true);
@@ -689,7 +638,7 @@ jQuery(document).on('click', '.store', function(e) {
 
             $.each(errors.errors, function( key, value ) {
                 $form.find('#'+key).addClass('is-invalid');
-                $form.find('#'+key).after($.getError(key, value));
+                $form.find('#'+key).parent().append($.getError(key, value));
             });
         }
     });
@@ -705,13 +654,19 @@ jQuery(document).on('click', '.update', function(e) {
         body: $form.closest('.modal-body')
     };
 
+    let data = new FormData($form[0]);
+    data.append('_method', 'put');
+
     jQuery.ajax({
         url: $form.attr('data-route'),
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
-        method: 'put',
-        data: $form.serialize(),
+        method: 'post',
+        // data: $form.serialize(),
+        data: data,
+        processData: false,
+        contentType: false,
         dataType: 'json',
         beforeSend: function() {
             $form.btn.prop('disabled', true);
@@ -740,7 +695,7 @@ jQuery(document).on('click', '.update', function(e) {
 
             $.each(errors.errors, function( key, value ) {
                 $form.find('#'+key).addClass('is-invalid');
-                $form.find('#'+key).after($.getError(key, value));
+                $form.find('#'+key).parent().append($.getError(key, value));
             });
         }
     });
@@ -998,127 +953,46 @@ jQuery(document).on('click', 'button.clearReport', function(e) {
     });
 });
 
-jQuery(document).on('readyAndAjax', function() {
-    $(".alert-time").delay(20000).fadeOut();
-});
-
-jQuery(document).on('readyAndAjax', function() {
-  $('[data-toggle="tooltip"]').tooltip();
-});
-
-jQuery(document).ready(function() {
-    $('[aria-controls="collapsePublishedAt"]').change(function() {
-        if ($(this).val() == 0) $('#collapsePublishedAt').collapse('hide');
-        else $('#collapsePublishedAt').collapse('show');
-    });
-    $('[aria-controls="collapseActivationAt"]').change(function() {
-        if ($(this).val() == 2) $('#collapseActivationAt').collapse('show');
-        else $('#collapseActivationAt').collapse('hide');
-    });
-});
-
-jQuery(document).on('click', '#selectAll', function() {
-    $('#selectForm .select').prop('checked', $(this).prop('checked')).trigger('change');
-});
-
-jQuery(document).on('change', '#selectForm .select', function() {
-    if ($('#selectForm .select:checked').length > 0) {
-        $('.select-action').fadeIn();
-    }
-    else {
-        $('.select-action').fadeOut();
-    }
-});
-
 (function($) {
-    let c, currentScrollTop = 0;
-    let $navbar = $('.navbar');
+    $.fn.removeClassStartingWith = function(begin) {
+        this.removeClass(function(index, className) {
+            return (className.match(new RegExp("\\b" + begin + "\\S+", "g")) || []).join(' ');
+        });
+    };
 
-    $(window).scroll(function() {
-        var a = $(window).scrollTop();
-        var b = $navbar.height()+10;
+    $.sanitize = function(html) {
+        let $output = $($.parseHTML('<div>' + html + '</div>', null, false));
 
-        currentScrollTop = a;
+        $output.find('*').each(function(index, node) {
+            $.each(node.attributes, function() {
+                let attrName = this.name;
+                let attrValue = this.value;
 
-        if (c < currentScrollTop && c > b) {
-            $navbar.fadeOut();
-        } else {
-            $navbar.fadeIn();
-        }
-        c = currentScrollTop;
-   });
-})(jQuery);
-
-// Scroll to top button appear
-$(document).on('scroll', function() {
-    var scrollDistance = $(this).scrollTop();
-    if (scrollDistance > 100) {
-        $('.scroll-to-top').fadeIn();
-    } else {
-        $('.scroll-to-top').fadeOut();
-    }
-});
-
-// Smooth scrolling using jQuery easing
-$(document).on('click', 'a.scroll-to-top', function(event) {
-    var $anchor = $(this);
-    $('html, body').stop().animate({
-        scrollTop: (0)
-    }, 1000, 'easeInOutExpo');
-    event.preventDefault();
-});
-
-$(document).on('click', ".modal-backdrop, #sidebarToggle", function(e) {
-    e.preventDefault();
-
-    // For larger resolutions, the sidebar is always visible (toggled or not)
-    if (window.innerWidth >= 768) {
-        $(".sidebar").toggleClass("toggled");
-        if ($("ul.sidebar").hasClass("toggled")) {
-            $.cookie("sidebarToggle", 1, { path: '/admin' });
-        } else {
-            $.cookie("sidebarToggle", 0, { path: '/admin' });
-        }
-    }
-    // For smaller resolutions, the sidebar is collapse with body backdrop
-    else {
-        $(".sidebar").removeClass("toggled");
-        if ($('.modal-backdrop').length) {
-            $('.modal-backdrop').fadeOut('slow', function() {
-                $(this).remove();
+                if (attrName.indexOf('on') == 0 || attrValue.indexOf('javascript:') == 0) {
+                    $(node).removeAttr(attrName);
+                }
             });
-            $(".sidebar").removeClass("show");
-            $('body').removeClass('modal-open');
-        } else {
-            $('<div class="modal-backdrop show z-900"></div>').appendTo('body').hide().fadeIn();
-            $(".sidebar").addClass("show");
-            $('body').addClass('modal-open');
-        }
-    }
-});
-
-jQuery(document).on('click', 'div#themeToggle button', function(e) {
-    e.preventDefault();
-
-    let $element = $(this);
-
-    if ($element.hasClass('btn-light')) {
-        $('link[href*="admin-dark.css"]').attr('href', function() {
-            return $(this).attr('href').replace('admin-dark.css', 'admin.css');
         });
-        $.cookie("themeToggle", 'light', { path: '/' });
-    }
 
-    if ($element.hasClass('btn-dark')) {
-        $('link[href*="admin.css"]').attr('href', function() {
-            return $(this).attr('href').replace('admin.css', 'admin-dark.css');
-        });
-        $.cookie("themeToggle", 'dark', { path: '/' });
-    }
+        return $output.html();
+    };
 
-    $element.prop('disabled', true);
-    $element.siblings('button').prop('disabled', false);
-});
+    $.getUrlParameter = function(url, name) {
+        return (RegExp(name + '=' + '(.+?)(&|$)').exec(url)||[,null])[1];
+    };
+
+    $.getLoader = function(type, loader = 'loader-absolute') {
+        return '<div class="'+loader+'"><div class="'+type+'"><span class="sr-only">Loading...</span></div></div>';
+    };
+
+    $.getAlert = function(response, type) {
+        return $.sanitize('<div class="alert alert-'+type+'" role="alert">'+response+'</div>');
+    };
+
+    $.getError = function(key, value) {
+        return $.sanitize('<span class="invalid-feedback d-block font-weight-bold" id="error-'+ key+'">'+value+'</span>');
+    };
+})(jQuery);
 
 jQuery(document).on('readyAndAjax', function() {
     $('[data-toggle=confirmation]').confirmation({
@@ -1233,6 +1107,161 @@ jQuery(document).on('readyAndAjax', function() {
             ]
         });
     }
+});
+
+// // jQuery(document).ready(function() {
+// //     var button = $('#buttonFilters');
+// //
+// //     $('#collapseFilters').on('show.bs.collapse', function() {
+// //         $(button).html($(button).attr('data-name-up') + ' <i class="fas fa-angle-up"></i>');
+// //     });
+// //     $('#collapseFilters').on('hide.bs.collapse', function() {
+// //         $(button).html($(button).attr('data-name-down') + ' <i class="fas fa-angle-down"></i>');
+// //     });
+// // });
+//
+// (function($) {
+//     "use strict"; // Start of use strict
+//
+//     // // Prevent the content wrapper from scrolling when the fixed side navigation hovered over
+//     // $('body.fixed-nav .sidebar').on('mousewheel DOMMouseScroll wheel', function(e) {
+//     //     if ($(window).width() > 768) {
+//     //         var e0 = e.originalEvent,
+//     //             delta = e0.wheelDelta || -e0.detail;
+//     //         this.scrollTop += (delta < 0 ? 1 : -1) * 30;
+//     //         e.preventDefault();
+//     //     }
+//     // });
+//
+// })(jQuery); // End of use strict
+
+jQuery(document).on('readyAndAjax', function() {
+    $(".alert-time").delay(20000).fadeOut();
+});
+
+jQuery(document).on('readyAndAjax', function() {
+  $('[data-toggle="tooltip"]').tooltip();
+});
+
+jQuery(document).ready(function() {
+    $('[aria-controls="collapsePublishedAt"]').change(function() {
+        if ($(this).val() == 0) $('#collapsePublishedAt').collapse('hide');
+        else $('#collapsePublishedAt').collapse('show');
+    });
+    $('[aria-controls="collapseActivationAt"]').change(function() {
+        if ($(this).val() == 2) $('#collapseActivationAt').collapse('show');
+        else $('#collapseActivationAt').collapse('hide');
+    });
+});
+
+jQuery(document).on('readyAndAjax', function() {
+    $(".custom-file-input").on("change", function() {
+        let fileName = $(this).val().split("\\").pop();
+        $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+    });
+});
+
+jQuery(document).on('click', '#selectAll', function() {
+    $('#selectForm .select').prop('checked', $(this).prop('checked')).trigger('change');
+});
+
+jQuery(document).on('change', '#selectForm .select', function() {
+    if ($('#selectForm .select:checked').length > 0) {
+        $('.select-action').fadeIn();
+    }
+    else {
+        $('.select-action').fadeOut();
+    }
+});
+
+(function($) {
+    let c, currentScrollTop = 0;
+    let $navbar = $('.navbar');
+
+    $(window).scroll(function() {
+        var a = $(window).scrollTop();
+        var b = $navbar.height()+10;
+
+        currentScrollTop = a;
+
+        if (c < currentScrollTop && c > b) {
+            $navbar.fadeOut();
+        } else {
+            $navbar.fadeIn();
+        }
+        c = currentScrollTop;
+   });
+})(jQuery);
+
+// Scroll to top button appear
+$(document).on('scroll', function() {
+    var scrollDistance = $(this).scrollTop();
+    if (scrollDistance > 100) {
+        $('.scroll-to-top').fadeIn();
+    } else {
+        $('.scroll-to-top').fadeOut();
+    }
+});
+
+// Smooth scrolling using jQuery easing
+$(document).on('click', 'a.scroll-to-top', function(event) {
+    var $anchor = $(this);
+    $('html, body').stop().animate({
+        scrollTop: (0)
+    }, 1000, 'easeInOutExpo');
+    event.preventDefault();
+});
+
+$(document).on('click', ".modal-backdrop, #sidebarToggle", function(e) {
+    e.preventDefault();
+
+    // For larger resolutions, the sidebar is always visible (toggled or not)
+    if (window.innerWidth >= 768) {
+        $(".sidebar").toggleClass("toggled");
+        if ($("ul.sidebar").hasClass("toggled")) {
+            $.cookie("sidebarToggle", 1, { path: '/admin' });
+        } else {
+            $.cookie("sidebarToggle", 0, { path: '/admin' });
+        }
+    }
+    // For smaller resolutions, the sidebar is collapse with body backdrop
+    else {
+        $(".sidebar").removeClass("toggled");
+        if ($('.modal-backdrop').length) {
+            $('.modal-backdrop').fadeOut('slow', function() {
+                $(this).remove();
+            });
+            $(".sidebar").removeClass("show");
+            $('body').removeClass('modal-open');
+        } else {
+            $('<div class="modal-backdrop show z-900"></div>').appendTo('body').hide().fadeIn();
+            $(".sidebar").addClass("show");
+            $('body').addClass('modal-open');
+        }
+    }
+});
+
+jQuery(document).on('click', 'div#themeToggle button', function(e) {
+    e.preventDefault();
+
+    let $element = $(this);
+
+    if ($element.hasClass('btn-light')) {
+        $('link[href*="admin-dark.css"]').attr('href', function() {
+            return $(this).attr('href').replace('admin-dark.css', 'admin.css');
+        });
+        $.cookie("themeToggle", 'light', { path: '/' });
+    }
+
+    if ($element.hasClass('btn-dark')) {
+        $('link[href*="admin.css"]').attr('href', function() {
+            return $(this).attr('href').replace('admin.css', 'admin-dark.css');
+        });
+        $.cookie("themeToggle", 'dark', { path: '/' });
+    }
+
+    $element.prop('disabled', true);
+    $element.siblings('button').prop('disabled', false);
 });
 
 jQuery(document).ready(function() {

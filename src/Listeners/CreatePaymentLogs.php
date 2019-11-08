@@ -13,7 +13,7 @@ class CreatePaymentLogs
      * [private description]
      * @var Request
      */
-    private $request;
+    protected $request;
 
     /**
      * Create the event listener.

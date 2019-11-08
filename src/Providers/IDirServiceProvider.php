@@ -18,9 +18,11 @@ class IDirServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(__DIR__.  '/../../config/idir.php', 'idir');
 
+        $this->app->register(AppServiceProvider::class);
         $this->app->register(RouteServiceProvider::class);
         $this->app->register(AuthServiceProvider::class);
         $this->app->register(EventServiceProvider::class);
+        $this->app->register(ScheduleServiceProvider::class);        
 
         $this->app['router']->middlewareGroup('idir.web', [
             'throttle:60,1',

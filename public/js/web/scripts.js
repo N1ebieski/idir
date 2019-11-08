@@ -6,86 +6,6 @@ jQuery(document).ajaxComplete(function() {
     $(document).trigger('readyAndAjax');
 });
 
-(function($) {
-    $.fn.removeClassStartingWith = function(begin) {
-        this.removeClass(function(index, className) {
-            return (className.match(new RegExp("\\b" + begin + "\\S+", "g")) || []).join(' ');
-        });
-    };
-
-    $.sanitize = function(html) {
-        let $output = $($.parseHTML('<div>' + html + '</div>', null, false));
-
-        $output.find('*').each(function(index, node) {
-            $.each(node.attributes, function() {
-                let attrName = this.name;
-                let attrValue = this.value;
-
-                if (attrName.indexOf('on') == 0 || attrValue.indexOf('javascript:') == 0) {
-                    $(node).removeAttr(attrName);
-                }
-            });
-        });
-
-        return $output.html();
-    };
-
-    $.getUrlParameter = function(url, name) {
-        return (RegExp(name + '=' + '(.+?)(&|$)').exec(url)||[,null])[1];
-    };
-
-    /**
-     * Plugin refreshujący recaptche v2. Potrzebne w przypadku pobrania formularza przez ajax
-     */
-    $.fn.recaptcha = function() {
-        if (this.hasClass('g-recaptcha')) {
-            var widgetId;
-            // Przypadek, gdy nowy token generowany jest w momencie pobrania formularza
-            // przez ajax. Wówczas trzeba go na nowo zrenderować pod nowym widgetId
-            if (!this.html().length) {
-                widgetId = grecaptcha.render(this[0], {
-                    'sitekey' : this.attr('data-sitekey')
-                });
-            }
-            // W przeciwnym razie (tzn. jeśli token jest prawidłowo wygenerowany) pobieramy
-            // jego widgetId
-            else {
-                widgetId = parseInt(this.find('textarea[name="g-recaptcha-response"]').attr('id').match(/\d+$/), 10);
-            }
-
-            // Resetowanie tokena. Konieczne w przypadku gdy formularz został wypełniony
-            // błędnie, ajax zwrócił errory, bez nowego formularza. W takim przypadku
-            // recaptcha nie rozpozna już wcześniejszego rozwiązania, trzeba zresetować i
-            // dać użytkownikowi możliwość ponownego przesłania formularza
-            if (Number.isInteger(widgetId)) grecaptcha.reset(widgetId);
-            else grecaptcha.reset();
-        }
-    };
-
-    $.fn.captcha = function() {
-        if (this.hasClass('logic_captcha')) {
-            this.find('input[name="captcha"]').val('');
-            this.find('.reload_captcha_base64').trigger('click');
-        }
-    };
-
-    $.getLoader = function(type, loader = 'loader-absolute') {
-        return '<div class="'+loader+'"><div class="'+type+'"><span class="sr-only">Loading...</span></div></div>';
-    };
-
-    $.getAlert = function(response, type) {
-        return $.sanitize('<div class="alert alert-'+type+' alert-time" role="alert">'+response+'</div>');
-    };
-
-    $.getError = function(key, value) {
-        return $.sanitize('<span class="invalid-feedback d-block font-weight-bold" id="error-'+ key+'">'+value+'</span>');
-    };
-
-    $.getMessage = function(response) {
-        return $.sanitize('<span class="valid-feedback d-block font-weight-bold">'+response+'</span>');
-    };
-})(jQuery);
-
 function categorySelect()
 {
     return $('#categoryOptions .form-group').map(function() {
@@ -99,18 +19,18 @@ jQuery(document).on('click', '#searchCategory .btn', function(e) {
     let $searchCategory = $('#searchCategory');
     $searchCategory.url = $searchCategory.attr('data-route');
     $searchCategory.btn = $searchCategory.find('.btn');
-    $searchCategory.input = {
-        val: $('#searchCategory input').val()
-    };
+    $searchCategory.input = $searchCategory.find('input');
 
     $.ajax({
-        url: $searchCategory.url+'?name='+$searchCategory.input.val,
+        url: $searchCategory.url+'?name='+$searchCategory.input.val(),
         method: 'get',
         dataType: 'json',
         beforeSend: function() {
             $searchCategory.btn.prop('disabled', true);
             $('#searchCategoryOptions').empty();
             $searchCategory.append($.getLoader('spinner-border'));
+            $searchCategory.input.removeClass('is-valid');
+            $searchCategory.input.removeClass('is-invalid');
         },
         complete: function() {
             $searchCategory.btn.prop('disabled', false);
@@ -120,6 +40,14 @@ jQuery(document).on('click', '#searchCategory .btn', function(e) {
             let $response = $(response.view).find(categorySelect().join(',')).remove().end();
 
             $searchCategory.find('#searchCategoryOptions').html($.sanitize($response.html()));
+        },
+        error: function(response) {
+            var errors = response.responseJSON;
+
+            $.each(errors.errors, function( key, value ) {
+                $searchCategory.input.addClass('is-invalid');
+                $searchCategory.input.parent().after($.getError(key, value));
+            });
         }
     });
 });
@@ -136,20 +64,24 @@ jQuery(document).on('change', '.categoryOption', function() {
         $input.remove();
     }
 
-    if ($searchCategory.is(':visible') && categorySelect().length >= $searchCategory.max) {
-        $searchCategory.fadeOut();
-    }
+    if ($.isNumeric($searchCategory.max)) {
+        if ($searchCategory.is(':visible') && categorySelect().length >= $searchCategory.max) {
+            $searchCategory.fadeOut();
+        }
 
-    if (!$searchCategory.is(':visible') && categorySelect().length < $searchCategory.max) {
-        $searchCategory.fadeIn();
+        if (!$searchCategory.is(':visible') && categorySelect().length < $searchCategory.max) {
+            $searchCategory.fadeIn();
+        }
     }
 });
 
-$('#searchCategory input').keypress(function(e) {
-    if (e.which == 13) {
-        $('#searchCategory .btn').trigger('click');
-        return false;
-    }
+jQuery(document).on('readyAndAjax', function() {
+    $('#searchCategory input').keypress(function(e) {
+        if (e.which == 13) {
+            $('#searchCategory .btn').trigger('click');
+            return false;
+        }
+    });
 });
 
 function ajaxCreateComment($element) {
@@ -611,6 +543,179 @@ jQuery(document).on('click', 'button.storeReport', function(e) {
     });
 });
 
+(function($) {
+    $.fn.removeClassStartingWith = function(begin) {
+        this.removeClass(function(index, className) {
+            return (className.match(new RegExp("\\b" + begin + "\\S+", "g")) || []).join(' ');
+        });
+    };
+
+    $.sanitize = function(html) {
+        let $output = $($.parseHTML('<div>' + html + '</div>', null, false));
+
+        $output.find('*').each(function(index, node) {
+            $.each(node.attributes, function() {
+                let attrName = this.name;
+                let attrValue = this.value;
+
+                if (attrName.indexOf('on') == 0 || attrValue.indexOf('javascript:') == 0) {
+                    $(node).removeAttr(attrName);
+                }
+            });
+        });
+
+        return $output.html();
+    };
+
+    $.getUrlParameter = function(url, name) {
+        return (RegExp(name + '=' + '(.+?)(&|$)').exec(url)||[,null])[1];
+    };
+
+    /**
+     * Plugin refreshujący recaptche v2. Potrzebne w przypadku pobrania formularza przez ajax
+     */
+    $.fn.recaptcha = function() {
+        if (this.hasClass('g-recaptcha')) {
+            var widgetId;
+            // Przypadek, gdy nowy token generowany jest w momencie pobrania formularza
+            // przez ajax. Wówczas trzeba go na nowo zrenderować pod nowym widgetId
+            if (!this.html().length) {
+                widgetId = grecaptcha.render(this[0], {
+                    'sitekey' : this.attr('data-sitekey')
+                });
+            }
+            // W przeciwnym razie (tzn. jeśli token jest prawidłowo wygenerowany) pobieramy
+            // jego widgetId
+            else {
+                widgetId = parseInt(this.find('textarea[name="g-recaptcha-response"]').attr('id').match(/\d+$/), 10);
+            }
+
+            // Resetowanie tokena. Konieczne w przypadku gdy formularz został wypełniony
+            // błędnie, ajax zwrócił errory, bez nowego formularza. W takim przypadku
+            // recaptcha nie rozpozna już wcześniejszego rozwiązania, trzeba zresetować i
+            // dać użytkownikowi możliwość ponownego przesłania formularza
+            if (Number.isInteger(widgetId)) grecaptcha.reset(widgetId);
+            else grecaptcha.reset();
+        }
+    };
+
+    $.fn.captcha = function() {
+        if (this.hasClass('logic_captcha')) {
+            this.find('input[name="captcha"]').val('');
+            this.find('.reload_captcha_base64').trigger('click');
+        }
+    };
+
+    $.getLoader = function(type, loader = 'loader-absolute') {
+        return '<div class="'+loader+'"><div class="'+type+'"><span class="sr-only">Loading...</span></div></div>';
+    };
+
+    $.getAlert = function(response, type) {
+        return $.sanitize('<div class="alert alert-'+type+' alert-time" role="alert">'+response+'</div>');
+    };
+
+    $.getError = function(key, value) {
+        return $.sanitize('<span class="invalid-feedback d-block font-weight-bold" id="error-'+ key+'">'+value+'</span>');
+    };
+
+    $.getMessage = function(response) {
+        return $.sanitize('<span class="valid-feedback d-block font-weight-bold">'+response+'</span>');
+    };
+})(jQuery);
+
+jQuery(document).ready(function() {
+    $('[data-toggle=confirmation]').confirmation({
+        rootSelector: '[data-toggle=confirmation]',
+        singleton: true,
+        popout: true,
+        onConfirm: function() {
+            if ($(this).hasClass('submit')) {
+        		$(this).parents('form:first').submit();
+            }
+        }
+    });
+});
+
+//$('ul.pagination').hide();
+jQuery(document).on('readyAndAjax', function() {
+    $('#infinite-scroll').jscroll({
+        debug: true,
+        autoTrigger: false,
+        loadingHtml: $.getLoader('spinner-border', 'loader'),
+        loadingFunction: function() {
+            $('#is-pagination').first().remove();
+        },
+        padding: 0,
+        nextSelector: 'a#is-next:last',
+        contentSelector: '#infinite-scroll',
+        pagingSelector: '.pagination',
+        callback: function(nextHref) {
+            let href = nextHref.split(' ')[0];
+            let page = $.getUrlParameter(href, 'page');
+            let title = $('a#is-next:last').attr('title').replace(/(\d+)/, '').trim();
+
+            if ($.isNumeric(page)) {
+                let regex = new RegExp(title+"\\s(\\d+)");
+                document.title = document.title.replace(regex, title+': '+page);
+            }
+
+            history.replaceState(null, null, href);
+        }
+    });
+});
+
+jQuery(document).ready(function() {
+    $('.tagsinput').tagsInput({
+        placeholder: $('.tagsinput').attr('placeholder'),
+        minChars: 3,
+        maxChars: 30,
+        limit: $('.tagsinput').attr('data-max'),
+        validationPattern: new RegExp('^(?:^[a-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ0-9\u00E0-\u00FC ]+$)$'),
+        unique: true,
+    });
+});
+
+(function($) {
+    let typeahead = function() {
+        let $input = $("#typeahead");
+        let $form = $input.closest('form');
+
+        let engine = new Bloodhound({
+            remote: {
+                url: $input.attr('data-route')+'?search=%QUERY%',
+                wildcard: '%QUERY%'
+            },
+            datumTokenizer: Bloodhound.tokenizers.whitespace('search'),
+            queryTokenizer: Bloodhound.tokenizers.whitespace
+        });
+
+        $input.typeahead({
+            hint: true,
+            highlight: true,
+            minLength: 3
+        }, {
+            source: engine.ttAdapter(),
+            display: function(data) {
+                return $($.parseHTML(data.name)).text();
+            },
+            templates: {
+                suggestion: function(data) {
+                    let name = $($.parseHTML(data.name)).text();
+                    let href = $form.attr('action')+'?source='+$form.find('select[name="source"]').val()+'&search='+name;
+
+                    return $.sanitize('<a href="'+href+'" class="list-group-item py-2 text-truncate">'+name+'</a>');
+                }
+            }
+        });
+    };
+
+    jQuery(document).ready(function() {
+        $.when( typeahead() ).then(function() {
+            $("input.tt-input").css('background-color', '');
+        });
+    });
+})(jQuery);
+
 jQuery(document).on('readyAndAjax', function() {
     $(".alert-time").delay(20000).fadeOut();
 });
@@ -722,99 +827,6 @@ jQuery(document).on('click', 'div#themeToggle button', function(e) {
     $element.siblings('button').prop('disabled', false);
 });
 
-jQuery(document).ready(function() {
-    $('[data-toggle=confirmation]').confirmation({
-        rootSelector: '[data-toggle=confirmation]',
-        singleton: true,
-        popout: true,
-        onConfirm: function() {
-            if ($(this).hasClass('submit')) {
-        		$(this).parents('form:first').submit();
-            }
-        }
-    });
-});
-
-//$('ul.pagination').hide();
-jQuery(document).on('readyAndAjax', function() {
-    $('#infinite-scroll').jscroll({
-        debug: true,
-        autoTrigger: false,
-        loadingHtml: $.getLoader('spinner-border', 'loader'),
-        loadingFunction: function() {
-            $('#is-pagination').first().remove();
-        },
-        padding: 0,
-        nextSelector: 'a#is-next:last',
-        contentSelector: '#infinite-scroll',
-        pagingSelector: '.pagination',
-        callback: function(nextHref) {
-            let href = nextHref.split(' ')[0];
-            let page = $.getUrlParameter(href, 'page');
-            let title = $('a#is-next:last').attr('title').replace(/(\d+)/, '').trim();
-
-            if ($.isNumeric(page)) {
-                let regex = new RegExp(title+"\\s(\\d+)");
-                document.title = document.title.replace(regex, title+': '+page);
-            }
-
-            history.replaceState(null, null, href);
-        }
-    });
-});
-
-jQuery(document).ready(function() {
-    $('.tagsinput').tagsInput({
-        placeholder: $('.tagsinput').attr('placeholder'),
-        minChars: 3,
-        maxChars: 30,
-        limit: $('.tagsinput').attr('data-max'),
-        validationPattern: new RegExp('^(?:^[a-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ0-9\u00E0-\u00FC ]+$)$'),
-        unique: true,
-    });
-});
-
-(function($) {
-    let typeahead = function() {
-        let $input = $("#typeahead");
-        let $form = $input.closest('form');
-
-        let engine = new Bloodhound({
-            remote: {
-                url: $input.attr('data-route')+'?search=%QUERY%',
-                wildcard: '%QUERY%'
-            },
-            datumTokenizer: Bloodhound.tokenizers.whitespace('search'),
-            queryTokenizer: Bloodhound.tokenizers.whitespace
-        });
-
-        $input.typeahead({
-            hint: true,
-            highlight: true,
-            minLength: 3
-        }, {
-            source: engine.ttAdapter(),
-            display: function(data) {
-                return $($.parseHTML(data.name)).text();
-            },
-            templates: {
-                suggestion: function(data) {
-                    let name = $($.parseHTML(data.name)).text();
-                    let href = $form.attr('action')+'?source='+$form.find('select[name="source"]').val()+'&search='+name;
-
-                    return $.sanitize('<a href="'+href+'" class="list-group-item py-2 text-truncate">'+name+'</a>');
-                }
-            }
-        });
-    };
-
-    jQuery(document).ready(function() {
-        $.when( typeahead() ).then(function() {
-            $("input.tt-input").css('background-color', '');
-        });
-    });
-})(jQuery);
-
 jQuery(document).on('readyAndAjax', function() {
     if (!$('.trumbowyg-box').length) {
         $('#content_html_dir_trumbowyg').trumbowyg({
@@ -860,6 +872,21 @@ jQuery(document).on('change', 'select#payment_code_transfer', function() {
         return $(this).attr('href').replace(/=(.*)/, '=' + $select.code).trim();
     });
     $('div#nav-code_transfer p span#price').text($select.price);
+});
+
+jQuery(document).on('change', 'select#backlink', function() {
+    let $select = $.parseJSON($(this).find('option:selected').attr('data'));
+    let link_as_html = '<a href="' + $select.url + '" title="' + $select.name + '">';
+
+    if ($select.img_url_from_storage !== null) {
+        link_as_html += '<img src="' + $select.img_url_from_storage + '" alt="' + $select.name + '">';
+    } else {
+        link_as_html += $select.name;
+    }
+
+    link_as_html += '</a>';
+
+    $('#backlink_code').val($.sanitize(link_as_html));
 });
 
 jQuery(document).ready(function() {

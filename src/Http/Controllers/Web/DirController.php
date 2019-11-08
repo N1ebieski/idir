@@ -6,11 +6,13 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 use N1ebieski\IDir\Http\Requests\Web\Dir\CreateFormRequest;
 use N1ebieski\IDir\Http\Requests\Web\Dir\StoreFormRequest;
+use N1ebieski\IDir\Http\Requests\Web\Dir\PaymentCodeRequest;
 use N1ebieski\IDir\Http\Requests\Web\Dir\CreateSummaryRequest;
 use N1ebieski\IDir\Http\Requests\Web\Dir\StoreSummaryRequest;
 use N1ebieski\IDir\Models\Group;
 use N1ebieski\IDir\Models\Dir;
 use N1ebieski\IDir\Models\Price;
+use N1ebieski\ICore\Models\Link;
 use N1ebieski\IDir\Models\Category\Dir\Category;
 use N1ebieski\IDir\Events\Dir\Store as DirStore;
 use N1ebieski\IDir\Events\Payment\Dir\Store as PaymentStore;
@@ -69,10 +71,11 @@ class DirController
      * @param  Group                $group    [description]
      * @param  Dir                  $dir      [description]
      * @param  Category             $category [description]
+     * @param  Link                 $link     [description]
      * @param  CreateSummaryRequest $request  [description]
      * @return View                           [description]
      */
-    public function createSummary(Group $group, Dir $dir, Category $category, CreateSummaryRequest $request) : View
+    public function createSummary(Group $group, Dir $dir, Category $category, Link $link, CreateSummaryRequest $request) : View
     {
         $dir->getService()->createOrUpdateSession($request->validated());
 
@@ -80,9 +83,17 @@ class DirController
             $request->session()->get('dir.categories')
         );
 
+        if ($group->backlink > 0) {
+            $backlinks = $link->getRepo()->getAvailableBacklinksByCats(array_merge(
+                $categories->pluck('ancestors')->flatten()->pluck('id')->toArray(),
+                $categories->pluck('id')->toArray()
+            ));
+        }
+
         return view('idir::web.dir.create.summary', [
             'group' => $group,
             'categories' => $categories,
+            'backlinks' => $backlinks ?? null,
             'driver' => [
                 'transfer' => config('idir.payment.transfer.driver'),
                 'code_sms' => config('idir.payment.code_sms.driver'),
@@ -93,13 +104,14 @@ class DirController
 
     /**
      * [storeSummary description]
-     * @param  Group                $group    [description]
-     * @param  Dir                  $dir      [description]
-     * @param  Price                $price    [description]
-     * @param  Payment              $payment  [description]
-     * @param  StoreSummaryRequest  $request  [description]
-     * @param  StoreSummaryResponse $response [description]
-     * @return RedirectResponse               [description]
+     * @param  Group                $group          [description]
+     * @param  Dir                  $dir            [description]
+     * @param  Price                $price          [description]
+     * @param  Payment              $payment        [description]
+     * @param  StoreSummaryRequest  $request        [description]
+     * @param  PaymentCodeRequest   $requestPayment [description]
+     * @param  StoreSummaryResponse $response       [description]
+     * @return RedirectResponse                     [description]
      */
     public function storeSummary(
         Group $group,
@@ -107,6 +119,7 @@ class DirController
         Price $price,
         Payment $payment,
         StoreSummaryRequest $request,
+        PaymentCodeRequest $requestPayment,
         StoreSummaryResponse $response
     ) : RedirectResponse
     {
@@ -118,6 +131,7 @@ class DirController
             )->getService()->create($request->only('payment_type'));
 
             event(new PaymentStore($payment));
+
             $response->setPayment($payment);
         }
 
