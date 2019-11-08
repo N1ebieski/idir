@@ -15,7 +15,7 @@ class PaymentRepo
      * [private description]
      * @var Payment
      */
-    private $payment;
+    protected $payment;
 
     /**
      * [__construct description]

@@ -6,6 +6,8 @@ use N1ebieski\ICore\Services\Serviceable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection as Collect;
 use N1ebieski\IDir\Models\Dir;
+use N1ebieski\IDir\Models\DirBacklink;
+use N1ebieski\ICore\Models\Link;
 use Illuminate\Contracts\Session\Session;
 use N1ebieski\IDir\Models\Group;
 use Carbon\Carbon;
@@ -19,35 +21,52 @@ class DirService implements Serviceable
      * Model
      * @var Dir
      */
-    private $dir;
+    protected $dir;
+
+    /**
+     * Model
+     * @var DirBacklink
+     */
+    protected $dirBacklink;
+
+    /**
+     * Model
+     * @var Link
+     */
+    protected $link;
 
     /**
      * [private description]
      * @var Group
      */
-    private $group;
+    protected $group;
 
     /**
      * [private description]
      * @var Session
      */
-    private $session;
+    protected $session;
 
     /**
      * [private description]
      * @var Collect
      */
-    private $collect;
+    protected $collect;
 
     /**
      * [__construct description]
      * @param Dir       $dir       [description]
+     * @param DirBacklink $dirBacklink [description]
+     * @param Link      $link      [description]
      * @param Session   $session   [description]
      * @param Collect   $collect   [description]
      */
-    public function __construct(Dir $dir, Session $session, Collect $collect)
+    public function __construct(Dir $dir, DirBacklink $dirBacklink, Link $link, Session $session, Collect $collect)
     {
         $this->dir = $dir;
+        $this->dirBacklink = $dirBacklink;
+        $this->link = $link;
+
         $this->session = $session;
         $this->collect = $collect;
     }
@@ -128,11 +147,30 @@ class DirService implements Serviceable
         $this->dir->status = $this->makeStatus($attributes['payment_type'] ?? null);
         $this->dir->save();
 
+        if (isset($attributes['backlink']) && isset($attributes['backlink_url'])) {
+            $this->createBacklink($attributes);
+        }
+
         $this->dir->categories()->attach($attributes['categories']);
 
         $this->dir->tag($attributes['tags'] ?? []);
 
         return $this->dir;
+    }
+
+    /**
+     * [createBacklink description]
+     * @param  array $attributes [description]
+     * @return Model             [description]
+     */
+    public function createBacklink(array $attributes) : Model
+    {
+        $this->dirBacklink->dir()->associate($this->dir);
+        $this->dirBacklink->link()->associate($attributes['backlink']);
+        $this->dirBacklink->url = $attributes['backlink_url'];
+        $this->dirBacklink->save();
+
+        return $this->dirBacklink;
     }
 
     /**

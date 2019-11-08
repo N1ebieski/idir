@@ -16,7 +16,7 @@ class PaymentService implements Serviceable
      * Model
      * @var Payment
      */
-    private $payment;
+    protected $payment;
 
     /**
      * [__construct description]

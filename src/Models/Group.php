@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Builder;
 use N1ebieski\ICore\Traits\Carbonable;
 use N1ebieski\ICore\Traits\Filterable;
 use N1ebieski\ICore\Traits\FullTextSearchable;
-use N1ebieski\IDir\Traits\Positionable;
+use N1ebieski\ICore\Traits\Positionable;
 use N1ebieski\IDir\Repositories\GroupRepo;
 use N1ebieski\IDir\Services\GroupService;
 

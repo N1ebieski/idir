@@ -3,9 +3,28 @@
 namespace N1ebieski\IDir\Http\Requests\Web\Dir;
 
 use N1ebieski\IDir\Http\Requests\Web\Dir\StoreFormRequest;
+use N1ebieski\ICore\Models\Link;
 
+/**
+ * [CreateSummaryRequest description]
+ */
 class CreateSummaryRequest extends StoreFormRequest
 {
+    /**
+     * [private description]
+     * @var Link
+     */
+    protected $link;
+
+    /**
+     * [__construct description]
+     * @param Link $link [description]
+     */
+    public function __construct(Link $link)
+    {
+        $this->link = $link;
+    }
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -35,21 +54,29 @@ class CreateSummaryRequest extends StoreFormRequest
      */
     protected function prepareForValidation()
     {
-        if (!$this->old('payment_type')) {
-            session()->put(
-                '_old_input.payment_type', $this->group_dir_available->prices->sortByDesc('type')->first()->type
-            );
+        if ($this->group_dir_available->prices->isNotEmpty()) {
+            if (!$this->old('payment_type')) {
+                session()->put(
+                    '_old_input.payment_type', $this->group_dir_available->prices->sortByDesc('type')->first()->type
+                );
+            }
+
+            if ($this->old('payment_code_sms')) {
+                session()->flash('_old_input.payment_code_sms_model',
+                    $this->group_dir_available->prices->where('id', old('payment_code_sms'))->first()
+                );
+            }
+
+            if ($this->old('payment_code_transfer')) {
+                session()->flash('_old_input.payment_code_transfer_model',
+                    $this->group_dir_available->prices->where('id', old('payment_code_transfer'))->first()
+                );
+            }
         }
 
-        if ($this->old('payment_code_sms')) {
-            session()->flash('_old_input.payment_code_sms_model',
-                $this->group_dir_available->prices->where('id', old('payment_code_sms'))->first()
-            );
-        }
-
-        if ($this->old('payment_code_transfer')) {
-            session()->flash('_old_input.payment_code_transfer_model',
-                $this->group_dir_available->prices->where('id', old('payment_code_transfer'))->first()
+        if ($this->old('backlink')) {
+            session()->flash('_old_input.backlink_model',
+                $this->link->find($this->old('backlink'))
             );
         }
 

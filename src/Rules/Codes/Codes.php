@@ -15,13 +15,13 @@ class Codes implements Rule
      * [private description]
      * @var Request
      */
-    private $request;
+    protected $request;
 
     /**
      * [private description]
      * @var Code
      */
-    private $code;
+    protected $code;
 
     /**
      * [__construct description]

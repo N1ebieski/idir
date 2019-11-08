@@ -12,7 +12,7 @@ class EditRequest extends FormRequest
      * [private description]
      * @var Price
      */
-    private $price;
+    protected $price;
 
     /**
      * [protected description]

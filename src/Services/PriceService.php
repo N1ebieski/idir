@@ -18,25 +18,25 @@ class PriceService implements Serviceable
      * Model
      * @var Price
      */
-    private $price;
+    protected $price;
 
     /**
      * [private description]
      * @var Code
      */
-    private $code;
+    protected $code;
 
     /**
      * [private description]
      * @var Group
      */
-    private $group;
+    protected $group;
 
     /**
      * [private description]
      * @var Collect
      */
-    private $collect;
+    protected $collect;
 
     /**
      * [__construct description]

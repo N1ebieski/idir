@@ -17,25 +17,25 @@ class Transfer extends Codes
      * [private description]
      * @var Price
      */
-    private $price;
+    protected $price;
 
     /**
      * [private description]
      * @var Code
      */
-    private $code;
+    protected $code;
 
     /**
      * [private description]
      * @var Request
      */
-    private $request;
+    protected $request;
 
     /**
      * [private description]
      * @var Cashbill
      */
-    private $cashbill;
+    protected $cashbill;
 
     /**
      * [__construct description]

@@ -24,8 +24,8 @@
     <link href="{{ mix(app('Helpers\View')->getStylesheet('css/vendor/idir')) }}" rel="stylesheet">
 
     <!-- Scripts -->
-    <script src="{{ mix('js/vendor/idir/vendor/vendor.js') }}"></script>
-    <script src="{{ mix('js/vendor/idir/web/web.js') }}"></script>
+    <script src="{{ mix('js/vendor/idir/vendor/vendor.js') }}" async></script>
+    <script src="{{ mix('js/vendor/idir/web/web.js') }}" async></script>
 </head>
 <body>
 
@@ -36,7 +36,7 @@
         @yield('content')
     </div>
 
-    @include('icore::web.partials.footer')
+    @include('idir::web.partials.footer')
 
     <a class="scroll-to-top rounded" href="#page-top">
         <i class="fas fa-angle-up"></i>

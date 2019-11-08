@@ -17,25 +17,25 @@ class StoreSummaryResponse
      * [private description]
      * @var Dir
      */
-    private $dir;
+    protected $dir;
 
     /**
      * [private description]
      * @var Payment
      */
-    private $payment;
+    protected $payment;
 
     /**
      * [private description]
      * @var ResponseFactory
      */
-    private $response;
+    protected $response;
 
     /**
      * [private description]
      * @var Config
      */
-    private $config;
+    protected $config;
 
     /**
      * @param ResponseFactory $response
