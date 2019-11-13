@@ -117,13 +117,10 @@ class DirController
         StoreSummaryResponse $response
     ) : RedirectResponse
     {
-        $dirService = $dir->makeService();
-        $dirService->setGroup($group)->create($request->validated());
+        $dir->setGroup($group)->makeService()->create($request->validated());
 
         if ($request->has('payment_type')) {
-            event(new PaymentStore($dirService->getPayment()));
-
-            $response->setPayment($dirService->getPayment());
+            event(new PaymentStore($dir->getPayment()));
         }
 
         event(new DirStore($dir));

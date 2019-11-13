@@ -3,6 +3,7 @@
 namespace N1ebieski\IDir\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use N1ebieski\IDir\Models\Price;
 use N1ebieski\IDir\Services\CodeService;
 
 /**
@@ -13,6 +14,12 @@ class Code extends Model
     // Configuration
 
     /**
+     * [protected description]
+     * @var Price
+     */
+    protected $price;
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array
@@ -21,6 +28,31 @@ class Code extends Model
         'code',
         'quantity'
     ];
+
+    // Setters
+
+    /**
+     * @param Price $price
+     *
+     * @return static
+     */
+    public function setPrice(Price $price)
+    {
+        $this->price = $price;
+
+        return $this;
+    }
+
+    // Getters
+
+    /**
+     * [getPrice description]
+     * @return Price [description]
+     */
+    public function getPrice() : Price
+    {
+        return $this->price;
+    }
 
     // Relations
 

@@ -3,18 +3,22 @@
 namespace N1ebieski\IDir\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use N1ebieski\IDir\Models\Dir;
 use N1ebieski\IDir\Repositories\DirBacklinkRepo;
-use Carbon\Carbon;
+use N1ebieski\IDir\Services\DirBacklinkService;
 
 /**
  * [DirBacklink description]
  */
 class DirBacklink extends Model
 {
-    public $test = 'dupa';
-
-
     // Configuration
+
+    /**
+     * [private description]
+     * @var Dir
+     */
+    protected $dir;
 
     /**
     * The attributes that are mass assignable.
@@ -39,6 +43,27 @@ class DirBacklink extends Model
         'attempts' => 0,
         'attempted_at' => null
     ];
+
+    // Setters
+
+    /**
+     * @param Dir $dir
+     *
+     * @return static
+     */
+    public function setDir(Dir $dir)
+    {
+        $this->dir = $dir;
+
+        return $this;
+    }
+
+    // Getters
+
+    public function getDir() : Dir
+    {
+        return $this->dir;
+    }
 
     // Relations
 
@@ -69,6 +94,15 @@ class DirBacklink extends Model
     public function makeRepo() : DirBacklinkRepo
     {
         return app()->make(DirBacklinkRepo::class, ['dirBacklink' => $this]);
+    }
+
+    /**
+     * [makeService description]
+     * @return DirBacklinkService [description]
+     */
+    public function makeService() : DirBacklinkService
+    {
+        return app()->make(DirBacklinkService::class, ['dirBacklink' => $this]);
     }
 
 }

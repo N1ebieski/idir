@@ -86,7 +86,7 @@
                 </div>
                 <div class="form-group">
                     <label for="backlink_url">{{ trans('idir::dirs.backlink_url') }}:</label>
-                    <input type="text" name="backlink_url" id="backlink_url"
+                    <input type="text" name="backlink_url" id="backlink_url" placeholder="https://"
                     value="{{ old('backlink_url') }}" class="form-control @isValid('backlink_url')">
                     @includeWhen($errors->has('backlink_url'), 'icore::admin.partials.errors', ['name' => 'backlink_url'])
                 </div>

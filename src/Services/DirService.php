@@ -10,7 +10,6 @@ use N1ebieski\IDir\Models\Price;
 use N1ebieski\IDir\Models\Dir;
 use N1ebieski\IDir\Models\DirBacklink;
 use Illuminate\Contracts\Session\Session;
-use N1ebieski\IDir\Models\Group;
 use Carbon\Carbon;
 
 /**
@@ -41,12 +40,6 @@ class DirService implements Serviceable
      * @var DirBacklink
      */
     protected $dirBacklink;
-
-    /**
-     * [private description]
-     * @var Group
-     */
-    protected $group;
 
     /**
      * [private description]
@@ -85,27 +78,6 @@ class DirService implements Serviceable
 
         $this->session = $session;
         $this->collect = $collect;
-    }
-
-    /**
-     * @param Group $group
-     *
-     * @return static
-     */
-    public function setGroup(Group $group)
-    {
-        $this->group = $group;
-
-        return $this;
-    }
-
-    /**
-     * [getPayment description]
-     * @return Payment [description]
-     */
-    public function getPayment() : Payment
-    {
-        return $this->payment;
     }
 
     /**
@@ -167,13 +139,13 @@ class DirService implements Serviceable
     {
         $this->dir->fill($attributes);
         $this->dir->user()->associate(auth()->user());
-        $this->dir->group()->associate($this->group);
+        $this->dir->group()->associate($this->dir->getGroup());
         $this->dir->content = $this->dir->content_html;
         $this->dir->status = $this->makeStatus($attributes['payment_type'] ?? null);
         $this->dir->save();
 
         if (isset($attributes['backlink']) && isset($attributes['backlink_url'])) {
-            $this->createBacklink($attributes);
+            $this->dirBacklink->setDir($this->dir)->makeService()->create($attributes);
         }
 
         $this->dir->categories()->attach($attributes['categories']);
@@ -181,27 +153,14 @@ class DirService implements Serviceable
         $this->dir->tag($attributes['tags'] ?? []);
 
         if (isset($attributes['payment_type'])) {
-            $this->payment->setMorph($this->dir)->setPriceMorph(
-                $this->price->find($attributes["payment_{$attributes['payment_type']}"])
-            )->makeService()->create($attributes);
+            $this->dir->setPayment(
+                $this->payment->setMorph($this->dir)->setPriceMorph(
+                    $this->price->find($attributes["payment_{$attributes['payment_type']}"])
+                )->makeService()->create($attributes)
+            );
         }
 
         return $this->dir;
-    }
-
-    /**
-     * [createBacklink description]
-     * @param  array $attributes [description]
-     * @return Model             [description]
-     */
-    public function createBacklink(array $attributes) : Model
-    {
-        $this->dirBacklink->dir()->associate($this->dir);
-        $this->dirBacklink->link()->associate($attributes['backlink']);
-        $this->dirBacklink->url = $attributes['backlink_url'];
-        $this->dirBacklink->save();
-
-        return $this->dirBacklink;
     }
 
     /**
