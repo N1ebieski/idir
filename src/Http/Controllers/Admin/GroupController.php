@@ -31,7 +31,7 @@ class GroupController
     public function index(Group $group, IndexRequest $request, IndexFilter $filter) : View
     {
         return view('idir::admin.group.index', [
-            'groups' => $group->getRepo()->paginateByFilter($filter->all()),
+            'groups' => $group->makeRepo()->paginateByFilter($filter->all()),
             'filter' => $filter->all(),
             'paginate' => config('database.paginate')
         ]);
@@ -62,7 +62,7 @@ class GroupController
      */
     public function store(Group $group, StoreRequest $request) : RedirectResponse
     {
-        $group->getService()->create($request->all());
+        $group->makeService()->create($request->all());
 
         return redirect()->route("admin.group.index")
             ->with('success', trans('idir::groups.success.store') );
@@ -92,7 +92,7 @@ class GroupController
         return view('idir::admin.group.edit', [
             'group' => $group,
             'groups' => $group->orderBy('id', 'asc')->get(),
-            'privileges' => $privilege->getRepo()->getWithGroup($group->id)
+            'privileges' => $privilege->makeRepo()->getWithGroup($group->id)
         ]);
     }
 
@@ -105,7 +105,7 @@ class GroupController
      */
     public function update(Group $group, UpdateRequest $request) : RedirectResponse
     {
-        $group->getService()->update($request->all());
+        $group->makeService()->update($request->all());
 
         return redirect()->route('admin.group.edit', [$group->id])
             ->with('success', trans('idir::groups.success.update') );
@@ -135,11 +135,11 @@ class GroupController
      */
     public function updatePosition(Group $group, UpdatePositionRequest $request) : JsonResponse
     {
-        $group->getService()->updatePosition($request->only('position'));
+        $group->makeService()->updatePosition($request->only('position'));
 
         return response()->json([
             'success' => '',
-            'siblings' => $group->getRepo()->getSiblingsAsArray()
+            'siblings' => $group->makeRepo()->getSiblingsAsArray()
         ]);
     }
 
@@ -151,7 +151,7 @@ class GroupController
      */
     public function destroy(Group $group) : RedirectResponse
     {
-        $group->getService()->delete();
+        $group->makeService()->delete();
 
         return redirect()->route("admin.group.index")
             ->with('success', trans('idir::groups.success.destroy'));

@@ -117,7 +117,7 @@ class PriceService implements Serviceable
         $this->price->group()->associate($this->group);
         $this->price->save();
 
-        $this->code->getService()->setPrice($this->price)
+        $this->code->makeService()->setPrice($this->price)
             ->organizeGlobal($attributes['codes'] ?? []);
 
         return $this->price;
@@ -130,7 +130,7 @@ class PriceService implements Serviceable
      */
     public function update(array $attributes) : bool
     {
-        $this->code->getService()->setPrice($this->price)
+        $this->code->makeService()->setPrice($this->price)
             ->organizeGlobal($attributes['codes'] ?? []);
 
         return $this->price->update($attributes);

@@ -65,13 +65,13 @@ class Price extends Model
         return $this->codes['codes'] ?? null;
     }
 
-    // Getters
+    // Makers
 
     /**
-     * [getService description]
+     * [makeService description]
      * @return PriceService [description]
      */
-    public function getService() : PriceService
+    public function makeService() : PriceService
     {
         return app()->make(PriceService::class, ['price' => $this]);
     }

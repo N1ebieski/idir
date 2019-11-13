@@ -20,7 +20,12 @@
 <br>
 {{ trans('idir::backlinks.edit_dir_info') }}
 
-@component('mail::button', ['url' => route('web.dir.edit_group', [$dirBacklink->dir->id]), 'color' => 'primary'])
+@component('mail::button', [
+    'url' => route('web.dir.edit_group', [
+        $dirBacklink->dir->id
+    ]),
+    'color' => 'primary'
+])
 {{ trans('idir::backlinks.edit_dir') }}
 @endcomponent
 
@@ -30,8 +35,7 @@
     "If you’re having trouble clicking the \":actionText\" button, copy and paste the URL below\n".
     'into your web browser: [:actionURL](:actionURL)',
     [
-        'actionText' => trans('idir::backlinks.edit_dir'),
-        'actionURL' => route('web.dir.edit_group', [$dirBacklink->dir->id]),
+        'actionURL' => route('web.dir.edit_group', [$dirBacklink->dir->id])
     ]
 )
 @endcomponent

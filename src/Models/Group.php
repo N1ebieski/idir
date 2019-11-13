@@ -163,22 +163,22 @@ class Group extends Model
         });
     }
 
-    // Getters
+    // Makers
 
     /**
-     * [getRepo description]
+     * [makeRepo description]
      * @return GroupRepo [description]
      */
-    public function getRepo() : GroupRepo
+    public function makeRepo() : GroupRepo
     {
         return app()->make(GroupRepo::class, ['group' => $this]);
     }
 
     /**
-     * [getService description]
+     * [makeService description]
      * @return GroupService [description]
      */
-    public function getService() : GroupService
+    public function makeService() : GroupService
     {
         return app()->make(GroupService::class, ['group' => $this]);
     }

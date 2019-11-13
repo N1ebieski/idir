@@ -11,12 +11,10 @@ use N1ebieski\IDir\Http\Requests\Web\Dir\CreateSummaryRequest;
 use N1ebieski\IDir\Http\Requests\Web\Dir\StoreSummaryRequest;
 use N1ebieski\IDir\Models\Group;
 use N1ebieski\IDir\Models\Dir;
-use N1ebieski\IDir\Models\Price;
 use N1ebieski\ICore\Models\Link;
 use N1ebieski\IDir\Models\Category\Dir\Category;
 use N1ebieski\IDir\Events\Dir\Store as DirStore;
 use N1ebieski\IDir\Events\Payment\Dir\Store as PaymentStore;
-use N1ebieski\IDir\Models\Payment\Dir\Payment;
 use N1ebieski\IDir\Http\Responses\Web\Dir\StoreSummaryResponse;
 
 /**
@@ -32,7 +30,7 @@ class DirController
     public function createGroup(Group $group) : View
     {
         return view('idir::web.dir.create.group', [
-            'groups' => $group->getRepo()->getPublicWithRels()
+            'groups' => $group->makeRepo()->getPublicWithRels()
         ]);
     }
 
@@ -61,7 +59,7 @@ class DirController
      */
     public function storeForm(Group $group, Dir $dir, StoreFormRequest $request) : RedirectResponse
     {
-        $dir->getService()->createOrUpdateSession($request->validated());
+        $dir->makeService()->createOrUpdateSession($request->validated());
 
         return redirect()->route('web.dir.create_summary', [$group->id]);
     }
@@ -77,14 +75,14 @@ class DirController
      */
     public function createSummary(Group $group, Dir $dir, Category $category, Link $link, CreateSummaryRequest $request) : View
     {
-        $dir->getService()->createOrUpdateSession($request->validated());
+        $dir->makeService()->createOrUpdateSession($request->validated());
 
-        $categories = $category->getRepo()->getByIds(
+        $categories = $category->makeRepo()->getByIds(
             $request->session()->get('dir.categories')
         );
 
         if ($group->backlink > 0) {
-            $backlinks = $link->getRepo()->getAvailableBacklinksByCats(array_merge(
+            $backlinks = $link->makeRepo()->getAvailableBacklinksByCats(array_merge(
                 $categories->pluck('ancestors')->flatten()->pluck('id')->toArray(),
                 $categories->pluck('id')->toArray()
             ));
@@ -106,8 +104,6 @@ class DirController
      * [storeSummary description]
      * @param  Group                $group          [description]
      * @param  Dir                  $dir            [description]
-     * @param  Price                $price          [description]
-     * @param  Payment              $payment        [description]
      * @param  StoreSummaryRequest  $request        [description]
      * @param  PaymentCodeRequest   $requestPayment [description]
      * @param  StoreSummaryResponse $response       [description]
@@ -116,23 +112,18 @@ class DirController
     public function storeSummary(
         Group $group,
         Dir $dir,
-        Price $price,
-        Payment $payment,
         StoreSummaryRequest $request,
         PaymentCodeRequest $requestPayment,
         StoreSummaryResponse $response
     ) : RedirectResponse
     {
-        $dir->getService()->setGroup($group)->create($request->validated());
+        $dirService = $dir->makeService();
+        $dirService->setGroup($group)->create($request->validated());
 
         if ($request->has('payment_type')) {
-            $payment->setMorph($dir)->setPriceMorph(
-                $price->find($request->input("payment_{$request->get('payment_type')}"))
-            )->getService()->create($request->only('payment_type'));
+            event(new PaymentStore($dirService->getPayment()));
 
-            event(new PaymentStore($payment));
-
-            $response->setPayment($payment);
+            $response->setPayment($dirService->getPayment());
         }
 
         event(new DirStore($dir));

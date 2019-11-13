@@ -39,7 +39,7 @@ class LinkCache extends BaseLinkCache
             "link.getLinksUnionDirsByComponent.{$cats}",
             now()->addMinutes($this->minutes),
             function() use ($dirs, $component) {
-                return $this->link->getRepo()->getLinksUnionDirsByComponent($dirs, $component);
+                return $this->link->makeRepo()->getLinksUnionDirsByComponent($dirs, $component);
             }
         );
     }

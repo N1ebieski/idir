@@ -68,7 +68,7 @@ class PaymentController
     public function verify(Payment $payment, VerifyRequest $request, Cashbill $cashbill) : string
     {
         // I can't' use the route binding, because cashbill returns id payment as $_GET variable
-        $payment = $payment->getRepo()->firstPendingById($request->input('userdata')) ?? abort(404);
+        $payment = $payment->makeRepo()->firstPendingById($request->input('userdata')) ?? abort(404);
 
         event(new VerifyAttempt($payment));
 
@@ -78,7 +78,7 @@ class PaymentController
             throw $e->setPayment($payment);
         }
 
-        $payment->getService()->updateStatus(['status' => 0]);
+        $payment->makeService()->updateStatus(['status' => 0]);
 
         event(new VerifySuccessful($payment));
 

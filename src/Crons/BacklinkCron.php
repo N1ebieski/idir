@@ -47,7 +47,7 @@ class BacklinkCron
      */
     private function addToQueue() : void
     {
-        $dirs = $this->dir->getRepo()->getAvailableHasBacklinkRequirement();
+        $dirs = $this->dir->makeRepo()->getAvailableHasBacklinkRequirement();
 
         if ($dirs->isNotEmpty()) {
             foreach ($dirs as $dir) {

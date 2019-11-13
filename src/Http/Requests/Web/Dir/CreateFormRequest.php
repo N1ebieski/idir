@@ -39,7 +39,7 @@ class CreateFormRequest extends FormRequest
         // danych z helpera old() stanowi problem
         if ($this->old('categories') || $this->session()->get('dir.categories')) {
             session()->flash('_old_input.categories_collection',
-                $this->category->getRepo()->getByIds(
+                $this->category->makeRepo()->getByIds(
                     $this->old('categories') ?? $this->session()->get('dir.categories')
                 )
             );

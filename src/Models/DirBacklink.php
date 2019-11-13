@@ -11,6 +11,9 @@ use Carbon\Carbon;
  */
 class DirBacklink extends Model
 {
+    public $test = 'dupa';
+
+
     // Configuration
 
     /**
@@ -57,13 +60,13 @@ class DirBacklink extends Model
         return $this->belongsTo('N1ebieski\ICore\Models\Link');
     }
 
-    // Getters
+    // Makers
 
     /**
-     * [getRepo description]
+     * [makeRepo description]
      * @return DirBacklinkRepo [description]
      */
-    public function getRepo() : DirBacklinkRepo
+    public function makeRepo() : DirBacklinkRepo
     {
         return app()->make(DirBacklinkRepo::class, ['dirBacklink' => $this]);
     }

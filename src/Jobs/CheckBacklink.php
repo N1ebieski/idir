@@ -8,6 +8,8 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use N1ebieski\IDir\Models\DirBacklink;
+use N1ebieski\IDir\Repositories\DirBacklinkRepo;
+use N1ebieski\IDir\Repositories\DirRepo;
 use Illuminate\Support\Facades\Mail;
 use N1ebieski\IDir\Mails\BacklinkNotFound;
 use Validator;
@@ -36,15 +38,27 @@ class CheckBacklink implements ShouldQueue
 
     /**
      * [protected description]
-     * @var string
+     * @var DirBacklinkRepo
      */
-    protected $hours;
+    protected $dirBacklinkRepo;
+
+    /**
+     * [protected description]
+     * @var DirRepo
+     */
+    protected $dirRepo;
 
     /**
      * [protected description]
      * @var int
      */
     protected $max_attempts;
+
+    /**
+     * [protected description]
+     * @var int
+     */
+    protected $hours;
 
     /**
      * Create a new job instance.
@@ -104,19 +118,22 @@ class CheckBacklink implements ShouldQueue
      */
     public function handle() : void
     {
+        $this->dirBacklinkRepo = $this->dirBacklink->makeRepo();
+        $this->dirRepo = $this->dirBacklink->dir->makeRepo();
+
         if ($this->isAttempt()) {
-            $this->dirBacklink->getRepo()->attemptedNow();
+            $this->dirBacklinkRepo->attemptedNow();
 
             if ($this->validateBacklink()) {
-                $this->dirBacklink->getRepo()->incrementAttempts();
+                $this->dirBacklinkRepo->incrementAttempts();
 
-                $this->dirBacklink->dir->getRepo()->deactivateByBacklink();
+                $this->dirRepo->deactivateByBacklink();
 
                 $this->sendMailToUser();
             } else {
-                $this->dirBacklink->getRepo()->resetAttempts();
+                $this->dirBacklinkRepo->resetAttempts();
 
-                $this->dirBacklink->dir->getRepo()->activate();
+                $this->dirRepo->activate();
             }
         }
     }
