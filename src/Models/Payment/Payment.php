@@ -65,22 +65,22 @@ class Payment extends Model
         return $query->where('status', 2);
     }
 
-    // Getters
+    // Makers
 
     /**
-     * [getService description]
+     * [makeService description]
      * @return PaymentService [description]
      */
-    public function getService() : PaymentService
+    public function makeService() : PaymentService
     {
         return app()->make(PaymentService::class, ['payment' => $this]);
     }
 
     /**
-     * [getRepo description]
+     * [makeRepo description]
      * @return PaymentRepo [description]
      */
-    public function getRepo() : PaymentRepo
+    public function makeRepo() : PaymentRepo
     {
         return app()->make(PaymentRepo::class, ['payment' => $this]);
     }

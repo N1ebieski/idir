@@ -30,8 +30,8 @@ class CheckoutDir
 
             $event->dir->payments->each(function($payment) use ($event) {
                 if ($payment->price->group_id === $event->dir->group_id) {
-                    $event->dir->getService()->updatePrivileged(['days' => $payment->price->days]);
-                    $payment->getService()->updateStatus(['status' => 1]);
+                    $event->dir->makeService()->updatePrivileged(['days' => $payment->price->days]);
+                    $payment->makeService()->updateStatus(['status' => 1]);
 
                     return false;
                 }

@@ -25,13 +25,13 @@ class RouteServiceProvider extends ServiceProvider
         parent::boot();
 
         $this->app['router']->bind('group_dir_available', function($value) {
-            return $this->app->make(\N1ebieski\IDir\Models\Group::class)->getRepo()
+            return $this->app->make(\N1ebieski\IDir\Models\Group::class)->makeRepo()
                 ->firstPublicById($value) ?? abort(404);
         });
 
         $this->app['router']->bind('payment_dir_pending', function($value) {
             return $this->app->make(\N1ebieski\IDir\Models\Payment\Dir\Payment::class)
-                ->getRepo()->firstPendingById($value) ?? abort(404);
+                ->makeRepo()->firstPendingById($value) ?? abort(404);
         });
     }
 

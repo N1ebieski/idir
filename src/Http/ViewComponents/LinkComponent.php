@@ -63,7 +63,7 @@ class LinkComponent implements Htmlable
                 'cats' => $this->cats
             ]) : null;
 
-        $links = $this->link->getCache()->rememberLinksUnionDirsByComponent($dirs, [
+        $links = $this->link->makeCache()->rememberLinksUnionDirsByComponent($dirs, [
             'cats' => $this->cats,
             'limit' => $this->limit
         ]);

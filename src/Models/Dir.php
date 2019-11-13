@@ -208,31 +208,31 @@ class Dir extends Model
         $this->attributes['content'] = strip_tags($value);
     }
 
-    // Getters
+    // Makers
 
     /**
-     * [getRepo description]
+     * [makeRepo description]
      * @return DirRepo [description]
      */
-    public function getRepo() : DirRepo
+    public function makeRepo() : DirRepo
     {
         return app()->make(DirRepo::class, ['dir' => $this]);
     }
 
     /**
-     * [getCache description]
+     * [makeCache description]
      * @return DirCache [description]
      */
-    public function getCache() : DirCache
+    public function makeCache() : DirCache
     {
         return app()->make(DirCache::class, ['dir' => $this]);
     }
 
     /**
-     * [getService description]
+     * [makeService description]
      * @return DirService [description]
      */
-    public function getService() : DirService
+    public function makeService() : DirService
     {
         return app()->make(DirService::class, ['dir' => $this]);
     }

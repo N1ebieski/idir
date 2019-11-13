@@ -33,13 +33,13 @@ class Code extends Model
         return $this->belongsTo('N1ebieski\IDir\Models\Price');
     }
 
-    // Getters
+    // Makers
 
     /**
-     * [getService description]
+     * [makeService description]
      * @return CodeService [description]
      */
-    public function getService() : CodeService
+    public function makeService() : CodeService
     {
         return app()->make(CodeService::class, ['code' => $this]);
     }

@@ -88,7 +88,7 @@ class Payment extends PaymentBaseModel
         return $this;
     }
 
-    // Getters
+    // Makers
 
     /**
      * [getMorph description]

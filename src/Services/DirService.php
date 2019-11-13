@@ -5,9 +5,10 @@ namespace N1ebieski\IDir\Services;
 use N1ebieski\ICore\Services\Serviceable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection as Collect;
+use N1ebieski\IDir\Models\Payment\Dir\Payment;
+use N1ebieski\IDir\Models\Price;
 use N1ebieski\IDir\Models\Dir;
 use N1ebieski\IDir\Models\DirBacklink;
-use N1ebieski\ICore\Models\Link;
 use Illuminate\Contracts\Session\Session;
 use N1ebieski\IDir\Models\Group;
 use Carbon\Carbon;
@@ -25,15 +26,21 @@ class DirService implements Serviceable
 
     /**
      * Model
-     * @var DirBacklink
+     * @var Payment
      */
-    protected $dirBacklink;
+    protected $payment;
 
     /**
      * Model
-     * @var Link
+     * @var Price
      */
-    protected $link;
+    protected $price;
+
+    /**
+     * Model
+     * @var DirBacklink
+     */
+    protected $dirBacklink;
 
     /**
      * [private description]
@@ -55,17 +62,26 @@ class DirService implements Serviceable
 
     /**
      * [__construct description]
-     * @param Dir       $dir       [description]
+     * @param Dir         $dir         [description]
+     * @param Payment     $payment     [description]
+     * @param Price       $price       [description]
      * @param DirBacklink $dirBacklink [description]
-     * @param Link      $link      [description]
-     * @param Session   $session   [description]
-     * @param Collect   $collect   [description]
+     * @param Session     $session     [description]
+     * @param Collect     $collect     [description]
      */
-    public function __construct(Dir $dir, DirBacklink $dirBacklink, Link $link, Session $session, Collect $collect)
+    public function __construct(
+        Dir $dir,
+        Payment $payment,
+        Price $price,
+        DirBacklink $dirBacklink,
+        Session $session,
+        Collect $collect
+    )
     {
         $this->dir = $dir;
         $this->dirBacklink = $dirBacklink;
-        $this->link = $link;
+        $this->payment = $payment;
+        $this->price = $price;
 
         $this->session = $session;
         $this->collect = $collect;
@@ -81,6 +97,15 @@ class DirService implements Serviceable
         $this->group = $group;
 
         return $this;
+    }
+
+    /**
+     * [getPayment description]
+     * @return Payment [description]
+     */
+    public function getPayment() : Payment
+    {
+        return $this->payment;
     }
 
     /**
@@ -154,6 +179,12 @@ class DirService implements Serviceable
         $this->dir->categories()->attach($attributes['categories']);
 
         $this->dir->tag($attributes['tags'] ?? []);
+
+        if (isset($attributes['payment_type'])) {
+            $this->payment->setMorph($this->dir)->setPriceMorph(
+                $this->price->find($attributes["payment_{$attributes['payment_type']}"])
+            )->makeService()->create($attributes);
+        }
 
         return $this->dir;
     }

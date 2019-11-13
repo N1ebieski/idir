@@ -58,7 +58,7 @@ class GroupService implements Serviceable
 
         $this->group->privileges()->attach(array_filter($attributes['priv'] ?? []));
 
-        $this->price->getService()->setGroup($this->group)->createOrUpdateGlobal(
+        $this->price->makeService()->setGroup($this->group)->createOrUpdateGlobal(
             array_filter((int)$attributes['payment'] === 1 ?
                 $this->collect->make($attributes['prices'])->flatten(1)->toArray() : []
             )
@@ -81,7 +81,7 @@ class GroupService implements Serviceable
 
         $this->group->privileges()->sync(array_filter($attributes['priv'] ?? []));
 
-        $this->price->getService()->setGroup($this->group)->organizeGlobal(
+        $this->price->makeService()->setGroup($this->group)->organizeGlobal(
             array_filter((int)$attributes['payment'] === 1 ?
                 $this->collect->make($attributes['prices'])->flatten(1)->toArray() : []
             )

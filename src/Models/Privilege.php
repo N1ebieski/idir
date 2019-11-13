@@ -17,13 +17,13 @@ class Privilege extends Model
         return $this->belongsToMany('N1ebieski\IDir\Models\Group', 'groups_privileges');
     }
 
-    // Getters
+    // Makers
 
     /**
-     * [getRepo description]
+     * [makeRepo description]
      * @return PrivilegeRepo [description]
      */
-    public function getRepo() : PrivilegeRepo
+    public function makeRepo() : PrivilegeRepo
     {
         return app()->make(PrivilegeRepo::class, ['privilege' => $this]);
     }
