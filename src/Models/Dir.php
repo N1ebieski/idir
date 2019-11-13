@@ -13,6 +13,8 @@ use N1ebieski\IDir\Services\DirService;
 use N1ebieski\IDir\Cache\DirCache;
 use N1ebieski\IDir\Repositories\DirRepo;
 use Illuminate\Database\Eloquent\Builder;
+use N1ebieski\IDir\Models\Group;
+use N1ebieski\IDir\Models\Payment\Dir\Payment;
 
 /**
  * [Dir description]
@@ -22,6 +24,18 @@ class Dir extends Model
     use Sluggable, Taggable, FullTextSearchable, Filterable;
 
     // Configuration
+
+    /**
+     * [private description]
+     * @var Group
+     */
+    protected $group;
+
+    /**
+     * [private description]
+     * @var Payment
+     */
+    protected $payment;
 
     /**
      * The attributes that are mass assignable.
@@ -74,6 +88,51 @@ class Dir extends Model
                 'source' => 'title'
             ]
         ];
+    }
+
+    // Setters
+
+    /**
+     * @param Group $group
+     *
+     * @return static
+     */
+    public function setGroup(Group $group)
+    {
+        $this->group = $group;
+
+        return $this;
+    }
+
+    /**
+     * [setPayment description]
+     * @param Payment $payment [description]
+     */
+    public function setPayment(Payment $payment)
+    {
+        $this->payment = $payment;
+
+        return $this;
+    }
+
+    // Getters
+
+    /**
+     * [getGroup description]
+     * @return Group [description]
+     */
+    public function getGroup() : Group
+    {
+        return $this->group;
+    }
+
+    /**
+     * [getPayment description]
+     * @return Payment [description]
+     */
+    public function getPayment() : Payment
+    {
+        return $this->payment;
     }
 
     // Overrides

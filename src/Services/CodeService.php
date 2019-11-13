@@ -4,8 +4,8 @@ namespace N1ebieski\IDir\Services;
 
 use N1ebieski\ICore\Services\Serviceable;
 use Illuminate\Database\Eloquent\Model;
-use N1ebieski\IDir\Models\Price;
 use N1ebieski\IDir\Models\Code;
+use Carbon\Carbon;
 
 /**
  * [CodeService description]
@@ -19,29 +19,11 @@ class CodeService implements Serviceable
     protected $code;
 
     /**
-     * Model
-     * @var Price
-     */
-    protected $price;
-
-    /**
      * @param Code $code
      */
     public function __construct(Code $code)
     {
         $this->code = $code;
-    }
-
-    /**
-     * @param Price $price
-     *
-     * @return static
-     */
-    public function setPrice(Price $price)
-    {
-        $this->price = $price;
-
-        return $this;
     }
 
     /**
@@ -67,7 +49,10 @@ class CodeService implements Serviceable
     {
         foreach ($codes as $code) {
             $_code = $this->code->make($code);
-            $_code->price()->associate($this->price);
+            $_code->price()->associate($this->code->getPrice());
+            $_code->created_at = Carbon::now();
+            $_code->updated_at = Carbon::now();
+
             $_codes_model[] = $_code->attributesToArray();
         }
 
@@ -119,7 +104,7 @@ class CodeService implements Serviceable
      */
     public function clear() : int
     {
-        return $this->code->where('price_id', $this->price->id)->delete();
+        return $this->code->where('price_id', $this->code->getPrice()->id)->delete();
     }
 
     /**

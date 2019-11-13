@@ -6,7 +6,6 @@ use N1ebieski\ICore\Services\Serviceable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection as Collect;
 use N1ebieski\IDir\Models\Price;
-use N1ebieski\IDir\Models\Group;
 use N1ebieski\IDir\Models\Code;
 
 /**
@@ -28,12 +27,6 @@ class PriceService implements Serviceable
 
     /**
      * [private description]
-     * @var Group
-     */
-    protected $group;
-
-    /**
-     * [private description]
      * @var Collect
      */
     protected $collect;
@@ -49,18 +42,6 @@ class PriceService implements Serviceable
         $this->price = $price;
         $this->code = $code;
         $this->collect = $collect;
-    }
-
-    /**
-     * @param Group $group
-     *
-     * @return static
-     */
-    public function setGroup(Group $group)
-    {
-        $this->group = $group;
-
-        return $this;
     }
 
     /**
@@ -112,15 +93,15 @@ class PriceService implements Serviceable
      */
     public function create(array $attributes) : Model
     {
-        $this->price = $this->price->make($attributes);
+        $price = $this->price->make($attributes);
 
-        $this->price->group()->associate($this->group);
-        $this->price->save();
+        $price->group()->associate($this->price->getGroup());
+        $price->save();
 
-        $this->code->makeService()->setPrice($this->price)
+        $this->code->setPrice($price)->makeService()
             ->organizeGlobal($attributes['codes'] ?? []);
 
-        return $this->price;
+        return $price;
     }
 
     /**
@@ -130,7 +111,7 @@ class PriceService implements Serviceable
      */
     public function update(array $attributes) : bool
     {
-        $this->code->makeService()->setPrice($this->price)
+        $this->code->setPrice($this->price)->makeService()
             ->organizeGlobal($attributes['codes'] ?? []);
 
         return $this->price->update($attributes);
@@ -163,7 +144,7 @@ class PriceService implements Serviceable
     public function deleteExceptGlobal(array $ids) : int
     {
         return $this->price->whereNotIn('id', $ids)
-            ->where('group_id', $this->group->id)->delete();
+            ->where('group_id', $this->price->getGroup()->id)->delete();
     }
 
     /**

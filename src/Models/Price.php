@@ -3,6 +3,7 @@
 namespace N1ebieski\IDir\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use N1ebieski\IDir\Models\Group;
 use N1ebieski\IDir\Services\PriceService;
 use Illuminate\Database\Eloquent\Collection;
 
@@ -12,6 +13,12 @@ use Illuminate\Database\Eloquent\Collection;
 class Price extends Model
 {
     // Configuration
+
+    /**
+     * [protected description]
+     * @var Group
+     */
+    protected $group;
 
     /**
      * The attributes that are mass assignable.
@@ -25,6 +32,31 @@ class Price extends Model
         'code',
         'number'
     ];
+
+    // Setters
+
+    /**
+     * @param Group $group
+     *
+     * @return static
+     */
+    public function setGroup(Group $group)
+    {
+        $this->group = $group;
+
+        return $this;
+    }
+
+    // Getters
+
+    /**
+     * [getGroup description]
+     * @return Group [description]
+     */
+    public function getGroup() : Group
+    {
+        return $this->group;
+    }
 
     // Relations
 

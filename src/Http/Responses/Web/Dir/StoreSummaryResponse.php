@@ -3,7 +3,6 @@
 namespace N1ebieski\IDir\Http\Responses\Web\Dir;
 
 use N1ebieski\IDir\Models\Dir;
-use N1ebieski\IDir\Models\Payment\Payment;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Http\RedirectResponse;
@@ -18,12 +17,6 @@ class StoreSummaryResponse
      * @var Dir
      */
     protected $dir;
-
-    /**
-     * [private description]
-     * @var Payment
-     */
-    protected $payment;
 
     /**
      * [private description]
@@ -60,18 +53,6 @@ class StoreSummaryResponse
     }
 
     /**
-     * @param Payment $payment
-     *
-     * @return static
-     */
-    public function setPayment(Payment $payment)
-    {
-        $this->payment = $payment;
-
-        return $this;
-    }
-
-    /**
      * [response description]
      * @return RedirectResponse [description]
      */
@@ -85,7 +66,7 @@ class StoreSummaryResponse
                 return $this->response->redirectToRoute('web.dir.show', [$this->dir->slug])
                     ->with('success', trans('idir::dirs.success.store.status_1'));
             case 2:
-                return $this->response->redirectToRoute('web.payment.dir.show', [$this->payment->id]);
+                return $this->response->redirectToRoute('web.payment.dir.show', [$this->dir->getPayment()->id]);
         }
     }
 }
