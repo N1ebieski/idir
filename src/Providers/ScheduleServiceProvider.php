@@ -31,7 +31,9 @@ class ScheduleServiceProvider extends ServiceProvider
              $schedule = $this->app->make(Schedule::class);
 
              $schedule->call($this->app->make(\N1ebieski\IDir\Crons\BacklinkCron::class))
-                ->name('BacklinkCron');
+                ->name('BacklinkCron')->daily();
+
+             $schedule->command('clean:directories')->hourly();
 
              $schedule->command('queue:restart');
              $schedule->command('queue:work --daemon --stop-when-empty --tries=3');

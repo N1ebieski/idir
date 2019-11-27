@@ -118,12 +118,12 @@
                                     <label for="payment_transfer" class="sr-only"> {{ trans('idir::dirs.payment_transfer') }}</label>
                                     <select class="form-control @isValid('payment_transfer')" id="payment_transfer" name="payment_transfer">
                                         @foreach ($transfers = $group->prices->where('type', 'transfer')->sortBy('price') as $transfer)
-                                            <option value="{{ $transfer->id }}" {{ old('payment_transfer') == $transfer->id ? 'selected' : null }}>
-                                                {{ trans('idir::dirs.price', [
-                                                'price' => $transfer->price,
-                                                'days' => $days = $transfer->days,
-                                                'limit' => $days !== null ? strtolower(trans('idir::groups.days')) : strtolower(trans('idir::groups.unlimited'))
-                                                ]) }}
+                                        <option value="{{ $transfer->id }}" {{ old('payment_transfer') == $transfer->id ? 'selected' : null }}>
+                                            {{ trans('idir::dirs.price', [
+                                            'price' => $transfer->price,
+                                            'days' => $days = $transfer->days,
+                                            'limit' => $days !== null ? strtolower(trans('idir::groups.days')) : strtolower(trans('idir::groups.unlimited'))
+                                            ]) }}
                                         </option>
                                         @endforeach
                                     </select>
@@ -147,13 +147,13 @@
                                     <label for="payment_code_transfer" class="sr-only"> {{ trans('idir::dirs.payment_code_transfer') }}</label>
                                     <select class="form-control @isValid('payment_code_transfer')" id="payment_code_transfer" name="payment_code_transfer">
                                         @foreach ($codes = $group->prices->where('type', 'code_transfer')->sortBy('price') as $code)
-                                            <option value="{{ $code->id }}" {{ old('payment_code_transfer') == $code->id ? 'selected' : null }}
-                                            data="{{ json_encode($code->only(['code', 'price'])) }}">
-                                                {{ trans('idir::dirs.price', [
-                                                'price' => $code->price,
-                                                'days' => $days = $code->days,
-                                                'limit' => $days !== null ? strtolower(trans('idir::groups.days')) : strtolower(trans('idir::groups.unlimited'))
-                                                ]) }}
+                                        <option value="{{ $code->id }}" {{ old('payment_code_transfer') == $code->id ? 'selected' : null }}
+                                        data="{{ json_encode($code->only(['code', 'price'])) }}">
+                                            {{ trans('idir::dirs.price', [
+                                            'price' => $code->price,
+                                            'days' => $days = $code->days,
+                                            'limit' => $days !== null ? strtolower(trans('idir::groups.days')) : strtolower(trans('idir::groups.unlimited'))
+                                            ]) }}
                                         </option>
                                         @endforeach
                                     </select>
@@ -185,13 +185,13 @@
                                     <label for="payment_code_sms" class="sr-only"> {{ trans('idir::dirs.payment_code_sms') }}</label>
                                     <select class="form-control @isValid('payment_code_sms')" id="payment_code_sms" name="payment_code_sms">
                                         @foreach ($codes = $group->prices->where('type', 'code_sms')->sortBy('price') as $code)
-                                            <option value="{{ $code->id }}" {{ old('payment_code_sms') == $code->id ? 'selected' : null }}
-                                            data="{{ json_encode($code->only(['code', 'price', 'number'])) }}">
-                                                {{ trans('idir::dirs.price', [
-                                                'price' => $code->price,
-                                                'days' => $days = $code->days,
-                                                'limit' => $days !== null ? strtolower(trans('idir::groups.days')) : strtolower(trans('idir::groups.unlimited'))
-                                                ]) }}
+                                        <option value="{{ $code->id }}" {{ old('payment_code_sms') == $code->id ? 'selected' : null }}
+                                        data="{{ json_encode($code->only(['code', 'price', 'number'])) }}">
+                                            {{ trans('idir::dirs.price', [
+                                            'price' => $code->price,
+                                            'days' => $days = $code->days,
+                                            'limit' => $days !== null ? strtolower(trans('idir::groups.days')) : strtolower(trans('idir::groups.unlimited'))
+                                            ]) }}
                                         </option>
                                         @endforeach
                                     </select>

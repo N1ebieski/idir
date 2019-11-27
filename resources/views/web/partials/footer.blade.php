@@ -21,7 +21,7 @@
         @render('icore::page.footerComponent', ['cols' => 3])
         <hr>
         <div class="d-flex justify-content-center">
-            <div class="footer-copyright text-center py-3">
+            <div class="footer-copyright text-center py-3 mr-3">
                 <small>
                     2019 Copyright © <a href="">iDir</a> by Mariusz Wysokiński
                 </small>

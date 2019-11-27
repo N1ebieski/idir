@@ -18,7 +18,8 @@
     <h3 class="h5 border-bottom pb-2">{{ trans('idir::dirs.page.create.form') }}</h3>
     <div class="row mb-4">
         <div class="col-md-8">
-            <form method="post" action="{{ route('web.dir.store_form', [$group->id]) }}" id="createForm">
+            <form method="post" action="{{ route('web.dir.store_form', [$group->id]) }}"
+            enctype="multipart/form-data" id="createForm">
                 @csrf
                 <div class="form-group">
                     <label for="title">{{ trans('idir::dirs.title') }}:</label>
@@ -91,6 +92,11 @@
                     </div>
                     @includeWhen($errors->has('categories'), 'icore::web.partials.errors', ['name' => 'categories'])
                 </div>
+                @if ($group->fields->isNotEmpty())
+                @foreach ($group->fields as $field)
+                @include("idir::web.field.partials.{$field->type}")
+                @endforeach
+                @endif
                 <hr>
                 <div class="d-flex mb-3">
                     <div class="mr-auto">

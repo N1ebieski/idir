@@ -39,7 +39,7 @@
                 @yield('content')
             </div>
 
-            @include('icore::admin.partials.footer')
+            @include('idir::admin.partials.footer')
 
         </div>
 

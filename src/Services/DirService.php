@@ -10,6 +10,8 @@ use N1ebieski\IDir\Models\Price;
 use N1ebieski\IDir\Models\Dir;
 use N1ebieski\IDir\Models\DirBacklink;
 use Illuminate\Contracts\Session\Session;
+use Illuminate\Contracts\Filesystem\Factory as Storage;
+use Illuminate\Http\UploadedFile;
 use Carbon\Carbon;
 
 /**
@@ -49,9 +51,27 @@ class DirService implements Serviceable
 
     /**
      * [private description]
+     * @var Storage
+     */
+    protected $storage;
+
+    /**
+     * [private description]
      * @var Collect
      */
     protected $collect;
+
+    /**
+     * [protected description]
+     * @var string
+     */
+    protected $img_temp_dir = 'vendor/idir/dirs/temp';
+
+    /**
+     * [protected description]
+     * @var string
+     */
+    protected $img_dir = 'vendor/idir/dirs';
 
     /**
      * [__construct description]
@@ -60,6 +80,7 @@ class DirService implements Serviceable
      * @param Price       $price       [description]
      * @param DirBacklink $dirBacklink [description]
      * @param Session     $session     [description]
+     * @param Storage     $storage     [description]
      * @param Collect     $collect     [description]
      */
     public function __construct(
@@ -68,6 +89,7 @@ class DirService implements Serviceable
         Price $price,
         DirBacklink $dirBacklink,
         Session $session,
+        Storage $storage,
         Collect $collect
     )
     {
@@ -77,7 +99,68 @@ class DirService implements Serviceable
         $this->price = $price;
 
         $this->session = $session;
+        $this->storage = $storage;
         $this->collect = $collect;
+    }
+
+    /**
+     * [prepareField description]
+     * @param  array $attributes [description]
+     * @return array             [description]
+     */
+    protected function prepareFieldAttribute(array $attributes) : array
+    {
+        foreach ($attributes as $key => $value) {
+            if ($value instanceof UploadedFile) {
+                $attributes[$key] = $this->prepareImage($value, 'field.'.$key);
+            }
+        }
+
+        return $attributes;
+    }
+
+    /**
+     * [uploadImage description]
+     * @param  UploadedFile      $img  [description]
+     * @param  string|null       $path [description]
+     * @return string                  [description]
+     */
+    protected function prepareImage(UploadedFile $img, string $path = null) : string
+    {
+        $path = $this->img_temp_dir . '/' . $path;
+
+        if ($this->storage->disk('public')->exists($exist = $path . '/' . $img->getClientOriginalName())) {
+            return $exist;
+        }
+
+        return $this->uploadImage($img, $path);
+    }
+
+    /**
+     * [moveImage description]
+     * @param  UploadedFile $img  [description]
+     * @param  string|null       $path [description]
+     * @return string             [description]
+     */
+    protected function moveImage(UploadedFile $img, string $path = null) : string
+    {
+        $old = $this->prepareImage($img, $path);
+        $new = str_replace('temp', $this->dir->id, $old);
+
+        $this->storage->disk('public')->move($old, $new);
+
+        return $new;
+    }
+
+    /**
+     * [uploadImage description]
+     * @param  UploadedFile      $img  [description]
+     * @param  string|null       $path [description]
+     * @return string                  [description]
+     */
+    protected function uploadImage(UploadedFile $img, string $path = null) : string
+    {
+        return $this->storage->disk('public')->putFile($path, $img);
     }
 
     /**
@@ -101,7 +184,11 @@ class DirService implements Serviceable
      */
     public function createSession(array $attributes) : void
     {
-        $this->session->put('dir', $attributes);
+        $this->session->put('dir', $this->collect->make($attributes)->except(['field'])->toArray());
+
+        if (isset($attributes['field'])) {
+            $this->session->put('dir.field', $this->prepareFieldAttribute($attributes['field']));
+        }
     }
 
     /**
@@ -111,8 +198,12 @@ class DirService implements Serviceable
      */
     public function updateSession(array $attributes) : void
     {
-        if (is_array($dir = $this->session->get('dir'))) {
-            $this->session->put('dir', array_merge($dir, $attributes));
+        $this->session->put('dir', array_merge(
+            $this->collect->make($attributes)->except(['field'])->toArray() + $this->session->get('dir')
+        ));
+
+        if (isset($attributes['field'])) {
+            $this->session->put('dir.field', $this->prepareFieldAttribute($attributes['field']) + $this->session->get('dir.field'));
         }
     }
 
@@ -127,7 +218,7 @@ class DirService implements Serviceable
             return 2;
         }
 
-        return $this->group->apply_status === 1 ? 1 : 0;
+        return $this->dir->getGroup()->apply_status === 1 ? 1 : 0;
     }
 
     /**
@@ -144,6 +235,10 @@ class DirService implements Serviceable
         $this->dir->status = $this->makeStatus($attributes['payment_type'] ?? null);
         $this->dir->save();
 
+        if (isset($attributes['field'])) {
+            $this->createFields($attributes['field']);
+        }
+
         if (isset($attributes['backlink']) && isset($attributes['backlink_url'])) {
             $this->dirBacklink->setDir($this->dir)->makeService()->create($attributes);
         }
@@ -153,14 +248,43 @@ class DirService implements Serviceable
         $this->dir->tag($attributes['tags'] ?? []);
 
         if (isset($attributes['payment_type'])) {
-            $this->dir->setPayment(
-                $this->payment->setMorph($this->dir)->setPriceMorph(
-                    $this->price->find($attributes["payment_{$attributes['payment_type']}"])
-                )->makeService()->create($attributes)
-            );
+            $this->dir->setPayment($this->createPayment($attributes));
         }
 
         return $this->dir;
+    }
+
+    /**
+     * [createPayment description]
+     * @param  array   $attributes [description]
+     * @return Payment             [description]
+     */
+    protected function createPayment(array $attributes) : Payment
+    {
+        return $this->payment->setMorph($this->dir)->setPriceMorph(
+            $this->price->find($attributes["payment_{$attributes['payment_type']}"])
+        )->makeService()->create($attributes);
+    }
+
+    /**
+     * [createFields description]
+     * @param  array $attributes [description]
+     * @return int               [description]
+     */
+    protected function createFields(array $attributes) : int
+    {
+        $i = 0;
+
+        foreach ($attributes as $key => $value) {
+            if ($value instanceof UploadedFile) {
+                $value = $this->moveImage($value, 'field.'.$key);
+            }
+            $this->dir->fields()->attach($key, ['value' => json_encode($value)]);
+
+            $i++;
+        }
+
+        return $i;
     }
 
     /**

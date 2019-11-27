@@ -44,7 +44,7 @@ class CreateSummaryRequest extends StoreFormRequest
     {
         $url = $this->redirector->getUrlGenerator();
 
-        return $url->route('web.dir.create_form', [$this->group_dir_available->id]);
+        return $url->route('web.dir.create_form', [$this->group_available->id]);
     }
 
     /**
@@ -52,39 +52,71 @@ class CreateSummaryRequest extends StoreFormRequest
      *
      * @return void
      */
-    protected function prepareForValidation()
+    protected function prepareForValidation() : void
     {
-        if ($this->group_dir_available->prices->isNotEmpty()) {
-            if (!$this->old('payment_type')) {
-                session()->put(
-                    '_old_input.payment_type', $this->group_dir_available->prices->sortByDesc('type')->first()->type
-                );
-            }
+        if ($this->group_available->prices->isNotEmpty()) {
+            $this->preparePaymentTypeOldAttribute();
 
-            if ($this->old('payment_code_sms')) {
-                session()->flash('_old_input.payment_code_sms_model',
-                    $this->group_dir_available->prices->where('id', old('payment_code_sms'))->first()
-                );
-            }
+            $this->preparePaymentCodeSmsModelOldAttribute();
 
-            if ($this->old('payment_code_transfer')) {
-                session()->flash('_old_input.payment_code_transfer_model',
-                    $this->group_dir_available->prices->where('id', old('payment_code_transfer'))->first()
-                );
-            }
+            $this->preparePaymentCodeTransferModelOldAttribute();
         }
 
-        if ($this->old('backlink')) {
-            session()->flash('_old_input.backlink_model',
-                $this->link->find($this->old('backlink'))
-            );
-        }
+        $this->prepareBacklinkModelOldAttribute();
 
         if ($this->session()->has('dir')) {
             $this->merge($this->session()->get('dir'));
         }
 
         parent::prepareForValidation();
+    }
+
+    /**
+     * [preparePaymentTypeOldAttribute description]
+     */
+    protected function preparePaymentTypeOldAttribute() : void
+    {
+        if (!$this->old('payment_type')) {
+            session()->put(
+                '_old_input.payment_type', $this->group_available->prices->sortByDesc('type')->first()->type
+            );
+        }
+    }
+
+    /**
+     * [preparePaymentCodeSmsModelOldAttribute description]
+     */
+    protected function preparePaymentCodeSmsModelOldAttribute() : void
+    {
+        if ($this->old('payment_code_sms')) {
+            session()->flash('_old_input.payment_code_sms_model',
+                $this->group_available->prices->where('id', old('payment_code_sms'))->first()
+            );
+        }
+    }
+
+    /**
+     * [preparePaymentCodeTransferModelOldAttribute description]
+     */
+    protected function preparePaymentCodeTransferModelOldAttribute() : void
+    {
+        if ($this->old('payment_code_transfer')) {
+            session()->flash('_old_input.payment_code_transfer_model',
+                $this->group_available->prices->where('id', old('payment_code_transfer'))->first()
+            );
+        }
+    }
+
+    /**
+     * [prepareBacklinkModelOldAttribute description]
+     */
+    protected function prepareBacklinkModelOldAttribute() : void
+    {
+        if ($this->old('backlink')) {
+            session()->flash('_old_input.backlink_model',
+                $this->link->find($this->old('backlink'))
+            );
+        }
     }
 
     /**

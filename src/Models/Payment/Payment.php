@@ -41,7 +41,7 @@ class Payment extends Model
      */
     public function morph()
     {
-        return $this->morphTo('model');
+        return $this->morphTo('morph', 'model_type', 'model_id');
     }
 
     /**
@@ -50,7 +50,7 @@ class Payment extends Model
      */
     public function price_morph()
     {
-        return $this->morphTo('price');
+        return $this->morphTo('price', 'price_type', 'price_id');
     }
 
     // Scopes

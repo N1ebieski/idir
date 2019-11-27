@@ -29,6 +29,7 @@ jQuery(document).on('click', '#searchCategory .btn', function(e) {
             $searchCategory.btn.prop('disabled', true);
             $('#searchCategoryOptions').empty();
             $searchCategory.append($.getLoader('spinner-border'));
+            $searchCategory.find('.invalid-feedback').remove();
             $searchCategory.input.removeClass('is-valid');
             $searchCategory.input.removeClass('is-invalid');
         },
@@ -722,6 +723,13 @@ jQuery(document).on('readyAndAjax', function() {
 
 jQuery(document).on('readyAndAjax', function() {
   $('[data-toggle="tooltip"]').tooltip();
+});
+
+jQuery(document).on('readyAndAjax', function() {
+    $(".custom-file-input").on("change", function() {
+        let fileName = $(this).val().split("\\").pop();
+        $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+    });
 });
 
 jQuery(document).ready(function() {

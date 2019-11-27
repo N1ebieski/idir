@@ -11,6 +11,7 @@ use N1ebieski\IDir\Http\Requests\Web\Dir\CreateSummaryRequest;
 use N1ebieski\IDir\Http\Requests\Web\Dir\StoreSummaryRequest;
 use N1ebieski\IDir\Models\Group;
 use N1ebieski\IDir\Models\Dir;
+use N1ebieski\IDir\Models\Payment\Dir\Payment;
 use N1ebieski\ICore\Models\Link;
 use N1ebieski\IDir\Models\Category\Dir\Category;
 use N1ebieski\IDir\Events\Dir\Store as DirStore;
@@ -43,7 +44,7 @@ class DirController
     public function createForm(Group $group, CreateFormRequest $request) : View
     {
         return view('idir::web.dir.create.form', [
-            'group' => $group,
+            'group' => $group->loadPublicFields(),
             'max_tags' => config('idir.dir.max_tags'),
             'trumbowyg' => $group->privileges->contains('name', 'additional options for editing content')
                 ? '_dir_trumbowyg' : null
@@ -119,8 +120,8 @@ class DirController
     {
         $dir->setGroup($group)->makeService()->create($request->validated());
 
-        if ($request->has('payment_type')) {
-            event(new PaymentStore($dir->getPayment()));
+        if (($payment = $dir->getPayment()) instanceof Payment) {
+            event(new PaymentStore($payment));
         }
 
         event(new DirStore($dir));
