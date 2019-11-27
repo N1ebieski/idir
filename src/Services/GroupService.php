@@ -119,6 +119,9 @@ class GroupService implements Serviceable
         // W przypadku usuwania grupy trzeba zmienić alternative innych grup na Default 1
         $this->group->where('alt_id', $this->group->id)->update(['alt_id' => 1]);
 
+        // Manually remove relations, because the field model is polymorfic and foreign key doesn't work
+        $this->group->fields()->detach();
+
         return $this->group->delete();
     }
 

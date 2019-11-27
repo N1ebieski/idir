@@ -78,11 +78,27 @@
             </div>
         </li>
         @endcan
-        @can('index groups')
-        <li class="nav-item @isUrlContains(['*/groups', '*/groups/*'])">
-            <a class="nav-link" href="{{ route('admin.group.index') }}">
+        @canany(['index groups', 'index fields'])
+        <li class="nav-item dropdown @isUrlContains(['*/groups', '*/groups/*', 'fields/group', 'fields/group/*'])">
+            <a class="nav-link dropdown-toggle"
+            href="#" id="groupDropdown" role="button"
+            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <i class="fas fa-fw fa-object-group"></i><span> {{ trans('idir::groups.page.index') }}</span>
             </a>
+            <div class="dropdown-menu" aria-labelledby="groupDropdown">
+                @can('index groups')
+                <a class="dropdown-item @isUrlContains(['*/groups', '*/groups/*'])"
+                href="{{ route('admin.group.index') }}">
+                    {{ trans('idir::groups.page.index') }}
+                </a>
+                @endcan
+                @can('index fields')
+                <a class="dropdown-item @isUrl(route('admin.field.group.index'))"
+                href="{{ route('admin.field.group.index') }}">
+                    {{ trans('idir::fields.page.index') }}
+                </a>
+                @endcan
+            </div>
         </li>
         @endcan
         @can('index mailings')

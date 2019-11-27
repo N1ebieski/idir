@@ -1,10 +1,11 @@
 <?php
 
-namespace N1ebieski\IDir\Http\Requests\Admin\Group;
+namespace N1ebieski\IDir\Http\Requests\Admin\Group\Traits;
 
-use Illuminate\Foundation\Http\FormRequest;
-
-abstract class Request extends FormRequest
+/**
+ * [trait description]
+ */
+trait CodePayable
 {
     /**
      * [prepareCodes description]

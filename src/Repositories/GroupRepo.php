@@ -67,7 +67,7 @@ class GroupRepo
     public function getPublicWithRels() : Collection
     {
         return $this->group->public()
-            ->with('privileges', 'prices')
+            ->with(['privileges', 'prices'])
             ->orderBy('position', 'asc')
             ->get();
     }
@@ -93,7 +93,33 @@ class GroupRepo
     public function firstPublicById(int $id) : ?Group
     {
         return $this->group->where('id', $id)
+            ->with(['fields' => function($query) {
+                return $query->public();
+            }])
             ->public()
             ->first();
+    }
+
+    /**
+     * [get description]
+     * @return Collection [description]
+     */
+    public function all() : Collection
+    {
+        return $this->group->orderBy('position', 'asc')->get();
+    }
+
+    /**
+     * [getWithRole description]
+     * @param  int        $id [description]
+     * @return Collection     [description]
+     */
+    public function getWithField(int $id) : Collection
+    {
+        return $this->group->with(['fields' => function($query) use ($id) {
+                $query->where('field_id', $id);
+            }])
+            ->orderBy('position', 'asc')
+            ->get();
     }
 }

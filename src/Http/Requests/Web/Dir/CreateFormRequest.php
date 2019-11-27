@@ -32,7 +32,20 @@ class CreateFormRequest extends FormRequest
         return true;
     }
 
-    public function prepareForValidation()
+    /**
+     * [prepareForValidation description]
+     */
+    public function prepareForValidation() : void
+    {
+        $this->prepareCategoriesCollectionOldAttribute();
+
+        $this->prepareContentHtmlOldAttribute();
+    }
+
+    /**
+     * [prepareCategoriesCollectionOldAttribute description]
+     */
+    protected function prepareCategoriesCollectionOldAttribute() : void
     {
         // Brzyki hook, ale nie mam innego pomyslu. Request dla kategorii zwraca tylko IDki
         // a w widoku edycji wpisu potrzebujemy calej kolekcji, co w przypadku wstawiania
@@ -44,9 +57,15 @@ class CreateFormRequest extends FormRequest
                 )
             );
         }
+    }
 
+    /**
+     * [prepareContentHtmlOldAttribute description]
+     */
+    protected function prepareContentHtmlOldAttribute() : void
+    {
         if ($this->old('content_html')) {
-            if (!$this->group_dir_available->privileges->contains('name', 'additional options for editing content')) {
+            if (!$this->group_available->privileges->contains('name', 'additional options for editing content')) {
                 session()->flash('_old_input.content_html', strip_tags($this->old('content_html')));
             }
         }

@@ -5,10 +5,10 @@ namespace N1ebieski\IDir\Models;
 use Illuminate\Database\Eloquent\Model;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Builder;
-use N1ebieski\ICore\Traits\Carbonable;
-use N1ebieski\ICore\Traits\Filterable;
-use N1ebieski\ICore\Traits\FullTextSearchable;
-use N1ebieski\ICore\Traits\Positionable;
+use N1ebieski\ICore\Models\Traits\Carbonable;
+use N1ebieski\IDir\Models\Traits\Filterable;
+use N1ebieski\ICore\Models\Traits\FullTextSearchable;
+use N1ebieski\ICore\Models\Traits\Positionable;
 use N1ebieski\IDir\Repositories\GroupRepo;
 use N1ebieski\IDir\Services\GroupService;
 
@@ -100,6 +100,15 @@ class Group extends Model
         return $this;
     }
 
+    /**
+     * [fields description]
+     * @return [type] [description]
+     */
+    public function fields()
+    {
+        return $this->morphToMany('N1ebieski\IDir\Models\Field\Field', 'model', 'fields_models', 'model_id', 'field_id');
+    }
+
     // Overrides
 
     /**
@@ -150,17 +159,19 @@ class Group extends Model
         return $query->where('backlink', 2);
     }
 
+    // Loads
+
     /**
-     * [scopeFilterVisible description]
-     * @param  Builder $query  [description]
-     * @param  int|null  $visible [description]
-     * @return Builder|null          [description]
+     * [loadPublicFields description]
+     * @return Group [description]
      */
-    public function scopeFilterVisible(Builder $query, int $visible = null) : ?Builder
+    public function loadPublicFields() : Group
     {
-        return $query->when($visible !== null, function($query) use ($visible) {
-            return $query->where('visible', $visible);
-        });
+        return $this->load([
+            'fields' => function($query) {
+                $query->public();
+            }
+        ]);
     }
 
     // Makers

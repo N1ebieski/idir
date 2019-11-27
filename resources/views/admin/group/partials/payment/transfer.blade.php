@@ -34,6 +34,7 @@
                 @includeWhen($errors->has("prices.transfer.{$loop->index}.price"), 'icore::admin.partials.errors', ['name' => "prices.transfer.{$loop->index}.price"])
                 @includeWhen($errors->has("prices.transfer.{$loop->index}.days"), 'icore::admin.partials.errors', ['name' => "prices.transfer.{$loop->index}.days"])
             </div>
+            <hr>
         </div>
         @endforeach
     </div>

@@ -24,13 +24,22 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::create(['name' => 'edit groups']);
         Permission::create(['name' => 'destroy groups']);
 
+        Permission::create(['name' => 'index fields']);
+        Permission::create(['name' => 'create fields']);
+        Permission::create(['name' => 'edit fields']);
+        Permission::create(['name' => 'destroy fields']);
+
         $role = Role::whereName('admin')
             ->first()
             ->givePermissionTo([
                 'index groups',
                 'create groups',
                 'edit groups',
-                'destroy groups'
+                'destroy groups',
+                'index fields',
+                'create fields',
+                'edit fields',
+                'destroy fields'
             ]);
     }
 }

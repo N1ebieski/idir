@@ -4,8 +4,10 @@ namespace N1ebieski\IDir\Http\Requests\Admin\Group;
 
 use Illuminate\Foundation\Http\FormRequest;
 use N1ebieski\IDir\Models\Price;
-use Illuminate\Database\Eloquent\Collection;
 
+/**
+ * [EditRequest description]
+ */
 class EditRequest extends FormRequest
 {
     /**
@@ -31,6 +33,14 @@ class EditRequest extends FormRequest
 
     public function prepareForValidation()
     {
+        $this->preparePricesCollectionOldAttribute();
+    }
+
+    /**
+     * [preparePricesCollectionOldAttribute description]
+     */
+    protected function preparePricesCollectionOldAttribute() : void
+    {
         $this->group->load(['prices', 'prices.codes']);
 
         foreach ($this->types as $type) {
@@ -45,20 +55,6 @@ class EditRequest extends FormRequest
                         ->add($this->price->make(['type' => $type]))
             );
         }
-    }
-
-    /**
-     * [prepareCodesAttribute description]
-     * @param  Collection $codes [description]
-     * @return string            [description]
-     */
-    public static function prepareCodes(Collection $codes) : string
-    {
-        foreach ($codes->codes as $code) {
-            $_codes[] = $code->code . ($code->quantity !== null ? '|' . $code->quantity : null);
-        }
-
-        return (string)implode("\r\n", $_codes);
     }
 
     /**

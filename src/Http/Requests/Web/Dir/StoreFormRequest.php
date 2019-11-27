@@ -5,6 +5,8 @@ namespace N1ebieski\IDir\Http\Requests\Web\Dir;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Mews\Purifier\Facades\Purifier;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\UploadedFile;
 
 class StoreFormRequest extends FormRequest
 {
@@ -23,7 +25,7 @@ class StoreFormRequest extends FormRequest
      *
      * @return void
      */
-    protected function prepareForValidation()
+    protected function prepareForValidation() : void
     {
         $this->prepareTagsAttribute();
 
@@ -32,6 +34,42 @@ class StoreFormRequest extends FormRequest
         $this->prepareContentAttribute();
 
         $this->prepareUrlAttribute();
+
+        $this->prepareFieldsAttribute();
+    }
+
+    /**
+     * [prepareFieldsAttribute description]
+     */
+    protected function prepareFieldsAttribute() : void
+    {
+        if (!$this->has('field') && !is_array($this->input('field'))) {
+            return;
+        }
+
+        foreach ($this->group_available->fields as $field) {
+            if ($field->type !== 'image') {
+                continue;
+            }
+
+            if (!$this->has("field.{$field->id}") || !is_string($this->input("field.{$field->id}"))) {
+                continue;
+            }
+
+            if (Storage::disk('public')->exists($this->input("field.{$field->id}"))) {
+                $this->merge([
+                    'field' => [
+                        $field->id => new UploadedFile(
+                            public_path('storage/') . $this->input("field.{$field->id}"),
+                            $this->input("field.{$field->id}"),
+                            null,
+                            null,
+                            true
+                        )
+                    ] + $this->input('field')
+                ]);
+            }
+        }
     }
 
     /**
@@ -40,7 +78,7 @@ class StoreFormRequest extends FormRequest
     protected function prepareUrlAttribute() : void
     {
         if ($this->has('url') && $this->input('url') !== null) {
-            if ($this->group_dir_available->url === 0) {
+            if ($this->group_available->url === 0) {
                 $this->merge(['url' => null]);
             } else {
                 $this->merge(['url' => preg_replace('/(\/)$/', null, $this->input('url'))]);
@@ -54,7 +92,7 @@ class StoreFormRequest extends FormRequest
     protected function prepareContentHtmlAttribute() : void
     {
         if ($this->has('content_html')) {
-            if ($this->group_dir_available->privileges->contains('name', 'additional options for editing content')) {
+            if ($this->group_available->privileges->contains('name', 'additional options for editing content')) {
                 $this->merge([
                     'content_html' => Purifier::clean($this->input('content_html'), 'dir')
                 ]);
@@ -91,13 +129,55 @@ class StoreFormRequest extends FormRequest
     }
 
     /**
+     * [prepareFieldsRules description]
+     * @return array [description]
+     */
+    protected function prepareFieldsRules() : array
+    {
+        foreach ($this->group_available->fields as $field) {
+            $rules["field.{$field->id}"][] = 'bail';
+            $rules["field.{$field->id}"][] = (bool)$field->options->required === true ?
+                'required' : 'nullable';
+
+            switch ($field->type) {
+                case 'multiselect' :
+                case 'checkbox' :
+                    $rules["field.{$field->id}"][] = 'array';
+                    break;
+
+                case 'image' :
+                    $rules["field.{$field->id}"][] = 'image';
+                    $rules["field.{$field->id}"][] = 'mimes:jpeg,png,jpg';
+                    $rules["field.{$field->id}"][] = 'max:' . $field->options->size;
+                    $rules["field.{$field->id}"][] = 'dimensions:max_width=' . $field->options->width . ',max_height=' . $field->options->height;
+                    break;
+
+                default :
+                    $rules["field.{$field->id}"][] = 'string';
+            }
+
+            if (isset($field->options->options)) {
+                $rules["field.{$field->id}"][] = 'in:' . implode(',', $field->options->options);
+            }
+            if (isset($field->options->min)) {
+                $rules["field.{$field->id}"][] = 'min:' . $field->options->min;
+            }
+            if (isset($field->options->max)) {
+                $rules["field.{$field->id}"][] = 'max:' . $field->options->max;
+            }
+        }
+
+        return $rules;
+    }
+
+    /**
      * Get the validation rules that apply to the request.
      *
      * @return array
      */
     public function rules()
     {
-        return [
+        return array_merge([
             'title' => 'bail|required|string|between:3,255',
             'tags' => [
                 'bail',
@@ -111,7 +191,7 @@ class StoreFormRequest extends FormRequest
                 'bail',
                 'required',
                 'array',
-                'between:1,' . $this->group_dir_available->max_cats,
+                'between:1,' . $this->group_available->max_cats,
                 'no_js_validation'
             ],
             'categories.*' => [
@@ -135,12 +215,12 @@ class StoreFormRequest extends FormRequest
             'notes' => 'bail|nullable|string|between:3,255',
             'url' => [
                 'bail',
-                ($this->group_dir_available->url === 2) ? 'required' : 'nullable',
+                ($this->group_available->url === 2) ? 'required' : 'nullable',
                 'string',
                 'regex:/^(https|http):\/\/([\da-z\.-]+)(\.[a-z]{2,6})\/?$/',
                 'unique:dirs,url'
             ]
-        ];
+        ], $this->prepareFieldsRules());
     }
 
     /**

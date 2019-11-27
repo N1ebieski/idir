@@ -104,7 +104,7 @@ jQuery(document).on('click', '#searchCategory .btn', function(e) {
             $searchCategory.btn.prop('disabled', true);
             $('#searchCategoryOptions').empty();
             $searchCategory.append($.getLoader('spinner-border'));
-            $('.invalid-feedback').remove();
+            $searchCategory.find('.invalid-feedback').remove();
             $searchCategory.input.removeClass('is-valid');
             $searchCategory.input.removeClass('is-invalid');
         },
@@ -637,8 +637,8 @@ jQuery(document).on('click', '.store', function(e) {
             var errors = response.responseJSON;
 
             $.each(errors.errors, function( key, value ) {
-                $form.find('#'+key).addClass('is-invalid');
-                $form.find('#'+key).parent().append($.getError(key, value));
+                $form.find('#' + $.escapeSelector(key)).addClass('is-invalid');
+                $form.find('#' + $.escapeSelector(key)).parent().append($.getError(key, value));
             });
         }
     });
@@ -694,8 +694,8 @@ jQuery(document).on('click', '.update', function(e) {
             var errors = response.responseJSON;
 
             $.each(errors.errors, function( key, value ) {
-                $form.find('#'+key).addClass('is-invalid');
-                $form.find('#'+key).parent().append($.getError(key, value));
+                $form.find('#' + $.escapeSelector(key)).addClass('is-invalid');
+                $form.find('#' + $.escapeSelector(key)).parent().append($.getError(key, value));
             });
         }
     });

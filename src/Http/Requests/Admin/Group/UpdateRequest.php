@@ -2,10 +2,13 @@
 
 namespace N1ebieski\IDir\Http\Requests\Admin\Group;
 
-use N1ebieski\IDir\Http\Requests\Admin\Group\Request;
+use Illuminate\Foundation\Http\FormRequest;
+use N1ebieski\IDir\Http\Requests\Admin\Group\Traits\CodePayable;
 
-class UpdateRequest extends Request
+class UpdateRequest extends FormRequest
 {
+    use CodePayable;
+
     /**
      * [protected description]
      * @var array
@@ -22,25 +25,40 @@ class UpdateRequest extends Request
         return true;
     }
 
-    public function prepareForValidation()
+    /**
+     * [prepareForValidation description]
+     */
+    public function prepareForValidation() : void
     {
-        if ($this->has('prices')) {
-            foreach ($this->types as $type) {
-                if ($this->has("prices.{$type}") && is_array($this->input("prices.{$type}"))) {
-                    $this->merge([
-                        'prices' => [
-                            $type => collect($this->input("prices.{$type}"))->filter(function($item) {
-                                return isset($item['select']) && $item['price'] !== null;
-                            })->map(function($item) {
-                                if (isset($item['codes']['codes']) && is_string($item['codes']['codes'])) {
-                                    $item['codes']['codes'] = $this->prepareCodes($item['codes']['codes']);
-                                }
-                                return $item;
-                            })->values()->toArray()
-                        ] + $this->input("prices")
-                    ]);
-                }
+        $this->preparePricesAttribute();
+    }
+
+    /**
+     * [preparePricesAttribute description]
+     */
+    protected function preparePricesAttribute() : void
+    {
+        if (!$this->has('prices')) {
+            return;
+        }
+
+        foreach ($this->types as $type) {
+            if (!$this->has("prices.{$type}") || !is_array($this->input("prices.{$type}"))) {
+                continue;
             }
+
+            $this->merge([
+                'prices' => [
+                    $type => collect($this->input("prices.{$type}"))->filter(function($item) {
+                        return isset($item['select']) && $item['price'] !== null;
+                    })->map(function($item) {
+                        if (isset($item['codes']['codes']) && is_string($item['codes']['codes'])) {
+                            $item['codes']['codes'] = $this->prepareCodes($item['codes']['codes']);
+                        }
+                        return $item;
+                    })->values()->toArray()
+                ] + $this->input("prices")
+            ]);
         }
     }
 

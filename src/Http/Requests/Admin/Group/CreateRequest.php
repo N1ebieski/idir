@@ -14,6 +14,12 @@ class CreateRequest extends FormRequest
     protected $price;
 
     /**
+     * [protected description]
+     * @var array
+     */
+    protected $types = ['transfer', 'code_sms', 'code_transfer'];
+
+    /**
      * [__construct description]
      * @param Price $price [description]
      */
@@ -32,9 +38,20 @@ class CreateRequest extends FormRequest
         return true;
     }
 
-    public function prepareForValidation()
+    /**
+     * [prepareForValidation description]
+     */
+    public function prepareForValidation() : void
     {
-        foreach (['transfer', 'code_sms', 'code_transfer'] as $type) {
+        $this->preparePricesCollectionOldAttribute();
+    }
+
+    /**
+     * [preparePricesCollectionOldAttribute description]
+     */
+    protected function preparePricesCollectionOldAttribute() : void
+    {
+        foreach ($this->types as $type) {
             session()->flash("_old_input.prices_collection.{$type}",
                 $this->price->hydrate(array_merge(
                     is_array($this->old("prices.{$type}")) ?

@@ -31,10 +31,13 @@ class StoreSummaryRequest extends StoreFormRequest
     {
         $url = $this->redirector->getUrlGenerator();
 
-        return $url->route('web.dir.create_summary', [$this->group_dir_available->id]);
+        return $url->route('web.dir.create_summary', [$this->group_available->id]);
     }
 
-    protected function prepareForValidation()
+    /**
+     * [prepareForValidation description]
+     */
+    protected function prepareForValidation() : void
     {
         if ($this->session()->has('dir')) {
             $this->merge($this->session()->get('dir'));
@@ -58,7 +61,7 @@ class StoreSummaryRequest extends StoreFormRequest
                 'backlink' => [
                     'bail',
                     'integer',
-                    $this->group_dir_available->backlink === 2 ? 'required' : 'nullable',
+                    $this->group_available->backlink === 2 ? 'required' : 'nullable',
                     Rule::exists('links', 'id')->where(function($query) {
                         $query->where('links.type', 'backlink')
                             ->whereNotExists(function ($query) {
@@ -77,11 +80,11 @@ class StoreSummaryRequest extends StoreFormRequest
                 'backlink_url' => [
                     'bail',
                     'string',
-                    $this->group_dir_available->backlink === 2 ? 'required' : 'nullable',
+                    $this->group_available->backlink === 2 ? 'required' : 'nullable',
                     $this->input('url') !== null ?
                         'regex:/^' . Str::escaped($this->input('url')) . '/'
                         : 'regex:/^(https|http):\/\/([\da-z\.-]+)(\.[a-z]{2,6})/',
-                    $this->group_dir_available->backlink === 2 ?
+                    $this->group_available->backlink === 2 && $this->has('backlink') ?
                         app()->make('N1ebieski\\IDir\\Rules\\Backlink', [
                             'link' => Link::find($this->input('backlink'))->url
                         ]) : null,
@@ -89,7 +92,7 @@ class StoreSummaryRequest extends StoreFormRequest
                 ]
             ],
 
-            $this->group_dir_available->prices->isNotEmpty() ?
+            $this->group_available->prices->isNotEmpty() ?
             [
                 'payment_type' => 'bail|required|string|in:transfer,code_sms,code_transfer|no_js_validation',
                 'payment_transfer' => $this->input('payment_type') === 'transfer' ?
@@ -100,7 +103,7 @@ class StoreSummaryRequest extends StoreFormRequest
                     Rule::exists('prices', 'id')->where(function($query) {
                         $query->where([
                             ['type', 'transfer'],
-                            ['group_id', $this->group_dir_available->id]
+                            ['group_id', $this->group_available->id]
                         ]);
                     })
                 ] : ['no_js_validation'],
@@ -112,7 +115,7 @@ class StoreSummaryRequest extends StoreFormRequest
                     Rule::exists('prices', 'id')->where(function($query) {
                         $query->where([
                             ['type', 'code_sms'],
-                            ['group_id', $this->group_dir_available->id]
+                            ['group_id', $this->group_available->id]
                         ]);
                     })
                 ] : ['no_js_validation'],
@@ -124,7 +127,7 @@ class StoreSummaryRequest extends StoreFormRequest
                     Rule::exists('prices', 'id')->where(function($query) {
                         $query->where([
                             ['type', 'code_transfer'],
-                            ['group_id', $this->group_dir_available->id]
+                            ['group_id', $this->group_available->id]
                         ]);
                     })
                 ] : ['no_js_validation']
@@ -140,8 +143,7 @@ class StoreSummaryRequest extends StoreFormRequest
     public function messages()
     {
         return [
-            'backlink_url.regex' => __('validation.regex') . ' ' . trans('idir::validation.backlink_url'),
-            'body.required'  => 'A message is required',
+            'backlink_url.regex' => __('validation.regex') . ' ' . trans('idir::validation.backlink_url')
         ];
     }
 

@@ -65,7 +65,7 @@ class PriceService implements Serviceable
     public function findById(int $id) : ?Price
     {
         if ($price = $this->price->find($id)) {
-            return $this->price = $price;
+            return $this->price = $price->setGroup($this->price->getGroup());
         }
 
         return null;

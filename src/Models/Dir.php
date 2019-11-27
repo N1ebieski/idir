@@ -5,8 +5,8 @@ namespace N1ebieski\IDir\Models;
 use Illuminate\Database\Eloquent\Model;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Cviebrock\EloquentTaggable\Taggable;
-use N1ebieski\ICore\Traits\FullTextSearchable;
-use N1ebieski\ICore\Traits\Filterable;
+use N1ebieski\ICore\Models\Traits\FullTextSearchable;
+use N1ebieski\ICore\Models\Traits\Filterable;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use N1ebieski\ICore\Services\TagService;
 use N1ebieski\IDir\Services\DirService;
@@ -128,9 +128,9 @@ class Dir extends Model
 
     /**
      * [getPayment description]
-     * @return Payment [description]
+     * @return Payment|null [description]
      */
-    public function getPayment() : Payment
+    public function getPayment() : ?Payment
     {
         return $this->payment;
     }
@@ -209,6 +209,15 @@ class Dir extends Model
     public function backlink()
     {
         return $this->hasOne('N1ebieski\IDir\Models\DirBacklink');
+    }
+
+    /**
+     * [fields description]
+     * @return [type] [description]
+     */
+    public function fields()
+    {
+        return $this->morphToMany('N1ebieski\IDir\Models\Field\Field', 'model', 'fields_values', 'model_id', 'field_id');
     }
 
     // Scopes
