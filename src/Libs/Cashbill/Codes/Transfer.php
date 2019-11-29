@@ -3,7 +3,7 @@
 namespace N1ebieski\IDir\Libs\Cashbill\Codes;
 
 use Illuminate\Contracts\Config\Repository as Config;
-use GuzzleHttp\Client;
+use GuzzleHttp\Client as GuzzleClient;
 
 /**
  * [Cashbill description]
@@ -23,12 +23,21 @@ class Transfer
     protected $response;
 
     /**
-     * [__construct description]
-     * @param Config $config [description]
+     * [protected description]
+     * @var GuzzleClient
      */
-    public function __construct(Config $config)
+    protected $guzzle;
+
+    /**
+     * [__construct description]
+     * @param Config       $config [description]
+     * @param GuzzleClient $guzzle [description]
+     */
+    public function __construct(Config $config, GuzzleClient $guzzle)
     {
         $this->check_url = $config->get('services.cashbill.code_transfer.check_url');
+
+        $this->guzzle = $guzzle;
     }
 
     /**
@@ -71,10 +80,8 @@ class Transfer
      */
     public function response(string $code, string $id) : void
     {
-        $client = new Client();
-
         try {
-            $response = $client->get($this->check_url . '?id=' . $id . '&check=' . $code);
+            $response = $this->guzzle->request('GET', $this->check_url . '?id=' . $id . '&check=' . $code);
         } catch (\GuzzleHttp\Exception\GuzzleException $e) {
             throw new \N1ebieski\IDir\Exceptions\Cashbill\Exception(
                 $e->getMessage(), $e->getCode()

@@ -3,7 +3,7 @@
 namespace N1ebieski\IDir\Libs\Cashbill\Codes;
 
 use Illuminate\Contracts\Config\Repository as Config;
-use GuzzleHttp\Client;
+use GuzzleHttp\Client as GuzzleClient;
 
 /**
  * [Cashbill description]
@@ -29,13 +29,22 @@ class SMS
     protected $response;
 
     /**
-     * [__construct description]
-     * @param Config $config [description]
+     * [protected description]
+     * @var GuzzleClient
      */
-    public function __construct(Config $config)
+    protected $guzzle;
+
+    /**
+     * [__construct description]
+     * @param Config       $config [description]
+     * @param GuzzleClient $guzzle [description]
+     */
+    public function __construct(Config $config, GuzzleClient $guzzle)
     {
         $this->check_url = $config->get('services.cashbill.code_sms.check_url');
         $this->token = $config->get('services.cashbill.code_sms.token');
+
+        $this->guzzle = $guzzle;    
     }
 
     /**
@@ -93,10 +102,8 @@ class SMS
      */
     public function response(string $code) : void
     {
-        $client = new Client();
-
         try {
-            $response = $client->get($this->check_url . $this->token . '/' . $code);
+            $response = $this->guzzle->request('GET', $this->check_url . $this->token . '/' . $code);
         } catch (\GuzzleHttp\Exception\GuzzleException $e) {
             throw new \N1ebieski\IDir\Exceptions\Cashbill\Exception(
                 $e->getMessage(), $e->getCode()

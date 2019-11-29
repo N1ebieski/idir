@@ -5,11 +5,43 @@ namespace N1ebieski\IDir\Http\Requests\Web\Dir;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Mews\Purifier\Facades\Purifier;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Http\UploadedFile;
+use N1ebieski\ICore\Models\BanValue;
+use Illuminate\Database\Eloquent\Collection;
+use N1ebieski\IDir\Http\Requests\Traits\FieldsExtended;
 
+/**
+ * [StoreFormRequest description]
+ */
 class StoreFormRequest extends FormRequest
 {
+    use FieldsExtended;
+
+    /**
+     * [private description]
+     * @var string
+     */
+    protected $bans;
+
+    /**
+     * [__construct description]
+     * @param BanValue $banValue [description]
+     */
+    public function __construct(BanValue $banValue)
+    {
+        $this->bans = $banValue->makeCache()->rememberAllWordsAsString();
+
+        parent::__construct();
+    }
+
+    /**
+     * [getFields description]
+     * @return Collection [description]
+     */
+    public function getFields() : Collection
+    {
+        return $this->group_available->fields;
+    }
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -36,40 +68,6 @@ class StoreFormRequest extends FormRequest
         $this->prepareUrlAttribute();
 
         $this->prepareFieldsAttribute();
-    }
-
-    /**
-     * [prepareFieldsAttribute description]
-     */
-    protected function prepareFieldsAttribute() : void
-    {
-        if (!$this->has('field') && !is_array($this->input('field'))) {
-            return;
-        }
-
-        foreach ($this->group_available->fields as $field) {
-            if ($field->type !== 'image') {
-                continue;
-            }
-
-            if (!$this->has("field.{$field->id}") || !is_string($this->input("field.{$field->id}"))) {
-                continue;
-            }
-
-            if (Storage::disk('public')->exists($this->input("field.{$field->id}"))) {
-                $this->merge([
-                    'field' => [
-                        $field->id => new UploadedFile(
-                            public_path('storage/') . $this->input("field.{$field->id}"),
-                            $this->input("field.{$field->id}"),
-                            null,
-                            null,
-                            true
-                        )
-                    ] + $this->input('field')
-                ]);
-            }
-        }
     }
 
     /**
@@ -129,48 +127,6 @@ class StoreFormRequest extends FormRequest
     }
 
     /**
-     * [prepareFieldsRules description]
-     * @return array [description]
-     */
-    protected function prepareFieldsRules() : array
-    {
-        foreach ($this->group_available->fields as $field) {
-            $rules["field.{$field->id}"][] = 'bail';
-            $rules["field.{$field->id}"][] = (bool)$field->options->required === true ?
-                'required' : 'nullable';
-
-            switch ($field->type) {
-                case 'multiselect' :
-                case 'checkbox' :
-                    $rules["field.{$field->id}"][] = 'array';
-                    break;
-
-                case 'image' :
-                    $rules["field.{$field->id}"][] = 'image';
-                    $rules["field.{$field->id}"][] = 'mimes:jpeg,png,jpg';
-                    $rules["field.{$field->id}"][] = 'max:' . $field->options->size;
-                    $rules["field.{$field->id}"][] = 'dimensions:max_width=' . $field->options->width . ',max_height=' . $field->options->height;
-                    break;
-
-                default :
-                    $rules["field.{$field->id}"][] = 'string';
-            }
-
-            if (isset($field->options->options)) {
-                $rules["field.{$field->id}"][] = 'in:' . implode(',', $field->options->options);
-            }
-            if (isset($field->options->min)) {
-                $rules["field.{$field->id}"][] = 'min:' . $field->options->min;
-            }
-            if (isset($field->options->max)) {
-                $rules["field.{$field->id}"][] = 'max:' . $field->options->max;
-            }
-        }
-
-        return $rules;
-    }
-
-    /**
      * Get the validation rules that apply to the request.
      *
      * @return array
@@ -205,12 +161,18 @@ class StoreFormRequest extends FormRequest
                     ]);
                 })
             ],
-            'content_html' => 'bail|required|string|no_js_validation',
+            'content_html' => [
+                'bail',
+                'required',
+                'string',
+                'no_js_validation',
+            ],
             'content' => [
                 'bail',
                 'required',
                 'string',
-                'between:' . config('idir.dir.min_content') . ',' . config('idir.dir.max_content')
+                'between:' . config('idir.dir.min_content') . ',' . config('idir.dir.max_content'),
+                !empty($this->bans) ? 'not_regex:/(.*)(\s|^)('.$this->bans.')(\s|\.|,|\?|$)(.*)/i' : null
             ],
             'notes' => 'bail|nullable|string|between:3,255',
             'url' => [
@@ -232,6 +194,18 @@ class StoreFormRequest extends FormRequest
     {
         return [
             'content_html' => 'content'
+        ];
+    }
+
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array
+     */
+    public function messages()
+    {
+        return [
+            'content.not_regex' => trans('icore::validation.not_regex_contains', ['words' => str_replace('|', ', ', $this->bans)])
         ];
     }
 }

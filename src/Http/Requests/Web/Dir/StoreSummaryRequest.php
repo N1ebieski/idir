@@ -64,7 +64,7 @@ class StoreSummaryRequest extends StoreFormRequest
                     $this->group_available->backlink === 2 ? 'required' : 'nullable',
                     Rule::exists('links', 'id')->where(function($query) {
                         $query->where('links.type', 'backlink')
-                            ->whereNotExists(function ($query) {
+                            ->whereNotExists(function($query) {
                                 $query->from('categories_models')
                                     ->whereRaw('links.id = categories_models.model_id')
                                     ->where('categories_models.model_type', 'N1ebieski\\ICore\\Models\\Link');
@@ -72,7 +72,7 @@ class StoreSummaryRequest extends StoreFormRequest
                                 $query->from('categories_models')
                                     ->whereRaw('links.id = categories_models.model_id')
                                     ->where('categories_models.model_type', 'N1ebieski\\ICore\\Models\\Link')
-                                    ->whereIn('categories_models.category_id', $this->input('categories'));
+                                    ->whereIn('categories_models.category_id', $this->input('categories') ?? []);
                             });
                     }),
                     'no_js_validation'

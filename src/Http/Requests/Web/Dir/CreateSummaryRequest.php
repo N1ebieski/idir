@@ -4,6 +4,7 @@ namespace N1ebieski\IDir\Http\Requests\Web\Dir;
 
 use N1ebieski\IDir\Http\Requests\Web\Dir\StoreFormRequest;
 use N1ebieski\ICore\Models\Link;
+use N1ebieski\ICore\Models\BanValue;
 
 /**
  * [CreateSummaryRequest description]
@@ -18,11 +19,14 @@ class CreateSummaryRequest extends StoreFormRequest
 
     /**
      * [__construct description]
-     * @param Link $link [description]
+     * @param Link     $link     [description]
+     * @param BanValue $banValue [description]
      */
-    public function __construct(Link $link)
+    public function __construct(Link $link, BanValue $banValue)
     {
         $this->link = $link;
+
+        parent::__construct($banValue);
     }
 
     /**

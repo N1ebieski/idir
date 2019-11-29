@@ -32,7 +32,7 @@ class PaymentController
                         'group' => $payment->price->group->name,
                         'days' => $days = $payment->price->days,
                         'limit' => $days !== null ? strtolower(trans('idir::groups.days'))
-                            : strtolower(trans('idir::groups.dunlimited'))
+                            : strtolower(trans('idir::groups.unlimited'))
                     ]),
                     'userdata' => $payment->id
                 ])->all()
@@ -74,7 +74,7 @@ class PaymentController
 
         try {
             $cashbill->setup(['amount' => $payment->price->price])->verify($request->validated());
-        } catch (\Exception $e) {
+        } catch (\N1ebieski\IDir\Exceptions\Cashbill\Exception $e) {
             throw $e->setPayment($payment);
         }
 

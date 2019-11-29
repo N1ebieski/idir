@@ -9,7 +9,7 @@ use N1ebieski\IDir\Models\Group;
 /**
  * [GroupSeeder description]
  */
-class GroupsAndPrivilegesSeeder extends Seeder
+class DefaultGroupAndPrivilegesSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -31,6 +31,7 @@ class GroupsAndPrivilegesSeeder extends Seeder
         Privilege::create(['name' => 'additional options for editing content']);
 
         $default = Group::create([
+            'id' => 1,
             'name' => 'Default',
             'max_cats' => 3,
             'position' => 0,
@@ -39,16 +40,5 @@ class GroupsAndPrivilegesSeeder extends Seeder
             'apply_status' => 0,
             'url' => 1
         ]);
-
-        $privileges = Privilege::all();
-
-        $groups = factory(Group::class, 5)
-            ->create()
-            ->each(function($group) use ($privileges) {
-                $group->privileges()->attach(
-                    $privileges->random(rand(0, $privileges->count()))
-                        ->pluck('id')->toArray()
-                );
-            });
     }
 }

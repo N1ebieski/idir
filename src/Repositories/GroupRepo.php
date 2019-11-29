@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Collection;
 use N1ebieski\IDir\Models\Group;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\Config\Repository as Config;
+use Illuminate\Support\Facades\DB;
 
 /**
  * [CommentRepo description]
@@ -68,8 +69,22 @@ class GroupRepo
     {
         return $this->group->public()
             ->with(['privileges', 'prices'])
+            ->withCount(['dirs', 'dirs_today'])
             ->orderBy('position', 'asc')
-            ->get();
+            ->get()
+            ->map(function($item) {
+                $item->available = true;
+
+                if ($item->max_models !== null && $item->dirs_count >= $item->max_models) {
+                    $item->available = false;
+                }
+
+                if ($item->max_models_daily !== null && $item->dirs_today_count >= $item->max_models_daily) {
+                    $item->available = false;
+                }
+
+                return $item;
+            });
     }
 
     /**
@@ -90,12 +105,20 @@ class GroupRepo
      * @param  int    $id [description]
      * @return Group|null     [description]
      */
-    public function firstPublicById(int $id) : ?Group
+    public function firstAvailableById(int $id) : ?Group
     {
         return $this->group->where('id', $id)
             ->with(['fields' => function($query) {
                 return $query->public();
             }])
+            ->where(function($q) {
+                $q->has('dirs', '<', DB::raw('`groups`.`max_models`'))
+                    ->orWhere('groups.max_models', null);
+            })
+            ->where(function($q) {
+                $q->has('dirs_today', '<', DB::raw('`groups`.`max_models_daily`'))
+                    ->orWhere('groups.max_models_daily', null);
+            })
             ->public()
             ->first();
     }

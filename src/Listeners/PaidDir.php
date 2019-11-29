@@ -26,8 +26,8 @@ class PaidDir
     public function handle($event)
     {
         if ($event->payment->status === 0) {
-            if ($event->payment->model->status === 2) {
-                $event->payment->model->update(['status' => $event->payment->model->group->apply_status]);
+            if ($event->payment->morph->status === 2) {
+                $event->payment->morph->update(['status' => $event->payment->morph->group->apply_status]);
             }
         }
     }

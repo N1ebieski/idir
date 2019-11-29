@@ -11,6 +11,7 @@ use N1ebieski\ICore\Models\Traits\FullTextSearchable;
 use N1ebieski\ICore\Models\Traits\Positionable;
 use N1ebieski\IDir\Repositories\GroupRepo;
 use N1ebieski\IDir\Services\GroupService;
+use Carbon\Carbon;
 
 /**
  * [Group description]
@@ -107,6 +108,24 @@ class Group extends Model
     public function fields()
     {
         return $this->morphToMany('N1ebieski\IDir\Models\Field\Field', 'model', 'fields_models', 'model_id', 'field_id');
+    }
+
+    /**
+     * [dirs description]
+     * @return [type] [description]
+     */
+    public function dirs()
+    {
+        return $this->hasMany('N1ebieski\IDir\Models\Dir');
+    }
+
+    /**
+     * [dirs description]
+     * @return [type] [description]
+     */
+    public function dirs_today()
+    {
+        return $this->hasMany('N1ebieski\IDir\Models\Dir')->whereDate('created_at', '=', Carbon::now()->format('Y-m-d'));
     }
 
     // Overrides
