@@ -22,7 +22,7 @@ class IDirServiceProvider extends ServiceProvider
         $this->app->register(RouteServiceProvider::class);
         $this->app->register(AuthServiceProvider::class);
         $this->app->register(EventServiceProvider::class);
-        $this->app->register(ScheduleServiceProvider::class);        
+        $this->app->register(ScheduleServiceProvider::class);
 
         $this->app['router']->middlewareGroup('idir.web', [
             'throttle:60,1',
@@ -34,6 +34,7 @@ class IDirServiceProvider extends ServiceProvider
             \N1ebieski\IDir\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \N1ebieski\ICore\Http\Middleware\XSSProtection::class,
+            \N1ebieski\ICore\Http\Middleware\ClearWhitespacesInStrings::class,            
             \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
             \Nckg\Minify\Middleware\MinifyResponse::class
         ]);

@@ -36,6 +36,6 @@ class VerifySuccessful
     public function __construct(Payment $payment)
     {
         $this->payment = $payment;
-        $this->dir = $payment->model;
+        $this->dir = $payment->morph;
     }
 }

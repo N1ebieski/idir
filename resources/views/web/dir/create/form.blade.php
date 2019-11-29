@@ -32,7 +32,7 @@
                         {{ trans('idir::groups.content') }}:
                     </label>
                     <div class="@isTheme('dark', 'trumbowyg-dark')">
-                        <textarea class="form-control @isValid('content_html')" id="content_html{{ $trumbowyg }}"
+                        <textarea class="form-control @isValid('content')" id="content_html{{ $trumbowyg }}"
                         name="content_html" rows="5">{{ old('content_html', session('dir.content_html')) }}</textarea>
                     </div>
                     @includeWhen($errors->has('content'), 'icore::admin.partials.errors', ['name' => 'content'])
@@ -123,6 +123,6 @@
 
 @push('script')
 @component('icore::admin.partials.jsvalidation')
-{!! str_replace('"content"', '"content_html"', JsValidator::formRequest('N1ebieski\IDir\Http\Requests\Web\Dir\StoreFormRequest', '#createForm')); !!}
+{!! str_replace('"content"', '"content_html"', JsValidator::formRequest(N1ebieski\IDir\Http\Requests\Web\Dir\StoreFormRequest::class, '#createForm')); !!}
 @endcomponent
 @endpush

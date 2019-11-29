@@ -17,6 +17,18 @@ class PaymentCodeRequest extends FormRequest
     }
 
     /**
+     * Get the URL to redirect to on a validation error.
+     *
+     * @return string
+     */
+    protected function getRedirectUrl()
+    {
+        $url = $this->redirector->getUrlGenerator();
+
+        return $url->route('web.dir.create_summary', [$this->group_available->id]);
+    }
+
+    /**
      * Get the validation rules that apply to the request.
      *
      * @return array

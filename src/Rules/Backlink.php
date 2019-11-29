@@ -18,14 +18,22 @@ class Backlink implements Rule
     protected $link;
 
     /**
+     * [protected description]
+     * @var GuzzleClient
+     */
+    protected $guzzle;
+
+    /**
      * Create a new rule instance.
      *
      * @param string $link [description]
+     * @param GuzzleClient $guzzle [description]
      * @return void
      */
-    public function __construct(string $link)
+    public function __construct(string $link, GuzzleClient $guzzle)
     {
         $this->link = $link;
+        $this->guzzle = $guzzle;
     }
 
     /**
@@ -50,10 +58,8 @@ class Backlink implements Rule
      */
     public function passes($attribute, $value)
     {
-        $client = new GuzzleClient(['timeout' => 10.0]);
-
         try {
-            $response = $client->get($value);
+            $response = $this->guzzle->request('GET', $value);
         } catch (\GuzzleHttp\Exception\GuzzleException $e) {
             return false;
         }

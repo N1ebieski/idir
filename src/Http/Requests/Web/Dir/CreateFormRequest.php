@@ -51,7 +51,7 @@ class CreateFormRequest extends FormRequest
         // a w widoku edycji wpisu potrzebujemy calej kolekcji, co w przypadku wstawiania
         // danych z helpera old() stanowi problem
         if ($this->old('categories') || $this->session()->get('dir.categories')) {
-            session()->flash('_old_input.categories_collection',
+            session()->put('_old_input.categories_collection',
                 $this->category->makeRepo()->getByIds(
                     $this->old('categories') ?? $this->session()->get('dir.categories')
                 )
@@ -66,7 +66,7 @@ class CreateFormRequest extends FormRequest
     {
         if ($this->old('content_html')) {
             if (!$this->group_available->privileges->contains('name', 'additional options for editing content')) {
-                session()->flash('_old_input.content_html', strip_tags($this->old('content_html')));
+                session()->put('_old_input.content_html', strip_tags($this->old('content_html')));
             }
         }
     }

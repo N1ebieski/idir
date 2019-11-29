@@ -23,9 +23,16 @@
             <div class="card h-100">
                 @include('idir::web.dir.partials.group')
                 <div class="card-footer mt-auto">
+                    @if ($group->available === true)
                     <a href="{{ route('web.dir.create_form', [$group->id]) }}" class="btn btn-link">
                         {{ trans('idir::dirs.choose_group') }} &raquo;
                     </a>
+                    @else
+                    {{ trans('idir::dirs.group_limit', [
+                        'dirs' => $group->max_models !== null ? $group->dirs_count : trans('idir::dirs.unlimited'),
+                        'dirs_today' =>$group->max_models_daily !== null ? $group->dirs_today_count : trans('idir::dirs.unlimited')
+                    ]) }}
+                    @endif
                 </div>
             </div>
         </div>
