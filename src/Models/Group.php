@@ -178,6 +178,27 @@ class Group extends Model
         return $query->where('backlink', 2);
     }
 
+    // Accessors
+
+    /**
+     * [getAvailableAttribute description]
+     * @return bool [description]
+     */
+    public function getAvailableAttribute() : bool
+    {
+        $available = true;
+
+        if ($this->max_models !== null && $this->dirs_count >= $this->max_models) {
+            $available = false;
+        }
+
+        if ($this->max_models_daily !== null && $this->dirs_today_count >= $this->max_models_daily) {
+            $available = false;
+        }
+
+        return $available;
+    }
+
     // Loads
 
     /**

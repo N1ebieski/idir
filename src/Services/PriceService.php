@@ -2,6 +2,7 @@
 
 namespace N1ebieski\IDir\Services;
 
+use Illuminate\Database\Eloquent\Collection;
 use N1ebieski\ICore\Services\Serviceable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection as Collect;
@@ -18,6 +19,12 @@ class PriceService implements Serviceable
      * @var Price
      */
     protected $price;
+
+    /**
+     * [protected description]
+     * @var Collection
+     */
+    protected $prices;
 
     /**
      * [private description]
@@ -45,43 +52,60 @@ class PriceService implements Serviceable
     }
 
     /**
-     * [organize description]
-     * @param array $prices [description]
+     * @param Price $price
+     *
+     * @return static
      */
-    public function organizeGlobal(array $prices) : void
+    public function setPrice(Price $price)
     {
-        $this->deleteExceptGlobal(
-            $this->collect->make($prices)->pluck('id')->toArray()
-        );
+        $this->price = $price;
 
-        $this->createOrUpdateGlobal($prices);
+        return $this;
     }
 
     /**
-     * [findById description]
-     * @param  int    $id [description]
-     * @return Price|null     [description]
+     * [organizeGlobal description]
+     * @param array $attributes [description]
      */
-    public function findById(int $id) : ?Price
+    public function organizeGlobal(array $attributes) : void
     {
-        if ($price = $this->price->find($id)) {
-            return $this->price = $price->setGroup($this->price->getGroup());
-        }
+        $this->deleteExceptGlobal(
+            $this->collect->make($attributes)->pluck('id')->toArray()
+        );
 
-        return null;
+        $this->createOrUpdateGlobal($attributes);
+    }
+
+    /**
+     * [findByIds description]
+     * @param  array      $ids [description]
+     * @return Collection      [description]
+     */
+    public function findByIds(array $ids) : Collection
+    {
+        return $this->prices = $this->price->makeRepo()
+            ->getByIds($ids)
+            ->map(function($item) {
+                return $item->setGroup($this->price->getGroup());
+            });
     }
 
     /**
      * [createOrUpdateGlobal description]
-     * @param array $prices [description]
+     * @param array $attributes [description]
      */
-    public function createOrUpdateGlobal(array $prices) : void
+    public function createOrUpdateGlobal(array $attributes) : void
     {
-        foreach ($prices as $price) {
-            if (isset($price['id']) && $this->findById((int)$price['id'])) {
-                $this->update($price);
+        $this->findByIds(
+            $this->collect->make($attributes)->pluck('id')->toArray()
+        );
+
+        foreach ($attributes as $attribute) {
+            if (isset($attribute['id'])
+            && ($price = $this->prices->where('id', $attribute['id'])->first()) instanceof Price) {
+                $this->setPrice($price)->update($attribute);
             } else {
-                $this->create($price);
+                $this->create($attribute);
             }
         }
     }
@@ -143,7 +167,7 @@ class PriceService implements Serviceable
      */
     public function deleteExceptGlobal(array $ids) : int
     {
-        return $this->price->whereNotIn('id', $ids)
+        return $this->price->whereNotIn('id', array_filter($ids))
             ->where('group_id', $this->price->getGroup()->id)->delete();
     }
 

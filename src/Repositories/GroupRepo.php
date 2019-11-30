@@ -71,20 +71,7 @@ class GroupRepo
             ->with(['privileges', 'prices'])
             ->withCount(['dirs', 'dirs_today'])
             ->orderBy('position', 'asc')
-            ->get()
-            ->map(function($item) {
-                $item->available = true;
-
-                if ($item->max_models !== null && $item->dirs_count >= $item->max_models) {
-                    $item->available = false;
-                }
-
-                if ($item->max_models_daily !== null && $item->dirs_today_count >= $item->max_models_daily) {
-                    $item->available = false;
-                }
-
-                return $item;
-            });
+            ->get();
     }
 
     /**

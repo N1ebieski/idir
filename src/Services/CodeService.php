@@ -43,20 +43,20 @@ class CodeService implements Serviceable
 
     /**
      * [createGlobal description]
-     * @param array $codes [description]
+     * @param array $attributes [description]
      */
-    public function createGlobal(array $codes) : void
+    public function createGlobal(array $attributes) : void
     {
-        foreach ($codes as $code) {
-            $_code = $this->code->make($code);
-            $_code->price()->associate($this->code->getPrice());
-            $_code->created_at = Carbon::now();
-            $_code->updated_at = Carbon::now();
+        foreach ($attributes as $attribute) {
+            $code = $this->code->make($code);
+            $code->price()->associate($this->code->getPrice());
+            $code->created_at = Carbon::now();
+            $code->updated_at = Carbon::now();
 
-            $_codes_model[] = $_code->attributesToArray();
+            $codes_model[] = $code->attributesToArray();
         }
 
-        $this->code->insert($_codes_model);
+        $this->code->insert($codes_model);
     }
 
     /**
