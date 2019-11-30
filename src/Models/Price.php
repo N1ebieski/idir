@@ -5,6 +5,7 @@ namespace N1ebieski\IDir\Models;
 use Illuminate\Database\Eloquent\Model;
 use N1ebieski\IDir\Models\Group;
 use N1ebieski\IDir\Services\PriceService;
+use N1ebieski\IDir\Repositories\PriceRepo;
 use Illuminate\Database\Eloquent\Collection;
 
 /**
@@ -106,5 +107,14 @@ class Price extends Model
     public function makeService() : PriceService
     {
         return app()->make(PriceService::class, ['price' => $this]);
+    }
+
+    /**
+     * [makeRepo description]
+     * @return PriceRepo [description]
+     */
+    public function makeRepo() : PriceRepo
+    {
+        return app()->make(PriceRepo::class, ['price' => $this]);
     }
 }

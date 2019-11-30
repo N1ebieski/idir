@@ -21,7 +21,7 @@
 </a>
 @endsection
 
-<nav class="navbar navbar-expand-md navbar-light bg-light fixed-top border-bottom">
+<nav class="navbar scroll navbar-expand-md navbar-light bg-light fixed-top border-bottom">
     <div class="container">
         @if (!app('Helpers\Active')->isUrl(route('web.home.index')))
         <div class="d-flex flex-grow-1 navbar-search">
@@ -69,7 +69,7 @@
                         {{ trans('idir::dirs.page.create.index') }}
                     </a>
                 </li>
-                <li class="nav-item dropdown">
+                <li class="nav-item dropdown @isUrl([route('web.profile.edit')])">
                     @auth
                     <a class="nav-link text-nowrap" href="#" role="button" id="navbarDropdownMenuProfile"
                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -77,7 +77,7 @@
                     </a>
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuProfile">
                         <h6 class="dropdown-header">{{ trans('icore::auth.hello')}}, {{ auth()->user()->name }}</h6>
-                        <a class="dropdown-item @isUrl('profile.edit')" href="{{ route('web.profile.edit') }}">{{ trans('icore::profile.page.edit') }}</a>
+                        <a class="dropdown-item @isUrl(route('web.profile.edit'))" href="{{ route('web.profile.edit') }}">{{ trans('icore::profile.page.edit') }}</a>
                         @can('index dashboard')
                         <a class="dropdown-item" href="{{ route('admin.home.index') }}">{{ trans('icore::admin.page.index') }}</a>
                         @endcan

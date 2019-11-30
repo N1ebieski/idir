@@ -11160,6 +11160,14 @@ body {
   display: none;
 }
 
+.sidebar:not(.toggled) .nav-item.dropdown.active .dropdown-toggle::after {
+  content: "\F107";
+}
+
+.sidebar:not(.toggled) .nav-item.dropdown.active .dropdown-menu {
+  display: block;
+}
+
 .sidebar.position {
   position: relative;
 }

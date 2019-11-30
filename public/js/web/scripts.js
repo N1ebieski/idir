@@ -767,6 +767,16 @@ jQuery(document).on('click', ".modal-backdrop, #navbarToggle", function(e) {
     }
 });
 
+$(document).ready(function() {
+    if (window.innerWidth < 768) {
+        $('.navbar-nav .nav-item.dropdown.active').each(function(index, node) {
+            $(node).addClass('show');
+            $(node).find('.dropdown-toggle').attr('aria-expanded', true);
+            $(node).find('.dropdown-menu').addClass('show');
+        });
+    }
+});
+
 // Scroll to top button appear
 $(document).on('scroll', function() {
     var scrollDistance = $(this).scrollTop();
@@ -779,7 +789,6 @@ $(document).on('scroll', function() {
 
 // Smooth scrolling using jQuery easing
 $(document).on('click', 'a.scroll-to-top', function(event) {
-    var $anchor = $(this);
     $('html, body').stop().animate({
         scrollTop: (0)
     }, 1000, 'easeInOutExpo');

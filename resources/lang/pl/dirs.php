@@ -48,6 +48,6 @@ return [
     'code' => 'Wpisz kod',
     'choose_backlink' => 'Wybierz link zwrotny',
     'backlink_url' => 'Adres z linkiem',
-    'group_limit' => 'Limit grupy wyczerpany (maksymalny: :dirs, dzienny: :dirs_today)',
+    'group_limit' => 'Limit wyczerpany (max: :dirs, dzienny: :dirs_today)',
     'unlimited' => 'nieograniczony'
 ];

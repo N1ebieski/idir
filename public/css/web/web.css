@@ -10860,6 +10860,14 @@ a.text-dark:focus {
   z-index: 1000;
 }
 
+@media (max-width: 767.98px) {
+  .navbar.scroll {
+    overflow-y: auto;
+    overflow-x: hidden;
+    max-height: 100vh;
+  }
+}
+
 .navbar-brand {
   padding: 0;
   margin-right: 0.5rem;
@@ -10884,7 +10892,15 @@ a.text-dark:focus {
 .navbar-nav .nav-item.active .nav-link,
 .navbar-nav span.twitter-typeahead .nav-item.tt-suggestion.tt-cursor .nav-link,
 span.twitter-typeahead .navbar-nav .nav-item.tt-suggestion.tt-cursor .nav-link {
-  color: #fff;
+  color: #007bff;
+}
+
+@media (max-width: 767.98px) {
+  .navbar-nav .nav-item.dropdown .dropdown-menu,
+  .navbar-nav .nav-item.dropdown span.twitter-typeahead .tt-menu,
+  span.twitter-typeahead .navbar-nav .nav-item.dropdown .tt-menu {
+    display: block;
+  }
 }
 
 .navbar-nav .nav-item.dropdown .dropdown-toggle::after {
@@ -10908,6 +10924,12 @@ span.twitter-typeahead .navbar-nav .nav-item.tt-suggestion.tt-cursor .nav-link {
 
 .navbar-nav .nav-item .nav-link:focus {
   outline: none;
+}
+
+.navbar-nav .nav-item .nav-link.active,
+.navbar-nav .nav-item span.twitter-typeahead .nav-link.tt-suggestion.tt-cursor,
+span.twitter-typeahead .navbar-nav .nav-item .nav-link.tt-suggestion.tt-cursor {
+  color: #007bff;
 }
 
 .navbar-nav .nav-item .nav-link .badge {
