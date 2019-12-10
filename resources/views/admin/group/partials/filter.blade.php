@@ -1,7 +1,7 @@
-<form data-route="{{ route("admin.field.{$field->poli}.index") }}" id="filter">
+<form data-route="{{ route("admin.group.index") }}" id="filter">
     <div class="row position-relative">
         <div class="col mb-3">
-            <span class="badge badge-primary">{{ trans('icore::filter.items') }}: {{ $fields->total() }}</span>&nbsp;
+            <span class="badge badge-primary">{{ trans('icore::filter.items') }}: {{ $groups->total() }}</span>&nbsp;
             @if ($filter['search'] !== null)
             <a href="#" class="badge badge-primary filterOption" data-name="filter[search]">
                 {{ trans('icore::filter.search') }}: {{ $filter['search'] }}
@@ -10,19 +10,12 @@
             @endif
             @if ($filter['visible'] !== null)
             <a href="#" class="badge badge-primary filterOption" data-name="filter[visible]">
-                {{ trans('idir::groups.visible') }}: {{ trans('idir::fields.visible_'.$filter['visible']) }}
+                {{ trans('idir::groups.visible') }}: {{ trans('idir::groups.visible_'.$filter['visible']) }}
                 <span aria-hidden="true">&times;</span>
             </a>&nbsp;
             @endif
-            @if ($filter['type'] !== null)
-            <a href="#" class="badge badge-primary filterOption" data-name="filter[type]">
-                {{ trans('icore::filter.type') }}: {{ $filter['type'] }}
-                <span aria-hidden="true">&times;</span>
-            </a>&nbsp;
-            @endif
-            @yield('filter-morph-option')
             @if (array_filter($filter))
-            <a href="{{ route("admin.field.{$field->poli}.index") }}" class="badge badge-dark">{{ trans('icore::default.clear') }}</a>&nbsp;
+            <a href="{{ route("admin.group.index") }}" class="badge badge-dark">{{ trans('icore::default.clear') }}</a>&nbsp;
             @endif
         </div>
         <div class="col-xs-3 text-right mx-3">
@@ -49,11 +42,11 @@
                         <option value="updated_at|asc"
                         {{ ($filter['orderby'] == 'updated_at|asc') ? 'selected' : '' }}>{{ mb_strtolower(trans('icore::filter.updated_at')) }}
                             {{ trans('icore::filter.asc') }}</option>
-                        <option value="title|desc"
-                        {{ ($filter['orderby'] == 'title|desc') ? 'selected' : '' }}>{{ mb_strtolower(trans('icore::filter.title')) }}
+                        <option value="name|desc"
+                        {{ ($filter['orderby'] == 'name|desc') ? 'selected' : '' }}>{{ mb_strtolower(trans('icore::filter.name')) }}
                             {{ trans('icore::filter.desc') }}</option>
-                        <option value="title|asc"
-                        {{ ($filter['orderby'] == 'title|asc') ? 'selected' : '' }}>{{ mb_strtolower(trans('icore::filter.title')) }}
+                        <option value="name|asc"
+                        {{ ($filter['orderby'] == 'name|asc') ? 'selected' : '' }}>{{ mb_strtolower(trans('icore::filter.name')) }}
                             {{ trans('icore::filter.asc') }}</option>
                         <option value="position|desc"
                         {{ ($filter['orderby'] == 'position|desc') ? 'selected' : '' }}>{{ mb_strtolower(trans('icore::filter.position')) }}
@@ -74,5 +67,5 @@
             </div>
         </div>
     </div>
-    @include('idir::admin.field.filter_filter')
+    @include('idir::admin.group.partials.filter_filter')
 </form>

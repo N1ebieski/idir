@@ -2,6 +2,8 @@
 
 namespace N1ebieski\IDir\Http\Controllers\Admin;
 
+use N1ebieski\IDir\Http\Requests\Admin\Group\DestroyRequest;
+
 use N1ebieski\IDir\Models\Group;
 use N1ebieski\IDir\Models\Privilege;
 use N1ebieski\IDir\Http\Requests\Admin\Group\IndexRequest;
@@ -147,9 +149,10 @@ class GroupController
      * Remove the specified Group from storage.
      *
      * @param  Group $group
+     * @param  DestroyRequest $request
      * @return RedirectResponse
      */
-    public function destroy(Group $group) : RedirectResponse
+    public function destroy(Group $group, DestroyRequest $request) : RedirectResponse
     {
         $group->makeService()->delete();
 

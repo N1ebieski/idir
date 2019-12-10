@@ -7064,7 +7064,8 @@ button.navbar.bg-light:focus {
   border-top: 1px solid #dee2e6 !important;
 }
 
-.border-right {
+.border-right,
+.sidebar {
   border-right: 1px solid #dee2e6 !important;
 }
 
@@ -11060,10 +11061,15 @@ p a {
 }
 
 @media (max-width: 767.98px) {
-  .navbar.scroll {
+  .navbar {
+    padding-right: 0;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .navbar-collapse.scroll {
     overflow-y: auto;
-    overflow-x: hidden;
-    max-height: 100vh;
+    max-height: calc(100vh - 67px);
   }
 }
 
@@ -11228,12 +11234,6 @@ span.twitter-typeahead .sidebar .nav-item.tt-suggestion.tt-cursor .nav-link:hove
   color: #007bff;
 }
 
-.sidebar .nav-item.active .nav-link,
-.sidebar span.twitter-typeahead .nav-item.tt-suggestion.tt-cursor .nav-link,
-span.twitter-typeahead .sidebar .nav-item.tt-suggestion.tt-cursor .nav-link {
-  color: #007bff;
-}
-
 .sidebar.toggled {
   min-width: 0 !important;
   width: 0 !important;
@@ -11244,9 +11244,15 @@ span.twitter-typeahead .sidebar .nav-item.tt-suggestion.tt-cursor .nav-link {
   margin-left: 0;
 }
 
-@media (min-width: 768px) {
+.sidebar .nav-item.active .nav-link,
+.sidebar span.twitter-typeahead .nav-item.tt-suggestion.tt-cursor .nav-link,
+span.twitter-typeahead .sidebar .nav-item.tt-suggestion.tt-cursor .nav-link {
+  color: #007bff;
+}
+
+@media (max-width: 575.98px) {
   .sidebar {
-    min-width: 225px !important;
+    min-width: 270px !important;
   }
 
   .sidebar .nav-item .nav-link {
@@ -11254,7 +11260,87 @@ span.twitter-typeahead .sidebar .nav-item.tt-suggestion.tt-cursor .nav-link {
     width: 100%;
     text-align: left;
     padding: 1rem;
-    width: 225px;
+    width: 270px;
+  }
+
+  .sidebar .nav-item .nav-link span {
+    font-size: 1rem;
+    display: inline;
+    margin-left: 0.6rem;
+  }
+
+  .sidebar .nav-item .dropdown-menu,
+  .sidebar .nav-item span.twitter-typeahead .tt-menu,
+  span.twitter-typeahead .sidebar .nav-item .tt-menu {
+    position: static !important;
+    margin: 0 1rem;
+    top: 0;
+  }
+
+  .sidebar .nav-item.dropdown .dropdown-toggle::after {
+    display: block;
+  }
+
+  .sidebar.toggled {
+    overflow: visible;
+    min-width: 90px !important;
+  }
+
+  .sidebar.toggled .nav-item:last-child {
+    margin-bottom: 1rem;
+  }
+
+  .sidebar.toggled .nav-item .nav-link {
+    text-align: center;
+    padding: 0.75rem 1rem;
+    width: 90px;
+  }
+
+  .sidebar.toggled .nav-item .nav-link span {
+    font-size: 0.65rem;
+    display: block;
+  }
+
+  .sidebar.toggled .nav-item .dropdown-menu,
+  .sidebar.toggled .nav-item span.twitter-typeahead .tt-menu,
+  span.twitter-typeahead .sidebar.toggled .nav-item .tt-menu {
+    position: absolute !important;
+    transform: none !important;
+    left: calc(90px + 0.5rem) !important;
+    margin: 0;
+  }
+
+  .sidebar.toggled .nav-item .dropdown-menu.dropup,
+  .sidebar.toggled .nav-item span.twitter-typeahead .dropup.tt-menu,
+  span.twitter-typeahead .sidebar.toggled .nav-item .dropup.tt-menu {
+    bottom: 0;
+    top: auto !important;
+  }
+
+  .sidebar.toggled .nav-item.dropdown .dropdown-toggle::after {
+    display: none;
+  }
+
+  .sidebar.toggled .nav-item .nav-link span {
+    margin-left: 0;
+  }
+
+  .sidebar {
+    border-right: 0px !important;
+  }
+}
+
+@media (min-width: 992px) {
+  .sidebar {
+    min-width: 270px !important;
+  }
+
+  .sidebar .nav-item .nav-link {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 1rem;
+    width: 270px;
   }
 
   .sidebar .nav-item .nav-link span {
@@ -11469,6 +11555,11 @@ span.twitter-typeahead .sidebar .nav-item.tt-suggestion.tt-cursor .nav-link {
   display: none;
 }
 
+.disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
 .input-group span.twitter-typeahead {
   display: flex !important;
   align-items: center;
@@ -11522,12 +11613,17 @@ span.twitter-typeahead .sidebar .nav-item.tt-suggestion.tt-cursor .nav-link {
   border-top-color: rgba(255, 255, 255, 0.2) !important;
 }
 
-.border-right {
+.border-right,
+.sidebar {
   border-right-color: rgba(255, 255, 255, 0.2) !important;
 }
 
 .border-left {
   border-left-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+.border-primary {
+  border-color: #007bff !important;
 }
 
 .dropdown-menu,

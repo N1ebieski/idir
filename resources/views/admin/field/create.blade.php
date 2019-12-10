@@ -13,7 +13,7 @@
             <nav>
                 <div class="btn-group btn-group-toggle nav d-block" data-toggle="buttons" id="nav-tab" role="tablist">
                     @foreach (['input', 'textarea', 'select', 'multiselect', 'checkbox', 'image'] as $type)
-                    <a class="nav-item btn btn-light {{ $loop->first ? 'active' : null }}" id="nav-{{ $type }}-tab"
+                    <a class="nav-item btn btn-info {{ $loop->first ? 'active' : null }}" id="nav-{{ $type }}-tab"
                     data-toggle="tab" href="#nav-{{ $type }}" role="tab"
                     aria-controls="nav-{{ $type }}" aria-selected="true">
                         <input type="radio" name="type" value="{{ $type }}" id="nav-{{ $type }}-tab"

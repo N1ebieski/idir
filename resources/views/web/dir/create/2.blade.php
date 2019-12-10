@@ -7,6 +7,7 @@
 @section('breadcrumb')
 <li class="breadcrumb-item"><a href="/">{{ trans('icore::home.page.index') }}</a></li>
 <li class="breadcrumb-item">{{ trans('idir::dirs.page.index') }}</li>
+<li class="breadcrumb-item">{{ trans('idir::dirs.page.create.index') }}</li>
 <li class="breadcrumb-item active" aria-current="page">
     {{ trans('idir::dirs.page.step', ['step' => 2]) }} {{ trans('idir::dirs.page.create.form') }}
 </li>
@@ -18,7 +19,7 @@
     <h3 class="h5 border-bottom pb-2">{{ trans('idir::dirs.page.create.form') }}</h3>
     <div class="row mb-4">
         <div class="col-md-8">
-            <form method="post" action="{{ route('web.dir.store_form', [$group->id]) }}"
+            <form method="post" action="{{ route('web.dir.store_2', [$group->id]) }}"
             enctype="multipart/form-data" id="createForm">
                 @csrf
                 <div class="form-group">
@@ -94,13 +95,13 @@
                 </div>
                 @if ($group->fields->isNotEmpty())
                 @foreach ($group->fields as $field)
-                @include("idir::web.field.partials.{$field->type}")
+                @include("idir::web.field.partials.{$field->type}", ['value' => session("dir.field.{$field->id}")])
                 @endforeach
                 @endif
                 <hr>
                 <div class="d-flex mb-3">
                     <div class="mr-auto">
-                        <a href="{{ route('web.dir.create_group') }}" class="btn btn-secondary" style="width:6rem">
+                        <a href="{{ route('web.dir.create_1') }}" class="btn btn-secondary" style="width:6rem">
                             &laquo; {{ trans('icore::default.back') }}
                         </a>
                     </div>
@@ -121,8 +122,8 @@
 </div>
 @endsection
 
-@push('script')
+{{-- @push('script')
 @component('icore::admin.partials.jsvalidation')
-{!! str_replace('"content"', '"content_html"', JsValidator::formRequest(N1ebieski\IDir\Http\Requests\Web\Dir\StoreFormRequest::class, '#createForm')); !!}
+{!! str_replace('"content"', '"content_html"', JsValidator::formRequest(\N1ebieski\IDir\Http\Requests\Web\Dir\Store2Request::class, '#createForm')); !!}
 @endcomponent
-@endpush
+@endpush --}}

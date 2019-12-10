@@ -7,6 +7,7 @@
 @section('breadcrumb')
 <li class="breadcrumb-item"><a href="/">{{ trans('icore::home.page.index') }}</a></li>
 <li class="breadcrumb-item">{{ trans('idir::dirs.page.index') }}</li>
+<li class="breadcrumb-item">{{ trans('idir::dirs.page.create.index') }}</li>
 <li class="breadcrumb-item active" aria-current="page">
     {{ trans('idir::dirs.page.step', ['step' => 1]) }} {{ trans('idir::dirs.page.create.group') }}
 </li>
@@ -22,9 +23,9 @@
         <div class="col-lg-4 col-md-6 mb-4">
             <div class="card h-100">
                 @include('idir::web.dir.partials.group')
-                <div class="card-footer mt-auto {{ $group->available === false ? 'bg-warning' : null }}">
-                    @if ($group->available === true)
-                    <a href="{{ route('web.dir.create_form', [$group->id]) }}" class="btn btn-link">
+                <div class="card-footer mt-auto {{ $group->isAvailable() ? null : 'bg-warning' }}">
+                    @if ($group->isAvailable())
+                    <a href="{{ route('web.dir.create_2', [$group->id]) }}" class="btn btn-link">
                         {{ trans('idir::dirs.choose_group') }} &raquo;
                     </a>
                     @else
@@ -34,7 +35,7 @@
                         'dirs_today' =>$group->max_models_daily ?? trans('idir::dirs.unlimited')
                     ]) }}
                     </div>
-                    @endif
+                    @endcan
                 </div>
             </div>
         </div>

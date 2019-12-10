@@ -7,7 +7,7 @@ use N1ebieski\ICore\Models\Link;
 use N1ebieski\IDir\Models\Dir;
 use N1ebieski\IDir\Models\Field\Group\Field;
 use Tests\TestCase;
-use N1ebieski\ICore\Models\User;
+use N1ebieski\IDir\Models\User;
 use N1ebieski\IDir\Models\Group;
 use N1ebieski\IDir\Models\Category\Dir\Category;
 use N1ebieski\IDir\Models\Price;

@@ -9,15 +9,27 @@ return [
             'form' => 'Wypełnij formularz',
             'summary' => 'Podsumowanie'
         ],
+        'edit' => [
+            'index' => 'Edytuj wpis',
+            'group' => 'Wybierz typ wpisu',
+            'form' => 'Wypełnij formularz',
+            'summary' => 'Podsumowanie'
+        ],
         'step' => 'Krok :step'
     ],
     'success' => [
         'store' => [
             'status_0' => 'Wpis został dodany i oczekuje na moderację.',
-            'status_1' => 'Wpis został dodany.'
-        ]
+            'status_1' => 'Wpis został dodany i jest aktywny.'
+        ],
+        'update' => [
+            'status_0' => 'Wpis został edytowany i oczekuje na moderację.',
+            'status_1' => 'Wpis został edytowany i jest aktywny.'
+        ],
     ],
     'choose_group' => 'Wybierz grupę',
+    'change_group' => 'Zmień grupę',
+    'renew_group' => 'Przedłuż ważność',
     'categories' => 'Kategorie',
     'tags' => 'Tagi',
     'tags_tooltip' => 'Min 3 znaki, max 30 znaków, max :max_tags tagów',

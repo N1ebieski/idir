@@ -24,11 +24,6 @@ class RouteServiceProvider extends ServiceProvider
     {
         parent::boot();
 
-        $this->app['router']->bind('group_available', function($value) {
-            return $this->app->make(\N1ebieski\IDir\Models\Group::class)->makeRepo()
-                ->firstAvailableById($value) ?? abort(404);
-        });
-
         $this->app['router']->bind('payment_dir_pending', function($value) {
             return $this->app->make(\N1ebieski\IDir\Models\Payment\Dir\Payment::class)
                 ->makeRepo()->firstPendingById($value) ?? abort(404);

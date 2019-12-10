@@ -6,12 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 use N1ebieski\IDir\Services\PaymentService;
 use N1ebieski\IDir\Repositories\PaymentRepo;
 use Illuminate\Database\Eloquent\Builder;
+use N1ebieski\ICore\Models\Traits\Polymorphic;
 
 /**
  * [Payment description]
  */
 class Payment extends Model
 {
+    use Polymorphic;
+
     // Configuration
 
     /**
@@ -63,6 +66,17 @@ class Payment extends Model
     public function scopePending(Builder $query) : Builder
     {
         return $query->where('status', 2);
+    }
+
+    // Checkers
+
+    /**
+     * [isPending description]
+     * @return bool [description]
+     */
+    public function isPending() : bool
+    {
+        return $this->status === 2;
     }
 
     // Makers

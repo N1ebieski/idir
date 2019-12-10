@@ -2,14 +2,14 @@
 
 namespace N1ebieski\IDir\Http\Requests\Web\Dir;
 
-use N1ebieski\IDir\Http\Requests\Web\Dir\StoreFormRequest;
+use N1ebieski\IDir\Http\Requests\Web\Dir\Store2Request;
 use N1ebieski\ICore\Models\Link;
 use N1ebieski\ICore\Models\BanValue;
 
 /**
- * [CreateSummaryRequest description]
+ * [Create3Request description]
  */
-class CreateSummaryRequest extends StoreFormRequest
+class Create3Request extends Store2Request
 {
     /**
      * [private description]
@@ -36,7 +36,7 @@ class CreateSummaryRequest extends StoreFormRequest
      */
     public function authorize()
     {
-        return true;
+        return $this->group->isAvailable() && $this->group->isPublic();
     }
 
     /**
@@ -48,7 +48,7 @@ class CreateSummaryRequest extends StoreFormRequest
     {
         $url = $this->redirector->getUrlGenerator();
 
-        return $url->route('web.dir.create_form', [$this->group_available->id]);
+        return $url->route('web.dir.create_2', [$this->group->id]);
     }
 
     /**
@@ -58,7 +58,7 @@ class CreateSummaryRequest extends StoreFormRequest
      */
     protected function prepareForValidation() : void
     {
-        if ($this->group_available->prices->isNotEmpty()) {
+        if ($this->group->prices->isNotEmpty()) {
             $this->preparePaymentTypeOldAttribute();
 
             $this->preparePaymentCodeSmsModelOldAttribute();
@@ -82,7 +82,7 @@ class CreateSummaryRequest extends StoreFormRequest
     {
         if (!$this->old('payment_type')) {
             session()->put(
-                '_old_input.payment_type', $this->group_available->prices->sortByDesc('type')->first()->type
+                '_old_input.payment_type', $this->group->prices->sortByDesc('type')->first()->type
             );
         }
     }
@@ -94,7 +94,7 @@ class CreateSummaryRequest extends StoreFormRequest
     {
         if ($this->old('payment_code_sms')) {
             session()->flash('_old_input.payment_code_sms_model',
-                $this->group_available->prices->where('id', old('payment_code_sms'))->first()
+                $this->group->prices->where('id', old('payment_code_sms'))->first()
             );
         }
     }
@@ -106,7 +106,7 @@ class CreateSummaryRequest extends StoreFormRequest
     {
         if ($this->old('payment_code_transfer')) {
             session()->flash('_old_input.payment_code_transfer_model',
-                $this->group_available->prices->where('id', old('payment_code_transfer'))->first()
+                $this->group->prices->where('id', old('payment_code_transfer'))->first()
             );
         }
     }

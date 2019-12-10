@@ -367,6 +367,31 @@ jQuery(document).on('click', 'button.updateComment', function(e) {
     });
 });
 
+jQuery(document).on('click', '.destroy', function(e) {
+    e.preventDefault();
+
+    let $element = $(this);
+    let $row = $('#row'+$element.attr('data-id'));
+
+    jQuery.ajax({
+        url: $element.attr('data-route'),
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        method: 'delete',
+        beforeSend: function() {
+            $row.find('.responsive-btn-group').addClass('disabled');
+            $row.append($.getLoader('spinner-border'));
+        },
+        complete: function() {
+            $row.find('div.loader-absolute').remove();
+        },
+        success: function(response) {
+            $row.fadeOut('slow');
+        }
+    });
+});
+
 (function($) {
     function ajaxFilter($form, href) {
         $.ajax({
@@ -624,9 +649,10 @@ jQuery(document).on('click', 'button.storeReport', function(e) {
     };
 })(jQuery);
 
-jQuery(document).ready(function() {
+jQuery(document).on('readyAndAjax', function() {
     $('[data-toggle=confirmation]').confirmation({
         rootSelector: '[data-toggle=confirmation]',
+        copyAttributes: 'data-route data-id',
         singleton: true,
         popout: true,
         onConfirm: function() {
@@ -767,16 +793,6 @@ jQuery(document).on('click', ".modal-backdrop, #navbarToggle", function(e) {
     }
 });
 
-$(document).ready(function() {
-    if (window.innerWidth < 768) {
-        $('.navbar-nav .nav-item.dropdown.active').each(function(index, node) {
-            $(node).addClass('show');
-            $(node).find('.dropdown-toggle').attr('aria-expanded', true);
-            $(node).find('.dropdown-menu').addClass('show');
-        });
-    }
-});
-
 // Scroll to top button appear
 $(document).on('scroll', function() {
     var scrollDistance = $(this).scrollTop();
@@ -871,6 +887,19 @@ jQuery(document).on('readyAndAjax', function() {
                 ['fullscreen']
             ]
         });
+    }
+});
+
+jQuery(document).on('change', 'form input[id^=delete_img]', function() {
+    $input = $(this).closest('.form-group').find('[type="file"]');
+    $hidden = $(this).closest('.form-group').find('[type="hidden"]');
+
+    if ($(this).prop('checked') === true) {
+        $input.prop('disabled', false);
+        $hidden.prop('disabled', true);
+    } else {
+        $input.prop('disabled', true);
+        $hidden.prop('disabled', false);
     }
 });
 

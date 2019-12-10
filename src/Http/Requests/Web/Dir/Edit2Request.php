@@ -5,7 +5,7 @@ namespace N1ebieski\IDir\Http\Requests\Web\Dir;
 use Illuminate\Foundation\Http\FormRequest;
 use N1ebieski\IDir\Models\Category\Dir\Category;
 
-class CreateFormRequest extends FormRequest
+class Edit2Request extends FormRequest
 {
     /**
      * [private description]
@@ -19,6 +19,8 @@ class CreateFormRequest extends FormRequest
      */
     public function __construct(Category $category)
     {
+        parent::__construct();
+
         $this->category = $category;
     }
 
@@ -29,7 +31,10 @@ class CreateFormRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        $check = $this->group->isPublic();
+
+        return $this->dir->isGroup($this->group->id) ?
+            $check : $check && $this->group->isAvailable();
     }
 
     /**
@@ -50,12 +55,14 @@ class CreateFormRequest extends FormRequest
         // Brzyki hook, ale nie mam innego pomyslu. Request dla kategorii zwraca tylko IDki
         // a w widoku edycji wpisu potrzebujemy calej kolekcji, co w przypadku wstawiania
         // danych z helpera old() stanowi problem
-        if ($this->old('categories') || $this->session()->get('dir.categories')) {
+        if ($this->old('categories') || $this->session()->get("dirId.{$this->dir->id}.categories")) {
             session()->put('_old_input.categories_collection',
                 $this->category->makeRepo()->getByIds(
-                    $this->old('categories') ?? $this->session()->get('dir.categories')
+                    $this->old('categories') ?? $this->session()->get("dirId.{$this->dir->id}.categories")
                 )
             );
+        } else {
+            session()->forget('_old_input.categories_collection');
         }
     }
 
@@ -65,7 +72,7 @@ class CreateFormRequest extends FormRequest
     protected function prepareContentHtmlOldAttribute() : void
     {
         if ($this->old('content_html')) {
-            if (!$this->group_available->privileges->contains('name', 'additional options for editing content')) {
+            if (!$this->group->privileges->contains('name', 'additional options for editing content')) {
                 session()->put('_old_input.content_html', strip_tags($this->old('content_html')));
             }
         }

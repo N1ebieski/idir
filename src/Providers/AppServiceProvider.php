@@ -33,5 +33,9 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(\N1ebieski\ICore\Cache\LinkCache::class, function($app, array $with) {
             return $this->app->make(\N1ebieski\IDir\Cache\LinkCache::class, $with);
         });
+
+        $this->app->bind(\N1ebieski\ICore\Models\User::class, function($app, array $with) {
+            return $this->app->make(\N1ebieski\IDir\Models\User::class, $with);
+        });
     }
 }

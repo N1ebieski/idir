@@ -7,11 +7,11 @@ Route::get('groups', 'GroupController@index')
     ->middleware('permission:index groups');
 
 Route::get('groups/{group}/edit', 'GroupController@edit')
-    ->middleware(['permission:edit groups', 'can:editDefault,group'])
+    ->middleware('permission:edit groups')
     ->name('group.edit')
     ->where('group', '[0-9]+');
 Route::put('groups/{group}', 'GroupController@update')
-    ->middleware(['permission:edit groups', 'can:editDefault,group'])
+    ->middleware('permission:edit groups')
     ->name('group.update')
     ->where('group', '[0-9]+');
 
@@ -32,6 +32,6 @@ Route::post('groups', 'GroupController@store')
     ->middleware('permission:create groups');
 
 Route::delete('groups/{group}', 'GroupController@destroy')
-    ->middleware(['permission:destroy groups', 'can:deleteDefault,group'])
+    ->middleware('permission:destroy groups')
     ->name('group.destroy')
     ->where('group', '[0-9]+');

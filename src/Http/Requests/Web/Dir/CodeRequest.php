@@ -4,30 +4,8 @@ namespace N1ebieski\IDir\Http\Requests\Web\Dir;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class PaymentCodeRequest extends FormRequest
+class CodeRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
-    public function authorize()
-    {
-        return true;
-    }
-
-    /**
-     * Get the URL to redirect to on a validation error.
-     *
-     * @return string
-     */
-    protected function getRedirectUrl()
-    {
-        $url = $this->redirector->getUrlGenerator();
-
-        return $url->route('web.dir.create_summary', [$this->group_available->id]);
-    }
-
     /**
      * Get the validation rules that apply to the request.
      *
