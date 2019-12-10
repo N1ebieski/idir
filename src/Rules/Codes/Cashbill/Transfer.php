@@ -47,10 +47,8 @@ class Transfer extends Codes
     public function __construct(Price $price, Code $code, Request $request, Cashbill $cashbill)
     {
         $this->cashbill = $cashbill;
-        $this->price = $price;
+        $this->price = $price->find($request->input('payment_code_transfer'));
         $this->request = $request;
-
-        $request->merge(['payment_code' => $request->input('payment_code_transfer')]);
 
         parent::__construct($code, $request);
     }
@@ -84,8 +82,7 @@ class Transfer extends Codes
         try {
             $this->cashbill->verify([
                 'code' => $value,
-                'id' => $this->price->where('id', $this->request->input('payment_code_transfer'))
-                    ->first('code')->code
+                'id' => $this->price->code
             ]);
         } catch (\Exception $e) {
             return false;

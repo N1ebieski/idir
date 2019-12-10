@@ -15,16 +15,16 @@
         <div class="text-right ml-3">
             <div class="responsive-btn-group">
                 @can('edit groups')
-                @can('editDefault', $group)
+                @if ($group->isNotDefault())
                 <a class="btn btn-primary align-bottom" href="{{ route('admin.group.edit', [$group->id]) }}"
                 role="button" target="_blank">
                     <i class="fas fa-edit"></i>
                     <span class="d-none d-sm-inline"> {{ trans('icore::default.edit') }}</span>
                 </a>
-                @endcan
+                @endif
                 @endcan
                 @can('destroy groups')
-                @can('deleteDefault', $group)
+                @if ($group->isNotDefault())
                 <form action="{{ route('admin.group.destroy', [$group->id]) }}" method="post">
                     @csrf
                     @method('delete')
@@ -37,7 +37,7 @@
                         <span class="d-none d-sm-inline">&nbsp;{{ trans('icore::default.delete') }}</span>
                     </button>
                 </form>
-                @endcan
+                @endif
                 @endcan
             </div>
         </div>

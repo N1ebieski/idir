@@ -7,7 +7,7 @@ use N1ebieski\IDir\Models\Dir;
 use N1ebieski\IDir\Models\Code;
 use N1ebieski\IDir\Models\Field\Group\Field;
 use Tests\TestCase;
-use N1ebieski\ICore\Models\User;
+use N1ebieski\IDir\Models\User;
 use N1ebieski\IDir\Models\Group;
 use N1ebieski\IDir\Models\Category\Dir\Category;
 use N1ebieski\IDir\Models\Price;
@@ -71,6 +71,9 @@ class DirTest extends TestCase
                 $fields['field'][$key] = array_slice($field->options->options, 0, 2);
             } else if ($field->type === 'image') {
                 $fields['field'][$key] = UploadedFile::fake()->image('avatar.jpg', 500, 200)->size(1000);
+                $this->mock(\N1ebieski\IDir\Libs\File::class, function($mock) {
+                    $mock->shouldReceive('moveFromTemp')->andReturn(true);
+                })->makePartial();
             }
         }
 
@@ -79,7 +82,7 @@ class DirTest extends TestCase
 
     public function test_dir_create_group_as_guest()
     {
-        $response = $this->get(route('web.dir.create_group'));
+        $response = $this->get(route('web.dir.create_1'));
 
         $response->assertRedirect(route('login'));
     }
@@ -93,17 +96,17 @@ class DirTest extends TestCase
 
         Auth::login($user, true);
 
-        $response = $this->get(route('web.dir.create_group'));
+        $response = $this->get(route('web.dir.create_1'));
 
-        $response->assertOk()->assertViewIs('idir::web.dir.create.group');
-        $response->assertSee(route('web.dir.create_form', [$public_groups[2]->id]));
+        $response->assertOk()->assertViewIs('idir::web.dir.create.1');
+        $response->assertSee(route('web.dir.create_2', [$public_groups[2]->id]));
         $response->assertSeeText($public_groups[2]->name);
         $response->assertDontSee($private_group->name);
     }
 
     public function test_dir_create_form_as_guest()
     {
-        $response = $this->get(route('web.dir.create_form', [34]));
+        $response = $this->get(route('web.dir.create_2', [34]));
 
         $response->assertRedirect(route('login'));
     }
@@ -114,7 +117,7 @@ class DirTest extends TestCase
 
         Auth::login($user, true);
 
-        $response = $this->get(route('web.dir.create_form', [34]));
+        $response = $this->get(route('web.dir.create_2', [34]));
 
         $response->assertStatus(404);
     }
@@ -127,9 +130,9 @@ class DirTest extends TestCase
 
         Auth::login($user, true);
 
-        $response = $this->get(route('web.dir.create_form', [$group->id]));
+        $response = $this->get(route('web.dir.create_2', [$group->id]));
 
-        $response->assertStatus(404);
+        $response->assertStatus(403);
     }
 
     public function test_dir_create_form_max_models_group()
@@ -141,9 +144,9 @@ class DirTest extends TestCase
 
         Auth::login($user, true);
 
-        $response = $this->get(route('web.dir.create_form', [$group->id]));
+        $response = $this->get(route('web.dir.create_2', [$group->id]));
 
-        $response->assertStatus(404);
+        $response->assertStatus(403);
     }
 
     public function test_dir_create_form_max_models_daily_group()
@@ -155,9 +158,9 @@ class DirTest extends TestCase
 
         Auth::login($user, true);
 
-        $response = $this->get(route('web.dir.create_form', [$group->id]));
+        $response = $this->get(route('web.dir.create_2', [$group->id]));
 
-        $response->assertStatus(404);
+        $response->assertStatus(403);
     }
 
     public function test_dir_create_form()
@@ -168,16 +171,16 @@ class DirTest extends TestCase
 
         $group = factory(Group::class)->states('public', 'additional options for editing content')->create();
 
-        $response = $this->get(route('web.dir.create_form', [$group->id]));
+        $response = $this->get(route('web.dir.create_2', [$group->id]));
 
-        $response->assertOk()->assertViewIs('idir::web.dir.create.form');
+        $response->assertOk()->assertViewIs('idir::web.dir.create.2');
         $response->assertSee('trumbowyg');
-        $response->assertSee(route('web.dir.store_form', [$group->id]));
+        $response->assertSee(route('web.dir.store_2', [$group->id]));
     }
 
     public function test_dir_store_form_as_guest()
     {
-        $response = $this->post(route('web.dir.store_form', [34]));
+        $response = $this->post(route('web.dir.store_2', [34]));
 
         $response->assertRedirect(route('login'));
     }
@@ -188,7 +191,7 @@ class DirTest extends TestCase
 
         Auth::login($user, true);
 
-        $response = $this->post(route('web.dir.store_form', [34]));
+        $response = $this->post(route('web.dir.store_2', [34]));
 
         $response->assertStatus(404);
     }
@@ -201,9 +204,9 @@ class DirTest extends TestCase
 
         Auth::login($user, true);
 
-        $response = $this->post(route('web.dir.store_form', [$group->id]));
+        $response = $this->post(route('web.dir.store_2', [$group->id]));
 
-        $response->assertStatus(404);
+        $response->assertStatus(403);
     }
 
     public function test_dir_store_form_validation_fail()
@@ -214,7 +217,7 @@ class DirTest extends TestCase
 
         $group = factory(Group::class)->states(['public', 'required_url'])->create();
 
-        $response = $this->post(route('web.dir.store_form', [$group->id]));
+        $response = $this->post(route('web.dir.store_2', [$group->id]));
 
         $response->assertSessionHasErrors(['categories', 'title', 'content', 'url']);
     }
@@ -227,7 +230,7 @@ class DirTest extends TestCase
 
         $group = factory(Group::class)->states(['public', 'required_url'])->create();
 
-        $response = $this->post(route('web.dir.store_form', [$group->id]), [
+        $response = $this->post(route('web.dir.store_2', [$group->id]), [
             'url' => 'dadasdasdasdasdsa23232'
         ]);
 
@@ -247,22 +250,22 @@ class DirTest extends TestCase
                 'additional options for editing content'
             ])->create();
 
-        $response = $this->post(route('web.dir.store_form', [$group->id]), $this->dirSetup());
+        $response = $this->post(route('web.dir.store_2', [$group->id]), $this->dirSetup());
 
-        $response->assertRedirect(route('web.dir.create_summary', [$group->id]));
+        $response->assertRedirect(route('web.dir.create_3', [$group->id]));
         $response->assertSessionHas('dir.title', 'dasdasdasd');
     }
 
     public function test_dir_create_summary_as_guest()
     {
-        $response = $this->get(route('web.dir.create_summary', [34]));
+        $response = $this->get(route('web.dir.create_3', [34]));
 
         $response->assertRedirect(route('login'));
     }
 
     public function test_dir_store_summary_as_guest()
     {
-        $response = $this->post(route('web.dir.store_summary', [34]));
+        $response = $this->post(route('web.dir.store_3', [34]));
 
         $response->assertRedirect(route('login'));
     }
@@ -275,12 +278,12 @@ class DirTest extends TestCase
 
         $group = factory(Group::class)->states(['public', 'required_url'])->create();
 
-        $response = $this->post(route('web.dir.store_summary', [$group->id]), [
+        $response = $this->post(route('web.dir.store_3', [$group->id]), [
             'url' => 'dadasdasdasdasdsa23232'
         ]);
 
         $response->assertSessionHasErrors(['url']);
-        $response->assertRedirect(route('web.dir.create_summary', [$group->id]));
+        $response->assertRedirect(route('web.dir.create_3', [$group->id]));
     }
 
     public function test_dir_store_summary_validation_categories_fail()
@@ -293,12 +296,12 @@ class DirTest extends TestCase
 
         $category = factory(Category::class, 3)->states('active')->create();
 
-        $response = $this->post(route('web.dir.store_summary', [$group->id]), [
+        $response = $this->post(route('web.dir.store_3', [$group->id]), [
             'categories' => $category->pluck('id')->toArray()
         ]);
 
         $response->assertSessionHasErrors(['categories']);
-        $response->assertRedirect(route('web.dir.create_summary', [$group->id]));
+        $response->assertRedirect(route('web.dir.create_3', [$group->id]));
     }
 
     public function test_dir_store_summary_validation_fields_fail()
@@ -316,10 +319,10 @@ class DirTest extends TestCase
             $fields[] = "field.{$field->id}";
         }
 
-        $response = $this->post(route('web.dir.store_summary', [$group->id]), []);
+        $response = $this->post(route('web.dir.store_3', [$group->id]), []);
 
         $response->assertSessionHasErrors($fields);
-        $response->assertRedirect(route('web.dir.create_summary', [$group->id]));
+        $response->assertRedirect(route('web.dir.create_3', [$group->id]));
     }
 
     public function test_dir_store_summary_validation_backlink_fail()
@@ -332,10 +335,10 @@ class DirTest extends TestCase
 
         $link = factory(Link::class)->states('backlink')->create();
 
-        $response = $this->post(route('web.dir.store_summary', [$group->id]), []);
+        $response = $this->post(route('web.dir.store_3', [$group->id]), []);
 
         $response->assertSessionHasErrors('backlink');
-        $response->assertRedirect(route('web.dir.create_summary', [$group->id]));
+        $response->assertRedirect(route('web.dir.create_3', [$group->id]));
     }
 
     public function test_dir_store_summary_validation_backlink_pass()
@@ -354,13 +357,13 @@ class DirTest extends TestCase
             );
         });
 
-        $response = $this->post(route('web.dir.store_summary', [$group->id]), [
+        $response = $this->post(route('web.dir.store_3', [$group->id]), [
             'backlink' => $link->id,
             'backlink_url' => 'http://dadadad.pl'
         ]);
 
         $response->assertSessionDoesntHaveErrors('backlink_url');
-        $response->assertRedirect(route('web.dir.create_summary', [$group->id]));
+        $response->assertRedirect(route('web.dir.create_3', [$group->id]));
     }
 
     public function test_dir_store_summary_fields()
@@ -371,7 +374,7 @@ class DirTest extends TestCase
 
         $group = factory(Group::class)->states(['public', 'apply_active', 'required_url'])->create();
 
-        $response = $this->post(route('web.dir.store_summary', [$group->id]),
+        $response = $this->post(route('web.dir.store_3', [$group->id]),
             ($dirSetup = $this->dirSetup()) + $this->fieldsSetup($group));
 
         $dir = Dir::orderBy('id', 'desc')->first();
@@ -408,12 +411,12 @@ class DirTest extends TestCase
         $price = factory(Price::class)->states(['transfer'])->make();
         $price->group()->associate($group)->save();
 
-        $response = $this->post(route('web.dir.store_summary', [$group->id]), [
+        $response = $this->post(route('web.dir.store_3', [$group->id]), [
             'payment_type' => 'transfer'
         ]);
 
         $response->assertSessionHasErrors('payment_transfer');
-        $response->assertRedirect(route('web.dir.create_summary', [$group->id]));
+        $response->assertRedirect(route('web.dir.create_3', [$group->id]));
     }
 
     public function test_dir_store_summary_validation_noexist_payment_fail()
@@ -426,13 +429,13 @@ class DirTest extends TestCase
         $price = factory(Price::class)->states(['transfer'])->make();
         $price->group()->associate($group)->save();
 
-        $response = $this->post(route('web.dir.store_summary', [$group->id]), [
+        $response = $this->post(route('web.dir.store_3', [$group->id]), [
             'payment_type' => 'transfer',
             'payment_transfer' => 23232
         ]);
 
         $response->assertSessionHasErrors('payment_transfer');
-        $response->assertRedirect(route('web.dir.create_summary', [$group->id]));
+        $response->assertRedirect(route('web.dir.create_3', [$group->id]));
     }
 
     public function test_dir_store_summary_payment()
@@ -445,7 +448,7 @@ class DirTest extends TestCase
         $price = factory(Price::class)->states(['transfer'])->make();
         $price->group()->associate($group)->save();
 
-        $response = $this->post(route('web.dir.store_summary', [$group->id]), [
+        $response = $this->post(route('web.dir.store_3', [$group->id]), [
             'payment_type' => 'transfer',
             'payment_transfer' => $price->id
         ] + $this->dirSetup());
@@ -480,13 +483,13 @@ class DirTest extends TestCase
         $price = factory(Price::class)->states(['code_sms'])->make();
         $price->group()->associate($group)->save();
 
-        $response = $this->post(route('web.dir.store_summary', [$group->id]), [
+        $response = $this->post(route('web.dir.store_3', [$group->id]), [
             'payment_type' => 'code_sms',
             'payment_code_sms' => $price->id
         ] + $this->dirSetup());
 
         $response->assertSessionHasErrors('code_sms');
-        $response->assertRedirect(route('web.dir.create_summary', [$group->id]));
+        $response->assertRedirect(route('web.dir.create_3', [$group->id]));
     }
 
     public function test_dir_store_summary_validation_payment_auto_code_sms_pass()
@@ -512,7 +515,7 @@ class DirTest extends TestCase
             );
         });
 
-        $response = $this->post(route('web.dir.store_summary', [$group->id]), [
+        $response = $this->post(route('web.dir.store_3', [$group->id]), [
             'payment_type' => 'code_sms',
             'payment_code_sms' => $price->id,
             'code_sms' => 'dsadasd7a8s'
@@ -551,14 +554,14 @@ class DirTest extends TestCase
             );
         });
 
-        $response = $this->post(route('web.dir.store_summary', [$group->id]), [
+        $response = $this->post(route('web.dir.store_3', [$group->id]), [
             'payment_type' => 'code_sms',
             'payment_code_sms' => $price->id,
             'code_sms' => 'dsadasd7a8s'
         ] + $this->dirSetup());
 
         $response->assertSessionHasErrors('code_sms');
-        $response->assertRedirect(route('web.dir.create_summary', [$group->id]));
+        $response->assertRedirect(route('web.dir.create_3', [$group->id]));
     }
 
     public function test_dir_store_summary_validation_payment_code_transfer_fail()
@@ -571,13 +574,13 @@ class DirTest extends TestCase
         $price = factory(Price::class)->states(['code_transfer'])->make();
         $price->group()->associate($group)->save();
 
-        $response = $this->post(route('web.dir.store_summary', [$group->id]), [
+        $response = $this->post(route('web.dir.store_3', [$group->id]), [
             'payment_type' => 'code_transfer',
             'payment_code_transfer' => $price->id
         ] + $this->dirSetup());
 
         $response->assertSessionHasErrors('code_transfer');
-        $response->assertRedirect(route('web.dir.create_summary', [$group->id]));
+        $response->assertRedirect(route('web.dir.create_3', [$group->id]));
     }
 
     public function test_dir_store_summary_validation_payment_auto_code_transfer_pass()
@@ -597,7 +600,7 @@ class DirTest extends TestCase
             );
         });
 
-        $response = $this->post(route('web.dir.store_summary', [$group->id]), [
+        $response = $this->post(route('web.dir.store_3', [$group->id]), [
             'payment_type' => 'code_transfer',
             'payment_code_transfer' => $price->id,
             'code_transfer' => 'dsadasd7a8s'
@@ -614,7 +617,7 @@ class DirTest extends TestCase
 
         $response->assertSessionDoesntHaveErrors('code_transfer');
         $this->assertTrue($dir->privileged_at === null && $dir->status === 0);
-        $response->assertRedirect(route('web.dir.create_group'));
+        $response->assertRedirect(route('web.dir.create_1'));
     }
 
     public function test_dir_store_summary_validation_payment_auto_code_transfer_error()
@@ -634,14 +637,14 @@ class DirTest extends TestCase
             );
         });
 
-        $response = $this->post(route('web.dir.store_summary', [$group->id]), [
+        $response = $this->post(route('web.dir.store_3', [$group->id]), [
             'payment_type' => 'code_transfer',
             'payment_code_transfer' => $price->id,
             'code_transfer' => 'dsadasd7a8s'
         ] + $this->dirSetup());
 
         $response->assertSessionHasErrors('code_transfer');
-        $response->assertRedirect(route('web.dir.create_summary', [$group->id]));
+        $response->assertRedirect(route('web.dir.create_3', [$group->id]));
     }
 
     public function test_dir_store_summary_validation_payment_local_code_transfer_pass()
@@ -664,7 +667,7 @@ class DirTest extends TestCase
             'quantity' => $code->quantity
         ]);
 
-        $response = $this->post(route('web.dir.store_summary', [$group->id]), [
+        $response = $this->post(route('web.dir.store_3', [$group->id]), [
             'payment_type' => 'code_transfer',
             'payment_code_transfer' => $price->id,
             'code_transfer' => $code->code
@@ -687,7 +690,7 @@ class DirTest extends TestCase
 
         $response->assertSessionDoesntHaveErrors('code_transfer');
         $this->assertTrue($dir->privileged_at === null && $dir->status === 0);
-        $response->assertRedirect(route('web.dir.create_group'));
+        $response->assertRedirect(route('web.dir.create_1'));
     }
 
     public function test_dir_store_summary_validation_payment_local_code_sms_pass()
@@ -710,7 +713,7 @@ class DirTest extends TestCase
             'quantity' => $code->quantity
         ]);
 
-        $response = $this->post(route('web.dir.store_summary', [$group->id]), [
+        $response = $this->post(route('web.dir.store_3', [$group->id]), [
             'payment_type' => 'code_sms',
             'payment_code_sms' => $price->id,
             'code_sms' => $code->code

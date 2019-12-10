@@ -41,6 +41,22 @@ class DirBacklinkService implements Serviceable
     }
 
     /**
+     * [sync description]
+     * @param  array  $attributes [description]
+     * @return Model|null             [description]
+     */
+    public function sync(array $attributes) : ?Model
+    {
+        $this->clear();
+
+        if (isset($attributes['backlink_url'])) {
+            return $this->create($attributes);
+        }
+
+        return null;
+    }
+
+    /**
      * [update description]
      * @param  array $attributes [description]
      * @return bool              [description]
@@ -58,6 +74,15 @@ class DirBacklinkService implements Serviceable
     public function updateStatus(array $attributes) : bool
     {
         //
+    }
+
+    /**
+     * [clear description]
+     * @return int [description]
+     */
+    public function clear() : int
+    {
+        return $this->dirBacklink->where('dir_id', $this->dirBacklink->getDir()->id)->delete();
     }
 
     /**

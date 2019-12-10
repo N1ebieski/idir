@@ -2,7 +2,7 @@
 
 namespace N1ebieski\IDir\Http\Requests\Web\Dir;
 
-use N1ebieski\IDir\Http\Requests\Web\Dir\StoreFormRequest;
+use N1ebieski\IDir\Http\Requests\Web\Dir\Update2Request;
 use N1ebieski\ICore\Http\ViewComponents\CaptchaComponent as Captcha;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Str;
@@ -10,7 +10,7 @@ use N1ebieski\ICore\Models\Link;
 // use Illuminate\Contracts\Validation\Validator;
 // use Illuminate\Http\Exceptions\HttpResponseException;
 
-class StoreSummaryRequest extends StoreFormRequest
+class Update3Request extends Update2Request
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -19,7 +19,10 @@ class StoreSummaryRequest extends StoreFormRequest
      */
     public function authorize()
     {
-        return true;
+        $check = $this->group->isPublic();
+
+        return $this->dir->isGroup($this->group->id) ?
+            $check : $check && $this->group->isAvailable();
     }
 
     /**
@@ -31,7 +34,7 @@ class StoreSummaryRequest extends StoreFormRequest
     {
         $url = $this->redirector->getUrlGenerator();
 
-        return $url->route('web.dir.create_summary', [$this->group_available->id]);
+        return $url->route('web.dir.edit_3', [$this->dir->id, $this->group->id]);
     }
 
     /**
@@ -39,8 +42,8 @@ class StoreSummaryRequest extends StoreFormRequest
      */
     protected function prepareForValidation() : void
     {
-        if ($this->session()->has('dir')) {
-            $this->merge($this->session()->get('dir'));
+        if ($this->session()->has("dirId.{$this->dir->id}")) {
+            $this->merge($this->session()->get("dirId.{$this->dir->id}"));
         }
 
         parent::prepareForValidation();
@@ -61,7 +64,7 @@ class StoreSummaryRequest extends StoreFormRequest
                 'backlink' => [
                     'bail',
                     'integer',
-                    $this->group_available->backlink === 2 ? 'required' : 'nullable',
+                    $this->group->backlink === 2 ? 'required' : 'nullable',
                     Rule::exists('links', 'id')->where(function($query) {
                         $query->where('links.type', 'backlink')
                             ->whereNotExists(function($query) {
@@ -72,7 +75,10 @@ class StoreSummaryRequest extends StoreFormRequest
                                 $query->from('categories_models')
                                     ->whereRaw('links.id = categories_models.model_id')
                                     ->where('categories_models.model_type', 'N1ebieski\\ICore\\Models\\Link')
-                                    ->whereIn('categories_models.category_id', $this->input('categories') ?? []);
+                                    ->whereIn('categories_models.category_id', function($query) {
+                                        return $query->from('categories_closure')->select('ancestor')
+                                            ->whereIn('descendant', $this->input('categories') ?? []);
+                                    });
                             });
                     }),
                     'no_js_validation'
@@ -80,11 +86,11 @@ class StoreSummaryRequest extends StoreFormRequest
                 'backlink_url' => [
                     'bail',
                     'string',
-                    $this->group_available->backlink === 2 ? 'required' : 'nullable',
+                    $this->group->backlink === 2 ? 'required' : 'nullable',
                     $this->input('url') !== null ?
                         'regex:/^' . Str::escaped($this->input('url')) . '/'
                         : 'regex:/^(https|http):\/\/([\da-z\.-]+)(\.[a-z]{2,6})/',
-                    $this->group_available->backlink === 2 && $this->has('backlink') ?
+                    $this->group->backlink === 2 && $this->has('backlink') ?
                         app()->make('N1ebieski\\IDir\\Rules\\Backlink', [
                             'link' => Link::find($this->input('backlink'))->url
                         ]) : null,
@@ -92,7 +98,7 @@ class StoreSummaryRequest extends StoreFormRequest
                 ]
             ],
 
-            $this->group_available->prices->isNotEmpty() ?
+            $this->dir->isPayment($this->group->id) && $this->group->prices->isNotEmpty() ?
             [
                 'payment_type' => 'bail|required|string|in:transfer,code_sms,code_transfer|no_js_validation',
                 'payment_transfer' => $this->input('payment_type') === 'transfer' ?
@@ -103,7 +109,7 @@ class StoreSummaryRequest extends StoreFormRequest
                     Rule::exists('prices', 'id')->where(function($query) {
                         $query->where([
                             ['type', 'transfer'],
-                            ['group_id', $this->group_available->id]
+                            ['group_id', $this->group->id]
                         ]);
                     })
                 ] : ['no_js_validation'],
@@ -115,7 +121,7 @@ class StoreSummaryRequest extends StoreFormRequest
                     Rule::exists('prices', 'id')->where(function($query) {
                         $query->where([
                             ['type', 'code_sms'],
-                            ['group_id', $this->group_available->id]
+                            ['group_id', $this->group->id]
                         ]);
                     })
                 ] : ['no_js_validation'],
@@ -127,7 +133,7 @@ class StoreSummaryRequest extends StoreFormRequest
                     Rule::exists('prices', 'id')->where(function($query) {
                         $query->where([
                             ['type', 'code_transfer'],
-                            ['group_id', $this->group_available->id]
+                            ['group_id', $this->group->id]
                         ]);
                     })
                 ] : ['no_js_validation']

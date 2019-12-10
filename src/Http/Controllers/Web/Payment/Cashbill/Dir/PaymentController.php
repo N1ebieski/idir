@@ -24,11 +24,13 @@ class PaymentController
      */
     public function show(Payment $payment, Cashbill $cashbill) : View
     {
+        $payment->load(['morph', 'price_morph']);
+
         return view('idir::web.payment.cashbill.dir.show', [
             'payment' => $cashbill->setup([
                     'amount' => $payment->price->price,
                     'desc' => trans('idir::payments.desc.dir', [
-                        'title' => $payment->model->title,
+                        'title' => $payment->morph->title,
                         'group' => $payment->price->group->name,
                         'days' => $days = $payment->price->days,
                         'limit' => $days !== null ? strtolower(trans('idir::groups.days'))
@@ -51,7 +53,7 @@ class PaymentController
             abort(403, 'Invalid signature of payment.');
         }
 
-        return redirect()->route('web.dir.create_group')->with(
+        return redirect()->route('web.dir.create_1')->with(
                 $request->input('status') === 'ok' ? 'success' : 'danger',
                 $request->input('status') === 'ok' ? trans('idir::payments.success.complete')
                     : trans('idir::payments.error.complete')
@@ -78,7 +80,7 @@ class PaymentController
             throw $e->setPayment($payment);
         }
 
-        $payment->makeService()->updateStatus(['status' => 0]);
+        $payment->makeRepo()->paid();
 
         event(new VerifySuccessful($payment));
 

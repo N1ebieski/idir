@@ -2,13 +2,28 @@
 
 namespace N1ebieski\IDir\Http\Controllers\Web;
 
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
-use N1ebieski\IDir\Http\Requests\Web\Dir\CreateFormRequest;
-use N1ebieski\IDir\Http\Requests\Web\Dir\StoreFormRequest;
-use N1ebieski\IDir\Http\Requests\Web\Dir\PaymentCodeRequest;
-use N1ebieski\IDir\Http\Requests\Web\Dir\CreateSummaryRequest;
-use N1ebieski\IDir\Http\Requests\Web\Dir\StoreSummaryRequest;
+use N1ebieski\IDir\Http\Requests\Web\Dir\Edit2Request;
+use N1ebieski\IDir\Http\Requests\Web\Dir\Edit3Request;
+use N1ebieski\IDir\Http\Requests\Web\Dir\Update2Request;
+use N1ebieski\IDir\Http\Requests\Web\Dir\Update3Request;
+use N1ebieski\IDir\Http\Requests\Web\Dir\Update3CodeRequest;
+use N1ebieski\IDir\Http\Requests\Web\Dir\Create2Request;
+use N1ebieski\IDir\Http\Requests\Web\Dir\Store2Request;
+use N1ebieski\IDir\Http\Requests\Web\Dir\Store3CodeRequest;
+use N1ebieski\IDir\Http\Requests\Web\Dir\Create3Request;
+use N1ebieski\IDir\Http\Requests\Web\Dir\Store3Request;
+use N1ebieski\IDir\Loads\Web\Dir\Edit1Load;
+use N1ebieski\IDir\Loads\Web\Dir\Edit2Load;
+use N1ebieski\IDir\Loads\Web\Dir\Edit3Load;
+use N1ebieski\IDir\Loads\Web\Dir\Store2Load;
+use N1ebieski\IDir\Loads\Web\Dir\Store3Load;
+use N1ebieski\IDir\Loads\Web\Dir\Create2Load;
+use N1ebieski\IDir\Loads\Web\Dir\Create3Load;
+use N1ebieski\IDir\Loads\Web\Dir\Update2Load;
+use N1ebieski\IDir\Loads\Web\Dir\Update3Load;
 use N1ebieski\IDir\Models\Group;
 use N1ebieski\IDir\Models\Dir;
 use N1ebieski\IDir\Models\Payment\Dir\Payment;
@@ -16,7 +31,8 @@ use N1ebieski\ICore\Models\Link;
 use N1ebieski\IDir\Models\Category\Dir\Category;
 use N1ebieski\IDir\Events\Dir\Store as DirStore;
 use N1ebieski\IDir\Events\Payment\Dir\Store as PaymentStore;
-use N1ebieski\IDir\Http\Responses\Web\Dir\StoreSummaryResponse;
+use N1ebieski\IDir\Http\Responses\Web\Dir\Store3Response;
+use N1ebieski\IDir\Http\Responses\Web\Dir\Update3Response;
 
 /**
  * [DirController description]
@@ -24,27 +40,28 @@ use N1ebieski\IDir\Http\Responses\Web\Dir\StoreSummaryResponse;
 class DirController
 {
     /**
-     * [createGroup description]
+     * [create1 description]
      * @param Group     $group     [description]
      * @return View
      */
-    public function createGroup(Group $group) : View
+    public function create1(Group $group) : View
     {
-        return view('idir::web.dir.create.group', [
+        return view('idir::web.dir.create.1', [
             'groups' => $group->makeRepo()->getPublicWithRels()
         ]);
     }
 
     /**
-     * [createForm description]
-     * @param  Group             $group   [description]
-     * @param  CreateFormRequest $request [description]
-     * @return View                       [description]
+     * [create2 description]
+     * @param  Group          $group   [description]
+     * @param  Create2Load    $load    [description]
+     * @param  Create2Request $request [description]
+     * @return View                    [description]
      */
-    public function createForm(Group $group, CreateFormRequest $request) : View
+    public function create2(Group $group, Create2Load $load, Create2Request $request) : View
     {
-        return view('idir::web.dir.create.form', [
-            'group' => $group->loadPublicFields(),
+        return view('idir::web.dir.create.2', [
+            'group' => $group,
             'max_tags' => config('idir.dir.max_tags'),
             'trumbowyg' => $group->privileges->contains('name', 'additional options for editing content')
                 ? '_dir_trumbowyg' : null
@@ -52,29 +69,38 @@ class DirController
     }
 
     /**
-     * [storeForm description]
+     * [store2 description]
      * @param  Group            $group   [description]
      * @param  Dir              $dir     [description]
-     * @param  StoreFormRequest $request [description]
+     * @param  Store2Load       $load    [description]
+     * @param  Store2Request    $request [description]
      * @return RedirectResponse          [description]
      */
-    public function storeForm(Group $group, Dir $dir, StoreFormRequest $request) : RedirectResponse
+    public function store2(Group $group, Dir $dir, Store2Load $load, Store2Request $request) : RedirectResponse
     {
         $dir->makeService()->createOrUpdateSession($request->validated());
 
-        return redirect()->route('web.dir.create_summary', [$group->id]);
+        return redirect()->route('web.dir.create_3', [$group->id]);
     }
 
     /**
-     * [createSummary description]
-     * @param  Group                $group    [description]
-     * @param  Dir                  $dir      [description]
-     * @param  Category             $category [description]
-     * @param  Link                 $link     [description]
-     * @param  CreateSummaryRequest $request  [description]
-     * @return View                           [description]
+     * [create3 description]
+     * @param  Group          $group    [description]
+     * @param  Dir            $dir      [description]
+     * @param  Category       $category [description]
+     * @param  Link           $link     [description]
+     * @param  Create3Load    $load     [description]
+     * @param  Create3Request $request  [description]
+     * @return View                     [description]
      */
-    public function createSummary(Group $group, Dir $dir, Category $category, Link $link, CreateSummaryRequest $request) : View
+    public function create3(
+        Group $group,
+        Dir $dir,
+        Category $category,
+        Link $link,
+        Create3Load $load,
+        Create3Request $request
+    ) : View
     {
         $dir->makeService()->createOrUpdateSession($request->validated());
 
@@ -89,7 +115,7 @@ class DirController
             ));
         }
 
-        return view('idir::web.dir.create.summary', [
+        return view('idir::web.dir.create.3', [
             'group' => $group,
             'categories' => $categories,
             'backlinks' => $backlinks ?? null,
@@ -102,20 +128,22 @@ class DirController
     }
 
     /**
-     * [storeSummary description]
-     * @param  Group                $group          [description]
-     * @param  Dir                  $dir            [description]
-     * @param  StoreSummaryRequest  $request        [description]
-     * @param  PaymentCodeRequest   $requestPayment [description]
-     * @param  StoreSummaryResponse $response       [description]
-     * @return RedirectResponse                     [description]
+     * [store3 description]
+     * @param  Group              $group          [description]
+     * @param  Dir                $dir            [description]
+     * @param  Store3Load         $load           [description]
+     * @param  Store3Request      $request        [description]
+     * @param  Store3CodeRequest  $requestPayment [description]
+     * @param  Store3Response     $response       [description]
+     * @return RedirectResponse                   [description]
      */
-    public function storeSummary(
+    public function store3(
         Group $group,
         Dir $dir,
-        StoreSummaryRequest $request,
-        PaymentCodeRequest $requestPayment,
-        StoreSummaryResponse $response
+        Store3Load $load,
+        Store3Request $request,
+        Store3CodeRequest $requestPayment,
+        Store3Response $response
     ) : RedirectResponse
     {
         $dir->setGroup($group)->makeService()->create($request->validated());
@@ -126,6 +154,144 @@ class DirController
 
         event(new DirStore($dir));
 
-        return $response->setDir($dir)->response();
+        return $response->setDir($dir)->makeResponse();
+    }
+
+    /**
+     * [edit1 description]
+     * @param  Dir       $dir   [description]
+     * @param  Edit1Load $load  [description]
+     * @param  Group     $group [description]
+     * @return View             [description]
+     */
+    public function edit1(Dir $dir, Edit1Load $load, Group $group) : View
+    {
+        $dir->makeService()->createOrUpdateSession($dir->attributes_as_array);
+
+        return view('idir::web.dir.edit.1', [
+            'dir' => $dir,
+            'groups' => $group->makeRepo()->getPublicWithRels()
+        ]);
+    }
+
+    /**
+     * [edit2 description]
+     * @param  Dir          $dir     [description]
+     * @param  Group        $group   [description]
+     * @param  Edit2Load    $load    [description]
+     * @param  Edit2Request $request [description]
+     * @return View                  [description]
+     */
+    public function edit2(Dir $dir, Group $group, Edit2Load $load, Edit2Request $request) : View
+    {
+        return view('idir::web.dir.edit.2', [
+            'dir' => $dir,
+            'group' => $group,
+            'max_tags' => config('idir.dir.max_tags'),
+            'trumbowyg' => $group->privileges->contains('name', 'additional options for editing content')
+                ? '_dir_trumbowyg' : null
+        ]);
+    }
+
+    /**
+     * [update2 description]
+     * @param  Dir              $dir     [description]
+     * @param  Group            $group   [description]
+     * @param  Update2Load      $load    [description]
+     * @param  Update2Request   $request [description]
+     * @return RedirectResponse          [description]
+     */
+    public function update2(Dir $dir, Group $group, Update2Load $load, Update2Request $request) : RedirectResponse
+    {
+        $dir->makeService()->createOrUpdateSession($request->validated());
+
+        return redirect()->route('web.dir.edit_3', [$dir->id, $group->id]);
+    }
+
+    /**
+     * [edit3 description]
+     * @param  Group          $group    [description]
+     * @param  Dir            $dir      [description]
+     * @param  Category       $category [description]
+     * @param  Link           $link     [description]
+     * @param  Edit3Load      $load     [description]
+     * @param  Edit3Request   $request  [description]
+     * @return View                     [description]
+     */
+    public function edit3(
+        Dir $dir,
+        Group $group,
+        Category $category,
+        Link $link,
+        Edit3Load $load,
+        Edit3Request $request
+    ) : View
+    {
+        $dir->makeService()->createOrUpdateSession($request->validated());
+
+        $categories = $category->makeRepo()->getByIds(
+            $request->session()->get("dirId.{$dir->id}.categories")
+        );
+
+        if ($group->backlink > 0) {
+            $backlinks = $link->makeRepo()->getAvailableBacklinksByCats(array_merge(
+                $categories->pluck('ancestors')->flatten()->pluck('id')->toArray(),
+                $categories->pluck('id')->toArray()
+            ));
+        }
+
+        return view('idir::web.dir.edit.3', [
+            'dir' => $dir,
+            'group' => $group,
+            'categories' => $categories,
+            'backlinks' => $backlinks ?? null,
+            'driver' => [
+                'transfer' => config('idir.payment.transfer.driver'),
+                'code_sms' => config('idir.payment.code_sms.driver'),
+                'code_transfer' => config('idir.payment.code_transfer.driver'),
+            ]
+        ]);
+    }
+
+    /**
+     * [store3 description]
+     * @param  Dir                 $dir            [description]
+     * @param  Group               $group          [description]
+     * @param  Update3Load         $load           [description]
+     * @param  Update3Request      $request        [description]
+     * @param  Update3CodeRequest  $requestPayment [description]
+     * @param  Update3Response     $response       [description]
+     * @return RedirectResponse                   [description]
+     */
+    public function update3(
+        Dir $dir,
+        Group $group,
+        Update3Load $load,
+        Update3Request $request,
+        Update3CodeRequest $requestPayment,
+        Update3Response $response
+    ) : RedirectResponse
+    {
+        $dir->setGroup($group)->makeService()->update($request->validated());
+
+        if (($payment = $dir->getPayment()) instanceof Payment) {
+            event(new PaymentStore($payment));
+        }
+
+        event(new DirStore($dir));
+
+        return $response->setDir($dir)->makeResponse();
+    }
+
+    /**
+     * [destroy description]
+     * @param  Dir          $dir [description]
+     * @return JsonResponse      [description]
+     */
+    public function destroy(Dir $dir) : JsonResponse
+    {
+        $dir->makeService()->delete();
+
+        return response()->json(['success' => '']);
     }
 }

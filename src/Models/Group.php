@@ -178,13 +178,13 @@ class Group extends Model
         return $query->where('backlink', 2);
     }
 
-    // Accessors
+    // Checkers
 
     /**
-     * [getAvailableAttribute description]
+     * [isAvailable description]
      * @return bool [description]
      */
-    public function getAvailableAttribute() : bool
+    public function isAvailable() : bool
     {
         $available = true;
 
@@ -197,6 +197,24 @@ class Group extends Model
         }
 
         return $available;
+    }
+
+    /**
+     * [isNotDefault description]
+     * @return bool [description]
+     */
+    public function isNotDefault() : bool
+    {
+        return strtolower($this->name) !== 'default';
+    }
+
+    /**
+     * [isPublic description]
+     * @return bool [description]
+     */
+    public function isPublic() : bool
+    {
+        return $this->getAttribute('visible') === 1;
     }
 
     // Loads

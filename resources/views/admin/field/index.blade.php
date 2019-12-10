@@ -28,11 +28,11 @@
     @endcan
 </h1>
 <div id="filterContent">
-    @include('idir::admin.field.filter')
+    @include('idir::admin.field.partials.filter')
     @if ($fields->isNotEmpty())
     <div id="infinite-scroll">
         @foreach ($fields as $field)
-            @include("idir::admin.field.field", ['field' => $field])
+            @include("idir::admin.field.partials.field", ['field' => $field])
         @endforeach
         @include('icore::admin.partials.pagination', ['items' => $fields])
     </div>

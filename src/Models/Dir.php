@@ -194,12 +194,39 @@ class Dir extends Model
     }
 
     /**
+     * [ratings description]
+     * @return [type] [description]
+     */
+    public function ratings()
+    {
+        return $this->morphMany('N1ebieski\ICore\Models\Rating\Rating', 'model');
+    }
+
+    /**
+     * [reports description]
+     * @return [type] [description]
+     */
+    public function reports()
+    {
+        return $this->morphMany('N1ebieski\ICore\Models\Report\Report', 'model');
+    }
+
+    /**
      * [categories description]
      * @return [type] [description]
      */
     public function categories()
     {
         return $this->morphToMany('N1ebieski\IDir\Models\Category\Dir\Category', 'model', 'categories_models', 'model_id', 'category_id');
+    }
+
+    /**
+     * [categories description]
+     * @return [type] [description]
+     */
+    public function comments()
+    {
+        return $this->morphMany('N1ebieski\ICore\Models\Comment\Comment', 'model');
     }
 
     /**
@@ -217,7 +244,8 @@ class Dir extends Model
      */
     public function fields()
     {
-        return $this->morphToMany('N1ebieski\IDir\Models\Field\Field', 'model', 'fields_values', 'model_id', 'field_id');
+        return $this->morphToMany('N1ebieski\IDir\Models\Field\Field', 'model', 'fields_values', 'model_id', 'field_id')
+            ->withPivot('value');
     }
 
     // Scopes
@@ -251,6 +279,72 @@ class Dir extends Model
             ->active();
     }
 
+    // Accessors
+
+    /**
+     * Short content used in the listing
+     * @return string [description]
+     */
+    public function getShortContentAttribute() : string
+    {
+        return substr($this->content, 0, 300);
+    }
+
+    /**
+     * [getAttributesAttribute description]
+     * @return array [description]
+     */
+    public function getAttributesAsArrayAttribute() : array
+    {
+        return $this->getAttributes()
+            + ['field' => $this->fields->keyBy('id')
+                ->map(function($item) {
+                    return json_decode($item->pivot->value);
+                })
+                ->toArray()]
+            + ['categories' => $this->categories->pluck('id')->toArray()];
+    }
+
+    // Checkers
+
+    /**
+     * [isRenew description]
+     * @return bool [description]
+     */
+    public function isRenew() : bool
+    {
+        return $this->privileged_to !== null
+            && $this->getRelation('group')->getRelation('prices')->isNotEmpty();
+    }
+
+    /**
+     * [isGroup description]
+     * @param  int  $id [description]
+     * @return bool     [description]
+     */
+    public function isGroup(int $id) : bool
+    {
+        return $this->group_id === $id;
+    }
+
+    /**
+     * [isPending description]
+     * @return bool [description]
+     */
+    public function isPending() : bool
+    {
+        return $this->status === 2;
+    }
+
+    /**
+     * [isPayment description]
+     * @param  int  $id [description]
+     * @return bool     [description]
+     */
+    public function isPayment(int $id) : bool
+    {
+        return !$this->isGroup($id) || $this->isPending();
+    }
 
     // Loads
 
@@ -264,6 +358,21 @@ class Dir extends Model
             $query->with('price_morph')->where('status', 0);
         }]);
     }
+
+    // /**
+    //  * [loadGroupWithRels description]
+    //  * @return self [description]
+    //  */
+    // public function loadGroupWithRels() : self
+    // {
+    //     return $this->load([
+    //         'group',
+    //         'group.privileges',
+    //         'group.fields' => function($query) {
+    //             return $query->public();
+    //         }
+    //     ]);
+    // }
 
     // Mutators
 

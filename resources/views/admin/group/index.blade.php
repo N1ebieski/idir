@@ -25,11 +25,11 @@
     @endcan
 </h1>
 <div id="filterContent">
-    @include('idir::admin.group.filter')    
+    @include('idir::admin.group.partials.filter')
     @if ($groups->isNotEmpty())
     <div id="infinite-scroll">
         @foreach ($groups as $group)
-            @include('idir::admin.group.group', ['group' => $group])
+            @include('idir::admin.group.partials.group', ['group' => $group])
         @endforeach
         @include('icore::admin.partials.pagination', ['items' => $groups])
     </div>

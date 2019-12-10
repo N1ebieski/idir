@@ -2,7 +2,7 @@
 
 namespace N1ebieski\IDir\Tests\Unit\Web;
 
-use N1ebieski\ICore\Models\Link;
+use N1ebieski\IDir\Models\Link;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use GuzzleHttp\Client as GuzzleClient;

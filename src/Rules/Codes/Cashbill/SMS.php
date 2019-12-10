@@ -47,11 +47,9 @@ class SMS extends Codes
     public function __construct(Price $price, Code $code, Request $request, Cashbill $cashbill)
     {
         $this->cashbill = $cashbill;
-        $this->price = $price;
+        $this->price = $price->find($request->input('payment_code_sms'));
         $this->code = $code;
         $this->request = $request;
-
-        $request->merge(['payment_code' => $request->input('payment_code_sms')]);
 
         parent::__construct($code, $request);
     }
@@ -85,8 +83,7 @@ class SMS extends Codes
         try {
             $this->cashbill->verify([
                 'code' => $value,
-                'number' => $this->price->where('id', $this->request->input('payment_code_sms'))
-                    ->first('number')->number
+                'number' => $this->price->number
             ]);
         } catch (\Exception $e) {
             return false;

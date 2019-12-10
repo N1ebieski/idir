@@ -88,25 +88,17 @@ class GroupRepo
     }
 
     /**
-     * [firstPublicById description]
+     * [firstWithRelsById description]
      * @param  int    $id [description]
      * @return Group|null     [description]
      */
-    public function firstAvailableById(int $id) : ?Group
+    public function firstWithRelsById(int $id) : ?Group
     {
         return $this->group->where('id', $id)
             ->with(['fields' => function($query) {
                 return $query->public();
             }])
-            ->where(function($q) {
-                $q->has('dirs', '<', DB::raw('`groups`.`max_models`'))
-                    ->orWhere('groups.max_models', null);
-            })
-            ->where(function($q) {
-                $q->has('dirs_today', '<', DB::raw('`groups`.`max_models_daily`'))
-                    ->orWhere('groups.max_models_daily', null);
-            })
-            ->public()
+            // ->withCount(['dirs', 'dirs_today'])
             ->first();
     }
 

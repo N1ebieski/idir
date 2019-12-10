@@ -98,7 +98,7 @@ class FieldController extends BaseFieldController implements Polymorphic
 
         return response()->json([
             'success' => '',
-            'view' => view('idir::admin.field.field', [
+            'view' => view('idir::admin.field.partials.field', [
                 'field' => $field
             ])->render()
         ]);

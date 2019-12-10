@@ -8,9 +8,9 @@ use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Http\RedirectResponse;
 
 /**
- * [StoreSummaryRedirect description]
+ * [Store3Response description]
  */
-class StoreSummaryResponse
+class Store3Response
 {
     /**
      * [private description]
@@ -56,11 +56,11 @@ class StoreSummaryResponse
      * [response description]
      * @return RedirectResponse [description]
      */
-    public function response() : RedirectResponse
+    public function makeResponse() : RedirectResponse
     {
         switch ($this->dir->status) {
             case 0:
-                return $this->response->redirectToRoute('web.dir.create_group')
+                return $this->response->redirectToRoute('web.dir.create_1')
                     ->with('success', trans('idir::dirs.success.store.status_0'));
             case 1:
                 return $this->response->redirectToRoute('web.dir.show', [$this->dir->slug])

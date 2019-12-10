@@ -56,10 +56,9 @@ class Codes implements Rule
      */
     public function passes($attribute, $value) : bool
     {
-        if ($check = $this->code->where([
-            ['code', $value],
-            ['price_id', $this->request->input('payment_code')]
-        ])->first()) {
+        if (($check = $this->code->makeRepo()->firstByCodeAndPriceId(
+            $value, $this->price->id
+        )) instanceof Code) {
             if ($check->quantity === 1) {
                 $check->delete();
             } else if ($check->quantity > 1) {

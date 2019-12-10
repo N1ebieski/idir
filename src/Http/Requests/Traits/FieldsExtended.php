@@ -76,6 +76,7 @@ trait FieldsExtended
                     $rules["field.{$field->id}"][] = 'mimes:jpeg,png,jpg';
                     $rules["field.{$field->id}"][] = 'max:' . $field->options->size;
                     $rules["field.{$field->id}"][] = 'dimensions:max_width=' . $field->options->width . ',max_height=' . $field->options->height;
+                    // $rules["field.{$field->id}"][] = 'no_js_validation';
                     break;
 
                 default :

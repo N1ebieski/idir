@@ -66,6 +66,16 @@ class DirRepo
     }
 
     /**
+     * [paginateByUser description]
+     * @param  int                  $id [description]
+     * @return LengthAwarePaginator     [description]
+     */
+    public function paginateByUser(int $id) : LengthAwarePaginator
+    {
+        return $this->dir->where('user_id', $id)->paginate();
+    }
+
+    /**
      * [deactivateByBacklink description]
      * @return bool [description]
      */
@@ -81,5 +91,17 @@ class DirRepo
     public function activate() : bool
     {
         return $this->dir->update(['status' => 1]);
+    }
+
+    /**
+     * [nullPrivileged description]
+     * @return bool [description]
+     */
+    public function nullablePrivileged() : bool
+    {
+        return $this->dir->update([
+            'privileged_at' => null,
+            'privileged_to' => null
+        ]);
     }
 }

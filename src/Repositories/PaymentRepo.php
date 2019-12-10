@@ -35,19 +35,26 @@ class PaymentRepo
     {
         return $this->payment->where('id', $id)
             ->pending()
+            ->poliType()
             ->with(['morph', 'price_morph'])
             ->first();
     }
 
     /**
-     * [firstById description]
-     * @param  int    $id [description]
-     * @return Payment|null     [description]
+     * [completed description]
+     * @return bool [description]
      */
-    public function firstById(int $id) : ?Payment
+    public function completed() : bool
     {
-        return $this->payment->where('id', $id)
-            ->with(['morph', 'price_morph'])
-            ->first();
-    }    
+        return $this->payment->update(['status' => 1]);
+    }
+
+    /**
+     * [paid description]
+     * @return bool [description]
+     */
+    public function paid() : bool
+    {
+        return $this->payment->update(['status' => 0]);
+    }
 }

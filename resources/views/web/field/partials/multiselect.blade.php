@@ -10,7 +10,7 @@
     name="field[{{ $field->id }}][]">
         @foreach ($field->options->options as $option)
         <option value="{{ $option }}"
-        {{ in_array($option, old("field.{$field->id}", session("dir.field.{$field->id}")) ?? []) ? 'selected' : null }}>{{ $option }}</option>
+        {{ in_array($option, old("field.{$field->id}", $value ?? null) ?? []) ? 'selected' : null }}>{{ $option }}</option>
         @endforeach
     </select>
     @includeWhen($errors->has("field.{$field->id}"), 'icore::admin.partials.errors', ['name' => "field.{$field->id}"])

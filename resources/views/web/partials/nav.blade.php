@@ -21,10 +21,10 @@
 </a>
 @endsection
 
-<nav class="navbar scroll navbar-expand-md navbar-light bg-light fixed-top border-bottom">
+<nav class="navbar navbar-expand-md navbar-light bg-light fixed-top border-bottom">
     <div class="container">
         @if (!app('Helpers\Active')->isUrl(route('web.home.index')))
-        <div class="d-flex flex-grow-1 navbar-search">
+        <div class="d-flex flex-grow-1 navbar-search pr-3 pr-md-0">
             @yield('logo')
             <form id="searchForm" method="GET" action="{{ route('web.search.index') }}" class="my-auto w-100 hide search">
                 <div class="input-group">
@@ -52,20 +52,22 @@
             @yield('navbar-toggler')
         </div>
         @else
-        @yield('logo')
-        @yield('navbar-toggler')
+        <div class="d-flex flex-grow-1 pr-3 pr-md-0">
+            @yield('logo')
+            @yield('navbar-toggler')
+        </div>
         @endif
-        <div class="navbar-collapse collapse flex-grow-0 justify-content-end">
+        <div class="navbar-collapse scroll collapse flex-grow-0 justify-content-end">
             @render('icore::page.menuComponent', ['limit' => 3])
-            <ul class="navbar-nav">
+            <ul class="navbar-nav pr-3 pr-md-0">
                 @if (!app('Helpers\Active')->isUrl(route('web.home.index')))
-                <li class="nav-item d-none d-md-inline mr-2">
+                <li class="nav-item d-none d-md-inline mr-1">
                     @yield('search-toggler')
                 </li>
                 @endif
                 <li class="nav-item mr-sm-0 mr-md-2 mb-2 mb-md-0">
                     <a class="nav-link text-primary btn btn-sm btn-outline-primary"
-                    href="{{ route('web.dir.create_group') }}" role="button">
+                    href="{{ route('web.dir.create_1') }}" role="button">
                         {{ trans('idir::dirs.page.create.index') }}
                     </a>
                 </li>
