@@ -24,8 +24,8 @@
     <link href="{{ mix(app('Helpers\View')->getStylesheet('css/vendor/idir')) }}" rel="stylesheet">
 
     <!-- Scripts -->
-    <script src="{{ mix('js/vendor/idir/vendor/vendor.js') }}" async></script>
-    <script src="{{ mix('js/vendor/idir/web/web.js') }}" async></script>
+    <script src="{{ mix('js/vendor/idir/vendor/vendor.js') }}"></script>
+    <script src="{{ mix('js/vendor/idir/web/web.js') }}"></script>
 </head>
 <body>
 

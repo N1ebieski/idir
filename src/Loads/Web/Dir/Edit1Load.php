@@ -15,6 +15,6 @@ class Edit1Load
      */
     public function __construct(Request $request)
     {
-        $request->route('dir')->load(['fields', 'categories', 'backlink']);
+        $request->route('dir')->load(['fields', 'categories', 'group', 'group.prices']);
     }
 }

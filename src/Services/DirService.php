@@ -11,7 +11,7 @@ use N1ebieski\IDir\Models\DirBacklink;
 use Illuminate\Contracts\Session\Session;
 use Illuminate\Contracts\Filesystem\Factory as Storage;
 use Illuminate\Http\UploadedFile;
-use N1ebieski\IDir\Libs\File;
+use N1ebieski\IDir\Utils\File;
 use Carbon\Carbon;
 
 /**
@@ -220,7 +220,7 @@ class DirService implements Serviceable
      * @param  array   $attributes [description]
      * @return Payment             [description]
      */
-    protected function createPayment(array $attributes) : Payment
+    public function createPayment(array $attributes) : Payment
     {
         return $this->payment->setMorph($this->dir)->setPriceMorph(
             $this->price->find($attributes["payment_{$attributes['payment_type']}"])
@@ -232,7 +232,7 @@ class DirService implements Serviceable
      * @param  array $attributes [description]
      * @return int               [description]
      */
-    protected function createFields(array $attributes) : int
+    public function createFields(array $attributes) : int
     {
         $i = 0;
 
@@ -243,6 +243,7 @@ class DirService implements Serviceable
                 if ($value instanceof UploadedFile) {
                     $this->file->setFile($value);
                     $this->file->setPath($this->img_dir . "/" . $this->dir->id . "/fields/" . $field->id);
+                    $this->file->prepare();
                     $this->file->moveFromTemp();
 
                     $value = $this->file->getFilePath();
@@ -263,7 +264,7 @@ class DirService implements Serviceable
      * @param  array $attributes [description]
      * @return int               [description]
      */
-    protected function updateFields(array $attributes) : int
+    public function updateFields(array $attributes) : int
     {
         $i = 0;
 
@@ -281,6 +282,7 @@ class DirService implements Serviceable
                     $this->file->setPath($this->img_dir . "/" . $this->dir->id . "/fields/" . $field->id);
 
                     if ($path !== ($value = $this->file->getFilePath())) {
+                        $this->file->prepare();
                         $this->file->moveFromTemp();
 
                         $this->storage->disk('public')->delete($path);
@@ -310,7 +312,7 @@ class DirService implements Serviceable
     {
         $this->dir->fill($attributes);
 
-        if ($this->dir->getGroup()->id !== $this->dir->group_id) {
+        if (!$this->dir->isGroup($this->dir->getGroup()->id)) {
             $this->dir->group()->associate($this->dir->getGroup());
             $this->dir->makeRepo()->nullablePrivileged();
         }

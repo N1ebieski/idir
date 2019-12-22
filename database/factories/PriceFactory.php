@@ -31,3 +31,9 @@ $factory->state(Price::class, 'code_transfer', function(Faker $faker) {
         'code' => 'dasdasdasd'
     ];
 });
+
+$factory->state(Price::class, 'seasonal', function(Faker $faker) {
+    return [
+        'days' => $faker->randomElement([rand(7, 365)])
+    ];
+});

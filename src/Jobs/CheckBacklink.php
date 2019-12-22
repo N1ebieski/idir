@@ -11,7 +11,7 @@ use N1ebieski\IDir\Models\DirBacklink;
 use N1ebieski\IDir\Repositories\DirBacklinkRepo;
 use N1ebieski\IDir\Repositories\DirRepo;
 use Illuminate\Support\Facades\Mail;
-use N1ebieski\IDir\Mails\BacklinkNotFound;
+use N1ebieski\IDir\Mails\DirBacklink\BacklinkNotFound;
 use Validator;
 use Carbon\Carbon;
 use Exception;

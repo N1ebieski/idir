@@ -43,7 +43,7 @@ class Update3Request extends Update2Request
     protected function prepareForValidation() : void
     {
         if ($this->session()->has("dirId.{$this->dir->id}")) {
-            $this->merge($this->session()->get("dirId.{$this->dir->id}"));
+            $this->merge($this->all() + $this->session()->get("dirId.{$this->dir->id}"));
         }
 
         parent::prepareForValidation();

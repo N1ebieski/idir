@@ -9,30 +9,38 @@ use N1ebieski\IDir\Http\Requests\Web\Dir\Edit2Request;
 use N1ebieski\IDir\Http\Requests\Web\Dir\Edit3Request;
 use N1ebieski\IDir\Http\Requests\Web\Dir\Update2Request;
 use N1ebieski\IDir\Http\Requests\Web\Dir\Update3Request;
+use N1ebieski\IDir\Http\Requests\Web\Dir\EditRenewRequest;
 use N1ebieski\IDir\Http\Requests\Web\Dir\Update3CodeRequest;
 use N1ebieski\IDir\Http\Requests\Web\Dir\Create2Request;
 use N1ebieski\IDir\Http\Requests\Web\Dir\Store2Request;
 use N1ebieski\IDir\Http\Requests\Web\Dir\Store3CodeRequest;
 use N1ebieski\IDir\Http\Requests\Web\Dir\Create3Request;
 use N1ebieski\IDir\Http\Requests\Web\Dir\Store3Request;
+use N1ebieski\IDir\Http\Requests\Web\Dir\UpdateRenewRequest;
+use N1ebieski\IDir\Http\Requests\Web\Dir\UpdateRenewCodeRequest;
 use N1ebieski\IDir\Loads\Web\Dir\Edit1Load;
 use N1ebieski\IDir\Loads\Web\Dir\Edit2Load;
 use N1ebieski\IDir\Loads\Web\Dir\Edit3Load;
+use N1ebieski\IDir\Loads\Web\Dir\EditRenewLoad;
 use N1ebieski\IDir\Loads\Web\Dir\Store2Load;
 use N1ebieski\IDir\Loads\Web\Dir\Store3Load;
 use N1ebieski\IDir\Loads\Web\Dir\Create2Load;
 use N1ebieski\IDir\Loads\Web\Dir\Create3Load;
 use N1ebieski\IDir\Loads\Web\Dir\Update2Load;
 use N1ebieski\IDir\Loads\Web\Dir\Update3Load;
+use N1ebieski\IDir\Loads\Web\Dir\UpdateRenewLoad;
 use N1ebieski\IDir\Models\Group;
 use N1ebieski\IDir\Models\Dir;
 use N1ebieski\IDir\Models\Payment\Dir\Payment;
 use N1ebieski\ICore\Models\Link;
 use N1ebieski\IDir\Models\Category\Dir\Category;
-use N1ebieski\IDir\Events\Dir\Store as DirStore;
-use N1ebieski\IDir\Events\Payment\Dir\Store as PaymentStore;
+use N1ebieski\IDir\Events\Web\Dir\Store as DirStore;
+use N1ebieski\IDir\Events\Web\Dir\Update as DirUpdate;
+use N1ebieski\IDir\Events\Web\Dir\UpdateRenew as DirUpdateRenew;
+use N1ebieski\IDir\Events\Web\Payment\Dir\Store as PaymentStore;
 use N1ebieski\IDir\Http\Responses\Web\Dir\Store3Response;
 use N1ebieski\IDir\Http\Responses\Web\Dir\Update3Response;
+use N1ebieski\IDir\Http\Responses\Web\Dir\UpdateRenewResponse;
 
 /**
  * [DirController description]
@@ -278,7 +286,52 @@ class DirController
             event(new PaymentStore($payment));
         }
 
-        event(new DirStore($dir));
+        event(new DirUpdate($dir));
+
+        return $response->setDir($dir)->makeResponse();
+    }
+
+    /**
+     * [editRenew description]
+     * @param  Dir              $dir     [description]
+     * @param  EditRenewLoad    $load    [description]
+     * @param  EditRenewRequest $request [description]
+     * @return View                      [description]
+     */
+    public function editRenew(Dir $dir, EditRenewLoad $load, EditRenewRequest $request) : View
+    {
+        return view('idir::web.dir.edit_renew', [
+            'dir' => $dir,
+            'driver' => [
+                'transfer' => config('idir.payment.transfer.driver'),
+                'code_sms' => config('idir.payment.code_sms.driver'),
+                'code_transfer' => config('idir.payment.code_transfer.driver'),
+            ]
+        ]);
+    }
+
+    /**
+     * [updateRenew description]
+     * @param  Dir                    $dir            [description]
+     * @param  UpdateRenewLoad        $load           [description]
+     * @param  UpdateRenewRequest     $request        [description]
+     * @param  UpdateRenewCodeRequest $requestPayment [description]
+     * @param  UpdateRenewResponse    $response       [description]
+     * @return RedirectResponse                       [description]
+     */
+    public function updateRenew(
+        Dir $dir,
+        UpdateRenewLoad $load,
+        UpdateRenewRequest $request,
+        UpdateRenewCodeRequest $requestPayment,
+        UpdateRenewResponse $response
+    ) : RedirectResponse
+    {
+        $payment = $dir->makeService()->createPayment($request->validated());
+
+        event(new PaymentStore($payment));
+
+        event(new DirUpdateRenew($dir));
 
         return $response->setDir($dir)->makeResponse();
     }

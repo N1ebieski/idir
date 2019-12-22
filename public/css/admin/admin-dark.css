@@ -11180,9 +11180,8 @@ body {
 
 .sidebar .nav-item .dropdown-menu .badge {
   font-size: 0.7rem;
-  position: absolute;
-  top: 7px;
-  right: 20px;
+  margin-left: 0.6rem;
+  min-width: 2rem;
 }
 
 .sidebar .nav-item .nav-link {
@@ -11192,6 +11191,11 @@ body {
 .sidebar .nav-item .nav-link:focus,
 .sidebar .nav-item .nav-link:hover {
   color: #343a40;
+}
+
+.sidebar .nav-item .nav-link .badge {
+  display: inline-block;
+  min-width: 2rem;
 }
 
 .sidebar .nav-item.active .nav-link {
@@ -11292,6 +11296,10 @@ body {
   .sidebar.toggled .nav-item .nav-link span {
     margin-left: 0;
   }
+
+  .sidebar.toggled .nav-item .nav-link .badge {
+    display: block;
+  }
 }
 
 @media (min-width: 768px) {
@@ -11368,6 +11376,10 @@ body {
   .sidebar.toggled .nav-item .nav-link span {
     margin-left: 0;
   }
+
+  .sidebar.toggled .nav-item .nav-link .badge {
+    display: block;
+  }
 }
 
 .card-body-icon {
@@ -11408,7 +11420,7 @@ footer {
   height: 60px;
 }
 
-@media (max-width: 1199.98px) {
+@media (max-width: 1366px) {
   .responsive-btn-group {
     flex-direction: column;
     align-items: flex-start;

@@ -2,7 +2,7 @@
 
 namespace N1ebieski\IDir\Rules\Codes\Cashbill;
 
-use N1ebieski\IDir\Libs\Cashbill\Codes\SMS as Cashbill;
+use N1ebieski\IDir\Utils\Cashbill\Codes\SMS as Cashbill;
 use N1ebieski\IDir\Models\Price;
 use N1ebieski\IDir\Models\Code;
 use Illuminate\Http\Request;
