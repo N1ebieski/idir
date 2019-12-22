@@ -28,7 +28,7 @@
                 {{ $dir->isGroup($group->id) || $group->isAvailable() ? null : 'bg-warning' }}">
                     @if ($dir->isGroup($group->id))
                         @if ($dir->isRenew())
-                        <a href="#" class="btn btn-link">
+                        <a href="{{ route('web.dir.edit_renew', [$dir->id]) }}" class="btn btn-link">
                             {{ trans('idir::dirs.renew_group') }} &raquo;
                         </a>
                         @endif

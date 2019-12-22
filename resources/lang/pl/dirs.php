@@ -11,6 +11,7 @@ return [
         ],
         'edit' => [
             'index' => 'Edytuj wpis',
+            'renew' => 'Przedłuż ważność',
             'group' => 'Wybierz typ wpisu',
             'form' => 'Wypełnij formularz',
             'summary' => 'Podsumowanie'
@@ -26,6 +27,12 @@ return [
             'status_0' => 'Wpis został edytowany i oczekuje na moderację.',
             'status_1' => 'Wpis został edytowany i jest aktywny.'
         ],
+        'update_renew' => [
+            'status_0' => 'Dziękujemy. Czas ważności wpisu zostanie przedłużony w momencie akceptacji wpisu przed moderację.',
+            'status_1' => 'Dziękujemy. Czas ważności wpisu został przedłużony.'
+        ],
+        'destroy' => 'Wpis został usunięty',
+        'destroy_global' => 'Pomyślnie usunięto :affected wpisów'
     ],
     'choose_group' => 'Wybierz grupę',
     'change_group' => 'Zmień grupę',
@@ -60,6 +67,18 @@ return [
     'code' => 'Wpisz kod',
     'choose_backlink' => 'Wybierz link zwrotny',
     'backlink_url' => 'Adres z linkiem',
+    'group' => 'Grupa',
     'group_limit' => 'Limit wyczerpany (max: :dirs, dzienny: :dirs_today)',
-    'unlimited' => 'nieograniczony'
+    'unlimited' => 'nieograniczony',
+    'status' => [
+        'index' => 'Status',
+        '1' => 'aktywny',
+        '0' => 'oczekujący na moderację',
+        '2' => 'oczekujący na płatość',
+        '3' => 'oczekujący na backlink',
+    ],
+    'privileged_to' => 'Data wygaśnięcia',
+    'delete_reason' => 'Powód usunięcia',
+    'delete_info' => 'Niestety przykro nam, ale Twój wpis :dir został usunięty z naszego katalogu.',
+    'content' => 'Opis'
 ];

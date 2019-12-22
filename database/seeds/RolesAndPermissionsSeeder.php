@@ -29,6 +29,12 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::create(['name' => 'edit fields']);
         Permission::create(['name' => 'destroy fields']);
 
+        Permission::create(['name' => 'index dirs']);
+        Permission::create(['name' => 'create dirs']);
+        Permission::create(['name' => 'status dirs']);
+        Permission::create(['name' => 'edit dirs']);
+        Permission::create(['name' => 'destroy dirs']);
+
         $role = Role::whereName('admin')
             ->first()
             ->givePermissionTo([

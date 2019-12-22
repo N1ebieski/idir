@@ -6,10 +6,10 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 use N1ebieski\IDir\Http\Requests\Web\Payment\Cashbill\CompleteRequest;
 use N1ebieski\IDir\Http\Requests\Web\Payment\Cashbill\VerifyRequest;
-use N1ebieski\IDir\Libs\Cashbill\Transfer as Cashbill;
+use N1ebieski\IDir\Utils\Cashbill\Transfer as Cashbill;
 use N1ebieski\IDir\Models\Payment\Dir\Payment;
-use N1ebieski\IDir\Events\Payment\Dir\VerifyAttempt;
-use N1ebieski\IDir\Events\Payment\Dir\VerifySuccessful;
+use N1ebieski\IDir\Events\Web\Payment\Dir\VerifyAttempt;
+use N1ebieski\IDir\Events\Web\Payment\Dir\VerifySuccessful;
 
 /**
  * [PaymentController description]
@@ -53,7 +53,7 @@ class PaymentController
             abort(403, 'Invalid signature of payment.');
         }
 
-        return redirect()->route('web.dir.create_1')->with(
+        return redirect()->route('web.profile.edit_dir')->with(
                 $request->input('status') === 'ok' ? 'success' : 'danger',
                 $request->input('status') === 'ok' ? trans('idir::payments.success.complete')
                     : trans('idir::payments.error.complete')

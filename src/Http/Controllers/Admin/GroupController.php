@@ -3,7 +3,6 @@
 namespace N1ebieski\IDir\Http\Controllers\Admin;
 
 use N1ebieski\IDir\Http\Requests\Admin\Group\DestroyRequest;
-
 use N1ebieski\IDir\Models\Group;
 use N1ebieski\IDir\Models\Privilege;
 use N1ebieski\IDir\Http\Requests\Admin\Group\IndexRequest;

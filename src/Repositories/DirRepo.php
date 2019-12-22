@@ -66,13 +66,20 @@ class DirRepo
     }
 
     /**
-     * [paginateByUser description]
-     * @param  int                  $id [description]
-     * @return LengthAwarePaginator     [description]
+     * [paginateWithRelsByUserAndFilter description]
+     * @param  int                  $id     [description]
+     * @param  array                $filter [description]
+     * @return LengthAwarePaginator         [description]
      */
-    public function paginateByUser(int $id) : LengthAwarePaginator
+    public function paginateWithRelsByUserAndFilter(int $id, array $filter) : LengthAwarePaginator
     {
-        return $this->dir->where('user_id', $id)->paginate();
+        return $this->dir->with(['group', 'categories', 'tags'])
+            ->where('user_id', $id)
+            ->filterSearch($filter['search'])
+            ->filterStatus($filter['status'])
+            ->filterGroup($filter['group'])
+            ->filterOrderBy($filter['orderby'])
+            ->filterPaginate($filter['paginate']);
     }
 
     /**
@@ -103,5 +110,14 @@ class DirRepo
             'privileged_at' => null,
             'privileged_to' => null
         ]);
+    }
+
+    /**
+     * [countInactive description]
+     * @return int [description]
+     */
+    public function countInactive() : int
+    {
+        return $this->dir->inactive()->count();
     }
 }

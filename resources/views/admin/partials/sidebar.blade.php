@@ -25,6 +25,21 @@
             </a>
         </li>
         @endcan
+        @can('index dirs')
+        <li class="nav-item @isUrlContains(['*/dirs', '*/dirs/*'])">
+            <div class="nav-link" onclick="window.location.href='{{ route('admin.dir.index') }}'"
+            style="cursor: pointer;">
+                <i class="far fa-fw fa-folder-open"></i>
+                <span> {{ trans('idir::dirs.page.index') }}</span>
+                <span>
+                    <a href="{{ route('admin.dir.index', ['filter[status]' => 0]) }}"
+                    class="badge badge-warning">
+                        {{ $dirs_inactive_count }}
+                    </a>
+                </span>
+            </div>
+        </li>
+        @endcan
         @can('index comments')
         <li class="nav-item dropdown @isUrl([
             route('admin.comment.post.index'),
@@ -40,15 +55,17 @@
             <div class="dropdown-menu" aria-labelledby="commentDropdown">
                 <h6 class="dropdown-header">{{ trans('icore::default.type') }}:</h6>
                 @foreach(['post', 'page'] as $type)
-                <div class="position-relative">
-                    <a class="dropdown-item @isUrl(route("admin.comment.{$type}.index"))" href="{{ route("admin.comment.{$type}.index") }}">
-                        {{ trans("icore::comments.page.type.{$type}") }}
-                    </a>
+                <div class="dropdown-item @isUrl(route("admin.comment.{$type}.index"))"
+                onclick="window.location.href='{{ route("admin.comment.{$type}.index") }}'"
+                style="cursor: pointer;">
+                    {{ trans("icore::comments.page.type.{$type}") }}
                     @if ($count = $comments_inactive_count->where('model', $type)->first())
-                    <a href="{{ route("admin.comment.{$type}.index", ['filter[status]' => 0]) }}"
-                    class="badge badge-warning">
-                        {{ $count->count }}
-                    </a>
+                    <span>
+                        <a href="{{ route("admin.comment.{$type}.index", ['filter[status]' => 0]) }}"
+                        class="badge badge-warning">
+                            {{ $count->count }}
+                        </a>
+                    </span>
                     @endif
                 </div>
                 @endforeach
@@ -79,7 +96,7 @@
         </li>
         @endcan
         @canany(['index groups', 'index fields'])
-        <li class="nav-item dropdown @isUrlContains(['*/groups', '*/groups/*', 'fields/group', 'fields/group/*'])">
+        <li class="nav-item dropdown @isUrlContains(['*/groups', '*/groups/*', '*/fields/group', 'fields/group/*'])">
             <a class="nav-link dropdown-toggle"
             href="#" id="groupDropdown" role="button"
             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

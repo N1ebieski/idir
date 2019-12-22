@@ -29,7 +29,8 @@
                 @endif
                 <div class="d-flex mb-3">
                     <div class="mr-auto">
-                        <a href="{{ route('web.dir.create_2', [$group->id]) }}" class="btn btn-secondary" style="width:6rem">
+                        <a href="{{ route('web.dir.create_2', [$group->id]) }}"
+                        class="btn btn-secondary" style="width:6rem">
                             &laquo; {{ trans('icore::default.back') }}
                         </a>
                     </div>

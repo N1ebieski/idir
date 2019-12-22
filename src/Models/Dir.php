@@ -5,6 +5,7 @@ namespace N1ebieski\IDir\Models;
 use Illuminate\Database\Eloquent\Model;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Cviebrock\EloquentTaggable\Taggable;
+use N1ebieski\ICore\Models\Traits\Carbonable;
 use N1ebieski\ICore\Models\Traits\FullTextSearchable;
 use N1ebieski\ICore\Models\Traits\Filterable;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
@@ -15,13 +16,14 @@ use N1ebieski\IDir\Repositories\DirRepo;
 use Illuminate\Database\Eloquent\Builder;
 use N1ebieski\IDir\Models\Group;
 use N1ebieski\IDir\Models\Payment\Dir\Payment;
+use Carbon\Carbon;
 
 /**
  * [Dir description]
  */
 class Dir extends Model
 {
-    use Sluggable, Taggable, FullTextSearchable, Filterable;
+    use Sluggable, Taggable, FullTextSearchable, Filterable, Carbonable;
 
     // Configuration
 
@@ -261,6 +263,16 @@ class Dir extends Model
     }
 
     /**
+     * [scopeInactive description]
+     * @param  Builder $query [description]
+     * @return Builder        [description]
+     */
+    public function scopeInactive(Builder $query) : Builder
+    {
+        return $query->where('dirs.status', 0);
+    }
+
+    /**
      * [scopeActiveHasLinkPriviligeByComponent description]
      * @param  Builder $query     [description]
      * @param  array   $component [description]
@@ -279,7 +291,29 @@ class Dir extends Model
             ->active();
     }
 
+    /**
+     * [scopeFilterGroup description]
+     * @param  Builder $query [description]
+     * @param  Group|null  $group  [description]
+     * @return Builder|null         [description]
+     */
+    public function scopeFilterGroup(Builder $query, Group $group = null) : ?Builder
+    {
+        return $query->when($group !== null, function($query) use ($group) {
+            $query->where('group_id', $group->id);
+        });
+    }
+
     // Accessors
+
+    /**
+     * [getPrivilegedToDiffAttribute description]
+     * @return string [description]
+     */
+    public function getPrivilegedToDiffAttribute() : string
+    {
+        return Carbon::parse($this->privileged_to)->diffForHumans();
+    }
 
     /**
      * Short content used in the listing
@@ -288,6 +322,17 @@ class Dir extends Model
     public function getShortContentAttribute() : string
     {
         return substr($this->content, 0, 300);
+    }
+
+    /**
+     * [getTitleAsLinkAttribute description]
+     * @return string [description]
+     */
+    public function getTitleAsLinkAttribute() : string
+    {
+        return $this->url !== null ?
+            '<a href="' . $this->url . '" target="_blank">' . $this->title . '</a>'
+            : $this->title;
     }
 
     /**
@@ -313,7 +358,7 @@ class Dir extends Model
      */
     public function isRenew() : bool
     {
-        return $this->privileged_to !== null
+        return ($this->privileged_to !== null || $this->isPending())
             && $this->getRelation('group')->getRelation('prices')->isNotEmpty();
     }
 

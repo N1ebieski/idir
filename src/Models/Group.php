@@ -116,7 +116,7 @@ class Group extends Model
      */
     public function dirs()
     {
-        return $this->hasMany('N1ebieski\IDir\Models\Dir');
+        return $this->hasMany('N1ebieski\IDir\Models\Dir')->whereIn('status', [0, 1]);
     }
 
     /**
@@ -125,7 +125,9 @@ class Group extends Model
      */
     public function dirs_today()
     {
-        return $this->hasMany('N1ebieski\IDir\Models\Dir')->whereDate('created_at', '=', Carbon::now()->format('Y-m-d'));
+        return $this->hasMany('N1ebieski\IDir\Models\Dir')
+            ->whereDate('created_at', '=', Carbon::now()->format('Y-m-d'))
+            ->whereIn('status', [0, 1]);
     }
 
     // Overrides

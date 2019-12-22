@@ -55,4 +55,13 @@ Route::group(['middleware' => ['auth', 'icore.ban.user', 'icore.ban.ip']], funct
         ->name('dir.update_3')
         ->where('group', '[0-9]+')
         ->where('dir', '[0-9]+');
+
+    Route::get('dirs/{dir}/edit/renew', 'DirController@editRenew')
+        ->middleware('can:edit,dir')
+        ->name('dir.edit_renew')
+        ->where('dir', '[0-9]+');
+    Route::patch('dirs/{dir}/renew', 'DirController@updateRenew')
+        ->middleware('can:edit,dir')
+        ->name('dir.update_renew')
+        ->where('dir', '[0-9]+');
 });

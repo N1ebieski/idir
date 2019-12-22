@@ -40,7 +40,7 @@ class Store3Request extends Store2Request
     protected function prepareForValidation() : void
     {
         if ($this->session()->has('dir')) {
-            $this->merge($this->session()->get('dir'));
+            $this->merge($this->all() + $this->session()->get('dir'));
         }
 
         parent::prepareForValidation();

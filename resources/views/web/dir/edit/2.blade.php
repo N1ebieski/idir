@@ -21,7 +21,7 @@
     <div class="row mb-4">
         <div class="col-md-8">
             <form method="post" action="{{ route('web.dir.update_2', [$dir->id, $group->id]) }}"
-            enctype="multipart/form-data" id="createForm">
+            enctype="multipart/form-data" id="editForm">
                 @csrf
                 @method('put')
                 <div class="form-group">
@@ -124,8 +124,8 @@
 </div>
 @endsection
 
-{{-- @push('script')
+@push('script')
 @component('icore::admin.partials.jsvalidation')
-{!! str_replace('"content"', '"content_html"', JsValidator::formRequest(\N1ebieski\IDir\Http\Requests\Web\Dir\Store2Request::class, '#createForm')); !!}
+{!! str_replace('"content"', '"content_html"', JsValidator::formRequest(\N1ebieski\IDir\Http\Requests\Web\Dir\Update2Request::class, '#editForm')); !!}
 @endcomponent
-@endpush --}}
+@endpush

@@ -2,10 +2,13 @@
 
 namespace N1ebieski\IDir\Http\Requests\Web\Dir;
 
-use N1ebieski\IDir\Http\Requests\Web\Dir\CodeRequest;
+use Illuminate\Foundation\Http\FormRequest;
+use N1ebieski\IDir\Http\Requests\Traits\CodePayable;
 
-class Store3CodeRequest extends CodeRequest
+class Store3CodeRequest extends FormRequest
 {
+    use CodePayable;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -35,6 +38,6 @@ class Store3CodeRequest extends CodeRequest
      */
     public function rules()
     {
-        return parent::rules();
+        return $this->prepareCodeRules();
     }
 }

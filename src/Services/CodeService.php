@@ -48,7 +48,7 @@ class CodeService implements Serviceable
     public function createGlobal(array $attributes) : void
     {
         foreach ($attributes as $attribute) {
-            $code = $this->code->make($code);
+            $code = $this->code->make($attribute);
             $code->price()->associate($this->code->getPrice());
             $code->created_at = Carbon::now();
             $code->updated_at = Carbon::now();
