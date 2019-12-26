@@ -9,7 +9,7 @@
             </a>&nbsp;
             @endif
             @if ($filter['status'] !== null)
-            <a href="#" class="badge badge-primary filterOption" data-name="filter[visible]">
+            <a href="#" class="badge badge-primary filterOption" data-name="filter[status]">
                 {{ trans('icore::filter.status') }}: {{ trans("idir::dirs.status.{$filter['status']}") }}
                 <span aria-hidden="true">&times;</span>
             </a>&nbsp;
@@ -54,6 +54,12 @@
                         <option value="title|asc"
                         {{ ($filter['orderby'] == 'title|asc') ? 'selected' : '' }}>{{ mb_strtolower(trans('icore::filter.title')) }}
                             {{ trans('icore::filter.asc') }}</option>
+                        <option value="sum_rating|desc"
+                        {{ ($filter['orderby'] == 'sum_rating|desc') ? 'selected' : '' }}>{{ mb_strtolower(trans('icore::filter.sum_rating')) }}
+                            {{ trans('icore::filter.desc') }}</option>
+                        <option value="sum_rating|asc"
+                        {{ ($filter['orderby'] == 'sum_rating|asc') ? 'selected' : '' }}>{{ mb_strtolower(trans('icore::filter.sum_rating')) }}
+                            {{ trans('icore::filter.asc') }}</option>
                     </select>
                 </div>
                 <div class="form-group col-xs-4">
@@ -67,5 +73,5 @@
             </div>
         </div>
     </div>
-    @include('idir::web.profile.partials.filter_filter')
+    @include('idir::web.profile.partials.dir.filter_filter')
 </form>

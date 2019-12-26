@@ -11636,7 +11636,8 @@ span.twitter-typeahead .tt-menu .dropdown-header {
   color: #000;
 }
 
-.popover-header {
+.popover-header,
+.popover-body {
   background-color: #ced4da;
   color: #000;
 }

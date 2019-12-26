@@ -3,8 +3,8 @@
 namespace N1ebieski\IDir\Rules\Codes;
 
 use Illuminate\Contracts\Validation\Rule;
-use Illuminate\Http\Request;
 use N1ebieski\IDir\Models\Code;
+use Illuminate\Http\Request;
 
 /**
  * [Recaptcha_v2 description]
@@ -18,20 +18,12 @@ class Codes implements Rule
     protected $request;
 
     /**
-     * [private description]
-     * @var Code
-     */
-    protected $code;
-
-    /**
      * [__construct description]
-     * @param Code     $code     [description]
      * @param Request  $request  [description]
      */
-    public function __construct(Code $code, Request $request)
+    public function __construct(Request $request)
     {
         $this->request = $request;
-        $this->code = $code;
     }
 
     /**
@@ -56,9 +48,7 @@ class Codes implements Rule
      */
     public function passes($attribute, $value) : bool
     {
-        if (($check = $this->code->makeRepo()->firstByCodeAndPriceId(
-            $value, $this->price->id
-        )) instanceof Code) {
+        if (($check = $this->price->makeRepo()->firstCodeByCode($value)) instanceof Code) {
             if ($check->quantity === 1) {
                 $check->delete();
             } else if ($check->quantity > 1) {

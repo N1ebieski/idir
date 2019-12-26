@@ -13,5 +13,5 @@ class IndexFilter extends Filter
      * [protected description]
      * @var array
      */
-    protected $filters = ['search', 'orderby', 'paginate'];
+    protected $filters = ['search', 'status', 'group', 'category', 'report', 'author', 'orderby', 'paginate'];
 }

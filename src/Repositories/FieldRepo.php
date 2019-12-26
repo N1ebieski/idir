@@ -33,6 +33,7 @@ class FieldRepo
     public function paginateByFilter(array $filter) : LengthAwarePaginator
     {
         return $this->field->poliType()
+            ->filterExcept($filter['except'])
             ->filterSearch($filter['search'])
             ->filterVisible($filter['visible'])
             ->filterType($filter['type'])

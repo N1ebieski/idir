@@ -1,4 +1,5 @@
-<div id="row{{ $dir->id }}" class="row border-bottom py-3 position-relative transition">
+<div id="row{{ $dir->id }}" class="row border-bottom py-3 position-relative transition"
+data-id="{{ $dir->id }}">
     <div class="col my-auto d-flex justify-content-between">
         @can('destroy dirs')
         <div class="custom-control custom-checkbox">
@@ -7,8 +8,9 @@
         @endcan
                 <ul class="list-unstyled mb-0 pb-0">
                     <li>{{ $dir->title_as_link }}</li>
-                    <li>{{ $dir->shortContent }}...</li>
+                    <li contenteditable="true" spellcheck="true">{{ $dir->shortContent }}...</li>
                     <li>{{ $dir->tagList }}</li>
+                    <li><small>{{ trans('idir::dirs.author') }}: <a href="{{ route('admin.dir.index', ['filter[author]' => $dir->user->id]) }}">{{ $dir->user->name }}</a></small></li>
                     <li><small>{{ trans('icore::filter.created_at') }}: {{ $dir->created_at_diff }}</small></li>
                     <li><small>{{ trans('icore::filter.updated_at') }}: {{ $dir->updated_at_diff }}</small></li>
                 </ul>

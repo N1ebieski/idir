@@ -16,11 +16,11 @@
     <span> {{ trans('idir::profile.page.edit_dir') }}</span>
 </h1>
 <div id="filterContent">
-    @include('idir::web.profile.partials.filter')
+    @include('idir::web.profile.partials.dir.filter')
     @if ($dirs->isNotEmpty())
     <div id="infinite-scroll">
         @foreach ($dirs as $dir)
-            @include('idir::web.profile.partials.dir')
+            @include('idir::web.profile.partials.dir.dir')
         @endforeach
         @include('icore::admin.partials.pagination', ['items' => $dirs])
     </div>

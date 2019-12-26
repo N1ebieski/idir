@@ -44,6 +44,7 @@ class GroupRepo
     public function paginateByFilter(array $filter) : LengthAwarePaginator
     {
         return $this->group->filterSearch($filter['search'])
+            ->filterExcept($filter['except'])
             ->filterVisible($filter['visible'])
             ->filterOrderBy($filter['orderby'] ?? 'position|asc')
             ->filterPaginate($filter['paginate']);

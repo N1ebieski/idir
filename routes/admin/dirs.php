@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::get('dirs', 'DirController@index')
+Route::match(['get', 'post'], 'dirs/index', 'DirController@index')
     ->name('dir.index')
     ->middleware('permission:index dirs');
 

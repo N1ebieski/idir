@@ -41,6 +41,7 @@ use N1ebieski\IDir\Events\Web\Payment\Dir\Store as PaymentStore;
 use N1ebieski\IDir\Http\Responses\Web\Dir\Store3Response;
 use N1ebieski\IDir\Http\Responses\Web\Dir\Update3Response;
 use N1ebieski\IDir\Http\Responses\Web\Dir\UpdateRenewResponse;
+use N1ebieski\IDir\Events\Web\Dir\Destroy as DirDestroy;
 
 /**
  * [DirController description]
@@ -344,6 +345,8 @@ class DirController
     public function destroy(Dir $dir) : JsonResponse
     {
         $dir->makeService()->delete();
+
+        event(new DirDestroy($dir));
 
         return response()->json(['success' => '']);
     }
