@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::get('groups', 'GroupController@index')
+Route::match(['get', 'post'], 'groups/index', 'GroupController@index')
     ->name('group.index')
     ->middleware('permission:index groups');
 

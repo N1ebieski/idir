@@ -11499,7 +11499,8 @@ li.page-item:not(.active) .page-link:not(:hover) {
   color: #000;
 }
 
-.popover-header {
+.popover-header,
+.popover-body {
   background-color: #ced4da;
   color: #000;
 }

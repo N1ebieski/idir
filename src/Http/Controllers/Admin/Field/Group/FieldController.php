@@ -30,7 +30,9 @@ class FieldController extends BaseFieldController implements Polymorphic
     {
         return view("idir::admin.field.group.index", [
             'field' => $field,
-            'fields' => $field->makeRepo()->paginateByFilter($filter->all()),
+            'fields' => $field->makeRepo()->paginateByFilter($filter->all() + [
+                'except' => $request->input('except')
+            ]),
             'groups' => $group->makeRepo()->all(),
             'filter' => $filter->all(),
             'paginate' => config('database.paginate')

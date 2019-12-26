@@ -6,6 +6,15 @@ jQuery(document).ajaxComplete(function() {
     $(document).trigger('readyAndAjax');
 });
 
+jQuery(document).on('readyAndAjax', function() {
+    $('form').find('input, select').keypress(function(e) {
+        if (e.which == 13) {
+            e.preventDefault();
+            return false;
+        }
+    });
+});
+
 function categorySelect()
 {
     return $('#categoryOptions .form-group').map(function() {
@@ -833,6 +842,15 @@ $(document).ready(function() {
             $form.btn.prop('disabled', false);
         } else {
             $form.btn.prop('disabled', true);
+        }
+    });
+});
+
+jQuery(document).on('readyAndAjax', function() {
+    $('form#searchForm').keypress(function(e) {
+        if (e.which == 13) {
+            $(this).submit();
+            return false;
         }
     });
 });

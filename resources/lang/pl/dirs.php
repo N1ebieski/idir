@@ -80,5 +80,6 @@ return [
     'privileged_to' => 'Data wygaśnięcia',
     'delete_reason' => 'Powód usunięcia',
     'delete_info' => 'Niestety przykro nam, ale Twój wpis :dir został usunięty z naszego katalogu.',
-    'content' => 'Opis'
+    'content' => 'Opis',
+    'author' => 'Autor'
 ];

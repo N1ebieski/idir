@@ -18121,6 +18121,7 @@ return jQuery;
             debug: false,
             autoTrigger: true,
             autoTriggerUntil: false,
+            data: false,            
             loadingHtml: '<small>Loading...</small>',
             loadingFunction: false,
             padding: 0,
@@ -18262,20 +18263,24 @@ return jQuery;
 
                 return $e.animate({scrollTop: $inner.outerHeight()}, 0, function() {
                     var nextHref = data.nextHref;
-                    $inner.find('div.jscroll-added').last().load(nextHref, function(r, status) {
-                        if (status === 'error') {
-                            return _destroy();
+                    $inner.find('div.jscroll-added').last().load(
+                        nextHref,
+                        _options.data ? _options.data.call(this) : null,
+                        function(r, status) {
+                            if (status === 'error') {
+                                return _destroy();
+                            }
+                            var $next = $(this).find(_options.nextSelector).first();
+                            data.waiting = false;
+                            data.nextHref = $next.prop('href') ? $.trim($next.prop('href') + ' ' + _options.contentSelector) : false;
+                            $('.jscroll-next-parent', $e).remove(); // Remove the previous next link now that we have a new one
+                            _checkNextHref();
+                            if (_options.callback) {
+                                _options.callback.call(this, nextHref);
+                            }
+                            _debug('dir', data);
                         }
-                        var $next = $(this).find(_options.nextSelector).first();
-                        data.waiting = false;
-                        data.nextHref = $next.prop('href') ? $.trim($next.prop('href') + ' ' + _options.contentSelector) : false;
-                        $('.jscroll-next-parent', $e).remove(); // Remove the previous next link now that we have a new one
-                        _checkNextHref();
-                        if (_options.callback) {
-                            _options.callback.call(this, nextHref);
-                        }
-                        _debug('dir', data);
-                    });
+                    );
                 });
             },
 
@@ -44213,6 +44218,12 @@ try {
 
   Bloodhound = __webpack_require__(/*! corejs-typeahead/dist/bloodhound.js */ "../laravel-icore/node_modules/corejs-typeahead/dist/bloodhound.js");
 } catch (e) {}
+
+$.ajaxSetup({
+  'headers': {
+    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+  }
+});
 /**
  * We'll load the axios HTTP library which allows us to easily issue requests
  * to our Laravel back-end. This library automatically handles sending the

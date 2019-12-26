@@ -25,7 +25,7 @@
     @endcan
 </h1>
 <div id="filterContent">
-    {{-- @include('icore::admin.post.partials.filter') --}}
+    @include('idir::admin.dir.partials.filter')
     @if ($dirs->isNotEmpty())
     <form action="{{ route('admin.dir.destroy_global') }}" method="post" id="selectForm"
     data-reasons="{{ json_encode(config('idir.dir.delete_reasons')) }}" data-reasons-label="{{ trans('idir::dirs.delete_reason') }}">
@@ -47,7 +47,7 @@
             @endforeach
             @include('icore::admin.partials.pagination', ['items' => $dirs])
         </div>
-        @can('destroy posts')
+        @can('destroy dirs')
         <div class="select-action rounded">
             <button class="btn btn-danger submit" data-toggle="confirmation"
             type="button" data-btn-ok-label=" {{ trans('icore::default.yes') }}" data-btn-ok-icon-class="fas fa-check"

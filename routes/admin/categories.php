@@ -7,7 +7,7 @@ Route::get('categories/backlink/search', 'Category\Dir\CategoryController@search
     ->middleware('permission:index categories')
     ->name('category.backlink.search');
 
-Route::get('categories/dir', 'Category\Dir\CategoryController@index')
+Route::match(['get', 'post'], 'categories/dir/index', 'Category\Dir\CategoryController@index')
     ->name('category.dir.index')
     ->middleware('permission:index categories');
 

@@ -66,18 +66,20 @@ class DirRepo
     }
 
     /**
-     * [paginateWithRelsByUserAndFilter description]
-     * @param  int                  $id     [description]
+     * [paginateByFilter description]
      * @param  array                $filter [description]
      * @return LengthAwarePaginator         [description]
      */
-    public function paginateWithRelsByUserAndFilter(int $id, array $filter) : LengthAwarePaginator
+    public function paginateByFilter(array $filter) : LengthAwarePaginator
     {
         return $this->dir->with(['group', 'categories', 'tags'])
-            ->where('user_id', $id)
+            ->withSumRating()
+            ->filterExcept($filter['except'])
             ->filterSearch($filter['search'])
             ->filterStatus($filter['status'])
             ->filterGroup($filter['group'])
+            ->filterCategory($filter['category'])
+            ->filterReport($filter['report'])
             ->filterOrderBy($filter['orderby'])
             ->filterPaginate($filter['paginate']);
     }

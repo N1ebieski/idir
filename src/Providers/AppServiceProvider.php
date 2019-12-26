@@ -26,6 +26,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $this->app->bind(\N1ebieski\ICore\Repositories\UserRepo::class, function($app, array $with) {
+            return $this->app->make(\N1ebieski\IDir\Repositories\UserRepo::class, $with);
+        });
+
         $this->app->bind(\N1ebieski\ICore\Repositories\LinkRepo::class, function($app, array $with) {
             return $this->app->make(\N1ebieski\IDir\Repositories\LinkRepo::class, $with);
         });

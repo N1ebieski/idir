@@ -4,7 +4,6 @@ namespace N1ebieski\IDir\Rules\Codes\Cashbill;
 
 use N1ebieski\IDir\Utils\Cashbill\Codes\SMS as Cashbill;
 use N1ebieski\IDir\Models\Price;
-use N1ebieski\IDir\Models\Code;
 use Illuminate\Http\Request;
 use N1ebieski\IDir\Rules\Codes\Codes;
 
@@ -21,12 +20,6 @@ class SMS extends Codes
 
     /**
      * [private description]
-     * @var Code
-     */
-    protected $code;
-
-    /**
-     * [private description]
      * @var Request
      */
     protected $request;
@@ -40,18 +33,16 @@ class SMS extends Codes
     /**
      * [__construct description]
      * @param Price    $price    [description]
-     * @param Code     $code     [description]
      * @param Request  $request  [description]
      * @param Cashbill $cashbill [description]
      */
-    public function __construct(Price $price, Code $code, Request $request, Cashbill $cashbill)
+    public function __construct(Price $price, Request $request, Cashbill $cashbill)
     {
         $this->cashbill = $cashbill;
         $this->price = $price->find($request->input('payment_code_sms'));
-        $this->code = $code;
         $this->request = $request;
 
-        parent::__construct($code, $request);
+        parent::__construct($request);
     }
 
     /**

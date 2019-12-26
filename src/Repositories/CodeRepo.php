@@ -23,18 +23,4 @@ class CodeRepo
     {
         $this->code = $code;
     }
-
-    /**
-     * [firstByCodeAndPriceId description]
-     * @param  string $code [description]
-     * @param  int    $id   [description]
-     * @return Code|null       [description]
-     */
-    public function firstByCodeAndPriceId(string $code, int $id) : ?Code
-    {
-        return $this->code->where([
-                ['code', $code],
-                ['price_id', $id]
-            ])->first();
-    }
 }

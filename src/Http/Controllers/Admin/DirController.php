@@ -4,6 +4,8 @@ namespace N1ebieski\IDir\Http\Controllers\Admin;
 
 use N1ebieski\IDir\Filters\Admin\Dir\IndexFilter;
 use N1ebieski\IDir\Models\Dir;
+use N1ebieski\IDir\Models\Group;
+use N1ebieski\IDir\Models\Category\Dir\Category;
 use N1ebieski\IDir\Http\Requests\Admin\Dir\IndexRequest;
 use N1ebieski\IDir\Http\Requests\Admin\Dir\DestroyRequest;
 use Illuminate\View\View;
@@ -17,21 +19,29 @@ use N1ebieski\IDir\Events\Admin\Dir\Destroy as DirDestroy;
 class DirController
 {
     /**
-     * Display a listing of the Dir.
-     *
-     * @param  Dir $dir
-     * @param  IndexRequest    $request         [description]
-     * @param  IndexFilter     $filter          [description]
-     * @return View                             [description]
+     * [index description]
+     * @param  Dir          $dir      [description]
+     * @param  Group        $group    [description]
+     * @param  Category     $category [description]
+     * @param  IndexRequest $request  [description]
+     * @param  IndexFilter  $filter   [description]
+     * @return View                   [description]
      */
-    public function index(Dir $dir, IndexRequest $request, IndexFilter $filter) : View
+    public function index(
+        Dir $dir,
+        Group $group,
+        Category $category,
+        IndexRequest $request,
+        IndexFilter $filter
+    ) : View
     {
-        $dirs = $dir->paginate();
-
         return view('idir::admin.dir.index', [
-            'dirs' => $dirs,
-            'filter' => $filter->all(),
-            'paginate' => config('database.paginate')
+            'dirs' => $dir->makeRepo()->paginateByFilter($filter->all() + [
+                'except' => $request->input('except')
+            ]),
+            'groups' => $group->makeRepo()->all(),
+            'categories' => $category->makeService()->getAsFlatTree(),
+            'filter' => $filter->all()
         ]);
     }
 

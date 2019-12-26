@@ -1,4 +1,5 @@
-<div id="row{{ $group->id }}" class="row border-bottom py-3 position-relative transition">
+<div id="row{{ $group->id }}" class="row border-bottom py-3 position-relative transition"
+data-id="{{ $group->id }}">
     <div class="col my-auto d-flex justify-content-between">
         <ul class="list-unstyled mb-0 pb-0">
             <li>

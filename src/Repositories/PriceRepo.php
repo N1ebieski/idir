@@ -4,6 +4,7 @@ namespace N1ebieski\IDir\Repositories;
 
 use Illuminate\Database\Eloquent\Collection;
 use N1ebieski\IDir\Models\Price;
+use N1ebieski\IDir\Models\Code;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Support\Facades\DB;
@@ -36,5 +37,15 @@ class PriceRepo
     public function getByIds(array $ids) : Collection
     {
         return $this->price->whereIn('id', array_filter($ids))->get();
+    }
+
+    /**
+     * [firstByCodeAndPriceId description]
+     * @param  string $code [description]
+     * @return Code|null       [description]
+     */
+    public function firstCodeByCode(string $code) : ?Code
+    {
+        return $this->price->codes()->where('code', $code)->first();
     }
 }

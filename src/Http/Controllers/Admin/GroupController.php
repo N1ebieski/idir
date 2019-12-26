@@ -32,7 +32,9 @@ class GroupController
     public function index(Group $group, IndexRequest $request, IndexFilter $filter) : View
     {
         return view('idir::admin.group.index', [
-            'groups' => $group->makeRepo()->paginateByFilter($filter->all()),
+            'groups' => $group->makeRepo()->paginateByFilter($filter->all() + [
+                'except' => $request->input('except')
+            ]),
             'filter' => $filter->all(),
             'paginate' => config('database.paginate')
         ]);

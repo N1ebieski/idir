@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::get('fields/group', 'Field\Group\FieldController@index')
+Route::match(['get', 'post'], 'fields/group/index', 'Field\Group\FieldController@index')
     ->name('field.group.index')
     ->middleware('permission:index fields');
 

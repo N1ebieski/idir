@@ -253,6 +253,21 @@ class Dir extends Model
     // Scopes
 
     /**
+     * [scopeWithSumRating description]
+     * @param  Builder $query [description]
+     * @return Builder        [description]
+     */
+    public function scopeWithSumRating(Builder $query) : Builder
+    {
+        return $query->selectRaw('dirs.*, COALESCE(SUM(ratings.rating), 0) AS sum_rating')
+            ->leftJoin('ratings', function($q) {
+                 $q->on('ratings.model_id', '=', 'dirs.id');
+                 $q->where('ratings.model_type', '=', 'N1ebieski\IDir\Models\Dir');
+            })
+            ->groupBy('dirs.id');
+    }
+
+    /**
      * [scopeActive description]
      * @param  Builder $query [description]
      * @return Builder        [description]
