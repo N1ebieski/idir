@@ -9,14 +9,30 @@ use Illuminate\Support\Str;
 
 $factory->define(Dir::class, function(Faker $faker) {
     $url = parse_url($faker->url);
+    $content = Str::random(350);
 
     return [
         // i cant use faker, because it doesnt have strict option to set min and max chars
         'title' => Str::random(rand(10, 30)),
-        'content_html' => Str::random(350),
-        'content' => Str::random(350),
+        'content_html' => $content,
+        'content' => $content,
         'url' => $url['scheme']."://".$url['host'],
         'status' => rand(0, 1),
+    ];
+});
+
+$factory->state(Dir::class, 'title_sentence', function(Faker $faker) {
+    return [
+        'title' => $faker->sentence(rand(1, 3))
+    ];
+});
+
+$factory->state(Dir::class, 'content_text', function(Faker $faker) {
+    $content = $faker->text(350);
+
+    return [
+        'content_html' => $content,
+        'content' => $content
     ];
 });
 

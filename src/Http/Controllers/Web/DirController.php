@@ -281,7 +281,7 @@ class DirController
         Update3Response $response
     ) : RedirectResponse
     {
-        $dir->setGroup($group)->makeService()->update($request->validated());
+        $dir->setGroup($group)->makeService()->updateFull($request->validated());
 
         if (($payment = $dir->getPayment()) instanceof Payment) {
             event(new PaymentStore($payment));

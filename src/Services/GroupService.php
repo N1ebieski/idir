@@ -3,7 +3,6 @@
 namespace N1ebieski\IDir\Services;
 
 use N1ebieski\IDir\Models\Group;
-use N1ebieski\IDir\Models\Price;
 use N1ebieski\ICore\Services\Serviceable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection as Collect;
@@ -20,12 +19,6 @@ class GroupService implements Serviceable
     protected $group;
 
     /**
-     * Model
-     * @var Price
-     */
-    protected $price;
-
-    /**
      * [private description]
      * @var Collect
      */
@@ -34,13 +27,12 @@ class GroupService implements Serviceable
     /**
      * [__construct description]
      * @param Group     $group     [description]
-     * @param Price     $price     [description]
      * @param Collect   $collect   [description]
      */
-    public function __construct(Group $group, Price $price, Collect $collect)
+    public function __construct(Group $group, Collect $collect)
     {
         $this->group = $group;
-        $this->price = $price;
+
         $this->collect = $collect;
     }
 
@@ -58,11 +50,14 @@ class GroupService implements Serviceable
 
         $this->group->privileges()->attach(array_filter($attributes['priv'] ?? []));
 
-        $this->price->setGroup($this->group)->makeService()->createOrUpdateGlobal(
-            array_filter((int)$attributes['payment'] === 1 ?
-                $this->collect->make($attributes['prices'])->flatten(1)->toArray() : []
-            )
-        );
+        $this->group->prices()->make()
+            ->setGroup($this->group)
+            ->makeService()
+            ->createOrUpdateGlobal(
+                array_filter((int)$attributes['payment'] === 1 ?
+                    $this->collect->make($attributes['prices'])->flatten(1)->toArray() : []
+                )
+            );
 
         return $this->group;
     }
@@ -81,11 +76,14 @@ class GroupService implements Serviceable
 
         $this->group->privileges()->sync(array_filter($attributes['priv'] ?? []));
 
-        $this->price->setGroup($this->group)->makeService()->organizeGlobal(
-            array_filter((int)$attributes['payment'] === 1 ?
-                $this->collect->make($attributes['prices'])->flatten(1)->toArray() : []
-            )
-        );
+        $this->group->prices()->make()
+            ->setGroup($this->group)
+            ->makeService()
+            ->organizeGlobal(
+                array_filter((int)$attributes['payment'] === 1 ?
+                    $this->collect->make($attributes['prices'])->flatten(1)->toArray() : []
+                )
+            );
 
         return $result;
     }

@@ -13,5 +13,5 @@
         {{ in_array($option, old("field.{$field->id}", $value ?? null) ?? []) ? 'selected' : null }}>{{ $option }}</option>
         @endforeach
     </select>
-    @includeWhen($errors->has("field.{$field->id}"), 'icore::admin.partials.errors', ['name' => "field.{$field->id}"])
+    @includeWhen($errors->has("field.{$field->id}"), 'icore::web.partials.errors', ['name' => "field.{$field->id}"])
 </div>

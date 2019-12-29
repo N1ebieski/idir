@@ -16,7 +16,9 @@ jQuery(document).on('readyAndAjax', function() {
 });
 
 jQuery(window).on('readyAndAjax', function() {
-    $('[contenteditable="true"]').focus();
+    if (navigator.userAgent.indexOf("Firefox") != -1) {
+        $('[spellcheck="true"]:first').focusWithoutScrolling();
+    }
 });
 
 jQuery(document).on('click', 'button.storeBanUser', function(e) {
@@ -153,7 +155,7 @@ jQuery(document).on('change', '.categoryOption', function() {
         $input.remove();
     }
 
-    if ($.isInteger($searchCategory.max)) {
+    if ($.isNumeric($searchCategory.max)) {
         if ($searchCategory.is(':visible') && categorySelect().length >= $searchCategory.max) {
             $searchCategory.fadeOut();
         }
@@ -970,6 +972,12 @@ jQuery(document).on('click', 'button.clearReport', function(e) {
         });
     };
 
+    $.fn.focusWithoutScrolling = function() {
+        var x = window.scrollX, y = window.scrollY;
+        this.focus();
+        window.scrollTo(x, y);
+    };
+
     $.sanitize = function(html) {
         let $output = $($.parseHTML('<div>' + html + '</div>', null, false));
 
@@ -1025,7 +1033,7 @@ jQuery(document).on('readyAndAjax', function() {
         autoTrigger: false,
         data: function() {
             return {
-                except: jQuery(document).find('[id^=row]').map(function() {
+                except: $(this).find('[id^=row]').map(function() {
                     return $(this).attr('data-id');
                 }).get()
             };
@@ -1073,15 +1081,17 @@ jQuery(document).ready(function() {
     });
 });
 
-jQuery(document).ready(function() {
-    $('.tagsinput').tagsInput({
-        placeholder: $('.tagsinput').attr('placeholder'),
-        minChars: 3,
-        maxChars: 30,
-        limit: $('.tagsinput').attr('data-max'),
-        validationPattern: new RegExp('^(?:^[a-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ0-9\u00E0-\u00FC ]+$)$'),
-        unique: true,
-    });
+jQuery(document).on('readyAndAjax', function() {
+    if (!$('[id$="_tagsinput"]').length) {    
+        $('.tagsinput').tagsInput({
+            placeholder: $('.tagsinput').attr('placeholder'),
+            minChars: 3,
+            maxChars: 30,
+            limit: $('.tagsinput').attr('data-max'),
+            validationPattern: new RegExp('^(?:^[a-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ0-9\u00E0-\u00FC ]+$)$'),
+            unique: true,
+        });
+    }
 });
 
 jQuery(document).on('readyAndAjax', function() {
@@ -1334,11 +1344,86 @@ jQuery(document).on('readyAndAjax', function() {
     });
 });
 
+jQuery(document).on('readyAndAjax', function() {
+    if (!$('.trumbowyg-box').length) {
+        $('#content_html_dir_trumbowyg').trumbowyg({
+            lang: 'pl',
+            svgPath: false,
+            hideButtonTexts: true,
+            tagsToRemove: ['script'],
+            autogrow: true,
+            btnsDef: {},
+            btns: [
+                ['viewHTML'],
+                ['historyUndo', 'historyRedo'],
+                // ['undo', 'redo'], // Only supported in Blink browsers
+                ['formatting'],
+                ['foreColor', 'backColor'],
+                ['strong', 'em', 'del'],
+                // ['superscript', 'subscript'],
+                // ['link'],
+                // ['insertImage'],
+                // ['justifyLeft', 'justifyCenter', 'justifyRight', 'justifyFull'],
+                ['unorderedList', 'orderedList'],
+                // ['horizontalRule'],
+                ['removeformat'],
+                // ['more'],
+                ['fullscreen']
+            ]
+        });
+    }
+});
+
 jQuery(document).ready(function() {
     $('[aria-controls="collapsePayments"]').change(function() {
         if ($(this).val() == 0) $('#collapsePayments').collapse('hide');
         else $('#collapsePayments').collapse('show');
     });
+});
+
+jQuery(document).on('change', 'form input[id^=delete_img]', function() {
+    $input = $(this).closest('.form-group').find('[type="file"]');
+    $hidden = $(this).closest('.form-group').find('[type="hidden"]');
+
+    if ($(this).prop('checked') === true) {
+        $input.prop('disabled', false);
+        $hidden.prop('disabled', true);
+    } else {
+        $input.prop('disabled', true);
+        $hidden.prop('disabled', false);
+    }
+});
+
+jQuery(document).on('change', 'select#payment_code_sms', function() {
+    let $select = $.parseJSON($(this).find('option:selected').attr('data'));
+
+    $('div#nav-code_sms p span#number').text($select.number);
+    $('div#nav-code_sms p span#code_sms').text($select.code);
+    $('div#nav-code_sms p span#price').text($select.price);
+});
+
+jQuery(document).on('change', 'select#payment_code_transfer', function() {
+    let $select = $.parseJSON($(this).find('option:selected').attr('data'));
+
+    $('div#nav-code_transfer p a#code_transfer').attr('href', function() {
+        return $(this).attr('href').replace(/=(.*)/, '=' + $select.code).trim();
+    });
+    $('div#nav-code_transfer p span#price').text($select.price);
+});
+
+jQuery(document).on('change', 'select#backlink', function() {
+    let $select = $.parseJSON($(this).find('option:selected').attr('data'));
+    let link_as_html = '<a href="' + $select.url + '" title="' + $select.name + '">';
+
+    if ($select.img_url_from_storage !== null) {
+        link_as_html += '<img src="' + $select.img_url_from_storage + '" alt="' + $select.name + '">';
+    } else {
+        link_as_html += $select.name;
+    }
+
+    link_as_html += '</a>';
+
+    $('#backlink_code').val($.sanitize(link_as_html));
 });
 
 jQuery(document).on('change', 'div[id^=prices] div.price:last-child input[name*="select"]', function() {

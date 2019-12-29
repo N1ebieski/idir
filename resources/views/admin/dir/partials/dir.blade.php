@@ -7,8 +7,8 @@ data-id="{{ $dir->id }}">
             <label class="custom-control-label" for="select{{ $dir->id }}">
         @endcan
                 <ul class="list-unstyled mb-0 pb-0">
-                    <li>{{ $dir->title_as_link }}</li>
-                    <li contenteditable="true" spellcheck="true">{{ $dir->shortContent }}...</li>
+                    <li>{!! $dir->title_as_link !!}</li>
+                    <li contenteditable="true" spellcheck="true" class="text-break">{{ $dir->shortContent }}...</li>
                     <li>{{ $dir->tagList }}</li>
                     <li><small>{{ trans('idir::dirs.author') }}: <a href="{{ route('admin.dir.index', ['filter[author]' => $dir->user->id]) }}">{{ $dir->user->name }}</a></small></li>
                     <li><small>{{ trans('icore::filter.created_at') }}: {{ $dir->created_at_diff }}</small></li>
@@ -36,6 +36,7 @@ data-id="{{ $dir->id }}">
                 </div>
                 @endcan
                 @can('status dirs')
+                @if ($dir->isUpdateStatus())
                 <button data-status="1" type="button" class="btn btn-success status"
                 data-route="{{ route('admin.dir.update_status', [$dir->id]) }}"
                 {{ $dir->status == 1 ? 'disabled' : '' }}>
@@ -48,6 +49,7 @@ data-id="{{ $dir->id }}">
                     <i class="fas fa-toggle-off"></i>
                     <span class="d-none d-sm-inline"> {{ trans('icore::default.inactive') }}</span>
                 </button>
+                @endif
                 @endcan
                 @can('destroy dirs')
                 <button class="btn btn-danger" data-status="delete" data-toggle="dir-confirmation"

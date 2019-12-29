@@ -71,10 +71,10 @@ class DirTest extends TestCase
             } else if ($field->type === 'image') {
                 $fields['field'][$key] = UploadedFile::fake()->image('avatar.jpg', 500, 200)->size(1000);
 
-                $this->mock(\N1ebieski\IDir\Utils\File::class, function ($mock) {
-                    $mock->shouldReceive('prepare')->once()->andReturn('vendor/idir/temp/df8s8sd78sd78sdf.jpg');
-                    $mock->shouldReceive('moveFromTemp')->andReturn(true);
-                })->makePartial();
+                // $this->mock(\N1ebieski\IDir\Utils\File::class, function ($mock) {
+                //     $mock->shouldReceive('prepare')->once()->andReturn('vendor/idir/temp/df8s8sd78sd78sdf.jpg');
+                //     $mock->shouldReceive('moveFromTemp')->andReturn(true);
+                // })->makePartial();
             }
         }
 

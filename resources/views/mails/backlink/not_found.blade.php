@@ -10,15 +10,15 @@
 @endif
 @endif
 
-{{ trans('idir::backlinks.not_found_info', ['attempt' => $dirBacklink->attempts]) }}
+{{ trans('idir::backlinks.mail.not_found.info', ['attempt' => $dirBacklink->attempts]) }}
 
-{{ trans('idir::backlinks.backlink_info') }}
+{{ trans('idir::backlinks.mail.not_found.backlink') }}
 
 <div>
     <textarea name="backlink" rows="3" cols="50" readonly>{{ $dirBacklink->link->linkAsHtml }}</textarea>
 </div>
 <br>
-{{ trans('idir::backlinks.edit_dir_info') }}
+{{ trans('idir::backlinks.mail.not_found.edit_dir') }}
 
 @component('mail::button', [
     'url' => route('web.dir.edit_1', [
@@ -26,7 +26,7 @@
     ]),
     'color' => 'primary'
 ])
-{{ trans('idir::backlinks.edit_dir') }}
+{{ trans('idir::dirs.page.edit.index') }}
 @endcomponent
 
 {{-- Subcopy --}}

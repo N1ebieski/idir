@@ -192,7 +192,7 @@ class Dir extends Model
      */
     public function payments()
     {
-        return $this->morphMany('N1ebieski\IDir\Models\Payment\Payment', 'model');
+        return $this->morphMany('N1ebieski\IDir\Models\Payment\Dir\Payment', 'model');
     }
 
     /**
@@ -246,7 +246,7 @@ class Dir extends Model
      */
     public function fields()
     {
-        return $this->morphToMany('N1ebieski\IDir\Models\Field\Field', 'model', 'fields_values', 'model_id', 'field_id')
+        return $this->morphToMany('N1ebieski\IDir\Models\Field\Dir\Field', 'model', 'fields_values', 'model_id', 'field_id')
             ->withPivot('value');
     }
 
@@ -359,10 +359,23 @@ class Dir extends Model
         return $this->getAttributes()
             + ['field' => $this->fields->keyBy('id')
                 ->map(function($item) {
-                    return json_decode($item->pivot->value);
+                    return $item->decode_value;
                 })
                 ->toArray()]
             + ['categories' => $this->categories->pluck('id')->toArray()];
+    }
+
+    /**
+     * [getBacklinkAsHtmlAttribute description]
+     * @return string [description]
+     */
+    public function getLinkAsHtmlAttribute() : string
+    {
+        $output = '<a href="' . route('web.dir.show', [$this->slug]) . '" title="' . $this->title . '">';
+        $output .= $this->title;
+        $output .= '</a>';
+
+        return $output;
     }
 
     // Checkers
@@ -404,6 +417,15 @@ class Dir extends Model
     public function isPayment(int $id) : bool
     {
         return !$this->isGroup($id) || $this->isPending();
+    }
+
+    /**
+     * [isUpdateStatus description]
+     * @return bool [description]
+     */
+    public function isUpdateStatus() : bool
+    {
+        return in_array($this->status, [0, 1]);
     }
 
     // Loads

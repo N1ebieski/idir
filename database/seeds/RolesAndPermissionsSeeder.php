@@ -45,7 +45,20 @@ class RolesAndPermissionsSeeder extends Seeder
                 'index fields',
                 'create fields',
                 'edit fields',
-                'destroy fields'
+                'destroy fields',
+                'index dirs',
+                'create dirs',
+                'status dirs',
+                'edit dirs',
+                'destroy dirs'
+            ]);
+
+        $role = Role::whereName('user')
+            ->first()
+            ->givePermissionTo([
+                'create dirs',
+                'edit dirs',
+                'destroy dirs'
             ]);
     }
 }

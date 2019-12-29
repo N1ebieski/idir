@@ -9,7 +9,7 @@
         </option>
         @endforeach
     </select>
-    @includeWhen($errors->has('backlink'), 'icore::admin.partials.errors', ['name' => 'backlink'])
+    @includeWhen($errors->has('backlink'), 'icore::web.partials.errors', ['name' => 'backlink'])
 </div>
 <div class="form-group">
     <textarea class="form-control" id="backlink_code" rows="5" readonly>{{ optional(old('backlink_model', $backlinks->first()))->link_as_html }}</textarea>
@@ -18,5 +18,5 @@
     <label for="backlink_url">{{ trans('idir::dirs.backlink_url') }}:</label>
     <input type="text" name="backlink_url" id="backlink_url" placeholder="https://"
     value="{{ old('backlink_url', $dir->backlink->url ?? null) }}" class="form-control @isValid('backlink_url')">
-    @includeWhen($errors->has('backlink_url'), 'icore::admin.partials.errors', ['name' => 'backlink_url'])
+    @includeWhen($errors->has('backlink_url'), 'icore::web.partials.errors', ['name' => 'backlink_url'])
 </div>

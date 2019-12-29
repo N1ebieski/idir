@@ -10,7 +10,7 @@
 @endif
 @endif
 
-{{ trans('idir::dirs.delete_info', ['dir' => $dir->title_as_link]) }}
+{!! trans('idir::dirs.mail.delete.info', ['dir_link' => $dir->title_as_link]) !!}
 
 {{ $reason !== null ? trans('idir::dirs.delete_reason') . ': ' . $reason : null }}
 

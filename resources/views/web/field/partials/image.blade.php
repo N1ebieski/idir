@@ -20,5 +20,5 @@
         {{ $value === null || old("delete_img.{$field->id}") ? 'disabled' : null }}>
     </div>
     @endif
-    @includeWhen($errors->has("field.{$field->id}"), 'icore::admin.partials.errors', ['name' => "field.{$field->id}"])
+    @includeWhen($errors->has("field.{$field->id}"), 'icore::web.partials.errors', ['name' => "field.{$field->id}"])
 </div>

@@ -29,7 +29,7 @@ class PaymentPolicy
      */
     public function show(User $current_user, Payment $payment) : bool
     {
-        return $current_user->id === $payment->model->user_id;
+        return $current_user->id === $payment->morph->user_id;
     }
 
     /**
@@ -40,6 +40,6 @@ class PaymentPolicy
      */
     public function complete(User $current_user, Payment $payment) : bool
     {
-        return $current_user->id === $payment->model->user_id;
+        return $current_user->id === $payment->morph->user_id;
     }
 }
