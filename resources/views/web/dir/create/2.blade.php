@@ -26,7 +26,7 @@
                     <label for="title">{{ trans('idir::dirs.title') }}:</label>
                     <input type="text" value="{{ old('title', session('dir.title')) }}" name="title"
                     id="title" class="form-control @isValid('title')">
-                    @includeWhen($errors->has('title'), 'icore::admin.partials.errors', ['name' => 'title'])
+                    @includeWhen($errors->has('title'), 'icore::web.partials.errors', ['name' => 'title'])
                 </div>
                 <div class="form-group">
                     <label for="content_html{{ $trumbowyg }}">
@@ -36,13 +36,13 @@
                         <textarea class="form-control @isValid('content')" id="content_html{{ $trumbowyg }}"
                         name="content_html" rows="5">{{ old('content_html', session('dir.content_html')) }}</textarea>
                     </div>
-                    @includeWhen($errors->has('content'), 'icore::admin.partials.errors', ['name' => 'content'])
+                    @includeWhen($errors->has('content'), 'icore::web.partials.errors', ['name' => 'content'])
                 </div>
                 <div class="form-group">
                     <label for="notes">{{ trans('idir::dirs.notes') }}:</label>
                     <input type="text" value="{{ old('notes', session('dir.notes')) }}" name="notes"
                     id="notes" class="form-control @isValid('notes')">
-                    @includeWhen($errors->has('notes'), 'icore::admin.partials.errors', ['name' => 'notes'])
+                    @includeWhen($errors->has('notes'), 'icore::web.partials.errors', ['name' => 'notes'])
                 </div>
                 <div class="form-group">
                     <label for="tags">
@@ -53,14 +53,14 @@
                     <input name="tags" id="tags" class="form-control tagsinput @isValid('tags')"
                     value="{{ old('tags', session('dir.tags') !== null ? implode(',', session('dir.tags')) : null) }}"
                     placeholder="{{ trans('idir::dirs.tags_placeholder') }}" data-max="{{ $max_tags }}">
-                    @includeWhen($errors->has('tags'), 'icore::admin.partials.errors', ['name' => 'tags'])
+                    @includeWhen($errors->has('tags'), 'icore::web.partials.errors', ['name' => 'tags'])
                 </div>
                 @if ($group->url > 0)
                 <div class="form-group">
                     <label for="url">{{ trans('idir::dirs.url') }}:</label>
                     <input type="text" value="{{ old('url', session('dir.url')) }}" name="url"
                     id="url" class="form-control @isValid('url')" placeholder="https://">
-                    @includeWhen($errors->has('url'), 'icore::admin.partials.errors', ['name' => 'url'])
+                    @includeWhen($errors->has('url'), 'icore::web.partials.errors', ['name' => 'url'])
                 </div>
                 @endif
                 <div class="form-group">
@@ -123,7 +123,7 @@
 @endsection
 
 @push('script')
-@component('icore::admin.partials.jsvalidation')
+@component('icore::web.partials.jsvalidation')
 {!! str_replace('"content"', '"content_html"', JsValidator::formRequest(\N1ebieski\IDir\Http\Requests\Web\Dir\Store2Request::class, '#createForm')); !!}
 @endcomponent
 @endpush

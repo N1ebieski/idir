@@ -14,75 +14,111 @@ class File
      * [$file description]
      * @var UploadedFile
      */
-    protected $file;
+    protected UploadedFile $file;
 
     /**
      * [protected description]
      * @var string
      */
-    protected $path;
+    protected string $file_path;
 
     /**
      * [protected description]
      * @var string
      */
-    protected $temp_path = 'vendor/idir/temp';
+    protected string $file_temp_path;
+
+    /**
+     * [protected description]
+     * @var string|null
+     */
+    protected ?string $path;
+
+    /**
+     * [protected description]
+     * @var string
+     */
+    protected string $temp_path = 'vendor/idir/temp';
 
     /**
      * [private description]
      * @var Storage
      */
-    protected $storage;
+    protected Storage $storage;
 
     /**
      * [__construct description]
-     * @param Storage $storage [description]
+     * @param Storage      $storage [description]
+     * @param UploadedFile $file    [description]
+     * @param string|null  $path    [description]
      */
-    public function __construct(Storage $storage)
+    public function __construct(Storage $storage, UploadedFile $file, string $path = null)
     {
         $this->storage = $storage;
-    }
 
-    /**
-     * @param UploadedFile $file
-     *
-     * @return static
-     */
-    public function setFile(UploadedFile $file)
-    {
         $this->file = $file;
-
-        return $this;
-    }
-
-    /**
-     * @param string $path
-     *
-     * @return static
-     */
-    public function setPath(string $path)
-    {
         $this->path = $path;
 
+        $this->setFileTempPath($this->makeFileTempPath());
+        $this->setFilePath($this->makeFilePath());
+    }
+
+    /**
+     * @return string
+     */
+    public function getFilePath(): string
+    {
+        return $this->file_path;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFileTempPath(): string
+    {
+        return $this->file_temp_path;
+    }
+
+    /**
+     * [setFileTempPath description]
+     * @param  string $path [description]
+     * @return self         [description]
+     */
+    public function setFileTempPath(string $path) : self
+    {
+        $this->file_temp_path = $path;
+
         return $this;
     }
 
     /**
-     * [getFilePath description]
-     * @return string [description]
+     * [setFilePath description]
+     * @param  string $path [description]
+     * @return self         [description]
      */
-    public function getFilePath() : string
+    public function setFilePath(string $path) : self
     {
-        return $this->path . "/" . $this->file->getClientOriginalName();
+        $this->file_path = $path;
+
+        return $this;
     }
 
     /**
      * [getFileTempPath description]
      * @return string [description]
      */
-    public function getFileTempPath() : string
+    protected function makeFileTempPath() : string
     {
         return $this->temp_path . "/" . $this->file->getClientOriginalName();
+    }
+
+    /**
+     * [getFilePath description]
+     * @return string [description]
+     */
+    protected function makeFilePath() : string
+    {
+        return $this->path . "/" . $this->file->getClientOriginalName();
     }
 
     /**
@@ -115,7 +151,11 @@ class File
      */
     public function upload() : string
     {
-        return $this->storage->disk('public')->putFile($this->path, $this->file);
+        $this->setFilePath(
+            $this->storage->disk('public')->putFile($this->path, $this->file)
+        );
+
+        return $this->getFilePath();
     }
 
     /**
@@ -124,6 +164,14 @@ class File
      */
     public function uploadToTemp() : string
     {
-        return $this->storage->disk('public')->putFile($this->temp_path, $this->file);
+        $this->setFileTempPath(
+            $this->storage->disk('public')->putFile($this->temp_path, $this->file)
+        );
+
+        $this->setFilePath(
+            $this->path . "/" . basename($this->getFileTempPath())
+        );
+
+        return $this->getFileTempPath();
     }
 }

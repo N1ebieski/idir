@@ -123,6 +123,15 @@ class Field extends Model
         return $options;
     }
 
+    /**
+     * [getDecodeValueAttribute description]
+     * @return mixed [description]
+     */
+    public function getDecodeValueAttribute()
+    {
+        return json_decode($this->pivot->value);
+    }
+
     // Mutators
 
     /**

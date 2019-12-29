@@ -1,4 +1,5 @@
-<div id="row{{ $dir->id }}" class="row border-bottom py-3 position-relative transition">
+<div id="row{{ $dir->id }}" class="row border-bottom py-3 position-relative transition"
+data-id="{{ $dir->id }}">
     <div class="col my-auto d-flex justify-content-between">
         <ul class="list-unstyled mb-0 pb-0">
             <li>
@@ -7,7 +8,7 @@
                     {{ trans("idir::dirs.status.{$dir->status}") }}
                 </span>
             </li>
-            <li class="my-2">{{ $dir->short_content }}...</li>
+            <li class="my-2 text-break">{{ $dir->short_content }}...</li>
             <li>
                 <div class="d-flex">
                     <small class="mr-auto">{{ trans('idir::dirs.group') }}: {{ $dir->group->name }}</small>
@@ -29,6 +30,7 @@
         </ul>
         <div class="text-right ml-3">
             <div class="responsive-btn-group">
+                @can('edit dirs')
                 <div class="btn-group-vertical">
                     <a class="btn btn-primary align-bottom" href="{{ route('web.dir.edit_1', [$dir->id]) }}"
                     role="button" target="_blank">
@@ -36,6 +38,8 @@
                         <span class="d-none d-sm-inline">&nbsp;{{ trans('icore::default.edit') }}</span>
                     </a>
                 </div>
+                @endcan
+                @can('destroy dirs')
                 <button class="btn btn-danger" data-status="delete" data-toggle="confirmation"
                 data-route="{{ route('web.dir.destroy', [$dir->id]) }}" data-id="{{ $dir->id }}"
                 type="button" data-btn-ok-label=" {{ trans('icore::default.yes') }}" data-btn-ok-icon-class="fas fa-check"
@@ -45,6 +49,7 @@
                     <i class="far fa-trash-alt"></i>
                     <span class="d-none d-sm-inline">&nbsp;{{ trans('icore::default.delete') }}</span>
                 </button>
+                @endcan
             </div>
         </div>
     </div>

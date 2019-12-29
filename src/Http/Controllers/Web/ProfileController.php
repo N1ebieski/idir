@@ -24,7 +24,9 @@ class ProfileController
         return view('idir::web.profile.edit_dir', [
             'filter' => $filter->all(),
             'groups' => $group->makeRepo()->all(),
-            'dirs' => auth()->user()->makeRepo()->paginateDirsByFilter($filter->all()),
+            'dirs' => auth()->user()->makeRepo()->paginateDirsByFilter($filter->all() + [
+                'except' => $request->input('except')
+            ]),
             'paginate' => config('database.paginate')
         ]);
     }

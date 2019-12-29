@@ -76,6 +76,19 @@ class GroupRepo
     }
 
     /**
+     * [getWithRels description]
+     * @return Collection [description]
+     */
+    public function getWithRels() : Collection
+    {
+        return $this->group
+            ->with(['privileges', 'prices'])
+            ->withCount(['dirs', 'dirs_today'])
+            ->orderBy('position', 'asc')
+            ->get();
+    }
+
+    /**
      * [getPricesByType description]
      * @param  string     $type [description]
      * @return Collection       [description]

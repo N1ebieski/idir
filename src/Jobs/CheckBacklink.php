@@ -12,7 +12,7 @@ use N1ebieski\IDir\Repositories\DirBacklinkRepo;
 use N1ebieski\IDir\Repositories\DirRepo;
 use Illuminate\Support\Facades\Mail;
 use N1ebieski\IDir\Mails\DirBacklink\BacklinkNotFound;
-use Validator;
+use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
 use Exception;
 

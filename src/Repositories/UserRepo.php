@@ -36,6 +36,7 @@ class UserRepo extends BaseUserRepo
         return $this->user->dirs()
             ->with(['group', 'categories', 'tags'])
             ->withSumRating()
+            ->filterExcept($filter['except'])
             ->filterSearch($filter['search'])
             ->filterStatus($filter['status'])
             ->filterGroup($filter['group'])

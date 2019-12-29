@@ -11491,6 +11491,10 @@ li.page-item:not(.active) .page-link:not(:hover) {
   border-left-color: rgba(255, 255, 255, 0.2) !important;
 }
 
+.border-primary {
+  border-color: #007bff !important;
+}
+
 .dropdown-menu {
   background-color: #ced4da;
 }

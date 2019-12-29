@@ -33,7 +33,7 @@
                         </option>
                         @endforeach
                     </select>
-                    @includeWhen($errors->has('payment_transfer'), 'icore::admin.partials.errors', ['name' => 'payment_transfer'])
+                    @includeWhen($errors->has('payment_transfer'), 'icore::web.partials.errors', ['name' => 'payment_transfer'])
                 </div>
                 <p>
                     {!! trans('idir::dirs.payment.transfer_info', [
@@ -63,12 +63,12 @@
                         </option>
                         @endforeach
                     </select>
-                    @includeWhen($errors->has('payment_code_transfer'), 'icore::admin.partials.errors', ['name' => 'payment_code_transfer'])
+                    @includeWhen($errors->has('payment_code_transfer'), 'icore::web.partials.errors', ['name' => 'payment_code_transfer'])
                 </div>
                 <div class="form-group">
                     <label for="code_transfer">{{ trans('idir::dirs.code') }}:</label>
                     <input type="text" value="" name="code_transfer" id="code_transfer" class="form-control @isValid('code_transfer')">
-                    @includeWhen($errors->has('code_transfer'), 'icore::admin.partials.errors', ['name' => 'code_transfer'])
+                    @includeWhen($errors->has('code_transfer'), 'icore::web.partials.errors', ['name' => 'code_transfer'])
                 </div>
                 <p>
                     {!! trans('idir::dirs.payment.code_transfer_info', [
@@ -101,12 +101,12 @@
                         </option>
                         @endforeach
                     </select>
-                    @includeWhen($errors->has('payment_code_sms'), 'icore::admin.partials.errors', ['name' => 'payment_code_sms'])
+                    @includeWhen($errors->has('payment_code_sms'), 'icore::web.partials.errors', ['name' => 'payment_code_sms'])
                 </div>
                 <div class="form-group">
                     <label for="code_sms">{{ trans('idir::dirs.code') }}:</label>
                     <input type="text" value="" name="code_sms" id="code_sms" class="form-control @isValid('code_sms')">
-                    @includeWhen($errors->has('code_sms'), 'icore::admin.partials.errors', ['name' => 'code_sms'])
+                    @includeWhen($errors->has('code_sms'), 'icore::web.partials.errors', ['name' => 'code_sms'])
                 </div>
                 <p>
                     {!! trans('idir::dirs.payment.code_sms_info', [

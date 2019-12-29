@@ -65,12 +65,14 @@
                     @yield('search-toggler')
                 </li>
                 @endif
+                @can('create dirs')
                 <li class="nav-item mr-sm-0 mr-md-2 mb-2 mb-md-0">
                     <a class="nav-link text-primary btn btn-sm btn-outline-primary"
                     href="{{ route('web.dir.create_1') }}" role="button">
                         {{ trans('idir::dirs.page.create.index') }}
                     </a>
                 </li>
+                @endcan
                 <li class="nav-item dropdown @isUrl([route('web.profile.edit')])">
                     @auth
                     <a class="nav-link text-nowrap" href="#" role="button" id="navbarDropdownMenuProfile"

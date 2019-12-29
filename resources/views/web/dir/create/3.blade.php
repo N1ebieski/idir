@@ -18,7 +18,7 @@
     <h3 class="h5 border-bottom pb-2">{{ trans('idir::dirs.page.create.summary') }}</h3>
     <div class="row mb-4">
         <div class="col-md-8">
-            @include('idir::web.dir.partials.dir', ['value' => session('dir')])
+            @include('idir::web.dir.partials.summary', ['value' => session('dir')])
             <form method="post" action="{{ route('web.dir.store_3', [$group->id]) }}" id="createSummary">
                 @csrf
                 @includeWhen($group->backlink > 0 && $backlinks->isNotEmpty(), 'idir::web.dir.partials.backlink')

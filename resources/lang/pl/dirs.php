@@ -27,6 +27,9 @@ return [
             'status_0' => 'Wpis został edytowany i oczekuje na moderację.',
             'status_1' => 'Wpis został edytowany i jest aktywny.'
         ],
+        'update_status' => [
+            'status_1' => 'Wpis został aktywowany'
+        ],
         'update_renew' => [
             'status_0' => 'Dziękujemy. Czas ważności wpisu zostanie przedłużony w momencie akceptacji wpisu przed moderację.',
             'status_1' => 'Dziękujemy. Czas ważności wpisu został przedłużony.'
@@ -79,7 +82,16 @@ return [
     ],
     'privileged_to' => 'Data wygaśnięcia',
     'delete_reason' => 'Powód usunięcia',
-    'delete_info' => 'Niestety przykro nam, ale Twój wpis :dir został usunięty z naszego katalogu.',
+    'mail' => [
+        'delete' => [
+            'info' => 'Niestety przykro nam, ale Twój wpis :dir_link został usunięty z naszego katalogu.'
+        ],
+        'activation' => [
+            'info' => 'Gratulujemy, Twój wpis :dir_link został poprawnie dodany do naszego katalogu
+            i znajduje się na stronie: :dir_page. Zapraszamy do kolejnych wpisów!'
+        ]
+    ],
+    'link_dir_page' => 'Podlinkuj swój wpis by przyśpieszyć indeksację',
     'content' => 'Opis',
     'author' => 'Autor'
 ];
