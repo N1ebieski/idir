@@ -1,9 +1,12 @@
 <?php
 
-namespace N1ebieski\IDir\Http\Requests\Web\Payment\Cashbill;
+namespace N1ebieski\IDir\Http\Requests\Web\Payment\Cashbill\Dir;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * [CompleteRequest description]
+ */
 class CompleteRequest extends FormRequest
 {
     /**
@@ -14,6 +17,23 @@ class CompleteRequest extends FormRequest
     public function authorize()
     {
         return true;
+    }
+
+    /**
+     * Prepare the data for validation.
+     *
+     * @return void
+     */
+    public function prepareForValidation() : void
+    {
+        if ($this->has('userdata')) {
+            $userdata = json_decode($this->input('userdata'));
+
+            $this->merge([
+                'id' => $userdata->id,
+                'redirect' => $userdata->redirect ?? 'web.profile.edit_dir'
+            ]);
+        }
     }
 
     // /**
@@ -39,9 +59,11 @@ class CompleteRequest extends FormRequest
             'service' => 'bail|required|string|in:' . config("services.cashbill.transfer.service"),
             'orderid' => 'bail|required|string',
             'amount' => 'bail|required|numeric|between:0,9999.99',
-            'userdata' => 'bail|required|integer',
+            'userdata' => 'bail|required|json',
+            'id' => 'bail|required|integer',
             'status' => 'bail|required|in:ok,err',
-            'sign' => 'bail|required|string'
+            'sign' => 'bail|required|string',
+            'redirect' => 'bail|nullable|string|in:admin.dir.index,web.profile.edit_dir'
         ];
     }
 }
