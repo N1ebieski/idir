@@ -4,8 +4,9 @@ namespace N1ebieski\IDir\Http\Controllers\Web\Payment\Cashbill\Dir;
 
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
-use N1ebieski\IDir\Http\Requests\Web\Payment\Cashbill\CompleteRequest;
-use N1ebieski\IDir\Http\Requests\Web\Payment\Cashbill\VerifyRequest;
+use N1ebieski\IDir\Http\Requests\Web\Payment\Cashbill\Dir\CompleteRequest;
+use N1ebieski\IDir\Http\Requests\Web\Payment\Cashbill\Dir\VerifyRequest;
+use N1ebieski\IDir\Http\Requests\Web\Payment\Cashbill\Dir\ShowRequest;
 use N1ebieski\IDir\Utils\Cashbill\Transfer as Cashbill;
 use N1ebieski\IDir\Models\Payment\Dir\Payment;
 use N1ebieski\IDir\Events\Web\Payment\Dir\VerifyAttempt;
@@ -19,10 +20,11 @@ class PaymentController
     /**
      * [show description]
      * @param  Payment  $payment  [description]
+     * @param  ShowRequest $request [description]
      * @param  Cashbill $cashbill [description]
      * @return View               [description]
      */
-    public function show(Payment $payment, Cashbill $cashbill) : View
+    public function show(Payment $payment, ShowRequest $request, Cashbill $cashbill) : View
     {
         $payment->load(['morph', 'price_morph']);
 
@@ -36,7 +38,10 @@ class PaymentController
                         'limit' => $days !== null ? strtolower(trans('idir::groups.days'))
                             : strtolower(trans('idir::groups.unlimited'))
                     ]),
-                    'userdata' => $payment->id
+                    'userdata' => json_encode([
+                        'id' => $payment->id,
+                        'redirect' => $request->input('redirect')
+                    ])
                 ])->all()
         ]);
     }
@@ -53,7 +58,7 @@ class PaymentController
             abort(403, 'Invalid signature of payment.');
         }
 
-        return redirect()->route('web.profile.edit_dir')->with(
+        return redirect()->route($request->input('redirect'))->with(
                 $request->input('status') === 'ok' ? 'success' : 'danger',
                 $request->input('status') === 'ok' ? trans('idir::payments.success.complete')
                     : trans('idir::payments.error.complete')
@@ -69,8 +74,8 @@ class PaymentController
      */
     public function verify(Payment $payment, VerifyRequest $request, Cashbill $cashbill) : string
     {
-        // I can't' use the route binding, because cashbill returns id payment as $_GET variable
-        $payment = $payment->makeRepo()->firstPendingById($request->input('userdata')) ?? abort(404);
+        // I can't' use the route binding, because cashbill returns id payment as part of $_POST['userdata'] variable
+        ($payment = $payment->makeRepo()->firstPendingById($request->input('id'))) ?? abort(404);
 
         event(new VerifyAttempt($payment));
 

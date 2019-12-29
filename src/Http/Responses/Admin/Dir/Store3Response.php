@@ -66,7 +66,10 @@ class Store3Response
                 return $this->response->redirectToRoute('admin.dir.index')
                     ->with('success', trans('idir::dirs.success.store.status_1'));
             case 2:
-                return $this->response->redirectToRoute('web.payment.dir.show', [$this->dir->getPayment()->id]);
+                return $this->response->redirectToRoute('web.payment.dir.show', [
+                    $this->dir->getPayment()->id,
+                    'redirect' => 'admin.dir.index'
+                ]);
         }
     }
 }
