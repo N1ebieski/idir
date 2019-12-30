@@ -3,17 +3,19 @@
 namespace N1ebieski\IDir\Services;
 
 use N1ebieski\IDir\Models\Field\Field;
-use N1ebieski\ICore\Services\Serviceable;
 use Illuminate\Database\Eloquent\Model;
 use N1ebieski\IDir\Utils\File;
 use Illuminate\Contracts\Filesystem\Factory as Storage;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Contracts\Container\Container as App;
+use N1ebieski\ICore\Services\Interfaces\Creatable;
+use N1ebieski\ICore\Services\Interfaces\Updatable;
+use N1ebieski\ICore\Services\Interfaces\PositionUpdatable;
 
 /**
  * [FieldService description]
  */
-class FieldService implements Serviceable
+class FieldService implements Creatable, Updatable, PositionUpdatable
 {
     /**
      * Model
@@ -206,16 +208,6 @@ class FieldService implements Serviceable
     }
 
     /**
-     * [updateStatus description]
-     * @param  array $attributes [description]
-     * @return bool              [description]
-     */
-    public function updateStatus(array $attributes) : bool
-    {
-
-    }
-
-    /**
      * [updatePosition description]
      * @param  array $attributes [description]
      * @return bool              [description]
@@ -223,24 +215,5 @@ class FieldService implements Serviceable
     public function updatePosition(array $attributes) : bool
     {
         return $this->field->update(['position' => (int)$attributes['position']]);
-    }
-
-    /**
-     * [delete description]
-     * @return bool [description]
-     */
-    public function delete() : bool
-    {
-        //
-    }
-
-    /**
-     * [deleteGlobal description]
-     * @param  array $ids [description]
-     * @return int        [description]
-     */
-    public function deleteGlobal(array $ids) : int
-    {
-
     }
 }

@@ -11,11 +11,12 @@ use N1ebieski\IDir\Utils\Cashbill\Transfer as Cashbill;
 use N1ebieski\IDir\Models\Payment\Dir\Payment;
 use N1ebieski\IDir\Events\Web\Payment\Dir\VerifyAttempt;
 use N1ebieski\IDir\Events\Web\Payment\Dir\VerifySuccessful;
+use N1ebieski\IDir\Http\Controllers\Web\Payment\Cashbill\Dir\Polymorphic;
 
 /**
  * [PaymentController description]
  */
-class PaymentController
+class PaymentController implements Polymorphic
 {
     /**
      * [show description]

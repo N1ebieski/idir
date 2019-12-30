@@ -2,14 +2,14 @@
 
 namespace N1ebieski\IDir\Services;
 
-use N1ebieski\ICore\Services\Serviceable;
+use N1ebieski\ICore\Services\Interfaces\Creatable;
 use Illuminate\Database\Eloquent\Model;
 use N1ebieski\IDir\Models\DirBacklink;
 
 /**
  * [DirBacklinkService description]
  */
-class DirBacklinkService implements Serviceable
+class DirBacklinkService implements Creatable
 {
     /**
      * [private description]
@@ -57,50 +57,11 @@ class DirBacklinkService implements Serviceable
     }
 
     /**
-     * [update description]
-     * @param  array $attributes [description]
-     * @return bool              [description]
-     */
-    public function update(array $attributes) : bool
-    {
-        //
-    }
-
-    /**
-     * [updateStatus description]
-     * @param  array $attributes [description]
-     * @return bool              [description]
-     */
-    public function updateStatus(array $attributes) : bool
-    {
-        //
-    }
-
-    /**
      * [clear description]
      * @return int [description]
      */
     public function clear() : int
     {
         return $this->dirBacklink->where('dir_id', $this->dirBacklink->getDir()->id)->delete();
-    }
-
-    /**
-     * [delete description]
-     * @return bool [description]
-     */
-    public function delete() : bool
-    {
-        //
-    }
-
-    /**
-     * [deleteGlobal description]
-     * @param  array $ids [description]
-     * @return int        [description]
-     */
-    public function deleteGlobal(array $ids) : int
-    {
-        //
     }
 }

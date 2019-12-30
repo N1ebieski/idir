@@ -1,33 +1,14 @@
 <?php
 
-namespace N1ebieski\IDir\Filters;
+namespace N1ebieski\IDir\Filters\Traits;
 
-use N1ebieski\ICore\Filters\Filter as BaseFilter;
 use N1ebieski\IDir\Models\Group;
 
 /**
- * [abstract description]
+ * [trait description]
  */
-abstract class Filter extends BaseFilter
+trait HasGroup
 {
-    /**
-     * [filterVisible description]
-     * @param int|null $value [description]
-     */
-    public function filterVisible(int $value = null) : void
-    {
-        $this->parameters['visible'] = $value;
-    }
-
-    /**
-     * [filterType description]
-     * @param string|null $value [description]
-     */
-    public function filterType(string $value = null) : void
-    {
-        $this->parameters['type'] = $value;
-    }
-
     /**
      * [setGroup description]
      * @param Group $group [description]

@@ -116,7 +116,7 @@ class Group extends Model
      */
     public function dirs()
     {
-        return $this->hasMany('N1ebieski\IDir\Models\Dir')->whereIn('status', [0, 1]);
+        return $this->hasMany('N1ebieski\IDir\Models\Dir');
     }
 
     /**

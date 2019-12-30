@@ -2,18 +2,24 @@
 
 namespace N1ebieski\IDir\Services;
 
-use N1ebieski\ICore\Services\Serviceable;
 use Illuminate\Database\Eloquent\Model;
 use N1ebieski\IDir\Models\Payment\Dir\Payment;
 use N1ebieski\IDir\Models\Price;
 use N1ebieski\IDir\Models\Dir;
 use Illuminate\Contracts\Session\Session;
 use Carbon\Carbon;
+use N1ebieski\ICore\Services\Interfaces\Creatable;
+use N1ebieski\ICore\Services\Interfaces\Updatable;
+use N1ebieski\ICore\Services\Interfaces\StatusUpdatable;
+use N1ebieski\ICore\Services\Interfaces\FullUpdatable;
+use N1ebieski\ICore\Services\Interfaces\Deletable;
+use N1ebieski\ICore\Services\Interfaces\GlobalDeletable;
 
 /**
  * [DirService description]
  */
-class DirService implements Serviceable
+class DirService implements Creatable, Updatable, StatusUpdatable,
+FullUpdatable, Deletable, GlobalDeletable
 {
     /**
      * Model
