@@ -2,15 +2,16 @@
 
 namespace N1ebieski\IDir\Services;
 
-use N1ebieski\ICore\Services\Serviceable;
 use Illuminate\Database\Eloquent\Model;
 use N1ebieski\IDir\Models\Payment\Payment;
 use Carbon\Carbon;
+use N1ebieski\ICore\Services\Interfaces\Creatable;
+use N1ebieski\ICore\Services\Interfaces\StatusUpdatable;
 
 /**
  * [PaymentService description]
  */
-class PaymentService implements Serviceable
+class PaymentService implements Creatable, StatusUpdatable
 {
     /**
      * Model
@@ -57,15 +58,6 @@ class PaymentService implements Serviceable
     }
 
     /**
-     * [update description]
-     * @param  array $attributes [description]
-     * @return bool              [description]
-     */
-    public function update(array $attributes) : bool
-    {
-    }
-
-    /**
      * Update Status attribute the specified Payment in storage.
      *
      * @param  array $attributes [description]
@@ -87,23 +79,5 @@ class PaymentService implements Serviceable
         return $this->payment->update([
             'logs' => $this->payment->logs . "\r\n" . Carbon::now() . "\r\n" . $attributes['logs']
         ]);
-    }
-
-    /**
-     * [delete description]
-     * @return bool [description]
-     */
-    public function delete() : bool
-    {
-
-    }
-
-    /**
-     * [deleteGlobal description]
-     * @param  array $ids [description]
-     * @return int        [description]
-     */
-    public function deleteGlobal(array $ids) : int
-    {
     }
 }

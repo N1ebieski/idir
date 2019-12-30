@@ -66,7 +66,7 @@ class File
     /**
      * @return string
      */
-    public function getFilePath(): string
+    public function getFilePath() : string
     {
         return $this->file_path;
     }
@@ -74,7 +74,7 @@ class File
     /**
      * @return string
      */
-    public function getFileTempPath(): string
+    public function getFileTempPath() : string
     {
         return $this->file_temp_path;
     }

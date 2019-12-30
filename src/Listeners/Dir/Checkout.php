@@ -29,7 +29,7 @@ class Checkout
             $event->dir->loadCheckoutPayments();
 
             $event->dir->payments->each(function($payment) use ($event) {
-                if ($payment->price->group_id === $event->dir->group_id) {
+                if (optional($payment->price)->group_id === $event->dir->group_id) {
                     $event->dir->makeService()->updatePrivileged(['days' => $payment->price->days]);
                     $payment->makeRepo()->completed();
                 }

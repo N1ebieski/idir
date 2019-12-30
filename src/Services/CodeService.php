@@ -2,15 +2,13 @@
 
 namespace N1ebieski\IDir\Services;
 
-use N1ebieski\ICore\Services\Serviceable;
-use Illuminate\Database\Eloquent\Model;
 use N1ebieski\IDir\Models\Code;
 use Carbon\Carbon;
 
 /**
  * [CodeService description]
  */
-class CodeService implements Serviceable
+class CodeService
 {
     /**
      * [private description]
@@ -60,60 +58,11 @@ class CodeService implements Serviceable
     }
 
     /**
-     * [create description]
-     * @param  array $attributes [description]
-     * @return Model             [description]
-     */
-    public function create(array $attributes) : Model
-    {
-        //
-    }
-
-    /**
-     * [update description]
-     * @param  array $attributes [description]
-     * @return bool              [description]
-     */
-    public function update(array $attributes) : bool
-    {
-        //
-    }
-
-    /**
-     * [updateStatus description]
-     * @param  array $attributes [description]
-     * @return bool              [description]
-     */
-    public function updateStatus(array $attributes) : bool
-    {
-        //
-    }
-
-    /**
-     * [delete description]
-     * @return bool [description]
-     */
-    public function delete() : bool
-    {
-        //
-    }
-
-    /**
      * [clear description]
      * @return int [description]
      */
     public function clear() : int
     {
         return $this->code->where('price_id', $this->code->getPrice()->id)->delete();
-    }
-
-    /**
-     * [deleteGlobal description]
-     * @param  array $ids [description]
-     * @return int        [description]
-     */
-    public function deleteGlobal(array $ids) : int
-    {
-        //
     }
 }

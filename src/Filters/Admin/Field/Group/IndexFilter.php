@@ -2,19 +2,21 @@
 
 namespace N1ebieski\IDir\Filters\Admin\Field\Group;
 
-use N1ebieski\IDir\Filters\Filter;
+use N1ebieski\ICore\Filters\Filter;
 use N1ebieski\IDir\Models\Group;
+use N1ebieski\ICore\Filters\Traits\HasSearch;
+use N1ebieski\IDir\Filters\Traits\HasVisible;
+use N1ebieski\IDir\Filters\Traits\HasType;
+use N1ebieski\ICore\Filters\Traits\HasMorph;
+use N1ebieski\ICore\Filters\Traits\HasOrderBy;
+use N1ebieski\ICore\Filters\Traits\HasPaginate;
 
 /**
  * [IndexFilter description]
  */
 class IndexFilter extends Filter
 {
-    /**
-     * [protected description]
-     * @var array
-     */
-    protected $filters = ['search', 'visible', 'type', 'morph', 'orderby', 'paginate'];
+    use HasSearch, HasVisible, HasType, HasMorph, HasOrderBy, HasPaginate;
 
     /**
      * [setMorph description]

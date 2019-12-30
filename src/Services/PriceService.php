@@ -3,15 +3,16 @@
 namespace N1ebieski\IDir\Services;
 
 use Illuminate\Database\Eloquent\Collection;
-use N1ebieski\ICore\Services\Serviceable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection as Collect;
 use N1ebieski\IDir\Models\Price;
+use N1ebieski\ICore\Services\Interfaces\Creatable;
+use N1ebieski\ICore\Services\Interfaces\Updatable;
 
 /**
  * [PriceService description]
  */
-class PriceService implements Serviceable
+class PriceService implements Creatable, Updatable
 {
     /**
      * Model
@@ -138,25 +139,6 @@ class PriceService implements Serviceable
     }
 
     /**
-     * [updateStatus description]
-     * @param  array $attributes [description]
-     * @return bool              [description]
-     */
-    public function updateStatus(array $attributes) : bool
-    {
-
-    }
-
-    /**
-     * [delete description]
-     * @return bool [description]
-     */
-    public function delete() : bool
-    {
-
-    }
-
-    /**
      * [deleteNotExists description]
      * @param  array $ids [description]
      * @return int          [description]
@@ -165,14 +147,5 @@ class PriceService implements Serviceable
     {
         return $this->price->whereNotIn('id', array_filter($ids))
             ->where('group_id', $this->price->getGroup()->id)->delete();
-    }
-
-    /**
-     * [deleteGlobal description]
-     * @param  array $ids [description]
-     * @return int        [description]
-     */
-    public function deleteGlobal(array $ids) : int
-    {
     }
 }

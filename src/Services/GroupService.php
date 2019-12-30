@@ -3,14 +3,17 @@
 namespace N1ebieski\IDir\Services;
 
 use N1ebieski\IDir\Models\Group;
-use N1ebieski\ICore\Services\Serviceable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection as Collect;
+use N1ebieski\ICore\Services\Interfaces\Creatable;
+use N1ebieski\ICore\Services\Interfaces\Updatable;
+use N1ebieski\ICore\Services\Interfaces\PositionUpdatable;
+use N1ebieski\ICore\Services\Interfaces\Deletable;
 
 /**
  * [GroupService description]
  */
-class GroupService implements Serviceable
+class GroupService implements Creatable, Updatable, PositionUpdatable, Deletable
 {
     /**
      * Model
@@ -89,16 +92,6 @@ class GroupService implements Serviceable
     }
 
     /**
-     * [updateStatus description]
-     * @param  array $attributes [description]
-     * @return bool              [description]
-     */
-    public function updateStatus(array $attributes) : bool
-    {
-
-    }
-
-    /**
      * [updatePosition description]
      * @param  array $attributes [description]
      * @return bool              [description]
@@ -117,19 +110,12 @@ class GroupService implements Serviceable
         // W przypadku usuwania grupy trzeba zmienić alternative innych grup na Default 1
         $this->group->where('alt_id', $this->group->id)->update(['alt_id' => 1]);
 
+        $this->group->dirs()->update(['group_id' => 1]);
+        $this->group->dirs()->pending()->update(['status' => 0]);
+
         // Manually remove relations, because the field model is polymorfic and foreign key doesn't work
         $this->group->fields()->detach();
 
         return $this->group->delete();
-    }
-
-    /**
-     * [deleteGlobal description]
-     * @param  array $ids [description]
-     * @return int        [description]
-     */
-    public function deleteGlobal(array $ids) : int
-    {
-
     }
 }
