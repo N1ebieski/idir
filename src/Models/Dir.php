@@ -321,6 +321,15 @@ class Dir extends Model
 
     // Accessors
 
+    // /**
+    //  * [getHostAttribute description]
+    //  * @return string        [description]
+    //  */
+    // public function getUrlHostAttribute() : string
+    // {
+    //     return parse_url($this->url, PHP_URL_HOST);
+    // }
+
     /**
      * [getPrivilegedToDiffAttribute description]
      * @return string [description]

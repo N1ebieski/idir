@@ -1,19 +1,18 @@
 <?php
 
-namespace N1ebieski\IDir\Http\Requests\Web\Dir;
+namespace N1ebieski\IDir\Http\Requests\Admin\Dir;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
-use Mews\Purifier\Facades\Purifier;
-use N1ebieski\ICore\Models\BanValue;
-use N1ebieski\IDir\Models\Group;
-use Illuminate\Database\Eloquent\Collection;
 use N1ebieski\IDir\Http\Requests\Traits\FieldsExtended;
+use N1ebieski\ICore\Models\BanValue;
+use Illuminate\Database\Eloquent\Collection;
+use Mews\Purifier\Facades\Purifier;
+use Illuminate\Validation\Rule;
 
 /**
- * [StoreFormRequest description]
+ * [UpdateFull2Request description]
  */
-class Store2Request extends FormRequest
+class UpdateFull2Request extends FormRequest
 {
     use FieldsExtended;
 
@@ -21,13 +20,7 @@ class Store2Request extends FormRequest
      * [private description]
      * @var string
      */
-    protected $bans_words;
-
-    /**
-     * [private description]
-     * @var string
-     */
-    protected $bans_urls;
+    protected $bans;
 
     /**
      * [__construct description]
@@ -37,9 +30,7 @@ class Store2Request extends FormRequest
     {
         parent::__construct();
 
-        $this->bans_words = $banValue->makeCache()->rememberAllWordsAsString();
-
-        $this->bans_urls = $banValue->makeCache()->rememberAllUrlsAsString();
+        $this->bans = $banValue->makeCache()->rememberAllWordsAsString();
     }
 
     /**
@@ -58,7 +49,7 @@ class Store2Request extends FormRequest
      */
     public function authorize()
     {
-        return $this->group->isAvailable() && $this->group->isPublic();
+        return $this->group->isAvailable();
     }
 
     /**
@@ -181,7 +172,7 @@ class Store2Request extends FormRequest
                 'required',
                 'string',
                 'between:' . config('idir.dir.min_content') . ',' . config('idir.dir.max_content'),
-                !empty($this->bans_words) ? 'not_regex:/(.*)(\s|^)('.$this->bans_words.')(\s|\.|,|\?|$)(.*)/i' : null
+                !empty($this->bans) ? 'not_regex:/(.*)(\s|^)('.$this->bans.')(\s|\.|,|\?|$)(.*)/i' : null
             ],
             'notes' => 'bail|nullable|string|between:3,255',
             'url' => [
@@ -189,8 +180,7 @@ class Store2Request extends FormRequest
                 ($this->group->url === 2) ? 'required' : 'nullable',
                 'string',
                 'regex:/^(https|http):\/\/([\da-z\.-]+)(\.[a-z]{2,6})\/?$/',
-                !empty($this->bans_urls) ? 'not_regex:/('.$this->bans_urls.')/i' : null,
-                'unique:dirs,url'
+                'unique:dirs,url,' . $this->dir->id
             ]
         ], $this->prepareFieldsRules());
     }
@@ -215,8 +205,7 @@ class Store2Request extends FormRequest
     public function messages()
     {
         return [
-            'content.not_regex' => trans('icore::validation.not_regex_contains', ['words' => str_replace('|', ', ', $this->bans)]),
-            'url.not_regex' => 'This address url is banned.'
+            'content.not_regex' => trans('icore::validation.not_regex_contains', ['words' => str_replace('|', ', ', $this->bans)])
         ];
     }
 }

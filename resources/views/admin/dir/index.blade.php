@@ -73,4 +73,11 @@
 @endslot
 @endcomponent
 
+@component('icore::admin.partials.modal')
+@slot('modal_id', 'createBanDirModal')
+@slot('modal_title')
+<i class="fas fa-user-slash"></i>
+<span> {{ trans('icore::bans.page.create') }}</span>
+@endslot
+@endcomponent
 @endsection

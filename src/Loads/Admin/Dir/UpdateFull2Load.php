@@ -1,13 +1,13 @@
 <?php
 
-namespace N1ebieski\IDir\Loads\Web\Dir;
+namespace N1ebieski\IDir\Loads\Admin\Dir;
 
 use Illuminate\Http\Request;
 
 /**
- * [Update3Load description]
+ * [UpdateFull2Load description]
  */
-class Update3Load
+class UpdateFull2Load
 {
     /**
      * [__construct description]
@@ -17,9 +17,6 @@ class Update3Load
     {
         $request->route('group')
             ->loadCount(['dirs', 'dirs_today'])
-            ->load('privileges')
-            ->loadPublicFields();
-
-        $request->route('dir')->load(['backlink', 'fields']);
+            ->load(['privileges', 'fields']);
     }
 }

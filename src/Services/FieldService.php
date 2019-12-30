@@ -176,7 +176,10 @@ class FieldService implements Serviceable
     public function create(array $attributes) : Model
     {
         $this->field->fill($attributes);
-        $this->field->options = array_merge($attributes[$attributes['type']], ['required' => $attributes['required']]);
+        $this->field->options = array_merge(
+            $attributes[$attributes['type']],
+            ['required' => $attributes['required']]
+        );
         $this->field->save();
 
         $this->field->morphs()->attach($attributes['morphs']);
@@ -192,7 +195,10 @@ class FieldService implements Serviceable
     public function update(array $attributes) : bool
     {
         $this->field->fill($attributes);
-        $this->field->options = array_merge($attributes[$attributes['type']], ['required' => $attributes['required']]);
+        $this->field->options = array_merge(
+            $attributes[$attributes['type']],
+            ['required' => $attributes['required']]
+        );
 
         $this->field->morphs()->sync($attributes['morphs']);
 

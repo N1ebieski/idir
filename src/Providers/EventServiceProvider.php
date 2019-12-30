@@ -28,6 +28,11 @@ class EventServiceProvider extends ServiceProvider
             \N1ebieski\IDir\Listeners\Dir\Checkout::class,
             \N1ebieski\IDir\Listeners\Dir\SendActivationNotification::class
         ],
+        \N1ebieski\IDir\Events\Admin\Dir\UpdateFull::class => [
+            // \N1ebieski\IDir\Listeners\ClearDirSession::class
+            \N1ebieski\IDir\Listeners\Dir\Checkout::class,
+            \N1ebieski\IDir\Listeners\Dir\SendActivationNotification::class
+        ],
         \N1ebieski\IDir\Events\Web\Dir\Destroy::class => [
             \N1ebieski\IDir\Listeners\Dir\SendDeleteNotification::class
         ],

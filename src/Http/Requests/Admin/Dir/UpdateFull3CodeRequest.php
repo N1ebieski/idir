@@ -1,11 +1,14 @@
 <?php
 
-namespace N1ebieski\IDir\Http\Requests\Web\Dir;
+namespace N1ebieski\IDir\Http\Requests\Admin\Dir;
 
 use Illuminate\Foundation\Http\FormRequest;
 use N1ebieski\IDir\Http\Requests\Traits\CodePayable;
 
-class Update3CodeRequest extends FormRequest
+/**
+ * [UpdateFull3CodeRequest description]
+ */
+class UpdateFull3CodeRequest extends FormRequest
 {
     use CodePayable;
 
@@ -16,10 +19,7 @@ class Update3CodeRequest extends FormRequest
      */
     public function authorize()
     {
-        $check = $this->group->isPublic();
-
-        return $this->dir->isGroup($this->group->id) ?
-            $check : $check && $this->group->isAvailable();
+        return $this->group->isAvailable();
     }
 
     /**
@@ -31,7 +31,7 @@ class Update3CodeRequest extends FormRequest
     {
         $url = $this->redirector->getUrlGenerator();
 
-        return $url->route('web.dir.edit_3', [$this->dir->id, $this->group->id]);
+        return $url->route('admin.dir.edit_full_3', [$this->dir->id, $this->group->id]);
     }
 
     /**
