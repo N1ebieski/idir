@@ -10,9 +10,15 @@ use N1ebieski\IDir\Http\Requests\Admin\Dir\Store3Request;
 use N1ebieski\IDir\Http\Requests\Admin\Dir\UpdateRequest;
 use N1ebieski\IDir\Http\Requests\Admin\Dir\Create2Request;
 use N1ebieski\IDir\Http\Requests\Admin\Dir\Create3Request;
+use N1ebieski\IDir\Http\Requests\Admin\Dir\EditFull2Request;
+use N1ebieski\IDir\Http\Requests\Admin\Dir\EditFull3Request;
 use N1ebieski\IDir\Http\Requests\Admin\Dir\Store3CodeRequest;
+use N1ebieski\IDir\Http\Requests\Admin\Dir\UpdateFull2Request;
+use N1ebieski\IDir\Http\Requests\Admin\Dir\UpdateFull3Request;
+use N1ebieski\IDir\Http\Requests\Admin\Dir\UpdateFull3CodeRequest;
 
 use N1ebieski\IDir\Http\Responses\Admin\Dir\Store3Response;
+use N1ebieski\IDir\Http\Responses\Admin\Dir\UpdateFull3Response;
 
 use N1ebieski\IDir\Loads\Admin\Dir\EditLoad;
 use N1ebieski\IDir\Loads\Admin\Dir\Store2Load;
@@ -21,6 +27,10 @@ use N1ebieski\IDir\Loads\Admin\Dir\UpdateLoad;
 use N1ebieski\IDir\Loads\Admin\Dir\Create2Load;
 use N1ebieski\IDir\Loads\Admin\Dir\Create3Load;
 use N1ebieski\IDir\Loads\Admin\Dir\EditFull1Load;
+use N1ebieski\IDir\Loads\Admin\Dir\EditFull2Load;
+use N1ebieski\IDir\Loads\Admin\Dir\EditFull3Load;
+use N1ebieski\IDir\Loads\Admin\Dir\UpdateFull2Load;
+use N1ebieski\IDir\Loads\Admin\Dir\UpdateFull3Load;
 use N1ebieski\IDir\Loads\Admin\Dir\UpdateStatusLoad;
 
 use N1ebieski\IDir\Models\Dir;
@@ -38,6 +48,7 @@ use N1ebieski\IDir\Events\Admin\Dir\Destroy as DirDestroy;
 use N1ebieski\IDir\Events\Admin\Dir\UpdateStatus as DirUpdateStatus;
 use N1ebieski\IDir\Events\Admin\Payment\Dir\Store as PaymentStore;
 use N1ebieski\IDir\Events\Admin\Dir\Store as DirStore;
+use N1ebieski\IDir\Events\Admin\Dir\UpdateFull as DirUpdateFull;
 
 /**
  * [DirController description]
@@ -204,6 +215,115 @@ class DirController
             'dir' => $dir,
             'groups' => $group->makeRepo()->getWithRels()
         ]);
+    }
+
+    /**
+     * [edit2 description]
+     * @param  Dir              $dir     [description]
+     * @param  Group            $group   [description]
+     * @param  EditFull2Load    $load    [description]
+     * @param  EditFull2Request $request [description]
+     * @return View                      [description]
+     */
+    public function editFull2(Dir $dir, Group $group, EditFull2Load $load, EditFull2Request $request) : View
+    {
+        return view('idir::admin.dir.edit_full.2', [
+            'dir' => $dir,
+            'group' => $group,
+            'max_tags' => config('idir.dir.max_tags'),
+            'trumbowyg' => $group->privileges->contains('name', 'additional options for editing content')
+                ? '_dir_trumbowyg' : null
+        ]);
+    }
+
+    /**
+     * [updateFull2 description]
+     * @param  Dir              $dir     [description]
+     * @param  Group            $group   [description]
+     * @param  UpdateFull2Load      $load    [description]
+     * @param  UpdateFull2Request   $request [description]
+     * @return RedirectResponse          [description]
+     */
+    public function updateFull2(Dir $dir, Group $group, UpdateFull2Load $load, UpdateFull2Request $request) : RedirectResponse
+    {
+        $dir->makeService()->createOrUpdateSession($request->validated());
+
+        return redirect()->route('admin.dir.edit_full_3', [$dir->id, $group->id]);
+    }
+
+    /**
+     * [editFull3 description]
+     * @param  Group              $group    [description]
+     * @param  Dir                $dir      [description]
+     * @param  Category           $category [description]
+     * @param  Link               $link     [description]
+     * @param  EditFull3Load      $load     [description]
+     * @param  EditFull3Request   $request  [description]
+     * @return View                         [description]
+     */
+    public function editFull3(
+        Dir $dir,
+        Group $group,
+        Category $category,
+        Link $link,
+        EditFull3Load $load,
+        EditFull3Request $request
+    ) : View
+    {
+        $dir->makeService()->createOrUpdateSession($request->validated());
+
+        $categories = $category->makeRepo()->getByIds(
+            $request->session()->get("dirId.{$dir->id}.categories")
+        );
+
+        if ($group->backlink > 0) {
+            $backlinks = $link->makeRepo()->getAvailableBacklinksByCats(array_merge(
+                $categories->pluck('ancestors')->flatten()->pluck('id')->toArray(),
+                $categories->pluck('id')->toArray()
+            ));
+        }
+
+        return view('idir::admin.dir.edit_full.3', [
+            'dir' => $dir,
+            'group' => $group,
+            'categories' => $categories,
+            'backlinks' => $backlinks ?? null,
+            'driver' => [
+                'transfer' => config('idir.payment.transfer.driver'),
+                'code_sms' => config('idir.payment.code_sms.driver'),
+                'code_transfer' => config('idir.payment.code_transfer.driver'),
+            ]
+        ]);
+    }
+
+    /**
+     * [updateFull3 description]
+     * @param  Dir                     $dir            [description]
+     * @param  Group                   $group          [description]
+     * @param  UpdateFull3Load         $load           [description]
+     * @param  UpdateFull3Request      $request        [description]
+     * @param  UpdateFull3CodeRequest  $requestPayment [description]
+     * @param  UpdateFull3Response     $response       [description]
+     * @return RedirectResponse                        [description]
+     */
+    public function updateFull3(
+        Dir $dir,
+        Group $group,
+        UpdateFull3Load $load,
+        UpdateFull3Request $request,
+        UpdateFull3CodeRequest $requestPayment,
+        UpdateFull3Response $response
+    ) : RedirectResponse
+    {
+        $dir->setGroup($group)->makeService()->updateFull($request->validated());
+
+        if (($payment = $dir->getPayment()) instanceof Payment) {
+            event(new PaymentStore($payment));
+        }
+
+        event(new DirUpdateFull($dir));
+
+        return $response->setDir($dir)->makeResponse();
     }
 
     /**

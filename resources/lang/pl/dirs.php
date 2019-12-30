@@ -20,11 +20,11 @@ return [
     ],
     'success' => [
         'store' => [
-            'status_0' => 'Wpis został dodany i oczekuje na moderację.',
+            'status_0' => 'Wpis został dodany i oczekuje na akceptację przez moderatora.',
             'status_1' => 'Wpis został dodany i jest aktywny.'
         ],
         'update' => [
-            'status_0' => 'Wpis został edytowany i oczekuje na moderację.',
+            'status_0' => 'Wpis został edytowany i oczekuje na akceptację przez moderatora.',
             'status_1' => 'Wpis został edytowany i jest aktywny.'
         ],
         'update_status' => [

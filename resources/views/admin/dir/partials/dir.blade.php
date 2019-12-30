@@ -51,17 +51,27 @@ data-id="{{ $dir->id }}">
                 </button>
                 @endif
                 @endcan
-                @can('destroy dirs')
-                <button class="btn btn-danger" data-status="delete" data-toggle="dir-confirmation"
-                data-route="{{ route('admin.dir.destroy', [$dir->id]) }}" data-id="{{ $dir->id }}"
-                type="button" data-btn-ok-label=" {{ trans('icore::default.yes') }}" data-btn-ok-icon-class="fas fa-check"
-                data-btn-ok-class="btn-primary btn-popover destroyDir" data-btn-cancel-label=" {{ trans('icore::default.cancel') }}"
-                data-btn-cancel-class="btn-secondary btn-popover" data-btn-cancel-icon-class="fas fa-ban"
-                data-title="{{ trans('icore::default.confirm') }}">
-                    <i class="far fa-trash-alt"></i>
-                    <span class="d-none d-sm-inline">&nbsp;{{ trans('icore::default.delete') }}</span>
-                </button>
-                @endcan
+                <div class="btn-group-vertical">
+                    @can('destroy dirs')
+                    <button class="btn btn-danger" data-status="delete" data-toggle="dir-confirmation"
+                    data-route="{{ route('admin.dir.destroy', [$dir->id]) }}" data-id="{{ $dir->id }}"
+                    type="button" data-btn-ok-label=" {{ trans('icore::default.yes') }}" data-btn-ok-icon-class="fas fa-check"
+                    data-btn-ok-class="btn-primary btn-popover destroyDir" data-btn-cancel-label=" {{ trans('icore::default.cancel') }}"
+                    data-btn-cancel-class="btn-secondary btn-popover" data-btn-cancel-icon-class="fas fa-ban"
+                    data-title="{{ trans('icore::default.confirm') }}">
+                        <i class="far fa-trash-alt"></i>
+                        <span class="d-none d-sm-inline">&nbsp;{{ trans('icore::default.delete') }}</span>
+                    </button>
+                    @endcan
+                    @can('create bans')
+                    <button type="button" class="btn btn-dark create"
+                    data-route="{{ route('admin.banmodel.dir.create', [$dir->id]) }}"
+                    data-toggle="modal" data-target="#createBanDirModal">
+                        <i class="fas fa-user-slash"></i>
+                        <span class="d-none d-sm-inline"> {{ trans('icore::default.ban') }}</span>
+                    </button>
+                    @endcan
+                </div>
             </div>
         </div>
     </div>

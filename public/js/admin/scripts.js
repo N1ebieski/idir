@@ -21,7 +21,7 @@ jQuery(window).on('readyAndAjax', function() {
     }
 });
 
-jQuery(document).on('click', 'button.storeBanUser', function(e) {
+jQuery(document).on('click', 'button.storeBanModel', function(e) {
     e.preventDefault();
 
     let $form = $(this).closest('form');

@@ -25,10 +25,12 @@
             </a>
         </li>
         @endcan
-        @can('index dirs')
-        <li class="nav-item @isUrlContains(['*/dirs', '*/dirs/*'])">
-            <div class="nav-link" onclick="window.location.href='{{ route('admin.dir.index') }}'"
-            style="cursor: pointer;">
+        @canany(['index dirs', 'index bans'])
+        <li class="nav-item dropdown @isUrlContains(['*/dirs', '*/dirs/*'])
+        @isUrl(route('admin.banvalue.index', ['type' => 'url']))">
+            <div class="nav-link dropdown-toggle"
+            id="dirDropdown" role="button" style="cursor: pointer;"
+            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <i class="far fa-fw fa-folder-open"></i>
                 <span> {{ trans('idir::dirs.page.index') }}</span>
                 <span>
@@ -38,8 +40,29 @@
                     </a>
                 </span>
             </div>
+            <div class="dropdown-menu" aria-labelledby="dirDropdown">
+                @can('index dirs')
+                <div class="dropdown-item @isUrlContains(['*/dirs', '*/dirs/*'])"
+                onclick="window.location.href='{{ route('admin.dir.index') }}'"
+                style="cursor: pointer;">
+                    {{ trans('idir::dirs.page.index') }}
+                    <span>
+                        <a href="{{ route('admin.dir.index', ['filter[status]' => 0]) }}"
+                        class="badge badge-warning">
+                            {{ $dirs_inactive_count }}
+                        </a>
+                    </span>
+                </div>
+                @endcan
+                @can('index bans')
+                <a class="dropdown-item @isUrl(route('admin.banvalue.index', ['type' => 'url']))"
+                href="{{ route('admin.banvalue.index', ['type' => 'url']) }}">
+                    {{ trans('idir::bans.value.url.page.index') }}
+                </a>
+                @endcan
+            </div>
         </li>
-        @endcan
+        @endcanany
         @can('index comments')
         <li class="nav-item dropdown @isUrl([
             route('admin.comment.post.index'),

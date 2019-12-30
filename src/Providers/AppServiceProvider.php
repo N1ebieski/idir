@@ -26,6 +26,29 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $this->app->extend('translator', function() {
+            return new \N1ebieski\IDir\Translation\Translator(
+                $this->app['translation.loader'],
+                $this->app['config']['app.locale']
+            );
+        });
+
+        $this->app->bind(\N1ebieski\ICore\Cache\BanValueCache::class, function($app, array $with) {
+            return $this->app->make(\N1ebieski\IDir\Cache\BanValueCache::class, $with);
+        });
+
+        $this->app->bind(\N1ebieski\ICore\Http\Requests\Admin\BanValue\IndexRequest::class, function($app, array $with) {
+            return $this->app->make(\N1ebieski\IDir\Http\Requests\Admin\BanValue\IndexRequest::class, $with);
+        });
+
+        $this->app->bind(\N1ebieski\ICore\Http\Requests\Admin\BanValue\CreateRequest::class, function($app, array $with) {
+            return $this->app->make(\N1ebieski\IDir\Http\Requests\Admin\BanValue\CreateRequest::class, $with);
+        });
+
+        $this->app->bind(\N1ebieski\ICore\Http\Requests\Admin\BanValue\StoreRequest::class, function($app, array $with) {
+            return $this->app->make(\N1ebieski\IDir\Http\Requests\Admin\BanValue\StoreRequest::class, $with);
+        });
+
         $this->app->bind(\N1ebieski\ICore\Http\Requests\Admin\Role\UpdateRequest::class, function($app, array $with) {
             return $this->app->make(\N1ebieski\IDir\Http\Requests\Admin\Role\UpdateRequest::class, $with);
         });
