@@ -10,12 +10,12 @@ use N1ebieski\IDir\Http\Requests\Admin\Dir\Store3Request;
 use N1ebieski\IDir\Http\Requests\Admin\Dir\UpdateRequest;
 use N1ebieski\IDir\Http\Requests\Admin\Dir\Create2Request;
 use N1ebieski\IDir\Http\Requests\Admin\Dir\Create3Request;
-use N1ebieski\IDir\Http\Requests\Admin\Dir\EditFull2Request; 
+use N1ebieski\IDir\Http\Requests\Admin\Dir\EditFull2Request;
 use N1ebieski\IDir\Http\Requests\Admin\Dir\EditFull3Request;
 use N1ebieski\IDir\Http\Requests\Admin\Dir\Store3CodeRequest;
 use N1ebieski\IDir\Http\Requests\Admin\Dir\UpdateFull2Request;
 use N1ebieski\IDir\Http\Requests\Admin\Dir\UpdateFull3Request;
-use N1ebieski\IDir\Http\Requests\Admin\Dir\UpdateFull3CodeRequest;
+use N1ebieski\IDir\Http\Requests\Admin\Dir\UpdateFull3CodeRequest; 
 
 use N1ebieski\IDir\Http\Responses\Admin\Dir\Store3Response;
 use N1ebieski\IDir\Http\Responses\Admin\Dir\UpdateFull3Response;
@@ -339,8 +339,9 @@ class DirController
             'view' => view('idir::admin.dir.edit', [
                 'dir' => $dir,
                 'max_tags' => config('idir.dir.max_tags'),
-                'trumbowyg' => $dir->group->privileges->contains('name', 'additional options for editing content')
-                    ? '_dir_trumbowyg' : null
+                'trumbowyg' => $dir->group->privileges
+                    ->contains('name', 'additional options for editing content') 
+                        ? '_dir_trumbowyg' : null
             ])->render(),
         ]);
     }
