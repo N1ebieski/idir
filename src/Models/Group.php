@@ -183,6 +183,19 @@ class Group extends Model
     // Checkers
 
     /**
+     * Undocumented function
+     *
+     * @param string $output
+     * @return boolean
+     */
+    public function hasEditorPrivilege() : bool
+    {
+        return $this->getRelation('privileges')
+            ->contains('name', 'additional options for editing content') ? 
+            true : false;
+    }
+
+    /**
      * [isAvailable description]
      * @return bool [description]
      */
@@ -240,7 +253,7 @@ class Group extends Model
      * [makeRepo description]
      * @return GroupRepo [description]
      */
-    public function makeRepo() : GroupRepo
+    public function makeRepo()
     {
         return app()->make(GroupRepo::class, ['group' => $this]);
     }
@@ -249,7 +262,7 @@ class Group extends Model
      * [makeService description]
      * @return GroupService [description]
      */
-    public function makeService() : GroupService
+    public function makeService()
     {
         return app()->make(GroupService::class, ['group' => $this]);
     }

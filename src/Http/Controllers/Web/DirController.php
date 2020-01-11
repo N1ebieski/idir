@@ -69,12 +69,7 @@ class DirController
      */
     public function create2(Group $group, Create2Load $load, Create2Request $request) : View
     {
-        return view('idir::web.dir.create.2', [
-            'group' => $group,
-            'max_tags' => config('idir.dir.max_tags'),
-            'trumbowyg' => $group->privileges->contains('name', 'additional options for editing content')
-                ? '_dir_trumbowyg' : null
-        ]);
+        return view('idir::web.dir.create.2', compact('group'));
     }
 
     /**
@@ -117,23 +112,13 @@ class DirController
             $request->session()->get('dir.categories')
         );
 
-        if ($group->backlink > 0) {
-            $backlinks = $link->makeRepo()->getAvailableBacklinksByCats(array_merge(
+        $backlinks = $group->backlink > 0 ? 
+            $link->makeRepo()->getAvailableBacklinksByCats(array_merge(
                 $categories->pluck('ancestors')->flatten()->pluck('id')->toArray(),
                 $categories->pluck('id')->toArray()
-            ));
-        }
+            )) : null;
 
-        return view('idir::web.dir.create.3', [
-            'group' => $group,
-            'categories' => $categories,
-            'backlinks' => $backlinks ?? null,
-            'driver' => [
-                'transfer' => config('idir.payment.transfer.driver'),
-                'code_sms' => config('idir.payment.code_sms.driver'),
-                'code_transfer' => config('idir.payment.code_transfer.driver'),
-            ]
-        ]);
+        return view('idir::web.dir.create.3', compact('group', 'categories', 'backlinks'));
     }
 
     /**
@@ -193,13 +178,7 @@ class DirController
      */
     public function edit2(Dir $dir, Group $group, Edit2Load $load, Edit2Request $request) : View
     {
-        return view('idir::web.dir.edit.2', [
-            'dir' => $dir,
-            'group' => $group,
-            'max_tags' => config('idir.dir.max_tags'),
-            'trumbowyg' => $group->privileges->contains('name', 'additional options for editing content')
-                ? '_dir_trumbowyg' : null
-        ]);
+        return view('idir::web.dir.edit.2', compact('dir', 'group'));
     }
 
     /**
@@ -242,24 +221,14 @@ class DirController
             $request->session()->get("dirId.{$dir->id}.categories")
         );
 
-        if ($group->backlink > 0) {
-            $backlinks = $link->makeRepo()->getAvailableBacklinksByCats(array_merge(
+        $backlinks = $group->backlink > 0 ? 
+            $link->makeRepo()->getAvailableBacklinksByCats(array_merge(
                 $categories->pluck('ancestors')->flatten()->pluck('id')->toArray(),
                 $categories->pluck('id')->toArray()
-            ));
-        }
+            )) : null;
 
-        return view('idir::web.dir.edit.3', [
-            'dir' => $dir,
-            'group' => $group,
-            'categories' => $categories,
-            'backlinks' => $backlinks ?? null,
-            'driver' => [
-                'transfer' => config('idir.payment.transfer.driver'),
-                'code_sms' => config('idir.payment.code_sms.driver'),
-                'code_transfer' => config('idir.payment.code_transfer.driver'),
-            ]
-        ]);
+        return view('idir::web.dir.edit.3', 
+            compact('dir', 'group', 'categories', 'backlinks'));
     }
 
     /**
@@ -301,14 +270,7 @@ class DirController
      */
     public function editRenew(Dir $dir, EditRenewLoad $load, EditRenewRequest $request) : View
     {
-        return view('idir::web.dir.edit_renew', [
-            'dir' => $dir,
-            'driver' => [
-                'transfer' => config('idir.payment.transfer.driver'),
-                'code_sms' => config('idir.payment.code_sms.driver'),
-                'code_transfer' => config('idir.payment.code_transfer.driver'),
-            ]
-        ]);
+        return view('idir::web.dir.edit_renew', compact('dir'));
     }
 
     /**

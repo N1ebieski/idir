@@ -26,15 +26,18 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $this->app->singleton('crypt.thumbnail', function() {
+            return new \Illuminate\Encryption\Encrypter(
+                $this->app['config']['idir.dir.thumbnail.key'],
+                $this->app['config']['app.cipher']
+            );
+        });
+
         $this->app->extend('translator', function() {
             return new \N1ebieski\IDir\Translation\Translator(
                 $this->app['translation.loader'],
                 $this->app['config']['app.locale']
             );
-        });
-
-        $this->app->bind(\N1ebieski\ICore\Cache\BanValueCache::class, function($app, array $with) {
-            return $this->app->make(\N1ebieski\IDir\Cache\BanValueCache::class, $with);
         });
 
         $this->app->bind(\N1ebieski\ICore\Http\Requests\Admin\BanValue\IndexRequest::class, function($app, array $with) {
@@ -53,24 +56,8 @@ class AppServiceProvider extends ServiceProvider
             return $this->app->make(\N1ebieski\IDir\Http\Requests\Admin\Role\UpdateRequest::class, $with);
         });
 
-        $this->app->bind(\N1ebieski\ICore\Repositories\PermissionRepo::class, function($app, array $with) {
-            return $this->app->make(\N1ebieski\IDir\Repositories\PermissionRepo::class, $with);
-        });
-
-        $this->app->bind(\N1ebieski\ICore\Repositories\UserRepo::class, function($app, array $with) {
-            return $this->app->make(\N1ebieski\IDir\Repositories\UserRepo::class, $with);
-        });
-
-        $this->app->bind(\N1ebieski\ICore\Repositories\LinkRepo::class, function($app, array $with) {
-            return $this->app->make(\N1ebieski\IDir\Repositories\LinkRepo::class, $with);
-        });
-
-        $this->app->bind(\N1ebieski\ICore\Cache\LinkCache::class, function($app, array $with) {
-            return $this->app->make(\N1ebieski\IDir\Cache\LinkCache::class, $with);
-        });
-
-        $this->app->bind(\N1ebieski\ICore\Models\User::class, function($app, array $with) {
-            return $this->app->make(\N1ebieski\IDir\Models\User::class, $with);
-        });
+        // $this->app->bind(\N1ebieski\ICore\Models\User::class, function($app, array $with) {
+        //     return $this->app->make(\N1ebieski\IDir\Models\User::class, $with);
+        // });
     }
 }

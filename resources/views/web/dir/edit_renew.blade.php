@@ -17,7 +17,7 @@
     <h3 class="h5 border-bottom pb-2">{{ trans('idir::dirs.page.edit.renew') }}</h3>
     <div class="row mb-4">
         <div class="col-md-8">
-            @include('idir::web.dir.partials.dir', [
+            @include('idir::web.dir.partials.summary', [
                 'value' => $dir->getAttributes(),
                 'categories' => $dir->categories,
                 'group' => $dir->group

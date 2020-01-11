@@ -1,24 +1,111 @@
+@section('thumbnail')
+<div class="d-flex flex-column">
+    <div class="thumbnail d-inline position-relative">
+        <img src="{{ $dir->thumbnail_url }}" class="img-fluid border"
+        alt="{{ $dir->title }}" style="width:90px;height:68px">
+    </div>
+    <a href="#" data-route="{{ route('admin.thumbnail.dir.reload', [$dir->id]) }}" 
+    class="badge badge-primary reloadThumbnail">
+        {{ trans('idir::dirs.reload_thumbnail') }}
+    </a>
+</div>
+@overwrite
+
 <div id="row{{ $dir->id }}" class="row border-bottom py-3 position-relative transition"
 data-id="{{ $dir->id }}">
-    <div class="col my-auto d-flex justify-content-between">
-        @can('destroy dirs')
+    <div class="col my-auto d-flex w-100 justify-content-between">
         <div class="custom-control custom-checkbox">
+        @can('destroy dirs')
             <input name="select[]" type="checkbox" class="custom-control-input select" id="select{{ $dir->id }}" value="{{ $dir->id }}">
             <label class="custom-control-label" for="select{{ $dir->id }}">
         @endcan
-                <ul class="list-unstyled mb-0 pb-0">
-                    <li>{!! $dir->title_as_link !!}</li>
-                    <li contenteditable="true" spellcheck="true" class="text-break">{{ $dir->shortContent }}...</li>
-                    <li>{{ $dir->tagList }}</li>
+            <ul class="list-unstyled mb-0 pb-0">
+                <li>
+                    {!! $dir->title_as_link !!}
+                    @if ($dir->reports_count > 0)
+                    <span>
+                        <a href="#" class="badge badge-danger show" data-toggle="modal"
+                        data-route="{{ route('admin.report.dir.show', [$dir->id]) }}"
+                        data-target="#showReportDirModal">
+                            {{ trans('icore::reports.page.show') }}: {{ $dir->reports_count }}
+                        </a>
+                    </span>
+                    @endif
+                </li>
+                <li class="text-break">
+                    <span contenteditable="true" spellcheck="true" id="content.{{ $dir->id }}">
+                        {{ $dir->short_content }}...
+                    </span>
+                    <span>
+                        <a href="#" class="badge badge-primary checkContent">
+                            {{ trans('idir::dirs.check_content') }}
+                        </a>
+                    </span>
+                </li>
+                @if ($dir->group->fields->isNotEmpty())
+                @foreach ($dir->group->fields as $field)
+                    @if ($value = optional($dir->fields->where('id', $field->id)->first())->decode_value)
+                    <li class="text-break">
+                        {{ $field->title }}: 
+                        <span>
+                        @if (in_array($field->type, ['input', 'textarea', 'select']))
+                            {{ $value }}
+                        @elseif (in_array($field->type, ['multiselect', 'checkbox']))
+                            {{ implode(', ', $value) }}
+                        @else
+                            <img class="img-fluid" src="{{ Storage::url($value) }}">
+                        @endif
+                        </span>
+                    </li>
+                    @endif
+                @endforeach
+                @endif                
+            </ul>
+            @can('destroy dirs')
+            </label>
+            @endcan            
+            <div class="d-flex">
+                <ul class="list-unstyled mb-0 pb-0 flex-grow-1">
+                    @if ($dir->tagList)
+                    <li><small>{{ trans('idir::dirs.tags') }}: {{ $dir->tagList }}</small></li>
+                    @endif
+                    @if ($dir->categories->isNotEmpty())
+                    <li><small>{{ trans('icore::categories.categories') }}: 
+                        @foreach ($dir->categories as $category)
+                        <a href="{{ route('admin.dir.index', ['filter[category]' => $category->id]) }}">{{ $category->name }}</a>
+                        {{ (!$loop->last) ? ', ' : '' }}
+                        @endforeach
+                    </small></li>
+                    @endif                   
+                    <li>
+                        <small>
+                            <span>{{ trans('idir::dirs.group') }}:</span>
+                            <span>
+                                <a href="{{ route('admin.dir.index', ['filter[group]' => $dir->group->id]) }}">{{ $dir->group->name }}</a>
+                            </span>
+                        </small>
+                        @if ($dir->group->prices->isNotEmpty() && $dir->payments->isNotEmpty())
+                        <span>
+                            <a href="#" class="badge badge-warning show" data-toggle="modal"
+                            data-route="{{ route('admin.payment.dir.show_logs', [$dir->id]) }}"
+                            data-target="#showPaymentLogsDirModal">
+                                {{ trans('idir::payments.page.show_logs') }}
+                            </a>
+                        </span>
+                        @endif
+                    </li>
                     <li><small>{{ trans('idir::dirs.author') }}: <a href="{{ route('admin.dir.index', ['filter[author]' => $dir->user->id]) }}">{{ $dir->user->name }}</a></small></li>
                     <li><small>{{ trans('icore::filter.created_at') }}: {{ $dir->created_at_diff }}</small></li>
                     <li><small>{{ trans('icore::filter.updated_at') }}: {{ $dir->updated_at_diff }}</small></li>
                 </ul>
-        @can('destroy dirs')
-            </label>
+                @if ($dir->url !== null)
+                <div class="pt-2 pl-2 d-xl-none">
+                    @yield('thumbnail')
+                </div>
+                @endif
+            </div>
         </div>
-        @endcan
-        <div class="text-right ml-3">
+        <div class="text-right ml-3 d-flex flex-column">
             <div class="responsive-btn-group">
                 @can('edit dirs')
                 <div class="btn-group-vertical">
@@ -73,6 +160,11 @@ data-id="{{ $dir->id }}">
                     @endcan
                 </div>
             </div>
-        </div>
-    </div>
+            @if ($dir->url !== null)
+            <div class="d-none d-xl-block mt-auto ml-auto pt-2">
+                @yield('thumbnail')
+            </div>
+            @endif 
+        </div>      
+    </div>     
 </div>

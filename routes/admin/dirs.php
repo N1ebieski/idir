@@ -48,6 +48,11 @@ Route::patch('dirs/{dir}', 'DirController@updateStatus')
     ->middleware('permission:status dirs')
     ->where('dir', '[0-9]+');
 
+Route::patch('dirs/{dir}/thumbnail', 'DirController@updateThumbnail')
+    ->name('dir.update_thumbnail')
+    ->middleware('permission:index dirs')
+    ->where('dir', '[0-9]+');  
+
 Route::delete('dirs/{dir}', 'DirController@destroy')
     ->middleware('permission:destroy dirs')
     ->name('dir.destroy')

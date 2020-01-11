@@ -11271,7 +11271,7 @@ span.twitter-typeahead .sidebar .nav-item.tt-suggestion.tt-cursor .nav-link {
   text-align: center;
 }
 
-@media (max-width: 1366px) {
+@media (max-width: 1199.98px) {
   .responsive-btn-group {
     flex-direction: column;
     align-items: flex-start;

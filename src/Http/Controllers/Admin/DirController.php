@@ -103,12 +103,7 @@ class DirController
      */
     public function create2(Group $group, Create2Load $load, Create2Request $request) : View
     {
-        return view('idir::admin.dir.create.2', [
-            'group' => $group,
-            'max_tags' => config('idir.dir.max_tags'),
-            'trumbowyg' => $group->privileges->contains('name', 'additional options for editing content')
-                ? '_dir_trumbowyg' : null
-        ]);
+        return view('idir::admin.dir.create.2', compact('group'));
     }
 
     /**
@@ -151,23 +146,13 @@ class DirController
             $request->session()->get('dir.categories')
         );
 
-        if ($group->backlink > 0) {
-            $backlinks = $link->makeRepo()->getAvailableBacklinksByCats(array_merge(
+        $backlinks = $group->backlink > 0 ?
+            $link->makeRepo()->getAvailableBacklinksByCats(array_merge(
                 $categories->pluck('ancestors')->flatten()->pluck('id')->toArray(),
                 $categories->pluck('id')->toArray()
-            ));
-        }
+            )) : null;
 
-        return view('idir::admin.dir.create.3', [
-            'group' => $group,
-            'categories' => $categories,
-            'backlinks' => $backlinks ?? null,
-            'driver' => [
-                'transfer' => config('idir.payment.transfer.driver'),
-                'code_sms' => config('idir.payment.code_sms.driver'),
-                'code_transfer' => config('idir.payment.code_transfer.driver'),
-            ]
-        ]);
+        return view('idir::admin.dir.create.3', compact('group', 'categories', 'backlinks'));
     }
 
     /**
@@ -227,13 +212,7 @@ class DirController
      */
     public function editFull2(Dir $dir, Group $group, EditFull2Load $load, EditFull2Request $request) : View
     {
-        return view('idir::admin.dir.edit_full.2', [
-            'dir' => $dir,
-            'group' => $group,
-            'max_tags' => config('idir.dir.max_tags'),
-            'trumbowyg' => $group->privileges->contains('name', 'additional options for editing content')
-                ? '_dir_trumbowyg' : null
-        ]);
+        return view('idir::admin.dir.edit_full.2', compact('dir', 'group'));
     }
 
     /**
@@ -276,24 +255,14 @@ class DirController
             $request->session()->get("dirId.{$dir->id}.categories")
         );
 
-        if ($group->backlink > 0) {
-            $backlinks = $link->makeRepo()->getAvailableBacklinksByCats(array_merge(
+        $backlinks = $group->backlink > 0 ?
+            $link->makeRepo()->getAvailableBacklinksByCats(array_merge(
                 $categories->pluck('ancestors')->flatten()->pluck('id')->toArray(),
                 $categories->pluck('id')->toArray()
-            ));
-        }
+            )) : null;
 
-        return view('idir::admin.dir.edit_full.3', [
-            'dir' => $dir,
-            'group' => $group,
-            'categories' => $categories,
-            'backlinks' => $backlinks ?? null,
-            'driver' => [
-                'transfer' => config('idir.payment.transfer.driver'),
-                'code_sms' => config('idir.payment.code_sms.driver'),
-                'code_transfer' => config('idir.payment.code_transfer.driver'),
-            ]
-        ]);
+        return view('idir::admin.dir.edit_full.3', 
+            compact('dir', 'group', 'categories', 'backlinks'));
     }
 
     /**
@@ -337,11 +306,7 @@ class DirController
         return response()->json([
             'success' => '',
             'view' => view('idir::admin.dir.edit', [
-                'dir' => $dir,
-                'max_tags' => config('idir.dir.max_tags'),
-                'trumbowyg' => $dir->group->privileges
-                    ->contains('name', 'additional options for editing content') 
-                        ? '_dir_trumbowyg' : null
+                'dir' => $dir
             ])->render(),
         ]);
     }
@@ -359,7 +324,9 @@ class DirController
 
         return response()->json([
             'success' => '',
-            'view' => view('idir::admin.dir.partials.dir', ['dir' => $dir])->render()
+            'view' => view('idir::admin.dir.partials.dir', [
+                'dir' => $dir->refresh()
+            ])->render()
         ]);
     }
 

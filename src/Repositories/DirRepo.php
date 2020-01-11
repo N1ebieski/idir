@@ -72,7 +72,18 @@ class DirRepo
      */
     public function paginateByFilter(array $filter) : LengthAwarePaginator
     {
-        return $this->dir->with(['group', 'categories', 'tags', 'user'])
+        return $this->dir->withCount('reports')
+            ->with([
+                'group',
+                'group.prices',
+                'group.fields',
+                'fields',
+                'categories', 
+                'tags', 
+                'user',
+                'payments',
+                'payments.group'
+            ])
             ->withSumRating()
             ->filterExcept($filter['except'])
             ->filterSearch($filter['search'])

@@ -14,7 +14,7 @@ class File
      * [$file description]
      * @var UploadedFile
      */
-    protected UploadedFile $file;
+    protected $file;
 
     /**
      * [protected description]
@@ -32,7 +32,7 @@ class File
      * [protected description]
      * @var string|null
      */
-    protected ?string $path;
+    protected $path;
 
     /**
      * [protected description]
@@ -44,7 +44,7 @@ class File
      * [private description]
      * @var Storage
      */
-    protected Storage $storage;
+    protected $storage;
 
     /**
      * [__construct description]

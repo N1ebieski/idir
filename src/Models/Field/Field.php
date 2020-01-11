@@ -149,7 +149,7 @@ class Field extends Model
      * [makeRepo description]
      * @return FieldRepo [description]
      */
-    public function makeRepo() : FieldRepo
+    public function makeRepo()
     {
         return app()->make(FieldRepo::class, ['field' => $this]);
     }
@@ -158,7 +158,7 @@ class Field extends Model
      * [makeService description]
      * @return FieldService [description]
      */
-    public function makeService() : FieldService
+    public function makeService()
     {
         return app()->make(FieldService::class, ['field' => $this]);
     }

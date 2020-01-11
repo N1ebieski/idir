@@ -5,11 +5,12 @@
         id="title" class="form-control">
     </div>
     <div class="form-group">
-        <label for="content_html{{ $trumbowyg }}">
+        <label for="content_html{{ $dir->group->hasEditorPrivilege() ? '_dir_trumbowyg' : null }}">
             {{ trans('idir::dirs.content') }}:
         </label>
-        <div class="@isTheme('dark', 'trumbowyg-dark')">
-            <textarea class="form-control" id="content_html{{ $trumbowyg }}"
+        <div id="content" class="@isTheme('dark', 'trumbowyg-dark')">
+            <textarea class="form-control" 
+            id="content_html{{ $dir->group->hasEditorPrivilege() ? '_dir_trumbowyg' : null }}"
             name="content_html" rows="5">{{ $dir->content_html }}</textarea>
         </div>
     </div>
@@ -21,7 +22,7 @@
     <div class="form-group">
         <label for="tags">
             {{ trans('idir::dirs.tags') }}: <i data-toggle="tooltip" data-placement="top"
-            title="{{ trans('idir::dirs.tags_tooltip', ['max_tags' => $max_tags]) }}"
+            title="{{ trans('idir::dirs.tags_tooltip', ['max_tags' => $max_tags = config('idir.dir.max_tags')]) }}"
             class="far fa-question-circle"></i>
         </label>
         <input name="tags" id="tags" class="form-control tagsinput"

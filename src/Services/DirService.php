@@ -40,10 +40,11 @@ FullUpdatable, Deletable, GlobalDeletable
     protected $session;
 
     /**
-     * [__construct description]
-     * @param Dir         $dir         [description]
-     * @param Price       $price       [description]
-     * @param Session     $session     [description]
+     * Undocumented function
+     *
+     * @param Dir $dir
+     * @param Price $price
+     * @param Session $session
      */
     public function __construct(
         Dir $dir,
@@ -58,8 +59,9 @@ FullUpdatable, Deletable, GlobalDeletable
     }
 
     /**
-     * [makeSessionName description]
-     * @return string [description]
+     * Undocumented function
+     *
+     * @return string
      */
     protected function makeSessionName() : string
     {
@@ -230,7 +232,10 @@ FullUpdatable, Deletable, GlobalDeletable
         }
 
         if (isset($attributes['backlink'])) {
-            $this->dir->backlink()->make()->setDir($this->dir)->makeService()->sync($attributes);
+            $this->dir->backlink()->make()
+                ->setDir($this->dir)
+                ->makeService()
+                ->sync($attributes);
         }
 
         $this->dir->categories()->sync($attributes['categories']);

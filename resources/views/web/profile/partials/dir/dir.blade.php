@@ -13,7 +13,7 @@ data-id="{{ $dir->id }}">
                 <div class="d-flex">
                     <small class="mr-auto">{{ trans('idir::dirs.group') }}: {{ $dir->group->name }}</small>
                     @if ($dir->tags->isNotEmpty())
-                    <small class="ml-auto text-right">{{ trans('icore::posts.tags') }}:
+                    <small class="ml-auto text-right">{{ trans('idir::dirs.tags') }}:
                         @foreach ($dir->tags as $tag)
                         <a href="{{ route('web.tag.dir.show', [$tag->normalized]) }}">{{ $tag->name }}</a>
                         {{ (!$loop->last) ? ', ' : '' }}

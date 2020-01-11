@@ -104,7 +104,7 @@ class Price extends Model
      * [makeService description]
      * @return PriceService [description]
      */
-    public function makeService() : PriceService
+    public function makeService()
     {
         return app()->make(PriceService::class, ['price' => $this]);
     }
@@ -113,7 +113,7 @@ class Price extends Model
      * [makeRepo description]
      * @return PriceRepo [description]
      */
-    public function makeRepo() : PriceRepo
+    public function makeRepo()
     {
         return app()->make(PriceRepo::class, ['price' => $this]);
     }

@@ -5,7 +5,7 @@ namespace N1ebieski\IDir\Http\Requests\Admin\Dir;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Mews\Purifier\Facades\Purifier;
-use N1ebieski\ICore\Models\BanValue;
+use N1ebieski\IDir\Models\BanValue;
 use Illuminate\Database\Eloquent\Collection;
 use N1ebieski\IDir\Http\Requests\Traits\FieldsExtended;
 
@@ -180,7 +180,10 @@ class Store2Request extends FormRequest
                 ($this->group->url === 2) ? 'required' : 'nullable',
                 'string',
                 'regex:/^(https|http):\/\/([\da-z\.-]+)(\.[a-z]{2,6})\/?$/',
-                'unique:dirs,url'
+                app()->make(\N1ebieski\IDir\Rules\UniqueUrl::class, [
+                    'table' => 'dirs',
+                    'column' => 'url'
+                ])
             ]
         ], $this->prepareFieldsRules());
     }

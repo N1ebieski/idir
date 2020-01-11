@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use N1ebieski\IDir\Services\PaymentService;
 use N1ebieski\IDir\Repositories\PaymentRepo;
 use Illuminate\Database\Eloquent\Builder;
+use N1ebieski\ICore\Models\Traits\Carbonable;
 use N1ebieski\ICore\Models\Traits\Polymorphic;
 
 /**
@@ -13,7 +14,7 @@ use N1ebieski\ICore\Models\Traits\Polymorphic;
  */
 class Payment extends Model
 {
-    use Polymorphic;
+    use Polymorphic, Carbonable;
 
     // Configuration
 
@@ -85,7 +86,7 @@ class Payment extends Model
      * [makeService description]
      * @return PaymentService [description]
      */
-    public function makeService() : PaymentService
+    public function makeService()
     {
         return app()->make(PaymentService::class, ['payment' => $this]);
     }
@@ -94,7 +95,7 @@ class Payment extends Model
      * [makeRepo description]
      * @return PaymentRepo [description]
      */
-    public function makeRepo() : PaymentRepo
+    public function makeRepo()
     {
         return app()->make(PaymentRepo::class, ['payment' => $this]);
     }

@@ -1319,6 +1319,30 @@ jQuery(document).on('click', 'a.destroyDir', function(e) {
     });
 });
 
+jQuery(document).on('click', 'a.reloadThumbnail', function(e) {
+    e.preventDefault();
+
+    let $element = $(this);
+    $element.thumbnail = $element.parent().children('.thumbnail');
+    $element.thumbnail.img = $element.thumbnail.children('img');
+
+    jQuery.ajax({
+        url: $element.attr('data-route'),
+        method: 'patch',
+        beforeSend: function() {
+            $element.prop('disabled', true);
+            $element.thumbnail.append($.getLoader('spinner-border'));
+        },
+        complete: function() {
+            $element.prop('disabled', false);
+            $element.thumbnail.find('div.loader-absolute').remove();
+        },
+        success: function(response) {
+            $element.thumbnail.img.attr('src', response.thumbnail_url + '&reload=' + Math.random());
+        }
+    });
+});
+
 jQuery(document).on('readyAndAjax', function() {
     $('[data-toggle=dir-confirmation]').confirmation({
         rootSelector: '[data-toggle=dir-confirmation]',
@@ -1426,6 +1450,39 @@ jQuery(document).on('change', 'select#backlink', function() {
     $('#backlink_code').val($.sanitize(link_as_html));
 });
 
+jQuery(document).on('click', '.checkContent', function(e) {
+    e.preventDefault();
+
+    let sentence = $(this).parents().find('[id^="content').text().split(".").filter(n => n);
+    let j = 0;
+    let content = '';
+
+    for (i=0; i<50; i++) {
+        if (j === 0) {
+            j = Math.floor(Math.random() * sentence.length);
+        }
+
+        if (typeof sentence[j] !== 'undefined') {
+            content += sentence[j].trim() + '. ';
+            j++;
+        } else {
+            content = '';
+            j = 0;
+        }
+
+        if (content.length > 150) {
+            window.open(
+                'http://www.google.pl/search?hl=pl&q=' + encodeURI(content), 
+                'checkContent', 
+                'resizable=yes,status=no,scrollbars=yes,width=1366,height=768'
+            ).focus();
+
+            break;
+        }
+    }
+
+    return false;
+});
 jQuery(document).on('change', 'div[id^=prices] div.price:last-child input[name*="select"]', function() {
     if ($(this).prop('checked') === true) {
         let $price = $(this).closest('div.price').clone();
@@ -1459,4 +1516,18 @@ jQuery(document).on('change', 'div[id^=prices] input[name*="sync"]', function() 
     } else {
         $price.textarea.prop('readonly', true);
     }
+});
+
+jQuery(document).on('readyAndAjax', function() {
+    $('.thumbnail').popover({
+        trigger: 'hover',
+        boundary: 'window',
+        html: true,
+        content: function() {
+            return $.sanitize($(this).html());
+        },
+        placement: 'auto'
+    }).on('inserted.bs.popover', function() {
+        $('[id^="popover"]').addClass('thumbnail');
+    });
 });
