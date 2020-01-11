@@ -36,12 +36,13 @@
                     @includeWhen($errors->has('payment_transfer'), 'icore::admin.partials.errors', ['name' => 'payment_transfer'])
                 </div>
                 <p>
+                    @php $driver['transfer'] = config('idir.payment.transfer.driver'); @endphp
                     {!! trans('idir::dirs.payment.transfer_info', [
                         'provider_url' => config("idir.payment.{$driver['transfer']}.url"),
                         'provider_name' => config("idir.payment.{$driver['transfer']}.name"),
                         'provider_docs_url' => config("idir.payment.{$driver['transfer']}.docs_url"),
                         'provider_rules_url' => config("idir.payment.{$driver['transfer']}.rules_url"),
-                        'rules_url' => route('web.page.show', ['slug' => strtolower(trans('idir::dirs.rules'))])
+                        'rules_url' => route('web.page.show', [strtolower(trans('idir::dirs.rules'))])
                     ]) !!}
                 </p>
             </div>
@@ -71,6 +72,7 @@
                     @includeWhen($errors->has('code_transfer'), 'icore::admin.partials.errors', ['name' => 'code_transfer'])
                 </div>
                 <p>
+                    @php $driver['code_transfer'] = config('idir.payment.code_transfer.driver'); @endphp
                     {!! trans('idir::dirs.payment.code_transfer_info', [
                         'code_transfer_url' => config("services.{$driver['code_transfer']}.code_transfer.url")
                         . old('payment_code_transfer_model', $codes->first())->code,
@@ -79,7 +81,7 @@
                         'provider_name' => config("idir.payment.{$driver['code_transfer']}.name"),
                         'provider_docs_url' => config("idir.payment.{$driver['code_transfer']}.docs_url"),
                         'provider_rules_url' => config("idir.payment.{$driver['code_transfer']}.rules_url"),
-                        'rules_url' => route('web.page.show', ['slug' => strtolower(trans('idir::dirs.rules'))])
+                        'rules_url' => route('web.page.show', [strtolower(trans('idir::dirs.rules'))])
                     ]) !!}
                 </p>
             </div>
@@ -108,6 +110,7 @@
                     <input type="text" value="" name="code_sms" id="code_sms" class="form-control @isValid('code_sms')">
                     @includeWhen($errors->has('code_sms'), 'icore::admin.partials.errors', ['name' => 'code_sms'])
                 </div>
+                @php $driver['code_sms'] = config('idir.payment.code_sms.driver') @endphp
                 <p>
                     {!! trans('idir::dirs.payment.code_sms_info', [
                         'number' => old('payment_code_sms_model', $codes->first())->number,
@@ -117,7 +120,7 @@
                         'provider_name' => config("idir.payment.{$driver['code_sms']}.name"),
                         'provider_docs_url' => config("idir.payment.{$driver['code_sms']}.docs_url"),
                         'provider_rules_url' => config("idir.payment.{$driver['code_sms']}.rules_url"),
-                        'rules_url' => route('web.page.show', ['slug' => strtolower(trans('idir::dirs.rules'))])
+                        'rules_url' => route('web.page.show', [strtolower(trans('idir::dirs.rules'))])
                     ]) !!}
                 </p>
             </div>

@@ -23,6 +23,6 @@ class Custom extends Exception
      */
     public function render(Request $request)
     {
-        return abort($this->getCode(), $this->getMessage());
+        return abort($this->getCode() !== 0 ? $this->getCode() : 403, $this->getMessage());
     }
 }

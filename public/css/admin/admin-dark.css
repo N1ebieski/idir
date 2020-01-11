@@ -33,7 +33,7 @@
   --breakpoint-sm: 576px;
   --breakpoint-md: 768px;
   --breakpoint-lg: 992px;
-  --breakpoint-xl: 1200px;
+  --breakpoint-xl: 1368px;
   --font-family-sans-serif: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
@@ -605,7 +605,7 @@ pre code {
   }
 }
 
-@media (min-width: 1200px) {
+@media (min-width: 1368px) {
   .container {
     max-width: 1140px;
   }
@@ -1435,7 +1435,7 @@ pre code {
   }
 }
 
-@media (min-width: 1200px) {
+@media (min-width: 1368px) {
   .col-xl {
     flex-basis: 0;
     flex-grow: 1;
@@ -1940,7 +1940,7 @@ pre code {
   }
 }
 
-@media (max-width: 1199.98px) {
+@media (max-width: 1367.98px) {
   .table-responsive-xl {
     display: block;
     width: 100%;
@@ -3341,7 +3341,7 @@ input[type=button].btn-block {
   }
 }
 
-@media (min-width: 1200px) {
+@media (min-width: 1368px) {
   .dropdown-menu-xl-left {
     right: auto;
     left: 0;
@@ -4591,7 +4591,7 @@ input[type=button].btn-block {
   }
 }
 
-@media (max-width: 1199.98px) {
+@media (max-width: 1367.98px) {
   .navbar-expand-xl > .container,
   .navbar-expand-xl > .container-fluid {
     padding-right: 0;
@@ -4599,7 +4599,7 @@ input[type=button].btn-block {
   }
 }
 
-@media (min-width: 1200px) {
+@media (min-width: 1368px) {
   .navbar-expand-xl {
     flex-flow: row nowrap;
     justify-content: flex-start;
@@ -5736,7 +5736,7 @@ a.badge-dark.focus {
   }
 }
 
-@media (min-width: 1200px) {
+@media (min-width: 1368px) {
   .list-group-horizontal-xl {
     flex-direction: row;
   }
@@ -6198,7 +6198,7 @@ a.close.disabled {
   }
 }
 
-@media (min-width: 1200px) {
+@media (min-width: 1368px) {
   .modal-xl {
     max-width: 1140px;
   }
@@ -7170,7 +7170,7 @@ button.navbar.bg-light:focus {
   }
 }
 
-@media (min-width: 1200px) {
+@media (min-width: 1368px) {
   .d-xl-none {
     display: none !important;
   }
@@ -7839,7 +7839,7 @@ button.navbar.bg-light:focus {
   }
 }
 
-@media (min-width: 1200px) {
+@media (min-width: 1368px) {
   .flex-xl-row {
     flex-direction: row !important;
   }
@@ -8031,7 +8031,7 @@ button.navbar.bg-light:focus {
   }
 }
 
-@media (min-width: 1200px) {
+@media (min-width: 1368px) {
   .float-xl-left {
     float: left !important;
   }
@@ -9946,7 +9946,7 @@ button.navbar.bg-light:focus {
   }
 }
 
-@media (min-width: 1200px) {
+@media (min-width: 1368px) {
   .m-xl-0 {
     margin: 0 !important;
   }
@@ -10456,7 +10456,7 @@ button.navbar.bg-light:focus {
   }
 }
 
-@media (min-width: 1200px) {
+@media (min-width: 1368px) {
   .text-xl-left {
     text-align: left !important;
   }
@@ -10974,6 +10974,14 @@ body {
   }
 }
 
+.popover.thumbnail {
+  max-width: initial;
+}
+
+.popover.thumbnail .popover-body img {
+  width: 480px;
+}
+
 .smaller {
   font-size: 0.7rem;
 }
@@ -11420,7 +11428,7 @@ footer {
   height: 60px;
 }
 
-@media (max-width: 1366px) {
+@media (max-width: 1367.98px) {
   .responsive-btn-group {
     flex-direction: column;
     align-items: flex-start;

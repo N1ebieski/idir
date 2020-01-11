@@ -35,9 +35,9 @@ class BanValueCache extends BaseBanValueCache
             "banValue.getAllUrlsAsString",
             now()->addMinutes($this->minutes),
             function() {
-                $words = $this->banValue->whereType('url')->get();
+                $urls = $this->banValue->whereType('url')->get();
 
-                return $this->str->escaped($words->implode('value', '|'));
+                return $this->str->escaped($urls->implode('value', '|'));
             }
         );
     }

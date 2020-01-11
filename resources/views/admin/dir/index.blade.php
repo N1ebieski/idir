@@ -80,4 +80,18 @@
 <span> {{ trans('icore::bans.page.create') }}</span>
 @endslot
 @endcomponent
+
+@component('icore::admin.partials.modal')
+@slot('modal_id', 'showReportDirModal')
+@slot('modal_title')
+<span>{{ trans('icore::reports.page.show') }}</span>
+@endslot
+@endcomponent
+
+@component('icore::admin.partials.modal')
+@slot('modal_id', 'showPaymentLogsDirModal')
+@slot('modal_title')
+<span>{{ trans('idir::payments.page.show_logs') }}</span>
+@endslot
+@endcomponent
 @endsection

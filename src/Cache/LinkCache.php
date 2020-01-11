@@ -2,7 +2,7 @@
 
 namespace N1ebieski\IDir\Cache;
 
-use N1ebieski\ICore\Models\Link;
+use N1ebieski\IDir\Models\Link;
 use Illuminate\Database\Eloquent\Builder;
 use N1ebieski\ICore\Cache\LinkCache as BaseLinkCache;
 use Illuminate\Database\Eloquent\Collection;
@@ -14,6 +14,12 @@ use Illuminate\Contracts\Config\Repository as Config;
  */
 class LinkCache extends BaseLinkCache
 {
+    /**
+     * Link model
+     * @var Link
+     */
+    protected $link;
+
     /**
      * [__construct description]
      * @param Link   $link   [description]

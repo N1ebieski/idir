@@ -33,12 +33,7 @@
             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <i class="far fa-fw fa-folder-open"></i>
                 <span> {{ trans('idir::dirs.page.index') }}</span>
-                <span>
-                    <a href="{{ route('admin.dir.index', ['filter[status]' => 0]) }}"
-                    class="badge badge-warning">
-                        {{ $dirs_inactive_count }}
-                    </a>
-                </span>
+                <span class="badge badge-warning"> {{ $dirs_inactive_count }}</span>
             </div>
             <div class="dropdown-menu" aria-labelledby="dirDropdown">
                 @can('index dirs')

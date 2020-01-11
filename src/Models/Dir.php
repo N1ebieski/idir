@@ -321,6 +321,30 @@ class Dir extends Model
 
     // Accessors
 
+    /**
+     * [getPoliAttribute description]
+     * @return string [description]
+     */
+    public function getPoliSelfAttribute() : string
+    {
+        return 'dir';
+    }
+
+    /**
+     * Undocumented function
+     *
+    * @return string
+     */
+    public function getThumbnailUrlAttribute() : string
+    {
+        if (($cache['url'] = config('idir.dir.thumbnail.cache.url')) 
+        && ($cache['key'] = config('idir.dir.thumbnail.key'))) {
+            return $this->makeCache()->rememberThumbnailUrl();
+        }
+
+        return config('idir.dir.thumbnail.url').$this->url;
+    }
+
     // /**
     //  * [getHostAttribute description]
     //  * @return string        [description]
@@ -345,7 +369,7 @@ class Dir extends Model
      */
     public function getShortContentAttribute() : string
     {
-        return substr($this->content, 0, 300);
+        return substr($this->content, 0, 500);
     }
 
     /**
@@ -482,7 +506,7 @@ class Dir extends Model
      * [makeRepo description]
      * @return DirRepo [description]
      */
-    public function makeRepo() : DirRepo
+    public function makeRepo()
     {
         return app()->make(DirRepo::class, ['dir' => $this]);
     }
@@ -491,7 +515,7 @@ class Dir extends Model
      * [makeCache description]
      * @return DirCache [description]
      */
-    public function makeCache() : DirCache
+    public function makeCache()
     {
         return app()->make(DirCache::class, ['dir' => $this]);
     }
@@ -500,7 +524,7 @@ class Dir extends Model
      * [makeService description]
      * @return DirService [description]
      */
-    public function makeService() : DirService
+    public function makeService()
     {
         return app()->make(DirService::class, ['dir' => $this]);
     }

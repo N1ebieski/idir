@@ -4,6 +4,7 @@ namespace N1ebieski\IDir\Models;
 
 use N1ebieski\ICore\Models\User as BaseUser;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use N1ebieski\IDir\Repositories\UserRepo;
 
 /**
  * [User description]
@@ -38,4 +39,15 @@ class User extends BaseUser
     {
         return $this->hasMany(\N1ebieski\IDir\Models\Dir::class);
     }
+
+    // Makers
+
+    /**
+     * [makeRepo description]
+     * @return UserRepo [description]
+     */
+    public function makeRepo() 
+    {
+        return app()->make(UserRepo::class, ['user' => $this]);
+    } 
 }

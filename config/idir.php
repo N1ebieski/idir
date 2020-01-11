@@ -19,6 +19,19 @@ return [
             'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
             'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.',
             'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
+        ],
+
+        'thumbnail' => [
+            'url' => env('IDIR_DIR_THUMBNAIL_URL'),
+            'reload_url' => env('IDIR_DIR_THUMBNAIL_RELOAD_URL'),
+            'key' => env('IDIR_DIR_THUMBNAIL_KEY'), // 32 characters string
+            'cache' => [
+                'url' => env('IDIR_DIR_THUMBNAIL_CACHE_URL'),
+                'days' => env('IDIR_DIR_THUMBNAIL_CACHE_DAYS', 30)
+            ],
+            'api' => [
+                'reload_url' => env('IDIR_DIR_THUMBNAIL_API_RELOAD_URL')
+            ]
         ]
     ],
 

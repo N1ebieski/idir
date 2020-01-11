@@ -37,7 +37,7 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function map()
     {
-        // $this->mapApiRoutes();
+        $this->mapApiRoutes();
 
         $this->mapWebRoutes();
 
@@ -67,26 +67,29 @@ class RouteServiceProvider extends ServiceProvider
              });
     }
 
-    // /**
-    //  * Define the "api" routes for the application.
-    //  *
-    //  * These routes are typically stateless.
-    //  *
-    //  * @return void
-    //  */
-    // protected function mapApiRoutes()
-    // {
-    //     Route::prefix('api')
-    //          ->middleware('api')
-    //          ->namespace($this->namespace)
-    //          ->group(function ($router) {
-    //              if (file_exists($override = base_path('routes') . '/vendor/icore/api.php')) {
-    //                  require($override);
-    //              } else {
-    //                  require(__DIR__ . '/../../routes/api.php');
-    //              }
-    //          });
-    // }
+    /**
+     * Define the "api" routes for the application.
+     *
+     * These routes are typically stateless.
+     *
+     * @return void
+     */
+    protected function mapApiRoutes()
+    {
+        $this->app['router']->middleware('api')
+            ->prefix('api')
+            ->as('api.')            
+            ->namespace($this->namespace.'\Api')
+            ->group(function ($router) {
+                foreach (glob(__DIR__ . '/../../routes/api/*.php') as $filename){
+                    if (file_exists($override = base_path('routes') . '/vendor/idir/api/' . basename($filename))) {
+                        require($override);
+                    } else {
+                        require($filename);
+                    }
+                }
+            });
+    }
 
     /**
      * Define the "admin" routes for the application.

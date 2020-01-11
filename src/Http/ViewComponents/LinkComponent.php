@@ -4,7 +4,7 @@ namespace N1ebieski\IDir\Http\ViewComponents;
 
 use Illuminate\Contracts\Support\Htmlable;
 use N1ebieski\IDir\Models\Dir;
-use N1ebieski\ICore\Models\Link;
+use N1ebieski\IDir\Models\Link;
 use Illuminate\View\View;
 
 /**

@@ -77,7 +77,7 @@ return [
         'index' => 'Status',
         '1' => 'aktywny',
         '0' => 'oczekujący na moderację',
-        '2' => 'oczekujący na płatość',
+        '2' => 'oczekujący na płatność',
         '3' => 'oczekujący na backlink',
     ],
     'privileged_to' => 'Data wygaśnięcia',
@@ -93,5 +93,7 @@ return [
     ],
     'link_dir_page' => 'Podlinkuj swój wpis by przyśpieszyć indeksację',
     'content' => 'Opis',
-    'author' => 'Autor'
+    'author' => 'Autor',
+    'reload_thumbnail' => 'Odśwież',
+    'check_content' => 'Sprawdź unikalność opisu'
 ];

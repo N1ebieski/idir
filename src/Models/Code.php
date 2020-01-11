@@ -72,7 +72,7 @@ class Code extends Model
      * [makeService description]
      * @return CodeService [description]
      */
-    public function makeService() : CodeService
+    public function makeService()
     {
         return app()->make(CodeService::class, ['code' => $this]);
     }
@@ -81,7 +81,7 @@ class Code extends Model
      * [makeRepo description]
      * @return CodeRepo [description]
      */
-    public function makeRepo() : CodeRepo
+    public function makeRepo()
     {
         return app()->make(CodeRepo::class, ['code' => $this]);
     }

@@ -23,7 +23,7 @@ class Privilege extends Model
      * [makeRepo description]
      * @return PrivilegeRepo [description]
      */
-    public function makeRepo() : PrivilegeRepo
+    public function makeRepo()
     {
         return app()->make(PrivilegeRepo::class, ['privilege' => $this]);
     }

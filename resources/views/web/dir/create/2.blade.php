@@ -29,11 +29,12 @@
                     @includeWhen($errors->has('title'), 'icore::web.partials.errors', ['name' => 'title'])
                 </div>
                 <div class="form-group">
-                    <label for="content_html{{ $trumbowyg }}">
+                    <label for="content_html{{ $group->hasEditorPrivilege() ? '_dir_trumbowyg' : null }}">
                         {{ trans('idir::groups.content') }}:
                     </label>
                     <div class="@isTheme('dark', 'trumbowyg-dark')">
-                        <textarea class="form-control @isValid('content')" id="content_html{{ $trumbowyg }}"
+                        <textarea class="form-control @isValid('content')" 
+                        id="content_html{{ $group->hasEditorPrivilege() ? '_dir_trumbowyg' : null }}"
                         name="content_html" rows="5">{{ old('content_html', session('dir.content_html')) }}</textarea>
                     </div>
                     @includeWhen($errors->has('content'), 'icore::web.partials.errors', ['name' => 'content'])
@@ -47,7 +48,7 @@
                 <div class="form-group">
                     <label for="tags">
                         {{ trans('idir::dirs.tags') }}: <i data-toggle="tooltip" data-placement="top"
-                        title="{{ trans('idir::dirs.tags_tooltip', ['max_tags' => $max_tags]) }}"
+                        title="{{ trans('idir::dirs.tags_tooltip', ['max_tags' => $max_tags = config('idir.dir.max_tags')]) }}"
                         class="far fa-question-circle"></i>
                     </label>
                     <input name="tags" id="tags" class="form-control tagsinput @isValid('tags')"

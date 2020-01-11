@@ -180,7 +180,11 @@ class UpdateRequest extends FormRequest
                 ($this->dir->group->url === 2) ? 'required' : 'nullable',
                 'string',
                 'regex:/^(https|http):\/\/([\da-z\.-]+)(\.[a-z]{2,6})\/?$/',
-                'unique:dirs,url,' . $this->dir->id
+                app()->make(\N1ebieski\IDir\Rules\UniqueUrl::class, [
+                    'table' => 'dirs',
+                    'column' => 'url',
+                    'ignore' => $this->dir->id
+                ])
             ]
         ], $this->prepareFieldsRules());
     }

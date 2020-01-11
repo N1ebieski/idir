@@ -2,6 +2,7 @@
 
 namespace N1ebieski\IDir\Models\Payment\Dir;
 
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use N1ebieski\IDir\Models\Payment\Payment as PaymentBaseModel;
 use N1ebieski\IDir\Models\Dir;
 use N1ebieski\IDir\Models\Price;
@@ -49,6 +50,25 @@ class Payment extends PaymentBaseModel
     public function getMorphClass()
     {
         return 'N1ebieski\\IDir\\Models\\Payment\\Payment';
+    }
+
+    // Relations
+
+    /**
+     * Undocumented function
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOneThrough
+     */
+    public function group() : HasOneThrough
+    {
+        return $this->hasOneThrough(
+            'N1ebieski\IDir\Models\Group',
+            'N1ebieski\IDir\Models\Price',
+            'id',
+            'id',
+            'price_id',
+            'group_id'
+        );
     }
 
     // Accessors

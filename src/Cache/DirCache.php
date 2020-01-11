@@ -40,6 +40,25 @@ class DirCache
     {
         $this->dir = $dir;
         $this->cache = $cache;
+        $this->config = $config;
+
         $this->minutes = $config->get('icore.cache.minutes');
     }
+
+    /**
+     * Undocumented function
+     *
+     * @return string
+     */
+    public function rememberThumbnailUrl() : string
+    {
+        return $this->cache->tags(['dir.'.$this->dir->slug])->remember(
+            "dir.thumbnailUrl.{$this->dir->slug}",
+            now()->addDays($this->config->get('idir.dir.thumbnail.cache.days')),
+            function() {
+                return $this->config->get('idir.dir.thumbnail.cache.url')
+                    .app('crypt.thumbnail')->encryptString($this->dir->url);
+            }
+        );
+    }  
 }

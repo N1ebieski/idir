@@ -91,7 +91,7 @@ class DirBacklink extends Model
      * [makeRepo description]
      * @return DirBacklinkRepo [description]
      */
-    public function makeRepo() : DirBacklinkRepo
+    public function makeRepo()
     {
         return app()->make(DirBacklinkRepo::class, ['dirBacklink' => $this]);
     }
@@ -100,7 +100,7 @@ class DirBacklink extends Model
      * [makeService description]
      * @return DirBacklinkService [description]
      */
-    public function makeService() : DirBacklinkService
+    public function makeService()
     {
         return app()->make(DirBacklinkService::class, ['dirBacklink' => $this]);
     }

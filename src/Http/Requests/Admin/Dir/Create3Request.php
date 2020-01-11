@@ -4,7 +4,7 @@ namespace N1ebieski\IDir\Http\Requests\Admin\Dir;
 
 use N1ebieski\IDir\Http\Requests\Admin\Dir\Store2Request;
 use N1ebieski\ICore\Models\Link;
-use N1ebieski\ICore\Models\BanValue;
+use N1ebieski\IDir\Models\BanValue;
 
 /**
  * [Create3Request description]

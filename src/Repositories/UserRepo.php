@@ -2,6 +2,7 @@
 
 namespace N1ebieski\IDir\Repositories;
 
+use Illuminate\Database\Eloquent\Collection;
 use N1ebieski\IDir\Models\User;
 use Illuminate\Pagination\LengthAwarePaginator;
 use N1ebieski\ICore\Repositories\UserRepo as BaseUserRepo;
