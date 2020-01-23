@@ -32,7 +32,7 @@ class ThumbnailController implements Polymorphic
             );
         }
 
-        cache()->tags(['dir.'.$dir->slug])->forget("dir.thumbnailUrl.{$dir->slug}");
+        cache()->forget("dir.thumbnailUrl.{$dir->slug}");
 
         return response()->json([
             'success' => '',

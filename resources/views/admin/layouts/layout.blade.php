@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ config('app.locale') }}">
 <head>
 
     <title>{{ app('Helpers\View')->makeMeta(array_merge($title, [trans('icore::admin.page.index'), config('app.name')]), ' - ') }}</title>

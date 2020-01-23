@@ -33,7 +33,7 @@ class FieldController extends BaseFieldController implements Polymorphic
             'fields' => $field->makeRepo()->paginateByFilter($filter->all() + [
                 'except' => $request->input('except')
             ]),
-            'groups' => $group->makeRepo()->all(),
+            'groups' => $group->all(),
             'filter' => $filter->all(),
             'paginate' => config('database.paginate')
         ]);

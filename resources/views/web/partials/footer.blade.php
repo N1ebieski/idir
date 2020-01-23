@@ -17,8 +17,33 @@
             </div>
             <hr class="clearfix w-100 d-md-none">
         </div>
-        {{-- @render('icore::page.footerComponent', ['pattern' => [[18, 19, 32], [45], [3, 1]]]) --}}
-        @render('icore::page.footerComponent', ['cols' => 3])
+        <h5 class="mt-3 mb-2">{{ trans('icore::pages.map') }}:</h5>
+        <div class="row">
+            {{-- @render('icore::page.footerComponent', ['pattern' => [[18, 19, 32], [45], [3, 1]]]) --}}
+            @render('icore::page.footerComponent', ['cols' => 3])
+            <div class="col-md-3 col-sm-6">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <a href="{{ route('web.dir.index') }}"
+                        class="@isUrl(route('web.dir.index'), 'font-weight-bold')">
+                            {{ trans('idir::dirs.page.index') }}
+                        </a>
+                    </li>                    
+                    <li class="list-group-item">
+                        <a href="{{ route('web.post.index') }}"
+                        class="@isUrl(route('web.post.index'), 'font-weight-bold')">
+                            {{ trans('icore::posts.page.blog') }}
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="{{ route('web.contact.index') }}"
+                        class="@isUrl(route('web.contact.index'), 'font-weight-bold')">
+                            {{ trans('icore::contact.page.index') }}
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>        
         <hr>
         <div class="d-flex justify-content-center">
             <div class="footer-copyright text-center py-3 mr-3">

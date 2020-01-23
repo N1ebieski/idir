@@ -7,6 +7,7 @@ use N1ebieski\IDir\Models\Dir;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\Config\Repository as Config;
 use Carbon\Carbon;
+use N1ebieski\ICore\Services\TagService;
 
 /**
  * [DirRepo description]
@@ -23,7 +24,7 @@ class DirRepo
      * [protected description]
      * @var int
      */
-    protected $checkBacklinkHours;
+    protected $paginate;
 
     /**
      * [__construct description]
@@ -35,6 +36,7 @@ class DirRepo
         $this->dir = $dir;
 
         $this->config = $config;
+        $this->paginate = $config->get('database.paginate');
     }
 
     /**
@@ -66,11 +68,11 @@ class DirRepo
     }
 
     /**
-     * [paginateByFilter description]
+     * [paginateForAdminByFilter description]
      * @param  array                $filter [description]
      * @return LengthAwarePaginator         [description]
      */
-    public function paginateByFilter(array $filter) : LengthAwarePaginator
+    public function paginateForAdminByFilter(array $filter) : LengthAwarePaginator
     {
         return $this->dir->withCount('reports')
             ->with([
@@ -85,6 +87,7 @@ class DirRepo
                 'payments.group'
             ])
             ->withSumRating()
+            ->filterAuthor($filter['author'])
             ->filterExcept($filter['except'])
             ->filterSearch($filter['search'])
             ->filterStatus($filter['status'])
@@ -93,6 +96,27 @@ class DirRepo
             ->filterReport($filter['report'])
             ->filterOrderBy($filter['orderby'])
             ->filterPaginate($filter['paginate']);
+    }
+
+    /**
+     * [paginateForWebByFilter description]
+     * @param  array                $filter [description]
+     * @return LengthAwarePaginator         [description]
+     */
+    public function paginateForWebByFilter(array $filter) : LengthAwarePaginator
+    {
+        return $this->dir
+            ->with([
+                'group',
+                'group.fields',
+                'fields',
+                'categories', 
+                'tags', 
+                'user'
+            ])
+            ->withSumRating()
+            ->filterOrderBy($filter['orderby'])
+            ->filterPaginate($this->paginate);
     }
 
     /**
@@ -132,5 +156,23 @@ class DirRepo
     public function countInactive() : int
     {
         return $this->dir->inactive()->count();
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param array $component
+     * @return array
+     */
+    public function getPopularTagsByComponent(array $component) : array
+    {
+        $tags = app(TagService::class)->getPopularTags(
+            $component['limit'], 
+            $this->dir, 
+            1,
+            $component['cats']
+        );
+
+        return $tags->shuffle()->all();
     }
 }

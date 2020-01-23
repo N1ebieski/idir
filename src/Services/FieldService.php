@@ -118,7 +118,7 @@ class FieldService implements Creatable, Updatable, PositionUpdatable
             }
         }
 
-        $this->field->getMorph()->fields()->attach($ids);
+        $this->field->getMorph()->fields()->attach($ids ?? []);
 
         return $i;
     }
@@ -165,7 +165,7 @@ class FieldService implements Creatable, Updatable, PositionUpdatable
             }
         }
 
-        $this->field->getMorph()->fields()->sync($ids);
+        $this->field->getMorph()->fields()->sync($ids ?? []);
 
         return $i;
     }

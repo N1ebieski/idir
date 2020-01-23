@@ -6,6 +6,7 @@ use N1ebieski\IDir\Models\Dir;
 use Illuminate\Contracts\Cache\Repository as Cache;
 use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 /**
  * [DirCache description]
@@ -42,7 +43,24 @@ class DirCache
         $this->cache = $cache;
         $this->config = $config;
 
-        $this->minutes = $config->get('icore.cache.minutes');
+        $this->minutes = $config->get('cache.minutes');
+    }
+
+    /**
+     * [rememberForWebByFilter description]
+     * @param  array        $filter       [description]
+     * @param  int          $page         [description]
+     * @return LengthAwarePaginator       [description]
+     */
+    public function rememberForWebByFilter(array $filter, int $page) : LengthAwarePaginator
+    {
+        return $this->cache->tags(['dirs'])->remember(
+            "dir.paginateByFilter.{$filter['orderby']}.{$page}",
+            now()->addMinutes($this->minutes),
+            function () use ($filter) {
+                return $this->dir->makeRepo()->paginateForWebByFilter($filter);
+            }
+        );
     }
 
     /**
@@ -52,7 +70,7 @@ class DirCache
      */
     public function rememberThumbnailUrl() : string
     {
-        return $this->cache->tags(['dir.'.$this->dir->slug])->remember(
+        return $this->cache->remember(
             "dir.thumbnailUrl.{$this->dir->slug}",
             now()->addDays($this->config->get('idir.dir.thumbnail.cache.days')),
             function() {
@@ -60,5 +78,5 @@ class DirCache
                     .app('crypt.thumbnail')->encryptString($this->dir->url);
             }
         );
-    }  
+    }     
 }

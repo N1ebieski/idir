@@ -30,8 +30,8 @@ class CompleteRequest extends FormRequest
             $userdata = json_decode($this->input('userdata'));
 
             $this->merge([
-                'id' => $userdata->id,
-                'redirect' => $userdata->redirect ?? 'web.profile.edit_dir'
+                'uuid' => $userdata->uuid,
+                'redirect' => $userdata->redirect ?? route('web.profile.edit_dir')
             ]);
         }
     }
@@ -60,10 +60,15 @@ class CompleteRequest extends FormRequest
             'orderid' => 'bail|required|string',
             'amount' => 'bail|required|numeric|between:0,9999.99',
             'userdata' => 'bail|required|json',
-            'id' => 'bail|required|integer',
+            'uuid' => 'bail|required|uuid',
             'status' => 'bail|required|in:ok,err',
             'sign' => 'bail|required|string',
-            'redirect' => 'bail|nullable|string|in:admin.dir.index,web.profile.edit_dir'
+            'redirect' => [
+                'bail', 
+                'nullable', 
+                'string', 
+                'regex:/^(https|http):\/\/([\da-z\.-]+)(\.[a-z]{2,6})/'
+            ]
         ];
     }
 }

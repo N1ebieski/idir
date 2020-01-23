@@ -1,0 +1,33 @@
+<?php
+
+namespace N1ebieski\IDir\Providers;
+
+use Illuminate\Support\ServiceProvider;
+use Illuminate\Console\Scheduling\Schedule;
+
+class CommandServiceProvider extends ServiceProvider
+{
+    /**
+     * Register services.
+     *
+     * @return void
+     */
+    public function register()
+    {
+        //
+    }
+
+    /**
+     * Bootstrap services.
+     *
+     * @return void
+     */
+    public function boot()
+    {
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                \N1ebieski\IDir\Console\Commands\SEOKatalogCommand::class
+            ]);
+        }
+    }
+}

@@ -57,7 +57,7 @@ class PaymentTest extends TestCase
         $provider['service'] = config('services.' . static::PAYMENT_PROVIDER . '.transfer.service');
         $provider['orderid'] = '2372832783';
         $provider['amount'] = $payment->price_morph->price;
-        $provider['userdata'] = json_encode(['id' => $payment->id]);
+        $provider['userdata'] = json_encode(['uuid' => $payment->uuid]);
         $provider['status'] = 'ok';
         $provider['sign'] = md5($provider['service'].$provider['orderid'].$provider['amount']
         .$provider['userdata'].$provider['status'].$this->key);
@@ -85,7 +85,7 @@ class PaymentTest extends TestCase
         $response->assertSeeText('OK');
 
         $this->assertDatabaseHas('payments', [
-            'id' => $payment->id,
+            'uuid' => $payment->uuid,
             'model_id' => $dir->id,
             'model_type' => 'N1ebieski\\IDir\\Models\\Dir',
             'price_id' => $price->id,
@@ -118,7 +118,7 @@ class PaymentTest extends TestCase
         $response->assertSeeText('OK');
 
         $this->assertDatabaseHas('payments', [
-            'id' => $payment->id,
+            'uuid' => $payment->uuid,
             'model_id' => $dir->id,
             'model_type' => 'N1ebieski\\IDir\\Models\\Dir',
             'price_id' => $price->id,

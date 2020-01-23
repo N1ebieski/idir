@@ -4,8 +4,8 @@ namespace N1ebieski\IDir\Http\Controllers\Admin\BanModel\Dir;
 
 use N1ebieski\IDir\Http\Requests\Admin\BanModel\Dir\StoreRequest;
 use N1ebieski\IDir\Models\Dir;
-use N1ebieski\ICore\Models\BanModel\BanModel;
-use N1ebieski\ICore\Models\BanValue;
+use N1ebieski\IDir\Models\BanModel\Dir\BanModel;
+use N1ebieski\IDir\Models\BanValue;
 use Illuminate\Http\JsonResponse;
 use N1ebieski\IDir\Http\Controllers\Admin\BanModel\Dir\Polymorphic;
 
