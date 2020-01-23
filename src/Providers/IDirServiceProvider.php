@@ -24,9 +24,10 @@ class IDirServiceProvider extends ServiceProvider
         $this->app->register(EventServiceProvider::class);
         $this->app->register(ViewServiceProvider::class);        
         $this->app->register(ScheduleServiceProvider::class);
+        $this->app->register(CommandServiceProvider::class);
 
         $this->app['router']->middlewareGroup('idir.web', [
-            'throttle:60,1',
+            // 'throttle:60,1',
             \N1ebieski\ICore\Http\Middleware\EncryptCookies::class,
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
             \Illuminate\Session\Middleware\StartSession::class,

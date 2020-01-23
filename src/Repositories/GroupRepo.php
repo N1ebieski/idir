@@ -117,12 +117,14 @@ class GroupRepo
     }
 
     /**
-     * [get description]
-     * @return Collection [description]
+     * Undocumented function
+     *
+     * @return Collection
      */
-    public function all() : Collection
+    public function getPublic() : Collection
     {
-        return $this->group->orderBy('position', 'asc')->get();
+        return $this->group->public()
+            ->orderBy('position', 'asc')->get();
     }
 
     /**

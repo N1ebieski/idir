@@ -1,11 +1,13 @@
 <form data-route="{{ route('admin.banmodel.dir.store', [$dir->id]) }}">
+    @if (isset($dir->user))    
     <div class="form-group">
         <div class="custom-control custom-checkbox">
               <input type="checkbox" class="custom-control-input" id="user" name="user" value="{{ $dir->user->id }}">
               <label class="custom-control-label" for="user">{{ trans('icore::bans.model.user.user') }}: {{ $dir->user->name }}</label>
         </div>
     </div>
-    @if (!is_null($dir->user->ip))
+    @endif
+    @if (!is_null(optional($dir->user)->ip))
     <div class="form-group">
         <div class="custom-control custom-checkbox">
               <input type="checkbox" class="custom-control-input" id="ip" name="ip" value="{{ $dir->user->ip }}">

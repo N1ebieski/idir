@@ -42,12 +42,35 @@ use N1ebieski\IDir\Http\Responses\Web\Dir\Store3Response;
 use N1ebieski\IDir\Http\Responses\Web\Dir\Update3Response;
 use N1ebieski\IDir\Http\Responses\Web\Dir\UpdateRenewResponse;
 use N1ebieski\IDir\Events\Web\Dir\Destroy as DirDestroy;
+use N1ebieski\IDir\Filters\Web\Dir\IndexFilter;
+use N1ebieski\IDir\Http\Requests\Web\Dir\IndexRequest;
 
 /**
  * [DirController description]
  */
 class DirController
 {
+    /**
+     * Display a listing of the Dirs.
+     *
+     * @param Dir $dir
+     * @param IndexRequest $request
+     * @param ShowRequest $filter
+     * @return View
+     */
+    public function index(Dir $dir, IndexRequest $request, IndexFilter $filter) : View
+    {
+        $dirs = $dir->makeCache()->rememberForWebByFilter(
+            $filter->all(),
+            $request->input('page') ?? 1
+        );
+
+        return view('idir::web.dir.index', [
+            'dirs' => $dirs,
+            'filter' => $filter->all()
+        ]);
+    }
+
     /**
      * [create1 description]
      * @param Group     $group     [description]

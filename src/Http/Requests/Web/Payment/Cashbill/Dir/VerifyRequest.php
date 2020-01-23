@@ -29,8 +29,8 @@ class VerifyRequest extends FormRequest
             $userdata = json_decode($this->input('userdata'));
 
             $this->merge([
-                'id' => $userdata->id,
-                'redirect' => $userdata->redirect ?? 'web.profile.edit_dir'
+                'uuid' => $userdata->uuid,
+                'redirect' => $userdata->redirect ?? route('web.profile.edit_dir')
             ]);
         }
 
@@ -53,8 +53,13 @@ class VerifyRequest extends FormRequest
             'userdata' => 'bail|required|json',
             'status' => 'bail|required|in:ok,err',
             'sign' => 'bail|required|string',
-            'id' => 'bail|required|integer',
-            'redirect' => 'bail|nullable|string|in:admin.dir.index,web.profile.edit_dir'
+            'uuid' => 'bail|required|uuid',
+            'redirect' => [
+                'bail', 
+                'nullable', 
+                'string', 
+                'regex:/^(https|http):\/\/([\da-z\.-]+)(\.[a-z]{2,6})/'
+            ]
         ];
     }
 }

@@ -2,6 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 
+Route::match(['get', 'post'], 'dirs', 'DirController@index')
+    ->name('dir.index');
+
 Route::get('dirs/{dir_cache}', 'DirController@show')
     ->name('dir.show')
     ->where('dir_cache', '[0-9A-Za-z,_-]+');

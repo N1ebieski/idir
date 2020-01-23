@@ -73,10 +73,10 @@ class DirController
     ) : View
     {
         return view('idir::admin.dir.index', [
-            'dirs' => $dir->makeRepo()->paginateByFilter($filter->all() + [
+            'dirs' => $dir->makeRepo()->paginateForAdminByFilter($filter->all() + [
                 'except' => $request->input('except')
             ]),
-            'groups' => $group->makeRepo()->all(),
+            'groups' => $group->all(),
             'categories' => $category->makeService()->getAsFlatTree(),
             'filter' => $filter->all()
         ]);

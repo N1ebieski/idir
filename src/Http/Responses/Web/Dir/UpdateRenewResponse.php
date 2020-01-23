@@ -69,7 +69,7 @@ class UpdateRenewResponse
     public function makeResponse() : RedirectResponse
     {
         if ($this->request->input('payment_type') === 'transfer') {
-            return $this->response->redirectToRoute('web.payment.dir.show', [$this->dir->getPayment()->id]);
+            return $this->response->redirectToRoute('web.payment.dir.show', [$this->dir->getPayment()->uuid]);
         }
 
         switch ($this->dir->status) {

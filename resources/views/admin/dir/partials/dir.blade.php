@@ -1,8 +1,8 @@
 @section('thumbnail')
 <div class="d-flex flex-column">
-    <div class="thumbnail d-inline position-relative">
+    <div class="thumbnail d-inline position-relative" style="width:90px;height:68px">
         <img src="{{ $dir->thumbnail_url }}" class="img-fluid border"
-        alt="{{ $dir->title }}" style="width:90px;height:68px">
+        alt="{{ $dir->title }}">
     </div>
     <a href="#" data-route="{{ route('admin.thumbnail.dir.reload', [$dir->id]) }}" 
     class="badge badge-primary reloadThumbnail">
@@ -15,10 +15,10 @@
 data-id="{{ $dir->id }}">
     <div class="col my-auto d-flex w-100 justify-content-between">
         <div class="custom-control custom-checkbox">
-        @can('destroy dirs')
+            @can('destroy dirs')
             <input name="select[]" type="checkbox" class="custom-control-input select" id="select{{ $dir->id }}" value="{{ $dir->id }}">
             <label class="custom-control-label" for="select{{ $dir->id }}">
-        @endcan
+            @endcan
             <ul class="list-unstyled mb-0 pb-0">
                 <li>
                     {!! $dir->title_as_link !!}
@@ -44,20 +44,20 @@ data-id="{{ $dir->id }}">
                 </li>
                 @if ($dir->group->fields->isNotEmpty())
                 @foreach ($dir->group->fields as $field)
-                    @if ($value = optional($dir->fields->where('id', $field->id)->first())->decode_value)
-                    <li class="text-break">
-                        {{ $field->title }}: 
-                        <span>
-                        @if (in_array($field->type, ['input', 'textarea', 'select']))
-                            {{ $value }}
-                        @elseif (in_array($field->type, ['multiselect', 'checkbox']))
-                            {{ implode(', ', $value) }}
-                        @else
-                            <img class="img-fluid" src="{{ Storage::url($value) }}">
-                        @endif
-                        </span>
-                    </li>
+                @if ($value = optional($dir->fields->where('id', $field->id)->first())->decode_value)
+                <li class="text-break">
+                    {{ $field->title }}: 
+                    <span>
+                    @if (in_array($field->type, ['input', 'textarea', 'select']))
+                        {{ $value }}
+                    @elseif (in_array($field->type, ['multiselect', 'checkbox']))
+                        {{ implode(', ', $value) }}
+                    @else
+                        <img class="img-fluid" src="{{ Storage::url($value) }}">
                     @endif
+                    </span>
+                </li>
+                @endif
                 @endforeach
                 @endif                
             </ul>
@@ -67,15 +67,20 @@ data-id="{{ $dir->id }}">
             <div class="d-flex">
                 <ul class="list-unstyled mb-0 pb-0 flex-grow-1">
                     @if ($dir->tagList)
-                    <li><small>{{ trans('idir::dirs.tags') }}: {{ $dir->tagList }}</small></li>
+                    <li class="text-break"><small>{{ trans('idir::dirs.tags') }}: {{ $dir->tagList }}</small></li>
                     @endif
                     @if ($dir->categories->isNotEmpty())
-                    <li><small>{{ trans('icore::categories.categories') }}: 
-                        @foreach ($dir->categories as $category)
-                        <a href="{{ route('admin.dir.index', ['filter[category]' => $category->id]) }}">{{ $category->name }}</a>
-                        {{ (!$loop->last) ? ', ' : '' }}
-                        @endforeach
-                    </small></li>
+                    <li>
+                        <small>
+                            <span>{{ trans('icore::categories.categories') }}:</span> 
+                            <span>
+                                @foreach ($dir->categories as $category)
+                                <a href="{{ route('admin.dir.index', ['filter[category]' => $category->id]) }}">{{ $category->name }}</a>
+                                {{ (!$loop->last) ? ', ' : '' }}
+                                @endforeach
+                            </span>
+                        </small>
+                    </li>
                     @endif                   
                     <li>
                         <small>
@@ -94,7 +99,14 @@ data-id="{{ $dir->id }}">
                         </span>
                         @endif
                     </li>
-                    <li><small>{{ trans('idir::dirs.author') }}: <a href="{{ route('admin.dir.index', ['filter[author]' => $dir->user->id]) }}">{{ $dir->user->name }}</a></small></li>
+                    @if (isset($dir->user))
+                    <li>
+                        <small>
+                            <span>{{ trans('idir::dirs.author') }}:</span>
+                            <span><a href="{{ route('admin.dir.index', ['filter[author]' => $dir->user->id]) }}">{{ $dir->user->name }}</a></span>
+                        </small>
+                    </li>
+                    @endif
                     <li><small>{{ trans('icore::filter.created_at') }}: {{ $dir->created_at_diff }}</small></li>
                     <li><small>{{ trans('icore::filter.updated_at') }}: {{ $dir->updated_at_diff }}</small></li>
                 </ul>

@@ -28,12 +28,12 @@ class PaymentRepo
 
     /**
      * [firstPendingById description]
-     * @param  int    $id [description]
+     * @param  string    $uuid [description]
      * @return Payment|null     [description]
      */
-    public function firstPendingById(int $id) : ?Payment
+    public function firstPendingByUuid(string $uuid) : ?Payment
     {
-        return $this->payment->where('id', $id)
+        return $this->payment->where('uuid', $uuid)
             ->pending()
             ->poliType()
             ->with(['morph', 'price_morph'])

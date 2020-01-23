@@ -20,7 +20,7 @@ class CreateDirsTable extends Migration
             $table->bigIncrements('id');
             $table->string('slug')->unique();
             $table->unsignedBigInteger('group_id')->index();
-            $table->unsignedBigInteger('user_id')->index();
+            $table->unsignedBigInteger('user_id')->nullable()->index();
             $table->string('title');
             $table->longText('content_html');
             $table->longText('content');
@@ -34,7 +34,7 @@ class CreateDirsTable extends Migration
 
         // Full Text Index
         DB::statement("ALTER TABLE dirs ADD FULLTEXT fulltext_index (title, content, url)");
-        DB::statement("ALTER TABLE dirs ADD FULLTEXT fulltext_index (url)");
+        DB::statement("ALTER TABLE dirs ADD FULLTEXT fulltext_url (url)");
 
         Schema::create('dirs_backlinks', function (Blueprint $table) {
             $table->bigIncrements('id');

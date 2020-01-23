@@ -8,6 +8,7 @@ use N1ebieski\IDir\Repositories\PaymentRepo;
 use Illuminate\Database\Eloquent\Builder;
 use N1ebieski\ICore\Models\Traits\Carbonable;
 use N1ebieski\ICore\Models\Traits\Polymorphic;
+use Ramsey\Uuid\Uuid;
 
 /**
  * [Payment description]
@@ -27,6 +28,27 @@ class Payment extends Model
         'status',
         'logs'
     ];
+
+    /**
+     * The primary key associated with the table.
+     *
+     * @var string
+     */
+    protected $primaryKey = 'uuid';
+
+    /**
+     * Indicates if the IDs are auto-incrementing.
+     *
+     * @var bool
+     */
+    public $incrementing = false;
+    
+    /**
+     * The "type" of the auto-incrementing ID.
+     *
+     * @var string
+     */
+    protected $keyType = 'string';    
 
     // Relations
 
@@ -55,6 +77,22 @@ class Payment extends Model
     public function price_morph()
     {
         return $this->morphTo('price', 'price_type', 'price_id');
+    }
+
+    // Overrides
+
+    /**
+     * Undocumented function
+     *
+     * @return void
+     */
+    public static function boot() : void
+    {
+        parent::boot();
+
+        self::creating(function ($model) {
+            $model->uuid = (string)Uuid::uuid4();
+        });
     }
 
     // Scopes

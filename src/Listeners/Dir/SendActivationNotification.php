@@ -18,6 +18,11 @@ class SendActivationNotification
      */
     public function handle($event)
     {
+        if (!optional($event->dir->user)->email) {
+            return;
+        }
+
+
         if ($event->dir->status === 1) {
             Mail::send(app()->makeWith(ActivationNotification::class, [
                 'dir' => $event->dir

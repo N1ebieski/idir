@@ -26,8 +26,13 @@ class RouteServiceProvider extends ServiceProvider
 
         $this->app['router']->bind('payment_dir_pending', function($value) {
             return $this->app->make(\N1ebieski\IDir\Models\Payment\Dir\Payment::class)
-                ->makeRepo()->firstPendingById($value) ?? abort(404);
+                ->makeRepo()->firstPendingByUuid($value) ?? abort(404);
         });
+
+        $this->app['router']->bind('category_dir_cache', function($value) {
+            return $this->app->make(\N1ebieski\IDir\Models\Category\Dir\Category::class)
+                ->makeCache()->rememberBySlug($value) ?? abort(404);
+        });        
     }
 
     /**

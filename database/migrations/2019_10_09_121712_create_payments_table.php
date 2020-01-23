@@ -17,7 +17,7 @@ class CreatePaymentsTable extends Migration
     public function up()
     {
         Schema::create('payments', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->uuid('uuid')->primary();
             $table->unsignedInteger('model_id')->nullable();
             $table->string('model_type')->nullable();
             $table->unsignedInteger('price_id');

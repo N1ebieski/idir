@@ -40,7 +40,7 @@ class PaymentController implements Polymorphic
                             : strtolower(trans('idir::groups.unlimited'))
                     ]),
                     'userdata' => json_encode([
-                        'id' => $payment->id,
+                        'uuid' => $payment->uuid,
                         'redirect' => $request->input('redirect')
                     ])
                 ])->all()
@@ -59,7 +59,7 @@ class PaymentController implements Polymorphic
             abort(403, 'Invalid signature of payment.');
         }
 
-        return redirect()->route($request->input('redirect'))->with(
+        return redirect()->to($request->input('redirect'))->with(
                 $request->input('status') === 'ok' ? 'success' : 'danger',
                 $request->input('status') === 'ok' ? trans('idir::payments.success.complete')
                     : trans('idir::payments.error.complete')
@@ -76,7 +76,7 @@ class PaymentController implements Polymorphic
     public function verify(Payment $payment, VerifyRequest $request, Cashbill $cashbill) : string
     {
         // I can't' use the route binding, because cashbill returns id payment as part of $_POST['userdata'] variable
-        ($payment = $payment->makeRepo()->firstPendingById($request->input('id'))) ?? abort(404);
+        ($payment = $payment->makeRepo()->firstPendingByUuid($request->input('uuid'))) ?? abort(404);
 
         event(new VerifyAttempt($payment));
 

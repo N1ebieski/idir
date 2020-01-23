@@ -14,6 +14,12 @@
                 <span aria-hidden="true">&times;</span>
             </a>&nbsp;
             @endif
+            @if ($filter['report'] !== null)
+            <a href="#" class="badge badge-primary filterOption" data-name="filter[report]">
+                {{ trans('icore::filter.report') }}: {{ trans('icore::filter.report_'.$filter['report']) }}
+                <span aria-hidden="true">&times;</span>
+            </a>&nbsp;
+            @endif        
             @if ($filter['group'] !== null)
             <a href="#" class="badge badge-primary filterOption" data-name="filter[group]">
                 {{ trans('idir::filter.group') }}: {{ $filter['group']->name }}

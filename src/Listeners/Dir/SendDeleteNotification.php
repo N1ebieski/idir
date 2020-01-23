@@ -18,6 +18,10 @@ class SendDeleteNotification
      */
     public function handle($event)
     {
+        if (!optional($event->dir->user)->email) {
+            return;
+        }
+
         Mail::send(app()->makeWith(DeleteNotification::class, [
             'dir' => $event->dir,
             'reason' => $event->reason

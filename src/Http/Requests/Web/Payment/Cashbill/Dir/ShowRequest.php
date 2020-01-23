@@ -27,7 +27,12 @@ class ShowRequest extends FormRequest
     public function rules()
     {
         return [
-            'redirect' => 'bail|nullable|string|in:admin.dir.index,web.profile.edit_dir'
+            'redirect' => [
+                'bail', 
+                'nullable', 
+                'string', 
+                'regex:/^(https|http):\/\/([\da-z\.-]+)(\.[a-z]{2,6})/'
+            ]
         ];
     }
 }

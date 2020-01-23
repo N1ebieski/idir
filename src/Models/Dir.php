@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\Builder;
 use N1ebieski\IDir\Models\Group;
 use N1ebieski\IDir\Models\Payment\Dir\Payment;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 /**
  * [Dir description]
@@ -140,21 +141,6 @@ class Dir extends Model
     // Overrides
 
     /**
-    * Override metody z paczki Taggable bo ma hardcodowane nazwy tabel w SQL
-     *
-     * @param int|null $limit
-     * @param int $minCount
-     *
-     * @return array
-     */
-    public function popularTags(int $limit = null, int $minCount = 1): array
-    {
-        $tags = app(TagService::class)->getPopularTags($limit, static::class, $minCount);
-
-        return $tags->shuffle()->all();
-    }
-
-    /**
      * Override relacji tags, bo ma hardcodowane nazwy pól
      *
      * @return \Illuminate\Database\Eloquent\Relations\MorphToMany
@@ -259,12 +245,18 @@ class Dir extends Model
      */
     public function scopeWithSumRating(Builder $query) : Builder
     {
-        return $query->selectRaw('dirs.*, COALESCE(SUM(ratings.rating), 0) AS sum_rating')
-            ->leftJoin('ratings', function($q) {
-                 $q->on('ratings.model_id', '=', 'dirs.id');
-                 $q->where('ratings.model_type', '=', 'N1ebieski\IDir\Models\Dir');
-            })
-            ->groupBy('dirs.id');
+        return $query->withCount([
+            'ratings AS sum_rating' => function($query) {
+                $query->select(DB::raw('COALESCE(SUM(`ratings`.`rating`), 0) as `sum_rating`'));
+            }
+        ]);
+
+        // return $query->selectRaw('dirs.*, COALESCE(SUM(ratings.rating), 0) AS sum_rating')
+        //     ->leftJoin('ratings', function($q) {
+        //          $q->on('ratings.model_id', '=', 'dirs.id');
+        //          $q->where('ratings.model_type', '=', 'N1ebieski\IDir\Models\Dir');
+        //     })
+        //     ->groupBy('dirs.id');
     }
 
     /**
@@ -369,7 +361,7 @@ class Dir extends Model
      */
     public function getShortContentAttribute() : string
     {
-        return substr($this->content, 0, 500);
+        return mb_substr($this->content, 0, 500);
     }
 
     /**

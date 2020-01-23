@@ -69,10 +69,10 @@ class UniqueUrl implements Rule
         return DB::table($this->table)
             ->where(function($query) use ($url) {
                 return $query->whereRaw("MATCH (url) AGAINST (? IN BOOLEAN MODE)", [
-                    '+/' . $url
+                    '+"/' . $url . '"'
                 ])
                 ->orWhereRaw("MATCH (url) AGAINST (? IN BOOLEAN MODE)", [
-                    '+/www.' . $url
+                    '+"/www.' . $url . '"'
                 ]);
             })
             ->when($this->ignore !== null, function($query) {

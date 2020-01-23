@@ -2,12 +2,12 @@
 
 namespace N1ebieski\IDir\Models\Category\Dir;
 
-use N1ebieski\ICore\Models\Category\Category as CategoryBaseModel;
+use N1ebieski\IDir\Models\Category\Category as BaseCategory;
 
 /**
  * [Category description]
  */
-class Category extends CategoryBaseModel
+class Category extends BaseCategory
 {
     /**
      * The model's default values for attributes.
@@ -27,6 +27,17 @@ class Category extends CategoryBaseModel
     public function getMorphClass()
     {
         return 'N1ebieski\\ICore\\Models\\Category\\Category';
+    }
+
+    // Relations
+
+    /**
+     * [morphs description]
+     * @return [type] [description]
+     */
+    public function morphs()
+    {
+        return $this->morphedByMany('N1ebieski\IDir\Models\Dir', 'model', 'categories_models', 'category_id');
     }
 
     // Accessors

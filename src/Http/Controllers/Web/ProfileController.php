@@ -23,7 +23,7 @@ class ProfileController
     {
         return view('idir::web.profile.edit_dir', [
             'filter' => $filter->all(),
-            'groups' => $group->makeRepo()->all(),
+            'groups' => $group->makeRepo()->getPublic(),
             'dirs' => auth()->user()->makeRepo()->paginateDirsByFilter($filter->all() + [
                 'except' => $request->input('except')
             ]),
