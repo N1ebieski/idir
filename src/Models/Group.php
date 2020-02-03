@@ -196,6 +196,30 @@ class Group extends Model
     }
 
     /**
+     * Undocumented function
+     *
+     * @return boolean
+     */
+    public function hasDirectLinkPrivilege() : bool
+    {
+        return $this->getRelation('privileges')
+            ->contains('name', 'direct link on listings') ? 
+            true : false;        
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @return boolean
+     */
+    public function hasNoFollowPrivilege() : bool
+    {
+        return $this->getRelation('privileges')
+            ->contains('name', 'direct link nofollow') ? 
+            true : false;         
+    }
+
+    /**
      * [isAvailable description]
      * @return bool [description]
      */

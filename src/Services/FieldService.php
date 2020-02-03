@@ -98,6 +98,10 @@ class FieldService implements Creatable, Updatable, PositionUpdatable
         $i = 0;
 
         foreach ($this->field->getMorph()->getGroup()->fields()->get() as $field) {
+            if ($field->type === 'regions') {
+                $this->field->getMorph()->regions()->attach($attributes[$field->id] ?? []);
+            }
+
             if (isset($attributes[$field->id])) {
                 $value = $attributes[$field->id];
 
@@ -133,8 +137,13 @@ class FieldService implements Creatable, Updatable, PositionUpdatable
         $i = 0;
 
         foreach ($this->field->getMorph()->getGroup()->fields()->get() as $field) {
+            if ($field->type === 'regions') {
+                $this->field->getMorph()->regions()->sync($attributes[$field->id] ?? []);
+            }
+
             if ($field->type === 'image') {
-                $path = optional($this->field->getMorph()->fields->where('id', $field->id)->first())->decode_value;
+                $path = optional($this->field->getMorph()->fields->where('id', $field->id)
+                    ->first())->decode_value;
             }
 
             if (isset($attributes[$field->id])) {
@@ -184,7 +193,7 @@ class FieldService implements Creatable, Updatable, PositionUpdatable
         );
         $this->field->save();
 
-        $this->field->morphs()->attach($attributes['morphs']);
+        $this->field->morphs()->attach($attributes['morphs'] ?? []);
 
         return $this->field;
     }
@@ -197,12 +206,14 @@ class FieldService implements Creatable, Updatable, PositionUpdatable
     public function update(array $attributes) : bool
     {
         $this->field->fill($attributes);
+
         $this->field->options = array_merge(
-            $attributes[$attributes['type']],
-            ['required' => $attributes['required']]
+            ['required' => $attributes['required']],
+            isset($attributes['type']) ?
+                $attributes[$attributes['type']] : []
         );
 
-        $this->field->morphs()->sync($attributes['morphs']);
+        $this->field->morphs()->sync($attributes['morphs'] ?? []);
 
         return $this->field->save();
     }

@@ -26,6 +26,7 @@ data-id="{{ $field->id }}">
                 </div>
                 @endcan
                 @can('destroy fields')
+                @if ($field->isNotDefault())
                 <button class="btn btn-danger" data-status="delete" data-toggle="confirmation"
                 data-route="{{ route('admin.field.destroy', ['field' => $field->id]) }}" data-id="{{ $field->id }}"
                 type="button" data-btn-ok-label=" {{ trans('icore::default.yes') }}" data-btn-ok-icon-class="fas fa-check"
@@ -35,6 +36,7 @@ data-id="{{ $field->id }}">
                     <i class="far fa-trash-alt"></i>
                     <span class="d-none d-sm-inline"> {{ trans('icore::default.delete') }}</span>
                 </button>
+                @endif
                 @endcan
             </div>
         </div>

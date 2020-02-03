@@ -17,6 +17,7 @@ class UpdateStatusLoad
     {
         $request->route('dir')->load([
             'group',
+            'group.privileges',
             'fields',
             'categories',
             'tags'

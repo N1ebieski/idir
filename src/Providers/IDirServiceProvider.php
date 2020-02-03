@@ -63,7 +63,18 @@ class IDirServiceProvider extends ServiceProvider
             __DIR__ . '/../../resources/views' => resource_path('views/vendor/idir'),
         ], 'idir.views');
 
-        $this->app->make('Illuminate\Database\Eloquent\Factory')->load(base_path('database/factories') . '/vendor/idir');
+        $this->publishes([
+            __DIR__ . '/../../public/css' => public_path('css/vendor/idir'),
+            __DIR__ . '/../../public/img' => public_path('img/vendor/idir'),
+            __DIR__ . '/../../public/js' => public_path('js/vendor/idir'),
+            // __DIR__ . '/../../public/svg' => public_path('svg/vendor/idir'),
+            // __DIR__ . '/../../public/fonts/vendor' => public_path('fonts/vendor'),
+            __DIR__ . '/../../public/mix-manifest.json' => public_path('mix-manifest.json')
+        ], 'idir.public');
+
+        if ($this->app->environment('local')) {
+            $this->app->make('Illuminate\Database\Eloquent\Factory')->load(base_path('database/factories') . '/vendor/idir');
+        }
 
         $this->publishes([
             __DIR__ . '/../../database/factories' => base_path('database/factories') . '/vendor/idir',

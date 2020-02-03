@@ -58,7 +58,9 @@ class UpdateRequest extends FormRequest
         return [
             'title' => 'bail|required|string|between:3,255|no_js_validation',
             'desc' => 'bail|nullable|string|between:3,5000|no_js_validation',
-            'type' => 'bail|required|string|in:input,textarea,select,multiselect,checkbox,image|no_js_validation',
+            'type' => $this->field->isNotDefault() ?
+                'bail|required|string|in:input,textarea,select,multiselect,checkbox,image|no_js_validation'
+                : 'not_present',
             'input.min' => $this->input('type') === 'input' ? [
                 'bail',
                 'required_if:type,input',

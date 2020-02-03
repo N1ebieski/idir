@@ -7,9 +7,8 @@ use Cviebrock\EloquentSluggable\Sluggable;
 use Cviebrock\EloquentTaggable\Taggable;
 use N1ebieski\ICore\Models\Traits\Carbonable;
 use N1ebieski\ICore\Models\Traits\FullTextSearchable;
-use N1ebieski\ICore\Models\Traits\Filterable;
+use N1ebieski\IDir\Models\Traits\Filterable;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
-use N1ebieski\ICore\Services\TagService;
 use N1ebieski\IDir\Services\DirService;
 use N1ebieski\IDir\Cache\DirCache;
 use N1ebieski\IDir\Repositories\DirRepo;
@@ -18,15 +17,23 @@ use N1ebieski\IDir\Models\Group;
 use N1ebieski\IDir\Models\Payment\Dir\Payment;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Mews\Purifier\Facades\Purifier;
+use Fico7489\Laravel\Pivot\Traits\PivotEventTrait;
 
 /**
  * [Dir description]
  */
 class Dir extends Model
 {
-    use Sluggable, Taggable, FullTextSearchable, Filterable, Carbonable;
+    use Sluggable, Taggable, FullTextSearchable, Filterable, Carbonable, PivotEventTrait;
 
     // Configuration
+
+    /**
+     * [private description]
+     * @var bool
+     */
+    private bool $pivotEvent = false;
 
     /**
      * [private description]
@@ -141,6 +148,37 @@ class Dir extends Model
     // Overrides
 
     /**
+     * Undocumented function
+     *
+     * @return void
+     */
+    public static function boot()
+    {
+        parent::boot();
+
+        static::pivotUpdated(function ($model, $relationName, $pivotIds, $pivotIdsAttributes) {
+            if ($model->pivotEvent === false && in_array($relationName, ['fields'])) {
+                $model->fireModelEvent('updated');
+                $model->pivotEvent = true;
+            }
+        });        
+
+        static::pivotAttached(function ($model, $relationName, $pivotIds, $pivotIdsAttributes) {
+            if ($model->pivotEvent === false && in_array($relationName, ['fields', 'categories', 'regions'])) {
+                $model->fireModelEvent('updated');
+                $model->pivotEvent = true;
+            }
+        });
+
+        static::pivotDetached(function ($model, $relationName, $pivotIds) {
+            if ($model->pivotEvent === false && in_array($relationName, ['fields', 'categories', 'regions'])) {
+                $model->fireModelEvent('updated');
+                $model->pivotEvent = true;
+            }
+        });        
+    }
+
+    /**
      * Override relacji tags, bo ma hardcodowane nazwy pól
      *
      * @return \Illuminate\Database\Eloquent\Relations\MorphToMany
@@ -187,8 +225,17 @@ class Dir extends Model
      */
     public function ratings()
     {
-        return $this->morphMany('N1ebieski\ICore\Models\Rating\Rating', 'model');
+        return $this->morphMany('N1ebieski\IDir\Models\Rating\Dir\Rating', 'model');
     }
+
+    /**
+     * [regions description]
+     * @return [type] [description]
+     */
+    public function regions()
+    {
+        return $this->morphToMany('N1ebieski\IDir\Models\Region\Region', 'model', 'regions_models', 'model_id', 'region_id');
+    }    
 
     /**
      * [reports description]
@@ -247,7 +294,7 @@ class Dir extends Model
     {
         return $query->withCount([
             'ratings AS sum_rating' => function($query) {
-                $query->select(DB::raw('COALESCE(SUM(`ratings`.`rating`), 0) as `sum_rating`'));
+                $query->select(DB::raw('COALESCE(SUM(`ratings`.`rating`)/COUNT(*), 0) as `sum_rating`'));
             }
         ]);
 
@@ -314,6 +361,24 @@ class Dir extends Model
     // Accessors
 
     /**
+     * Undocumented function
+     *
+     * @return string
+     */
+    public function getSumRatingAttribute() : string
+    {
+        if (!isset($this->attributes['sum_rating'])) {
+            $ratings = $this->getRelation('ratings');
+
+            $sum_rating = $ratings->count() > 0 ? $ratings->sum('rating')/$ratings->count() : 0;
+
+            return number_format($sum_rating, 2, '.', '');
+        }
+
+        return $this->attributes['sum_rating'];
+    }
+
+    /**
      * [getPoliAttribute description]
      * @return string [description]
      */
@@ -337,14 +402,14 @@ class Dir extends Model
         return config('idir.dir.thumbnail.url').$this->url;
     }
 
-    // /**
-    //  * [getHostAttribute description]
-    //  * @return string        [description]
-    //  */
-    // public function getUrlHostAttribute() : string
-    // {
-    //     return parse_url($this->url, PHP_URL_HOST);
-    // }
+    /**
+     * [getHostAttribute description]
+     * @return string        [description]
+     */
+    public function getUrlAsHostAttribute() : string
+    {
+        return parse_url($this->url, PHP_URL_HOST);
+    }
 
     /**
      * [getPrivilegedToDiffAttribute description]
@@ -370,10 +435,47 @@ class Dir extends Model
      */
     public function getTitleAsLinkAttribute() : string
     {
-        return $this->url !== null ?
-            '<a href="' . $this->url . '" target="_blank">' . $this->title . '</a>'
-            : $this->title;
+        if ($this->url !== null) {
+            $link = '<a ';
+
+            if ($this->getRelation('group')->hasNoFollowPrivilege()) {
+                $link .= 'rel="nofollow" ';
+            }
+
+            $link .= 'href="' . $this->url . '" target="_blank">' . $this->title . '</a>';
+        }
+
+        return $link ?? $this->title;
     }
+
+    /**
+     * Undocumented function
+     *
+     * @return string
+     */
+    public function getLinkAttribute() : string
+    {
+        if ($this->url !== null) {
+            if ($this->getRelation('group')->hasDirectLinkPrivilege()) {
+                return $this->title_as_link;
+            } 
+        }
+
+        return '<a href="' . route('web.dir.show', [$this->slug]) . '">' . $this->title . '</a>';
+    }
+
+    /**
+     * [getContentHtmlAttribute description]
+     * @return string [description]
+     */
+    public function getContentHtmlAttribute() : string
+    {
+        if ($this->getRelation('group')->hasEditorPrivilege()) {
+            return Purifier::clean($this->attributes['content_html'], 'dir');
+        }
+
+        return nl2br(e($this->content));
+    }    
 
     /**
      * [getAttributesAttribute description]
@@ -435,6 +537,15 @@ class Dir extends Model
     }
 
     /**
+     * [isActive description]
+     * @return bool [description]
+     */
+    public function isActive() : bool
+    {
+        return $this->status === 1;
+    }    
+
+    /**
      * [isPayment description]
      * @param  int  $id [description]
      * @return bool     [description]
@@ -464,6 +575,28 @@ class Dir extends Model
         return $this->load(['payments' => function($query) {
             $query->with('price_morph')->where('status', 0);
         }]);
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @return self
+     */
+    public function loadAllWebRels() : self
+    {
+        return $this->load([
+                'fields', 
+                'categories', 
+                'group', 
+                'group.privileges',
+                'group.fields' => function($query) {
+                    return $query->public();
+                },
+                'tags',
+                'regions',
+                'ratings'
+            ])
+            ;
     }
 
     // /**

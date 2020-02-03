@@ -59,17 +59,54 @@ class CategoryRepo extends BaseCategoryRepo
      */
     public function paginateDirsByFilter(array $filter) : LengthAwarePaginator
     {
-        return $this->category->morphs()
-            ->with([
-                'group',
-                'group.fields',
-                'fields',
-                'categories', 
-                'tags', 
-                'user'
-            ])
+        $relations = [
+            'group',
+            'group.fields' => function($query) {
+                return $query->public();
+            },
+            'group.privileges',                
+            'fields',
+            'regions',
+            'categories', 
+            'tags', 
+            'user'
+        ];
+
+        $sqlPrivilege = DB::table('privileges')
+            ->join('groups_privileges', 'privileges.id', '=', 'groups_privileges.privilege_id')
+            ->whereColumn('dirs.group_id', 'groups_privileges.group_id')
+            ->whereRaw('`privileges`.`name` = "highest position in their categories"')
+            ->toSql();
+
+        $dirs = $this->category->morphs()
+            ->selectRaw('`dirs`.*, CASE WHEN EXISTS (' . $sqlPrivilege . ') THEN TRUE ELSE FALSE END AS `privilege`')
+            ->with($relations)
             ->withSumRating()
-            ->filterOrderBy($filter['orderby'])
+            ->active()
+            ->filterRegion($filter['region']);
+
+        return $this->category->morphs()
+            ->make()
+            ->selectRaw('`dirs`.*, TRUE as `privilege`')
+            ->with($relations)
+            ->withSumRating()
+            ->whereHas('group', function($query) {
+                $query->whereHas('privileges', function($query) {
+                    $query->where('name', 'highest position in ancestor categories');
+                });
+            })
+            ->whereHas('categories', function($query) {
+                $query->whereIn('id', $this->category->descendants->pluck('id')->toArray());
+            })
+            ->active()
+            ->union($dirs)
+            ->filterRegion($filter['region'])
+            ->when($filter['orderby'] === null, function($query) {
+                $query->orderBy('privilege', 'desc')->latest();
+            })            
+            ->when($filter['orderby'] !== null, function($query) use ($filter) {
+                $query->filterOrderBy($filter['orderby']);
+            })
             ->filterPaginate($this->paginate);
     }    
 }

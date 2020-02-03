@@ -7,6 +7,7 @@
         <label for="desc">{{ trans('idir::fields.desc') }}:</label>
         <textarea class="form-control" id="desc" name="desc" rows="3">{{ $field->desc }}</textarea>
     </div>
+    @if ($field->isNotDefault())
     <div class="form-group">
         <label for="type">{{ trans('idir::fields.choose_type') }}:</label>
         <div id="type">
@@ -85,6 +86,7 @@
             </div>
         </div>
     </div>
+    @endif
     <div class="form-group">
         <label for="visible">
             {{ trans('idir::fields.visible') }}: <i data-toggle="tooltip" data-placement="top"

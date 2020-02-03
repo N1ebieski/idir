@@ -28,15 +28,18 @@ class ScheduleServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->app->booted(function() {
-             $schedule = $this->app->make(Schedule::class);
+            $schedule = $this->app->make(Schedule::class);
 
-             $schedule->call($this->app->make(\N1ebieski\IDir\Crons\BacklinkCron::class))
+            $schedule->call($this->app->make(\N1ebieski\IDir\Crons\BacklinkCron::class))
                 ->name('BacklinkCron')->daily();
 
-             $schedule->command('clean:directories')->hourly();
+            $schedule->call($this->app->make(\N1ebieski\IDir\Crons\Tag\Dir\PopularTagsCron::class))
+                ->name('Dir.PopularTagsCron');
 
-             $schedule->command('queue:restart');
-             $schedule->command('queue:work --daemon --stop-when-empty --tries=3');
-         });
+            $schedule->command('clean:directories')->hourly();
+
+            $schedule->command('queue:restart');
+            $schedule->command('queue:work --daemon --stop-when-empty --tries=3');
+        });
     }
 }

@@ -26,6 +26,11 @@
     <!-- Scripts -->
     <script src="{{ mix('js/vendor/idir/vendor/vendor.js') }}"></script>
     <script src="{{ mix('js/vendor/idir/web/web.js') }}"></script>
+
+    {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-star-rating/4.0.6/js/star-rating.min.js" type="text/javascript"></script>
+
+    <!-- optionally if you need to use a theme, then include the theme JS file as mentioned below -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-star-rating/4.0.6/themes/krajee-svg/theme.js"></script>    --}}
 </head>
 <body>
 

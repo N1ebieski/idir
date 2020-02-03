@@ -678,11 +678,15 @@ jQuery(document).on('readyAndAjax', function() {
         debug: false,
         autoTrigger: false,
         data: function() {
-            return {
-                except: $(this).find('[id^=row]').map(function() {
-                    return $(this).attr('data-id');
-                }).get()
-            };
+            let except = $(this).find('[id^=row]').map(function() {
+                return $(this).attr('data-id');
+            }).get();
+
+            if (except.length) {
+                return {
+                    except: except
+                };
+            }
         },
         loadingHtml: $.getLoader('spinner-border', 'loader'),
         loadingFunction: function() {
@@ -706,6 +710,25 @@ jQuery(document).on('readyAndAjax', function() {
     });
 });
 
+jQuery(document).ready(function() {
+    let $map = $("#map");
+    $map.data = $map.data();
+
+    if (typeof $map.data.addressMarker !== 'undefined' && $map.data.addressMarker.length) {
+        $map.googleMap({
+            zoom: parseInt($map.data.zoom),
+			scrollwheel: true,              
+            type: "ROADMAP"
+        })
+        .addClass($map.data.containerClass);
+
+        $.each($map.data.addressMarker, function(key, value) {
+            $map.addMarker({
+                address: value
+            });
+        });
+    }
+});
 jQuery(document).ready(function() {
     $('.tagsinput').tagsInput({
         placeholder: $('.tagsinput').attr('placeholder'),
@@ -884,6 +907,77 @@ jQuery(document).on('click', 'div#themeToggle button', function(e) {
     $element.siblings('button').prop('disabled', false);
 });
 
+jQuery(document).ready(function() {
+    $('[id^="star-rating"]').on('rating:change', function(event, value, caption) {
+        event.preventDefault();
+
+        let $element = $(this);
+
+        if (value === $element.attr('data-user-value')) {
+            $element.rating("update", $element.attr('value'));
+
+            return;
+        }
+
+        $.ajax({
+            url: $element.attr('data-route') + '?rating=' + value,
+            method: 'get',
+            beforeSend: function() {
+            },
+            complete: function() {
+            },
+            success: function(response) {
+                $element.rating("update", response.sum_rating)
+                        .rating("refresh", {
+                            showClear: true
+                        })
+                        .attr('data-user-value', value);
+            }
+        });    
+    });
+
+    $('[id^="star-rating"]').on('rating:clear', function(event, value, caption) {
+        event.preventDefault();
+
+        let $element = $(this);
+
+        $.ajax({
+            url: $element.attr('data-route') + '?rating=' + $element.attr('data-user-value'),
+            method: 'get',
+            beforeSend: function() {
+            },
+            complete: function() {
+            },
+            success: function(response) {
+                $element.rating("update", response.sum_rating)
+                        .rating("refresh", {
+                            showClear: false
+                        })
+                        .attr('data-user-value', '');
+            }
+        }); 
+    });
+});
+jQuery(document).on('readyAndAjax', function() {
+    $('[id^="star-rating"]').rating({
+        theme: 'krajee-svg',
+        language: 'pl',
+        showCaption: false
+    });
+});
+$(document).ready(function(){
+    // CSSMap;
+    $("#map-poland").CSSMap({
+      "size": 430,
+      "tooltips": "floating-top-center",
+      "responsive": "auto",
+      "tapOnce": true,
+      onLoad: function(e) {
+        $("#map-poland").find('a.active-region').parent().addClass('active-region');
+      }
+    }).children().show();
+    // END OF THE CSSMap;
+ });
 jQuery(document).on('readyAndAjax', function() {
     if (!$('.trumbowyg-box').length) {
         $('#content_html_dir_trumbowyg').trumbowyg({

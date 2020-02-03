@@ -33,6 +33,7 @@
                     value="{{ $search ?? null }}">
                     <select class="custom-select" name="source">
                         <option value="post" @isRouteContains('post', 'selected')>{{ trans('icore::search.type.post') }}</option>
+                        <option value="dir" @isRouteContains('dir', 'selected')>{{ trans('idir::search.type.dir') }}</option>
                     </select>
                     <span class="input-group-append">
                         <button class="btn btn-outline-secondary border border-left-0"

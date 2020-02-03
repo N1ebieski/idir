@@ -21,5 +21,7 @@ class EnvSeeder extends Seeder
         $this->call(DefaultGroupAndPrivilegesSeeder::class);
         $this->call(GroupsSeeder::class);
         $this->call(LinksSeeder::class);
+        $this->call(DefaultFieldsSeeder::class);
+        $this->call(RegionsSeeder::class);
     }
 }

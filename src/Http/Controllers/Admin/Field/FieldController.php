@@ -6,6 +6,7 @@ use N1ebieski\IDir\Models\Field\Field;
 use N1ebieski\IDir\Http\Requests\Admin\Field\UpdatePositionRequest;
 use Illuminate\Http\JsonResponse;
 use N1ebieski\IDir\Http\Controllers\Admin\Field\Polymorphic;
+use N1ebieski\IDir\Http\Requests\Admin\Field\DestroyRequest;
 
 /**
  * [FieldController description]
@@ -45,11 +46,13 @@ class FieldController implements Polymorphic
     }
 
     /**
-     * [destroy description]
-     * @param  Field        $field [description]
-     * @return JsonResponse        [description]
+     * Undocumented function
+     *
+     * @param Field $field
+     * @param DestroyRequest $request
+     * @return JsonResponse
      */
-    public function destroy(Field $field) : JsonResponse
+    public function destroy(Field $field, DestroyRequest $request) : JsonResponse
     {
         $field->delete();
 

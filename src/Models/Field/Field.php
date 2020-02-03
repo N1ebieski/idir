@@ -143,6 +143,17 @@ class Field extends Model
         $this->attributes['options'] = json_encode($value);
     }
 
+    // Checkers
+
+    /**
+     * [isNotDefault description]
+     * @return bool [description]
+     */
+    public function isNotDefault() : bool
+    {
+        return !in_array($this->type, ['regions', 'map']);
+    }
+
     // Makers
 
     /**

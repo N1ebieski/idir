@@ -50,4 +50,41 @@ class Category extends BaseCategory
     {
         return 'dir';
     }
+
+    // Loads
+
+    /**
+     * [loadNestedWithMorphsCount description]
+     * @param  array    $filter    [description]
+     * @return self [description]
+     */
+    public function loadNestedWithMorphsCountByFilter(array $filter) : self
+    {
+        return $this
+            ->loadCount([
+                'morphs' => function($query) use ($filter) {
+                    $query->active()->filterRegion($filter['region']);
+                }
+            ])
+            ->load([
+                'childrens' => function($query) use ($filter) {
+                    $query->active()
+                        ->withCount([
+                            'morphs' => function($query) use ($filter) {
+                                $query->active()->filterRegion($filter['region']);
+                            }
+                        ])
+                        ->orderBy('position', 'asc');
+                },
+                'ancestors' => function($query) use ($filter) {
+                    $query->whereColumn('ancestor', '!=', 'descendant')
+                        ->withCount([
+                            'morphs' => function($query) use ($filter) {
+                                $query->active()->filterRegion($filter['region']);
+                            }
+                        ])
+                        ->orderBy('depth', 'desc');
+                }
+            ]);
+    }    
 }

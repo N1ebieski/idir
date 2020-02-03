@@ -32,7 +32,17 @@ class RouteServiceProvider extends ServiceProvider
         $this->app['router']->bind('category_dir_cache', function($value) {
             return $this->app->make(\N1ebieski\IDir\Models\Category\Dir\Category::class)
                 ->makeCache()->rememberBySlug($value) ?? abort(404);
-        });        
+        });
+
+        $this->app['router']->bind('region_cache', function($value) {
+            return $this->app->make(\N1ebieski\IDir\Models\Region\Region::class)
+                ->makeCache()->rememberBySlug($value) ?? abort(404);
+        });
+        
+        $this->app['router']->bind('dir_cache', function($value) {
+            return $this->app->make(\N1ebieski\IDir\Models\Dir::class)
+                ->makeCache()->rememberBySlug($value) ?? abort(404);
+        });         
     }
 
     /**

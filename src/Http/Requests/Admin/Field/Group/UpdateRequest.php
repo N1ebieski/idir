@@ -16,7 +16,7 @@ class UpdateRequest extends BaseUpdateRequest
         return array_merge([
             'morphs' => [
                 'bail',
-                'required',
+                'nullable',
                 'array',
                 'exists:groups,id'
             ]

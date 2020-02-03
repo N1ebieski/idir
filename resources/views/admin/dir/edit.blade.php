@@ -67,7 +67,7 @@
     </div>
     @if ($dir->group->fields->isNotEmpty())
     @foreach ($dir->group->fields as $field)
-    @include("idir::web.field.partials.{$field->type}", [
+    @include("idir::admin.field.partials.{$field->type}", [
         'value' => optional($dir->fields->where('id', $field->id)->first())->decode_value
     ])
     @endforeach

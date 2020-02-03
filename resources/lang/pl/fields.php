@@ -32,5 +32,7 @@ return [
     'required' => 'Warunek pola',
     'required_0' => 'nieobowiązkowe',
     'required_1' => 'obowiązkowe',
-    'groups' => 'Dotyczy grup'
+    'groups' => 'Dotyczy grup',
+    'remove_marker' => 'Usuń marker',
+    'add_marker' => 'Dodaj marker'
 ];

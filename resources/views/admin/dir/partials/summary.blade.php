@@ -53,13 +53,26 @@
             <p>
                 {{ $field->title }}:<br>
                 <span>
-                @if (in_array($field->type, ['input', 'textarea', 'select']))
-                    {{ $value['field'][$field->id] }}
-                @elseif (in_array($field->type, ['multiselect', 'checkbox']))
-                    {{ implode(', ', $value['field'][$field->id]) }}
-                @else
-                    <img class="img-fluid" src="{{ Storage::url($value['field'][$field->id]) }}">
-                @endif
+                @switch($field->type)
+                    @case('input')
+                    @case('textarea')
+                    @case('select')
+                        {{ $value['field'][$field->id] }}
+                        @break;
+
+                    @case('multiselect')
+                    @case('checkbox')
+                        {{ implode(', ', $value['field'][$field->id]) }}
+                        @break;
+
+                    @case('regions')
+                        {{ implode(', ', $regions->whereIn('id', $value['field'][$field->id])->pluck('name')->toArray()) }}
+                        @break;
+
+                    @case('image')                    
+                        <img class="img-fluid" src="{{ Storage::url($value['field'][$field->id]) }}">
+                        @break
+                @endswitch
                 </span>
             </p>
         @endif

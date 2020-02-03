@@ -36,11 +36,9 @@ data-id="{{ $dir->id }}">
                     <span contenteditable="true" spellcheck="true" id="content.{{ $dir->id }}">
                         {{ $dir->short_content }}...
                     </span>
-                    <span>
-                        <a href="#" class="badge badge-primary checkContent">
-                            {{ trans('idir::dirs.check_content') }}
-                        </a>
-                    </span>
+                    <a href="#" class="badge badge-primary checkContent">
+                        {{ trans('idir::dirs.check_content') }}
+                    </a>
                 </li>
                 @if ($dir->group->fields->isNotEmpty())
                 @foreach ($dir->group->fields as $field)
@@ -52,6 +50,8 @@ data-id="{{ $dir->id }}">
                         {{ $value }}
                     @elseif (in_array($field->type, ['multiselect', 'checkbox']))
                         {{ implode(', ', $value) }}
+                    @elseif ($field->type === 'regions')
+                        {{ implode(', ', $dir->regions->pluck('name')->toArray()) }}
                     @else
                         <img class="img-fluid" src="{{ Storage::url($value) }}">
                     @endif

@@ -43,7 +43,13 @@ use N1ebieski\IDir\Http\Responses\Web\Dir\Update3Response;
 use N1ebieski\IDir\Http\Responses\Web\Dir\UpdateRenewResponse;
 use N1ebieski\IDir\Events\Web\Dir\Destroy as DirDestroy;
 use N1ebieski\IDir\Filters\Web\Dir\IndexFilter;
+use N1ebieski\IDir\Filters\Web\Dir\SearchFilter;
+use N1ebieski\IDir\Filters\Web\Dir\ShowFilter;
 use N1ebieski\IDir\Http\Requests\Web\Dir\IndexRequest;
+use N1ebieski\IDir\Http\Requests\Web\Dir\SearchRequest;
+use N1ebieski\IDir\Http\Requests\Web\Dir\ShowRequest;
+use N1ebieski\IDir\Loads\Web\Dir\ShowLoad;
+use N1ebieski\IDir\Models\Comment\Dir\Comment;
 
 /**
  * [DirController description]
@@ -67,6 +73,55 @@ class DirController
 
         return view('idir::web.dir.index', [
             'dirs' => $dirs,
+            'filter' => $filter->all()
+        ]);
+    }
+
+    /**
+     * [search description]
+     * @param  Dir           $dir    [description]
+     * @param  SearchRequest $request [description]
+     * @return View                   [description]
+     */
+    public function search(Dir $dir, SearchRequest $request, SearchFilter $filter) : View
+    {
+        return view('idir::web.dir.search', [
+            'dirs' => $dir->makeRepo()->paginateBySearchAndFilter(
+                $request->input('search'),
+                $filter->all()
+            ),
+            'filter' => $filter->all(),            
+            'search' => $request->input('search')
+        ]);
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param Dir $dir
+     * @param Comment $comment
+     * @param ShowLoad $load
+     * @param ShowRequest $request
+     * @param ShowFilter $filter
+     * @return View
+     */
+    public function show(
+        Dir $dir, 
+        Comment $comment, 
+        ShowLoad $load, 
+        ShowRequest $request, 
+        ShowFilter $filter
+    ) : View
+    {
+        $comments = $comment->setMorph($dir)->makeCache()->rememberRootsByFilter(
+            $filter->all() + ['except' => $request->input('except')],
+            $request->input('page') ?? 1
+        );
+
+        return view('idir::web.dir.show', [
+            'dir' => $dir,
+            'related' => $dir->makeCache()->rememberRelated(),
+            'comments' => $comments,
             'filter' => $filter->all()
         ]);
     }

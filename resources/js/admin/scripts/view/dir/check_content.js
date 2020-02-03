@@ -1,7 +1,7 @@
 jQuery(document).on('click', '.checkContent', function(e) {
     e.preventDefault();
 
-    let sentence = $(this).parents().find('[id^="content').text().split(".").filter(n => n);
+    let sentence = $(this).parent().find('[id^="content"]').text().split(".").filter(n => n);
     let j = 0;
     let content = '';
 
