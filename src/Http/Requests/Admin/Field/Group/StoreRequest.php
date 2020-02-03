@@ -16,7 +16,7 @@ class StoreRequest extends BaseStoreRequest
         return array_merge([
             'morphs' => [
                 'bail',
-                'required',
+                'nullable',
                 'array',
                 'exists:groups,id'
             ]

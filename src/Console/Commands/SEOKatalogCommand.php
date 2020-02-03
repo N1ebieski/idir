@@ -104,6 +104,10 @@ class SEOKatalogCommand extends Command
         $this->info("\r");
         $bar->advance();
         $this->info("\n");
+        $this->call('db:seed', ['--class' => 'N1ebieski\IDir\Seeds\DefaultFieldsSeeder'], $this->getOutput());
+        $this->info("\r");
+        $bar->advance();        
+        $this->info("\n");
         $this->call('db:seed', ['--class' => 'N1ebieski\IDir\Seeds\SEOKatalogSeeder'], $this->getOutput());
         $this->info("\r");
         $bar->advance();

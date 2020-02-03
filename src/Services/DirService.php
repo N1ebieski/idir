@@ -296,6 +296,8 @@ FullUpdatable, Deletable, GlobalDeletable
 
         $this->dir->reports()->delete();
 
+        $this->dir->regions()->delete();
+
         $this->dir->detag();
 
         return $this->dir->delete();
@@ -327,6 +329,10 @@ FullUpdatable, Deletable, GlobalDeletable
 
         $this->dir->reports()->make()->whereIn('model_id', $ids)
             ->where('model_type', 'N1ebieski\IDir\Models\Dir')->delete();
+
+        $this->dir->regions()->newPivotStatement()
+            ->whereIn('model_id', $ids)
+            ->where('model_type', 'N1ebieski\IDir\Models\Dir')->delete();            
 
         $this->dir->tags()->newPivotStatement()
             ->whereIn('model_id', $ids)

@@ -19,6 +19,7 @@ class EditLoad
             'group',
             'group.privileges',
             'group.fields',
+            'regions',
             'fields',
             'categories',
             'tags'

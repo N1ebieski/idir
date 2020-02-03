@@ -314,18 +314,20 @@ class DirController
     /**
      * [update2 description]
      * @param  Dir              $dir     [description]
-     * @param  UpdateLoad      $load    [description]
      * @param  UpdateRequest   $request [description]
      * @return JsonResponse             [description]
      */
-    public function update(Dir $dir, UpdateLoad $load, UpdateRequest $request) : JsonResponse
+    public function update(Dir $dir, UpdateRequest $request) : JsonResponse
     {
         $dir->setGroup($dir->group)->makeService()->update($request->validated());
+
+        // Laravel's refresh() reload only direct relations of model, I need reload relations of relations also
+        new UpdateLoad($request);
 
         return response()->json([
             'success' => '',
             'view' => view('idir::admin.dir.partials.dir', [
-                'dir' => $dir->refresh()
+                'dir' => $dir
             ])->render()
         ]);
     }

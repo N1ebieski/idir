@@ -26,12 +26,28 @@ class ViewServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->app['view']->composer($this->app['config']->get('idir.layout') . '::admin.partials.sidebar',
+        $layout = $this->app['config']->get('idir.layout');
+
+        $this->app['view']->composer($layout . '::admin.partials.sidebar',
             function($view) {
                 $view->with([
                     'dirs_inactive_count' => $this->app->make(\N1ebieski\IDir\Repositories\DirRepo::class)
                         ->countInactive()
                 ]);
             });
+
+        $this->app['view']->composer([
+            $layout . '::web.category.dir.partials.sidebar',
+            $layout . '::web.field.partials.regions',
+            $layout . '::admin.field.partials.regions',
+            $layout . '::web.dir.partials.summary',
+            $layout . '::admin.dir.partials.summary'
+        ],
+        function($view) {
+            $view->with([
+                'regions' => $this->app->make(\N1ebieski\IDir\Models\Region\Region::class)
+                    ->makeCache()->rememberAll()
+            ]);
+        });            
     }
 }

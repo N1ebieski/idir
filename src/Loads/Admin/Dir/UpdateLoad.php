@@ -20,6 +20,7 @@ class UpdateLoad
             'group.privileges',
             'group.fields',
             'fields',
+            'regions',
             'categories',
             'tags'
         ]);

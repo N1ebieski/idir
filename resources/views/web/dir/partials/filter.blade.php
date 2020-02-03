@@ -1,4 +1,7 @@
-<form data-route="{{ route("web.dir.index") }}" id="filter">
+<form data-route="{{ url()->current() }}" id="filter">
+    @if (isset($search))
+    <input type="hidden" value="{{ $search }}" name="search">
+    @endif    
     <div class="d-flex position-relative">
         <div class="form-group ml-auto">
             <label class="sr-only" for="filterOrderBy">{{ trans('icore::filter.order') }}</label>

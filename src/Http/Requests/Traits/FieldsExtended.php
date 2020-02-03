@@ -21,8 +21,35 @@ trait FieldsExtended
         }
 
         foreach ($this->getFields() as $field) {
+            $this->prepareFieldMapAttribute($field);
             $this->prepareFieldImageAttribute($field);
         }
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param Field $field
+     * @return void
+     */
+    protected function prepareFieldMapAttribute(Field $field) : void
+    {
+        if ($field->type !== 'map') {
+            return;
+        }
+
+        if (!$this->has("field.{$field->id}") || !is_array($this->input("field.{$field->id}"))) {
+            return;
+        }
+
+        $this->merge([
+            'field' => [
+                $field->id => collect($this->input("field.{$field->id}"))->filter(function($item) {
+                    return isset($item['lat']) && $item['lat'] !== null
+                        && isset($item['long']) && $item['long'] !== null;
+                })->toArray()
+            ] + $this->input('field')
+        ]);      
     }
 
     /**
@@ -66,6 +93,33 @@ trait FieldsExtended
                 'required' : 'nullable';
 
             switch ($field->type) {
+                case 'map' :
+                    $rules["field.{$field->id}"] = [
+                        'array',
+                        'max:1',
+                        'no_js_validation'
+                    ];
+                    $rules["field.{$field->id}.*.lat"] = [
+                        'bail', 
+                        (bool)$field->options->required === true ? 'required' : 'nullable',
+                        "required_with:field.{$field->id}.*.long", 
+                        'numeric',
+                        'between:-90,90'
+                    ];
+                    $rules["field.{$field->id}.*.long"] = [
+                        'bail', 
+                        (bool)$field->options->required === true ? 'required' : 'nullable',                        
+                        "required_with:field.{$field->id}.*.lat", 
+                        'numeric',
+                        'between:-180,180'
+                    ];
+                    break;
+
+                case 'regions' :
+                    $rules["field.{$field->id}"][] = 'array';
+                    $rules["field.{$field->id}"][] = 'exists:regions,id';
+                    break;
+
                 case 'multiselect' :
                 case 'checkbox' :
                     $rules["field.{$field->id}"][] = 'array';

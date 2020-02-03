@@ -24,4 +24,19 @@ trait Filterable
             return $query->where('visible', $visible);
         });
     }
+
+    /**
+     * [scopeFilterRegion description]
+     * @param  Builder       $query  [description]
+     * @param  string|null  $region  [description]
+     * @return Builder|null          [description]
+     */
+    public function scopeFilterRegion(Builder $query, string $region = null) : ?Builder
+    {
+        return $query->when($region !== null, function($query) use ($region) {
+            return $query->whereHas('regions', function($query) use ($region) {
+                $query->where('slug', $region);
+            });
+        });
+    }    
 }

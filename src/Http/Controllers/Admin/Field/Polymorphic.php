@@ -5,6 +5,7 @@ namespace N1ebieski\IDir\Http\Controllers\Admin\Field;
 use N1ebieski\IDir\Models\Field\Field;
 use N1ebieski\IDir\Http\Requests\Admin\Field\UpdatePositionRequest;
 use Illuminate\Http\JsonResponse;
+use N1ebieski\IDir\Http\Requests\Admin\Field\DestroyRequest;
 
 /**
  * [interface description]
@@ -27,9 +28,11 @@ interface Polymorphic
     public function updatePosition(Field $field, UpdatePositionRequest $request) : JsonResponse;
 
     /**
-     * [destroy description]
-     * @param  Field        $field [description]
-     * @return JsonResponse        [description]
+     * Undocumented function
+     *
+     * @param Field $field
+     * @param DestroyRequest $request
+     * @return JsonResponse
      */
-    public function destroy(Field $field) : JsonResponse;
+    public function destroy(Field $field, DestroyRequest $request) : JsonResponse;
 }

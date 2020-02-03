@@ -57,6 +57,8 @@
                     {{ $value['field'][$field->id] }}
                 @elseif (in_array($field->type, ['multiselect', 'checkbox']))
                     {{ implode(', ', $value['field'][$field->id]) }}
+                @elseif ($field->type === 'regions')
+                    {{ implode(', ', $regions->whereIn('id', $value['field'][$field->id])->pluck('name')->toArray())) }}                    
                 @else
                     <img class="img-fluid" src="{{ Storage::url($value['field'][$field->id]) }}">
                 @endif

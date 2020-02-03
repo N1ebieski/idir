@@ -3,6 +3,7 @@
 return [
     'page' => [
         'index' => 'Katalog',
+        'search' => 'Wyszukiwanie: :search',        
         'create' => [
             'index' => 'Dodaj wpis',
             'group' => 'Wybierz typ wpisu',
@@ -95,5 +96,8 @@ return [
     'content' => 'Opis',
     'author' => 'Autor',
     'reload_thumbnail' => 'Odśwież',
-    'check_content' => 'Sprawdź unikalność opisu'
+    'check_content' => 'Sprawdź unikalność opisu',
+    'rating' => 'Ocena',
+    'url' => 'Adres strony',
+    'related' => 'Podobne wpisy'    
 ];

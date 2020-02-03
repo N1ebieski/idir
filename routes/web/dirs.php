@@ -2,8 +2,11 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::match(['get', 'post'], 'dirs', 'DirController@index')
+Route::get('dirs/index', 'DirController@index')
     ->name('dir.index');
+
+Route::get('dirs/search', 'DirController@search')
+    ->name('dir.search');
 
 Route::get('dirs/{dir_cache}', 'DirController@show')
     ->name('dir.show')

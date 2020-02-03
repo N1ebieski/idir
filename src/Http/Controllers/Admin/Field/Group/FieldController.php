@@ -51,7 +51,7 @@ class FieldController extends BaseFieldController implements Polymorphic
             'success' => '',
             'view' => view('idir::admin.field.group.create', [
                 'field' => $field,
-                'groups' => $group->makeRepo()->all()
+                'groups' => $group->all()
             ])->render()
         ]);
     }

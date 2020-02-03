@@ -10,6 +10,7 @@ use Illuminate\Http\JsonResponse;
 use N1ebieski\IDir\Filters\Web\Category\ShowFilter;
 use N1ebieski\IDir\Http\Requests\Web\Category\ShowRequest;
 use Illuminate\View\View;
+use N1ebieski\IDir\Models\Region\Region;
 
 /**
  * [CategoryController description]
@@ -20,19 +21,23 @@ class CategoryController implements Polymorphic
      * Display a listing of the Dirs for Category.
      *
      * @param  Category $category [description]
+     * @param  Region   $region   [description]
      * @param  ShowRequest $request
      * @param  ShowFilter $filter
      * @return View [description]
      */
-    public function show(Category $category, ShowRequest $request, ShowFilter $filter) : View
+    public function show(Category $category, Region $region, ShowRequest $request, ShowFilter $filter) : View
     {
         return view('idir::web.category.dir.show', [
             'dirs' => $category->makeCache()->rememberDirsByFilter(
-                $filter->all(),
+                $filter->all() + ['region' => $region->slug],
                 $request->input('page') ?? 1
             ),
+            'region' => $region,
             'filter' => $filter->all(),
-            'category' => $category,
+            'category' => $category->makeCache()->rememberLoadNestedWithMorphsCountByFilter(
+                ['region' => $region->slug]
+            ),
             'catsAsArray' => [
                 'ancestors' => $category->ancestors->pluck('id')->toArray(), 
                 'self' => [$category->id]
