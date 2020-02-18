@@ -99,5 +99,6 @@ return [
     'check_content' => 'Sprawdź unikalność opisu',
     'rating' => 'Ocena',
     'url' => 'Adres strony',
-    'related' => 'Podobne wpisy'    
+    'related' => 'Podobne wpisy',
+    'latest' => 'Najnowsze wpisy'
 ];

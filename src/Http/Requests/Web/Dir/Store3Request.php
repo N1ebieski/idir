@@ -54,25 +54,23 @@ class Store3Request extends Store2Request
     public function rules()
     {
         return array_merge(
-
             parent::rules(),
-
             [
                 'backlink' => [
                     'bail',
                     'integer',
                     $this->group->backlink === 2 ? 'required' : 'nullable',
-                    Rule::exists('links', 'id')->where(function($query) {
+                    Rule::exists('links', 'id')->where(function ($query) {
                         $query->where('links.type', 'backlink')
-                            ->whereNotExists(function($query) {
+                            ->whereNotExists(function ($query) {
                                 $query->from('categories_models')
                                     ->whereRaw('`links`.`id` = `categories_models`.`model_id`')
                                     ->where('categories_models.model_type', 'N1ebieski\\ICore\\Models\\Link');
-                            })->orWhereExists(function($query) {
+                            })->orWhereExists(function ($query) {
                                 $query->from('categories_models')
                                     ->whereRaw('`links`.`id` = `categories_models`.`model_id`')
                                     ->where('categories_models.model_type', 'N1ebieski\\ICore\\Models\\Link')
-                                    ->whereIn('categories_models.category_id', function($query) {
+                                    ->whereIn('categories_models.category_id', function ($query) {
                                         return $query->from('categories_closure')->select('ancestor')
                                             ->whereIn('descendant', $this->input('categories') ?? []);
                                     });
@@ -94,7 +92,6 @@ class Store3Request extends Store2Request
                     'no_js_validation'
                 ]
             ],
-
             $this->group->prices->isNotEmpty() ?
             [
                 'payment_type' => 'bail|required|string|in:transfer,code_sms,code_transfer|no_js_validation',
@@ -103,7 +100,7 @@ class Store3Request extends Store2Request
                     'bail',
                     'required_if:payment_type,transfer',
                     'integer',
-                    Rule::exists('prices', 'id')->where(function($query) {
+                    Rule::exists('prices', 'id')->where(function ($query) {
                         $query->where([
                             ['type', 'transfer'],
                             ['group_id', $this->group->id]
@@ -115,7 +112,7 @@ class Store3Request extends Store2Request
                     'bail',
                     'required_if:payment_type,code_sms',
                     'integer',
-                    Rule::exists('prices', 'id')->where(function($query) {
+                    Rule::exists('prices', 'id')->where(function ($query) {
                         $query->where([
                             ['type', 'code_sms'],
                             ['group_id', $this->group->id]
@@ -127,7 +124,7 @@ class Store3Request extends Store2Request
                     'bail',
                     'required_if:payment_type,code_transfer',
                     'integer',
-                    Rule::exists('prices', 'id')->where(function($query) {
+                    Rule::exists('prices', 'id')->where(function ($query) {
                         $query->where([
                             ['type', 'code_transfer'],
                             ['group_id', $this->group->id]

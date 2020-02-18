@@ -16,7 +16,7 @@ class EnvSeeder extends Seeder
      */
     public function run()
     {
-        $this->call(RolesAndPermissionsSeeder::class);
+        $this->call(DefaultRolesAndPermissionsSeeder::class);
         $this->call(CategoriesSeeder::class);
         $this->call(DefaultGroupAndPrivilegesSeeder::class);
         $this->call(GroupsSeeder::class);

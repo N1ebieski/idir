@@ -36,9 +36,9 @@
                         </a>
                     </li>
                     <li class="list-group-item">
-                        <a href="{{ route('web.contact.index') }}"
-                        class="@isUrl(route('web.contact.index'), 'font-weight-bold')">
-                            {{ trans('icore::contact.page.index') }}
+                        <a href="{{ route('web.contact.show') }}"
+                        class="@isUrl(route('web.contact.show'), 'font-weight-bold')">
+                            {{ trans('icore::contact.page.show') }}
                         </a>
                     </li>
                 </ul>

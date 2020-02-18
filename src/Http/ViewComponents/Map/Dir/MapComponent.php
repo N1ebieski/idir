@@ -22,7 +22,7 @@ class MapComponent extends BaseMapComponent
     /**
      * Undocumented variable
      *
-     * @var array
+     * @var array|null
      */
     protected $address_marker_pattern;
 
@@ -38,12 +38,12 @@ class MapComponent extends BaseMapComponent
      *
      * @var array
      */
-    protected $coords_marker_pattern;
+    protected $coords;
 
     /**
      * Undocumented variable
      *
-     * @var array
+     * @var Collect
      */
     protected $coords_marker;    
 
@@ -66,11 +66,11 @@ class MapComponent extends BaseMapComponent
         Collect $collect,
         string $selector = 'map',
         string $container_class = 'map', 
-        int $zoom = 15, 
-        array $address_marker = null,
+        int $zoom = 13, 
+        array $address_marker = [],
         array $address_marker_pattern = null,
-        array $coords_marker = null,
-        array $coords_marker_pattern = null        
+        array $coords_marker = [],
+        array $coords = [52.15, 21.00]
     )
     {
         parent::__construct($container_class, $zoom, $address_marker);
@@ -79,31 +79,47 @@ class MapComponent extends BaseMapComponent
         $this->collect = $collect;
 
         $this->selector = $selector;
-        $this->address_marker = $collect->make((array)$address_marker);
+        $this->coords = $coords;
+        $this->address_marker = $collect->make($address_marker);
         $this->address_marker_pattern = $address_marker_pattern;
-        $this->coords_marker = $collect->make((array)$coords_marker);
-        $this->coords_marker_pattern = $coords_marker_pattern;        
+        $this->coords_marker = $collect->make($coords_marker);  
     }
 
     /**
-     * [toHtml description]
-     * @return View [description]
+     * Undocumented function
+     *
+     * @return void
      */
-    public function toHtml() : View
+    protected function prepareCoordsMarker() : void
     {
-        // if ($this->coords_marker_pattern !== null) {
-        //     foreach ($this->coords_marker_pattern as $row) {
-        //         if ($row['lat'] !== null && $row['long'] !== null) {
-        //             $this->coords_marker->push([$row['lat'], $row['long']]);
-        //         }
-        //     }
+        if (!$this->dir->relationLoaded('fields')) {
+            return;
+        }
 
-        //     $marker = [
-        //         'coordsMarker' => $this->coords_marker->isNotEmpty() ? 
-        //             json_encode($this->coords_marker->toArray()) : null
-        //     ];
-        // } 
-        // else 
+        if ($this->dir->group->fields->contains('type', 'map')) {
+            if (is_array($value = optional($this->dir->fields->where('type', 'map')->first())->decode_value)) {
+                foreach ($value as $row) {
+                    $this->coords_marker->push([$row->lat, $row->long]);
+                }               
+            }
+        }
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @return void
+     */
+    protected function prepareAddressMarker() : void
+    {
+        if (!$this->dir->relationLoaded('fields')) {
+            return;
+        }
+
+        if ($this->coords_marker->isNotEmpty()) {
+            return;
+        }
+
         if ($this->address_marker_pattern !== null) {
             $check = $this->dir->group->fields->contains(function($item) {
                 return in_array(
@@ -117,23 +133,38 @@ class MapComponent extends BaseMapComponent
                     $address = '';
 
                     foreach ($row as $col) {
-                        $address .= optional($this->dir->fields->where('id', $col)->first())->decode_value . ' ';
+                        if (is_string($value = optional($this->dir->fields->where('id', $col)->first())->decode_value)) {
+                            $address .= $value . ' ';
+                        }
                     }
 
-                    $this->address_marker->push(trim($address));
+                    if (!empty($address)) {
+                        $this->address_marker->push(trim($address));
+                    }
                 }
-
-                $marker = [
-                    'addressMarker' => $this->address_marker->isNotEmpty() ?
-                        json_encode($this->address_marker->toArray()) : null
-                ];
             }
-        }
+        }       
+    }
+
+    /**
+     * [toHtml description]
+     * @return View [description]
+     */
+    public function toHtml() : View
+    {
+        $this->prepareCoordsMarker();
+        
+        $this->prepareAddressMarker();
 
         return view('idir::web.components.map.dir.map', [
             'selector' => $this->selector,
             'containerClass' => $this->container_class,
-            'zoom' => $this->zoom
-        ] + ($marker ?? []));
+            'coords' => json_encode($this->coords),
+            'zoom' => $this->zoom,
+            'addressMarker' => $this->address_marker->isNotEmpty() ? 
+                json_encode($this->address_marker->toArray()) : null,
+            'coordsMarker' => $this->coords_marker->isNotEmpty() ?
+                json_encode($this->coords_marker->toArray()) : null
+        ]);
     }
 }

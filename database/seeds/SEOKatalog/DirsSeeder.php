@@ -7,6 +7,8 @@ use N1ebieski\IDir\Models\Dir;
 use Illuminate\Support\Facades\DB;
 use N1ebieski\IDir\Models\Link;
 use Carbon\Carbon;
+use N1ebieski\IDir\Models\Field\Field;
+use N1ebieski\IDir\Models\Region\Region;
 
 class DirsSeeder extends SEOKatalogSeeder
 {
@@ -35,7 +37,7 @@ class DirsSeeder extends SEOKatalogSeeder
 
         $desc = str_replace(["<br />", "<br>", "<br/>"], "\r\n", $desc);
      
-        return strip_tags($desc);     
+        return strip_tags(htmlspecialchars_decode($desc));     
     }
 
     /**
@@ -79,14 +81,20 @@ class DirsSeeder extends SEOKatalogSeeder
         $groups = DB::connection('import')->table('groups')->get();
         $fields = DB::connection('import')->table('forms')->get();
 
+        $defaultRegions = Region::all();
+        $defaultFields = [];
+        $defaultFields['map'] = Field::where('type', 'map')->first(['id']);
+        $defaultFields['regions'] = Field::where('type', 'regions')->first(['id']);
+
         DB::connection('import')
             ->table('sites')
-            ->whereIn('id', function($query) {
+            // Trick to get effect distinct by once field
+            ->whereIn('id', function ($query) {
                 $query->selectRaw('MIN(id)')->from('sites')
                     ->groupBy('url');
             })
-            ->orderBy('id')
-            ->chunk(1000, function($items) use ($groups, $fields) {
+            ->orderBy('id', 'desc')
+            ->chunk(1000, function($items) use ($groups, $fields, $defaultRegions, $defaultFields) {
                 $relations = DB::connection('import')
                     ->table('relations')
                     ->distinct()
@@ -99,11 +107,11 @@ class DirsSeeder extends SEOKatalogSeeder
                     ->select('id_sub', 'id_site')
                     ->get();
 
-                $items->each(function($item) use ($groups, $relations, $fields) {
+                $items->each(function($item) use ($groups, $relations, $fields, $defaultRegions, $defaultFields) {
 
                     $dir = Dir::create([
                         'id' => $item->id,
-                        'title' => $item->title,
+                        'title' => htmlspecialchars_decode($item->title),
                         'content_html' => $this->makeContentHtml($item->description),
                         'content' => $this->makeContentHtml($item->description),
                         'group_id' => $this->group_last_id + $item->group,
@@ -124,6 +132,12 @@ class DirsSeeder extends SEOKatalogSeeder
                             ->filter(fn($item) => !is_null($item) && strlen($item) <= 30)
                     );
 
+                    if ($item->total_votes > 0) {
+                        $dir->ratings()->create([
+                            'rating' => ($item->total_value/$item->total_votes)/2
+                        ]);
+                    }
+
                     if (!empty($item->backlink_link)) {
                         $backlink = Link::where([
                             ['url', $this->makeUrl($item->backlink)],
@@ -143,9 +157,32 @@ class DirsSeeder extends SEOKatalogSeeder
 
                         foreach ($fields as $field) {
                             if (!empty($value = $item->{"form_{$field->id}"})) {
-                                $ids[$this->field_last_id + $field->id] = [
+                                switch($field->mod) {
+                                    case 1:
+                                        $value = $defaultRegions->whereIn('name', explode(',', $value))->pluck('id')->toArray();
+                                        $id = $defaultFields['regions']->id;
+                                        $dir->regions()->sync($value);
+                                        break;
+
+                                    case 2:
+                                        $loc = explode(';', $value);
+                                        $value = [];
+                                        $value[0] = [
+                                            'lat' => $loc[0],
+                                            'long' => $loc[1]
+                                        ];
+                                        $id = $defaultFields['map']->id;
+                                        $dir->map()->updateOrCreate($value[0]);
+                                        break;
+
+                                    default:
+                                        $value = htmlspecialchars_decode($value);
+                                        $id = $this->field_last_id + $field->id;
+                                }
+
+                                $ids[$id] = [
                                     'value' => json_encode($value)
-                                ];
+                                ];                                
                             }
                         }
 

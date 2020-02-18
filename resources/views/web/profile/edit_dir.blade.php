@@ -24,8 +24,8 @@
         @endforeach
         @include('icore::admin.partials.pagination', ['items' => $dirs])
     </div>
+    @else
+    <p>{{ trans('icore::default.empty') }}</p>
+    @endif
 </div>
-@else
-<p>{{ trans('icore::default.empty') }}</p>
-@endif
 @endsection

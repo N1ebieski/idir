@@ -141,20 +141,20 @@ class Group extends Model
     {
         parent::boot();
 
-        static::saving(function(Group $group) {
-            $group->position = $group->position ?? $group->getNextAfterLastPosition();
+        static::saving(function (Group $model) {
+            $model->position = $model->position ?? $model->getNextAfterLastPosition();
         });
 
         // Everytime the model is removed, we have to decrement siblings position by 1
-        static::deleted(function(Group $group) {
-            $group->decrementSiblings($group->position, null);
+        static::deleted(function (Group $model) {
+            $model->decrementSiblings($model->position, null);
         });
 
         // Everytime the model's position
         // is changed, all siblings reordering will happen,
         // so they will always keep the proper order.
-        static::saved(function(Group $group) {
-            $group->reorderSiblings();
+        static::saved(function (Group $model) {
+            $model->reorderSiblings();
         });
     }
 
@@ -190,8 +190,8 @@ class Group extends Model
      */
     public function hasEditorPrivilege() : bool
     {
-        return $this->getRelation('privileges')
-            ->contains('name', 'additional options for editing content') ? 
+        return $this->privileges
+            ->contains('name', 'additional options for editing content') ?
             true : false;
     }
 
@@ -202,9 +202,9 @@ class Group extends Model
      */
     public function hasDirectLinkPrivilege() : bool
     {
-        return $this->getRelation('privileges')
-            ->contains('name', 'direct link on listings') ? 
-            true : false;        
+        return $this->privileges
+            ->contains('name', 'direct link on listings') ?
+            true : false;
     }
 
     /**
@@ -214,9 +214,9 @@ class Group extends Model
      */
     public function hasNoFollowPrivilege() : bool
     {
-        return $this->getRelation('privileges')
-            ->contains('name', 'direct link nofollow') ? 
-            true : false;         
+        return $this->privileges
+            ->contains('name', 'direct link nofollow') ?
+            true : false;
     }
 
     /**
@@ -265,7 +265,7 @@ class Group extends Model
     public function loadPublicFields() : Group
     {
         return $this->load([
-            'fields' => function($query) {
+            'fields' => function ($query) {
                 $query->public();
             }
         ]);

@@ -28,26 +28,31 @@ class ViewServiceProvider extends ServiceProvider
     {
         $layout = $this->app['config']->get('idir.layout');
 
-        $this->app['view']->composer($layout . '::admin.partials.sidebar',
-            function($view) {
+        $this->app['view']->composer(
+            $layout . '::admin.partials.sidebar',
+            function ($view) {
                 $view->with([
                     'dirs_inactive_count' => $this->app->make(\N1ebieski\IDir\Repositories\DirRepo::class)
-                        ->countInactive()
+                        ->countInactive(),
+                    'dirs_reported_count' => $this->app->make(\N1ebieski\IDir\Repositories\DirRepo::class)
+                        ->countReported()
                 ]);
-            });
+            }
+        );
 
-        $this->app['view']->composer([
-            $layout . '::web.category.dir.partials.sidebar',
-            $layout . '::web.field.partials.regions',
-            $layout . '::admin.field.partials.regions',
-            $layout . '::web.dir.partials.summary',
-            $layout . '::admin.dir.partials.summary'
-        ],
-        function($view) {
-            $view->with([
-                'regions' => $this->app->make(\N1ebieski\IDir\Models\Region\Region::class)
-                    ->makeCache()->rememberAll()
-            ]);
-        });            
+        $this->app['view']->composer(
+            [
+                $layout . '::web.field.partials.regions',
+                $layout . '::admin.field.partials.regions',
+                $layout . '::web.dir.partials.summary',
+                $layout . '::admin.dir.partials.summary'
+            ],
+            function ($view) {
+                $view->with([
+                    'regions' => $this->app->make(\N1ebieski\IDir\Models\Region\Region::class)
+                        ->makeCache()->rememberAll()
+                ]);
+            }
+        );
     }
 }

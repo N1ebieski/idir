@@ -1,17 +1,15 @@
 @extends(config('idir.layout') . '::web.layouts.layout', [
     'title' => [
         $dir->title,
-        // trans('icore::pagination.page', ['num' => $comments->currentPage()])
+        trans('icore::pagination.page', ['num' => $comments->currentPage()])
     ],
-    // 'desc' => [$post->meta_desc],
-    // 'keys' => [$post->tagList],
-    // 'index' => (bool)$post->seo_noindex === true ? 'noindex' : 'index',
-    // 'follow' => (bool)$post->seo_nofollow === true ? 'nofollow' : 'follow',
-    // 'og' => [
-    //     'title' => $post->meta_title,
-    //     'desc' => $post->meta_desc,
-    //     'image' => $post->first_image
-    // ]
+    'desc' => [$dir->short_content],
+    'keys' => [$dir->tagList],
+    'og' => [
+        'title' => $dir->title,
+        'desc' => $dir->short_content,
+        'image' => $dir->url !== null ? $dir->thumbnail_url : null
+    ]
 ])
 
 @section('breadcrumb')
@@ -28,32 +26,30 @@
                 <h1 class="h4 border-bottom pb-2">{!! $dir->title_as_link !!}</h1>
                 <div class="d-flex mb-2">
                     <small class="mr-auto">{{ trans('icore::default.created_at_diff') }}: {{ $dir->created_at_diff }}</small>
-                    {{-- <small class="ml-auto text-right">{{ trans('icore::posts.author') }}: {{ $post->user->name ?? '' }}</small> --}}
                 </div>
-                <div class="mb-3">{!! $dir->content_html !!}</div>
+                <div class="mb-3">{!! $dir->content_as_html !!}</div>
                 <div class="d-flex mb-3">
+                    @if ($dir->categories->isNotEmpty())
                     <small class="mr-auto">{{ trans('icore::categories.categories') }}:
-                        @if ($dir->categories->isNotEmpty())
                         @foreach ($dir->categories as $category)
                         <a href="{{ route('web.category.dir.show', [$category->slug]) }}">{{ $category->name }}</a>
                         {{ (!$loop->last) ? ', ' : '' }}
                         @endforeach
-                        @endif
                     </small>
+                    @endif
+                    @if ($dir->tags->isNotEmpty())
                     <small class="ml-auto text-right">{{ trans('icore::dirs.tags') }}:
-                        @if ($dir->tags->isNotEmpty())
                         @foreach ($dir->tags as $tag)
                         <a href="{{ route('web.tag.dir.show', [$tag->normalized]) }}">{{ $tag->name }}</a>
                         {{ (!$loop->last) ? ', ' : '' }}
                         @endforeach
-                        @endif
                     </small>
+                    @endif
                 </div>
                 <div class="mb-3">
                     @render('idir::map.dir.mapComponent', [
                         'dir' => $dir,
-                        // 'address_marker' => ['Platynowa 15/22 80-041 Gdańsk'],
-                        'address_marker_pattern' => [[2]]
+                        'address_marker_pattern' => [[4]]
                     ])
                 </div>
                 @if ($related->isNotEmpty())
@@ -90,20 +86,14 @@
                     </div>
                     @endif
                 </div>
-                {{--                 
-                @component('icore::web.partials.modal')
-                @slot('modal_id', 'createReportModal')
-                @slot('modal_title')
-                {{ trans('icore::reports.page.create') }}
-                @endslot
-                @endcomponent
-                @endif --}}
             </div>
         </div>
         <div class="col-md-4 order-1">
             @if ($dir->url !== null)
-            <img src="{{ $dir->thumbnail_url }}" class="img-fluid border"
-            alt="{{ $dir->title }}">
+            <div>
+                <img src="{{ $dir->thumbnail_url }}" class="img-fluid border mx-auto d-block"
+                alt="{{ $dir->title }}">
+            </div>
             @endif
             <div class="list-group list-group-flush mb-3">   
                 <div class="list-group-item">
@@ -126,7 +116,7 @@
                 </div>
                 @endif
                 @if ($dir->group->fields->isNotEmpty())
-                @foreach ($dir->group->fields as $field)
+                @foreach ($dir->group->fields->where('type', '!=', 'map') as $field)
                 @if ($value = optional($dir->fields->where('id', $field->id)->first())->decode_value)
                 <div class="list-group-item">
                     <div class="float-left mr-2">{{ $field->title }}:</div>
@@ -156,8 +146,69 @@
                 @endif   
                 @endforeach
                 @endif
+                @auth
+                @if (isset($dir->user->email))
+                <div class="list-group-item">
+                    <a href="#" data-route="{{ route('web.contact.dir.show', [$dir->id]) }}"
+                    data-toggle="modal" data-target="#contactModal" class="showContact">
+                        <i class="fas fa-paper-plane"></i>
+                        <span>{{ trans('idir::contact.dir.page.show') }}</span>
+                    </a>
+                </div>
+                @endif
+                <div class="list-group-item">
+                    <a href="#" data-route="{{ route('web.report.dir.create', [$dir->id]) }}"
+                    data-toggle="modal" data-target="#createReportModal" class="createReport">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <span>{{ trans('icore::reports.page.create') }}</span>
+                    </a>
+                </div>
+                @endauth
+                <div class="list-group-item">
+                    <a href="#" data-toggle="modal" data-target="#linkModal">
+                        <i class="fas fa-link"></i>
+                        <span>{{ trans('idir::dirs.link_dir_page') }}</span>
+                    </a>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
+@component('icore::web.partials.modal')
+@slot('modal_id', 'linkModal')
+@slot('modal_title')
+<i class="fas fa-link"></i>
+<span>{{ trans('idir::dirs.link_dir_page') }}</span>
+@endslot
+@slot('modal_body')
+<div class="form-group">
+    <textarea class="form-control" name="dir" rows="5" readonly>{{ $dir->link_as_html }}</textarea>
+</div>
+@endslot
+@endcomponent
+
+@auth
+@component('icore::web.partials.modal')
+@slot('modal_id', 'createReportModal')
+@slot('modal_title')
+<i class="fas fa-exclamation-triangle"></i>
+<span>{{ trans('icore::reports.page.create') }}</span>
+@endslot
+@endcomponent
+
+@component('icore::web.partials.modal')
+@slot('modal_id', 'contactModal')
+@slot('modal_size', 'modal-lg')
+@slot('modal_title')
+<i class="fas fa-paper-plane"></i>
+<span>{{ trans('idir::contact.dir.page.show') }}</span>
+@endslot
+@endcomponent
+@endauth
+
 @endsection
+
+@php
+App::make(N1ebieski\ICore\Http\ViewComponents\CaptchaComponent::class)->toHtml()->render();
+@endphp

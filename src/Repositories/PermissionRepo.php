@@ -27,16 +27,21 @@ class PermissionRepo extends BasePermissionRepo
      */
     public function getUserWithRole(int $id) : Collection
     {
-        return $this->permission->with(['roles' => function($query) use ($id) {
-                $query->where('id', $id);
-            }])->whereIn('name', [
+        return $this->permission->with([
+                'roles' => function ($query) use ($id) {
+                    $query->where('id', $id);
+                }
+            ])
+            ->whereIn('name', [
                 'create comments',
                 'suggest comments',
                 'edit comments',
                 'create dirs',
                 'edit dirs',
-                'destroy dirs'
-            ])->orderBy('name', 'asc')
+                'destroy dirs',
+                'notification dirs'
+            ])
+            ->orderBy('name', 'asc')
             ->get();
     }
 }

@@ -72,7 +72,7 @@ class SMS extends Codes
         }
 
         try {
-            $this->cashbill->verify([
+            $this->cashbill->authorize([
                 'code' => $value,
                 'number' => $this->price->number
             ]);

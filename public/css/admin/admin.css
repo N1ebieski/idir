@@ -10906,6 +10906,13 @@ a.text-dark:focus {
   }
 }
 
+/**
+ * Creates a "breakpoint" based class, for example:
+ *    $create-breakpoint-class('btn', 'purple')
+ *      --> .btn-purple, .btn-sm-purple, .btn-md-purple, ...
+ *    Where the class' content is applicable to that screen size.
+ */
+
 html {
   position: relative;
   min-height: 100%;
@@ -11083,6 +11090,118 @@ body {
   opacity: 0.5;
 }
 
+.w-25 {
+  width: 25% !important;
+}
+
+@media (min-width: 576px) {
+  .w-sm-25 {
+    width: 25% !important;
+  }
+}
+
+@media (min-width: 768px) {
+  .w-md-25 {
+    width: 25% !important;
+  }
+}
+
+@media (min-width: 992px) {
+  .w-lg-25 {
+    width: 25% !important;
+  }
+}
+
+@media (min-width: 1368px) {
+  .w-xl-25 {
+    width: 25% !important;
+  }
+}
+
+.w-50 {
+  width: 50% !important;
+}
+
+@media (min-width: 576px) {
+  .w-sm-50 {
+    width: 50% !important;
+  }
+}
+
+@media (min-width: 768px) {
+  .w-md-50 {
+    width: 50% !important;
+  }
+}
+
+@media (min-width: 992px) {
+  .w-lg-50 {
+    width: 50% !important;
+  }
+}
+
+@media (min-width: 1368px) {
+  .w-xl-50 {
+    width: 50% !important;
+  }
+}
+
+.w-75 {
+  width: 75% !important;
+}
+
+@media (min-width: 576px) {
+  .w-sm-75 {
+    width: 75% !important;
+  }
+}
+
+@media (min-width: 768px) {
+  .w-md-75 {
+    width: 75% !important;
+  }
+}
+
+@media (min-width: 992px) {
+  .w-lg-75 {
+    width: 75% !important;
+  }
+}
+
+@media (min-width: 1368px) {
+  .w-xl-75 {
+    width: 75% !important;
+  }
+}
+
+.w-100 {
+  width: 100% !important;
+}
+
+@media (min-width: 576px) {
+  .w-sm-100 {
+    width: 100% !important;
+  }
+}
+
+@media (min-width: 768px) {
+  .w-md-100 {
+    width: 100% !important;
+  }
+}
+
+@media (min-width: 992px) {
+  .w-lg-100 {
+    width: 100% !important;
+  }
+}
+
+@media (min-width: 1368px) {
+  .w-xl-100 {
+    width: 100% !important;
+  }
+}
+
 .navbar {
   min-height: 67px;
   z-index: 1000;
@@ -11210,7 +11329,7 @@ body {
 
 .sidebar .nav-item .dropdown-menu .badge {
   font-size: 0.7rem;
-  margin-left: 0.6rem;
+  margin-left: 0.3rem;
   min-width: 2rem;
 }
 
@@ -11225,6 +11344,7 @@ body {
 
 .sidebar .nav-item .nav-link .badge {
   display: inline-block;
+  margin-left: 0.3rem;
   min-width: 2rem;
 }
 

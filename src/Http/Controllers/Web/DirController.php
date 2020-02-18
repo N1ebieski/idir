@@ -48,6 +48,7 @@ use N1ebieski\IDir\Filters\Web\Dir\ShowFilter;
 use N1ebieski\IDir\Http\Requests\Web\Dir\IndexRequest;
 use N1ebieski\IDir\Http\Requests\Web\Dir\SearchRequest;
 use N1ebieski\IDir\Http\Requests\Web\Dir\ShowRequest;
+use N1ebieski\IDir\Loads\Web\Dir\DestroyLoad;
 use N1ebieski\IDir\Loads\Web\Dir\ShowLoad;
 use N1ebieski\IDir\Models\Comment\Dir\Comment;
 
@@ -66,13 +67,11 @@ class DirController
      */
     public function index(Dir $dir, IndexRequest $request, IndexFilter $filter) : View
     {
-        $dirs = $dir->makeCache()->rememberForWebByFilter(
-            $filter->all(),
-            $request->input('page') ?? 1
-        );
-
         return view('idir::web.dir.index', [
-            'dirs' => $dirs,
+            'dirs' => $dir->makeCache()->rememberForWebByFilter(
+                $filter->all(),
+                $request->input('page') ?? 1
+            ),
             'filter' => $filter->all()
         ]);
     }
@@ -90,7 +89,7 @@ class DirController
                 $request->input('search'),
                 $filter->all()
             ),
-            'filter' => $filter->all(),            
+            'filter' => $filter->all(),
             'search' => $request->input('search')
         ]);
     }
@@ -106,13 +105,12 @@ class DirController
      * @return View
      */
     public function show(
-        Dir $dir, 
-        Comment $comment, 
-        ShowLoad $load, 
-        ShowRequest $request, 
+        Dir $dir,
+        Comment $comment,
+        ShowLoad $load,
+        ShowRequest $request,
         ShowFilter $filter
-    ) : View
-    {
+    ) : View {
         $comments = $comment->setMorph($dir)->makeCache()->rememberRootsByFilter(
             $filter->all() + ['except' => $request->input('except')],
             $request->input('page') ?? 1
@@ -182,15 +180,14 @@ class DirController
         Link $link,
         Create3Load $load,
         Create3Request $request
-    ) : View
-    {
+    ) : View {
         $dir->makeService()->createOrUpdateSession($request->validated());
 
         $categories = $category->makeRepo()->getByIds(
             $request->session()->get('dir.categories')
         );
 
-        $backlinks = $group->backlink > 0 ? 
+        $backlinks = $group->backlink > 0 ?
             $link->makeRepo()->getAvailableBacklinksByCats(array_merge(
                 $categories->pluck('ancestors')->flatten()->pluck('id')->toArray(),
                 $categories->pluck('id')->toArray()
@@ -216,8 +213,7 @@ class DirController
         Store3Request $request,
         Store3CodeRequest $requestPayment,
         Store3Response $response
-    ) : RedirectResponse
-    {
+    ) : RedirectResponse {
         $dir->setGroup($group)->makeService()->create($request->validated());
 
         if (($payment = $dir->getPayment()) instanceof Payment) {
@@ -291,22 +287,23 @@ class DirController
         Link $link,
         Edit3Load $load,
         Edit3Request $request
-    ) : View
-    {
+    ) : View {
         $dir->makeService()->createOrUpdateSession($request->validated());
 
         $categories = $category->makeRepo()->getByIds(
             $request->session()->get("dirId.{$dir->id}.categories")
         );
 
-        $backlinks = $group->backlink > 0 ? 
+        $backlinks = $group->backlink > 0 ?
             $link->makeRepo()->getAvailableBacklinksByCats(array_merge(
                 $categories->pluck('ancestors')->flatten()->pluck('id')->toArray(),
                 $categories->pluck('id')->toArray()
             )) : null;
 
-        return view('idir::web.dir.edit.3', 
-            compact('dir', 'group', 'categories', 'backlinks'));
+        return view(
+            'idir::web.dir.edit.3',
+            compact('dir', 'group', 'categories', 'backlinks')
+        );
     }
 
     /**
@@ -326,8 +323,7 @@ class DirController
         Update3Request $request,
         Update3CodeRequest $requestPayment,
         Update3Response $response
-    ) : RedirectResponse
-    {
+    ) : RedirectResponse {
         $dir->setGroup($group)->makeService()->updateFull($request->validated());
 
         if (($payment = $dir->getPayment()) instanceof Payment) {
@@ -366,8 +362,7 @@ class DirController
         UpdateRenewRequest $request,
         UpdateRenewCodeRequest $requestPayment,
         UpdateRenewResponse $response
-    ) : RedirectResponse
-    {
+    ) : RedirectResponse {
         $payment = $dir->makeService()->createPayment($request->validated());
 
         event(new PaymentStore($payment));
@@ -378,11 +373,13 @@ class DirController
     }
 
     /**
-     * [destroy description]
-     * @param  Dir          $dir [description]
-     * @return JsonResponse      [description]
+     * Undocumented function
+     *
+     * @param Dir $dir
+     * @param DestroyLoad $load
+     * @return JsonResponse
      */
-    public function destroy(Dir $dir) : JsonResponse
+    public function destroy(Dir $dir, DestroyLoad $load) : JsonResponse
     {
         $dir->makeService()->delete();
 

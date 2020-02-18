@@ -50,10 +50,10 @@ class Transfer
     }
 
     /**
-     * [verify description]
+     * [authorize description]
      * @param array $attributes [description]
      */
-    public function verify(array $attributes) : void
+    public function authorize(array $attributes) : void
     {
         $this->response($attributes['code'], $attributes['id']);
 

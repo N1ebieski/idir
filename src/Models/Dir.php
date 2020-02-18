@@ -220,6 +220,15 @@ class Dir extends Model
     }
 
     /**
+     * [map description]
+     * @return [type] [description]
+     */
+    public function map()
+    {
+        return $this->morphOne('N1ebieski\IDir\Models\Map\Map', 'model');
+    }    
+
+    /**
      * [ratings description]
      * @return [type] [description]
      */
@@ -274,6 +283,15 @@ class Dir extends Model
     }
 
     /**
+     * [status description]
+     * @return [type] [description]
+     */
+    public function status()
+    {
+        return $this->hasOne('N1ebieski\IDir\Models\DirStatus');
+    }
+
+    /**
      * [fields description]
      * @return [type] [description]
      */
@@ -284,6 +302,29 @@ class Dir extends Model
     }
 
     // Scopes
+
+    /**
+     * Undocumented function
+     *
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeWithAllPublicRels(Builder $query) : Builder
+    {
+        return $query->with([
+            'group',
+            'group.fields' => function ($query) {
+                return $query->public();
+            },
+            'group.privileges',
+            'fields',
+            'regions',
+            'categories',
+            'tags',
+            'user'
+        ])
+        ->withSumRating();
+    }
 
     /**
      * [scopeWithSumRating description]
@@ -335,8 +376,8 @@ class Dir extends Model
     public function scopeActiveHasLinkPriviligeByComponent(Builder $query, array $component) : Builder
     {
         return $query->selectRaw('id, url, title AS name, NULL')
-            ->whereHas('group', function($query) {
-                $query->whereHas('privileges', function($query) {
+            ->whereHas('group', function ($query) {
+                $query->whereHas('privileges', function ($query) {
                     $query->where('name', 'place in the links component');
                 });
             })->whereHas('categories', function ($query) use ($component) {
@@ -458,7 +499,7 @@ class Dir extends Model
         if ($this->url !== null) {
             if ($this->getRelation('group')->hasDirectLinkPrivilege()) {
                 return $this->title_as_link;
-            } 
+            }
         }
 
         return '<a href="' . route('web.dir.show', [$this->slug]) . '">' . $this->title . '</a>';
@@ -474,8 +515,22 @@ class Dir extends Model
             return Purifier::clean($this->attributes['content_html'], 'dir');
         }
 
-        return nl2br(e($this->content));
-    }    
+        return strip_tags($this->attributes['content_html']);
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @return string
+     */
+    public function getContentAsHtmlAttribute() : string
+    {
+        if (!$this->getRelation('group')->hasEditorPrivilege()) {
+            return nl2br($this->content_html);
+        }
+
+        return $this->content_html;
+    }
 
     /**
      * [getAttributesAttribute description]
@@ -483,7 +538,7 @@ class Dir extends Model
      */
     public function getAttributesAsArrayAttribute() : array
     {
-        return $this->getAttributes()
+        return $this->attributesToArray()
             + ['field' => $this->fields->keyBy('id')
                 ->map(function($item) {
                     return $item->decode_value;
@@ -506,6 +561,16 @@ class Dir extends Model
     }
 
     // Checkers
+    
+    /**
+     * Undocumented function
+     *
+     * @return boolean
+     */
+    public function isCommentable() : bool
+    {
+        return true;
+    }
 
     /**
      * [isRenew description]
@@ -528,6 +593,15 @@ class Dir extends Model
     }
 
     /**
+     * [isUrl description]
+     * @return bool [description]
+     */
+    public function isUrl() : bool
+    {
+        return $this->url !== null;
+    }
+
+    /**
      * [isPending description]
      * @return bool [description]
      */
@@ -543,7 +617,7 @@ class Dir extends Model
     public function isActive() : bool
     {
         return $this->status === 1;
-    }    
+    }
 
     /**
      * [isPayment description]
@@ -582,21 +656,38 @@ class Dir extends Model
      *
      * @return self
      */
-    public function loadAllWebRels() : self
+    public function loadAllPublicRels() : self
     {
         return $this->load([
-                'fields', 
-                'categories', 
-                'group', 
+                'fields',
+                'categories',
+                'group',
                 'group.privileges',
-                'group.fields' => function($query) {
+                'group.fields' => function ($query) {
                     return $query->public();
                 },
                 'tags',
                 'regions',
                 'ratings'
-            ])
-            ;
+            ]);
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @return self
+     */
+    public function loadAllRels() : self
+    {
+        return $this->load([
+            'group',
+            'group.privileges',
+            'group.fields',
+            'fields',
+            'regions',
+            'categories',
+            'tags'
+        ]);
     }
 
     // /**

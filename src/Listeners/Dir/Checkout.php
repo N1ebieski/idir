@@ -8,13 +8,19 @@ namespace N1ebieski\IDir\Listeners\Dir;
 class Checkout
 {
     /**
-     * Create the event listener.
+     * Undocumented variable
      *
-     * @return void
+     * @var object
      */
-    public function __construct()
+    protected object $event;
+
+    /**
+     *
+     * @return bool
+     */
+    public function verify() : bool
     {
-        //
+        return $this->event->dir->isActive();
     }
 
     /**
@@ -25,15 +31,19 @@ class Checkout
      */
     public function handle($event) : void
     {
-        if ($event->dir->status === 1) {
-            $event->dir->loadCheckoutPayments();
+        $this->event = $event;
 
-            $event->dir->payments->each(function($payment) use ($event) {
-                if (optional($payment->price)->group_id === $event->dir->group_id) {
-                    $event->dir->makeService()->updatePrivileged(['days' => $payment->price->days]);
-                    $payment->makeRepo()->completed();
-                }
-            });
+        if (!$this->verify()) {
+            return;
         }
+
+        $event->dir->loadCheckoutPayments();
+
+        $event->dir->payments->each(function ($payment) use ($event) {
+            if (optional($payment->price)->group_id === $event->dir->group_id) {
+                $event->dir->makeService()->updatePrivileged(['days' => $payment->price->days]);
+                $payment->makeRepo()->completed();
+            }
+        });
     }
 }

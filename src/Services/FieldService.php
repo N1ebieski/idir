@@ -21,19 +21,19 @@ class FieldService implements Creatable, Updatable, PositionUpdatable
      * Model
      * @var Field
      */
-    protected Field $field;
+    protected $field;
 
     /**
      * [private description]
      * @var Storage
      */
-    protected Storage $storage;
+    protected $storage;
 
     /**
      * [protected description]
      * @var App
      */
-    protected App $app;
+    protected $app;
 
     /**
      * [protected description]
@@ -98,11 +98,15 @@ class FieldService implements Creatable, Updatable, PositionUpdatable
         $i = 0;
 
         foreach ($this->field->getMorph()->getGroup()->fields()->get() as $field) {
-            if ($field->type === 'regions') {
-                $this->field->getMorph()->regions()->attach($attributes[$field->id] ?? []);
-            }
-
             if (isset($attributes[$field->id])) {
+                if ($field->type === 'regions') {
+                    $this->createRegionsValue($attributes[$field->id]);
+                }
+    
+                if ($field->type === 'map') { 
+                    $this->updateOrCreateMapValue($attributes[$field->id]);
+                }
+
                 $value = $attributes[$field->id];
 
                 if ($value instanceof UploadedFile) {
@@ -128,6 +132,57 @@ class FieldService implements Creatable, Updatable, PositionUpdatable
     }
 
     /**
+     * Undocumented function
+     *
+     * @param array $attributes
+     * @return void
+     */
+    protected function updateOrCreateMapValue(array $attributes) : void
+    {       
+        if (count($attributes) > 0) {
+            $this->field->getMorph()->map()->updateOrCreate([], [
+                'lat' => $attributes[0]['lat'],
+                'long' => $attributes[0]['long']
+            ]);
+        }
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param array $attributes
+     * @return void
+     */
+    protected function deleteMapValue(array $attributes) : void
+    {
+        if (count($attributes) === 0) {
+            $this->field->getMorph()->map()->delete();                
+        }    
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param array $attributes
+     * @return void
+     */
+    protected function createRegionsValue(array $attributes) : void
+    {
+        $this->field->getMorph()->regions()->attach($attributes ?? []);
+    }    
+
+    /**
+     * Undocumented function
+     *
+     * @param array $attributes
+     * @return void
+     */
+    protected function updateRegionsValue(array $attributes) : void
+    {
+        $this->field->getMorph()->regions()->sync($attributes ?? []);
+    }
+
+    /**
      * [updateValues description]
      * @param  array $attributes [description]
      * @return int               [description]
@@ -137,16 +192,20 @@ class FieldService implements Creatable, Updatable, PositionUpdatable
         $i = 0;
 
         foreach ($this->field->getMorph()->getGroup()->fields()->get() as $field) {
-            if ($field->type === 'regions') {
-                $this->field->getMorph()->regions()->sync($attributes[$field->id] ?? []);
-            }
-
             if ($field->type === 'image') {
                 $path = optional($this->field->getMorph()->fields->where('id', $field->id)
                     ->first())->decode_value;
             }
 
-            if (isset($attributes[$field->id])) {
+            if (isset($attributes[$field->id]) && !empty($attributes[$field->id])) {
+                if ($field->type === 'regions') {            
+                    $this->updateRegionsValue($attributes[$field->id]);
+                }
+    
+                if ($field->type === 'map') { 
+                    $this->updateOrCreateMapValue($attributes[$field->id]);
+                }
+
                 $value = $attributes[$field->id];
 
                 if ($value instanceof UploadedFile) {
@@ -168,6 +227,10 @@ class FieldService implements Creatable, Updatable, PositionUpdatable
                 $ids[$field->id] = ['value' => json_encode($value)];
                 $i++;
             } else {
+                if ($field->type === 'map') {                
+                    $this->deleteMapValue($attributes[$field->id]);
+                }
+
                 if ($field->type === 'image') {
                     $this->storage->disk('public')->delete($path);
                 }

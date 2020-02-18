@@ -3,7 +3,6 @@
 namespace N1ebieski\IDir\Http\Controllers\Web\Payment\Cashbill\Dir;
 
 use Illuminate\Http\RedirectResponse;
-use Illuminate\View\View;
 use N1ebieski\IDir\Http\Requests\Web\Payment\Cashbill\Dir\CompleteRequest;
 use N1ebieski\IDir\Http\Requests\Web\Payment\Cashbill\Dir\VerifyRequest;
 use N1ebieski\IDir\Http\Requests\Web\Payment\Cashbill\Dir\ShowRequest;
@@ -23,28 +22,35 @@ class PaymentController implements Polymorphic
      * @param  Payment  $payment  [description]
      * @param  ShowRequest $request [description]
      * @param  Cashbill $cashbill [description]
-     * @return View               [description]
+     * @return RedirectResponse               [description]
      */
-    public function show(Payment $payment, ShowRequest $request, Cashbill $cashbill) : View
+    public function show(Payment $payment, ShowRequest $request, Cashbill $cashbill) : RedirectResponse
     {
         $payment->load(['morph', 'price_morph']);
 
-        return view('idir::web.payment.cashbill.dir.show', [
-            'payment' => $cashbill->setup([
-                    'amount' => $payment->price->price,
-                    'desc' => trans('idir::payments.desc.dir', [
-                        'title' => $payment->morph->title,
-                        'group' => $payment->price->group->name,
-                        'days' => $days = $payment->price->days,
-                        'limit' => $days !== null ? strtolower(trans('idir::groups.days'))
-                            : strtolower(trans('idir::groups.unlimited'))
-                    ]),
-                    'userdata' => json_encode([
-                        'uuid' => $payment->uuid,
-                        'redirect' => $request->input('redirect')
-                    ])
-                ])->all()
-        ]);
+        try {
+            $response = $cashbill->setup([
+                'amount' => $payment->price->price,
+                'desc' => trans('idir::payments.desc.dir', [
+                    'title' => $payment->morph->title,
+                    'group' => $payment->price->group->name,
+                    'days' => $days = $payment->price->days,
+                    'limit' => $days !== null ? strtolower(trans('idir::groups.days'))
+                        : strtolower(trans('idir::groups.unlimited'))
+                ]),
+                'userdata' => json_encode([
+                    'uuid' => $payment->uuid,
+                    'redirect' => $request->input('redirect')
+                ])
+            ])
+            ->response();
+        } catch (\N1ebieski\IDir\Exceptions\Cashbill\Exception $e) {
+            throw $e->setPayment($payment);
+        }
+
+        $redirects = $response->getHeader(\GuzzleHttp\RedirectMiddleware::HISTORY_HEADER);
+
+        return response()->redirectTo(end($redirects));
     }
 
     /**
@@ -60,10 +66,10 @@ class PaymentController implements Polymorphic
         }
 
         return redirect()->to($request->input('redirect'))->with(
-                $request->input('status') === 'ok' ? 'success' : 'danger',
-                $request->input('status') === 'ok' ? trans('idir::payments.success.complete')
-                    : trans('idir::payments.error.complete')
-            );
+            $request->input('status') === 'ok' ? 'success' : 'danger',
+            $request->input('status') === 'ok' ? trans('idir::payments.success.complete')
+                : trans('idir::payments.error.complete')
+        );
     }
 
     /**
@@ -81,7 +87,7 @@ class PaymentController implements Polymorphic
         event(new VerifyAttempt($payment));
 
         try {
-            $cashbill->setup(['amount' => $payment->price->price])->verify($request->validated());
+            $cashbill->setup(['amount' => $payment->price->price])->authorize($request->validated());
         } catch (\N1ebieski\IDir\Exceptions\Cashbill\Exception $e) {
             throw $e->setPayment($payment);
         }

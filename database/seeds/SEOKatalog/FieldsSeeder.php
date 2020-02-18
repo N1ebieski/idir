@@ -92,6 +92,10 @@ class FieldsSeeder extends SEOKatalogSeeder
             ->orderBy('position', 'asc')->orderBy('title', 'asc')->get();
 
         $fields->each(function($item) {
+            if ($item->mod !== 0) {
+                return;
+            }
+
             $field = Field::create([
                 'id' => $this->field_last_id + $item->id,
                 'title' => $item->title,

@@ -1,0 +1,20 @@
+.carousel {
+    .bottom-controls {
+        margin-top: 40px;
+
+        .carousel-control-prev,
+        .carousel-control-next {
+            filter: invert(100%);
+            align-items: flex-end;
+            width: auto;
+        }
+    
+        .carousel-indicators {
+            bottom: -18px;
+    
+            li {
+                filter: invert(100%);
+            }
+        }
+    }
+}

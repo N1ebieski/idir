@@ -67,7 +67,7 @@ class UniqueUrl implements Rule
         $url = str_replace('www.', '', parse_url($value, PHP_URL_HOST));
 
         return DB::table($this->table)
-            ->where(function($query) use ($url) {
+            ->where(function ($query) use ($url) {
                 return $query->whereRaw("MATCH (url) AGAINST (? IN BOOLEAN MODE)", [
                     '+"/' . $url . '"'
                 ])
@@ -75,9 +75,10 @@ class UniqueUrl implements Rule
                     '+"/www.' . $url . '"'
                 ]);
             })
-            ->when($this->ignore !== null, function($query) {
+            ->when($this->ignore !== null, function ($query) {
                 $query->where('id', '<>', $this->ignore);
-            })->count() === 0;
+            })
+            ->count() === 0;
     }
 
     /**
@@ -98,5 +99,5 @@ class UniqueUrl implements Rule
     public function __toString() : string
     {
         return 'UniqueUrl';
-    }    
+    }
 }

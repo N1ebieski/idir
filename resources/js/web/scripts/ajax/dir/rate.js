@@ -22,6 +22,7 @@ jQuery(document).ready(function() {
                         .rating("refresh", {
                             showClear: true
                         })
+                        .attr('value', response.sum_rating)
                         .attr('data-user-value', value);
             }
         });    

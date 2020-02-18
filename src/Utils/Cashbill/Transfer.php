@@ -3,12 +3,26 @@
 namespace N1ebieski\IDir\Utils\Cashbill;
 
 use Illuminate\Contracts\Config\Repository as Config;
+use GuzzleHttp\Client as GuzzleClient;
+use GuzzleHttp\Psr7\Response as GuzzleResponse;
 
 /**
  * [Cashbill description]
  */
 class Transfer
 {
+    /**
+     * [protected description]
+     * @var GuzzleClient
+     */
+    protected $guzzle;
+
+    /**
+     * [protected description]
+     * @var GuzzleResponse
+     */
+    protected $response;
+
     /**
      * [protected description]
      * @var string
@@ -52,11 +66,15 @@ class Transfer
     protected $sign;
 
     /**
-     * [__construct description]
-     * @param Config $config [description]
+     * Undocumented function
+     *
+     * @param GuzzleClient $guzzle
+     * @param Config $config
      */
-    public function __construct(Config $config)
+    public function __construct(GuzzleClient $guzzle, Config $config)
     {
+        $this->guzzle = $guzzle;
+
         $this->service = $config->get("services.cashbill.transfer.service");
         $this->transfer_url = $config->get("services.cashbill.transfer.url");
         $this->key = $config->get("services.cashbill.transfer.key");
@@ -130,35 +148,61 @@ class Transfer
     }
 
     /**
-     * [verify description]
+     * [authorize description]
      * @param  array  $attributes [description]
      * @return void               [description]
      */
-    public function verify(array $attributes) : void
+    public function authorize(array $attributes) : void
     {
         if (!$this->isService($attributes['service'])) {
             throw new \N1ebieski\IDir\Exceptions\Cashbill\Transfer\InvalidServiceException(
-                'Invalid service.', 403
+                'Invalid service.',
+                403
             );
         }
 
         if (!$this->isStatus($attributes['status'])) {
             throw new \N1ebieski\IDir\Exceptions\Cashbill\Transfer\InvalidStatusException(
-                'Invalid status of payment.', 403
+                'Invalid status of payment.',
+                403
             );
         }
 
         if (!$this->isAmount((float)$attributes['amount'])) {
             throw new \N1ebieski\IDir\Exceptions\Cashbill\Transfer\InvalidAmountException(
-                'Invalid amount of payment.', 403
+                'Invalid amount of payment.',
+                403
             );
         }
 
         if (!$this->isSign($attributes)) {
             throw new \N1ebieski\IDir\Exceptions\Cashbill\Transfer\InvalidSignException(
-                'Invalid signature of payment.', 403
+                'Invalid signature of payment.',
+                403
             );
         }
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @return GuzzleResponse
+     */
+    public function response() : GuzzleResponse
+    {
+        try {
+            $response = $this->guzzle->request('POST', $this->transfer_url, [
+                'allow_redirects' => ['track_redirects' => true],
+                'form_params' => $this->all()
+            ]);
+        } catch (\GuzzleHttp\Exception\GuzzleException $e) {
+            throw new \N1ebieski\IDir\Exceptions\Cashbill\Exception(
+                $e->getMessage(),
+                $e->getCode()
+            );
+        }
+
+        return $this->response = $response;
     }
 
     /**
@@ -176,5 +220,4 @@ class Transfer
             'sign' => $this->makeSign()
         ];
     }
-
 }
