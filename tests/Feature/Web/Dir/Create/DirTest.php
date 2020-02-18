@@ -469,10 +469,10 @@ class DirTest extends TestCase
             'status' => 2
         ]);
 
-        $payment = Payment::orderBy('id', 'desc')->first();
+        $payment = Payment::orderBy('created_at', 'desc')->first();
 
         $response->assertSessionDoesntHaveErrors('payment_transfer');
-        $response->assertRedirect(route('web.payment.dir.show', [$payment->id]));
+        $response->assertRedirect(route('web.payment.dir.show', [$payment->uuid]));
     }
 
     public function test_dir_store_3_validation_payment_code_sms_fail()

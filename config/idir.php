@@ -14,6 +14,11 @@ return [
             'max_attempts' => env('IDIR_DIR_BACKLINK_MAX_ATTEMPTS', 3),
         ],
 
+        'status' => [
+            'check_days' => env('IDIR_DIR_STATUS_CHECK_DAYS', 7),
+            'max_attempts' => env('IDIR_DIR_STATUS_MAX_ATTEMPTS', 3),
+        ],
+
         'delete_reasons' => [
             'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
             'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
@@ -32,7 +37,18 @@ return [
             'api' => [
                 'reload_url' => env('IDIR_DIR_THUMBNAIL_API_RELOAD_URL')
             ]
+        ],
+
+        'notification' => [
+            'dirs' => env('IDIR_DIR_NOTIFICATION_DIRS'),
+            'hours' => env('IDIR_DIR_NOTIFICATION_HOURS')
         ]
+
+    ],
+
+    'home' => [
+        'max' => env('IDIR_HOME_MAX', 10),
+        'max_privileged'=> env('IDIR_HOME_MAX_PRIVILEGED', 5)
     ],
 
     'payment' => [

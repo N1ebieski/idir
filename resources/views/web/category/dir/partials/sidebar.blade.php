@@ -1,4 +1,7 @@
-@include('idir::web.category.dir.partials.regions')
+@render('idir::region.category.regionComponent', [
+    'region' => $region, 
+    'category' => $category
+])
 <h3 class="h5">{{ trans('icore::categories.categories') }}</h3>
 <div class="list-group list-group-flush mb-3">
     @if ($category->relationLoaded('ancestors'))

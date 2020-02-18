@@ -30,7 +30,8 @@ class UpdateRequest extends BaseUpdateRequest
                     'edit comments',
                     'create dirs',
                     'edit dirs',
-                    'destroy dirs'
+                    'destroy dirs',
+                    'notification dirs'
                 ]) : null,
                 'no_js_validation'
             ]

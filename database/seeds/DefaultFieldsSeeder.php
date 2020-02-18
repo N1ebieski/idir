@@ -18,14 +18,14 @@ class DefaultFieldsSeeder extends Seeder
             'title' => 'Region',
             'type' => 'regions',
             'visible' => 1,
-            'options' => json_encode(['required' => 0])
+            'options' => ['required' => 0]
         ]);
 
         Field::create([
             'title' => 'Lokalizacja',
             'type' => 'map',
             'visible' => 1,
-            'options' => json_encode(['required' => 0])
+            'options' => ['required' => 0]
         ]);
     }
 }

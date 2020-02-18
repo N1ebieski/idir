@@ -40,21 +40,42 @@ data-id="{{ $dir->id }}">
                         {{ trans('idir::dirs.check_content') }}
                     </a>
                 </li>
+                @if ($dir->notes)
+                <li class="text-break font-weight-bold">
+                    {{ $dir->notes }}
+                </li>
+                @endif                
                 @if ($dir->group->fields->isNotEmpty())
                 @foreach ($dir->group->fields as $field)
                 @if ($value = optional($dir->fields->where('id', $field->id)->first())->decode_value)
                 <li class="text-break">
                     {{ $field->title }}: 
                     <span>
-                    @if (in_array($field->type, ['input', 'textarea', 'select']))
-                        {{ $value }}
-                    @elseif (in_array($field->type, ['multiselect', 'checkbox']))
-                        {{ implode(', ', $value) }}
-                    @elseif ($field->type === 'regions')
-                        {{ implode(', ', $dir->regions->pluck('name')->toArray()) }}
-                    @else
-                        <img class="img-fluid" src="{{ Storage::url($value) }}">
-                    @endif
+                    @switch($field->type)
+                        @case('input')
+                        @case('textarea')
+                        @case('select')
+                            {{ $value }}
+                            @break
+
+                        @case('multiselect')
+                        @case('checkbox')
+                            {{ implode(', ', $value) }}
+                            @break
+
+                        @case('regions')
+                            {{ implode(', ', $dir->regions->pluck('name')->toArray()) }}
+                            @break
+
+                        @case('image')
+                            <br>
+                            <img class="img-fluid" src="{{ Storage::url($value) }}">
+                            @break
+
+                        @case('map')
+                            {{ $value[0]->lat }} : {{ $value[0]->long }}
+                            @break
+                    @endswitch
                     </span>
                 </li>
                 @endif
@@ -107,6 +128,9 @@ data-id="{{ $dir->id }}">
                         </small>
                     </li>
                     @endif
+                    @if ($dir->privileged_to !== null)
+                    <li><small>{{ trans('idir::dirs.privileged_to') }}: {{ $dir->privileged_to_diff }}</small></li>
+                    @endif                    
                     <li><small>{{ trans('icore::filter.created_at') }}: {{ $dir->created_at_diff }}</small></li>
                     <li><small>{{ trans('icore::filter.updated_at') }}: {{ $dir->updated_at_diff }}</small></li>
                 </ul>

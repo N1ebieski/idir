@@ -72,7 +72,7 @@ class Transfer extends Codes
         }
 
         try {
-            $this->cashbill->verify([
+            $this->cashbill->authorize([
                 'code' => $value,
                 'id' => $this->price->code
             ]);

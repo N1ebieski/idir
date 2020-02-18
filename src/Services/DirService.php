@@ -139,7 +139,7 @@ FullUpdatable, Deletable, GlobalDeletable
         $this->dir->fill($attributes);
         $this->dir->user()->associate(auth()->user());
         $this->dir->group()->associate($this->dir->getGroup());
-        $this->dir->content = $this->dir->content_html;
+        $this->dir->content = $attributes['content_html'];
         $this->dir->status = $this->makeStatus($attributes['payment_type'] ?? null);
         $this->dir->save();
 
@@ -192,7 +192,7 @@ FullUpdatable, Deletable, GlobalDeletable
     public function update(array $attributes) : bool
     {
         $this->dir->fill($attributes);
-        $this->dir->content = $this->dir->content_html;
+        $this->dir->content = $attributes['content_html'];
 
         if (isset($attributes['field'])) {
             $this->dir->fields()->make()
@@ -221,7 +221,7 @@ FullUpdatable, Deletable, GlobalDeletable
             $this->dir->group()->associate($this->dir->getGroup());
             $this->dir->makeRepo()->nullablePrivileged();
         }
-        $this->dir->content = $this->dir->content_html;
+        $this->dir->content = $attributes['content_html'];
         $this->dir->status = $this->makeStatus($attributes['payment_type'] ?? null);
 
         if (isset($attributes['field'])) {
@@ -298,6 +298,8 @@ FullUpdatable, Deletable, GlobalDeletable
 
         $this->dir->regions()->delete();
 
+        $this->dir->map()->delete();        
+
         $this->dir->detag();
 
         return $this->dir->delete();
@@ -336,6 +338,9 @@ FullUpdatable, Deletable, GlobalDeletable
 
         $this->dir->tags()->newPivotStatement()
             ->whereIn('model_id', $ids)
+            ->where('model_type', 'N1ebieski\IDir\Models\Dir')->delete();
+
+        $this->dir->map()->make()->whereIn('model_id', $ids)
             ->where('model_type', 'N1ebieski\IDir\Models\Dir')->delete();
 
         return $this->dir->whereIn('id', $ids)->delete();

@@ -712,21 +712,24 @@ jQuery(document).on('readyAndAjax', function() {
 
 jQuery(document).ready(function() {
     let $map = $("#map");
-    $map.data = $map.data();
 
-    if (typeof $map.data.addressMarker !== 'undefined' && $map.data.addressMarker.length) {
-        $map.googleMap({
-            zoom: parseInt($map.data.zoom),
-			scrollwheel: true,              
-            type: "ROADMAP"
-        })
-        .addClass($map.data.containerClass);
+    if ($map.length) {
+        $map.data = $map.data();
 
-        $.each($map.data.addressMarker, function(key, value) {
-            $map.addMarker({
-                address: value
+        if (typeof $map.data.addressMarker !== 'undefined' && $map.data.addressMarker.length) {
+            $map.googleMap({
+                zoom: parseInt($map.data.zoom),
+                scrollwheel: true,              
+                type: "ROADMAP"
+            })
+            .addClass($map.data.containerClass);
+    
+            $.each($map.data.addressMarker, function(key, value) {
+                $map.addMarker({
+                    address: value
+                });
             });
-        });
+        }
     }
 });
 jQuery(document).ready(function() {
@@ -766,7 +769,7 @@ jQuery(document).ready(function() {
             templates: {
                 suggestion: function(data) {
                     let name = $($.parseHTML(data.name)).text();
-                    let href = $form.attr('action')+'?source='+$form.find('select[name="source"]').val()+'&search='+name;
+                    let href = $form.attr('action')+'?source='+$form.find('[name="source"]').val()+'&search='+name;
 
                     return $.sanitize('<a href="'+href+'" class="list-group-item py-2 text-truncate">'+name+'</a>');
                 }
@@ -801,18 +804,20 @@ jQuery(document).ready(function() {
     let $navbar = $('.navbar');
 
     $(window).scroll(function () {
-       var a = $(window).scrollTop();
-       var b = $navbar.height()+10;
-
-       currentScrollTop = a;
-
-       if (c < currentScrollTop && c > b) {
-         $navbar.fadeOut();
-       } else {
-         $navbar.fadeIn();
-       }
-       c = currentScrollTop;
-   });
+        if (!$('body').hasClass('modal-open')) {
+            var a = $(window).scrollTop();
+            var b = $navbar.height() + 10;
+    
+            currentScrollTop = a;
+    
+            if (c < currentScrollTop && c > b) {
+                $navbar.fadeOut();
+            } else {
+                $navbar.fadeIn();
+            }
+            c = currentScrollTop;
+        }
+    });
 });
 
 jQuery(document).on('click', ".modal-backdrop, #navbarToggle", function(e) {
@@ -907,6 +912,80 @@ jQuery(document).on('click', 'div#themeToggle button', function(e) {
     $element.siblings('button').prop('disabled', false);
 });
 
+jQuery(document).on('click', 'button.sendContact', function(e) {
+    e.preventDefault();
+
+    let $form = $(this).closest('form');
+    $form.btn = $form.find('.btn');
+    $form.input = $form.find('.form-control');
+    let $modal = {
+        body: $form.closest('.modal-body')
+    };
+
+    $.ajax({
+        url: $form.attr('data-route'),
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        method: 'post',
+        data: $form.serialize(),
+        dataType: 'json',
+        beforeSend: function() {
+            $form.btn.prop('disabled', true);
+            $modal.body.append($.getLoader('spinner-border'));
+            $('.invalid-feedback').remove();
+            $form.input.removeClass('is-valid');
+            $form.input.removeClass('is-invalid');
+        },
+        complete: function() {
+            $form.btn.prop('disabled', false);
+            $modal.body.find('div.loader-absolute').remove();
+            $form.find('.captcha').recaptcha();
+            $form.find('.captcha').captcha();
+            $form.input.addClass('is-valid');
+        },
+        success: function(response) {
+            $modal.body.html($.getAlert(response.success, 'success'));
+        },
+        error: function(response) {
+            let errors = response.responseJSON;
+
+            $.each(errors.errors, function(key, value) {
+                $form.find('[name="'+key+'"]').addClass('is-invalid');
+                $form.find('[name="'+key+'"]').closest('.form-group').append($.getError(key, value));
+            });
+        }
+    });
+});
+
+jQuery(document).on('click', '.showContact', function(e) {
+    e.preventDefault();
+
+    let $element = $(this);
+    let $modal = {
+        body: $($element.attr('data-target')).find('.modal-body'),
+        content: $($element.attr('data-target')).find('.modal-content')
+    };
+
+    $modal.body.empty();
+
+    jQuery.ajax({
+        url: $element.attr('data-route'),
+        method: 'get',
+        beforeSend: function() {
+            $modal.body.append($.getLoader('spinner-grow'));
+        },
+        complete: function() {
+            $modal.content.find('script')
+            $modal.content.find('div.loader-absolute').remove();
+            $modal.content.find('.captcha').recaptcha();
+        },
+        success: function(response) {
+            $modal.body.html($.sanitize(response.view));
+        }
+    });
+});
+
 jQuery(document).ready(function() {
     $('[id^="star-rating"]').on('rating:change', function(event, value, caption) {
         event.preventDefault();
@@ -931,6 +1010,7 @@ jQuery(document).ready(function() {
                         .rating("refresh", {
                             showClear: true
                         })
+                        .attr('value', response.sum_rating)
                         .attr('data-user-value', value);
             }
         });    
@@ -978,6 +1058,103 @@ $(document).ready(function(){
     }).children().show();
     // END OF THE CSSMap;
  });
+jQuery(document).ready(function() {
+    let $map = $('#map');
+
+    if ($map.length) {
+        $map.data = $map.data();
+
+        if (typeof $map.data.coordsMarker !== 'undefined' && $map.data.coordsMarker.length) {
+            if (!$map.html().length) {
+                $map.googleMap({
+                    zoom: parseInt($map.data.zoom),
+                    scrollwheel: true,              
+                    type: "ROADMAP"
+                })
+                .addClass($map.data.containerClass);
+            }
+                    
+            $.each($map.data.coordsMarker, function(key, value) {
+                $map.addMarker({
+                    coords: value,       
+                });
+            });
+        }        
+    }
+});
+
+jQuery(document).on('readyAndAjax', function() {
+    let $map = $("#map-select");
+
+    if ($map.length) {
+        $map.data = $map.data();
+        
+        if (!$map.html().length) {        
+            $map.googleMap({
+                zoom: $map.data.zoom,
+                coords: $map.data.coords,
+                scrollwheel: true,            
+                type: "ROADMAP"
+            })
+            .addClass($map.attr('data-container-class')); 
+
+            $map.siblings('[id^="marker"]').each(function(index, element) {
+                let $element = $(element);
+                $element = {
+                    lat: $element.find('input[id$="lat"]'),
+                    long: $element.find('input[id$="long"]')
+                };
+
+                if ($element.lat.val().length && $element.long.val().length) {
+                    $map.addMarker({
+                        coords: [
+                            $element.lat.val(), 
+                            $element.long.val()
+                        ],
+                        id: 'marker' + index,
+                        draggable: true,
+                        success: function(e) {
+                            $element.lat.val(e.lat);
+                            $element.long.val(e.lon);                    
+                        }
+                    });
+                }
+            });
+        }
+    }     
+});
+
+jQuery(document).on('click', '#remove-marker', function(e) {
+    e.preventDefault();
+
+    let $map = $('#map-select');
+
+    $map.removeMarker('marker0');
+    $map.siblings('#marker0').find('input[id$="lat"]').val(null);
+    $map.siblings('#marker0').find('input[id$="long"]').val(null);
+
+    $('#add-marker').show();
+    $(this).hide();
+});
+
+jQuery(document).on('click', '#add-marker', function(e) {
+    e.preventDefault();
+
+    let $map = $('#map-select');
+
+    $map.addMarker({
+        coords: $map.data('coords'),
+        draggable: true,
+        id: 'marker0',
+        success: function(e) {
+            $map.siblings('#marker0').find('input[id$="lat"]').val(e.lat);
+            $map.siblings('#marker0').find('input[id$="long"]').val(e.lon);                    
+        }
+    });
+
+    $('#remove-marker').show();
+    $(this).hide();
+});
 jQuery(document).on('readyAndAjax', function() {
     if (!$('.trumbowyg-box').length) {
         $('#content_html_dir_trumbowyg').trumbowyg({
@@ -1008,6 +1185,9 @@ jQuery(document).on('readyAndAjax', function() {
     }
 });
 
+jQuery(document).ready(function () {
+    // $('.carousel').carousel();
+});
 jQuery(document).on('change', 'form input[id^=delete_img]', function() {
     $input = $(this).closest('.form-group').find('[type="file"]');
     $hidden = $(this).closest('.form-group').find('[type="hidden"]');

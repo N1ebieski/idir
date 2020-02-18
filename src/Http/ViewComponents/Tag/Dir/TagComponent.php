@@ -2,28 +2,15 @@
 
 namespace N1ebieski\IDir\Http\ViewComponents\Tag\Dir;
 
-use Illuminate\Contracts\Support\Htmlable;
+use N1ebieski\ICore\Http\ViewComponents\Tag\TagComponent as BaseTagComponent;
 use N1ebieski\IDir\Models\Tag\Dir\Tag;
 use Illuminate\View\View;
 
 /**
  * [TagComponent description]
  */
-class TagComponent implements Htmlable
+class TagComponent extends BaseTagComponent
 {
-    /**
-     * [private description]
-     * @var Tag
-     */
-    protected $tag;
-
-    /**
-     * Undocumented variable
-     *
-     * @var int
-     */
-    protected $limit;
-
     /**
      * Undocumented variable
      *
@@ -32,15 +19,17 @@ class TagComponent implements Htmlable
     protected $cats;
 
     /**
-     * [__construct description]
-     * @param Tag   $tag  [description]
-     * @param array $cats [description]
+     * Undocumented function
+     *
+     * @param Tag $tag
+     * @param integer $limit
+     * @param array $cats
+     * @param array $colors
      */
-    public function __construct(Tag $tag, int $limit = 25, array $cats = null)
+    public function __construct(Tag $tag, int $limit = 25, array $colors = null, array $cats = null)
     {
-        $this->tag = $tag;
+        parent::__construct($tag, $limit, $colors);
 
-        $this->limit = $limit;        
         $this->cats = $cats;
     }
 
@@ -54,7 +43,8 @@ class TagComponent implements Htmlable
             'tags' => $this->tag->makeCache()->rememberPopularByComponent([
                 'limit' => $this->limit,
                 'cats' => $this->cats
-            ])
+            ]),
+            'colors' => $this->colors
         ]);
     }
 }

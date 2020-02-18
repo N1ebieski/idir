@@ -1,0 +1,14 @@
+.carousel {
+    .bottom-controls {
+        .carousel-control-prev,
+        .carousel-control-next {
+            filter: invert(0%);
+        }
+
+        .carousel-indicators {
+            li {
+                filter: invert(0%);
+            }
+        }
+    }
+}

@@ -249,7 +249,7 @@ class DirTest extends TestCase
 
         $response2->assertOk()
             ->assertViewIs('idir::web.dir.edit.2')
-            ->assertSee($dir->content_html);
+            ->assertSee($dir->title);
     }
 
     public function test_dir_edit_2()
@@ -847,10 +847,10 @@ class DirTest extends TestCase
             'status' => 2
         ]);
 
-        $payment = Payment::orderBy('id', 'desc')->first();
+        $payment = Payment::orderBy('created_at', 'desc')->first();
 
         $response->assertSessionDoesntHaveErrors('payment_transfer');
-        $response->assertRedirect(route('web.payment.dir.show', [$payment->id]));
+        $response->assertRedirect(route('web.payment.dir.show', [$payment->uuid]));
     }
 
     public function test_dir_update_3_old_group_without_payment()
@@ -886,7 +886,7 @@ class DirTest extends TestCase
             'status' => 2
         ]);
 
-        $payment = Payment::orderBy('id', 'desc')->first();
+        $payment = Payment::orderBy('created_at', 'desc')->first();
 
         $response->assertSessionDoesntHaveErrors('payment_transfer');
         $response->assertRedirect(route('web.profile.edit_dir'))->assertSessionHas('success');

@@ -10,6 +10,17 @@ use Carbon\Carbon;
 class CommentsSeeder extends SEOKatalogSeeder
 {
     /**
+     * Undocumented function
+     *
+     * @param string $content
+     * @return string
+     */
+    protected static function makeContentHtml(string $content) : string
+    {
+        return strip_tags(htmlspecialchars_decode($content));     
+    }
+
+    /**
      * Run the database seeds.
      *
      * @return void
@@ -26,8 +37,8 @@ class CommentsSeeder extends SEOKatalogSeeder
                         'model_type' => 'N1ebieski\IDir\Models\Dir',
                         'user_id' => is_int($item->user) && $item->user > 0 ? 
                             $this->user_last_id + $item->user : null,
-                        'content_html' => $item->content,
-                        'content' => $item->content,
+                        'content_html' => $this->makeContentHtml($item->content),
+                        'content' => $this->makeContentHtml($item->content),
                         'status' => $item->active,
                         'created_at' => Carbon::createFromTimestamp($item->date),
                         'updated_at' => Carbon::createFromTimestamp($item->date)                        

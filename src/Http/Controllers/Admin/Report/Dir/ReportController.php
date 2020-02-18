@@ -43,7 +43,7 @@ class ReportController implements Polymorphic
         return response()->json([
             'success' => '',
             'view' => view('idir::admin.dir.partials.dir', [
-                'dir' => $dir
+                'dir' => $dir->loadAllRels()
             ])->render()
         ]);
     }

@@ -8,13 +8,20 @@ namespace N1ebieski\IDir\Listeners\Dir;
 class MarkAsPaid
 {
     /**
-     * Create the event listener.
+     * Undocumented variable
      *
-     * @return void
+     * @var object
      */
-    public function __construct()
+    protected object $event;
+
+    /**
+     *
+     * @return bool
+     */
+    public function verify() : bool
     {
-        //
+        return $this->event->payment->isUndone()
+            && $this->event->payment->morph->isPending();
     }
 
     /**
@@ -25,10 +32,14 @@ class MarkAsPaid
      */
     public function handle($event)
     {
-        if ($event->payment->status === 0) {
-            if ($event->payment->morph->status === 2) {
-                $event->payment->morph->update(['status' => $event->payment->morph->group->apply_status]);
-            }
+        $this->event = $event;
+
+        if (!$this->verify()) {
+            return;
         }
+
+        $event->payment->morph->update([
+            'status' => $event->payment->morph->group->apply_status
+        ]);
     }
 }

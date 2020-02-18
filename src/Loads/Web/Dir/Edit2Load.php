@@ -17,7 +17,6 @@ class Edit2Load
     {
         $request->route('group')
             ->loadCount(['dirs', 'dirs_today'])
-            ->load('privileges')
-            ->loadPublicFields();
+            ->load(['privileges', 'fields']);
     }
 }

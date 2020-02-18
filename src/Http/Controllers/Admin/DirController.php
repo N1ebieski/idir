@@ -15,15 +15,12 @@ use N1ebieski\IDir\Http\Requests\Admin\Dir\EditFull3Request;
 use N1ebieski\IDir\Http\Requests\Admin\Dir\Store3CodeRequest;
 use N1ebieski\IDir\Http\Requests\Admin\Dir\UpdateFull2Request;
 use N1ebieski\IDir\Http\Requests\Admin\Dir\UpdateFull3Request;
-use N1ebieski\IDir\Http\Requests\Admin\Dir\UpdateFull3CodeRequest; 
-
+use N1ebieski\IDir\Http\Requests\Admin\Dir\UpdateFull3CodeRequest;
 use N1ebieski\IDir\Http\Responses\Admin\Dir\Store3Response;
 use N1ebieski\IDir\Http\Responses\Admin\Dir\UpdateFull3Response;
-
 use N1ebieski\IDir\Loads\Admin\Dir\EditLoad;
 use N1ebieski\IDir\Loads\Admin\Dir\Store2Load;
 use N1ebieski\IDir\Loads\Admin\Dir\Store3Load;
-use N1ebieski\IDir\Loads\Admin\Dir\UpdateLoad;
 use N1ebieski\IDir\Loads\Admin\Dir\Create2Load;
 use N1ebieski\IDir\Loads\Admin\Dir\Create3Load;
 use N1ebieski\IDir\Loads\Admin\Dir\EditFull1Load;
@@ -31,8 +28,6 @@ use N1ebieski\IDir\Loads\Admin\Dir\EditFull2Load;
 use N1ebieski\IDir\Loads\Admin\Dir\EditFull3Load;
 use N1ebieski\IDir\Loads\Admin\Dir\UpdateFull2Load;
 use N1ebieski\IDir\Loads\Admin\Dir\UpdateFull3Load;
-use N1ebieski\IDir\Loads\Admin\Dir\UpdateStatusLoad;
-
 use N1ebieski\IDir\Models\Dir;
 use N1ebieski\IDir\Models\Group;
 use N1ebieski\IDir\Models\Category\Dir\Category;
@@ -45,10 +40,11 @@ use Illuminate\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use N1ebieski\IDir\Events\Admin\Dir\Destroy as DirDestroy;
-use N1ebieski\IDir\Events\Admin\Dir\UpdateStatus as DirUpdateStatus;
 use N1ebieski\IDir\Events\Admin\Payment\Dir\Store as PaymentStore;
 use N1ebieski\IDir\Events\Admin\Dir\Store as DirStore;
 use N1ebieski\IDir\Events\Admin\Dir\UpdateFull as DirUpdateFull;
+use N1ebieski\IDir\Events\Admin\Dir\UpdateStatus as DirUpdateStatus;
+use N1ebieski\IDir\Loads\Admin\Dir\DestroyLoad;
 
 /**
  * [DirController description]
@@ -70,8 +66,7 @@ class DirController
         Category $category,
         IndexRequest $request,
         IndexFilter $filter
-    ) : View
-    {
+    ) : View {
         return view('idir::admin.dir.index', [
             'dirs' => $dir->makeRepo()->paginateForAdminByFilter($filter->all() + [
                 'except' => $request->input('except')
@@ -138,8 +133,7 @@ class DirController
         Link $link,
         Create3Load $load,
         Create3Request $request
-    ) : View
-    {
+    ) : View {
         $dir->makeService()->createOrUpdateSession($request->validated());
 
         $categories = $category->makeRepo()->getByIds(
@@ -172,8 +166,7 @@ class DirController
         Store3Request $request,
         Store3CodeRequest $requestPayment,
         Store3Response $response
-    ) : RedirectResponse
-    {
+    ) : RedirectResponse {
         $dir->setGroup($group)->makeService()->create($request->validated());
 
         if (($payment = $dir->getPayment()) instanceof Payment) {
@@ -247,8 +240,7 @@ class DirController
         Link $link,
         EditFull3Load $load,
         EditFull3Request $request
-    ) : View
-    {
+    ) : View {
         $dir->makeService()->createOrUpdateSession($request->validated());
 
         $categories = $category->makeRepo()->getByIds(
@@ -261,8 +253,10 @@ class DirController
                 $categories->pluck('id')->toArray()
             )) : null;
 
-        return view('idir::admin.dir.edit_full.3', 
-            compact('dir', 'group', 'categories', 'backlinks'));
+        return view(
+            'idir::admin.dir.edit_full.3',
+            compact('dir', 'group', 'categories', 'backlinks')
+        );
     }
 
     /**
@@ -282,8 +276,7 @@ class DirController
         UpdateFull3Request $request,
         UpdateFull3CodeRequest $requestPayment,
         UpdateFull3Response $response
-    ) : RedirectResponse
-    {
+    ) : RedirectResponse {
         $dir->setGroup($group)->makeService()->updateFull($request->validated());
 
         if (($payment = $dir->getPayment()) instanceof Payment) {
@@ -321,13 +314,10 @@ class DirController
     {
         $dir->setGroup($dir->group)->makeService()->update($request->validated());
 
-        // Laravel's refresh() reload only direct relations of model, I need reload relations of relations also
-        new UpdateLoad($request);
-
         return response()->json([
             'success' => '',
             'view' => view('idir::admin.dir.partials.dir', [
-                'dir' => $dir
+                'dir' => $dir->loadAllRels()
             ])->render()
         ]);
     }
@@ -335,30 +325,35 @@ class DirController
     /**
      * [updateStatus description]
      * @param  Dir                 $dir     [description]
-     * @param  UpdateStatusLoad    $load    [description]
-     * @param  UpdateStatusRequest $request [description]
      * @return JsonResponse                 [description]
      */
-    public function updateStatus(Dir $dir, UpdateStatusLoad $load, UpdateStatusRequest $request) : JsonResponse
+    public function updateStatus(Dir $dir, UpdateStatusRequest $request) : JsonResponse
     {
         $dir->makeService()->updateStatus($request->only('status'));
+
+        $dir->loadAllRels();
 
         event(new DirUpdateStatus($dir));
 
         return response()->json([
             'success' => '',
             'status' => $dir->status,
-            'view' => view('idir::admin.dir.partials.dir', ['dir' => $dir])->render(),
+            'view' => view('idir::admin.dir.partials.dir', [
+                'dir' => $dir
+            ])
+            ->render()
         ]);
     }
 
     /**
-     * [destroy description]
-     * @param  Dir            $dir     [description]
-     * @param  DestroyRequest $request [description]
-     * @return JsonResponse            [description]
+     * Undocumented function
+     *
+     * @param Dir $dir
+     * @param DestroyLoad $load
+     * @param DestroyRequest $request
+     * @return JsonResponse
      */
-    public function destroy(Dir $dir, DestroyRequest $request) : JsonResponse
+    public function destroy(Dir $dir, DestroyLoad $load, DestroyRequest $request) : JsonResponse
     {
         $dir->makeService()->delete();
 
@@ -378,6 +373,11 @@ class DirController
     {
         $deleted = $dir->makeService()->deleteGlobal($request->input('select'));
 
-        return redirect()->back()->with('success', trans('idir::dirs.success.destroy_global', ['affected' => $deleted]));
+        return redirect()->back()->with(
+            'success',
+            trans('idir::dirs.success.destroy_global', [
+                'affected' => $deleted
+            ])
+        );
     }
 }

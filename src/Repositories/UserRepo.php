@@ -44,4 +44,14 @@ class UserRepo extends BaseUserRepo
             ->filterOrderBy($filter['orderby'])
             ->filterPaginate($filter['paginate']);
     }
+
+    /**
+     * Undocumented function
+     *
+     * @return Collection
+     */
+    public function getByNotificationDirsPermission() : Collection
+    {
+        return $this->user->permission('access admin')->permission('notification dirs')->get();
+    }
 }

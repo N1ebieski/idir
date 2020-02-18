@@ -27,6 +27,15 @@ class CreateLogs
     }
 
     /**
+     *
+     * @return bool
+     */
+    public function verify() : bool
+    {
+        return $this->request->has('logs');
+    }
+
+    /**
      * Handle the event.
      *
      * @param  object  $event
@@ -34,7 +43,7 @@ class CreateLogs
      */
     public function handle($event)
     {
-        if (!$this->request->has('logs')) {
+        if (!$this->verify()) {
             return;
         }
 

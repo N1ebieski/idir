@@ -32,7 +32,7 @@ class GroupsAndPrivilegesSeeder extends SEOKatalogSeeder
 
         $privileges = Privilege::all();
 
-        $groups->each(function($item) use ($privileges) {
+        $groups->each(function ($item) use ($privileges) {
             $group = Group::create([
                 'id' => $this->group_last_id + $item->id,
                 'name' => $item->title,
@@ -43,7 +43,7 @@ class GroupsAndPrivilegesSeeder extends SEOKatalogSeeder
                 'max_models_daily' => $item->max!== 0 ? $item->max : null,
                 'visible' => $item->type,
                 'apply_status' => 0,
-                'url' => 1,
+                'url' => 2,
                 'backlink' => $item->backlink === 0 ? 0 : ($item->backlink === 2 ? 1 : 2)
             ]);
             
@@ -53,13 +53,13 @@ class GroupsAndPrivilegesSeeder extends SEOKatalogSeeder
                 $privIds[] = $privileges->where('name', 'highest position on homepage')->first()->id;
             }
 
-            if ($item->my_cat === 1 || $item->my_sub === 1) {            
+            if ($item->my_cat === 1 || $item->my_sub === 1) {
                 $privIds[] = $privileges->where('name', 'highest position in their categories')->first()->id;
             }
 
-            if ($item->all_cat === 1 || $item->all_sub === 1) {            
+            if ($item->all_cat === 1 || $item->all_sub === 1) {
                 $privIds[] = $privileges->where('name', 'highest position in ancestor categories')->first()->id;
-            }            
+            }
 
             if ($item->friend === 1) {
                 $privIds[] = $privileges->where('name', 'additional link on the friends subpage')->first()->id;
@@ -79,7 +79,7 @@ class GroupsAndPrivilegesSeeder extends SEOKatalogSeeder
 
             if ($item->link_box === 1) {
                 $privIds[] = $privileges->where('name', 'place in the links component')->first()->id;
-            } 
+            }
             
             if ($item->premium_box === 1) {
                 $privIds[] = $privileges->where('name', 'place in the advertising component')->first()->id;

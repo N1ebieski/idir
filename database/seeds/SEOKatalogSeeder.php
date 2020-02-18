@@ -48,7 +48,7 @@ class SEOKatalogSeeder extends Seeder
         $this->sub_last_id = $this->makeSubLastId();
         $this->user_last_id = $this->makeUserLastId();
 
-        ini_set('memory_limit', '512M');
+        // ini_set('memory_limit', '512M');
 
         DB::disableQueryLog();
     }
@@ -82,7 +82,7 @@ class SEOKatalogSeeder extends Seeder
     protected static function makeFieldLastId() : int
     {
         return ((Field::orderBy('id', 'desc')->first()->id ?? 0) - 
-            DB::connection('import')->table('forms')->orderBy('id', 'desc')->first()->id);
+            DB::connection('import')->table('forms')->where('mod', 0)->orderBy('id', 'desc')->first()->id);
     }
 
     /**

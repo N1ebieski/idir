@@ -3,7 +3,6 @@
 namespace N1ebieski\IDir\Http\Controllers\Web\Payment\Cashbill\Dir;
 
 use Illuminate\Http\RedirectResponse;
-use Illuminate\View\View;
 use N1ebieski\IDir\Http\Requests\Web\Payment\Cashbill\Dir\CompleteRequest;
 use N1ebieski\IDir\Http\Requests\Web\Payment\Cashbill\Dir\VerifyRequest;
 use N1ebieski\IDir\Http\Requests\Web\Payment\Cashbill\Dir\ShowRequest;
@@ -20,9 +19,9 @@ interface Polymorphic
      * @param  Payment  $payment  [description]
      * @param  ShowRequest $request [description]
      * @param  Cashbill $cashbill [description]
-     * @return View               [description]
+     * @return RedirectResponse               [description]
      */
-    public function show(Payment $payment, ShowRequest $request, Cashbill $cashbill) : View;
+    public function show(Payment $payment, ShowRequest $request, Cashbill $cashbill) : RedirectResponse;
 
     /**
      * [complete description]

@@ -6,7 +6,6 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Mews\Purifier\Facades\Purifier;
 use N1ebieski\IDir\Models\BanValue;
-use N1ebieski\IDir\Models\Group;
 use Illuminate\Database\Eloquent\Collection;
 use N1ebieski\IDir\Http\Requests\Traits\FieldsExtended;
 
@@ -163,7 +162,7 @@ class Store2Request extends FormRequest
                 'bail',
                 'integer',
                 'distinct',
-                Rule::exists('categories', 'id')->where(function($query) {
+                Rule::exists('categories', 'id')->where(function ($query) {
                     $query->where([
                         ['status', 1],
                         ['model_type', 'N1ebieski\\IDir\\Models\\Dir']
@@ -218,7 +217,9 @@ class Store2Request extends FormRequest
     public function messages()
     {
         return [
-            'content.not_regex' => trans('icore::validation.not_regex_contains', ['words' => str_replace('|', ', ', $this->bans)]),
+            'content.not_regex' => trans('icore::validation.not_regex_contains', [
+                'words' => str_replace('|', ', ', $this->bans)
+            ]),
             'url.not_regex' => 'This address url is banned.'
         ];
     }

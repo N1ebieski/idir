@@ -11,6 +11,7 @@
 
 @section('content')
 <div class="container">
+    @render('idir::dir.carouselComponent')
     <div class="row">
         <div class="col-md-8 order-sm-1 order-md-2">
             <div id="filterContent">

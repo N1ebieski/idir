@@ -51,7 +51,7 @@ class DirCache
         $this->dir = $dir;
         $this->cache = $cache;
         $this->config = $config;
-        $this->collect = $collect;        
+        $this->collect = $collect;
 
         $this->minutes = $config->get('cache.minutes');
     }
@@ -115,12 +115,12 @@ class DirCache
         return $this->cache->remember(
             "dir.thumbnailUrl.{$this->dir->slug}",
             now()->addDays($this->config->get('idir.dir.thumbnail.cache.days')),
-            function() {
+            function () {
                 return $this->config->get('idir.dir.thumbnail.cache.url')
                     .app('crypt.thumbnail')->encryptString($this->dir->url);
             }
         );
-    }     
+    }
 
     /**
      * Undocumented function
@@ -186,23 +186,23 @@ class DirCache
         return $this->cache->tags(["dir.{$slug}"])->remember(
             "dir.firstBySlug.{$slug}",
             now()->addMinutes($this->minutes),
-            function() use ($slug) {
+            function () use ($slug) {
                 return $this->dir->makeRepo()->firstBySlug($slug);
             }
         );
     }
     
     /**
-     * [rememberLoadAllWebRels description]
+     * [rememberLoadAllPublicRels description]
      * @return Dir [description]
      */
-    public function rememberLoadAllWebRels() : Dir
+    public function rememberLoadAllPublicRels() : Dir
     {
         return $this->cache->tags(["dir.{$this->dir->slug}"])->remember(
-            "dir.{$this->dir->slug}.loadAllWebRels",
+            "dir.{$this->dir->slug}.loadAllPublicRels",
             now()->addMinutes($this->minutes),
-            function() {
-                return $this->dir->loadAllWebRels();
+            function () {
+                return $this->dir->loadAllPublicRels();
             }
         );
     }
@@ -220,5 +220,37 @@ class DirCache
                 return $this->dir->makeRepo()->getRelated();
             }
         );
-    }    
+    }
+
+    /**
+     * [rememberLatest description]
+     * @return Collection [description]
+     */
+    public function rememberLatest() : Collection
+    {
+        return $this->cache->tags(["dirs"])->remember(
+            "dir.getLatest",
+            now()->addMinutes($this->minutes),
+            function () {
+                return $this->dir->makeRepo()->getLatest();
+            }
+        );
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param array $component
+     * @return Collection
+     */
+    public function rememberAdvertisingPrivilegedByComponent(array $component) : Collection
+    {
+        return $this->cache->tags(["dirs"])->remember(
+            "dir.getAdvertisingPrivilegedByComponent",
+            now()->addMinutes($this->minutes),
+            function () use ($component) {
+                return $this->dir->makeRepo()->getAdvertisingPrivilegedByComponent($component);
+            }
+        );
+    }
 }

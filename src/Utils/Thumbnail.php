@@ -74,13 +74,12 @@ class Thumbnail
      * @param Config $config
      */
     public function __construct(
-        GuzzleClient $guzzle, 
-        Storage $storage, 
+        GuzzleClient $guzzle,
+        Storage $storage,
         Carbon $carbon,
         Config $config,
         string $url
-    )
-    {
+    ) {
         $this->guzzle = $guzzle;
         $this->storage = $storage;
         $this->carbon = $carbon;
@@ -89,7 +88,7 @@ class Thumbnail
         $this->url = $url;
         $this->host = $this->makeHost();
         $this->file_path = $this->makeFilePath();
-    } 
+    }
 
     /**
      * Undocumented function
@@ -167,12 +166,13 @@ class Thumbnail
             $response = $this->guzzle->request('GET', $value);
         } catch (\GuzzleHttp\Exception\GuzzleException $e) {
             throw new \N1ebieski\IDir\Exceptions\Thumbnail\Exception(
-                $e->getMessage(), $e->getCode()
+                $e->getMessage(),
+                $e->getCode()
             );
         }
 
         return $response->getBody()->getContents();
-    } 
+    }
 
     /**
      * Undocumented function
@@ -185,7 +185,7 @@ class Thumbnail
             $this->put();
         }
 
-        return $this->get(); 
+        return $this->get();
     }
 
     /**
@@ -199,7 +199,7 @@ class Thumbnail
 
         if ($this->isExists()) {
             $this->delete();
-        }        
+        }
 
         return true;
     }
@@ -220,9 +220,9 @@ class Thumbnail
      * @return string
      */
     protected function put() : string
-    {      
+    {
         return $this->storage->disk('public')->put(
-            $this->file_path, 
+            $this->file_path,
             $this->response($this->config->get('idir.dir.thumbnail.url') . $this->url)
         );
     }
@@ -234,6 +234,6 @@ class Thumbnail
      */
     protected function get() : string
     {
-        return $this->storage->disk('public')->get($this->file_path); 
+        return $this->storage->disk('public')->get($this->file_path);
     }
 }

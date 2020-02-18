@@ -8,6 +8,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\Config\Repository as Config;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\LazyCollection;
 use N1ebieski\IDir\Models\Rating\Dir\Rating;
 
 /**
@@ -48,20 +49,32 @@ class DirRepo
     {
         return $this->dir->with('backlink')
             ->whereIn('status', [1, 3])
-            ->whereHas('group', function($query) {
+            ->whereHas('group', function ($query) {
                 $query->obligatoryBacklink();
             })
-            ->whereHas('backlink', function($query) {
-                $query->where(function($query) {
+            ->whereHas('backlink', function ($query) {
+                $query->where(function ($query) {
                     $query->whereDate(
+                        'attempted_at',
+                        '<',
+                        Carbon::now()->subHours($this->config->get('idir.dir.backlink.check_hours'))->format('Y-m-d')
+                    )
+                    ->orWhere(function ($query) {
+                        $query->whereDate(
+                            'attempted_at',
+                            '=',
+                            Carbon::now()->subHours(
+                                $this->config->get('idir.dir.backlink.check_hours')
+                            )->format('Y-m-d')
+                        )
+                        ->whereTime(
                             'attempted_at',
                             '<=',
-                            Carbon::now()->subHours($this->config->get('idir.dir.backlink.check_hours'))->format('Y-m-d')
-                        )->whereTime(
-                            'attempted_at',
-                            '<=',
-                            Carbon::now()->subHours($this->config->get('idir.dir.backlink.check_hours'))->format('H:i:s')
+                            Carbon::now()->subHours(
+                                $this->config->get('idir.dir.backlink.check_hours')
+                            )->format('H:i:s')
                         );
+                    });
                 })
                 ->orWhere('attempted_at', null);
             })
@@ -83,8 +96,8 @@ class DirRepo
                 'group.privileges',
                 'fields',
                 'regions',
-                'categories', 
-                'tags', 
+                'categories',
+                'tags',
                 'user',
                 'payments',
                 'payments.group'
@@ -109,20 +122,8 @@ class DirRepo
     public function paginateForWebByFilter(array $filter) : LengthAwarePaginator
     {
         return $this->dir
-            ->with([
-                'group',
-                'group.fields' => function($query) {
-                    return $query->public();
-                },
-                'group.privileges',                
-                'fields',
-                'regions',
-                'categories', 
-                'tags', 
-                'user'
-            ])
+            ->withAllPublicRels()
             ->active()
-            ->withSumRating()
             ->filterOrderBy($filter['orderby'])
             ->filterPaginate($this->paginate);
     }
@@ -134,6 +135,15 @@ class DirRepo
     public function deactivateByBacklink() : bool
     {
         return $this->dir->update(['status' => 3]);
+    }
+
+    /**
+     * [deactivateByStatus description]
+     * @return bool [description]
+     */
+    public function deactivateByStatus() : bool
+    {
+        return $this->dir->update(['status' => 4]);
     }
 
     /**
@@ -167,6 +177,15 @@ class DirRepo
     }
 
     /**
+     * [countReported description]
+     * @return int [description]
+     */
+    public function countReported() : int
+    {
+        return $this->dir->whereHas('reports')->count();
+    }
+
+    /**
      * [paginateByTag description]
      * @param  string               $tag [description]
      * @param  array                $filter  [description]
@@ -175,20 +194,8 @@ class DirRepo
     public function paginateByTagAndFilter(string $tag, array $filter) : LengthAwarePaginator
     {
         return $this->dir->withAllTags($tag)
-            ->with([
-                'group',
-                'group.fields' => function($query) {
-                    return $query->public();
-                },
-                'group.privileges',
-                'fields',
-                'regions',
-                'categories', 
-                'tags', 
-                'user'
-            ])
-            ->withSumRating()
-            ->active()            
+            ->withAllPublicRels()
+            ->active()
             ->filterOrderBy($filter['orderby'])
             ->filterPaginate($this->paginate);
     }
@@ -207,30 +214,41 @@ class DirRepo
             ->whereRaw('`privileges`.`name` = "highest position in search results"')
             ->toSql();
 
-        return $this->dir->selectRaw('`dirs`.*, CASE WHEN EXISTS (' . $sqlPrivilege . ') THEN TRUE ELSE FALSE END AS `privilege`')        
-            ->with([
-                'group',
-                'group.fields' => function($query) {
-                    return $query->public();
-                },
-                'group.privileges',
-                'fields',
-                'regions',
-                'categories', 
-                'tags', 
-                'user'
-            ])
-            ->withSumRating()
-            ->active()        
-            ->search($name)    
-            ->when($filter['orderby'] === null, function($query) {
+        return $this->dir
+            ->selectRaw('`dirs`.*, CASE WHEN EXISTS (' . $sqlPrivilege . ') THEN TRUE ELSE FALSE END AS `privilege`')
+            ->withAllPublicRels()
+            ->active()
+            ->search($name)
+            ->when($filter['orderby'] === null, function ($query) {
                 $query->orderBy('privilege', 'desc')->latest();
-            })            
-            ->when($filter['orderby'] !== null, function($query) use ($filter) {
+            })
+            ->when($filter['orderby'] !== null, function ($query) use ($filter) {
                 $query->filterOrderBy($filter['orderby']);
-            })            
+            })
             ->filterPaginate($this->paginate);
-    }    
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param array $component
+     * @return Collection
+     */
+    public function getAdvertisingPrivilegedByComponent(array $component) : Collection
+    {
+        return $this->dir->whereHas('group', function ($query) {
+                $query->whereHas('privileges', function ($query) {
+                    $query->where('name', 'place in the advertising component');
+                });
+            })
+            ->active()
+            ->withAllPublicRels()
+            ->when($component['limit'] !== null, function ($query) use ($component) {
+                $query->limit($component['limit'])
+                    ->inRandomOrder();
+            })
+            ->get();
+    }
 
     /**
      * [firstBySlug description]
@@ -240,7 +258,7 @@ class DirRepo
     public function firstBySlug(string $slug)
     {
         return $this->dir->where('slug', $slug)->first();
-    }    
+    }
 
     /**
      * [firstRatingByUser description]
@@ -260,11 +278,11 @@ class DirRepo
     public function getRelated(int $limit = 5)
     {
         return $this->dir->active()
-            ->whereHas('categories', function($query) {
+            ->whereHas('categories', function ($query) {
                 $query->whereIn('category_id', $this->dir->categories->pluck('id')->toArray());
             })
             ->where('dirs.id', '<>', $this->dir->id)
-            ->inRandomOrder()            
+            ->inRandomOrder()
             ->limit($limit)
             ->get();
     }
@@ -284,5 +302,73 @@ class DirRepo
             ->filterExcept($filter['except'])
             ->filterCommentsOrderBy($filter['orderby'])
             ->filterPaginate($this->paginate);
-    }    
+    }
+
+    /**
+     * [getLatest description]
+     * @return Collection         [description]
+     */
+    public function getLatest() : Collection
+    {
+        $dirs = $this->dir->selectRaw('`dirs`.*, TRUE as `privilege`')
+            ->withAllPublicRels()
+            ->whereHas('group', function ($query) {
+                $query->whereHas('privileges', function ($query) {
+                    $query->where('name', 'highest position on homepage');
+                });
+            })
+            ->active()
+            ->latest()
+            ->limit($this->config->get('idir.home.max_privileged'));
+
+        $sqlPrivilege = DB::table('privileges')
+            ->join('groups_privileges', 'privileges.id', '=', 'groups_privileges.privilege_id')
+            ->whereColumn('dirs.group_id', 'groups_privileges.group_id')
+            ->whereRaw('`privileges`.`name` = "highest position on homepage"')
+            ->toSql();
+
+        return $this->dir->selectRaw('`dirs`.*, CASE WHEN EXISTS (' . $sqlPrivilege . ') THEN TRUE ELSE FALSE END AS `privilege`')
+            ->withAllPublicRels()
+            ->active()
+            ->union($dirs)
+            ->limit($this->config->get('idir.home.max'))
+            ->orderBy('privilege', 'desc')
+            ->latest()
+            ->get();
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param integer $limit
+     * @return Collection
+     */
+    public function getLatestForModeratorsByLimit(int $limit) : Collection
+    {
+        return $this->dir->withAllPublicRels()
+            ->whereIn('status', [0, 1])
+            ->latest()
+            ->limit($limit)
+            ->get();
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param string $datetime
+     * @return Collection
+     */
+    public function getLatestForModeratorsByCreatedAt(string $datetime) : Collection
+    {
+        return $this->dir->withAllPublicRels()
+            ->whereIn('status', [0, 1])
+            ->whereDate('created_at', '>', Carbon::parse($datetime)->format('Y-m-d'))
+            ->orWhere(function ($query) use ($datetime) {
+                $query->whereDate('created_at', '=', Carbon::parse($datetime)->format('Y-m-d'))
+                    ->whereTime('created_at', '>', Carbon::parse($datetime)->format('H:i:s'));
+            })
+            ->latest()
+            ->limit(25)
+            ->get();
+    }
 }

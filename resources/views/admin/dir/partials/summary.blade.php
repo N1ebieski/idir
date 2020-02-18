@@ -8,7 +8,7 @@
     @if (isset($value['content_html']) && $value['content_html'] !== null)
     <p>
         {{ trans('idir::dirs.content') }}:<br>
-        <span>{!! $value['content_html'] !!}</span>
+        <span>{!! $group->hasEditorPrivilege() ? $value['content_html'] : nl2br($value['content_html']) !!}</span>
     </p>
     @endif
     @if (isset($value['notes']) && $value['notes'] !== null)
@@ -68,6 +68,14 @@
                     @case('regions')
                         {{ implode(', ', $regions->whereIn('id', $value['field'][$field->id])->pluck('name')->toArray()) }}
                         @break;
+
+                    @case('map')
+                        @render('idir::map.dir.mapComponent', [
+                            'coords_marker' => [
+                                [$value['field'][$field->id][0]['lat'], $value['field'][$field->id][0]['long']]
+                            ]
+                        ])
+                        @break;                        
 
                     @case('image')                    
                         <img class="img-fluid" src="{{ Storage::url($value['field'][$field->id]) }}">

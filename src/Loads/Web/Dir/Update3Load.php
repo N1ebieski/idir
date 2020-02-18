@@ -17,8 +17,7 @@ class Update3Load
     {
         $request->route('group')
             ->loadCount(['dirs', 'dirs_today'])
-            ->load('privileges')
-            ->loadPublicFields();
+            ->load(['privileges', 'fields']);
 
         $request->route('dir')->load(['backlink', 'fields']);
     }

@@ -47,7 +47,7 @@ class SEOKatalogCommand extends Command
      */
     public function handle()
     {
-        $bar = $this->output->createProgressBar(14);
+        $bar = $this->output->createProgressBar(15);
         
         $this->info("\r");
         $bar->start();
@@ -92,11 +92,11 @@ class SEOKatalogCommand extends Command
         $this->info("\r");
         $bar->advance();
         $this->info("\n");
-        $this->call('db:seed', ['--class' => 'N1ebieski\ICore\Seeds\RolesAndPermissionsSeeder'], $this->getOutput());
+        $this->call('db:seed', ['--class' => 'N1ebieski\ICore\Seeds\DefaultRolesAndPermissionsSeeder'], $this->getOutput());
         $this->info("\r");
         $bar->advance();
         $this->info("\n");
-        $this->call('db:seed', ['--class' => 'N1ebieski\IDir\Seeds\RolesAndPermissionsSeeder'], $this->getOutput());
+        $this->call('db:seed', ['--class' => 'N1ebieski\IDir\Seeds\DefaultRolesAndPermissionsSeeder'], $this->getOutput());
         $this->info("\r");
         $bar->advance();
         $this->info("\n");
@@ -106,7 +106,11 @@ class SEOKatalogCommand extends Command
         $this->info("\n");
         $this->call('db:seed', ['--class' => 'N1ebieski\IDir\Seeds\DefaultFieldsSeeder'], $this->getOutput());
         $this->info("\r");
-        $bar->advance();        
+        $bar->advance(); 
+        $this->info("\n");
+        $this->call('db:seed', ['--class' => 'N1ebieski\IDir\Seeds\DefaultRegionsSeeder'], $this->getOutput());
+        $this->info("\r");
+        $bar->advance();
         $this->info("\n");
         $this->call('db:seed', ['--class' => 'N1ebieski\IDir\Seeds\SEOKatalogSeeder'], $this->getOutput());
         $this->info("\r");

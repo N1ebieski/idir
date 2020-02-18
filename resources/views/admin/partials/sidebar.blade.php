@@ -33,7 +33,12 @@
             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <i class="far fa-fw fa-folder-open"></i>
                 <span> {{ trans('idir::dirs.page.index') }}</span>
+                @if ($dirs_inactive_count > 0)
                 <span class="badge badge-warning"> {{ $dirs_inactive_count }}</span>
+                @endif
+                @if ($dirs_reported_count > 0)
+                <span class="badge badge-danger"> {{ $dirs_reported_count }}</span>
+                @endif
             </div>
             <div class="dropdown-menu" aria-labelledby="dirDropdown">
                 @can('index dirs')
@@ -41,12 +46,22 @@
                 onclick="window.location.href='{{ route('admin.dir.index') }}'"
                 style="cursor: pointer;">
                     {{ trans('idir::dirs.page.index') }}
+                    @if ($dirs_inactive_count > 0)
                     <span>
                         <a href="{{ route('admin.dir.index', ['filter[status]' => 0]) }}"
                         class="badge badge-warning">
                             {{ $dirs_inactive_count }}
                         </a>
                     </span>
+                    @endif
+                    @if ($dirs_reported_count > 0)
+                    <span>
+                        <a href="{{ route('admin.dir.index', ['filter[report]' => 1]) }}"
+                        class="badge badge-danger">
+                            {{ $dirs_reported_count }}
+                        </a>
+                    </span>
+                    @endif                    
                 </div>
                 @endcan
                 @can('index bans')
@@ -62,17 +77,23 @@
         <li class="nav-item dropdown @isUrl([
             route('admin.comment.post.index'),
             route('admin.comment.page.index'),
+            route('admin.comment.dir.index')
         ])">
             <a class="nav-link dropdown-toggle"
             href="#" id="commentDropdown" role="button"
             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <i class="fas fa-fw fa-comments"></i>
                 <span> {{ trans('icore::comments.page.index') }} </span>
-                <span class="badge badge-warning">{{ $comments_inactive_count->sum('count') }}</span>
+                @if ($count = $comments_inactive_count->sum('count'))
+                <span class="badge badge-warning">{{ $count }}</span>
+                @endif
+                @if ($count = $comments_reported_count->sum('count'))
+                <span class="badge badge-danger">{{ $comments_reported_count->sum('count') }}</span>
+                @endif
             </a>
             <div class="dropdown-menu" aria-labelledby="commentDropdown">
                 <h6 class="dropdown-header">{{ trans('icore::default.type') }}:</h6>
-                @foreach(['post', 'page'] as $type)
+                @foreach(['post', 'page', 'dir'] as $type)
                 <div class="dropdown-item @isUrl(route("admin.comment.{$type}.index"))"
                 onclick="window.location.href='{{ route("admin.comment.{$type}.index") }}'"
                 style="cursor: pointer;">
@@ -85,6 +106,14 @@
                         </a>
                     </span>
                     @endif
+                    @if ($count = $comments_reported_count->where('model', $type)->first())
+                    <span>
+                        <a href="{{ route("admin.comment.{$type}.index", ['filter[report]' => 1]) }}"
+                        class="badge badge-danger">
+                            {{ $count->count }}
+                        </a>
+                    </span>
+                    @endif                    
                 </div>
                 @endforeach
             </div>

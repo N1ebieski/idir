@@ -118,6 +118,16 @@ class Payment extends Model
         return $this->status === 2;
     }
 
+    /**
+     * Undocumented function
+     *
+     * @return boolean
+     */
+    public function isUndone() : bool
+    {
+        return $this->status === 0;
+    }
+
     // Makers
 
     /**

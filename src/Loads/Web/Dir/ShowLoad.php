@@ -17,7 +17,7 @@ class ShowLoad
     {
         $request->route('dir_cache')->setRelations(
             $request->route('dir_cache')->makeCache()
-                ->rememberLoadAllWebRels()->getRelations()
+                ->rememberLoadAllPublicRels()->getRelations()
         );
     }
 }
