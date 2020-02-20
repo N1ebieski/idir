@@ -7,6 +7,7 @@ use N1ebieski\IDir\Models\DirBacklink;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\Config\Repository as Config;
 use Carbon\Carbon;
+use Closure;
 
 /**
  * [DirBacklinkRepo description]
@@ -56,5 +57,49 @@ class DirBacklinkRepo
     public function incrementAttempts() : int
     {
         return $this->dirBacklink->increment('attempts');
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param Closure $closure
+     * @return Collection
+     */
+    public function chunkAvailableHasBacklinkRequirement(Closure $closure) : Collection
+    {
+        return $this->dirBacklink
+            ->whereHas('dir', function ($query) {
+                $query->whereIn('status', [1, 3])
+                    ->whereHas('group', function ($query) {
+                        $query->obligatoryBacklink();
+                    });
+            })
+            ->where(function ($query) {
+                $query->whereDate(
+                    'attempted_at',
+                    '<',
+                    Carbon::now()->subHours(
+                        $this->config->get('idir.dir.backlink.check_hours')
+                    )->format('Y-m-d')
+                )
+                ->orWhere(function ($query) {
+                    $query->whereDate(
+                        'attempted_at',
+                        '=',
+                        Carbon::now()->subHours(
+                            $this->config->get('idir.dir.backlink.check_hours')
+                        )->format('Y-m-d')
+                    )
+                    ->whereTime(
+                        'attempted_at',
+                        '<=',
+                        Carbon::now()->subHours(
+                            $this->config->get('idir.dir.backlink.check_hours')
+                        )->format('H:i:s')
+                    );
+                });
+            })
+            ->orWhere('attempted_at', null)
+            ->chunk(1000, $closure);
     }
 }

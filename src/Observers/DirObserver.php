@@ -17,8 +17,6 @@ class DirObserver
      */
     public function created(Dir $dir)
     {
-        $dir->status()->create();
-
         cache()->tags(['dirs', 'links'])->flush();
     }
 

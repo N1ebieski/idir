@@ -80,6 +80,7 @@ return [
         '0' => 'oczekujący na moderację',
         '2' => 'oczekujący na płatność',
         '3' => 'oczekujący na backlink',
+        '4' => 'oczekujący na status 200'
     ],
     'privileged_to' => 'Data wygaśnięcia',
     'delete_reason' => 'Powód usunięcia',

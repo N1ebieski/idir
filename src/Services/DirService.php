@@ -18,8 +18,13 @@ use N1ebieski\ICore\Services\Interfaces\GlobalDeletable;
 /**
  * [DirService description]
  */
-class DirService implements Creatable, Updatable, StatusUpdatable,
-FullUpdatable, Deletable, GlobalDeletable
+class DirService implements
+    Creatable,
+    Updatable,
+    StatusUpdatable,
+    FullUpdatable,
+    Deletable,
+    GlobalDeletable
 {
     /**
      * Model
@@ -50,8 +55,7 @@ FullUpdatable, Deletable, GlobalDeletable
         Dir $dir,
         Price $price,
         Session $session
-    )
-    {
+    ) {
         $this->dir = $dir;
         $this->price = $price;
 
@@ -157,6 +161,13 @@ FullUpdatable, Deletable, GlobalDeletable
                 ->create($attributes);
         }
 
+        if (isset($attributes['url'])) {
+            $this->dir->status()->make()
+                ->setDir($this->dir)
+                ->makeService()
+                ->create($attributes);
+        }
+
         $this->dir->categories()->attach($attributes['categories']);
 
         $this->dir->tag($attributes['tags'] ?? []);
@@ -201,6 +212,11 @@ FullUpdatable, Deletable, GlobalDeletable
                 ->updateValues($attributes['field']);
         }
 
+        $this->dir->status()->make()
+            ->setDir($this->dir)
+            ->makeService()
+            ->sync($attributes);
+
         $this->dir->categories()->sync($attributes['categories']);
 
         $this->dir->retag($attributes['tags'] ?? []);
@@ -237,6 +253,11 @@ FullUpdatable, Deletable, GlobalDeletable
                 ->makeService()
                 ->sync($attributes);
         }
+
+        $this->dir->status()->make()
+            ->setDir($this->dir)
+            ->makeService()
+            ->sync($attributes);
 
         $this->dir->categories()->sync($attributes['categories']);
 
@@ -298,7 +319,7 @@ FullUpdatable, Deletable, GlobalDeletable
 
         $this->dir->regions()->delete();
 
-        $this->dir->map()->delete();        
+        $this->dir->map()->delete();
 
         $this->dir->detag();
 
@@ -334,7 +355,7 @@ FullUpdatable, Deletable, GlobalDeletable
 
         $this->dir->regions()->newPivotStatement()
             ->whereIn('model_id', $ids)
-            ->where('model_type', 'N1ebieski\IDir\Models\Dir')->delete();            
+            ->where('model_type', 'N1ebieski\IDir\Models\Dir')->delete();
 
         $this->dir->tags()->newPivotStatement()
             ->whereIn('model_id', $ids)

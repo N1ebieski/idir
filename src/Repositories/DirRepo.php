@@ -8,7 +8,6 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\Config\Repository as Config;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\LazyCollection;
 use N1ebieski\IDir\Models\Rating\Dir\Rating;
 
 /**
@@ -39,46 +38,6 @@ class DirRepo
 
         $this->config = $config;
         $this->paginate = $config->get('database.paginate');
-    }
-
-    /**
-     * [getHasBacklinkRequirement description]
-     * @return Collection [description]
-     */
-    public function getAvailableHasBacklinkRequirement() : Collection
-    {
-        return $this->dir->with('backlink')
-            ->whereIn('status', [1, 3])
-            ->whereHas('group', function ($query) {
-                $query->obligatoryBacklink();
-            })
-            ->whereHas('backlink', function ($query) {
-                $query->where(function ($query) {
-                    $query->whereDate(
-                        'attempted_at',
-                        '<',
-                        Carbon::now()->subHours($this->config->get('idir.dir.backlink.check_hours'))->format('Y-m-d')
-                    )
-                    ->orWhere(function ($query) {
-                        $query->whereDate(
-                            'attempted_at',
-                            '=',
-                            Carbon::now()->subHours(
-                                $this->config->get('idir.dir.backlink.check_hours')
-                            )->format('Y-m-d')
-                        )
-                        ->whereTime(
-                            'attempted_at',
-                            '<=',
-                            Carbon::now()->subHours(
-                                $this->config->get('idir.dir.backlink.check_hours')
-                            )->format('H:i:s')
-                        );
-                    });
-                })
-                ->orWhere('attempted_at', null);
-            })
-            ->get();
     }
 
     /**
@@ -236,12 +195,12 @@ class DirRepo
      */
     public function getAdvertisingPrivilegedByComponent(array $component) : Collection
     {
-        return $this->dir->whereHas('group', function ($query) {
+        return $this->dir->active()
+            ->whereHas('group', function ($query) {
                 $query->whereHas('privileges', function ($query) {
                     $query->where('name', 'place in the advertising component');
                 });
             })
-            ->active()
             ->withAllPublicRels()
             ->when($component['limit'] !== null, function ($query) use ($component) {
                 $query->limit($component['limit'])

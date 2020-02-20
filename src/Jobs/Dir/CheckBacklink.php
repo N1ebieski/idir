@@ -120,6 +120,34 @@ class CheckBacklink implements ShouldQueue
     }
 
     /**
+     * Undocumented function
+     *
+     * @return void
+     */
+    protected function executeValidBacklink() : void
+    {
+        $this->dirBacklinkRepo->resetAttempts();
+
+        $this->dirRepo->activate();
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @return void
+     */
+    protected function executeInvalidBacklink() : void
+    {
+        $this->dirBacklinkRepo->incrementAttempts();
+
+        if ($this->isMaxAttempt()) {
+            $this->dirRepo->deactivateByBacklink();
+
+            $this->sendMailToUser();
+        }
+    }
+
+    /**
      * Execute the job.
      *
      * @return void
@@ -133,17 +161,9 @@ class CheckBacklink implements ShouldQueue
             $this->dirBacklinkRepo->attemptedNow();
 
             if ($this->validateBacklink()) {
-                $this->dirBacklinkRepo->resetAttempts();
-
-                $this->dirRepo->activate();
+                $this->executeValidBacklink();
             } else {
-                $this->dirBacklinkRepo->incrementAttempts();
-
-                if ($this->isMaxAttempt()) {
-                    $this->dirRepo->deactivateByBacklink();
-
-                    $this->sendMailToUser();
-                }
+                $this->executeInvalidBacklink();
             }
         }
     }

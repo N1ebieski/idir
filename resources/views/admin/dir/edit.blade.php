@@ -44,11 +44,13 @@
         </label>
         <div id="category">
             <div id="categoryOptions">
-                @include('icore::web.category.partials.search', ['categories'
-                => old('categories_collection', $dir->categories), 'checked' => true])
+                @include('icore::web.category.partials.search', [
+                    'categories' => $dir->categories, 
+                    'checked' => true
+                ])
             </div>
             <div id="searchCategory"
-            {{ (old('categories_collection', $dir->categories)->count() >= $dir->group->max_cats) ? 'style=display:none' : '' }}
+            {{ ($dir->categories->count() >= $dir->group->max_cats) ? 'style=display:none' : '' }}
             data-route="{{ route('web.category.dir.search') }}" data-max="{{ $dir->group->max_cats }}"
             class="position-relative">
                 <div class="input-group">

@@ -152,6 +152,10 @@ class DirsSeeder extends SEOKatalogSeeder
                         }
                     }
         
+                    if (!empty($item->url)) {
+                        $dir->status()->create();
+                    }
+
                     if ($fields->isNotEmpty()) {
                         $ids = array();
 

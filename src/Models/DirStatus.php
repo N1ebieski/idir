@@ -5,7 +5,7 @@ namespace N1ebieski\IDir\Models;
 use Illuminate\Database\Eloquent\Model;
 use N1ebieski\IDir\Models\Dir;
 use N1ebieski\IDir\Repositories\DirStatusRepo;
-use N1ebieski\IDir\Services\DirBacklinkService;
+use N1ebieski\IDir\Services\DirStatusService;
 
 /**
  * [DirStatus description]
@@ -14,11 +14,11 @@ class DirStatus extends Model
 {
     // Configuration
 
-    // /**
-    //  * [private description]
-    //  * @var Dir
-    //  */
-    // protected $dir;
+    /**
+     * [private description]
+     * @var Dir
+     */
+    protected $dir;
 
     /**
     * The attributes that are mass assignable.
@@ -44,26 +44,26 @@ class DirStatus extends Model
         'attempted_at' => null
     ];
 
-    // // Setters
+    // Setters
 
-    // /**
-    //  * @param Dir $dir
-    //  *
-    //  * @return static
-    //  */
-    // public function setDir(Dir $dir)
-    // {
-    //     $this->dir = $dir;
+    /**
+     * @param Dir $dir
+     *
+     * @return static
+     */
+    public function setDir(Dir $dir)
+    {
+        $this->dir = $dir;
 
-    //     return $this;
-    // }
+        return $this;
+    }
 
-    // // Getters
+    // Getters
 
-    // public function getDir() : Dir
-    // {
-    //     return $this->dir;
-    // }
+    public function getDir() : Dir
+    {
+        return $this->dir;
+    }
 
     // Relations
 
@@ -87,13 +87,12 @@ class DirStatus extends Model
         return app()->make(DirStatusRepo::class, ['dirStatus' => $this]);
     }
 
-    // /**
-    //  * [makeService description]
-    //  * @return DirBacklinkService [description]
-    //  */
-    // public function makeService()
-    // {
-    //     return app()->make(DirBacklinkService::class, ['dirBacklink' => $this]);
-    // }
-
+    /**
+     * [makeService description]
+     * @return DirStatusService [description]
+     */
+    public function makeService()
+    {
+        return app()->make(DirStatusService::class, ['dirStatus' => $this]);
+    }
 }
