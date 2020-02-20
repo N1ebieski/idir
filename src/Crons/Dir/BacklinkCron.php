@@ -5,9 +5,6 @@ namespace N1ebieski\IDir\Crons\Dir;
 use N1ebieski\IDir\Models\Dir;
 use N1ebieski\IDir\Jobs\Dir\CheckBacklink;
 
-/**
- * [MailingCron description]
- */
 class BacklinkCron
 {
     /**
@@ -47,12 +44,12 @@ class BacklinkCron
      */
     private function addToQueue() : void
     {
-        $dirs = $this->dir->makeRepo()->getAvailableHasBacklinkRequirement();
-
-        if ($dirs->isNotEmpty()) {
-            foreach ($dirs as $dir) {
-                $this->checkBacklink->dispatch($dir->backlink);
+        $this->dir->makeRepo()->chunkAvailableHasBacklinkRequirement(
+            function ($items) {
+                $items->each(function ($item) {
+                    $this->checkBacklink->dispatch($item);
+                });
             }
-        }
+        );
     }
 }

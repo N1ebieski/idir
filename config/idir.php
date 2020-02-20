@@ -15,8 +15,8 @@ return [
         ],
 
         'status' => [
-            'check_days' => env('IDIR_DIR_STATUS_CHECK_DAYS', 7),
-            'max_attempts' => env('IDIR_DIR_STATUS_MAX_ATTEMPTS', 3),
+            'check_days' => env('IDIR_DIR_STATUS_CHECK_DAYS', 30),
+            'max_attempts' => env('IDIR_DIR_STATUS_MAX_ATTEMPTS', 2),
         ],
 
         'delete_reasons' => [

@@ -104,23 +104,20 @@ class CheckStatus implements ShouldQueue
      */
     protected function isMaxAttempt() : bool
     {
-        return $this->dirBacklink->attempts === $this->max_attempts;
+        return $this->dirStatus->attempts >= $this->max_attempts;
     }
 
     /**
      * Undocumented function
      *
-     * @return GuzzleResponse
+     * @return void
      */
-    public function response() : GuzzleResponse
+    public function response() : void
     {
-        try {
-            $response = $this->guzzle->request('GET', $this->dirStatus->dir->url);
-        } catch (\GuzzleHttp\Exception\GuzzleException $e) {
-            throw new $e;
-        }
-
-        return $this->response = $response;
+        $this->response = $this->guzzle->request('GET', $this->dirStatus->dir->url, [
+            'http_errors' => true,
+            'verify' => false
+        ]);
     }
 
     /**
@@ -129,7 +126,39 @@ class CheckStatus implements ShouldQueue
      */
     protected function validateStatus() : bool
     {
+        try {
+            $this->response();
+        } catch (\GuzzleHttp\Exception\RequestException $e) {
+            return false;
+        }
+
         return $this->response->getStatusCode() === 200;
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @return void
+     */
+    protected function executeValidStatus() : void
+    {
+        $this->dirStatusRepo->resetAttempts();
+
+        $this->dirRepo->activate();
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @return void
+     */
+    protected function executeInvalidStatus() : void
+    {
+        $this->dirStatusRepo->incrementAttempts();
+
+        if ($this->isMaxAttempt()) {
+            $this->dirRepo->deactivateByStatus();
+        }
     }
 
     /**
@@ -141,9 +170,6 @@ class CheckStatus implements ShouldQueue
     public function handle(GuzzleClient $guzzle) : void
     {
         $this->guzzle = $guzzle;
-
-        $this->response();
-
         $this->dirStatusRepo = $this->dirStatus->makeRepo();
         $this->dirRepo = $this->dirStatus->dir->makeRepo();
 
@@ -151,15 +177,9 @@ class CheckStatus implements ShouldQueue
             $this->dirStatusRepo->attemptedNow();
 
             if ($this->validateStatus()) {
-                $this->dirStatusRepo->resetAttempts();
-
-                $this->dirRepo->activate();
+                $this->executeValidStatus();
             } else {
-                $this->dirStatusRepo->incrementAttempts();
-
-                if ($this->isMaxAttempt()) {
-                    $this->dirRepo->deactivateByStatus();
-                }
+                $this->executeInvalidStatus();
             }
         }
     }

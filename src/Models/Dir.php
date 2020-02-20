@@ -161,7 +161,7 @@ class Dir extends Model
                 $model->fireModelEvent('updated');
                 $model->pivotEvent = true;
             }
-        });        
+        });
 
         static::pivotAttached(function ($model, $relationName, $pivotIds, $pivotIdsAttributes) {
             if ($model->pivotEvent === false && in_array($relationName, ['fields', 'categories', 'regions'])) {
@@ -175,7 +175,7 @@ class Dir extends Model
                 $model->fireModelEvent('updated');
                 $model->pivotEvent = true;
             }
-        });        
+        });
     }
 
     /**
@@ -608,6 +608,16 @@ class Dir extends Model
     public function isPending() : bool
     {
         return $this->status === 2;
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @return boolean
+     */
+    public function isNotOk() : bool
+    {
+        return $this->status === 4;
     }
 
     /**

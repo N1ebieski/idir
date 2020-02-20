@@ -37,7 +37,7 @@ class ScheduleServiceProvider extends ServiceProvider
 
             $schedule->call($this->app->make(\N1ebieski\IDir\Crons\Dir\StatusCron::class))
                 ->name('StatusCron')
-                // ->daily()
+                ->daily()
                 ->runInBackground();
 
             $schedule->call($this->app->make(\N1ebieski\IDir\Crons\Dir\ModeratorNotificationCron::class))

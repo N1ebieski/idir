@@ -21,7 +21,9 @@ class EditLoad
             'group.fields',
             'regions',
             'fields',
-            'categories',
+            'categories' => function ($query) {
+                $query->withAncestorsExceptSelf();
+            },
             'tags'
         ]);
     }

@@ -134,7 +134,7 @@ data-id="{{ $dir->id }}">
                     <li><small>{{ trans('icore::filter.created_at') }}: {{ $dir->created_at_diff }}</small></li>
                     <li><small>{{ trans('icore::filter.updated_at') }}: {{ $dir->updated_at_diff }}</small></li>
                 </ul>
-                @if ($dir->url !== null)
+                @if ($dir->isUrl() && !$dir->isNotOk())
                 <div class="pt-2 pl-2 d-xl-none">
                     @yield('thumbnail')
                 </div>
@@ -196,7 +196,7 @@ data-id="{{ $dir->id }}">
                     @endcan
                 </div>
             </div>
-            @if ($dir->url !== null)
+            @if ($dir->isUrl() && !$dir->isNotOk())
             <div class="d-none d-xl-block mt-auto ml-auto pt-2">
                 @yield('thumbnail')
             </div>

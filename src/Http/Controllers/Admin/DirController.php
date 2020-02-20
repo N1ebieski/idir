@@ -3,7 +3,6 @@
 namespace N1ebieski\IDir\Http\Controllers\Admin;
 
 use N1ebieski\ICore\Models\Link;
-
 use N1ebieski\IDir\Filters\Admin\Dir\IndexFilter;
 use N1ebieski\IDir\Http\Requests\Admin\Dir\Store2Request;
 use N1ebieski\IDir\Http\Requests\Admin\Dir\Store3Request;
@@ -216,8 +215,12 @@ class DirController
      * @param  UpdateFull2Request   $request [description]
      * @return RedirectResponse          [description]
      */
-    public function updateFull2(Dir $dir, Group $group, UpdateFull2Load $load, UpdateFull2Request $request) : RedirectResponse
-    {
+    public function updateFull2(
+        Dir $dir,
+        Group $group,
+        UpdateFull2Load $load,
+        UpdateFull2Request $request
+    ) : RedirectResponse {
         $dir->makeService()->createOrUpdateSession($request->validated());
 
         return redirect()->route('admin.dir.edit_full_3', [$dir->id, $group->id]);

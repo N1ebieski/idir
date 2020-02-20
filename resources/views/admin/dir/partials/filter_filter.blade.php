@@ -19,6 +19,7 @@
         <option value="0" {{ ($filter['status'] == '0') ? 'selected' : '' }}>{{ trans('idir::dirs.status.0') }}</option>
         <option value="2" {{ ($filter['status'] == '2') ? 'selected' : '' }}>{{ trans('idir::dirs.status.2') }}</option>
         <option value="3" {{ ($filter['status'] == '3') ? 'selected' : '' }}>{{ trans('idir::dirs.status.3') }}</option>
+        <option value="4" {{ ($filter['status'] == '4') ? 'selected' : '' }}>{{ trans('idir::dirs.status.4') }}</option>        
     </select>
 </div>
 @if ($groups->isNotEmpty())

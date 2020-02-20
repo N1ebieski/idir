@@ -7,6 +7,7 @@ use N1ebieski\IDir\Models\DirStatus;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\Config\Repository as Config;
 use Carbon\Carbon;
+use Closure;
 
 /**
  * [DirStatusRepo description]
@@ -59,14 +60,16 @@ class DirStatusRepo
     }
 
     /**
-     * [getAvailableHasUrl description]
-     * @return Collection [description]
+     * Undocumented function
+     *
+     * @param Closure $closure
+     * @return bool
      */
-    public function getAvailableHasUrl() : Collection
+    public function chunkAvailableHasUrl(Closure $closure) : bool
     {
         return $this->dirStatus
             ->whereHas('dir', function ($query) {
-                $query->active()
+                $query->whereIn('status', [1, 4])
                     ->whereNotNull('url');
             })
             ->where(function ($query) {
@@ -94,6 +97,6 @@ class DirStatusRepo
             })
             ->orWhere('attempted_at', null)
             ->orderBy('attempted_at', 'asc')
-            ->get();
+            ->chunk(1000, $closure);
     }
 }
