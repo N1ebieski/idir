@@ -45,7 +45,7 @@ class RegionComponent extends BaseRegionComponent
     public function toHtml() : View
     {
         return view('idir::web.components.region.category.region', [
-            'regions' => $this->region->all(),
+            'regions' => $this->region->makeCache()->rememberAll(),
             'category' => $this->category,
             'region' => $this->region
         ]);
