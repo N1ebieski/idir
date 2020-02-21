@@ -2,16 +2,16 @@
 
 namespace N1ebieski\IDir\Crons\Dir;
 
-use N1ebieski\IDir\Models\Dir;
+use N1ebieski\IDir\Models\DirBacklink;
 use N1ebieski\IDir\Jobs\Dir\CheckBacklink;
 
 class BacklinkCron
 {
     /**
      * [private description]
-     * @var Dir
+     * @var DirBacklink
      */
-    protected $dir;
+    protected $dirBacklink;
 
     /**
      * [protected description]
@@ -21,12 +21,12 @@ class BacklinkCron
 
     /**
      * [__construct description]
-     * @param Dir     $dir     [description]
+     * @param DirBacklink     $dir     [description]
      * @param CheckBacklink $checkBacklink [description]
      */
-    public function __construct(Dir $dir, CheckBacklink $checkBacklink)
+    public function __construct(DirBacklink $dirBacklink, CheckBacklink $checkBacklink)
     {
-        $this->dir = $dir;
+        $this->dirBacklink = $dirBacklink;
         
         $this->checkBacklink = $checkBacklink;
     }
@@ -44,7 +44,7 @@ class BacklinkCron
      */
     private function addToQueue() : void
     {
-        $this->dir->makeRepo()->chunkAvailableHasBacklinkRequirement(
+        $this->dirBacklink->makeRepo()->chunkAvailableHasBacklinkRequirement(
             function ($items) {
                 $items->each(function ($item) {
                     $this->checkBacklink->dispatch($item);
