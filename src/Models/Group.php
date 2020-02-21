@@ -130,6 +130,16 @@ class Group extends Model
             ->whereIn('status', [0, 1]);
     }
 
+    /**
+     * Alternative group
+     *
+     * @return void
+     */
+    public function alt()
+    {
+        return $this->hasOne(static::class, 'id', 'alt_id');
+    }
+
     // Overrides
 
     /**

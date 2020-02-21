@@ -19,6 +19,10 @@ return [
             'max_attempts' => env('IDIR_DIR_STATUS_MAX_ATTEMPTS', 2),
         ],
 
+        'reminder' => [
+            'left_days' => env('IDIR_DIR_REMINDER_LEFT_DAYS', 7)
+        ],
+
         'delete_reasons' => [
             'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
             'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
