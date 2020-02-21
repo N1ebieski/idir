@@ -7,6 +7,7 @@ use N1ebieski\IDir\Models\Dir;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\Config\Repository as Config;
 use Carbon\Carbon;
+use Closure;
 use Illuminate\Support\Facades\DB;
 use N1ebieski\IDir\Models\Rating\Dir\Rating;
 
@@ -329,5 +330,32 @@ class DirRepo
             ->latest()
             ->limit(25)
             ->get();
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param Closure $callback
+     * @param string $timestamp
+     * @return boolean
+     */
+    public function chunkAvailableHasPaidRequirementByPrivilegedTo(Closure $callback, string $timestamp) : bool
+    {
+        return $this->dir->active()
+            ->whereHas('group', function ($query) {
+                $query->whereHas('prices', function ($query) {
+                    $query->where('days', '>', 0)
+                        ->whereNotNull('days');
+                });
+            })
+            ->where(function ($query) use ($timestamp) {
+                $query->whereDate(
+                    'privileged_to',
+                    '<=',
+                    Carbon::parse($timestamp)->format('Y-m-d')
+                )
+                ->orWhereNull('privileged_to');
+            })
+            ->chunk(1000, $callback);
     }
 }
