@@ -42,7 +42,7 @@
                         'provider_name' => config("idir.payment.{$driver['transfer']}.name"),
                         'provider_docs_url' => config("idir.payment.{$driver['transfer']}.docs_url"),
                         'provider_rules_url' => config("idir.payment.{$driver['transfer']}.rules_url"),
-                        'rules_url' => route('web.page.show', [strtolower(trans('idir::dirs.rules'))])
+                        'rules_url' => route('web.page.show', [Str::slug(trans('idir::dirs.rules'))])
                     ]) !!}
                 </p>
             </div>
@@ -81,7 +81,7 @@
                         'provider_name' => config("idir.payment.{$driver['code_transfer']}.name"),
                         'provider_docs_url' => config("idir.payment.{$driver['code_transfer']}.docs_url"),
                         'provider_rules_url' => config("idir.payment.{$driver['code_transfer']}.rules_url"),
-                        'rules_url' => route('web.page.show', [strtolower(trans('idir::dirs.rules'))])
+                        'rules_url' => route('web.page.show', [Str::slug(trans('idir::dirs.rules'))])
                     ]) !!}
                 </p>
             </div>
@@ -120,7 +120,7 @@
                         'provider_name' => config("idir.payment.{$driver['code_sms']}.name"),
                         'provider_docs_url' => config("idir.payment.{$driver['code_sms']}.docs_url"),
                         'provider_rules_url' => config("idir.payment.{$driver['code_sms']}.rules_url"),
-                        'rules_url' => route('web.page.show', [strtolower(trans('idir::dirs.rules'))])
+                        'rules_url' => route('web.page.show', [Str::slug(trans('idir::dirs.rules'))])
                     ]) !!}
                 </p>
             </div>
