@@ -10933,7 +10933,6 @@ body {
   width: 100%;
   padding-top: 0.3rem;
   padding-bottom: 60px;
-  margin-top: 67px;
 }
 
 .scroll-to-top {
@@ -11200,6 +11199,10 @@ body {
   .w-xl-100 {
     width: 100% !important;
   }
+}
+
+.menu-height {
+  margin-bottom: 67px;
 }
 
 .navbar {

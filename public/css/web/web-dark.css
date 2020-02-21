@@ -11713,6 +11713,14 @@ p a {
  *    Where the class' content is applicable to that screen size.
  */
 
+.policy-height {
+  margin-top: 67px;
+}
+
+.menu-height {
+  margin-bottom: 67px;
+}
+
 .navbar {
   min-height: 67px;
   z-index: 1000;
@@ -12075,7 +12083,6 @@ span.twitter-typeahead .sidebar .nav-item.tt-suggestion.tt-cursor .nav-link {
 }
 
 .content {
-  margin-top: 67px;
   min-height: calc(100vh - 290px);
 }
 
@@ -12106,7 +12113,7 @@ span.twitter-typeahead .sidebar .nav-item.tt-suggestion.tt-cursor .nav-link {
 }
 
 .scroll-to-top {
-  z-index: 100;
+  z-index: 1001;
   position: fixed;
   right: 15px;
   bottom: 15px;

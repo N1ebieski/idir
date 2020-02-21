@@ -1280,14 +1280,20 @@ jQuery(document).on('click', 'div#themeToggle button', function(e) {
         $('link[href*="admin-dark.css"]').attr('href', function() {
             return $(this).attr('href').replace('admin-dark.css', 'admin.css');
         });
-        $.cookie("themeToggle", 'light', { path: '/' });
+        $.cookie("themeToggle", 'light', { 
+            path: '/',
+            expires: 365
+        });
     }
 
     if ($element.hasClass('btn-dark')) {
         $('link[href*="admin.css"]').attr('href', function() {
             return $(this).attr('href').replace('admin.css', 'admin-dark.css');
         });
-        $.cookie("themeToggle", 'dark', { path: '/' });
+        $.cookie("themeToggle", 'dark', { 
+            path: '/',
+            expires: 365
+        });
     }
 
     $element.prop('disabled', true);

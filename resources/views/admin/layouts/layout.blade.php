@@ -33,6 +33,8 @@
 
         <div class="content-wrapper">
 
+            <div class="menu-height"></div>
+
             <div class="container-fluid">
                 @include('icore::admin.partials.breadcrumb')
                 @include('icore::admin.partials.alerts')

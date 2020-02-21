@@ -801,7 +801,7 @@ jQuery(document).on('readyAndAjax', function() {
 
 jQuery(document).ready(function() {
     let c, currentScrollTop = 0;
-    let $navbar = $('.navbar');
+    let $navbar = $('.menu.navbar');
 
     $(window).scroll(function () {
         if (!$('body').hasClass('modal-open')) {
@@ -836,6 +836,16 @@ jQuery(document).on('click', ".modal-backdrop, #navbarToggle", function(e) {
     }
 });
 
+jQuery(document).on('click', '#policy #agree', function (e) {
+    e.preventDefault();
+
+    $('#policy').remove();
+
+    $.cookie("policyAgree", 1, { 
+        path: '/',
+        expires: 365
+    });
+});
 // Scroll to top button appear
 $(document).on('scroll', function() {
     var scrollDistance = $(this).scrollTop();
@@ -898,14 +908,20 @@ jQuery(document).on('click', 'div#themeToggle button', function(e) {
         $('link[href*="web-dark.css"]').attr('href', function() {
             return $(this).attr('href').replace('web-dark.css', 'web.css');
         });
-        $.cookie("themeToggle", 'light', { path: '/' });
+        $.cookie("themeToggle", 'light', { 
+            path: '/',
+            expires: 365
+        });
     }
 
     if ($element.hasClass('btn-dark')) {
         $('link[href*="web.css"]').attr('href', function() {
             return $(this).attr('href').replace('web.css', 'web-dark.css');
         });
-        $.cookie("themeToggle", 'dark', { path: '/' });
+        $.cookie("themeToggle", 'dark', { 
+            path: '/',
+            expires: 365
+        });
     }
 
     $element.prop('disabled', true);
