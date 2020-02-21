@@ -35,6 +35,7 @@
     "If you’re having trouble clicking the \":actionText\" button, copy and paste the URL below\n".
     'into your web browser: [:actionURL](:actionURL)',
     [
+        'actionText' => trans('idir::dirs.page.edit.index'),
         'actionURL' => route('web.dir.edit_1', [$dirBacklink->dir->id])
     ]
 )
