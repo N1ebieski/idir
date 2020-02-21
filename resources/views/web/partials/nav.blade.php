@@ -21,7 +21,7 @@
 </a>
 @endsection
 
-<nav class="navbar navbar-expand-md navbar-light bg-light fixed-top border-bottom">
+<nav class="navbar menu navbar-expand-md navbar-light bg-light fixed-top border-bottom">
     <div class="container">
         @if (!app('Helpers\Active')->isUrl(route('web.home.index')))
         <div class="d-flex flex-grow-1 navbar-search pr-3 pr-md-0">

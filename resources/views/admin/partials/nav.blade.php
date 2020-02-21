@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand navbar-light bg-light fixed-top border-bottom">
+<nav class="navbar menu navbar-expand navbar-light bg-light fixed-top border-bottom">
     <a href="#" class="navbar-toggler" role="button" id="sidebarToggle">
         <span class="navbar-toggler-icon"></span>
     </a>
