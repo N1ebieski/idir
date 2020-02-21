@@ -891,8 +891,11 @@ $(document).ready(function() {
 });
 
 jQuery(document).on('readyAndAjax', function() {
-    $('form#searchForm input[name="search"]').keypress(function(e) {
-        if (e.which == 13) {
+    let $form = $('form#searchForm');
+    $form.btn = $form.find('button');
+
+    $form.find('input[name="search"]').keypress(function(e) {
+        if (e.which == 13 && $form.btn.prop('disabled') === false) {
             $('form#searchForm').submit();
             return false;
         }
