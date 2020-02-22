@@ -53,8 +53,11 @@ return [
     'payment_1' => 'płatny',
     'price_from' => 'płatny już od :price PLN / :days :limit',
     'unlimited' => 'nieograniczony czasowo',
-    'alt' => 'Alternatywna grupa',
-    'alt_tooltip' => 'Grupa do której spadnie wpis w przypadku braku przedłużenia okresu czasowego.',
+    'alt' => [
+        'index' => 'Alternatywna grupa',
+        'tooltip' => 'Grupa do której spadnie wpis w przypadku braku przedłużenia okresu czasowego.',
+        'null' => 'Brak (po upływie czasu nastąpi deaktywacja ze statusem "oczekujący na płatność")'
+    ],
     'code_sms' => 'Kod SMS',
     'code_transfer' => 'Kod ID',
     'number' => 'Numer',

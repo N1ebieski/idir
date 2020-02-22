@@ -125,11 +125,12 @@
                 id="collapsePayments">
                     <div class="form-group">
                         <label for="alt">
-                            <span>{{ trans('idir::groups.alt') }}: </span>
-                            <i data-toggle="tooltip" data-placement="top" title="{{ trans('idir::groups.alt_tooltip') }}"
+                            <span>{{ trans('idir::groups.alt.index') }}: </span>
+                            <i data-toggle="tooltip" data-placement="top" title="{{ trans('idir::groups.alt.tooltip') }}"
                             class="far fa-question-circle"></i>
                         </label>
                         <select class="form-control @isValid('alt_id')" id="alt" name="alt_id">
+                            <option value="" {{ (old('alt_id', $group->alt_id) == null) ? 'selected' : null }}>{{ trans('idir::groups.alt.null') }}</option>
                             @foreach ($groups as $_group)
                             <option value="{{ $_group->id }}" {{ (old('alt_id', $group->alt_id) == $_group->id) ? 'selected' : null }}>{{ $_group->name }}</option>
                             @endforeach
