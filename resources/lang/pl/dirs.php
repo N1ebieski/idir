@@ -102,6 +102,14 @@ return [
             ze statusem "oczekujący na płatność".',
             'renew_dir' => 'Możesz temu zapobiec przedłużając czas ważności wpisu w aktualnej grupie.
             Przedłużenia swojego wpisu dokonasz klikając w przycisk poniżej:'
+        ],
+        'completed' => [
+            'title' => 'Koniec czasu ważności',
+            'info' => 'informujemy, że zakończył się czas ważności Twojego wpisu :dir_link w grupie :group.',
+            'alt' => 'Tym samym wpis został przeniesiony do niższej grupy :alt_group.',
+            'deactivation' => 'Tym samym wpis został deaktywowany ze statusem "oczekujący na płatność".',
+            'edit_dir' => 'Możesz odnowić wpis lub zmienić grupę. Edycji swojego wpisu dokonasz 
+            klikając w przycisk poniżej:'
         ]
     ],
     'link_dir_page' => 'Podlinkuj swój wpis by przyśpieszyć indeksację',

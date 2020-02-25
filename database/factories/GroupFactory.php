@@ -22,6 +22,18 @@ $factory->afterCreatingState(Group::class, 'additional options for editing conte
     $group->privileges()->sync([Privilege::where('name', 'additional options for editing content')->first()->id]);
 });
 
+$factory->state(Group::class, 'apply_alt_deactivation', function(Faker $faker) {
+    return [
+        'alt_id' => null
+    ];
+});
+
+$factory->state(Group::class, 'apply_alt_group', function(Faker $faker) {
+    return [
+        'alt_id' => 1
+    ];
+});
+
 $factory->state(Group::class, 'apply_active', function(Faker $faker) {
     return [
         'apply_status' => 1

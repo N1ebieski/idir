@@ -282,6 +282,16 @@ class DirService implements
     }
 
     /**
+     * Undocumented function
+     *
+     * @return boolean
+     */
+    public function moveToAltGroup() : bool
+    {
+        return $this->dir->group()->associate($this->dir->group->alt_id)->save();
+    }
+
+    /**
      * Update Status attribute the specified Dir in storage.
      *
      * @param  array $attributes [description]

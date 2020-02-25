@@ -42,6 +42,18 @@ $factory->state(Dir::class, 'with_user', function(Faker $faker) {
     ];
 });
 
+$factory->state(Dir::class, 'active', function(Faker $faker) {
+    return [
+        'status' => 1
+    ];
+});
+
+$factory->state(Dir::class, 'inactive', function(Faker $faker) {
+    return [
+        'status' => 0
+    ];
+});
+
 $factory->state(Dir::class, 'pending', function(Faker $faker) {
     return [
         'status' => 2

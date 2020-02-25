@@ -567,6 +567,16 @@ class Dir extends Model
      *
      * @return boolean
      */
+    public function isNulledPrivileges() : bool
+    {
+        return $this->privileged_at === null && $this->privileged_to === null;
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @return boolean
+     */
     public function isCommentable() : bool
     {
         return true;

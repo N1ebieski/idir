@@ -10,15 +10,14 @@
 @endif
 @endif
 
-{{ trans('idir::dirs.mail.reminder.info', [
+{{ trans('idir::dirs.mail.completed.info', [
     'dir_link' => $dir->title_as_link,
-    'dir_page' => route('web.dir.show', [$dir->slug]),
     'group' => $dir->group->name
 ]) }}
 
 {{ $result }}
 
-{{ trans('idir::dirs.mail.reminder.renew_dir') }}
+{{ trans('idir::dirs.mail.completed.edit_dir') }}
 
 @component('mail::button', [
     'url' => route('web.dir.edit_1', [

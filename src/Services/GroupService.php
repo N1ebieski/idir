@@ -110,7 +110,11 @@ class GroupService implements Creatable, Updatable, PositionUpdatable, Deletable
         // W przypadku usuwania grupy trzeba zmienić alternative innych grup na Default 1
         $this->group->where('alt_id', $this->group->id)->update(['alt_id' => 1]);
 
-        $this->group->dirs()->update(['group_id' => 1]);
+        $this->group->dirs()->update([
+            'group_id' => 1,
+            'privileged_at' => null,
+            'privileged_to' => null
+        ]);
         $this->group->dirs()->pending()->update(['status' => 0]);
 
         // Manually remove relations, because the field model is polymorfic and foreign key doesn't work
