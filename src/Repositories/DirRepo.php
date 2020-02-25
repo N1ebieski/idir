@@ -107,6 +107,15 @@ class DirRepo
     }
 
     /**
+     * [deactivateByPayment description]
+     * @return bool [description]
+     */
+    public function deactivateByPayment() : bool
+    {
+        return $this->dir->update(['status' => 2]);
+    }
+
+    /**
      * [activate description]
      * @return bool [description]
      */
@@ -343,10 +352,7 @@ class DirRepo
     {
         return $this->dir->active()
             ->whereHas('group', function ($query) {
-                $query->whereHas('prices', function ($query) {
-                    $query->where('days', '>', 0)
-                        ->whereNotNull('days');
-                });
+                $query->whereHas('prices');
             })
             ->where(function ($query) use ($timestamp) {
                 $query->whereDate(
@@ -354,7 +360,10 @@ class DirRepo
                     '<=',
                     Carbon::parse($timestamp)->format('Y-m-d')
                 )
-                ->orWhereNull('privileged_to');
+                ->orWhere(function ($query) {
+                    $query->whereNull('privileged_at')
+                        ->whereNull('privileged_to');
+                });
             })
             ->chunk(1000, $callback);
     }
