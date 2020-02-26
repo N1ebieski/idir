@@ -6,7 +6,7 @@ use N1ebieski\IDir\Models\Dir;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Support\Carbon;
-use N1ebieski\IDir\Mail\Dir\Reminder;
+use N1ebieski\IDir\Mail\Dir\ReminderMail;
 
 class ReminderCron
 {
@@ -79,7 +79,7 @@ class ReminderCron
         $this->dir->makeRepo()->chunkAvailableHasPaidRequirementByPrivilegedTo(
             function ($dirs) {
                 $dirs->each(function ($dir) {
-                    Mail::send(app()->make(Reminder::class, ['dir' => $dir]));
+                    Mail::send(app()->make(ReminderMail::class, ['dir' => $dir]));
                 });
             },
             $this->makeReminderTimestamp()

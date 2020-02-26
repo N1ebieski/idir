@@ -5,7 +5,7 @@ namespace N1ebieski\IDir\Listeners\Dir;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Config;
-use N1ebieski\IDir\Mail\Dir\ModeratorNotification;
+use N1ebieski\IDir\Mail\Dir\ModeratorMail;
 use N1ebieski\IDir\Models\Dir;
 use N1ebieski\IDir\Models\User;
 
@@ -118,7 +118,7 @@ class SendModeratorNotification
             if ($dirs->isNotEmpty()) {
                 $this->user->makeRepo()->getByNotificationDirsPermission()
                 ->each(function ($user) use ($dirs) {
-                    Mail::send(app()->make(ModeratorNotification::class, [
+                    Mail::send(app()->make(ModeratorMail::class, [
                         'user' => $user,
                         'dirs' => $dirs
                     ]));

@@ -2,55 +2,55 @@
 
 namespace N1ebieski\IDir\Http\Controllers\Web;
 
+use Illuminate\View\View;
+use N1ebieski\IDir\Models\Dir;
+use N1ebieski\ICore\Models\Link;
+use N1ebieski\IDir\Models\Group;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\View\View;
-use N1ebieski\IDir\Http\Requests\Web\Dir\Edit2Request;
-use N1ebieski\IDir\Http\Requests\Web\Dir\Edit3Request;
-use N1ebieski\IDir\Http\Requests\Web\Dir\Update2Request;
-use N1ebieski\IDir\Http\Requests\Web\Dir\Update3Request;
-use N1ebieski\IDir\Http\Requests\Web\Dir\EditRenewRequest;
-use N1ebieski\IDir\Http\Requests\Web\Dir\Update3CodeRequest;
-use N1ebieski\IDir\Http\Requests\Web\Dir\Create2Request;
-use N1ebieski\IDir\Http\Requests\Web\Dir\Store2Request;
-use N1ebieski\IDir\Http\Requests\Web\Dir\Store3CodeRequest;
-use N1ebieski\IDir\Http\Requests\Web\Dir\Create3Request;
-use N1ebieski\IDir\Http\Requests\Web\Dir\Store3Request;
-use N1ebieski\IDir\Http\Requests\Web\Dir\UpdateRenewRequest;
-use N1ebieski\IDir\Http\Requests\Web\Dir\UpdateRenewCodeRequest;
+use N1ebieski\IDir\Loads\Web\Dir\ShowLoad;
 use N1ebieski\IDir\Loads\Web\Dir\Edit1Load;
 use N1ebieski\IDir\Loads\Web\Dir\Edit2Load;
 use N1ebieski\IDir\Loads\Web\Dir\Edit3Load;
-use N1ebieski\IDir\Loads\Web\Dir\EditRenewLoad;
 use N1ebieski\IDir\Loads\Web\Dir\Store2Load;
 use N1ebieski\IDir\Loads\Web\Dir\Store3Load;
 use N1ebieski\IDir\Loads\Web\Dir\Create2Load;
 use N1ebieski\IDir\Loads\Web\Dir\Create3Load;
+use N1ebieski\IDir\Loads\Web\Dir\DestroyLoad;
 use N1ebieski\IDir\Loads\Web\Dir\Update2Load;
 use N1ebieski\IDir\Loads\Web\Dir\Update3Load;
-use N1ebieski\IDir\Loads\Web\Dir\UpdateRenewLoad;
-use N1ebieski\IDir\Models\Group;
-use N1ebieski\IDir\Models\Dir;
-use N1ebieski\IDir\Models\Payment\Dir\Payment;
-use N1ebieski\ICore\Models\Link;
-use N1ebieski\IDir\Models\Category\Dir\Category;
-use N1ebieski\IDir\Events\Web\Dir\Store as DirStore;
-use N1ebieski\IDir\Events\Web\Dir\Update as DirUpdate;
-use N1ebieski\IDir\Events\Web\Dir\UpdateRenew as DirUpdateRenew;
-use N1ebieski\IDir\Events\Web\Payment\Dir\Store as PaymentStore;
-use N1ebieski\IDir\Http\Responses\Web\Dir\Store3Response;
-use N1ebieski\IDir\Http\Responses\Web\Dir\Update3Response;
-use N1ebieski\IDir\Http\Responses\Web\Dir\UpdateRenewResponse;
-use N1ebieski\IDir\Events\Web\Dir\Destroy as DirDestroy;
-use N1ebieski\IDir\Filters\Web\Dir\IndexFilter;
-use N1ebieski\IDir\Filters\Web\Dir\SearchFilter;
 use N1ebieski\IDir\Filters\Web\Dir\ShowFilter;
+use N1ebieski\IDir\Models\Comment\Dir\Comment;
+use N1ebieski\IDir\Models\Payment\Dir\Payment;
+use N1ebieski\IDir\Filters\Web\Dir\IndexFilter;
+use N1ebieski\IDir\Loads\Web\Dir\EditRenewLoad;
+use N1ebieski\IDir\Filters\Web\Dir\SearchFilter;
+use N1ebieski\IDir\Models\Category\Dir\Category;
+use N1ebieski\IDir\Loads\Web\Dir\UpdateRenewLoad;
+use N1ebieski\IDir\Http\Requests\Web\Dir\ShowRequest;
+use N1ebieski\IDir\Http\Requests\Web\Dir\Edit2Request;
+use N1ebieski\IDir\Http\Requests\Web\Dir\Edit3Request;
 use N1ebieski\IDir\Http\Requests\Web\Dir\IndexRequest;
 use N1ebieski\IDir\Http\Requests\Web\Dir\SearchRequest;
-use N1ebieski\IDir\Http\Requests\Web\Dir\ShowRequest;
-use N1ebieski\IDir\Loads\Web\Dir\DestroyLoad;
-use N1ebieski\IDir\Loads\Web\Dir\ShowLoad;
-use N1ebieski\IDir\Models\Comment\Dir\Comment;
+use N1ebieski\IDir\Http\Requests\Web\Dir\Store2Request;
+use N1ebieski\IDir\Http\Requests\Web\Dir\Store3Request;
+use N1ebieski\IDir\Http\Requests\Web\Dir\Create2Request;
+use N1ebieski\IDir\Http\Requests\Web\Dir\Create3Request;
+use N1ebieski\IDir\Http\Requests\Web\Dir\Update2Request;
+use N1ebieski\IDir\Http\Requests\Web\Dir\Update3Request;
+use N1ebieski\IDir\Http\Responses\Web\Dir\Store3Response;
+use N1ebieski\IDir\Http\Requests\Web\Dir\EditRenewRequest;
+use N1ebieski\IDir\Http\Responses\Web\Dir\Update3Response;
+use N1ebieski\IDir\Http\Requests\Web\Dir\Store3CodeRequest;
+use N1ebieski\IDir\Http\Requests\Web\Dir\Update3CodeRequest;
+use N1ebieski\IDir\Http\Requests\Web\Dir\UpdateRenewRequest;
+use N1ebieski\IDir\Events\Web\Dir\StoreEvent as DirStoreEvent;
+use N1ebieski\IDir\Http\Responses\Web\Dir\UpdateRenewResponse;
+use N1ebieski\IDir\Events\Web\Dir\UpdateEvent as DirUpdateEvent;
+use N1ebieski\IDir\Http\Requests\Web\Dir\UpdateRenewCodeRequest;
+use N1ebieski\IDir\Events\Web\Dir\DestroyEvent as DirDestroyEvent;
+use N1ebieski\IDir\Events\Web\Dir\UpdateRenewEvent as DirUpdateRenewEvent;
+use N1ebieski\IDir\Events\Web\Payment\Dir\StoreEvent as PaymentStoreEvent;
 
 /**
  * [DirController description]
@@ -217,10 +217,10 @@ class DirController
         $dir->setGroup($group)->makeService()->create($request->validated());
 
         if (($payment = $dir->getPayment()) instanceof Payment) {
-            event(new PaymentStore($payment));
+            event(new PaymentStoreEvent($payment));
         }
 
-        event(new DirStore($dir));
+        event(new DirStoreEvent($dir));
 
         return $response->setDir($dir)->makeResponse();
     }
@@ -327,10 +327,10 @@ class DirController
         $dir->setGroup($group)->makeService()->updateFull($request->validated());
 
         if (($payment = $dir->getPayment()) instanceof Payment) {
-            event(new PaymentStore($payment));
+            event(new PaymentStoreEvent($payment));
         }
 
-        event(new DirUpdate($dir));
+        event(new DirUpdateEvent($dir));
 
         return $response->setDir($dir)->makeResponse();
     }
@@ -365,9 +365,9 @@ class DirController
     ) : RedirectResponse {
         $payment = $dir->makeService()->createPayment($request->validated());
 
-        event(new PaymentStore($payment));
+        event(new PaymentStoreEvent($payment));
 
-        event(new DirUpdateRenew($dir));
+        event(new DirUpdateRenewEvent($dir));
 
         return $response->setDir($dir)->makeResponse();
     }
@@ -383,7 +383,7 @@ class DirController
     {
         $dir->makeService()->delete();
 
-        event(new DirDestroy($dir));
+        event(new DirDestroyEvent($dir));
 
         return response()->json(['success' => '']);
     }

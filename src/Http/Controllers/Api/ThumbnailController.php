@@ -3,7 +3,7 @@
 namespace N1ebieski\IDir\Http\Controllers\Api;
 
 use Illuminate\Routing\Controller;
-use N1ebieski\IDir\Utils\Thumbnail;
+use N1ebieski\IDir\Utils\ThumbnailUtil;
 use Illuminate\Http\JsonResponse;
 use N1ebieski\IDir\Http\Requests\Api\Thumbnail\ReloadRequest;
 
@@ -17,7 +17,7 @@ class ThumbnailController extends Controller
      */
     public function reload(ReloadRequest $request) : JsonResponse
     {
-        app(Thumbnail::class, ['url' => $request->input('url')])->reload();
+        app(ThumbnailUtil::class, ['url' => $request->input('url')])->reload();
 
         return response()->json([
             'success' => ''

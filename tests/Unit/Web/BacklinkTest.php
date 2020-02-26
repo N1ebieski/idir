@@ -2,7 +2,6 @@
 
 namespace N1ebieski\IDir\Tests\Unit\Web;
 
-use N1ebieski\IDir\Models\Link;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use GuzzleHttp\Client as GuzzleClient;
@@ -32,7 +31,7 @@ class BacklinkTest extends TestCase
         $handler = HandlerStack::create($mock);
         $client = new GuzzleClient(['handler' => $handler]);
 
-        $rule = new \N1ebieski\IDir\Rules\Backlink($this->url, $client);
+        $rule = new \N1ebieski\IDir\Rules\BacklinkRule($this->url, $client);
         $response = $rule->passes(null, '/');
 
         $this->assertTrue($response === 0);
@@ -47,7 +46,7 @@ class BacklinkTest extends TestCase
         $handler = HandlerStack::create($mock);
         $client = new GuzzleClient(['handler' => $handler]);
 
-        $rule = new \N1ebieski\IDir\Rules\Backlink($this->url, $client);
+        $rule = new \N1ebieski\IDir\Rules\BacklinkRule($this->url, $client);
         $response = $rule->passes(null, '/');
 
         $this->assertTrue($response === 1);

@@ -38,11 +38,11 @@ use N1ebieski\IDir\Http\Requests\Admin\Dir\UpdateStatusRequest;
 use Illuminate\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
-use N1ebieski\IDir\Events\Admin\Dir\Destroy as DirDestroy;
-use N1ebieski\IDir\Events\Admin\Payment\Dir\Store as PaymentStore;
-use N1ebieski\IDir\Events\Admin\Dir\Store as DirStore;
-use N1ebieski\IDir\Events\Admin\Dir\UpdateFull as DirUpdateFull;
-use N1ebieski\IDir\Events\Admin\Dir\UpdateStatus as DirUpdateStatus;
+use N1ebieski\IDir\Events\Admin\Dir\DestroyEvent as DirDestroyEvent;
+use N1ebieski\IDir\Events\Admin\Payment\Dir\StoreEvent as PaymentStoreEvent;
+use N1ebieski\IDir\Events\Admin\Dir\StoreEvent as DirStoreEvent;
+use N1ebieski\IDir\Events\Admin\Dir\UpdateFullEvent as DirUpdateFullEvent;
+use N1ebieski\IDir\Events\Admin\Dir\UpdateStatusEvent as DirUpdateStatusEvent;
 use N1ebieski\IDir\Loads\Admin\Dir\DestroyLoad;
 
 /**
@@ -169,10 +169,10 @@ class DirController
         $dir->setGroup($group)->makeService()->create($request->validated());
 
         if (($payment = $dir->getPayment()) instanceof Payment) {
-            event(new PaymentStore($payment));
+            event(new PaymentStoreEvent($payment));
         }
 
-        event(new DirStore($dir));
+        event(new DirStoreEvent($dir));
 
         return $response->setDir($dir)->makeResponse();
     }
@@ -283,10 +283,10 @@ class DirController
         $dir->setGroup($group)->makeService()->updateFull($request->validated());
 
         if (($payment = $dir->getPayment()) instanceof Payment) {
-            event(new PaymentStore($payment));
+            event(new PaymentStoreEvent($payment));
         }
 
-        event(new DirUpdateFull($dir));
+        event(new DirUpdateFullEvent($dir));
 
         return $response->setDir($dir)->makeResponse();
     }
@@ -336,7 +336,7 @@ class DirController
 
         $dir->loadAllRels();
 
-        event(new DirUpdateStatus($dir));
+        event(new DirUpdateStatusEvent($dir));
 
         return response()->json([
             'success' => '',
@@ -360,7 +360,7 @@ class DirController
     {
         $dir->makeService()->delete();
 
-        event(new DirDestroy($dir, $request->input('reason')));
+        event(new DirDestroyEvent($dir, $request->input('reason')));
 
         return response()->json(['success' => '']);
     }

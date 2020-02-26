@@ -2,10 +2,10 @@
 
 namespace N1ebieski\IDir\Exceptions\Cashbill;
 
-use N1ebieski\IDir\Exceptions\Custom;
+use N1ebieski\IDir\Exceptions\CustomException;
 use N1ebieski\IDir\Models\Payment\Payment;
 
-class Exception extends Custom
+class Exception extends CustomException
 {
     /**
      * [protected description]

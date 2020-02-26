@@ -30,15 +30,24 @@ class CompletedCron
     protected $config;
 
     /**
+     * Undocumented variable
+     *
+     * @var CompletedJob
+     */
+    protected $completedJob;
+
+    /**
      * Undocumented function
      *
      * @param Dir $dir
+     * @param CompletedJob $completedJob
      * @param Config $config
      * @param Carbon $carbon
      */
-    public function __construct(Dir $dir, Config $config, Carbon $carbon)
+    public function __construct(Dir $dir, CompletedJob $completedJob, Config $config, Carbon $carbon)
     {
         $this->dir = $dir;
+        $this->completedJob = $completedJob;
 
         $this->config = $config;
         $this->carbon = $carbon;
@@ -67,6 +76,6 @@ class CompletedCron
      */
     protected function addToQueue(Dir $dir) : void
     {
-        CompletedJob::dispatch($dir);
+        $this->completedJob->dispatch($dir);
     }
 }

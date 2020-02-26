@@ -4,7 +4,7 @@ namespace N1ebieski\IDir\Services;
 
 use N1ebieski\IDir\Models\Field\Field;
 use Illuminate\Database\Eloquent\Model;
-use N1ebieski\IDir\Utils\File;
+use N1ebieski\IDir\Utils\FileUtil;
 use Illuminate\Contracts\Filesystem\Factory as Storage;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Contracts\Container\Container as App;
@@ -75,7 +75,7 @@ class FieldService implements Creatable, Updatable, PositionUpdatable
         if (isset($attributes['field'])) {
             foreach ($attributes['field'] as $key => $value) {
                 if ($value instanceof UploadedFile) {
-                    $file = $this->app->make(File::class, [
+                    $file = $this->app->make(FileUtil::class, [
                         'file' => $value,
                         'path' => is_int($this->field->getMorph()->id) ? $this->makePath($key) : null
                     ]);
@@ -110,7 +110,7 @@ class FieldService implements Creatable, Updatable, PositionUpdatable
                 $value = $attributes[$field->id];
 
                 if ($value instanceof UploadedFile) {
-                    $file = $this->app->make(File::class, [
+                    $file = $this->app->make(FileUtil::class, [
                         'file' => $value,
                         'path' => $this->makePath($field->id)
                     ]);
@@ -209,7 +209,7 @@ class FieldService implements Creatable, Updatable, PositionUpdatable
                 $value = $attributes[$field->id];
 
                 if ($value instanceof UploadedFile) {
-                    $file = $this->app->make(File::class, [
+                    $file = $this->app->make(FileUtil::class, [
                         'file' => $value,
                         'path' => $this->makePath($field->id)
                     ]);

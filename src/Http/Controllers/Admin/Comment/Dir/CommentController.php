@@ -2,17 +2,17 @@
 
 namespace N1ebieski\IDir\Http\Controllers\Admin\Comment\Dir;
 
-use N1ebieski\IDir\Models\Dir;
-use N1ebieski\IDir\Models\Comment\Dir\Comment;
-use N1ebieski\IDir\Http\Requests\Admin\Comment\Dir\CreateRequest;
-use N1ebieski\IDir\Http\Requests\Admin\Comment\Dir\StoreRequest;
-use N1ebieski\ICore\Http\Requests\Admin\Comment\IndexRequest;
-use Illuminate\Http\JsonResponse;
-use N1ebieski\ICore\Filters\Admin\Comment\IndexFilter;
 use Illuminate\View\View;
-use N1ebieski\ICore\Events\Admin\Comment\Store as CommentStore;
-use N1ebieski\ICore\Http\Controllers\Admin\Comment\CommentController as BaseCommentController;
+use N1ebieski\IDir\Models\Dir;
+use Illuminate\Http\JsonResponse;
+use N1ebieski\IDir\Models\Comment\Dir\Comment;
+use N1ebieski\ICore\Filters\Admin\Comment\IndexFilter;
+use N1ebieski\ICore\Http\Requests\Admin\Comment\IndexRequest;
+use N1ebieski\ICore\Events\Admin\Comment\StoreEvent as CommentStoreEvent;
+use N1ebieski\IDir\Http\Requests\Admin\Comment\Dir\StoreRequest;
+use N1ebieski\IDir\Http\Requests\Admin\Comment\Dir\CreateRequest;
 use N1ebieski\IDir\Http\Controllers\Admin\Comment\Dir\Polymorphic;
+use N1ebieski\ICore\Http\Controllers\Admin\Comment\CommentController as BaseCommentController;
 
 /**
  * [CommentController description]
@@ -71,7 +71,7 @@ class CommentController extends BaseCommentController implements Polymorphic
         $comment = $comment->setMorph($dir)->makeService()
             ->create($request->only(['content', 'parent_id']));
 
-        event(new CommentStore($comment));
+        event(new CommentStoreEvent($comment));
 
         return response()->json([
             'success' => '',
