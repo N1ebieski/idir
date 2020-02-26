@@ -195,7 +195,9 @@ class Thumbnail
      */
     public function reload() : bool
     {
-        $this->response($this->config->get('idir.dir.thumbnail.reload_url') . $this->url);
+        if ($this->config->has('idir.dir.thumbnail.reload_url')) {
+            $this->response($this->config->get('idir.dir.thumbnail.reload_url') . $this->url);
+        }
 
         if ($this->isExists()) {
             $this->delete();
