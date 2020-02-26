@@ -10,7 +10,7 @@
                         </span>
                     </small>
                 </div>
-                <div>{!! nl2br(e($payment->logs)) !!}</div>
+                <div>{!! $payment->logs_as_html !!}</div>
             </div>
         @endforeach
     @endif

@@ -483,10 +483,10 @@ class Dir extends Model
                 $link .= 'rel="nofollow" ';
             }
 
-            $link .= 'href="' . $this->url . '" target="_blank">' . $this->title . '</a>';
+            $link .= 'href="' . e($this->url) . '" target="_blank">' . e($this->title) . '</a>';
         }
 
-        return $link ?? $this->title;
+        return $link ?? e($this->title);
     }
 
     /**
@@ -502,7 +502,7 @@ class Dir extends Model
             }
         }
 
-        return '<a href="' . route('web.dir.show', [$this->slug]) . '">' . $this->title . '</a>';
+        return '<a href="' . route('web.dir.show', [$this->slug]) . '">' . e($this->title) . '</a>';
     }
 
     /**
@@ -526,7 +526,7 @@ class Dir extends Model
     public function getContentAsHtmlAttribute() : string
     {
         if (!$this->getRelation('group')->hasEditorPrivilege()) {
-            return nl2br($this->content_html);
+            return nl2br(e($this->content_html));
         }
 
         return $this->content_html;
@@ -554,7 +554,7 @@ class Dir extends Model
     public function getLinkAsHtmlAttribute() : string
     {
         $output = '<a href="' . route('web.dir.show', [$this->slug]) . '" title="' . $this->title . '">';
-        $output .= $this->title;
+        $output .= e($this->title);
         $output .= '</a>';
 
         return $output;

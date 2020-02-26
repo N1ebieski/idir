@@ -10,10 +10,10 @@
 @endif
 @endif
 
-{{ trans('idir::dirs.mail.completed.info', [
+{!! trans('idir::dirs.mail.completed.info', [
     'dir_link' => $dir->title_as_link,
     'group' => $dir->group->name
-]) }}
+]) !!}
 
 {{ $result }}
 

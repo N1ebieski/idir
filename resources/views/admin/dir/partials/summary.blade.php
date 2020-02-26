@@ -8,7 +8,7 @@
     @if (isset($value['content_html']) && $value['content_html'] !== null)
     <p>
         {{ trans('idir::dirs.content') }}:<br>
-        <span>{!! $group->hasEditorPrivilege() ? $value['content_html'] : nl2br($value['content_html']) !!}</span>
+        <span>{!! $group->hasEditorPrivilege() ? $value['content_html'] : nl2br(e($value['content_html'])) !!}</span>
     </p>
     @endif
     @if (isset($value['notes']) && $value['notes'] !== null)

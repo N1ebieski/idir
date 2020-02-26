@@ -10,11 +10,11 @@
 @endif
 @endif
 
-{{ trans('idir::dirs.mail.reminder.info', [
+{!! trans('idir::dirs.mail.reminder.info', [
     'dir_link' => $dir->title_as_link,
     'dir_page' => route('web.dir.show', [$dir->slug]),
-    'group' => $dir->group->name
-]) }}
+    'group' => e($dir->group->name)
+]) !!}
 
 {{ $result }}
 
