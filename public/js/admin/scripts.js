@@ -1017,7 +1017,7 @@ jQuery(document).on('readyAndAjax', function() {
         rootSelector: '[data-toggle=confirmation]',
         copyAttributes: 'data-route data-id',
         singleton: true,
-        popout: true,
+        popout: true,      
         onConfirm: function() {
             if ($(this).hasClass('submit')) {
         		$(this).parents('form:first').submit();
@@ -1208,18 +1208,20 @@ jQuery(document).on('change', '#selectForm .select', function() {
     let c, currentScrollTop = 0;
     let $navbar = $('.navbar');
 
-    $(window).scroll(function() {
-        var a = $(window).scrollTop();
-        var b = $navbar.height()+10;
+    $(window).scroll(function () {
+        if (!$('body').hasClass('modal-open')) {        
+            var a = $(window).scrollTop();
+            var b = $navbar.height() + 10;
 
-        currentScrollTop = a;
+            currentScrollTop = a;
 
-        if (c < currentScrollTop && c > b) {
-            $navbar.fadeOut();
-        } else {
-            $navbar.fadeIn();
-        }
-        c = currentScrollTop;
+            if (c < currentScrollTop && c > b) {
+                $navbar.fadeOut();
+            } else {
+                $navbar.fadeIn();
+            }
+            c = currentScrollTop;
+        }            
    });
 })(jQuery);
 
