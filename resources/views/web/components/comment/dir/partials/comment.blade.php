@@ -11,6 +11,6 @@
         @endif
     </div>
     <div>
-        {!! nl2br(e($comment->content_html)) !!}
+        {!! $comment->content_as_html !!}
     </div>
 </div>

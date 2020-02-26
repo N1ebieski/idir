@@ -3,18 +3,9 @@
 namespace N1ebieski\IDir\Http\Requests\Web\Thumbnail;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\App;
 
 class ShowRequest extends FormRequest
 {
-
-    // public function __construct()
-    // {
-    //     parent::__construct();
-
-
-    // }
-
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -49,9 +40,7 @@ class ShowRequest extends FormRequest
                 abort(403, $e->getMessage());
             }
 
-            $this->merge([
-                'url' => $url
-            ]);
+            $this->merge(['url' => $url]);
         }
     }
 

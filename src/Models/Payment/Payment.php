@@ -95,6 +95,18 @@ class Payment extends Model
         });
     }
 
+    // Accessors
+
+    /**
+     * Undocumented function
+     *
+     * @return string
+     */
+    public function getLogsAsHtmlAttribute() : string
+    {
+        return nl2br(e($this->logs));
+    }
+
     // Scopes
 
     /**
