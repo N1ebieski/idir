@@ -12,7 +12,7 @@ class IndexRequest extends BaseIndexRequest
      * [protected description]
      * @var Category
      */
-    protected Category $category;
+    protected $category;
 
     /**
      * @param Category $category

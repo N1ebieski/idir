@@ -3,7 +3,7 @@
 namespace N1ebieski\IDir\Crons\Dir;
 
 use N1ebieski\IDir\Models\DirStatus;
-use N1ebieski\IDir\Jobs\Dir\CheckStatus;
+use N1ebieski\IDir\Jobs\Dir\CheckStatusJob;
 use Illuminate\Support\Facades\Config;
 
 /**
@@ -19,20 +19,20 @@ class StatusCron
 
     /**
      * [protected description]
-     * @var CheckStatus
+     * @var CheckStatusJob
      */
-    protected $checkStatus;
+    protected $checkStatusJob;
 
     /**
      * [__construct description]
      * @param DirStatus     $dirStatus     [description]
-     * @param CheckStatus $checkStatus [description]
+     * @param CheckStatusJob $checkStatusJob [description]
      */
-    public function __construct(DirStatus $dirStatus, CheckStatus $checkStatus)
+    public function __construct(DirStatus $dirStatus, CheckStatusJob $checkStatusJob)
     {
         $this->dirStatus = $dirStatus;
         
-        $this->checkStatus = $checkStatus;
+        $this->checkStatusJob = $checkStatusJob;
     }
 
     /**
@@ -66,7 +66,7 @@ class StatusCron
         $this->dirStatus->makeRepo()->chunkAvailableHasUrl(
             function ($items) {
                 $items->each(function ($item) {
-                    $this->checkStatus->dispatch($item);
+                    $this->checkStatusJob->dispatch($item);
                 });
             }
         );

@@ -2,9 +2,9 @@
 
 namespace N1ebieski\IDir\Exceptions\Thumbnail;
 
-use N1ebieski\IDir\Exceptions\Custom;
+use N1ebieski\IDir\Exceptions\CustomException;
 
-class Exception extends Custom
+class Exception extends CustomException
 {
     //
 }

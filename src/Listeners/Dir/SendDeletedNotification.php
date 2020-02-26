@@ -3,12 +3,12 @@
 namespace N1ebieski\IDir\Listeners\Dir;
 
 use Illuminate\Support\Facades\Mail;
-use N1ebieski\IDir\Mail\Dir\ActivationMail;
+use N1ebieski\IDir\Mail\Dir\DeletedMail;
 
 /**
- * [SendActivationNotification description]
+ * [SendDeleteNotification description]
  */
-class SendActivationNotification
+class SendDeletedNotification
 {
     /**
      * Undocumented variable
@@ -41,10 +41,9 @@ class SendActivationNotification
             return;
         }
 
-        if ($event->dir->status === 1) {
-            Mail::send(app()->makeWith(ActivationMail::class, [
-                'dir' => $event->dir
-            ]));
-        }
+        Mail::send(app()->makeWith(DeletedMail::class, [
+            'dir' => $event->dir,
+            'reason' => $event->reason
+        ]));
     }
 }

@@ -3,14 +3,14 @@
 namespace N1ebieski\IDir\Http\Controllers\Web\Payment\Cashbill\Dir;
 
 use Illuminate\Http\RedirectResponse;
-use N1ebieski\IDir\Http\Requests\Web\Payment\Cashbill\Dir\CompleteRequest;
-use N1ebieski\IDir\Http\Requests\Web\Payment\Cashbill\Dir\VerifyRequest;
-use N1ebieski\IDir\Http\Requests\Web\Payment\Cashbill\Dir\ShowRequest;
-use N1ebieski\IDir\Utils\Cashbill\Transfer as Cashbill;
 use N1ebieski\IDir\Models\Payment\Dir\Payment;
-use N1ebieski\IDir\Events\Web\Payment\Dir\VerifyAttempt;
-use N1ebieski\IDir\Events\Web\Payment\Dir\VerifySuccessful;
+use N1ebieski\IDir\Utils\Cashbill\TransferUtil as Cashbill;
+use N1ebieski\IDir\Events\Web\Payment\Dir\VerifyAttemptEvent;
+use N1ebieski\IDir\Events\Web\Payment\Dir\VerifySuccessfulEvent;
+use N1ebieski\IDir\Http\Requests\Web\Payment\Cashbill\Dir\ShowRequest;
+use N1ebieski\IDir\Http\Requests\Web\Payment\Cashbill\Dir\VerifyRequest;
 use N1ebieski\IDir\Http\Controllers\Web\Payment\Cashbill\Dir\Polymorphic;
+use N1ebieski\IDir\Http\Requests\Web\Payment\Cashbill\Dir\CompleteRequest;
 
 /**
  * [PaymentController description]
@@ -84,7 +84,7 @@ class PaymentController implements Polymorphic
         // I can't' use the route binding, because cashbill returns id payment as part of $_POST['userdata'] variable
         ($payment = $payment->makeRepo()->firstPendingByUuid($request->input('uuid'))) ?? abort(404);
 
-        event(new VerifyAttempt($payment));
+        event(new VerifyAttemptEvent($payment));
 
         try {
             $cashbill->setup(['amount' => $payment->price->price])->authorize($request->validated());
@@ -94,7 +94,7 @@ class PaymentController implements Polymorphic
 
         $payment->makeRepo()->paid();
 
-        event(new VerifySuccessful($payment));
+        event(new VerifySuccessfulEvent($payment));
 
         return 'OK';
     }

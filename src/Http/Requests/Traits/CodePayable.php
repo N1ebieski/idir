@@ -21,7 +21,7 @@ trait CodePayable
                 'nullable',
                 'required_if:payment_type,code_sms',
                 'string',
-                app()->make('N1ebieski\\IDir\\Rules\\Codes\\' . ucfirst(config('idir.payment.code_sms.driver')) . '\\SMS')
+                app()->make('N1ebieski\\IDir\\Rules\\Codes\\' . ucfirst(config('idir.payment.code_sms.driver')) . '\\SMSRule')
             ] : [],
             'code_transfer' => $this->input('payment_type') === 'code_transfer' ?
             [
@@ -29,7 +29,7 @@ trait CodePayable
                 'nullable',
                 'required_if:payment_type,code_transfer',
                 'string',
-                app()->make('N1ebieski\\IDir\\Rules\\Codes\\' . ucfirst(config('idir.payment.code_transfer.driver')) . '\\Transfer')
+                app()->make('N1ebieski\\IDir\\Rules\\Codes\\' . ucfirst(config('idir.payment.code_transfer.driver')) . '\\TransferRule')
             ] : []
         ];
     }

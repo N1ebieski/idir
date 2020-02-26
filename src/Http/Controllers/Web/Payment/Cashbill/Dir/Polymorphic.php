@@ -6,7 +6,7 @@ use Illuminate\Http\RedirectResponse;
 use N1ebieski\IDir\Http\Requests\Web\Payment\Cashbill\Dir\CompleteRequest;
 use N1ebieski\IDir\Http\Requests\Web\Payment\Cashbill\Dir\VerifyRequest;
 use N1ebieski\IDir\Http\Requests\Web\Payment\Cashbill\Dir\ShowRequest;
-use N1ebieski\IDir\Utils\Cashbill\Transfer as Cashbill;
+use N1ebieski\IDir\Utils\Cashbill\TransferUtil as Cashbill;
 use N1ebieski\IDir\Models\Payment\Dir\Payment;
 
 /**

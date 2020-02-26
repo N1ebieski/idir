@@ -7,7 +7,7 @@ use N1ebieski\IDir\Http\Requests\Web\Comment\Dir\StoreRequest;
 use N1ebieski\IDir\Models\Dir;
 use N1ebieski\IDir\Models\Comment\Dir\Comment;
 use Illuminate\Http\JsonResponse;
-use N1ebieski\ICore\Events\Web\Comment\Store as CommentStore;
+use N1ebieski\ICore\Events\Web\Comment\StoreEvent as CommentStoreEvent;
 use N1ebieski\IDir\Http\Controllers\Web\Comment\Dir\Polymorphic as Polymorphic;
 
 /**
@@ -44,7 +44,7 @@ class CommentController implements Polymorphic
     {
         $comment = $comment->setMorph($dir)->makeService()->create($request->only(['content', 'parent_id']));
 
-        event(new CommentStore($comment));
+        event(new CommentStoreEvent($comment));
 
         return response()->json([
             'success' => $comment->status === 1 ? '' : trans('icore::comments.success.store_0'),
