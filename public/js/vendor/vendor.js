@@ -179,8 +179,8 @@
   var DATA_KEY = "bs." + NAME;
   var EVENT_KEY = "." + DATA_KEY;
   var JQUERY_NO_CONFLICT = $.fn[NAME];
-  var BTN_CLASS_BASE = 'btn';
-  var BTN_CLASS_DEFAULT = 'btn h-100';
+  var BTN_CLASS_BASE = 'h-100 d-flex align-items-center';
+  var BTN_CLASS_DEFAULT = 'btn btn-sm';
 
   var DefaultType = _objectSpread({}, Popover.DefaultType, {
     singleton: 'boolean',
@@ -5229,10 +5229,11 @@
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
- * typeahead.js 1.2.0
- * https://github.com/twitter/typeahead.js
- * Copyright 2013-2017 Twitter, Inc. and other contributors; Licensed MIT
+ * typeahead.js 1.3.0
+ * https://github.com/corejavascript/typeahead.js
+ * Copyright 2013-2019 Twitter, Inc. and other contributors; Licensed MIT
  */
+
 
 (function(root, factory) {
     if (true) {
@@ -5385,7 +5386,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
             noop: function() {}
         };
     }();
-    var VERSION = "1.2.0";
+    var VERSION = "1.3.0";
     var tokenizers = function() {
         "use strict";
         return {
@@ -6188,10 +6189,11 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(setImmediate) {var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
- * typeahead.js 1.2.0
- * https://github.com/twitter/typeahead.js
- * Copyright 2013-2017 Twitter, Inc. and other contributors; Licensed MIT
+ * typeahead.js 1.3.0
+ * https://github.com/corejavascript/typeahead.js
+ * Copyright 2013-2019 Twitter, Inc. and other contributors; Licensed MIT
  */
+
 
 (function(root, factory) {
     if (true) {
@@ -7082,8 +7084,12 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
                 pending: templates.pending && _.templatify(templates.pending),
                 header: templates.header && _.templatify(templates.header),
                 footer: templates.footer && _.templatify(templates.footer),
-                suggestion: templates.suggestion || suggestionTemplate
+                suggestion: templates.suggestion ? userSuggestionTemplate : suggestionTemplate
             };
+            function userSuggestionTemplate(context) {
+                var template = templates.suggestion;
+                return $(template(context)).attr("id", _.guid());
+            }
             function suggestionTemplate(context) {
                 return $('<div role="option">').attr("id", _.guid()).text(displayFn(context));
             }
@@ -7442,8 +7448,10 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
                 var $selectable;
                 if ($selectable = this.menu.getActiveSelectable()) {
                     this.select($selectable) && $e.preventDefault();
-                } else if ($selectable = this.menu.getTopSelectable()) {
-                    this.autocomplete($selectable) && $e.preventDefault();
+                } else if (this.autoselect) {
+                    if ($selectable = this.menu.getTopSelectable()) {
+                        this.autocomplete($selectable) && $e.preventDefault();
+                    }
                 }
             },
             _onEscKeyed: function onEscKeyed() {
@@ -7595,7 +7603,9 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
                 if (!cancelMove && !this.eventBus.before("cursorchange", suggestion, datasetName)) {
                     this.menu.setCursor($candidate);
                     if (data) {
-                        this.input.setInputValue(data.val);
+                        if (typeof data.val === "string") {
+                            this.input.setInputValue(data.val);
+                        }
                     } else {
                         this.input.resetInputValue();
                         this._updateHint();
@@ -8021,7 +8031,7 @@ $(function() {
 
 							if($that.data('googleMarker').length < 2) {
 								$that.data('googleMap').setCenter(results[0].geometry.location);
-								$that.data('googleMap').setZoom($that.data('googleMap').getZoom()); 
+								$that.data('googleMap').setZoom($that.data('googleMap').getZoom());
 							} else {
 								$that.data('googleMap').fitBounds($that.data('googleBound'));
 							}
@@ -36543,7 +36553,7 @@ jQuery.extend(jQuery.fn.pickadate.defaults,{monthsFull:["styczeń","luty","marze
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
- * Date picker for pickadate.js v3.6.2
+ * Date picker for pickadate.js v3.6.4
  * http://amsul.github.io/pickadate.js/date.htm
  */
 
@@ -37910,7 +37920,7 @@ Picker.extend( 'pickadate', DatePicker )
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
- * pickadate.js v3.6.2, 2019/03/19
+ * pickadate.js v3.6.4, 2019/05/25
  * By Amsul, http://amsul.ca
  * Hosted on http://amsul.github.io/pickadate.js
  * Licensed under MIT
@@ -37951,7 +37961,8 @@ function PickerConstructor( ELEMENT, NAME, COMPONENT, OPTIONS ) {
 
         // The state of the picker.
         STATE = {
-            id: ELEMENT.id || 'P' + Math.abs( ~~(Math.random() * new Date()) )
+            id: ELEMENT.id || 'P' + Math.abs( ~~(Math.random() * new Date()) ),
+            handlingOpen: false,
         },
 
 
@@ -38174,6 +38185,17 @@ function PickerConstructor( ELEMENT, NAME, COMPONENT, OPTIONS ) {
 
                     // Bind the document events.
                     $document.on( 'click.' + STATE.id + ' focusin.' + STATE.id, function( event ) {
+                        // If the picker is currently midway through processing
+                        // the opening sequence of events then don't handle clicks
+                        // on any part of the DOM. This is caused by a bug in Chrome 73
+                        // where a click event is being generated with the incorrect
+                        // path in it.
+                        // In short, if someone does a click that finishes after the
+                        // new element is created then the path contains only the
+                        // parent element and not the input element itself.
+                        if (STATE.handlingOpen) {
+                          return;
+                        }
 
                         var target = getRealEventTarget( event, ELEMENT )
 
@@ -38538,10 +38560,28 @@ function PickerConstructor( ELEMENT, NAME, COMPONENT, OPTIONS ) {
 
             // On focus/click, open the picker.
             on( 'focus.' + STATE.id + ' click.' + STATE.id,
-            debounce(function(event) {
-                event.preventDefault()
-                P.open()
-            }, 100))
+                function(event) {
+                    event.preventDefault()
+                    P.open()
+                }
+            )
+
+            // Mousedown handler to capture when the user starts interacting
+            // with the picker. This is used in working around a bug in Chrome 73.
+            .on('mousedown', function() {
+              STATE.handlingOpen = true;
+              var handler = function() {
+                // By default mouseup events are fired before a click event.
+                // By using a timeout we can force the mouseup to be handled
+                // after the corresponding click event is handled.
+                setTimeout(function() {
+                  $(document).off('mouseup', handler);
+                  STATE.handlingOpen = false;
+                }, 0);
+              };
+              $(document).on('mouseup', handler);
+            });
+
 
         // Only bind keydown events if the element isn’t editable.
         if ( !SETTINGS.editable ) {
@@ -38897,22 +38937,6 @@ function getRealEventTarget( event, ELEMENT ) {
     return event.target
 }
 
-// taken from https://davidwalsh.name/javascript-debounce-function
-function debounce(func, wait, immediate) {
-    var timeout;
-    return function() {
-        var context = this, args = arguments;
-        var later = function() {
-            timeout = null;
-            if (!immediate) func.apply(context, args);
-        };
-        var callNow = immediate && !timeout;
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-        if (callNow) func.apply(context, args);
-    };
-}
-
 /**
  * PickerConstructor helper methods.
  */
@@ -39126,7 +39150,7 @@ return PickerConstructor
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
- * Time picker for pickadate.js v3.6.2
+ * Time picker for pickadate.js v3.6.4
  * http://amsul.github.io/pickadate.js/time.htm
  */
 
@@ -42800,7 +42824,7 @@ jQuery.trumbowyg.langs.pl={viewHTML:"Pokaż HTML",formatting:"Format",p:"Akapit"
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-!function(o){"use strict";function r(o){return("0"+parseInt(o).toString(16)).slice(-2)}function e(o){return o.search("rgb")===-1?o.replace("#",""):"rgba(0, 0, 0, 0)"===o?"transparent":(o=o.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+))?\)$/),r(o[1])+r(o[2])+r(o[3]))}function f(o,r){var f=[];if(!o.style)return f;if(""!==o.style.backgroundColor){var a=e(o.style.backgroundColor);r.o.plugins.colors.colorList.indexOf(a)>=0?f.push("backColor"+a):f.push("backColorFree")}var c;return""!==o.style.color?c=e(o.style.color):o.hasAttribute("color")&&(c=e(o.getAttribute("color"))),c&&(r.o.plugins.colors.colorList.indexOf(c)>=0?f.push("foreColor"+c):f.push("foreColorFree")),f}function a(r,e){var f=[];o.each(e.o.plugins.colors.colorList,function(o,a){var c=r+a,l={fn:r,forceCss:!0,param:"#"+a,style:"background-color: #"+a+";"};e.addBtnDef(c,l),f.push(c)});var a=r+"Remove",c={fn:"removeFormat",param:r,style:"background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAG0lEQVQIW2NkQAAfEJMRmwBYhoGBYQtMBYoAADziAp0jtJTgAAAAAElFTkSuQmCC);"};e.addBtnDef(a,c),f.push(a);var l=r+"Free",d={fn:function(){e.openModalInsert(e.lang[r],{color:{label:r,forceCss:!0,type:"color",value:"#FFFFFF"}},function(o){return e.execCmd(r,o.color),!0})},text:"#",style:"text-indent: 0;line-height: 20px;padding: 0 5px;"};return e.addBtnDef(l,d),f.push(l),f}o.extend(!0,o.trumbowyg,{langs:{cs:{foreColor:"Barva textu",backColor:"Barva pozadí"},en:{foreColor:"Text color",backColor:"Background color"},da:{foreColor:"Tekstfarve",backColor:"Baggrundsfarve"},fr:{foreColor:"Couleur du texte",backColor:"Couleur de fond"},de:{foreColor:"Textfarbe",backColor:"Hintergrundfarbe"},nl:{foreColor:"Tekstkleur",backColor:"Achtergrondkleur"},sk:{foreColor:"Farba textu",backColor:"Farba pozadia"},zh_cn:{foreColor:"文字颜色",backColor:"背景颜色"},zh_tw:{foreColor:"文字顏色",backColor:"背景顏色"},ru:{foreColor:"Цвет текста",backColor:"Цвет выделения текста"},ja:{foreColor:"文字色",backColor:"背景色"},tr:{foreColor:"Yazı rengi",backColor:"Arkaplan rengi"},pt_br:{foreColor:"Cor de fonte",backColor:"Cor de fundo"}}});var c={colorList:["ffffff","000000","eeece1","1f497d","4f81bd","c0504d","9bbb59","8064a2","4bacc6","f79646","ffff00","f2f2f2","7f7f7f","ddd9c3","c6d9f0","dbe5f1","f2dcdb","ebf1dd","e5e0ec","dbeef3","fdeada","fff2ca","d8d8d8","595959","c4bd97","8db3e2","b8cce4","e5b9b7","d7e3bc","ccc1d9","b7dde8","fbd5b5","ffe694","bfbfbf","3f3f3f","938953","548dd4","95b3d7","d99694","c3d69b","b2a2c7","b7dde8","fac08f","f2c314","a5a5a5","262626","494429","17365d","366092","953734","76923c","5f497a","92cddc","e36c09","c09100","7f7f7f","0c0c0c","1d1b10","0f243e","244061","632423","4f6128","3f3151","31859b","974806","7f6000"]};o.extend(!0,o.trumbowyg,{plugins:{color:{init:function(o){o.o.plugins.colors=o.o.plugins.colors||c;var r={dropdown:a("foreColor",o)},e={dropdown:a("backColor",o)};o.addBtnDef("foreColor",r),o.addBtnDef("backColor",e)},tagHandler:f}}})}(jQuery);
+!function(o){"use strict";function r(o){return("0"+parseInt(o).toString(16)).slice(-2)}function e(o){return o.search("rgb")===-1?o.replace("#",""):"rgba(0, 0, 0, 0)"===o?"transparent":(o=o.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+))?\)$/),r(o[1])+r(o[2])+r(o[3]))}function l(o,r){var l=[];if(!o.style)return l;if(""!==o.style.backgroundColor){var a=e(o.style.backgroundColor);r.o.plugins.colors.colorList.indexOf(a)>=0?l.push("backColor"+a):l.push("backColorFree")}var c;return""!==o.style.color?c=e(o.style.color):o.hasAttribute("color")&&(c=e(o.getAttribute("color"))),c&&(r.o.plugins.colors.colorList.indexOf(c)>=0?l.push("foreColor"+c):l.push("foreColorFree")),l}function a(r,e){var l=[],a=e.o.plugins.colors,c=a[r+"List"]||a.colorList;o.each(c,function(o,c){var f=r+c,t={fn:r,forceCss:!0,hasIcon:!1,text:e.lang["#"+c]||"#"+c,param:"#"+c,style:"background-color: #"+c+";"};a.displayAsList&&"foreColor"===r&&(t.style="color: #"+c+" !important;"),e.addBtnDef(f,t),l.push(f)});var f=r+"Remove",t={fn:"removeFormat",hasIcon:!1,param:r,style:"background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAG0lEQVQIW2NkQAAfEJMRmwBYhoGBYQtMBYoAADziAp0jtJTgAAAAAElFTkSuQmCC);"};if(a.displayAsList&&(t.style=""),e.addBtnDef(f,t),l.push(f),a["allowCustom"+r.charAt(0).toUpperCase()+r.substr(1)]){var d=r+"Free",n={fn:function(){e.openModalInsert(e.lang[r],{color:{label:r,forceCss:!0,type:"color",value:"#FFFFFF"}},function(o){return e.execCmd(r,o.color),!0})},hasIcon:!1,text:"#",style:"text-indent: 0; line-height: 20px; padding: 0 5px;"};e.addBtnDef(d,n),l.push(d)}return l}o.extend(!0,o.trumbowyg,{langs:{cs:{foreColor:"Barva textu",backColor:"Barva pozadí"},en:{foreColor:"Text color",backColor:"Background color",foreColorRemove:"Remove text color",backColorRemove:"Remove background color"},da:{foreColor:"Tekstfarve",backColor:"Baggrundsfarve"},fr:{foreColor:"Couleur du texte",backColor:"Couleur de fond",foreColorRemove:"Supprimer la couleur du texte",backColorRemove:"Supprimer la couleur de fond"},de:{foreColor:"Textfarbe",backColor:"Hintergrundfarbe"},nl:{foreColor:"Tekstkleur",backColor:"Achtergrondkleur"},sk:{foreColor:"Farba textu",backColor:"Farba pozadia"},zh_cn:{foreColor:"文字颜色",backColor:"背景颜色"},zh_tw:{foreColor:"文字顏色",backColor:"背景顏色"},ru:{foreColor:"Цвет текста",backColor:"Цвет выделения текста"},ja:{foreColor:"文字色",backColor:"背景色"},tr:{foreColor:"Yazı rengi",backColor:"Arkaplan rengi"},pt_br:{foreColor:"Cor de fonte",backColor:"Cor de fundo"},ko:{foreColor:"글자색",backColor:"배경색",foreColorRemove:"글자색 지우기",backColorRemove:"배경색 지우기"}}});var c={colorList:["ffffff","000000","eeece1","1f497d","4f81bd","c0504d","9bbb59","8064a2","4bacc6","f79646","ffff00","f2f2f2","7f7f7f","ddd9c3","c6d9f0","dbe5f1","f2dcdb","ebf1dd","e5e0ec","dbeef3","fdeada","fff2ca","d8d8d8","595959","c4bd97","8db3e2","b8cce4","e5b9b7","d7e3bc","ccc1d9","b7dde8","fbd5b5","ffe694","bfbfbf","3f3f3f","938953","548dd4","95b3d7","d99694","c3d69b","b2a2c7","b7dde8","fac08f","f2c314","a5a5a5","262626","494429","17365d","366092","953734","76923c","5f497a","92cddc","e36c09","c09100","7f7f7f","0c0c0c","1d1b10","0f243e","244061","632423","4f6128","3f3151","31859b","974806","7f6000"],foreColorList:null,backColorList:null,allowCustomForeColor:!0,allowCustomBackColor:!0,displayAsList:!1};o.extend(!0,o.trumbowyg,{plugins:{color:{init:function(o){o.o.plugins.colors=o.o.plugins.colors||c;var r=o.o.plugins.colors.displayAsList?o.o.prefix+"dropdown--color-list":"",e={dropdown:a("foreColor",o),dropdownClass:r},l={dropdown:a("backColor",o),dropdownClass:r};o.addBtnDef("foreColor",e),o.addBtnDef("backColor",l)},tagHandler:l}}})}(jQuery);
 
 /***/ }),
 
@@ -42811,7 +42835,7 @@ jQuery.trumbowyg.langs.pl={viewHTML:"Pokaż HTML",formatting:"Format",p:"Akapit"
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-!function(o){"use strict";o.extend(!0,o.trumbowyg,{langs:{de:{history:{redo:"Wiederholen",undo:"Rückgängig"}},en:{history:{redo:"Redo",undo:"Undo"}},da:{history:{redo:"Annuller fortryd",undo:"Fortryd"}},fr:{history:{redo:"Annuler",undo:"Rétablir"}},zh_tw:{history:{redo:"重做",undo:"復原"}},pt_br:{history:{redo:"Refazer",undo:"Desfazer"}}},plugins:{history:{init:function(i){i.o.plugins.history=o.extend(!0,{_stack:[],_index:-1,_focusEl:void 0},i.o.plugins.history||{});var t={title:i.lang.history.redo,ico:"redo",key:"Y",fn:function(){if(i.o.plugins.history._index<i.o.plugins.history._stack.length-1){i.o.plugins.history._index+=1;var o=i.o.plugins.history._index,t=i.o.plugins.history._stack[o];i.execCmd("html",t),i.o.plugins.history._stack[o]=i.$ed.html(),l(),s()}}},n={title:i.lang.history.undo,ico:"undo",key:"Z",fn:function(){if(i.o.plugins.history._index>0){i.o.plugins.history._index-=1;var o=i.o.plugins.history._index,t=i.o.plugins.history._stack[o];i.execCmd("html",t),i.o.plugins.history._stack[o]=i.$ed.html(),l(),s()}}},e=function(){var t,n,e=i.o.plugins.history._index,r=i.o.plugins.history._stack,l=r.slice(-1)[0]||"<p></p>",u=r[e],h=i.$ed.html(),c=i.doc.getSelection().focusNode,g="",a=i.o.plugins.history._focusEl;t=o("<div>"+l+"</div>").find("*").map(function(){return this.localName}),n=o("<div>"+h+"</div>").find("*").map(function(){return this.localName}),c&&(i.o.plugins.history._focusEl=c,g=c.outerHTML||c.textContent),h!==u&&(g.slice(-1).match(/\s/)||!d(t,n)||i.o.plugins.history._index<=0||c!==a?(i.o.plugins.history._index+=1,i.o.plugins.history._stack=r.slice(0,i.o.plugins.history._index),i.o.plugins.history._stack.push(h)):i.o.plugins.history._stack[e]=h,s())},s=function(){var o=i.o.plugins.history._index,t=i.o.plugins.history._stack.length,n=o>0,e=0!==t&&o!==t-1;r("historyUndo",n),r("historyRedo",e)},r=function(o,t){var n=i.$box.find(".trumbowyg-"+o+"-button");t?n.removeClass("trumbowyg-disable"):n.hasClass("trumbowyg-disable")||n.addClass("trumbowyg-disable")},d=function(o,i){if(o===i)return!0;if(null==o||null==i)return!1;if(o.length!==i.length)return!1;for(var t=0;t<o.length;t+=1)if(o[t]!==i[t])return!1;return!0},l=function(){var o=i.doc.getSelection().focusNode,t=i.doc.createRange();o.childNodes.length>0&&(t.setStartAfter(o.childNodes[o.childNodes.length-1]),t.setEndAfter(o.childNodes[o.childNodes.length-1]),i.doc.getSelection().removeAllRanges(),i.doc.getSelection().addRange(t))};i.$c.on("tbwinit tbwchange",e),i.addBtnDef("historyRedo",t),i.addBtnDef("historyUndo",n)}}}})}(jQuery);
+!function(o){"use strict";o.extend(!0,o.trumbowyg,{langs:{de:{history:{redo:"Wiederholen",undo:"Rückgängig"}},en:{history:{redo:"Redo",undo:"Undo"}},da:{history:{redo:"Annuller fortryd",undo:"Fortryd"}},fr:{history:{redo:"Annuler",undo:"Rétablir"}},zh_tw:{history:{redo:"重做",undo:"復原"}},pt_br:{history:{redo:"Refazer",undo:"Desfazer"}},ko:{history:{redo:"다시 실행",undo:"되돌리기"}}},plugins:{history:{init:function(i){i.o.plugins.history=o.extend(!0,{_stack:[],_index:-1,_focusEl:void 0},i.o.plugins.history||{});var t={title:i.lang.history.redo,ico:"redo",key:"Y",fn:function(){if(i.o.plugins.history._index<i.o.plugins.history._stack.length-1){i.o.plugins.history._index+=1;var o=i.o.plugins.history._index,t=i.o.plugins.history._stack[o];i.execCmd("html",t),i.o.plugins.history._stack[o]=i.$ed.html(),l(),s()}}},n={title:i.lang.history.undo,ico:"undo",key:"Z",fn:function(){if(i.o.plugins.history._index>0){i.o.plugins.history._index-=1;var o=i.o.plugins.history._index,t=i.o.plugins.history._stack[o];i.execCmd("html",t),i.o.plugins.history._stack[o]=i.$ed.html(),l(),s()}}},e=function(){var t,n,e=i.o.plugins.history._index,r=i.o.plugins.history._stack,l=r.slice(-1)[0]||"<p></p>",u=r[e],h=i.$ed.html(),c=i.doc.getSelection().focusNode,g="",a=i.o.plugins.history._focusEl;t=o("<div>"+l+"</div>").find("*").map(function(){return this.localName}),n=o("<div>"+h+"</div>").find("*").map(function(){return this.localName}),c&&(i.o.plugins.history._focusEl=c,g=c.outerHTML||c.textContent),h!==u&&(g.slice(-1).match(/\s/)||!d(t,n)||i.o.plugins.history._index<=0||c!==a?(i.o.plugins.history._index+=1,i.o.plugins.history._stack=r.slice(0,i.o.plugins.history._index),i.o.plugins.history._stack.push(h)):i.o.plugins.history._stack[e]=h,s())},s=function(){var o=i.o.plugins.history._index,t=i.o.plugins.history._stack.length,n=o>0,e=0!==t&&o!==t-1;r("historyUndo",n),r("historyRedo",e)},r=function(o,t){var n=i.$box.find(".trumbowyg-"+o+"-button");t?n.removeClass("trumbowyg-disable"):n.hasClass("trumbowyg-disable")||n.addClass("trumbowyg-disable")},d=function(o,i){if(o===i)return!0;if(null==o||null==i)return!1;if(o.length!==i.length)return!1;for(var t=0;t<o.length;t+=1)if(o[t]!==i[t])return!1;return!0},l=function(){var o=i.doc.getSelection().focusNode,t=i.doc.createRange();o.childNodes.length>0&&(t.setStartAfter(o.childNodes[o.childNodes.length-1]),t.setEndAfter(o.childNodes[o.childNodes.length-1]),i.doc.getSelection().removeAllRanges(),i.doc.getSelection().addRange(t))};i.$c.on("tbwinit tbwchange",e),i.addBtnDef("historyRedo",t),i.addBtnDef("historyUndo",n)}}}})}(jQuery);
 
 /***/ }),
 
@@ -42823,7 +42847,7 @@ jQuery.trumbowyg.langs.pl={viewHTML:"Pokaż HTML",formatting:"Format",p:"Akapit"
 /***/ (function(module, exports) {
 
 /**
- * Trumbowyg v2.14.0 - A lightweight WYSIWYG editor
+ * Trumbowyg v2.21.0 - A lightweight WYSIWYG editor
  * Trumbowyg core file
  * ------------------------
  * @link http://alex-d.github.io/Trumbowyg
@@ -42849,7 +42873,7 @@ jQuery.trumbowyg = {
 
             bold: 'Bold',
             italic: 'Italic',
-            strikethrough: 'Stroke',
+            strikethrough: 'Strikethrough',
             underline: 'Underline',
 
             strong: 'Strong',
@@ -42914,8 +42938,10 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
         prefix: 'trumbowyg-',
 
         semantic: true,
+        semanticKeepAttributes: false,
         resetCss: false,
         removeformatPasted: false,
+        tabToIndent: false,
         tagsToRemove: [],
         tagsToKeep: ['hr', 'img', 'embed', 'iframe', 'input'],
         btns: [
@@ -42934,6 +42960,7 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
         ],
         // For custom button definitions
         btnsDef: {},
+        changeActiveDropdownIcon: false,
 
         inlineElementsSelector: 'a,abbr,acronym,b,caption,cite,code,col,dfn,dir,dt,dd,em,font,hr,i,kbd,li,q,span,strikeout,strong,sub,sup,u',
 
@@ -42943,13 +42970,13 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
 
         plugins: {},
         urlProtocol: false,
-        minimalLinks: false
+        minimalLinks: false,
+        defaultLinkTarget: undefined
     },
     writable: false,
     enumerable: true,
     configurable: false
 });
-
 
 (function (navigator, window, document, $) {
     'use strict';
@@ -42972,7 +42999,7 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
                 switch (options) {
                     // Exec command
                     case 'execCmd':
-                        return t.execCmd(params.cmd, params.param, params.forceCss);
+                        return t.execCmd(params.cmd, params.param, params.forceCss, params.skipTrumbowyg);
 
                     // Modal box
                     case 'openModal':
@@ -43088,7 +43115,7 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
 
         /**
          * When the button is associated to a empty object
-         * fn and title attributs are defined from the button key value
+         * fn and title attributes are defined from the button key value
          *
          * For example
          *      foo: {}
@@ -43138,6 +43165,14 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
             h4: {
                 fn: 'formatBlock',
                 title: h + ' 4'
+            },
+            h5: {
+                fn: 'formatBlock',
+                title: h + ' 5'
+            },
+            h6: {
+                fn: 'formatBlock',
+                title: h + ' 6'
             },
             subscript: {
                 tag: 'sub'
@@ -43265,7 +43300,10 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
         t.pasteHandlers = [].concat(t.o.pasteHandlers);
 
         // Check if browser is IE
-        t.isIE = (navigator.userAgent.indexOf('MSIE') !== -1 || navigator.appVersion.indexOf('Trident/') !== -1);
+        t.isIE = navigator.userAgent.indexOf('MSIE') !== -1 || navigator.appVersion.indexOf('Trident/') !== -1;
+
+        // Check if we are on macOs
+        t.isMac = navigator.platform.toUpperCase().indexOf('MAC') !== -1;
 
         t.init();
     };
@@ -43308,7 +43346,7 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
         },
 
         addBtnDef: function (btnName, btnDef) {
-            this.btnsDef[btnName] = btnDef;
+            this.btnsDef[btnName] = $.extend(btnDef, this.btnsDef[btnName] || {});
         },
 
         setupUrlPrefix: function () {
@@ -43320,7 +43358,7 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
             if (typeof(protocol) !== 'string') {
                 return 'https://';
             }
-            return /:\/\/$/.test(protocol) ? protocol : protocol + '://';
+            return protocol.replace('://', '') + '://';
         },
 
         buildEditor: function () {
@@ -43400,8 +43438,7 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
 
             var ctrl = false,
                 composition = false,
-                debounceButtonPaneStatus,
-                updateEventName = 'keyup';
+                debounceButtonPaneStatus;
 
             t.$ed
                 .on('dblclick', 'img', t.o.imgDblClickHandler)
@@ -43413,14 +43450,24 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
                         try {
                             t.execCmd(key.fn, key.param);
                             return false;
-                        } catch (c) {
+                        } catch (c) {}
+                    } else {
+                        if (t.o.tabToIndent && e.key === 'Tab') {
+                            try {
+                                if (e.shiftKey) {
+                                    t.execCmd('outdent', true, null);
+                                } else {
+                                    t.execCmd('indent', true, null);
+                                }
+                                return false;
+                            } catch (c) {}
                         }
                     }
                 })
                 .on('compositionstart compositionupdate', function () {
                     composition = true;
                 })
-                .on(updateEventName + ' compositionend', function (e) {
+                .on('keyup compositionend', function (e) {
                     if (e.type === 'compositionend') {
                         composition = false;
                     } else if (composition) {
@@ -43460,10 +43507,10 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
                     }, 50);
                 })
                 .on('focus blur', function (e) {
-                    t.$c.trigger('tbw' + e.type);
                     if (e.type === 'blur') {
-                        $('.' + prefix + 'active-button', t.$btnPane).removeClass(prefix + 'active-button ' + prefix + 'active');
+                        t.clearButtonPaneStatus();
                     }
+                    t.$c.trigger('tbw' + e.type);
                     if (t.o.autogrowOnEnter) {
                         if (t.autogrowOnEnterDontClose) {
                             return;
@@ -43476,6 +43523,15 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
                             t.$ed.css({height: t.$ed.css('min-height')});
                             t.$c.trigger('tbwresize');
                         }
+                    }
+                })
+                .on('keyup focus', function () {
+                    if (!t.$ta.val().match(/<.*>/)) {
+                        setTimeout(function () {
+                            var block = t.isIE ? '<p>' : 'p';
+                            t.doc.execCommand('formatBlock', false, block);
+                            t.syncCode();
+                        }, 0);
                     }
                 })
                 .on('cut drop', function () {
@@ -43532,8 +43588,8 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
                     }, 0);
                 });
 
-            t.$box.on('keydown', function (e) {
-                if (e.which === 27 && $('.' + prefix + 'modal-box', t.$box).length === 1) {
+            $(t.doc.body).on('keydown.' + t.eventNamespace, function (e) {
+                if (e.which === 27 && $('.' + prefix + 'modal-box').length >= 1) {
                     t.closeModal();
                     return false;
                 }
@@ -43608,7 +43664,7 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
                     html: t.hasSvg && hasIcon ?
                         '<svg><use xlink:href="' + t.svgPath + '#' + prefix + (btn.ico || btnName).replace(/([A-Z]+)/g, '-$1').toLowerCase() + '"/></svg>' :
                         t.hideButtonTexts ? '' : (btn.text || btn.title || t.lang[btnName] || btnName),
-                    title: (btn.title || btn.text || textDef) + ((btn.key) ? ' (Ctrl + ' + btn.key + ')' : ''),
+                    title: (btn.title || btn.text || textDef) + (btn.key ? ' (' + (t.isMac ? 'Cmd' : 'Ctrl') + ' + ' + btn.key + ')' : ''),
                     tabindex: -1,
                     mousedown: function () {
                         if (!isDropdown || $('.' + btnName + '-' + prefix + 'dropdown', t.$box).is(':hidden')) {
@@ -43631,7 +43687,7 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
                 $btn.addClass(prefix + 'open-dropdown');
                 var dropdownPrefix = prefix + 'dropdown',
                     dropdownOptions = { // the dropdown
-                        class: dropdownPrefix + '-' + btnName + ' ' + dropdownPrefix + ' ' + prefix + 'fixed-top'
+                        class: dropdownPrefix + '-' + btnName + ' ' + dropdownPrefix + ' ' + prefix + 'fixed-top ' + (btn.dropdownClass || '')
                     };
                 dropdownOptions['data-' + dropdownPrefix] = btnName;
                 var $dropdown = $('<div/>', dropdownOptions);
@@ -43673,9 +43729,11 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
 
             return $('<button/>', {
                 type: 'button',
-                class: prefix + btnName + '-dropdown-button' + (btn.ico ? ' ' + prefix + btn.ico + '-button' : ''),
-                html: t.hasSvg && hasIcon ? '<svg><use xlink:href="' + t.svgPath + '#' + prefix + (btn.ico || btnName).replace(/([A-Z]+)/g, '-$1').toLowerCase() + '"/></svg>' + (btn.text || btn.title || t.lang[btnName] || btnName) : (btn.text || btn.title || t.lang[btnName] || btnName),
-                title: ((btn.key) ? ' (Ctrl + ' + btn.key + ')' : null),
+                class: prefix + btnName + '-dropdown-button ' + (btn.class || '') + (btn.ico ? ' ' + prefix + btn.ico + '-button' : ''),
+                html: t.hasSvg && hasIcon ?
+                  '<svg><use xlink:href="' + t.svgPath + '#' + prefix + (btn.ico || btnName).replace(/([A-Z]+)/g, '-$1').toLowerCase() + '"/></svg>' + (btn.text || btn.title || t.lang[btnName] || btnName) :
+                  (btn.text || btn.title || t.lang[btnName] || btnName),
+                title: (btn.key ? '(' + (t.isMac ? 'Cmd' : 'Ctrl') + ' + ' + btn.key + ')' : null),
                 style: btn.style || null,
                 mousedown: function () {
                     $('body', t.doc).trigger('mousedown');
@@ -43687,10 +43745,10 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
             });
         },
         // Check if button is supported
-        isSupportedBtn: function (b) {
+        isSupportedBtn: function (btnName) {
             try {
-                return this.btnsDef[b].isSupported();
-            } catch (c) {
+                return this.btnsDef[btnName].isSupported();
+            } catch (e) {
             }
             return true;
         },
@@ -43737,36 +43795,36 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
 
                     var scrollTop = $(window).scrollTop(),
                         offset = $box.offset().top + 1,
-                        bp = t.$btnPane,
-                        oh = bp.outerHeight() - 2;
+                        $buttonPane = t.$btnPane,
+                        buttonPaneOuterHeight = $buttonPane.outerHeight() - 2;
 
                     if ((scrollTop - offset > 0) && ((scrollTop - offset - t.height) < 0)) {
                         if (!t.isFixed) {
                             t.isFixed = true;
-                            bp.css({
+                            $buttonPane.css({
                                 position: 'fixed',
                                 top: 0,
-                                left: fixedFullWidth ? '0' : 'auto',
+                                left: fixedFullWidth ? 0 : 'auto',
                                 zIndex: 7
                             });
-                            $([t.$ta, t.$ed]).css({marginTop: bp.height()});
+                            t.$box.css({paddingTop: $buttonPane.height()});
                         }
-                        bp.css({
-                            width: fixedFullWidth ? '100%' : (($box.width() - 1) + 'px')
+                        $buttonPane.css({
+                            width: fixedFullWidth ? '100%' : (($box.width() - 1))
                         });
 
                         $('.' + t.o.prefix + 'fixed-top', $box).css({
                             position: fixedFullWidth ? 'fixed' : 'absolute',
-                            top: fixedFullWidth ? oh : oh + (scrollTop - offset) + 'px',
+                            top: fixedFullWidth ? buttonPaneOuterHeight : buttonPaneOuterHeight + (scrollTop - offset),
                             zIndex: 15
                         });
                     } else if (t.isFixed) {
                         t.isFixed = false;
-                        bp.removeAttr('style');
-                        $([t.$ta, t.$ed]).css({marginTop: 0});
+                        $buttonPane.removeAttr('style');
+                        t.$box.css({paddingTop: 0});
                         $('.' + t.o.prefix + 'fixed-top', $box).css({
                             position: 'absolute',
-                            top: oh
+                            top: buttonPaneOuterHeight
                         });
                     }
                 });
@@ -43822,6 +43880,7 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
             $('body').removeClass(prefix + 'body-fullscreen');
             t.$c.trigger('tbwclose');
             $(window).off('scroll.' + t.eventNamespace + ' resize.' + t.eventNamespace);
+            $(t.doc.body).off('keydown.' + t.eventNamespace);
         },
 
 
@@ -43842,6 +43901,7 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
             }
 
             t.semanticCode(false, true);
+            t.$c.trigger('tbwchange');
 
             setTimeout(function () {
                 t.doc.activeElement.blur();
@@ -43863,31 +43923,31 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
         // Open dropdown when click on a button which open that
         dropdown: function (name) {
             var t = this,
-                d = t.doc,
+                $body = $('body', t.doc),
                 prefix = t.o.prefix,
                 $dropdown = $('[data-' + prefix + 'dropdown=' + name + ']', t.$box),
                 $btn = $('.' + prefix + name + '-button', t.$btnPane),
                 show = $dropdown.is(':hidden');
 
-            $('body', d).trigger('mousedown');
+            $body.trigger('mousedown');
 
             if (show) {
-                var o = $btn.offset().left;
+                var btnOffsetLeft = $btn.offset().left;
                 $btn.addClass(prefix + 'active');
 
                 $dropdown.css({
                     position: 'absolute',
                     top: $btn.offset().top - t.$btnPane.offset().top + $btn.outerHeight(),
-                    left: (t.o.fixedFullWidth && t.isFixed) ? o + 'px' : (o - t.$btnPane.offset().left) + 'px'
+                    left: (t.o.fixedFullWidth && t.isFixed) ? btnOffsetLeft : (btnOffsetLeft - t.$btnPane.offset().left)
                 }).show();
 
                 $(window).trigger('scroll');
 
-                $('body', d).on('mousedown.' + t.eventNamespace, function (e) {
+                $body.on('mousedown.' + t.eventNamespace, function (e) {
                     if (!$dropdown.is(e.target)) {
                         $('.' + prefix + 'dropdown', t.$box).hide();
                         $('.' + prefix + 'active', t.$btnPane).removeClass(prefix + 'active');
-                        $('body', d).off('mousedown.' + t.eventNamespace);
+                        $body.off('mousedown.' + t.eventNamespace);
                     }
                 });
             }
@@ -43916,9 +43976,9 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
             if (!force && t.$ed.is(':visible')) {
                 t.syncTextarea();
             } else {
-                // wrap the content in a div it's easier to get the innerhtml
+                // wrap the content in a div it's easier to get the inner html
                 var html = $('<div>').html(t.$ta.val());
-                //scrub the html before loading into the doc
+                // scrub the html before loading into the doc
                 var safe = $('<div>').append(html);
                 $(t.o.tagsToRemove.join(','), safe).remove();
                 t.$ed.html(safe.contents().html());
@@ -43932,11 +43992,10 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
                 }
             }
             if (t.o.autogrowOnEnter) {
-                // t.autogrowEditorOnEnter();
                 t.$ed.height('auto');
-                var totalheight = t.autogrowOnEnterWasFocused ? t.$ed[0].scrollHeight : t.$ed.css('min-height');
-                if (totalheight !== t.$ta.css('height')) {
-                    t.$ed.css({height: totalheight});
+                var totalHeight = t.autogrowOnEnterWasFocused ? t.$ed[0].scrollHeight : t.$ed.css('min-height');
+                if (totalHeight !== t.$ta.css('height')) {
+                    t.$ed.css({height: totalHeight});
                     t.$c.trigger('tbwresize');
                 }
             }
@@ -43952,10 +44011,10 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
             t.syncCode(force);
 
             if (t.o.semantic) {
-                t.semanticTag('b');
-                t.semanticTag('i');
-                t.semanticTag('s');
-                t.semanticTag('strike');
+                t.semanticTag('b', t.o.semanticKeepAttributes);
+                t.semanticTag('i', t.o.semanticKeepAttributes);
+                t.semanticTag('s', t.o.semanticKeepAttributes);
+                t.semanticTag('strike', t.o.semanticKeepAttributes);
 
                 if (full) {
                     var inlineElementsSelector = t.o.inlineElementsSelector,
@@ -43978,15 +44037,6 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
                     wrapInlinesInParagraphsFrom(t.$ed.children(inlineElementsSelector).first());
 
                     t.semanticTag('div', true);
-
-                    // Unwrap paragraphs content, containing nothing usefull
-                    t.$ed.find('p').filter(function () {
-                        // Don't remove currently being edited element
-                        if (t.range && this === t.range.startContainer) {
-                            return false;
-                        }
-                        return $(this).text().trim().length === 0 && $(this).children().not('br,span').length === 0;
-                    }).contents().unwrap();
 
                     // Get rid of temporary span's
                     $('[data-tbw]', t.$ed).contents().unwrap();
@@ -44034,8 +44084,9 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
         createLink: function () {
             var t = this,
                 documentSelection = t.doc.getSelection(),
+                selectedRange = documentSelection.getRangeAt(0),
                 node = documentSelection.focusNode,
-                text = new XMLSerializer().serializeToString(documentSelection.getRangeAt(0).cloneContents()),
+                text = new XMLSerializer().serializeToString(selectedRange.cloneContents()) || selectedRange + '',
                 url,
                 title,
                 target;
@@ -44050,7 +44101,7 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
                 url = $a.attr('href');
                 if (!t.o.minimalLinks) {
                     title = $a.attr('title');
-                    target = $a.attr('target');
+                    target = $a.attr('target') || t.o.defaultLinkTarget;
                 }
                 var range = t.doc.createRange();
                 range.selectNode(node);
@@ -44072,7 +44123,7 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
                 }
             };
             if (!t.o.minimalLinks) {
-                Object.assign(options, {
+                $.extend(options, {
                     title: {
                         label: t.lang.title,
                         value: title
@@ -44092,13 +44143,11 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
 
                 var link = $(['<a href="', url, '">', v.text || v.url, '</a>'].join(''));
 
-                if (!t.o.minimalLinks) {
-                    if (v.title.length > 0) {
-                        link.attr('title', v.title);
-                    }
-                    if (v.target.length > 0) {
-                        link.attr('target', v.target);
-                    }
+                if (v.title) {
+                    link.attr('title', v.title);
+                }
+                if (v.target || t.o.defaultLinkTarget) {
+                    link.attr('target', v.target || t.o.defaultLinkTarget);
                 }
                 t.range.deleteContents();
                 t.range.insertNode(link[0]);
@@ -44184,10 +44233,25 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
             var t = this,
                 prefix = t.o.prefix,
                 fullscreenCssClass = prefix + 'fullscreen',
-                isFullscreen;
+                fullscreenPlaceholderClass = fullscreenCssClass + '-placeholder',
+                isFullscreen,
+                editorHeight = t.$box.outerHeight();
 
             t.$box.toggleClass(fullscreenCssClass);
             isFullscreen = t.$box.hasClass(fullscreenCssClass);
+
+            if (isFullscreen) {
+                t.$box.before(
+                    $('<div/>', {
+                        class: fullscreenPlaceholderClass
+                    }).css({
+                        height: editorHeight
+                    })
+                );
+            } else {
+                $('.' + fullscreenPlaceholderClass).remove();
+            }
+
             $('body').toggleClass(prefix + 'body-fullscreen', isFullscreen);
             $(window).trigger('scroll');
             t.$c.trigger('tbw' + (isFullscreen ? 'open' : 'close') + 'fullscreen');
@@ -44197,7 +44261,7 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
         /*
          * Call method of trumbowyg if exist
          * else try to call anonymous function
-         * and finaly native execCommand
+         * and finally native execCommand
          */
         execCmd: function (cmd, param, forceCss, skipTrumbowyg) {
             var t = this;
@@ -44239,9 +44303,11 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
 
 
         // Open a modal box
-        openModal: function (title, content) {
+        openModal: function (title, content, buildForm) {
             var t = this,
                 prefix = t.o.prefix;
+
+            buildForm = buildForm !== false;
 
             // No open a modal box when exist other modal box
             if ($('.' + prefix + 'modal-box', t.$box).length > 0) {
@@ -44272,33 +44338,39 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
             });
 
             // Build the form
-            var $form = $('<form/>', {
-                action: '',
-                html: content
-            })
-                .on('submit', function () {
-                    $modal.trigger(CONFIRM_EVENT);
-                    return false;
+            var formOrContent;
+            if (buildForm) {
+                formOrContent = $('<form/>', {
+                    action: '',
+                    html: content
                 })
-                .on('reset', function () {
-                    $modal.trigger(CANCEL_EVENT);
-                    return false;
-                })
-                .on('submit reset', function () {
-                    if (t.o.autogrowOnEnter) {
-                        t.autogrowOnEnterDontClose = false;
-                    }
-                });
+                  .on('submit', function () {
+                      $modal.trigger(CONFIRM_EVENT);
+                      return false;
+                  })
+                  .on('reset', function () {
+                      $modal.trigger(CANCEL_EVENT);
+                      return false;
+                  })
+                  .on('submit reset', function () {
+                      if (t.o.autogrowOnEnter) {
+                          t.autogrowOnEnterDontClose = false;
+                      }
+                  });
+            } else {
+                formOrContent = content;
+            }
 
 
             // Build ModalBox and animate to show them
             var $box = $('<div/>', {
                 class: prefix + 'modal-box',
-                html: $form
+                html: formOrContent
             })
                 .css({
-                    top: '-' + t.$btnPane.outerHeight() + 'px',
-                    opacity: 0
+                    top: '-' + t.$btnPane.outerHeight(),
+                    opacity: 0,
+                    paddingBottom: buildForm ? null : '5%',
                 })
                 .appendTo($modal)
                 .animate({
@@ -44308,24 +44380,26 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
 
 
             // Append title
-            $('<span/>', {
-                text: title,
-                class: prefix + 'modal-title'
-            }).prependTo($box);
+            if (title) {
+                $('<span/>', {
+                    text: title,
+                    class: prefix + 'modal-title'
+                }).prependTo($box);
+            }
 
-            $modal.height($box.outerHeight() + 10);
+            if (buildForm) {
+                // Focus in modal box
+                $('input:first', $box).focus();
 
+                // Append Confirm and Cancel buttons
+                t.buildModalBtn('submit', $box);
+                t.buildModalBtn('reset', $box);
 
-            // Focus in modal box
-            $('input:first', $box).focus();
-
-
-            // Append Confirm and Cancel buttons
-            t.buildModalBtn('submit', $box);
-            t.buildModalBtn('reset', $box);
-
+                $modal.height($box.outerHeight() + 10);
+            }
 
             $(window).trigger('scroll');
+            t.$c.trigger('tbwmodalopen');
 
             return $modal;
         },
@@ -44349,18 +44423,19 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
             t.$overlay.off();
 
             // Find the modal box
-            var $modalBox = $('.' + prefix + 'modal-box', $(document.body));
+            var $modalBox = $('.' + prefix + 'modal-box', $(t.doc.body));
 
             $modalBox.animate({
                 top: '-' + $modalBox.height()
             }, 100, function () {
                 $modalBox.parent().remove();
                 t.hideOverlay();
+                t.$c.trigger('tbwmodalclose');
             });
 
             t.restoreRange();
         },
-        // Preformated build and management modal
+        // Pre-formatted build and management modal
         openModalInsert: function (title, fields, cmd) {
             var t = this,
                 prefix = t.o.prefix,
@@ -44434,11 +44509,15 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
         },
         addErrorOnModalField: function ($field, err) {
             var prefix = this.o.prefix,
+                spanErrorClass = prefix + 'msg-error',
                 $label = $field.parent();
 
             $field
                 .on('change keyup', function () {
                     $label.removeClass(prefix + 'input-error');
+                    setTimeout(function () {
+                        $label.find('.' + spanErrorClass).remove();
+                    }, 150);
                 });
 
             $label
@@ -44446,7 +44525,7 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
                 .find('input+span')
                 .append(
                     $('<span/>', {
-                        class: prefix + 'msg-error',
+                        class: spanErrorClass,
                         text: err
                     })
                 );
@@ -44574,20 +44653,40 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
                 }
             }
 
-            documentSelection.removeAllRanges();
+            // Fix IE11 Error 'Could not complete the operation due to error 800a025e'.
+            // https://stackoverflow.com/questions/16160996/could-not-complete-the-operation-due-to-error-800a025e
+            try {
+                documentSelection.removeAllRanges();
+            } catch (e) {
+            }
+
             documentSelection.addRange(range || savedRange);
         },
         getRangeText: function () {
             return this.range + '';
         },
 
+        clearButtonPaneStatus: function () {
+            var t = this,
+              prefix = t.o.prefix,
+              activeClasses = prefix + 'active-button ' + prefix + 'active',
+              originalIconClass = prefix + 'original-icon';
+
+            // Reset all buttons and dropdown state
+            $('.' + prefix + 'active-button', t.$btnPane).removeClass(activeClasses);
+            $('.' + originalIconClass, t.$btnPane).each(function () {
+                $(this).find('svg use').attr('xlink:href', $(this).data(originalIconClass));
+            });
+        },
         updateButtonPaneStatus: function () {
             var t = this,
                 prefix = t.o.prefix,
-                tags = t.getTagsRecursive(t.doc.getSelection().focusNode),
-                activeClasses = prefix + 'active-button ' + prefix + 'active';
+                activeClasses = prefix + 'active-button ' + prefix + 'active',
+                originalIconClass = prefix + 'original-icon',
+                tags = t.getTagsRecursive(t.doc.getSelection().focusNode);
 
-            $('.' + prefix + 'active-button', t.$btnPane).removeClass(activeClasses);
+            t.clearButtonPaneStatus();
+
             $.each(tags, function (i, tag) {
                 var btnName = t.tagToButton[tag.toLowerCase()],
                     $btn = $('.' + prefix + btnName + '-button', t.$btnPane);
@@ -44597,8 +44696,25 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
                 } else {
                     try {
                         $btn = $('.' + prefix + 'dropdown .' + prefix + btnName + '-dropdown-button', t.$box);
-                        var dropdownBtnName = $btn.parent().data('dropdown');
-                        $('.' + prefix + dropdownBtnName + '-button', t.$box).addClass(activeClasses);
+                        var $btnSvgUse = $btn.find('svg use'),
+                            dropdownBtnName = $btn.parent().data(prefix + 'dropdown'),
+                            $dropdownBtn = $('.' + prefix + dropdownBtnName + '-button', t.$box),
+                            $dropdownBtnSvgUse = $dropdownBtn.find('svg use');
+
+                        // Highlight the dropdown button
+                        $dropdownBtn.addClass(activeClasses);
+
+                        // Switch dropdown icon to the active sub-icon one
+                        if (t.o.changeActiveDropdownIcon && $btnSvgUse.length > 0) {
+                            // Save original icon
+                            $dropdownBtn
+                              .addClass(originalIconClass)
+                              .data(originalIconClass, $dropdownBtnSvgUse.attr('xlink:href'));
+
+                            // Put the active sub-button's icon
+                            $dropdownBtnSvgUse
+                              .attr('xlink:href', $btnSvgUse.attr('xlink:href'));
+                        }
                     } catch (e) {
                     }
                 }
@@ -44648,9 +44764,10 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
             });
         },
         destroyPlugins: function () {
+            var t = this;
             $.each(this.loadedPlugins, function (i, plugin) {
                 if (plugin.destroy) {
-                    plugin.destroy();
+                    plugin.destroy(t);
                 }
             });
         }
