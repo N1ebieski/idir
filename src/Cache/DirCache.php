@@ -223,16 +223,16 @@ class DirCache
     }
 
     /**
-     * [rememberLatest description]
+     * [rememberLatestForHome description]
      * @return Collection [description]
      */
-    public function rememberLatest() : Collection
+    public function rememberLatestForHome() : Collection
     {
         return $this->cache->tags(["dirs"])->remember(
-            "dir.getLatest",
+            "dir.getLatestForHome",
             now()->addMinutes($this->minutes),
             function () {
-                return $this->dir->makeRepo()->getLatest();
+                return $this->dir->makeRepo()->getLatestForHome();
             }
         );
     }

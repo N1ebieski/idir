@@ -32,9 +32,12 @@ class PrivilegeRepo
      */
     public function getWithGroup(int $id) : Collection
     {
-        return $this->privilege->with(['groups' => function($query) use ($id) {
-                $query->where('id', $id);
-            }])->orderBy('name', 'asc')
+        return $this->privilege->with([
+                'groups' => function ($query) use ($id) {
+                    $query->where('id', $id);
+                }
+            ])
+            ->orderBy('name', 'asc')
             ->get();
     }
 }

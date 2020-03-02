@@ -2,7 +2,7 @@
 
 namespace N1ebieski\IDir\Http\Controllers\Web;
 
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\View;
 use N1ebieski\IDir\Models\Dir;
 
 /**
@@ -11,24 +11,14 @@ use N1ebieski\IDir\Models\Dir;
 class HomeController
 {
     /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        //$this->middleware(['auth', 'verified']);
-    }
-
-    /**
      * Show the application dashboard.
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function index(Dir $dir)
     {
-        return view('idir::web.home.index', [
-            'dirs' => $dir->makeCache()->rememberLatest()
+        return View::make('idir::web.home.index', [
+            'dirs' => $dir->makeCache()->rememberLatestForHome()
         ]);
     }
 }

@@ -274,10 +274,11 @@ class DirRepo
     }
 
     /**
-     * [getLatest description]
-     * @return Collection         [description]
+     * Undocumented function
+     *
+     * @return Collection
      */
-    public function getLatest() : Collection
+    public function getLatestForHome() : Collection
     {
         $dirs = $this->dir->selectRaw('`dirs`.*, TRUE as `privilege`')
             ->withAllPublicRels()
@@ -324,17 +325,17 @@ class DirRepo
     /**
      * Undocumented function
      *
-     * @param string $datetime
+     * @param string $timestamp
      * @return Collection
      */
-    public function getLatestForModeratorsByCreatedAt(string $datetime) : Collection
+    public function getLatestForModeratorsByCreatedAt(string $timestamp) : Collection
     {
         return $this->dir->withAllPublicRels()
             ->whereIn('status', [0, 1])
-            ->whereDate('created_at', '>', Carbon::parse($datetime)->format('Y-m-d'))
-            ->orWhere(function ($query) use ($datetime) {
-                $query->whereDate('created_at', '=', Carbon::parse($datetime)->format('Y-m-d'))
-                    ->whereTime('created_at', '>', Carbon::parse($datetime)->format('H:i:s'));
+            ->whereDate('created_at', '>', Carbon::parse($timestamp)->format('Y-m-d'))
+            ->orWhere(function ($query) use ($timestamp) {
+                $query->whereDate('created_at', '=', Carbon::parse($timestamp)->format('Y-m-d'))
+                    ->whereTime('created_at', '>', Carbon::parse($timestamp)->format('H:i:s'));
             })
             ->latest()
             ->limit(25)
