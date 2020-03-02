@@ -39,7 +39,7 @@ class BacklinkCron
      * [protected description]
      * @var int
      */
-    protected int $check_hours;
+    protected int $checkHours;
 
     /**
      * Undocumented function
@@ -62,7 +62,7 @@ class BacklinkCron
         $this->config = $config;
         $this->carbon = $carbon;
 
-        $this->check_hours = (int)$this->config->get('idir.dir.backlink.check_hours');
+        $this->checkHours = (int)$this->config->get('idir.dir.backlink.check_hours');
     }
 
     /**
@@ -70,7 +70,14 @@ class BacklinkCron
      */
     public function __invoke() : void
     {
-        $this->addToQueue();
+        $this->dirBacklink->makeRepo()->chunkAvailableHasBacklinkRequirementByAttemptedAt(
+            function ($dirBacklinks) {
+                $dirBacklinks->each(function ($dirBacklink) {
+                    $this->addToQueue($dirBacklink);
+                });
+            },
+            $this->makeCheckTimestamp()
+        );
     }
 
     /**
@@ -80,21 +87,14 @@ class BacklinkCron
      */
     protected function makeCheckTimestamp() : string
     {
-        return $this->carbon->now()->subHours($this->check_hours);
+        return $this->carbon->now()->subHours($this->checkHours);
     }
 
     /**
      * Adds new jobs to the queue.
      */
-    private function addToQueue() : void
+    private function addToQueue(DirBacklink $dirBacklink) : void
     {
-        $this->dirBacklink->makeRepo()->chunkAvailableHasBacklinkRequirementByAttemptedAt(
-            function ($items) {
-                $items->each(function ($item) {
-                    $this->checkBacklinkJob->dispatch($item);
-                });
-            },
-            $this->makeCheckTimestamp()
-        );
+        $this->checkBacklinkJob->dispatch($dirBacklink);
     }
 }
