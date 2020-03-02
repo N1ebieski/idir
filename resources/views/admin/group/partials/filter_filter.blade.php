@@ -1,3 +1,5 @@
+@inject('group', 'N1ebieski\IDir\Models\Group')
+
 @component('icore::admin.partials.modal')
 @slot('modal_id', 'filterModal')
 
@@ -15,8 +17,12 @@
     <label for="FormVisible">{{ trans('icore::filter.filter') }} "{{ trans('idir::groups.visible') }}"</label>
     <select class="form-control custom-select" id="FormVisible" name="filter[visible]">
         <option value="">{{ trans('icore::filter.default') }}</option>
-        <option value="1" {{ ($filter['visible'] == '1') ? 'selected' : '' }}>{{ trans('idir::groups.visible_1') }}</option>
-        <option value="0" {{ ($filter['visible'] == '0') ? 'selected' : '' }}>{{ trans('idir::groups.visible_0') }}</option>
+        <option value="{{ $group::VISIBLE }}" {{ ($filter['visible'] === $group::VISIBLE) ? 'selected' : '' }}>
+            {{ trans('idir::groups.visible_'.$group::VISIBLE) }}
+        </option>
+        <option value="{{ $group::INVISIBLE }}" {{ ($filter['visible'] === $group::INVISIBLE) ? 'selected' : '' }}>
+            {{ trans('idir::groups.visible_'.$group::INVISIBLE) }}
+        </option>
     </select>
 </div>
 <button type="button" class="btn btn-primary btn-send" id="filterFilter">

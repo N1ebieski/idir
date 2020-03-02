@@ -20,7 +20,7 @@ class MarkAsPaid
      */
     public function verify() : bool
     {
-        return $this->event->payment->isUndone()
+        return $this->event->payment->isUnfinished()
             && $this->event->payment->morph->isPending();
     }
 

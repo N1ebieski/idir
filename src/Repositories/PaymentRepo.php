@@ -44,9 +44,9 @@ class PaymentRepo
      * [completed description]
      * @return bool [description]
      */
-    public function completed() : bool
+    public function finished() : bool
     {
-        return $this->payment->update(['status' => 1]);
+        return $this->payment->update(['status' => Payment::FINISHED]);
     }
 
     /**
@@ -55,6 +55,6 @@ class PaymentRepo
      */
     public function paid() : bool
     {
-        return $this->payment->update(['status' => 0]);
+        return $this->payment->update(['status' => Payment::UNFINISHED]);
     }
 }

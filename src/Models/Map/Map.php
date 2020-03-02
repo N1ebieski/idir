@@ -10,7 +10,7 @@ use N1ebieski\ICore\Models\Traits\Polymorphic;
  */
 class Map extends Model
 {
-    use Polymorphic;   
+    use Polymorphic;
     
     // Configuration
 
@@ -22,5 +22,5 @@ class Map extends Model
     protected $fillable = [
         'lat',
         'long'
-    ];    
+    ];
 }
