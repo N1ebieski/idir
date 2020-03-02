@@ -63,10 +63,13 @@ class DirBacklinkRepo
      * Undocumented function
      *
      * @param Closure $closure
+     * @param string $timestamp
      * @return Collection
      */
-    public function chunkAvailableHasBacklinkRequirement(Closure $closure) : Collection
-    {
+    public function chunkAvailableHasBacklinkRequirementByAttemptedAt(
+        Closure $closure,
+        string $timestamp
+    ) : Collection {
         return $this->dirBacklink
             ->whereHas('dir', function ($query) {
                 $query->whereIn('status', [1, 3])
@@ -74,28 +77,22 @@ class DirBacklinkRepo
                         $query->obligatoryBacklink();
                     });
             })
-            ->where(function ($query) {
+            ->where(function ($query) use ($timestamp) {
                 $query->whereDate(
                     'attempted_at',
                     '<',
-                    Carbon::now()->subHours(
-                        $this->config->get('idir.dir.backlink.check_hours')
-                    )->format('Y-m-d')
+                    Carbon::parse($timestamp)->format('Y-m-d')
                 )
-                ->orWhere(function ($query) {
+                ->orWhere(function ($query) use ($timestamp) {
                     $query->whereDate(
                         'attempted_at',
                         '=',
-                        Carbon::now()->subHours(
-                            $this->config->get('idir.dir.backlink.check_hours')
-                        )->format('Y-m-d')
+                        Carbon::parse($timestamp)->format('Y-m-d')
                     )
                     ->whereTime(
                         'attempted_at',
                         '<=',
-                        Carbon::now()->subHours(
-                            $this->config->get('idir.dir.backlink.check_hours')
-                        )->format('H:i:s')
+                        Carbon::parse($timestamp)->format('H:i:s')
                     );
                 });
             })

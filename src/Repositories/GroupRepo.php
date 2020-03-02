@@ -109,7 +109,7 @@ class GroupRepo
     public function firstWithRelsById(int $id) : ?Group
     {
         return $this->group->where('id', $id)
-            ->with(['fields' => function($query) {
+            ->with(['fields' => function ($query) {
                 return $query->public();
             }])
             // ->withCount(['dirs', 'dirs_today'])

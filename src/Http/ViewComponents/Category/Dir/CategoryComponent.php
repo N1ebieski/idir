@@ -33,7 +33,7 @@ class CategoryComponent implements Htmlable
     public function toHtml() : View
     {
         return view('idir::web.components.category.dir.category', [
-            'categories' => $this->category->makeCache()->rememberRootsWithNestedMorphsCount()       
+            'categories' => $this->category->makeCache()->rememberRootsWithNestedMorphsCount()
         ]);
     }
 }

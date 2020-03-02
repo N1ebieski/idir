@@ -2,9 +2,7 @@
 
 namespace N1ebieski\IDir\Repositories;
 
-use Illuminate\Database\Eloquent\Collection;
 use N1ebieski\IDir\Models\DirStatus;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\Config\Repository as Config;
 use Carbon\Carbon;
 use Closure;
@@ -62,41 +60,38 @@ class DirStatusRepo
     /**
      * Undocumented function
      *
-     * @param Closure $closure
-     * @return bool
+     * @param Closure $callback
+     * @param string $timestamp
+     * @return boolean
      */
-    public function chunkAvailableHasUrl(Closure $closure) : bool
+    public function chunkAvailableHasUrlByAttemptedAt(Closure $callback, string $timestamp) : bool
     {
         return $this->dirStatus
             ->whereHas('dir', function ($query) {
                 $query->whereIn('status', [1, 4])
                     ->whereNotNull('url');
             })
-            ->where(function ($query) {
+            ->where(function ($query) use ($timestamp) {
                 $query->whereDate(
                     'attempted_at',
                     '<',
-                    Carbon::now()->subDays($this->config->get('idir.dir.status.check_days'))->format('Y-m-d')
+                    Carbon::parse($timestamp)->format('Y-m-d')
                 )
-                ->orWhere(function ($query) {
+                ->orWhere(function ($query) use ($timestamp) {
                     $query->whereDate(
                         'attempted_at',
                         '=',
-                        Carbon::now()->subDays(
-                            $this->config->get('idir.dir.status.check_days')
-                        )->format('Y-m-d')
+                        Carbon::parse($timestamp)->format('Y-m-d')
                     )
                     ->whereTime(
                         'attempted_at',
                         '<=',
-                        Carbon::now()->subDays(
-                            $this->config->get('idir.dir.status.check_days')
-                        )->format('H:i:s')
+                        Carbon::parse($timestamp)->format('H:i:s')
                     );
                 });
             })
             ->orWhere('attempted_at', null)
             ->orderBy('attempted_at', 'asc')
-            ->chunk(1000, $closure);
+            ->chunk(1000, $callback);
     }
 }
