@@ -2,13 +2,15 @@
 
 namespace N1ebieski\IDir\Crons\Dir;
 
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Config;
-use N1ebieski\IDir\Mail\Dir\ModeratorNotification;
+use Illuminate\Contracts\Mail\Mailer;
+use N1ebieski\IDir\Mail\Dir\ModeratorMail;
 use N1ebieski\IDir\Models\Dir;
 use N1ebieski\IDir\Models\User;
-use Carbon\Carbon;
+use Illuminate\Contracts\Config\Repository as Config;
+use Illuminate\Contracts\Cache\Factory as Cache;
+use Illuminate\Support\Carbon;
+use Illuminate\Contracts\Container\Container as App;
+use Illuminate\Database\Eloquent\Collection;
 
 class ModeratorNotificationCron
 {
@@ -27,14 +29,78 @@ class ModeratorNotificationCron
     protected $dir;
 
     /**
+     * Undocumented variable
+     *
+     * @var Collection
+     */
+    protected Collection $dirs;
+
+    /**
+     * Undocumented variable
+     *
+     * @var Carbon
+     */
+    protected $carbon;
+
+    /**
+     * Undocumented variable
+     *
+     * @var Config
+     */
+    protected $config;
+
+    /**
+     * Undocumented variable
+     *
+     * @var Cache
+     */
+    protected $cache;
+
+    /**
+     * Undocumented variable
+     *
+     * @var Mailer
+     */
+    protected $mailer;
+
+    /**
+     * Undocumented variable
+     *
+     * @var App
+     */
+    protected $app;
+
+    /**
+     * Undocumented variable
+     *
+     * @var int
+     */
+    protected int $hours;
+
+    /**
      * Create the event listener.
      *
      * @return void
      */
-    public function __construct(User $user, Dir $dir)
-    {
+    public function __construct(
+        User $user,
+        Dir $dir,
+        Config $config,
+        Carbon $carbon,
+        Cache $cache,
+        Mailer $mailer,
+        App $app
+    ) {
         $this->user = $user;
         $this->dir = $dir;
+
+        $this->config = $config;
+        $this->carbon = $carbon;
+        $this->cache = $cache;
+        $this->mailer = $mailer;
+        $this->app = $app;
+
+        $this->hours = $this->config->get('idir.dir.notification.hours');
     }
 
     /**
@@ -44,7 +110,7 @@ class ModeratorNotificationCron
      */
     protected function isNotificationTurnOn() : bool
     {
-        return Config::get('idir.dir.notification.hours') > 0;
+        return $this->hours > 0;
     }
 
     /**
@@ -54,9 +120,8 @@ class ModeratorNotificationCron
      */
     protected function isTimeToSend() : bool
     {
-        return Carbon::parse($this->getCheckpoint())->addHours(
-            Config::get('idir.dir.notification.hours') ?? 0
-        ) < Carbon::now();
+        return $this->carbon->parse($this->getCheckpoint())
+            ->addHours($this->hours) < $this->carbon->now();
     }
 
     /**
@@ -66,9 +131,9 @@ class ModeratorNotificationCron
      */
     protected function getCheckpoint() : string
     {
-        return Cache::get(
+        return $this->cache->get(
             'dir.notification.hours',
-            Carbon::now()->subHours(Config::get('idir.dir.notification.hours'))
+            $this->carbon->now()->subHours($this->hours)
         );
     }
 
@@ -79,7 +144,19 @@ class ModeratorNotificationCron
      */
     protected function putCheckpoint() : bool
     {
-        return Cache::forever('dir.notification.hours', Carbon::now());
+        return $this->cache->forever('dir.notification.hours', $this->carbon->now());
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @return Collection
+     */
+    protected function makeLatestDirsForModerators() : Collection
+    {
+        return $this->dirs = $this->dir->makeRepo()->getLatestForModeratorsByCreatedAt(
+            $this->getCheckpoint()
+        );
     }
 
     /**
@@ -92,29 +169,32 @@ class ModeratorNotificationCron
         }
 
         if ($this->isTimeToSend()) {
-            $this->addToQueue();
+            $this->makeLatestDirsForModerators();
+    
+            if ($this->dirs->isNotEmpty()) {
+                $this->user->makeRepo()->getModeratorsByNotificationDirsPermission()
+                    ->each(function ($user) {
+                        $this->sendMailToModerator($user);
+                    });
+    
+                $this->putCheckpoint();
+            }
         }
     }
 
     /**
-     * Adds new jobs to the queue.
+     * Undocumented function
+     *
+     * @param User $user
+     * @return void
      */
-    protected function addToQueue() : void
+    protected function sendMailToModerator(User $user) : void
     {
-        $dirs = $this->dir->makeRepo()->getLatestForModeratorsByCreatedAt(
-            $this->getCheckpoint()
+        $this->mailer->send(
+            $this->app->make(ModeratorMail::class, [
+                'user' => $user,
+                'dirs' => $this->dirs
+            ])
         );
-
-        if ($dirs->isNotEmpty()) {
-            $this->user->makeRepo()->getByNotificationDirsPermission()
-                ->each(function ($user) use ($dirs) {
-                    Mail::send(app()->make(ModeratorNotification::class, [
-                        'user' => $user,
-                        'dirs' => $dirs
-                    ]));
-                });
-
-            $this->putCheckpoint();
-        }
     }
 }
