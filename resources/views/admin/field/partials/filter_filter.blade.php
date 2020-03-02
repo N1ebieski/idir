@@ -1,8 +1,11 @@
+@inject('field', 'N1ebieski\IDir\Models\Field\Field')
+
 @component('icore::admin.partials.modal')
 @slot('modal_id', 'filterModal')
 
 @slot('modal_title')
-<i class="fas fa-sort-amount-up"></i> {{ trans('icore::filter.filter_title') }}
+<i class="fas fa-sort-amount-up"></i>
+<span>{{ trans('icore::filter.filter_title') }}</span>
 @endslot
 
 @slot('modal_body')
@@ -15,8 +18,12 @@
     <label for="FormVisible">{{ trans('icore::filter.filter') }} "{{ trans('idir::fields.visible') }}"</label>
     <select class="form-control custom-select" id="FormVisible" name="filter[visible]">
         <option value="">{{ trans('icore::filter.default') }}</option>
-        <option value="1" {{ ($filter['visible'] == '1') ? 'selected' : '' }}>{{ trans('idir::fields.visible_1') }}</option>
-        <option value="0" {{ ($filter['visible'] == '0') ? 'selected' : '' }}>{{ trans('idir::fields.visible_0') }}</option>
+        <option value="{{ $field::VISIBLE }}" {{ ($filter['visible'] === $field::VISIBLE) ? 'selected' : '' }}>
+            {{ trans('idir::fields.visible_'.$field::VISIBLE) }}
+        </option>
+        <option value="{{ $field::INVISIBLE }}" {{ ($filter['visible'] === $field::INVISIBLE) ? 'selected' : '' }}>
+            {{ trans('idir::fields.visible_'.$field::INVISIBLE) }}
+        </option>
     </select>
 </div>
 <div class="form-group">

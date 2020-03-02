@@ -1,3 +1,5 @@
+@inject('dir', 'N1ebieski\IDir\Models\Dir')
+
 @component('icore::web.partials.modal')
 @slot('modal_id', 'filterModal')
 
@@ -15,11 +17,21 @@
     <label for="FormStatus">{{ trans('icore::filter.filter') }} "{{ trans('icore::filter.status') }}"</label>
     <select class="form-control custom-select" id="FormVisible" name="filter[status]">
         <option value="">{{ trans('icore::filter.default') }}</option>
-        <option value="1" {{ ($filter['status'] == '1') ? 'selected' : '' }}>{{ trans('idir::dirs.status.1') }}</option>
-        <option value="0" {{ ($filter['status'] == '0') ? 'selected' : '' }}>{{ trans('idir::dirs.status.0') }}</option>
-        <option value="2" {{ ($filter['status'] == '2') ? 'selected' : '' }}>{{ trans('idir::dirs.status.2') }}</option>
-        <option value="3" {{ ($filter['status'] == '3') ? 'selected' : '' }}>{{ trans('idir::dirs.status.3') }}</option>
-        <option value="4" {{ ($filter['status'] == '4') ? 'selected' : '' }}>{{ trans('idir::dirs.status.4') }}</option>        
+        <option value="{{ $dir::ACTIVE }}" {{ ($filter['status'] == $dir::ACTIVE) ? 'selected' : '' }}>
+            {{ trans('idir::dirs.status.'.$dir::ACTIVE) }}
+        </option>
+        <option value="{{ $dir::INACTIVE }}" {{ ($filter['status'] == $dir::INACTIVE) ? 'selected' : '' }}>
+            {{ trans('idir::dirs.status.'.$dir::INACTIVE) }}
+        </option>
+        <option value="{{ $dir::PAYMENT_INACTIVE }}" {{ ($filter['status'] == $dir::PAYMENT_INACTIVE) ? 'selected' : '' }}>
+            {{ trans('idir::dirs.status.'.$dir::PAYMENT_INACTIVE) }}
+        </option>
+        <option value="{{ $dir::BACKLINK_INACTIVE }}" {{ ($filter['status'] == $dir::BACKLINK_INACTIVE) ? 'selected' : '' }}>
+            {{ trans('idir::dirs.status.'.$dir::BACKLINK_INACTIVE) }}
+        </option>
+        <option value="{{ $dir::STATUS_INACTIVE }}" {{ ($filter['status'] == $dir::STATUS_INACTIVE) ? 'selected' : '' }}>
+            {{ trans('idir::dirs.status.'.$dir::STATUS_INACTIVE) }}
+        </option>      
     </select>
 </div>
 @if ($groups->isNotEmpty())

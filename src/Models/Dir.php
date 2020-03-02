@@ -30,6 +30,36 @@ class Dir extends Model
     // Configuration
 
     /**
+     * [public description]
+     * @var int
+     */
+    public const ACTIVE = 1;
+
+    /**
+     * [public description]
+     * @var int
+     */
+    public const INACTIVE = 0;
+
+    /**
+     * [public description]
+     * @var int
+     */
+    public const PAYMENT_INACTIVE = 2;
+
+    /**
+     * [public description]
+     * @var int
+     */
+    public const BACKLINK_INACTIVE = 3;
+
+    /**
+     * [public description]
+     * @var int
+     */
+    public const STATUS_INACTIVE = 4;
+
+    /**
      * [private description]
      * @var bool
      */
@@ -80,7 +110,7 @@ class Dir extends Model
      * @var array
      */
     protected $attributes = [
-        'status' => 0,
+        'status' => self::INACTIVE,
         'notes' => null,
         'privileged_at' => null,
         'privileged_to' => null
@@ -338,13 +368,6 @@ class Dir extends Model
                 $query->select(DB::raw('COALESCE(SUM(`ratings`.`rating`)/COUNT(*), 0) as `sum_rating`'));
             }
         ]);
-
-        // return $query->selectRaw('dirs.*, COALESCE(SUM(ratings.rating), 0) AS sum_rating')
-        //     ->leftJoin('ratings', function($q) {
-        //          $q->on('ratings.model_id', '=', 'dirs.id');
-        //          $q->where('ratings.model_type', '=', 'N1ebieski\IDir\Models\Dir');
-        //     })
-        //     ->groupBy('dirs.id');
     }
 
     /**
@@ -354,7 +377,7 @@ class Dir extends Model
      */
     public function scopeActive(Builder $query) : Builder
     {
-        return $query->where('dirs.status', 1);
+        return $query->where('dirs.status', static::ACTIVE);
     }
 
     /**
@@ -364,7 +387,7 @@ class Dir extends Model
      */
     public function scopeInactive(Builder $query) : Builder
     {
-        return $query->where('dirs.status', 0);
+        return $query->where('dirs.status', static::INACTIVE);
     }
 
     /**
@@ -617,7 +640,7 @@ class Dir extends Model
      */
     public function isPending() : bool
     {
-        return $this->status === 2;
+        return $this->status === static::PAYMENT_INACTIVE;
     }
 
     /**
@@ -627,7 +650,7 @@ class Dir extends Model
      */
     public function isNotOk() : bool
     {
-        return $this->status === 4;
+        return $this->status === static::STATUS_INACTIVE;
     }
 
     /**
@@ -636,7 +659,7 @@ class Dir extends Model
      */
     public function isActive() : bool
     {
-        return $this->status === 1;
+        return $this->status === static::ACTIVE;
     }
 
     /**
@@ -655,7 +678,10 @@ class Dir extends Model
      */
     public function isUpdateStatus() : bool
     {
-        return in_array($this->status, [0, 1]);
+        return in_array($this->status, [
+            static::INACTIVE,
+            static::ACTIVE
+        ]);
     }
 
     // Loads
@@ -667,7 +693,7 @@ class Dir extends Model
     public function loadCheckoutPayments() : self
     {
         return $this->load(['payments' => function($query) {
-            $query->with('price_morph')->where('status', 0);
+            $query->with('price_morph')->where('status', static::INACTIVE);
         }]);
     }
 

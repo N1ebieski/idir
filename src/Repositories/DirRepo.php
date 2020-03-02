@@ -94,7 +94,7 @@ class DirRepo
      */
     public function deactivateByBacklink() : bool
     {
-        return $this->dir->update(['status' => 3]);
+        return $this->dir->update(['status' => Dir::BACKLINK_INACTIVE]);
     }
 
     /**
@@ -103,7 +103,7 @@ class DirRepo
      */
     public function deactivateByStatus() : bool
     {
-        return $this->dir->update(['status' => 4]);
+        return $this->dir->update(['status' => Dir::STATUS_INACTIVE]);
     }
 
     /**
@@ -112,7 +112,7 @@ class DirRepo
      */
     public function deactivateByPayment() : bool
     {
-        return $this->dir->update(['status' => 2]);
+        return $this->dir->update(['status' => Dir::PAYMENT_INACTIVE]);
     }
 
     /**
@@ -121,7 +121,7 @@ class DirRepo
      */
     public function activate() : bool
     {
-        return $this->dir->update(['status' => 1]);
+        return $this->dir->update(['status' => Dir::ACTIVE]);
     }
 
     /**
@@ -265,7 +265,7 @@ class DirRepo
     {
         return $this->dir->comments()->where([
                 ['comments.parent_id', null],
-                ['comments.status', 1]
+                ['comments.status', \N1ebieski\ICore\Models\Comment\Comment::ACTIVE]
             ])
             ->withAllRels($filter['orderby'])
             ->filterExcept($filter['except'])
@@ -316,7 +316,7 @@ class DirRepo
     public function getLatestForModeratorsByLimit(int $limit) : Collection
     {
         return $this->dir->withAllPublicRels()
-            ->whereIn('status', [0, 1])
+            ->whereIn('status', [Dir::INACTIVE, Dir::ACTIVE])
             ->latest()
             ->limit($limit)
             ->get();
@@ -331,7 +331,7 @@ class DirRepo
     public function getLatestForModeratorsByCreatedAt(string $timestamp) : Collection
     {
         return $this->dir->withAllPublicRels()
-            ->whereIn('status', [0, 1])
+            ->whereIn('status', [Dir::INACTIVE, Dir::ACTIVE])
             ->whereDate('created_at', '>', Carbon::parse($timestamp)->format('Y-m-d'))
             ->orWhere(function ($query) use ($timestamp) {
                 $query->whereDate('created_at', '=', Carbon::parse($timestamp)->format('Y-m-d'))

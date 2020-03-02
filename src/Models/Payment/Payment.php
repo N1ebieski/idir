@@ -20,6 +20,24 @@ class Payment extends Model
     // Configuration
 
     /**
+     * [public description]
+     * @var int
+     */
+    public const FINISHED = 1;
+
+    /**
+     * [public description]
+     * @var int
+     */
+    public const UNFINISHED = 0;
+
+    /**
+     * [public description]
+     * @var int
+     */
+    public const PENDING = 2;
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array
@@ -48,7 +66,7 @@ class Payment extends Model
      *
      * @var string
      */
-    protected $keyType = 'string';    
+    protected $keyType = 'string';
 
     // Relations
 
@@ -116,7 +134,7 @@ class Payment extends Model
      */
     public function scopePending(Builder $query) : Builder
     {
-        return $query->where('status', 2);
+        return $query->where('status', static::PENDING);
     }
 
     // Checkers
@@ -127,7 +145,7 @@ class Payment extends Model
      */
     public function isPending() : bool
     {
-        return $this->status === 2;
+        return $this->status === static::PENDING;
     }
 
     /**
@@ -135,9 +153,9 @@ class Payment extends Model
      *
      * @return boolean
      */
-    public function isUndone() : bool
+    public function isUnfinished() : bool
     {
-        return $this->status === 0;
+        return $this->status === static::UNFINISHED;
     }
 
     // Makers

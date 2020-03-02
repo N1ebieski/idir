@@ -23,6 +23,54 @@ class Group extends Model
     // Configuration
 
     /**
+     * [public description]
+     * @var int
+     */
+    public const VISIBLE = 1;
+
+    /**
+     * [public description]
+     * @var int
+     */
+    public const INVISIBLE = 0;
+
+    /**
+     * [public description]
+     * @var int
+     */
+    public const APPLY_ACTIVE = 1;
+
+    /**
+     * [public description]
+     * @var int
+     */
+    public const APPLY_INACTIVE = 0;
+
+    /**
+     * [public description]
+     * @var int
+     */
+    public const WITH_URL = 1;
+
+    /**
+     * [public description]
+     * @var int
+     */
+    public const WITHOUT_URL = 0;
+
+    /**
+     * [public description]
+     * @var int
+     */
+    public const WITH_BACKLINK = 1;
+
+    /**
+     * [public description]
+     * @var int
+     */
+    public const WITHOUT_BACKLINK = 0;
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array
@@ -127,7 +175,7 @@ class Group extends Model
     {
         return $this->hasMany('N1ebieski\IDir\Models\Dir')
             ->whereDate('created_at', '=', Carbon::now()->format('Y-m-d'))
-            ->whereIn('status', [0, 1]);
+            ->whereIn('status', [Dir::INACTIVE, Dir::ACTIVE]);
     }
 
     /**
@@ -177,7 +225,7 @@ class Group extends Model
      */
     public function scopePublic(Builder $query) : Builder
     {
-        return $query->where('visible', 1);
+        return $query->where('visible', static::VISIBLE);
     }
 
     /**
@@ -187,7 +235,7 @@ class Group extends Model
      */
     public function scopeObligatoryBacklink(Builder $query) : Builder
     {
-        return $query->where('backlink', 2);
+        return $query->where('backlink', static::WITH_BACKLINK);
     }
 
     // Checkers
@@ -263,7 +311,7 @@ class Group extends Model
      */
     public function isPublic() : bool
     {
-        return $this->getAttribute('visible') === 1;
+        return $this->getAttribute('visible') === static::VISIBLE;
     }
 
     // Loads

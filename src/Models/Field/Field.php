@@ -22,6 +22,24 @@ class Field extends Model
     // Configuration
 
     /**
+     * [public description]
+     * @var int
+     */
+    public const VISIBLE = 1;
+
+    /**
+     * [public description]
+     * @var int
+     */
+    public const INVISIBLE = 0;
+
+    /**
+     * [public description]
+     * @var array
+     */
+    public const DEFAULT = ['regions', 'map'];
+
+    /**
      * The columns of the full text index
      *
      * @var array
@@ -75,7 +93,7 @@ class Field extends Model
      */
     public function scopePublic(Builder $query) : Builder
     {
-        return $query->where('visible', 1);
+        return $query->where('visible', static::VISIBLE);
     }
 
     // Overrides
@@ -151,7 +169,7 @@ class Field extends Model
      */
     public function isNotDefault() : bool
     {
-        return !in_array($this->type, ['regions', 'map']);
+        return !in_array($this->type, static::DEFAULT);
     }
 
     // Makers
