@@ -47,6 +47,7 @@ class CompletedCron
     public function __construct(Dir $dir, CompletedJob $completedJob, Config $config, Carbon $carbon)
     {
         $this->dir = $dir;
+        
         $this->completedJob = $completedJob;
 
         $this->config = $config;

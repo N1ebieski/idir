@@ -18,11 +18,12 @@ class LinksSeeder extends Seeder
      */
     public function run()
     {
-        $categories = Category::where('status', 1)->get(['id'])->pluck('id')->toArray();
+        $categories = Category::active()->get(['id'])->pluck('id')->toArray();
 
-        factory(Link::class, 10)->states('backlink')->create()->each(function($link) use ($categories) {
-            shuffle($categories);
-            $link->categories()->attach(array_slice($categories, 0, rand(1, 5)));
-        });
+        factory(Link::class, 10)->states('backlink')->create()
+            ->each(function ($link) use ($categories) {
+                shuffle($categories);
+                $link->categories()->attach(array_slice($categories, 0, rand(1, 5)));
+            });
     }
 }

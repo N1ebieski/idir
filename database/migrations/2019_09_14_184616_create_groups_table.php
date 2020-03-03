@@ -27,10 +27,10 @@ class CreateGroupsTable extends Migration
             $table->integer('max_models')->unsigned()->nullable();
             $table->integer('max_models_daily')->unsigned()->nullable();
             $table->integer('position')->unsigned();
-            $table->integer('visible')->unsigned();
-            $table->unsignedInteger('apply_status');
-            $table->unsignedInteger('url')->nullable();
-            $table->unsignedInteger('backlink')->nullable();
+            $table->tinyInteger('visible')->unsigned();
+            $table->tinyInteger('apply_status')->unsigned();
+            $table->tinyInteger('url')->unsigned()->nullable();
+            $table->tinyInteger('backlink')->unsigned()->nullable();
 
             $table->timestamps();
         });

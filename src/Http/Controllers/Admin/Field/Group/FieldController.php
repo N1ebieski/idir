@@ -2,16 +2,19 @@
 
 namespace N1ebieski\IDir\Http\Controllers\Admin\Field\Group;
 
+use N1ebieski\IDir\Models\Group;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Response;
 use N1ebieski\IDir\Models\Field\Group\Field;
-use N1ebieski\IDir\Http\Controllers\Admin\Field\FieldController as BaseFieldController;
+use Illuminate\Http\Response as HttpResponse;
+use N1ebieski\IDir\Filters\Admin\Field\Group\IndexFilter;
 use N1ebieski\IDir\Http\Requests\Admin\Field\Group\IndexRequest;
 use N1ebieski\IDir\Http\Requests\Admin\Field\Group\StoreRequest;
 use N1ebieski\IDir\Http\Requests\Admin\Field\Group\UpdateRequest;
-use N1ebieski\IDir\Filters\Admin\Field\Group\IndexFilter;
-use Illuminate\View\View;
-use Illuminate\Http\JsonResponse;
-use N1ebieski\IDir\Models\Group;
 use N1ebieski\IDir\Http\Controllers\Admin\Field\Group\Polymorphic;
+use N1ebieski\IDir\Http\Controllers\Admin\Field\FieldController as BaseFieldController;
 
 /**
  * [FieldController description]
@@ -24,18 +27,18 @@ class FieldController extends BaseFieldController implements Polymorphic
      * @param  Group        $group   [description]
      * @param  IndexRequest $request [description]
      * @param  IndexFilter  $filter  [description]
-     * @return View                  [description]
+     * @return HttpResponse                  [description]
      */
-    public function index(Field $field, Group $group, IndexRequest $request, IndexFilter $filter) : View
+    public function index(Field $field, Group $group, IndexRequest $request, IndexFilter $filter) : HttpResponse
     {
-        return view("idir::admin.field.group.index", [
+        return Response::view("idir::admin.field.group.index", [
             'field' => $field,
             'fields' => $field->makeRepo()->paginateByFilter($filter->all() + [
                 'except' => $request->input('except')
             ]),
             'groups' => $group->all(),
             'filter' => $filter->all(),
-            'paginate' => config('database.paginate')
+            'paginate' => Config::get('database.paginate')
         ]);
     }
 
@@ -47,9 +50,9 @@ class FieldController extends BaseFieldController implements Polymorphic
      */
     public function create(Field $field, Group $group) : JsonResponse
     {
-        return response()->json([
+        return Response::json([
             'success' => '',
-            'view' => view('idir::admin.field.group.create', [
+            'view' => View::make('idir::admin.field.group.create', [
                 'field' => $field,
                 'groups' => $group->all()
             ])->render()
@@ -68,7 +71,7 @@ class FieldController extends BaseFieldController implements Polymorphic
 
         $request->session()->flash('success', trans('idir::fields.success.store'));
 
-        return response()->json(['success' => '' ]);
+        return Response::json(['success' => '' ]);
     }
 
     /**
@@ -79,9 +82,9 @@ class FieldController extends BaseFieldController implements Polymorphic
      */
     public function edit(Field $field, Group $group) : JsonResponse
     {
-        return response()->json([
+        return Response::json([
             'success' => '',
-            'view' => view('idir::admin.field.group.edit', [
+            'view' => View::make('idir::admin.field.group.edit', [
                 'field' => $field,
                 'groups' => $group->makeRepo()->getWithField($field->id)
             ])->render()
@@ -98,9 +101,9 @@ class FieldController extends BaseFieldController implements Polymorphic
     {
         $field->makeService()->update($request->validated());
 
-        return response()->json([
+        return Response::json([
             'success' => '',
-            'view' => view('idir::admin.field.partials.field', [
+            'view' => View::make('idir::admin.field.partials.field', [
                 'field' => $field
             ])->render()
         ]);

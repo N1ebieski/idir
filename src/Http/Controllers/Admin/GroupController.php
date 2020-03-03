@@ -2,19 +2,23 @@
 
 namespace N1ebieski\IDir\Http\Controllers\Admin;
 
-use N1ebieski\IDir\Http\Requests\Admin\Group\DestroyRequest;
+use Illuminate\View\View;
 use N1ebieski\IDir\Models\Group;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Lang;
 use N1ebieski\IDir\Models\Privilege;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Http\Response as HttpResponse;
+use N1ebieski\IDir\Filters\Admin\Group\IndexFilter;
+use N1ebieski\IDir\Http\Requests\Admin\Group\EditRequest;
 use N1ebieski\IDir\Http\Requests\Admin\Group\IndexRequest;
-use N1ebieski\IDir\Http\Requests\Admin\Group\UpdatePositionRequest;
-use N1ebieski\IDir\Http\Requests\Admin\Group\UpdateRequest;
 use N1ebieski\IDir\Http\Requests\Admin\Group\StoreRequest;
 use N1ebieski\IDir\Http\Requests\Admin\Group\CreateRequest;
-use N1ebieski\IDir\Http\Requests\Admin\Group\EditRequest;
-use N1ebieski\IDir\Filters\Admin\Group\IndexFilter;
-use Illuminate\View\View;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\RedirectResponse;
+use N1ebieski\IDir\Http\Requests\Admin\Group\UpdateRequest;
+use N1ebieski\IDir\Http\Requests\Admin\Group\DestroyRequest;
+use N1ebieski\IDir\Http\Requests\Admin\Group\UpdatePositionRequest;
 
 /**
  * Base Group Controller
@@ -27,16 +31,16 @@ class GroupController
      * @param  Group      $group      [description]
      * @param  IndexRequest  $request       [description]
      * @param  IndexFilter   $filter        [description]
-     * @return View                         [description]
+     * @return HttpResponse                         [description]
      */
-    public function index(Group $group, IndexRequest $request, IndexFilter $filter) : View
+    public function index(Group $group, IndexRequest $request, IndexFilter $filter) : HttpResponse
     {
-        return view('idir::admin.group.index', [
+        return Response::view('idir::admin.group.index', [
             'groups' => $group->makeRepo()->paginateByFilter($filter->all() + [
                 'except' => $request->input('except')
             ]),
             'filter' => $filter->all(),
-            'paginate' => config('database.paginate')
+            'paginate' => Config::get('database.paginate')
         ]);
     }
 
@@ -46,11 +50,11 @@ class GroupController
      * @param  Group      $group      [description]
      * @param Privilege   $privilege  [description]
      * @param CreateRequest $request  [description]
-     * @return View
+     * @return HttpResponse
      */
-    public function create(Group $group, Privilege $privilege, CreateRequest $request) : View
+    public function create(Group $group, Privilege $privilege, CreateRequest $request) : HttpResponse
     {
-        return view('idir::admin.group.create', [
+        return Response::view('idir::admin.group.create', [
             'privileges' => $privilege->orderBy('name', 'asc')->get(),
             'groups' => $group->orderBy('id', 'asc')->get()
         ]);
@@ -67,19 +71,8 @@ class GroupController
     {
         $group->makeService()->create($request->all());
 
-        return redirect()->route("admin.group.index")
-            ->with('success', trans('idir::groups.success.store') );
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
+        return Response::redirectToRoute("admin.group.index")
+            ->with('success', Lang::get('idir::groups.success.store'));
     }
 
     /**
@@ -88,11 +81,11 @@ class GroupController
      * @param  Group       $group
      * @param  Privilege   $privilege  [description]
      * @param  EditRequest $request    [description]
-     * @return View
+     * @return HttpResponse
      */
-    public function edit(Group $group, Privilege $privilege, EditRequest $request) : View
+    public function edit(Group $group, Privilege $privilege, EditRequest $request) : HttpResponse
     {
-        return view('idir::admin.group.edit', [
+        return Response::view('idir::admin.group.edit', [
             'group' => $group,
             'groups' => $group->orderBy('id', 'asc')->get(),
             'privileges' => $privilege->makeRepo()->getWithGroup($group->id)
@@ -110,8 +103,8 @@ class GroupController
     {
         $group->makeService()->update($request->all());
 
-        return redirect()->route('admin.group.edit', [$group->id])
-            ->with('success', trans('idir::groups.success.update') );
+        return Response::redirectToRoute('admin.group.edit', [$group->id])
+            ->with('success', Lang::get('idir::groups.success.update'));
     }
 
     /**
@@ -121,9 +114,9 @@ class GroupController
      */
     public function editPosition(Group $group) : JsonResponse
     {
-        return response()->json([
+        return Response::json([
             'success' => '',
-            'view' => view('idir::admin.group.edit_position', [
+            'view' => View::get('idir::admin.group.edit_position', [
                 'group' => $group,
                 'siblings_count' => $group->count()
             ])->render()
@@ -140,7 +133,7 @@ class GroupController
     {
         $group->makeService()->updatePosition($request->only('position'));
 
-        return response()->json([
+        return Response::json([
             'success' => '',
             'siblings' => $group->makeRepo()->getSiblingsAsArray()
         ]);
@@ -156,8 +149,8 @@ class GroupController
     public function destroy(Group $group, DestroyRequest $request) : RedirectResponse
     {
         $group->makeService()->delete();
-
-        return redirect()->route("admin.group.index")
-            ->with('success', trans('idir::groups.success.destroy'));
+        
+        return Response::redirectToRoute("admin.group.index")
+            ->with('success', Lang::get('idir::groups.success.destroy'));
     }
 }

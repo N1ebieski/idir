@@ -2,17 +2,20 @@
 
 namespace N1ebieski\IDir\Http\Controllers\Admin\Category\Dir;
 
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response as HttpResponse;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\View;
 use N1ebieski\IDir\Models\Category\Dir\Category;
+use N1ebieski\ICore\Filters\Admin\Category\IndexFilter;
+use N1ebieski\ICore\Http\Requests\Admin\Category\SearchRequest;
+use N1ebieski\ICore\Http\Responses\Admin\Category\SearchResponse;
 use N1ebieski\IDir\Http\Requests\Admin\Category\Dir\IndexRequest;
 use N1ebieski\IDir\Http\Requests\Admin\Category\Dir\StoreRequest;
-use N1ebieski\IDir\Http\Requests\Admin\Category\Dir\StoreGlobalRequest;
-use N1ebieski\ICore\Http\Requests\Admin\Category\SearchRequest;
-use N1ebieski\ICore\Filters\Admin\Category\IndexFilter;
-use Illuminate\View\View;
-use Illuminate\Http\JsonResponse;
 use N1ebieski\IDir\Http\Controllers\Admin\Category\Dir\Polymorphic;
+use N1ebieski\IDir\Http\Requests\Admin\Category\Dir\StoreGlobalRequest;
 use N1ebieski\ICore\Http\Controllers\Admin\Category\CategoryController as CategoryBaseController;
-use N1ebieski\ICore\Http\Responses\Admin\Category\SearchResponse;
 
 /**
  * [CategoryController description]
@@ -25,20 +28,20 @@ class CategoryController extends CategoryBaseController implements Polymorphic
      * @param  Category      $category      [description]
      * @param  IndexRequest  $request       [description]
      * @param  IndexFilter   $filter        [description]
-     * @return View                         [description]
+     * @return HttpResponse                         [description]
      */
-    public function index(Category $category, IndexRequest $request, IndexFilter $filter) : View
+    public function index(Category $category, IndexRequest $request, IndexFilter $filter) : HttpResponse
     {
         $categoryService = $category->makeService();
 
-        return view('icore::admin.category.index', [
+        return Response::view('icore::admin.category.index', [
             'model' => $category,
             'categories' => $categoryService->paginateByFilter($filter->all() + [
                 'except' => $request->input('except')
             ]),
             'parents' => $categoryService->getAsFlatTree(),
             'filter' => $filter->all(),
-            'paginate' => config('database.paginate')
+            'paginate' => Config::get('database.paginate')
         ]);
     }
 
@@ -50,9 +53,9 @@ class CategoryController extends CategoryBaseController implements Polymorphic
      */
     public function create(Category $category) : JsonResponse
     {
-        return response()->json([
+        return Response::json([
             'success' => '',
-            'view' => view('icore::admin.category.create', [
+            'view' => View::make('icore::admin.category.create', [
                 'model' => $category,
                 'categories' => $category->makeService()->getAsFlatTree()
             ])->render()
@@ -72,7 +75,7 @@ class CategoryController extends CategoryBaseController implements Polymorphic
 
         $request->session()->flash('success', trans('icore::categories.success.store'));
 
-        return response()->json(['success' => '' ]);
+        return Response::json(['success' => '' ]);
     }
 
     /**
@@ -88,7 +91,7 @@ class CategoryController extends CategoryBaseController implements Polymorphic
 
         $request->session()->flash('success', trans('icore::categories.success.store_global'));
 
-        return response()->json(['success' => '' ]);
+        return Response::json(['success' => '' ]);
     }
 
     /**

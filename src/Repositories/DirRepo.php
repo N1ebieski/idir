@@ -368,4 +368,28 @@ class DirRepo
             })
             ->chunk(1000, $callback);
     }
+
+    /**
+     * Undocumented function
+     *
+     * @return Collection
+     */
+    public function getPayments() : Collection
+    {
+        return $this->dir->payments()
+            ->orderBy('created_at', 'desc')
+            ->get();
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @return Collection
+     */
+    public function getReportsWithUser() : Collection
+    {
+        return $this->dir->reports()
+            ->with('user')
+            ->get();
+    }
 }

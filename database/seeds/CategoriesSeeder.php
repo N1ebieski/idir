@@ -17,29 +17,35 @@ class CategoriesSeeder extends Seeder
      */
     public function run()
     {
-        for ($i=0; $i<10; $i++) {
-            $cat[$i] = factory(Category::class)->make();
-            $cat[$i]->save();
+        $pattern = [
+            0 => 10,
+            1 => [2, 10],
+            2 => [0, 10],
+            3 => [0, 5]
+        ];
 
-            for ($j=0; $j<rand(2, 10); $j++) {
-                $catcat[$j] = factory(Category::class)->make();
-                $catcat[$j]->parent_id = $cat[$i]->id;
-                $catcat[$j]->save();
+        $depth = 0;
 
-                for ($k=0; $k<rand(0, 10); $k++) {
-                    $catcatcat[$k] = factory(Category::class)->make();
-                    $catcatcat[$k]->parent_id = $catcat[$j]->id;
-                    $catcatcat[$k]->save();
+        $closure = function ($parent_id) use ($pattern, &$closure, &$depth) {
+            if (is_array($pattern[$depth])) {
+                $loop = rand($pattern[$depth][0], $pattern[$depth][1]);
+            } else {
+                $loop = $pattern[$depth];
+            }
 
-                    if (rand(0, 1) == 1) {
-                        for ($l=0; $l<rand(0, 5); $l++) {
-                            $catcatcatcat[$l] = factory(Category::class)->make();
-                            $catcatcatcat[$l]->parent_id = $catcatcat[$k]->id;
-                            $catcatcatcat[$l]->save();
-                        }
-                    }
+            for ($i = 0; $i < $loop; $i++) {
+                $category = factory(Category::class)->create([
+                    'parent_id' => $parent_id
+                ]);
+
+                $depth = $category->real_depth + 1;
+
+                if (isset($pattern[$depth])) {
+                    $closure($category->id);
                 }
             }
-        }
+        };
+
+        $closure(null);
     }
 }

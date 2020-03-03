@@ -2,10 +2,10 @@ jQuery(document).on('click', '.checkContent', function(e) {
     e.preventDefault();
 
     let sentence = $(this).parent().find('[id^="content"]').text().split(".").filter(n => n);
-    let j = 0;
+    let i, j = 0;
     let content = '';
 
-    for (i=0; i<50; i++) {
+    for (i = 0; i < 50; i++) {
         if (j === 0) {
             j = Math.floor(Math.random() * sentence.length);
         }

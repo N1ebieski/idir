@@ -6,6 +6,7 @@ use N1ebieski\ICore\Models\BanValue;
 use Illuminate\Contracts\Cache\Repository as Cache;
 use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Support\Str;
+use Illuminate\Support\Carbon;
 use N1ebieski\ICore\Cache\BanValueCache as BaseBanValueCache;
 
 /**
@@ -14,15 +15,22 @@ use N1ebieski\ICore\Cache\BanValueCache as BaseBanValueCache;
 class BanValueCache extends BaseBanValueCache
 {
     /**
-     * [__construct description]
-     * @param BanValue $banValue [description]
-     * @param Cache    $cache    [description]
-     * @param Config   $config   [description]
-     * @param Str      $str      [description]
+     * Undocumented function
+     *
+     * @param BanValue $banValue
+     * @param Cache $cache
+     * @param Config $config
+     * @param Str $str
+     * @param Carbon $carbon
      */
-    public function __construct(BanValue $banValue, Cache $cache, Config $config, Str $str)
-    {
-        parent::__construct($banValue, $cache, $config, $str);
+    public function __construct(
+        BanValue $banValue,
+        Cache $cache,
+        Config $config,
+        Str $str,
+        Carbon $carbon
+    ) {
+        parent::__construct($banValue, $cache, $config, $str, $carbon);
     }
 
     /**
@@ -33,8 +41,8 @@ class BanValueCache extends BaseBanValueCache
     {
         return $this->cache->tags('bans.url')->remember(
             "banValue.getAllUrlsAsString",
-            now()->addMinutes($this->minutes),
-            function() {
+            $this->carbon->now()->addMinutes($this->minutes),
+            function () {
                 $urls = $this->banValue->whereType('url')->get();
 
                 return $this->str->escaped($urls->implode('value', '|'));

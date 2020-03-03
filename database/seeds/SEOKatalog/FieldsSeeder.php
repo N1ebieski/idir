@@ -15,7 +15,7 @@ class FieldsSeeder extends SEOKatalogSeeder
      */
     protected static function makeFieldLastId() : int
     {
-        return Field::orderBy('id', 'desc')->first()->id ?? 0;        
+        return Field::orderBy('id', 'desc')->first()->id ?? 0;
     }
 
     /**
@@ -76,7 +76,7 @@ class FieldsSeeder extends SEOKatalogSeeder
         
         if ($item->size !== 0) {
             $options['width'] = $item->size;
-        }        
+        }
 
         return $options;
     }
@@ -91,7 +91,7 @@ class FieldsSeeder extends SEOKatalogSeeder
         $fields = DB::connection('import')->table('forms')
             ->orderBy('position', 'asc')->orderBy('title', 'asc')->get();
 
-        $fields->each(function($item) {
+        $fields->each(function ($item) {
             if ($item->mod !== 0) {
                 return;
             }
@@ -109,8 +109,8 @@ class FieldsSeeder extends SEOKatalogSeeder
                 $item->groups === 'all' ?
                 $field->morphs()->make()->get('id')->pluck('id')->toArray() :
                 collect(array_filter(explode(',', $item->groups)))
-                    ->map(function($item) {
-                        return $this->group_last_id + $item; 
+                    ->map(function ($item) {
+                        return $this->group_last_id + $item;
                     })
             );
         });

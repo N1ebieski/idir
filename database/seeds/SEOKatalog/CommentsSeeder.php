@@ -17,7 +17,7 @@ class CommentsSeeder extends SEOKatalogSeeder
      */
     protected static function makeContentHtml(string $content) : string
     {
-        return strip_tags(htmlspecialchars_decode($content));     
+        return strip_tags(htmlspecialchars_decode($content));
     }
 
     /**
@@ -30,18 +30,18 @@ class CommentsSeeder extends SEOKatalogSeeder
         DB::connection('import')
             ->table('comments')
             ->orderBy('id')
-            ->chunk(1000, function($items) {
-                $items->each(function($item) {
+            ->chunk(1000, function ($items) {
+                $items->each(function ($item) {
                     Comment::create([
                         'model_id' => $item->id_site,
                         'model_type' => 'N1ebieski\IDir\Models\Dir',
-                        'user_id' => is_int($item->user) && $item->user > 0 ? 
+                        'user_id' => is_int($item->user) && $item->user > 0 ?
                             $this->user_last_id + $item->user : null,
                         'content_html' => $this->makeContentHtml($item->content),
                         'content' => $this->makeContentHtml($item->content),
                         'status' => $item->active,
                         'created_at' => Carbon::createFromTimestamp($item->date),
-                        'updated_at' => Carbon::createFromTimestamp($item->date)                        
+                        'updated_at' => Carbon::createFromTimestamp($item->date)
                     ]);
                 });
             });

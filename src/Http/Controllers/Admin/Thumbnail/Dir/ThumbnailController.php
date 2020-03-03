@@ -3,8 +3,11 @@
 namespace N1ebieski\IDir\Http\Controllers\Admin\Thumbnail\Dir;
 
 use N1ebieski\IDir\Models\Dir;
-use GuzzleHttp\Client as GuzzleClient;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Cache;
+use GuzzleHttp\Client as GuzzleClient;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Response;
 use N1ebieski\IDir\Http\Controllers\Admin\Thumbnail\Dir\Polymorphic;
 
 class ThumbnailController implements Polymorphic
@@ -20,23 +23,24 @@ class ThumbnailController implements Polymorphic
     {
         try {
             $guzzle->request(
-                'PATCH', 
-                config('idir.dir.thumbnail.api.reload_url') . $dir->url, 
+                'PATCH',
+                Config::get('idir.dir.thumbnail.api.reload_url') . $dir->url,
                 [
-                    'headers' => ['Authorization' => config('idir.dir.thumbnail.key')]
+                    'headers' => ['Authorization' => Config::get('idir.dir.thumbnail.key')]
                 ]
             );
         } catch (\GuzzleHttp\Exception\GuzzleException $e) {
             throw new \N1ebieski\IDir\Exceptions\Thumbnail\Exception(
-                $e->getMessage(), $e->getCode()
+                $e->getMessage(),
+                $e->getCode()
             );
         }
 
-        cache()->forget("dir.thumbnailUrl.{$dir->slug}");
+        Cache::forget("dir.thumbnailUrl.{$dir->slug}");
 
-        return response()->json([
+        return Response::json([
             'success' => '',
             'thumbnail_url' => $dir->thumbnail_url
-        ]);        
-    }    
+        ]);
+    }
 }

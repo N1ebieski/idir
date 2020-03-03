@@ -100,7 +100,7 @@ class ModeratorNotificationCron
         $this->mailer = $mailer;
         $this->app = $app;
 
-        $this->hours = $this->config->get('idir.dir.notification.hours');
+        $this->hours = (int)$this->config->get('idir.dir.notification.hours');
     }
 
     /**
@@ -160,7 +160,9 @@ class ModeratorNotificationCron
     }
 
     /**
-     * [__invoke description]
+     * Undocumented function
+     *
+     * @return void
      */
     public function __invoke() : void
     {

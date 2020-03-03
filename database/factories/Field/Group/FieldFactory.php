@@ -3,7 +3,7 @@
 use Faker\Generator as Faker;
 use N1ebieski\IDir\Models\Field\Group\Field;
 
-$factory->define(Field::class, function(Faker $faker) {
+$factory->define(Field::class, function (Faker $faker) {
     return [
         'title' => ucfirst($faker->unique()->word),
         'desc' => $faker->text(300),
@@ -11,19 +11,19 @@ $factory->define(Field::class, function(Faker $faker) {
     ];
 });
 
-$factory->state(Field::class, 'public', function(Faker $faker) {
+$factory->state(Field::class, 'public', function (Faker $faker) {
     return [
         'visible' => 1
     ];
 });
 
-$factory->state(Field::class, 'private', function(Faker $faker) {
+$factory->state(Field::class, 'private', function (Faker $faker) {
     return [
         'visible' => 0
     ];
 });
 
-$factory->state(Field::class, 'input', function(Faker $faker) {
+$factory->state(Field::class, 'input', function (Faker $faker) {
     return [
         'type' => 'input',
         'options' => [
@@ -34,7 +34,7 @@ $factory->state(Field::class, 'input', function(Faker $faker) {
     ];
 });
 
-$factory->state(Field::class, 'textarea', function(Faker $faker) {
+$factory->state(Field::class, 'textarea', function (Faker $faker) {
     return [
         'type' => 'textarea',
         'options' => [
@@ -45,7 +45,7 @@ $factory->state(Field::class, 'textarea', function(Faker $faker) {
     ];
 });
 
-$factory->state(Field::class, 'select', function(Faker $faker) {
+$factory->state(Field::class, 'select', function (Faker $faker) {
     return [
         'type' => 'select',
         'options' => [
@@ -55,7 +55,7 @@ $factory->state(Field::class, 'select', function(Faker $faker) {
     ];
 });
 
-$factory->state(Field::class, 'multiselect', function(Faker $faker) {
+$factory->state(Field::class, 'multiselect', function (Faker $faker) {
     return [
         'type' => 'multiselect',
         'options' => [
@@ -65,7 +65,7 @@ $factory->state(Field::class, 'multiselect', function(Faker $faker) {
     ];
 });
 
-$factory->state(Field::class, 'checkbox', function(Faker $faker) {
+$factory->state(Field::class, 'checkbox', function (Faker $faker) {
     return [
         'type' => 'checkbox',
         'options' => [
@@ -75,7 +75,7 @@ $factory->state(Field::class, 'checkbox', function(Faker $faker) {
     ];
 });
 
-$factory->state(Field::class, 'image', function(Faker $faker) {
+$factory->state(Field::class, 'image', function (Faker $faker) {
     return [
         'type' => 'image',
         'options' => [

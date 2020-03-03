@@ -28,7 +28,11 @@ class DirsSeeder extends SEOKatalogSeeder
         $desc = preg_replace('#\[b\](.*?)\[/b\]#si', '<strong>\\1</strong>', $desc);
         $desc = preg_replace('#\[i\](.*?)\[/i\]#si', '<i>\\1</i>', $desc);
         $desc = preg_replace('#\[u\](.*?)\[/u\]#si', '<u>\\1</u>', $desc);
-        $desc = preg_replace('#(\[quote\]|\[quote\]<br />)(.*?)(\[/quote\]<br />|\[/quote\])#si', '<blockquote>\\1</blockquote>', $desc);
+        $desc = preg_replace(
+            '#(\[quote\]|\[quote\]<br />)(.*?)(\[/quote\]<br />|\[/quote\])#si',
+            '<blockquote>\\1</blockquote>',
+            $desc
+        );
         $desc = preg_replace('#\[img\](.*?)\[/img\]#si', '<img src="\\1" />', $desc);
         $desc = preg_replace('#\[size=(.*?)\](.*?)\[/size\]#si', '<span style="font-size:\\1%;">\\2</span>', $desc);
         $desc = preg_replace('#\[list=(.*?)\](.*?)\[/list\]#si', '<ol start="\\1">\\2</ol>', $desc);
@@ -37,7 +41,7 @@ class DirsSeeder extends SEOKatalogSeeder
 
         $desc = str_replace(["<br />", "<br>", "<br/>"], "\r\n", $desc);
      
-        return strip_tags(htmlspecialchars_decode($desc));     
+        return strip_tags(htmlspecialchars_decode($desc));
     }
 
     /**
@@ -94,11 +98,11 @@ class DirsSeeder extends SEOKatalogSeeder
                     ->groupBy('url');
             })
             ->orderBy('id', 'desc')
-            ->chunk(1000, function($items) use ($groups, $fields, $defaultRegions, $defaultFields) {
+            ->chunk(1000, function ($items) use ($groups, $fields, $defaultRegions, $defaultFields) {
                 $relations = DB::connection('import')
                     ->table('relations')
                     ->distinct()
-                    ->whereExists(function($query) {
+                    ->whereExists(function ($query) {
                         $query->select('id')
                             ->from('subcategories')
                             ->whereRaw('id_sub = id');
@@ -107,7 +111,7 @@ class DirsSeeder extends SEOKatalogSeeder
                     ->select('id_sub', 'id_site')
                     ->get();
 
-                $items->each(function($item) use ($groups, $relations, $fields, $defaultRegions, $defaultFields) {
+                $items->each(function ($item) use ($groups, $relations, $fields, $defaultRegions, $defaultFields) {
 
                     $dir = Dir::create([
                         'id' => $item->id,
@@ -120,11 +124,11 @@ class DirsSeeder extends SEOKatalogSeeder
                         'status' => $item->active,
                         'privileged_at' => $item->date_mod !== 0 ? Carbon::createFromTimestamp($item->date_mod) : null,
                         'privileged_to' => $this->makePrivilegedTo(
-                            $item->date_mod, 
+                            $item->date_mod,
                             ($groups->where('id', $item->id)->first()->days ?? 0)
                         ),
                         'created_at' => Carbon::createFromTimestamp($item->date),
-                        'updated_at' => Carbon::createFromTimestamp($item->date)                
+                        'updated_at' => Carbon::createFromTimestamp($item->date)
                     ]);
         
                     $dir->tag(
@@ -161,9 +165,14 @@ class DirsSeeder extends SEOKatalogSeeder
 
                         foreach ($fields as $field) {
                             if (!empty($value = $item->{"form_{$field->id}"})) {
-                                switch($field->mod) {
+                                switch ($field->mod) {
                                     case 1:
-                                        $value = $defaultRegions->whereIn('name', explode(',', $value))->pluck('id')->toArray();
+                                        $value = $defaultRegions->whereIn(
+                                            'name',
+                                            explode(',', $value)
+                                        )
+                                        ->pluck('id')->toArray();
+
                                         $id = $defaultFields['regions']->id;
                                         $dir->regions()->sync($value);
                                         break;
@@ -186,7 +195,7 @@ class DirsSeeder extends SEOKatalogSeeder
 
                                 $ids[$id] = [
                                     'value' => json_encode($value)
-                                ];                                
+                                ];
                             }
                         }
 

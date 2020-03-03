@@ -35,10 +35,10 @@ class DefaultGroupAndPrivilegesSeeder extends Seeder
             'name' => 'Default',
             'max_cats' => 3,
             'position' => 0,
-            'visible' => 0,
-            'backlink' => 0,
-            'apply_status' => 0,
-            'url' => 1
+            'visible' => Group::INVISIBLE,
+            'backlink' => Group::WITHOUT_BACKLINK,
+            'apply_status' => Group::APPLY_INACTIVE,
+            'url' => Group::WITH_URL
         ]);
     }
 }

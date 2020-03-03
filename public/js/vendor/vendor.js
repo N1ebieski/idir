@@ -46094,15 +46094,13 @@ module.exports = function(module) {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-try {
-  __webpack_require__(/*! ../../../../../../vendor/n1ebieski/icore/resources/js/vendor/vendor.js */ "../laravel-icore/packages/n1ebieski/icore/resources/js/vendor/vendor.js");
+__webpack_require__(/*! ../../../../../../vendor/n1ebieski/icore/resources/js/vendor/vendor.js */ "../laravel-icore/packages/n1ebieski/icore/resources/js/vendor/vendor.js");
 
-  __webpack_require__(/*! bootstrap-star-rating/js/star-rating.js */ "./node_modules/bootstrap-star-rating/js/star-rating.js");
+__webpack_require__(/*! bootstrap-star-rating/js/star-rating.js */ "./node_modules/bootstrap-star-rating/js/star-rating.js");
 
-  __webpack_require__(/*! bootstrap-star-rating/themes/krajee-svg/theme.js */ "./node_modules/bootstrap-star-rating/themes/krajee-svg/theme.js");
+__webpack_require__(/*! bootstrap-star-rating/themes/krajee-svg/theme.js */ "./node_modules/bootstrap-star-rating/themes/krajee-svg/theme.js");
 
-  __webpack_require__(/*! bootstrap-star-rating/js/locales/pl.js */ "./node_modules/bootstrap-star-rating/js/locales/pl.js");
-} catch (e) {}
+__webpack_require__(/*! bootstrap-star-rating/js/locales/pl.js */ "./node_modules/bootstrap-star-rating/js/locales/pl.js");
 
 /***/ }),
 

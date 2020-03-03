@@ -3,7 +3,7 @@
 use Faker\Generator as Faker;
 use N1ebieski\IDir\Models\Price;
 
-$factory->define(Price::class, function(Faker $faker) {
+$factory->define(Price::class, function (Faker $faker) {
     return [
         'type' => $faker->randomElement(['transfer', 'code_transfer', 'code_sms']),
         'price' => number_format(rand(12, 57) / 10, 2),
@@ -11,13 +11,13 @@ $factory->define(Price::class, function(Faker $faker) {
     ];
 });
 
-$factory->state(Price::class, 'transfer', function(Faker $faker) {
+$factory->state(Price::class, 'transfer', function (Faker $faker) {
     return [
         'type' => 'transfer'
     ];
 });
 
-$factory->state(Price::class, 'code_sms', function(Faker $faker) {
+$factory->state(Price::class, 'code_sms', function (Faker $faker) {
     return [
         'type' => 'code_sms',
         'number' => 99999,
@@ -25,14 +25,14 @@ $factory->state(Price::class, 'code_sms', function(Faker $faker) {
     ];
 });
 
-$factory->state(Price::class, 'code_transfer', function(Faker $faker) {
+$factory->state(Price::class, 'code_transfer', function (Faker $faker) {
     return [
         'type' => 'code_transfer',
         'code' => 'dasdasdasd'
     ];
 });
 
-$factory->state(Price::class, 'seasonal', function(Faker $faker) {
+$factory->state(Price::class, 'seasonal', function (Faker $faker) {
     return [
         'days' => $faker->randomElement([rand(7, 365)])
     ];

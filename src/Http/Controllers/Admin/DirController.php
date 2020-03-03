@@ -2,48 +2,54 @@
 
 namespace N1ebieski\IDir\Http\Controllers\Admin;
 
+use Illuminate\View\View;
+use N1ebieski\IDir\Models\Dir;
 use N1ebieski\ICore\Models\Link;
-use N1ebieski\IDir\Filters\Admin\Dir\IndexFilter;
-use N1ebieski\IDir\Http\Requests\Admin\Dir\Store2Request;
-use N1ebieski\IDir\Http\Requests\Admin\Dir\Store3Request;
-use N1ebieski\IDir\Http\Requests\Admin\Dir\UpdateRequest;
-use N1ebieski\IDir\Http\Requests\Admin\Dir\Create2Request;
-use N1ebieski\IDir\Http\Requests\Admin\Dir\Create3Request;
-use N1ebieski\IDir\Http\Requests\Admin\Dir\EditFull2Request;
-use N1ebieski\IDir\Http\Requests\Admin\Dir\EditFull3Request;
-use N1ebieski\IDir\Http\Requests\Admin\Dir\Store3CodeRequest;
-use N1ebieski\IDir\Http\Requests\Admin\Dir\UpdateFull2Request;
-use N1ebieski\IDir\Http\Requests\Admin\Dir\UpdateFull3Request;
-use N1ebieski\IDir\Http\Requests\Admin\Dir\UpdateFull3CodeRequest;
-use N1ebieski\IDir\Http\Responses\Admin\Dir\Store3Response;
-use N1ebieski\IDir\Http\Responses\Admin\Dir\UpdateFull3Response;
+use N1ebieski\IDir\Models\Group;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Lang;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Response;
 use N1ebieski\IDir\Loads\Admin\Dir\EditLoad;
+use Illuminate\Http\Response as HttpResponse;
 use N1ebieski\IDir\Loads\Admin\Dir\Store2Load;
 use N1ebieski\IDir\Loads\Admin\Dir\Store3Load;
+use N1ebieski\IDir\Models\Payment\Dir\Payment;
 use N1ebieski\IDir\Loads\Admin\Dir\Create2Load;
 use N1ebieski\IDir\Loads\Admin\Dir\Create3Load;
+use N1ebieski\IDir\Loads\Admin\Dir\DestroyLoad;
+use N1ebieski\IDir\Models\Category\Dir\Category;
+use N1ebieski\IDir\Filters\Admin\Dir\IndexFilter;
 use N1ebieski\IDir\Loads\Admin\Dir\EditFull1Load;
 use N1ebieski\IDir\Loads\Admin\Dir\EditFull2Load;
 use N1ebieski\IDir\Loads\Admin\Dir\EditFull3Load;
 use N1ebieski\IDir\Loads\Admin\Dir\UpdateFull2Load;
 use N1ebieski\IDir\Loads\Admin\Dir\UpdateFull3Load;
-use N1ebieski\IDir\Models\Dir;
-use N1ebieski\IDir\Models\Group;
-use N1ebieski\IDir\Models\Category\Dir\Category;
-use N1ebieski\IDir\Models\Payment\Dir\Payment;
 use N1ebieski\IDir\Http\Requests\Admin\Dir\IndexRequest;
+use N1ebieski\IDir\Http\Requests\Admin\Dir\Store2Request;
+use N1ebieski\IDir\Http\Requests\Admin\Dir\Store3Request;
+use N1ebieski\IDir\Http\Requests\Admin\Dir\UpdateRequest;
+use N1ebieski\IDir\Http\Requests\Admin\Dir\Create2Request;
+use N1ebieski\IDir\Http\Requests\Admin\Dir\Create3Request;
 use N1ebieski\IDir\Http\Requests\Admin\Dir\DestroyRequest;
-use N1ebieski\IDir\Http\Requests\Admin\Dir\DestroyGlobalRequest;
+use N1ebieski\IDir\Http\Responses\Admin\Dir\Store3Response;
+use N1ebieski\IDir\Http\Requests\Admin\Dir\EditFull2Request;
+use N1ebieski\IDir\Http\Requests\Admin\Dir\EditFull3Request;
+use N1ebieski\IDir\Http\Requests\Admin\Dir\Store3CodeRequest;
+use N1ebieski\IDir\Http\Requests\Admin\Dir\UpdateFull2Request;
+use N1ebieski\IDir\Http\Requests\Admin\Dir\UpdateFull3Request;
 use N1ebieski\IDir\Http\Requests\Admin\Dir\UpdateStatusRequest;
-use Illuminate\View\View;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\RedirectResponse;
-use N1ebieski\IDir\Events\Admin\Dir\DestroyEvent as DirDestroyEvent;
-use N1ebieski\IDir\Events\Admin\Payment\Dir\StoreEvent as PaymentStoreEvent;
 use N1ebieski\IDir\Events\Admin\Dir\StoreEvent as DirStoreEvent;
+use N1ebieski\IDir\Http\Requests\Admin\Dir\DestroyGlobalRequest;
+use N1ebieski\IDir\Http\Responses\Admin\Dir\UpdateFull3Response;
+use N1ebieski\IDir\Http\Requests\Admin\Dir\UpdateFull3CodeRequest;
+use N1ebieski\IDir\Events\Admin\Dir\DestroyEvent as DirDestroyEvent;
 use N1ebieski\IDir\Events\Admin\Dir\UpdateFullEvent as DirUpdateFullEvent;
+use N1ebieski\IDir\Events\Admin\Payment\Dir\StoreEvent as PaymentStoreEvent;
 use N1ebieski\IDir\Events\Admin\Dir\UpdateStatusEvent as DirUpdateStatusEvent;
-use N1ebieski\IDir\Loads\Admin\Dir\DestroyLoad;
 
 /**
  * [DirController description]
@@ -57,7 +63,7 @@ class DirController
      * @param  Category     $category [description]
      * @param  IndexRequest $request  [description]
      * @param  IndexFilter  $filter   [description]
-     * @return View                   [description]
+     * @return HttpResponse           [description]
      */
     public function index(
         Dir $dir,
@@ -65,8 +71,8 @@ class DirController
         Category $category,
         IndexRequest $request,
         IndexFilter $filter
-    ) : View {
-        return view('idir::admin.dir.index', [
+    ) : HttpResponse {
+        return Response::view('idir::admin.dir.index', [
             'dirs' => $dir->makeRepo()->paginateForAdminByFilter($filter->all() + [
                 'except' => $request->input('except')
             ]),
@@ -79,11 +85,11 @@ class DirController
     /**
      * [create1 description]
      * @param Group     $group     [description]
-     * @return View
+     * @return HttpResponse
      */
-    public function create1(Group $group) : View
+    public function create1(Group $group) : HttpResponse
     {
-        return view('idir::admin.dir.create.1', [
+        return Response::view('idir::admin.dir.create.1', [
             'groups' => $group->makeRepo()->getWithRels()
         ]);
     }
@@ -93,11 +99,11 @@ class DirController
      * @param  Group          $group   [description]
      * @param  Create2Load    $load    [description]
      * @param  Create2Request $request [description]
-     * @return View                    [description]
+     * @return HttpResponse                    [description]
      */
-    public function create2(Group $group, Create2Load $load, Create2Request $request) : View
+    public function create2(Group $group, Create2Load $load, Create2Request $request) : HttpResponse
     {
-        return view('idir::admin.dir.create.2', compact('group'));
+        return Response::view('idir::admin.dir.create.2', compact('group'));
     }
 
     /**
@@ -112,7 +118,7 @@ class DirController
     {
         $dir->makeService()->createOrUpdateSession($request->validated());
 
-        return redirect()->route('admin.dir.create_3', [$group->id]);
+        return Response::redirectToRoute('admin.dir.create_3', [$group->id]);
     }
 
     /**
@@ -123,7 +129,7 @@ class DirController
      * @param  Link           $link     [description]
      * @param  Create3Load    $load     [description]
      * @param  Create3Request $request  [description]
-     * @return View                     [description]
+     * @return HttpResponse             [description]
      */
     public function create3(
         Group $group,
@@ -132,7 +138,7 @@ class DirController
         Link $link,
         Create3Load $load,
         Create3Request $request
-    ) : View {
+    ) : HttpResponse {
         $dir->makeService()->createOrUpdateSession($request->validated());
 
         $categories = $category->makeRepo()->getByIds(
@@ -145,7 +151,7 @@ class DirController
                 $categories->pluck('id')->toArray()
             )) : null;
 
-        return view('idir::admin.dir.create.3', compact('group', 'categories', 'backlinks'));
+        return Response::view('idir::admin.dir.create.3', compact('group', 'categories', 'backlinks'));
     }
 
     /**
@@ -169,26 +175,26 @@ class DirController
         $dir->setGroup($group)->makeService()->create($request->validated());
 
         if (($payment = $dir->getPayment()) instanceof Payment) {
-            event(new PaymentStoreEvent($payment));
+            Event::dispatch(App::make(PaymentStoreEvent::class, ['payment' => $payment]));
         }
 
-        event(new DirStoreEvent($dir));
+        Event::dispatch(App::make(DirStoreEvent::class, ['dir' => $dir]));
 
         return $response->setDir($dir)->makeResponse();
     }
 
     /**
      * [edit1 description]
-     * @param  Dir       $dir   [description]
-     * @param  EditFull1Load $load  [description]
-     * @param  Group     $group [description]
-     * @return View             [description]
+     * @param  Dir       $dir           [description]
+     * @param  EditFull1Load $load      [description]
+     * @param  Group     $group         [description]
+     * @return HttpResponse             [description]
      */
-    public function editFull1(Dir $dir, EditFull1Load $load, Group $group) : View
+    public function editFull1(Dir $dir, EditFull1Load $load, Group $group) : HttpResponse
     {
         $dir->makeService()->createOrUpdateSession($dir->attributes_as_array);
 
-        return view('idir::admin.dir.edit_full.1', [
+        return Response::view('idir::admin.dir.edit_full.1', [
             'dir' => $dir,
             'groups' => $group->makeRepo()->getWithRels()
         ]);
@@ -200,20 +206,20 @@ class DirController
      * @param  Group            $group   [description]
      * @param  EditFull2Load    $load    [description]
      * @param  EditFull2Request $request [description]
-     * @return View                      [description]
+     * @return HttpResponse              [description]
      */
-    public function editFull2(Dir $dir, Group $group, EditFull2Load $load, EditFull2Request $request) : View
+    public function editFull2(Dir $dir, Group $group, EditFull2Load $load, EditFull2Request $request) : HttpResponse
     {
-        return view('idir::admin.dir.edit_full.2', compact('dir', 'group'));
+        return Response::view('idir::admin.dir.edit_full.2', compact('dir', 'group'));
     }
 
     /**
      * [updateFull2 description]
-     * @param  Dir              $dir     [description]
-     * @param  Group            $group   [description]
+     * @param  Dir              $dir         [description]
+     * @param  Group            $group       [description]
      * @param  UpdateFull2Load      $load    [description]
      * @param  UpdateFull2Request   $request [description]
-     * @return RedirectResponse          [description]
+     * @return RedirectResponse              [description]
      */
     public function updateFull2(
         Dir $dir,
@@ -223,7 +229,7 @@ class DirController
     ) : RedirectResponse {
         $dir->makeService()->createOrUpdateSession($request->validated());
 
-        return redirect()->route('admin.dir.edit_full_3', [$dir->id, $group->id]);
+        return Response::redirectToRoute('admin.dir.edit_full_3', [$dir->id, $group->id]);
     }
 
     /**
@@ -234,7 +240,7 @@ class DirController
      * @param  Link               $link     [description]
      * @param  EditFull3Load      $load     [description]
      * @param  EditFull3Request   $request  [description]
-     * @return View                         [description]
+     * @return HttpResponse                 [description]
      */
     public function editFull3(
         Dir $dir,
@@ -243,7 +249,7 @@ class DirController
         Link $link,
         EditFull3Load $load,
         EditFull3Request $request
-    ) : View {
+    ) : HttpResponse {
         $dir->makeService()->createOrUpdateSession($request->validated());
 
         $categories = $category->makeRepo()->getByIds(
@@ -256,7 +262,7 @@ class DirController
                 $categories->pluck('id')->toArray()
             )) : null;
 
-        return view(
+        return Response::view(
             'idir::admin.dir.edit_full.3',
             compact('dir', 'group', 'categories', 'backlinks')
         );
@@ -283,10 +289,10 @@ class DirController
         $dir->setGroup($group)->makeService()->updateFull($request->validated());
 
         if (($payment = $dir->getPayment()) instanceof Payment) {
-            event(new PaymentStoreEvent($payment));
+            Event::dispatch(App::make(PaymentStoreEvent::class, ['payment' => $payment]));
         }
 
-        event(new DirUpdateFullEvent($dir));
+        Event::dispatch(App::make(DirUpdateFullEvent::class, ['dir' => $dir]));
 
         return $response->setDir($dir)->makeResponse();
     }
@@ -299,9 +305,9 @@ class DirController
      */
     public function edit(Dir $dir, EditLoad $load) : JsonResponse
     {
-        return response()->json([
+        return Response::json([
             'success' => '',
-            'view' => view('idir::admin.dir.edit', [
+            'view' => View::make('idir::admin.dir.edit', [
                 'dir' => $dir
             ])->render(),
         ]);
@@ -317,9 +323,9 @@ class DirController
     {
         $dir->setGroup($dir->group)->makeService()->update($request->validated());
 
-        return response()->json([
+        return Response::json([
             'success' => '',
-            'view' => view('idir::admin.dir.partials.dir', [
+            'view' => View::make('idir::admin.dir.partials.dir', [
                 'dir' => $dir->loadAllRels()
             ])->render()
         ]);
@@ -336,12 +342,12 @@ class DirController
 
         $dir->loadAllRels();
 
-        event(new DirUpdateStatusEvent($dir));
+        Event::dispatch(App::make(DirUpdateStatusEvent::class, ['dir' => $dir]));
 
-        return response()->json([
+        return Response::json([
             'success' => '',
             'status' => $dir->status,
-            'view' => view('idir::admin.dir.partials.dir', [
+            'view' => View::make('idir::admin.dir.partials.dir', [
                 'dir' => $dir
             ])
             ->render()
@@ -360,9 +366,14 @@ class DirController
     {
         $dir->makeService()->delete();
 
-        event(new DirDestroyEvent($dir, $request->input('reason')));
+        Event::dispatch(
+            App::make(DirDestroyEvent::class, [
+                'dir' => $dir,
+                'reason' => $request->input('reason')
+            ])
+        );
 
-        return response()->json(['success' => '']);
+        return Response::json(['success' => '']);
     }
 
     /**
@@ -376,9 +387,9 @@ class DirController
     {
         $deleted = $dir->makeService()->deleteGlobal($request->input('select'));
 
-        return redirect()->back()->with(
+        return Response::redirectTo(URL::previous())->with(
             'success',
-            trans('idir::dirs.success.destroy_global', [
+            Lang::get('idir::dirs.success.destroy_global', [
                 'affected' => $deleted
             ])
         );

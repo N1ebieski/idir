@@ -1324,7 +1324,7 @@ jQuery(document).on('click', 'a.destroyDir', function(e) {
         complete: function() {
             $row.find('div.loader-absolute').remove();
         },
-        success: function(response) {
+        success: function() {
             $row.fadeOut('slow');
         }
     });
@@ -1514,8 +1514,8 @@ jQuery(document).ready(function() {
 });
 
 jQuery(document).on('change', 'form input[id^=delete_img]', function() {
-    $input = $(this).closest('.form-group').find('[type="file"]');
-    $hidden = $(this).closest('.form-group').find('[type="hidden"]');
+    let $input = $(this).closest('.form-group').find('[type="file"]');
+    let $hidden = $(this).closest('.form-group').find('[type="hidden"]');
 
     if ($(this).prop('checked') === true) {
         $input.prop('disabled', false);
@@ -1562,10 +1562,10 @@ jQuery(document).on('click', '.checkContent', function(e) {
     e.preventDefault();
 
     let sentence = $(this).parent().find('[id^="content"]').text().split(".").filter(n => n);
-    let j = 0;
+    let i, j = 0;
     let content = '';
 
-    for (i=0; i<50; i++) {
+    for (i = 0; i < 50; i++) {
         if (j === 0) {
             j = Math.floor(Math.random() * sentence.length);
         }

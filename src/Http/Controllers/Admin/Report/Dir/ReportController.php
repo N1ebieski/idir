@@ -4,6 +4,8 @@ namespace N1ebieski\IDir\Http\Controllers\Admin\Report\Dir;
 
 use N1ebieski\IDir\Models\Dir;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Response;
 use N1ebieski\IDir\Http\Controllers\Admin\Report\Dir\Polymorphic;
 
 /**
@@ -19,12 +21,10 @@ class ReportController implements Polymorphic
      */
     public function show(Dir $dir) : JsonResponse
     {
-        $reports = $dir->reports()->with('user:id,name')->get();
-
-        return response()->json([
+        return Response::json([
             'success' => '',
-            'view' => view('icore::admin.report.show', [
-                'reports' => $reports,
+            'view' => View::make('icore::admin.report.show', [
+                'reports' => $dir->makeRepo()->getReportsWithUser(),
                 'model' => $dir
             ])->render()
         ]);
@@ -40,9 +40,9 @@ class ReportController implements Polymorphic
     {
         $dir->reports()->delete();
 
-        return response()->json([
+        return Response::json([
             'success' => '',
-            'view' => view('idir::admin.dir.partials.dir', [
+            'view' => View::make('idir::admin.dir.partials.dir', [
                 'dir' => $dir->loadAllRels()
             ])->render()
         ]);

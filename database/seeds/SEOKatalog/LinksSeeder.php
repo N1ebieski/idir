@@ -29,7 +29,7 @@ class LinksSeeder extends SEOKatalogSeeder
         $links = DB::connection('import')->table('links')
             ->orderBy('position', 'asc')->orderBy('title', 'asc')->get();
 
-        $links->each(function($item) {
+        $links->each(function ($item) {
             foreach (['in', 'out'] as $type) {
                 if ($item->{$type} !== 0) {
                     $link = Link::create([
@@ -39,11 +39,11 @@ class LinksSeeder extends SEOKatalogSeeder
                     ]);
 
                     $link->categories()->attach(
-                        $item->cat === 'all' ? 
+                        $item->cat === 'all' ?
                         null :
                         collect(array_filter(explode(',', $item->cat)))
                             ->filter(fn($item) => $item > 0)
-                            ->map(function($item) {
+                            ->map(function ($item) {
                                 return $this->sub_last_id + $item;
                             })
                             ->toArray()

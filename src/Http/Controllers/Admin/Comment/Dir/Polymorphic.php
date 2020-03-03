@@ -3,13 +3,13 @@
 namespace N1ebieski\IDir\Http\Controllers\Admin\Comment\Dir;
 
 use N1ebieski\IDir\Models\Dir;
-use N1ebieski\IDir\Models\Comment\Dir\Comment;
-use N1ebieski\IDir\Http\Requests\Admin\Comment\Dir\CreateRequest;
-use N1ebieski\IDir\Http\Requests\Admin\Comment\Dir\StoreRequest;
-use N1ebieski\ICore\Http\Requests\Admin\Comment\IndexRequest;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response as HttpResponse;
+use N1ebieski\IDir\Models\Comment\Dir\Comment;
 use N1ebieski\ICore\Filters\Admin\Comment\IndexFilter;
-use Illuminate\View\View;
+use N1ebieski\ICore\Http\Requests\Admin\Comment\IndexRequest;
+use N1ebieski\IDir\Http\Requests\Admin\Comment\Dir\StoreRequest;
+use N1ebieski\IDir\Http\Requests\Admin\Comment\Dir\CreateRequest;
 
 /**
  * [interface description]
@@ -23,9 +23,9 @@ interface Polymorphic
      * @param  Comment       $comment       [description]
      * @param  IndexRequest  $request       [description]
      * @param  IndexFilter   $filter        [description]
-     * @return View                         [description]
+     * @return HttpResponse                         [description]
      */
-    public function index(Comment $comment, IndexRequest $request, IndexFilter $filter) : View;
+    public function index(Comment $comment, IndexRequest $request, IndexFilter $filter) : HttpResponse;
 
     /**
      * Show the form for creating a new Comment for Dir.

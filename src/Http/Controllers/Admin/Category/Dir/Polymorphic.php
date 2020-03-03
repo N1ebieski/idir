@@ -2,15 +2,15 @@
 
 namespace N1ebieski\IDir\Http\Controllers\Admin\Category\Dir;
 
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response as HttpResponse;
 use N1ebieski\IDir\Models\Category\Dir\Category;
+use N1ebieski\ICore\Filters\Admin\Category\IndexFilter;
+use N1ebieski\ICore\Http\Requests\Admin\Category\SearchRequest;
+use N1ebieski\ICore\Http\Responses\Admin\Category\SearchResponse;
 use N1ebieski\IDir\Http\Requests\Admin\Category\Dir\IndexRequest;
 use N1ebieski\IDir\Http\Requests\Admin\Category\Dir\StoreRequest;
 use N1ebieski\IDir\Http\Requests\Admin\Category\Dir\StoreGlobalRequest;
-use N1ebieski\ICore\Http\Requests\Admin\Category\SearchRequest;
-use N1ebieski\ICore\Filters\Admin\Category\IndexFilter;
-use Illuminate\View\View;
-use Illuminate\Http\JsonResponse;
-use N1ebieski\ICore\Http\Responses\Admin\Category\SearchResponse;
 
 /**
  * [interface description]
@@ -23,9 +23,9 @@ interface Polymorphic
      * @param  Category      $category      [description]
      * @param  IndexRequest  $request       [description]
      * @param  IndexFilter   $filter        [description]
-     * @return View                         [description]
+     * @return HttpResponse                         [description]
      */
-    public function index(Category $category, IndexRequest $request, IndexFilter $filter) : View;
+    public function index(Category $category, IndexRequest $request, IndexFilter $filter) : HttpResponse;
 
     /**
      * Show the form for creating a new Category.

@@ -2,6 +2,8 @@
 
 namespace N1ebieski\IDir\Listeners\Dir;
 
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Config;
@@ -33,6 +35,20 @@ class SendModeratorNotification
     protected $dir;
 
     /**
+     * Undocumented variable
+     *
+     * @var Collection
+     */
+    protected Collection $dirs;
+
+    /**
+     * Undocumented variable
+     *
+     * @var int
+     */
+    protected int $counter;
+
+    /**
      * Create the event listener.
      *
      * @return void
@@ -41,6 +57,8 @@ class SendModeratorNotification
     {
         $this->user = $user;
         $this->dir = $dir;
+
+        $this->counter = (int)Config::get('idir.dir.notification.dirs');
     }
 
     /**
@@ -59,7 +77,7 @@ class SendModeratorNotification
      */
     protected function isNotificationTurnOn() : bool
     {
-        return Config::get('idir.dir.notification.dirs') > 0;
+        return $this->counter > 0;
     }
 
     /**
@@ -69,7 +87,7 @@ class SendModeratorNotification
      */
     protected function isTimeToSend() : bool
     {
-        return Cache::get('dir.notification.dirs') >= Config::get('idir.dir.notification.dirs');
+        return Cache::get('dir.notification.dirs') >= $this->counter;
     }
 
     /**
@@ -111,21 +129,43 @@ class SendModeratorNotification
         $this->incrementCounter();
 
         if ($this->isTimeToSend()) {
-            $dirs = $this->dir->makeRepo()->getLatestForModeratorsByLimit(
-                Config::get('idir.dir.notification.dirs')
-            );
+            $this->makeLatestDirsForModerators();
 
-            if ($dirs->isNotEmpty()) {
-                $this->user->makeRepo()->getByNotificationDirsPermission()
-                ->each(function ($user) use ($dirs) {
-                    Mail::send(app()->make(ModeratorMail::class, [
-                        'user' => $user,
-                        'dirs' => $dirs
-                    ]));
-                });
+            if ($this->dirs->isNotEmpty()) {
+                $this->user->makeRepo()->getModeratorsByNotificationDirsPermission()
+                    ->each(function ($user) {
+                        $this->sendMailToModerator($user);
+                    });
 
                 $this->forgetCounter();
             }
         }
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @return Collection
+     */
+    protected function makeLatestDirsForModerators() : Collection
+    {
+        return $this->dirs = $this->dir->makeRepo()
+            ->getLatestForModeratorsByLimit(
+                $this->counter
+            );
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param User $user
+     * @return void
+     */
+    protected function sendMailToModerator(User $user) : void
+    {
+        Mail::send(App::make(ModeratorMail::class, [
+            'user' => $user,
+            'dirs' => $this->dirs
+        ]));
     }
 }

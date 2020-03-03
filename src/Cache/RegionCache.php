@@ -6,9 +6,7 @@ use N1ebieski\IDir\Models\Region\Region;
 use Illuminate\Contracts\Cache\Repository as Cache;
 use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Pagination\LengthAwarePaginator;
-use N1ebieski\ICore\Models\Tag\Tag;
-use Illuminate\Support\Collection as Collect;
+use Illuminate\Support\Carbon;
 
 /**
  * [RegionCache description]
@@ -28,22 +26,33 @@ class RegionCache
     protected $cache;
 
     /**
+     * Undocumented variable
+     *
+     * @var Carbon
+     */
+    protected $carbon;
+
+    /**
      * Configuration
      * @var int
      */
     protected $minutes;
 
     /**
-     * [__construct description]
-     * @param Region   $region   [description]
-     * @param Cache  $cache  [description]
-     * @param Config $config [description]
+     * Undocumented function
+     *
+     * @param Region $region
+     * @param Cache $cache
+     * @param Config $config
+     * @param Carbon $carbon
      */
-    public function __construct(Region $region, Cache $cache, Config $config)
+    public function __construct(Region $region, Cache $cache, Config $config, Carbon $carbon)
     {
         $this->region = $region;
+
         $this->cache = $cache;
-        $this->config = $config;      
+        $this->config = $config;
+        $this->carbon = $carbon;
 
         $this->minutes = $config->get('cache.minutes');
     }
@@ -57,8 +66,8 @@ class RegionCache
     {
         return $this->cache->remember(
             "region.all",
-            now()->addMinutes($this->minutes),
-            function() {
+            $this->carbon->now()->addMinutes($this->minutes),
+            function () {
                 return $this->region->all();
             }
         );
@@ -73,10 +82,10 @@ class RegionCache
     {
         return $this->cache->remember(
             "region.firstBySlug.{$slug}",
-            now()->addMinutes($this->minutes),
-            function() use ($slug) {
+            $this->carbon->now()->addMinutes($this->minutes),
+            function () use ($slug) {
                 return $this->region->makeRepo()->firstBySlug($slug);
             }
         );
-    }    
+    }
 }

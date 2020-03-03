@@ -2,11 +2,13 @@
 
 namespace N1ebieski\IDir\Http\Controllers\Admin\BanModel\Dir;
 
-use N1ebieski\IDir\Http\Requests\Admin\BanModel\Dir\StoreRequest;
 use N1ebieski\IDir\Models\Dir;
-use N1ebieski\IDir\Models\BanModel\Dir\BanModel;
-use N1ebieski\IDir\Models\BanValue;
 use Illuminate\Http\JsonResponse;
+use N1ebieski\IDir\Models\BanValue;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Response;
+use N1ebieski\IDir\Models\BanModel\Dir\BanModel;
+use N1ebieski\IDir\Http\Requests\Admin\BanModel\Dir\StoreRequest;
 use N1ebieski\IDir\Http\Controllers\Admin\BanModel\Dir\Polymorphic;
 
 /**
@@ -22,9 +24,9 @@ class BanModelController implements Polymorphic
      */
     public function create(Dir $dir) : JsonResponse
     {
-        return response()->json([
+        return Response::json([
             'success' => '',
-            'view' => view('idir::admin.banmodel.dir.create', [
+            'view' => View::make('idir::admin.banmodel.dir.create', [
                 'dir' => $dir
             ])->render()
         ]);
@@ -59,7 +61,7 @@ class BanModelController implements Polymorphic
             ]);
         }
 
-        return response()->json([
+        return Response::json([
             'success' => trans('icore::bans.model.success.store'),
         ]);
     }

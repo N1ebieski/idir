@@ -20,9 +20,9 @@ class GroupsSeeder extends Seeder
     {
         $privileges = Privilege::all();
 
-        $groups = factory(Group::class, 5)
+        factory(Group::class, 5)
             ->create()
-            ->each(function($group) use ($privileges) {
+            ->each(function ($group) use ($privileges) {
                 $group->privileges()->attach(
                     $privileges->random(rand(0, $privileges->count()))
                         ->pluck('id')->toArray()

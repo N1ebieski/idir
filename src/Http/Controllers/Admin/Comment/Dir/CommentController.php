@@ -2,9 +2,14 @@
 
 namespace N1ebieski\IDir\Http\Controllers\Admin\Comment\Dir;
 
-use Illuminate\View\View;
+use Illuminate\Support\Facades\View;
 use N1ebieski\IDir\Models\Dir;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response as HttpResponse;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Response;
 use N1ebieski\IDir\Models\Comment\Dir\Comment;
 use N1ebieski\ICore\Filters\Admin\Comment\IndexFilter;
 use N1ebieski\ICore\Http\Requests\Admin\Comment\IndexRequest;
@@ -25,19 +30,17 @@ class CommentController extends BaseCommentController implements Polymorphic
      * @param  Comment       $comment       [description]
      * @param  IndexRequest  $request       [description]
      * @param  IndexFilter   $filter        [description]
-     * @return View                         [description]
+     * @return HttpResponse                 [description]
      */
-    public function index(Comment $comment, IndexRequest $request, IndexFilter $filter) : View
+    public function index(Comment $comment, IndexRequest $request, IndexFilter $filter) : HttpResponse
     {
-        $comments = $comment->makeRepo()->paginateByFilter($filter->all() + [
-            'except' => $request->input('except')
-        ]);
-
-        return view('icore::admin.comment.index', [
+        return Response::view('icore::admin.comment.index', [
             'model' => $comment,
-            'comments' => $comments,
+            'comments' => $comment->makeRepo()->paginateByFilter($filter->all() + [
+                'except' => $request->input('except')
+            ]),
             'filter' => $filter->all(),
-            'paginate' => config('database.paginate')
+            'paginate' => Config::get('database.paginate')
         ]);
     }
 
@@ -50,9 +53,9 @@ class CommentController extends BaseCommentController implements Polymorphic
      */
     public function create(Dir $dir, CreateRequest $request) : JsonResponse
     {
-        return response()->json([
+        return Response::json([
             'success' => '',
-            'view' => view('icore::admin.comment.create', [
+            'view' => View::make('icore::admin.comment.create', [
                 'model' => $dir,
                 'parent_id' => $request->get('parent_id')
             ])->render()
@@ -71,11 +74,11 @@ class CommentController extends BaseCommentController implements Polymorphic
         $comment = $comment->setMorph($dir)->makeService()
             ->create($request->only(['content', 'parent_id']));
 
-        event(new CommentStoreEvent($comment));
+        Event::dispatch(App::make(CommentStoreEvent::class, ['comment' => $comment]));
 
-        return response()->json([
+        return Response::json([
             'success' => '',
-            'view' => view('icore::admin.comment.partials.comment', [
+            'view' => View::make('icore::admin.comment.partials.comment', [
                 'comment' => $comment
             ])->render()
         ]);

@@ -44,8 +44,7 @@ class CreateFieldsTable extends Migration
                 ->on('fields')
                 ->onDelete('cascade');
 
-            $table->primary(['field_id', 'model_type', 'model_id'],
-                    'fields_primary');
+            $table->primary(['field_id', 'model_type', 'model_id'], 'fields_primary');
         });
 
         Schema::create('fields_values', function (Blueprint $table) {
@@ -61,8 +60,7 @@ class CreateFieldsTable extends Migration
                 ->on('fields')
                 ->onDelete('cascade');
 
-            $table->primary(['field_id', 'model_type', 'model_id'],
-                    'fields_primary');
+            $table->primary(['field_id', 'model_type', 'model_id'], 'fields_primary');
         });
     }
 

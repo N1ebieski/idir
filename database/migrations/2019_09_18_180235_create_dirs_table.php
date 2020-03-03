@@ -19,14 +19,14 @@ class CreateDirsTable extends Migration
         Schema::create('dirs', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('slug')->unique();
-            $table->unsignedBigInteger('group_id')->index();
-            $table->unsignedBigInteger('user_id')->nullable()->index();
+            $table->bigInteger('group_id')->unsigned()->index();
+            $table->bigInteger('user_id')->unsigned()->nullable()->index();
             $table->string('title');
             $table->longText('content_html');
             $table->longText('content');
             $table->string('notes')->nullable();
             $table->string('url')->unique()->nullable();
-            $table->unsignedInteger('status');
+            $table->tinyInteger('status')->unsigned();
             $table->timestamp('privileged_at')->nullable();
             $table->timestamp('privileged_to')->nullable();
             $table->timestamps();

@@ -20,7 +20,7 @@ jQuery(document).on('click', 'a.destroyDir', function(e) {
         complete: function() {
             $row.find('div.loader-absolute').remove();
         },
-        success: function(response) {
+        success: function() {
             $row.fadeOut('slow');
         }
     });

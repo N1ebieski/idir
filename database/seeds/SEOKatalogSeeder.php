@@ -36,14 +36,14 @@ class SEOKatalogSeeder extends Seeder
      *
      * @var int
      */
-    public int $user_last_id;    
+    public int $user_last_id;
 
     /**
      * Undocumented function
      */
     public function __construct()
     {
-        $this->group_last_id = $this->makeGroupLastId(); 
+        $this->group_last_id = $this->makeGroupLastId();
         $this->field_last_id = $this->makeFieldLastId();
         $this->sub_last_id = $this->makeSubLastId();
         $this->user_last_id = $this->makeUserLastId();
@@ -60,8 +60,11 @@ class SEOKatalogSeeder extends Seeder
      */
     protected static function makeUserLastId() : int
     {
-        return (User::orderBy('id', 'desc')->first()->id - 
-            DB::connection('import')->table('users')->orderBy('id', 'desc')->first()->id);        
+        return (
+            User::orderBy('id', 'desc')->first()->id
+            -
+            DB::connection('import')->table('users')->orderBy('id', 'desc')->first()->id
+        );
     }
 
     /**
@@ -81,8 +84,11 @@ class SEOKatalogSeeder extends Seeder
      */
     protected static function makeFieldLastId() : int
     {
-        return ((Field::orderBy('id', 'desc')->first()->id ?? 0) - 
-            DB::connection('import')->table('forms')->where('mod', 0)->orderBy('id', 'desc')->first()->id);
+        return (
+            (Field::orderBy('id', 'desc')->first()->id ?? 0)
+            -
+            DB::connection('import')->table('forms')->where('mod', 0)->orderBy('id', 'desc')->first()->id
+        );
     }
 
     /**
@@ -92,8 +98,11 @@ class SEOKatalogSeeder extends Seeder
      */
     protected static function makeGroupLastId() : int
     {
-        return (Group::orderBy('id', 'desc')->first()->id - 
-            DB::connection('import')->table('groups')->orderBy('id', 'desc')->first()->id);
+        return (
+            Group::orderBy('id', 'desc')->first()->id
+            -
+            DB::connection('import')->table('groups')->orderBy('id', 'desc')->first()->id
+        );
     }
 
     /**
