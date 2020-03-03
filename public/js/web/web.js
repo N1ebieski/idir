@@ -179,11 +179,9 @@ eval(function (p, a, c, k, _e, r) {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-try {
-  __webpack_require__(/*! ../../../../../../vendor/n1ebieski/icore/resources/js/web/web.js */ "../laravel-icore/packages/n1ebieski/icore/resources/js/web/web.js");
+__webpack_require__(/*! ../../../../../../vendor/n1ebieski/icore/resources/js/web/web.js */ "../laravel-icore/packages/n1ebieski/icore/resources/js/web/web.js");
 
-  __webpack_require__(/*! ../web/cssmap-poland/jquery.cssmap.min.js */ "./packages/n1ebieski/idir/resources/js/web/cssmap-poland/jquery.cssmap.min.js");
-} catch (e) {}
+__webpack_require__(/*! ../web/cssmap-poland/jquery.cssmap.min.js */ "./packages/n1ebieski/idir/resources/js/web/cssmap-poland/jquery.cssmap.min.js");
 
 /***/ }),
 

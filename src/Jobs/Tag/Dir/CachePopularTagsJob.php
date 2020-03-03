@@ -2,12 +2,12 @@
 
 namespace N1ebieski\IDir\Jobs\Tag\Dir;
 
-use N1ebieski\ICore\Jobs\Tag\CachePopularTags as BaseCachePopularTags;
+use N1ebieski\ICore\Jobs\Tag\CachePopularTagsJob as BaseCachePopularTagsJob;
 
 /**
  * [CachePopularTags description]
  */
-class CachePopularTagsJob extends BaseCachePopularTags
+class CachePopularTagsJob extends BaseCachePopularTagsJob
 {
     /**
      * Create a new job instance.

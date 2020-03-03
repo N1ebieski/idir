@@ -38,8 +38,7 @@ class IndexFilter extends Filter
         $this->parameters['morph'] = null;
 
         if ($id !== null) {
-            if ($group = $this->findMorph($id))
-            {
+            if ($group = $this->findMorph($id)) {
                 $this->setMorph($group);
             }
         }

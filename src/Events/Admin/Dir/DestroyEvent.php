@@ -34,6 +34,7 @@ class DestroyEvent
     public function __construct(Dir $dir, string $reason = null)
     {
         $this->dir = $dir;
+        
         $this->reason = $reason;
     }
 }

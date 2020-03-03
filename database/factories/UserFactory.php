@@ -15,7 +15,7 @@ use Illuminate\Support\Str;
 |
 */
 
-$factory->define(User::class, function(Faker $faker) {
+$factory->define(User::class, function (Faker $faker) {
     return [
         'name' => str_replace("'", '', $faker->name),
         'ip' => $faker->ipv4,
@@ -27,24 +27,24 @@ $factory->define(User::class, function(Faker $faker) {
     ];
 });
 
-$factory->state(User::class, 'active', function(Faker $faker) {
+$factory->state(User::class, 'active', function (Faker $faker) {
     return [
         'status' => 1
     ];
 });
 
-$factory->afterCreatingState(User::class, 'user', function($user) {
+$factory->afterCreatingState(User::class, 'user', function ($user) {
     $user->assignRole('user');
 });
 
-$factory->afterCreatingState(User::class, 'admin', function($user) {
+$factory->afterCreatingState(User::class, 'admin', function ($user) {
     $user->assignRole('admin');
 });
 
-$factory->afterCreatingState(User::class, 'super-admin', function($user) {
+$factory->afterCreatingState(User::class, 'super-admin', function ($user) {
     $user->assignRole('super-admin');
 });
 
-$factory->afterCreatingState(User::class, 'ban_user', function($user) {
+$factory->afterCreatingState(User::class, 'ban_user', function ($user) {
     $user->ban()->create();
 });

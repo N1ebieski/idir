@@ -29,8 +29,7 @@ trait HasGroup
         $this->parameters['group'] = null;
 
         if ($id !== null) {
-            if ($group = $this->findGroup($id))
-            {
+            if ($group = $this->findGroup($id)) {
                 $this->setGroup($group);
             }
         }

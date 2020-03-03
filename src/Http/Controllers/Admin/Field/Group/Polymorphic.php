@@ -7,7 +7,7 @@ use N1ebieski\IDir\Http\Requests\Admin\Field\Group\IndexRequest;
 use N1ebieski\IDir\Http\Requests\Admin\Field\Group\StoreRequest;
 use N1ebieski\IDir\Http\Requests\Admin\Field\Group\UpdateRequest;
 use N1ebieski\IDir\Filters\Admin\Field\Group\IndexFilter;
-use Illuminate\View\View;
+use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Http\JsonResponse;
 use N1ebieski\IDir\Models\Group;
 
@@ -22,9 +22,9 @@ interface Polymorphic
      * @param  Group        $group   [description]
      * @param  IndexRequest $request [description]
      * @param  IndexFilter  $filter  [description]
-     * @return View                  [description]
+     * @return HttpResponse          [description]
      */
-    public function index(Field $field, Group $group, IndexRequest $request, IndexFilter $filter) : View;
+    public function index(Field $field, Group $group, IndexRequest $request, IndexFilter $filter) : HttpResponse;
 
     /**
      * [create description]

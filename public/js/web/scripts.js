@@ -1005,8 +1005,8 @@ jQuery(document).on('click', '.showContact', function(e) {
     });
 });
 
-jQuery(document).ready(function() {
-    $('[id^="star-rating"]').on('rating:change', function(event, value, caption) {
+jQuery(document).ready(function () {
+    $('[id^="star-rating"]').on('rating:change', function(event, value) {
         event.preventDefault();
 
         let $element = $(this);
@@ -1020,9 +1020,9 @@ jQuery(document).ready(function() {
         $.ajax({
             url: $element.attr('data-route') + '?rating=' + value,
             method: 'get',
-            beforeSend: function() {
+            beforeSend: function () {
             },
-            complete: function() {
+            complete: function () {
             },
             success: function(response) {
                 $element.rating("update", response.sum_rating)
@@ -1035,7 +1035,7 @@ jQuery(document).ready(function() {
         });    
     });
 
-    $('[id^="star-rating"]').on('rating:clear', function(event, value, caption) {
+    $('[id^="star-rating"]').on('rating:clear', function(event) {
         event.preventDefault();
 
         let $element = $(this);
@@ -1064,14 +1064,14 @@ jQuery(document).on('readyAndAjax', function() {
         showCaption: false
     });
 });
-$(document).ready(function(){
+$(document).ready(function () {
     // CSSMap;
     $("#map-poland").CSSMap({
       "size": 430,
       "tooltips": "floating-top-center",
       "responsive": "auto",
       "tapOnce": true,
-      onLoad: function(e) {
+      onLoad: function () {
         $("#map-poland").find('a.active-region').parent().addClass('active-region');
       }
     }).children().show();
@@ -1208,8 +1208,8 @@ jQuery(document).ready(function () {
     // $('.carousel').carousel();
 });
 jQuery(document).on('change', 'form input[id^=delete_img]', function() {
-    $input = $(this).closest('.form-group').find('[type="file"]');
-    $hidden = $(this).closest('.form-group').find('[type="hidden"]');
+    let $input = $(this).closest('.form-group').find('[type="file"]');
+    let $hidden = $(this).closest('.form-group').find('[type="hidden"]');
 
     if ($(this).prop('checked') === true) {
         $input.prop('disabled', false);

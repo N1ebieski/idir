@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::group(['middleware' => 'auth'], function() {
+Route::group(['middleware' => 'auth'], function () {
     Route::get('comments/dir/{dir}/create', 'Comment\Dir\CommentController@create')
         ->middleware(['icore.ban.user', 'icore.ban.ip', 'permission:create comments|suggest comments'])
         ->name('comment.dir.create')

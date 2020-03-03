@@ -1,6 +1,6 @@
 jQuery(document).on('change', 'form input[id^=delete_img]', function() {
-    $input = $(this).closest('.form-group').find('[type="file"]');
-    $hidden = $(this).closest('.form-group').find('[type="hidden"]');
+    let $input = $(this).closest('.form-group').find('[type="file"]');
+    let $hidden = $(this).closest('.form-group').find('[type="hidden"]');
 
     if ($(this).prop('checked') === true) {
         $input.prop('disabled', false);

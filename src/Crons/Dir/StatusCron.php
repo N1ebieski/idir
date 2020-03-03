@@ -45,6 +45,12 @@ class StatusCron
     protected int $checkDays;
 
     /**
+     * [protected description]
+     * @var int
+     */
+    protected int $maxAttempts;
+
+    /**
      * Undocumented function
      *
      * @param DirStatus $dirStatus
@@ -66,6 +72,7 @@ class StatusCron
         $this->carbon = $carbon;
         
         $this->checkDays = (int)$this->config->get('idir.dir.status.check_days');
+        $this->maxAttempts = (int)$this->config->get('idir.dir.status.max_attempts');
     }
 
     /**
@@ -75,8 +82,7 @@ class StatusCron
      */
     protected function isStatusCheckerTurnOn() : bool
     {
-        return $this->config->get('idir.dir.status.check_days') > 0
-            && $this->config->get('idir.dir.status.max_attempts') > 0;
+        return $this->checkDays > 0 && $this->maxAttempts > 0;
     }
 
     /**
@@ -98,21 +104,24 @@ class StatusCron
             return;
         }
 
-        $this->addToQueue();
-    }
-
-    /**
-     * Adds new jobs to the queue.
-     */
-    protected function addToQueue() : void
-    {
         $this->dirStatus->makeRepo()->chunkAvailableHasUrlByAttemptedAt(
-            function ($items) {
-                $items->each(function ($item) {
-                    $this->checkStatusJob->dispatch($item);
+            function ($dirStatuses) {
+                $dirStatuses->each(function ($dirStatus) {
+                    $this->addToQueue($dirStatus);
                 });
             },
             $this->makeCheckTimestamp()
         );
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param DirStatus $dirStatus
+     * @return void
+     */
+    protected function addToQueue(DirStatus $dirStatus) : void
+    {
+        $this->checkStatusJob->dispatch($dirStatus);
     }
 }

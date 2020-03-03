@@ -19,12 +19,12 @@ class RatingsSeeder extends Seeder
     {
         $dirs = Dir::all();
 
-        $dirs->chunk(1000, function($items) {
-            $items->each(function($item) {
-                for ($i=0; $i<rand(1,10); $i++) {
+        $dirs->chunk(1000, function ($items) {
+            $items->each(function ($item) {
+                for ($i = 0; $i < rand(1, 10); $i++) {
                     $item->ratings()->create([
                         'user_id' => 1,
-                        'rating' => rand(1,5)
+                        'rating' => rand(1, 5)
                     ]);
                 }
             });

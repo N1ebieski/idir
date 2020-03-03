@@ -7,7 +7,7 @@ use N1ebieski\IDir\Models\Category\Dir\Category;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 
-$factory->define(Dir::class, function(Faker $faker) {
+$factory->define(Dir::class, function (Faker $faker) {
     $url = parse_url($faker->url);
     $content = Str::random(350);
 
@@ -21,13 +21,13 @@ $factory->define(Dir::class, function(Faker $faker) {
     ];
 });
 
-$factory->state(Dir::class, 'title_sentence', function(Faker $faker) {
+$factory->state(Dir::class, 'title_sentence', function (Faker $faker) {
     return [
         'title' => $faker->sentence(rand(1, 3))
     ];
 });
 
-$factory->state(Dir::class, 'content_text', function(Faker $faker) {
+$factory->state(Dir::class, 'content_text', function (Faker $faker) {
     $content = $faker->text(350);
 
     return [
@@ -36,31 +36,31 @@ $factory->state(Dir::class, 'content_text', function(Faker $faker) {
     ];
 });
 
-$factory->state(Dir::class, 'with_user', function(Faker $faker) {
+$factory->state(Dir::class, 'with_user', function (Faker $faker) {
     return [
         'user_id' => factory(User::class)->create()->id
     ];
 });
 
-$factory->state(Dir::class, 'active', function(Faker $faker) {
+$factory->state(Dir::class, 'active', function (Faker $faker) {
     return [
         'status' => 1
     ];
 });
 
-$factory->state(Dir::class, 'inactive', function(Faker $faker) {
+$factory->state(Dir::class, 'inactive', function (Faker $faker) {
     return [
         'status' => 0
     ];
 });
 
-$factory->state(Dir::class, 'pending', function(Faker $faker) {
+$factory->state(Dir::class, 'pending', function (Faker $faker) {
     return [
         'status' => 2
     ];
 });
 
-$factory->state(Dir::class, 'paid_seasonal', function(Faker $faker) {
+$factory->state(Dir::class, 'paid_seasonal', function (Faker $faker) {
     return [
         'status' => 1,
         'privileged_at' => Carbon::now(),
@@ -68,13 +68,13 @@ $factory->state(Dir::class, 'paid_seasonal', function(Faker $faker) {
     ];
 });
 
-$factory->state(Dir::class, 'without_url', function(Faker $faker) {
+$factory->state(Dir::class, 'without_url', function (Faker $faker) {
     return [
         'url' => null,
     ];
 });
 
-$factory->afterCreatingState(Dir::class, 'with_category', function($dir) {
+$factory->afterCreatingState(Dir::class, 'with_category', function ($dir) {
     $dir->categories()->sync(
         factory(Category::class)->states('active')->create()->id
     );

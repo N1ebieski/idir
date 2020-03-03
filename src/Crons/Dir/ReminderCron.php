@@ -2,11 +2,11 @@
 
 namespace N1ebieski\IDir\Crons\Dir;
 
+use Illuminate\Support\Carbon;
 use N1ebieski\IDir\Models\Dir;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Contracts\Config\Repository as Config;
-use Illuminate\Support\Carbon;
 use N1ebieski\IDir\Mail\Dir\ReminderMail;
+use Illuminate\Contracts\Config\Repository as Config;
 
 class ReminderCron
 {

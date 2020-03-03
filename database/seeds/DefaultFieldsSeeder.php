@@ -17,14 +17,14 @@ class DefaultFieldsSeeder extends Seeder
         Field::create([
             'title' => 'Region',
             'type' => 'regions',
-            'visible' => 1,
+            'visible' => Field::VISIBLE,
             'options' => ['required' => 0]
         ]);
 
         Field::create([
             'title' => 'Lokalizacja',
             'type' => 'map',
-            'visible' => 1,
+            'visible' => Field::VISIBLE,
             'options' => ['required' => 0]
         ]);
     }

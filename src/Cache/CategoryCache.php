@@ -9,6 +9,7 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 use N1ebieski\ICore\Cache\CategoryCache as BaseCategoryCache;
 use Illuminate\Support\Collection as Collect;
+use Illuminate\Support\Carbon;
 
 /**
  * [CategoryCache description]
@@ -25,7 +26,7 @@ class CategoryCache extends BaseCategoryCache
      * [private description]
      * @var Collect
      */
-    protected $collect;    
+    protected $collect;
 
     /**
      * [__construct description]
@@ -35,15 +36,15 @@ class CategoryCache extends BaseCategoryCache
      * @param Collect      $collect      [description]
      */
     public function __construct(
-        Category $category, 
-        Cache $cache, 
-        Config $config, 
+        Category $category,
+        Cache $cache,
+        Config $config,
+        Carbon $carbon,
         Collect $collect
-    )
-    {
-        parent::__construct($category, $cache, $config);
+    ) {
+        parent::__construct($category, $cache, $config, $carbon);
 
-        $this->collect = $collect; 
+        $this->collect = $collect;
     }
 
     /**
@@ -54,8 +55,8 @@ class CategoryCache extends BaseCategoryCache
     {
         return $this->cache->tags(['categories'])->remember(
             "category.{$this->category->poli}.getRootsWithNestedMorphsCount",
-            now()->addMinutes($this->minutes),
-            function() {
+            $this->carbon->now()->addMinutes($this->minutes),
+            function () {
                 return $this->category->makeRepo()->getRootsWithNestedMorphsCount();
             }
         );
@@ -86,7 +87,7 @@ class CategoryCache extends BaseCategoryCache
             ->put(
                 "category.{$this->category->id}.paginateDirsByFilter.{$filter['region']}.{$page}",
                 $dirs,
-                now()->addMinutes($this->minutes)
+                $this->carbon->now()->addMinutes($this->minutes)
             );
     }
 
@@ -122,10 +123,10 @@ class CategoryCache extends BaseCategoryCache
     {
         return $this->cache->tags(["category.{$this->category->slug}"])->remember(
             "category.{$this->category->slug}.loadNestedWithMorphsCountByFilter.{$filter['region']}",
-            now()->addMinutes($this->minutes),
-            function() use ($filter) {
+            $this->carbon->now()->addMinutes($this->minutes),
+            function () use ($filter) {
                 return $this->category->loadNestedWithMorphsCountByFilter($filter);
             }
         );
-    }    
+    }
 }

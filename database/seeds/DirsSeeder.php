@@ -26,7 +26,7 @@ class DirsSeeder extends Seeder
 
         factory(Dir::class, 50)->states(['title_sentence', 'content_text'])
             ->make()
-            ->each(function($dir) use ($categories, $group) {
+            ->each(function ($dir) use ($categories, $group) {
                 $dir->user()->associate(1);
                 $dir->group()->associate($group);
                 $dir->save();

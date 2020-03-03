@@ -8,6 +8,7 @@ use N1ebieski\ICore\Cache\LinkCache as BaseLinkCache;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Contracts\Cache\Repository as Cache;
 use Illuminate\Contracts\Config\Repository as Config;
+use Illuminate\Support\Carbon;
 
 /**
  * [LinkCache description]
@@ -21,14 +22,16 @@ class LinkCache extends BaseLinkCache
     protected $link;
 
     /**
-     * [__construct description]
-     * @param Link   $link   [description]
-     * @param Cache  $cache  [description]
-     * @param Config $config [description]
+     * Undocumented function
+     *
+     * @param Link $link
+     * @param Cache $cache
+     * @param Config $config
+     * @param Carbon $carbon
      */
-    public function __construct(Link $link, Cache $cache, Config $config)
+    public function __construct(Link $link, Cache $cache, Config $config, Carbon $carbon)
     {
-        parent::__construct($link, $cache, $config);
+        parent::__construct($link, $cache, $config, $carbon);
     }
 
     /**
@@ -43,8 +46,8 @@ class LinkCache extends BaseLinkCache
 
         return $this->cache->tags(['links'])->remember(
             "link.getLinksUnionDirsByComponent.{$cats}",
-            now()->addMinutes($this->minutes),
-            function() use ($dirs, $component) {
+            $this->carbon->now()->addMinutes($this->minutes),
+            function () use ($dirs, $component) {
                 return $this->link->makeRepo()->getLinksUnionDirsByComponent($dirs, $component);
             }
         );

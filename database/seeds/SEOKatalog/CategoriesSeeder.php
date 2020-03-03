@@ -22,7 +22,7 @@ class CategoriesSeeder extends SEOKatalogSeeder
         $categories = DB::connection('import')->table('categories')->orderBy('position', 'asc')
             ->orderBy('title', 'asc')->get();
 
-        $categories->each(function($item) {
+        $categories->each(function ($item) {
             Category::create([
                 'id' => $this->sub_last_id + $item->id,
                 'name' => $item->title,
@@ -32,7 +32,7 @@ class CategoriesSeeder extends SEOKatalogSeeder
             ]);
         });
 
-        $subcategories->each(function($item) {
+        $subcategories->each(function ($item) {
             Category::create([
                 'id' => $item->id,
                 'name' => $item->title,

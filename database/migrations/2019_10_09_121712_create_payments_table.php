@@ -18,11 +18,11 @@ class CreatePaymentsTable extends Migration
     {
         Schema::create('payments', function (Blueprint $table) {
             $table->uuid('uuid')->primary();
-            $table->unsignedInteger('model_id')->nullable();
+            $table->bigInteger('model_id')->unsigned()->nullable();
             $table->string('model_type')->nullable();
-            $table->unsignedInteger('price_id');
+            $table->bigInteger('price_id')->unsigned();
             $table->string('price_type');
-            $table->integer('status')->unsigned();
+            $table->tinyInteger('status')->unsigned();
             $table->longText('logs')->nullable();
             $table->timestamps();
 

@@ -1,5 +1,5 @@
-jQuery(document).ready(function() {
-    $('[id^="star-rating"]').on('rating:change', function(event, value, caption) {
+jQuery(document).ready(function () {
+    $('[id^="star-rating"]').on('rating:change', function(event, value) {
         event.preventDefault();
 
         let $element = $(this);
@@ -13,9 +13,9 @@ jQuery(document).ready(function() {
         $.ajax({
             url: $element.attr('data-route') + '?rating=' + value,
             method: 'get',
-            beforeSend: function() {
+            beforeSend: function () {
             },
-            complete: function() {
+            complete: function () {
             },
             success: function(response) {
                 $element.rating("update", response.sum_rating)
@@ -28,7 +28,7 @@ jQuery(document).ready(function() {
         });    
     });
 
-    $('[id^="star-rating"]').on('rating:clear', function(event, value, caption) {
+    $('[id^="star-rating"]').on('rating:clear', function(event) {
         event.preventDefault();
 
         let $element = $(this);

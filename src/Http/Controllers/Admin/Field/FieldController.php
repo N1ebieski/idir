@@ -2,11 +2,13 @@
 
 namespace N1ebieski\IDir\Http\Controllers\Admin\Field;
 
-use N1ebieski\IDir\Models\Field\Field;
-use N1ebieski\IDir\Http\Requests\Admin\Field\UpdatePositionRequest;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\View;
+use N1ebieski\IDir\Models\Field\Field;
+use Illuminate\Support\Facades\Response;
 use N1ebieski\IDir\Http\Controllers\Admin\Field\Polymorphic;
 use N1ebieski\IDir\Http\Requests\Admin\Field\DestroyRequest;
+use N1ebieski\IDir\Http\Requests\Admin\Field\UpdatePositionRequest;
 
 /**
  * [FieldController description]
@@ -20,9 +22,9 @@ class FieldController implements Polymorphic
      */
     public function editPosition(Field $field) : JsonResponse
     {
-        return response()->json([
+        return Response::json([
             'success' => '',
-            'view' => view('idir::admin.field.edit_position', [
+            'view' => View::make('idir::admin.field.edit_position', [
                 'field' => $field,
                 'siblings_count' => $field->countSiblings()
             ])->render()
@@ -39,7 +41,7 @@ class FieldController implements Polymorphic
     {
         $field->makeService()->updatePosition($request->only('position'));
 
-        return response()->json([
+        return Response::json([
             'success' => '',
             'siblings' => $field->makeRepo()->getSiblingsAsArray()
         ]);
@@ -56,6 +58,6 @@ class FieldController implements Polymorphic
     {
         $field->delete();
 
-        return response()->json(['success' => '']);
+        return Response::json(['success' => '']);
     }
 }

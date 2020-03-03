@@ -15,7 +15,7 @@ class PopularTagsCron extends BasePopularTagsCron
      * Undocumented function
      *
      * @param Category $category
-     * @param CachePopularTag $cachePopularTag
+     * @param CachePopularTagsJob $cachePopularTagsJob
      */
     public function __construct(Category $category, CachePopularTagsJob $cachePopularTagsJob)
     {
