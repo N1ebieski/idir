@@ -24,15 +24,17 @@ class UpdateRequest extends BaseUpdateRequest
                 'string',
                 'distinct',
                 'exists:permissions,name',
-                $this->role->name === 'user' ? Rule::in([
-                    'create comments',
-                    'suggest comments',
-                    'edit comments',
-                    'create dirs',
-                    'edit dirs',
-                    'destroy dirs',
-                    'notification dirs'
-                ]) : null,
+                $this->role->name === 'user' ?
+                    Rule::in([
+                        'create comments',
+                        'suggest comments',
+                        'edit comments',
+                        'create dirs',
+                        'edit dirs',
+                        'destroy dirs',
+                        'notification dirs'
+                    ])
+                    : null,
                 'no_js_validation'
             ]
         ]);

@@ -2,8 +2,9 @@
 
 namespace N1ebieski\IDir\Http\Controllers\Web\Tag\Dir;
 
+use Illuminate\Http\Response as HttpResponse;
+use Illuminate\Support\Facades\Response;
 use N1ebieski\IDir\Http\Requests\Web\Tag\ShowRequest;
-use Illuminate\View\View;
 use N1ebieski\IDir\Filters\Web\Tag\ShowFilter;
 use N1ebieski\ICore\Models\Tag\Tag;
 use N1ebieski\IDir\Models\Dir;
@@ -21,11 +22,11 @@ class TagController implements Polymorphic
      * @param  Dir  $dir [description]
      * @param  ShowRequest $request
      * @param  ShowFilter  $filter [description]
-     * @return View       [description]
+     * @return HttpResponse       [description]
      */
-    public function show(Tag $tag, Dir $dir, ShowRequest $request, ShowFilter $filter) : View
+    public function show(Tag $tag, Dir $dir, ShowRequest $request, ShowFilter $filter) : HttpResponse
     {
-        return view('idir::web.tag.dir.show', [
+        return Response::view('idir::web.tag.dir.show', [
             'tag' => $tag,
             'filter' => $filter->all(),
             'dirs' => $dir->makeCache()->rememberByTagAndFilter(

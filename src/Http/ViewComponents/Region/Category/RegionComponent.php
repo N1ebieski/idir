@@ -2,9 +2,10 @@
 
 namespace N1ebieski\IDir\Http\ViewComponents\Region\Category;
 
+use Illuminate\View\View;
 use N1ebieski\IDir\Models\Region\Region;
 use N1ebieski\ICore\Models\Category\Category;
-use Illuminate\View\View;
+use Illuminate\Contracts\View\Factory as ViewFactory;
 use N1ebieski\IDir\Http\ViewComponents\Region\RegionComponent as BaseRegionComponent;
 
 /**
@@ -30,10 +31,11 @@ class RegionComponent extends BaseRegionComponent
      *
      * @param Category $category
      * @param Region $region
+     * @param ViewFactory $view
      */
-    public function __construct(Category $category, Region $region)
+    public function __construct(Category $category, Region $region, ViewFactory $view)
     {
-        parent::__construct($region);
+        parent::__construct($region, $view);
 
         $this->category = $category;
     }
@@ -44,7 +46,7 @@ class RegionComponent extends BaseRegionComponent
      */
     public function toHtml() : View
     {
-        return view('idir::web.components.region.category.region', [
+        return $this->view->make('idir::web.components.region.category.region', [
             'regions' => $this->region->makeCache()->rememberAll(),
             'category' => $this->category,
             'region' => $this->region

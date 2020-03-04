@@ -1,4 +1,4 @@
-jQuery(document).on('click', 'a.destroyDir', function(e) {
+jQuery(document).on('click', 'a.destroyDir', function (e) {
     e.preventDefault();
 
     let $element = $(this);
@@ -13,14 +13,14 @@ jQuery(document).on('click', 'a.destroyDir', function(e) {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
         method: 'delete',
-        beforeSend: function() {
+        beforeSend: function () {
             $row.find('.responsive-btn-group').addClass('disabled');
             $row.append($.getLoader('spinner-border'));
         },
-        complete: function() {
+        complete: function () {
             $row.find('div.loader-absolute').remove();
         },
-        success: function() {
+        success: function () {
             $row.fadeOut('slow');
         }
     });

@@ -3,7 +3,10 @@
 namespace N1ebieski\IDir\Http\Middleware\Api\Thumbnail;
 
 use Closure;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Config;
 
 class VerifyKey
 {
@@ -14,12 +17,12 @@ class VerifyKey
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle($request, Closure $next)
+    public function handle(Request $request, Closure $next)
     {
-        if ($request->header('Authorization') === config('idir.dir.thumbnail.key')) {
+        if ($request->header('Authorization') === Config::get('idir.dir.thumbnail.key')) {
             return $next($request);
         }
 
-        abort(Response::HTTP_UNAUTHORIZED);
+        App::abort(Response::HTTP_UNAUTHORIZED);
     }
 }

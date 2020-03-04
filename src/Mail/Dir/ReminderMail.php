@@ -3,10 +3,12 @@
 namespace N1ebieski\IDir\Mail\Dir;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
-use Illuminate\Queue\SerializesModels;
 use N1ebieski\IDir\Models\Dir;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Contracts\Config\Repository as Config;
+use Illuminate\Contracts\Translation\Translator as Lang;
 
 class ReminderMail extends Mailable implements ShouldQueue
 {
@@ -18,6 +20,20 @@ class ReminderMail extends Mailable implements ShouldQueue
      * @var Dir
      */
     public $dir;
+
+    /**
+     * Undocumented variable
+     *
+     * @var Lang
+     */
+    protected $lang;
+
+    /**
+     * Undocumented variable
+     *
+     * @var Config
+     */
+    protected $config;
 
     /**
      * Undocumented function
@@ -34,10 +50,13 @@ class ReminderMail extends Mailable implements ShouldQueue
      *
      * @return $this
      */
-    public function build()
+    public function build(Lang $lang, Config $config)
     {
-        return $this->subject(trans('idir::dirs.mail.reminder.title'))
-            ->from(config('mail.from.address'))
+        $this->lang = $lang;
+        $this->config = $config;
+
+        return $this->subject($this->lang->get('idir::dirs.mail.reminder.title'))
+            ->from($this->config->get('mail.from.address'))
             ->to($this->dir->user->email)
             ->with([
                 'result' => $this->result()
@@ -53,12 +72,12 @@ class ReminderMail extends Mailable implements ShouldQueue
     protected function result() : string
     {
         if ($this->dir->group->alt_id === null) {
-            return trans('idir::dirs.mail.reminder.deactivation', [
+            return $this->lang->get('idir::dirs.mail.reminder.deactivation', [
                 'days' => $this->dir->privileged_to_diff
             ]);
         }
 
-        return trans('idir::dirs.mail.reminder.alt', [
+        return $this->lang->get('idir::dirs.mail.reminder.alt', [
             'days' => $this->dir->privileged_to_diff,
             'alt_group' => $this->dir->group->alt->name
         ]);

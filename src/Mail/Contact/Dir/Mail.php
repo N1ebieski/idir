@@ -3,8 +3,11 @@
 namespace N1ebieski\IDir\Mail\Contact\Dir;
 
 use Illuminate\Http\Request;
-use N1ebieski\ICore\Mail\Contact\Mail as BaseMail;
 use N1ebieski\IDir\Models\Dir;
+use Illuminate\Contracts\Translation\Translator as Lang;
+use Illuminate\Contracts\Routing\UrlGenerator as URL;
+use Illuminate\Contracts\Config\Repository as Config;
+use N1ebieski\ICore\Mail\Contact\Mail as BaseMail;
 
 /**
  * [Mail description]
@@ -18,16 +21,26 @@ class Mail extends BaseMail
     protected $dir;
 
     /**
-     * [__construct description]
-     * @param Request $request [description]
+     * Undocumented function
+     *
+     * @param Request $request
+     * @param Dir $dir
+     * @param Lang $lang
+     * @param URL $url
+     * @param Config $config
      */
-    public function __construct(Request $request, Dir $dir)
-    {
-        parent::__construct($request);
+    public function __construct(
+        Request $request,
+        Dir $dir,
+        Lang $lang,
+        URL $url,
+        Config $config
+    ) {
+        parent::__construct($request, $lang, $url, $config);
 
         $this->dir = $dir;
 
-        $this->email = $this->dir->user->email ?? null;
+        $this->email = $this->dir->user->email;
     }
 
     /**
@@ -36,8 +49,8 @@ class Mail extends BaseMail
      */
     protected function subcopy() : string
     {
-        return trans('icore::contact.subcopy.form', [
-            'url' => route('web.dir.show', [$this->dir->slug])
+        return $this->lang->get('icore::contact.subcopy.form', [
+            'url' => $this->url->route('web.dir.show', [$this->dir->slug])
         ]);
     }
 }

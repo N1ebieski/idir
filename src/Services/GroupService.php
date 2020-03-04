@@ -56,11 +56,11 @@ class GroupService implements Creatable, Updatable, PositionUpdatable, Deletable
         $this->group->prices()->make()
             ->setGroup($this->group)
             ->makeService()
-            ->createOrUpdateGlobal(
-                array_filter((int)$attributes['payment'] === 1 ?
-                    $this->collect->make($attributes['prices'])->flatten(1)->toArray() : []
-                )
-            );
+            ->createOrUpdateGlobal(array_filter(
+                (int)$attributes['payment'] === 1 ?
+                    $this->collect->make($attributes['prices'])->flatten(1)->toArray()
+                    : []
+            ));
 
         return $this->group;
     }
@@ -82,11 +82,11 @@ class GroupService implements Creatable, Updatable, PositionUpdatable, Deletable
         $this->group->prices()->make()
             ->setGroup($this->group)
             ->makeService()
-            ->organizeGlobal(
-                array_filter((int)$attributes['payment'] === 1 ?
-                    $this->collect->make($attributes['prices'])->flatten(1)->toArray() : []
-                )
-            );
+            ->organizeGlobal(array_filter(
+                (int)$attributes['payment'] === 1 ?
+                    $this->collect->make($attributes['prices'])->flatten(1)->toArray()
+                    : []
+            ));
 
         return $result;
     }

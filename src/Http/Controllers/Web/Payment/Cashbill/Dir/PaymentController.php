@@ -3,6 +3,10 @@
 namespace N1ebieski\IDir\Http\Controllers\Web\Payment\Cashbill\Dir;
 
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Lang;
+use Illuminate\Support\Facades\Response;
 use N1ebieski\IDir\Models\Payment\Dir\Payment;
 use N1ebieski\IDir\Utils\Cashbill\TransferUtil as Cashbill;
 use N1ebieski\IDir\Events\Web\Payment\Dir\VerifyAttemptEvent;
@@ -26,7 +30,7 @@ class PaymentController implements Polymorphic
      */
     public function show(Payment $payment, ShowRequest $request, Cashbill $cashbill) : RedirectResponse
     {
-        $payment->load(['morph', 'price_morph']);
+        $payment->load(['morph', 'priceMorph']);
 
         try {
             $response = $cashbill->setup([
@@ -50,7 +54,7 @@ class PaymentController implements Polymorphic
 
         $redirects = $response->getHeader(\GuzzleHttp\RedirectMiddleware::HISTORY_HEADER);
 
-        return response()->redirectTo(end($redirects));
+        return Response::redirectTo(end($redirects));
     }
 
     /**
@@ -62,13 +66,14 @@ class PaymentController implements Polymorphic
     public function complete(CompleteRequest $request, Cashbill $cashbill) : RedirectResponse
     {
         if (!$cashbill->isSign($request->validated())) {
-            abort(403, 'Invalid signature of payment.');
+            App::abort(403, 'Invalid signature of payment.');
         }
 
-        return redirect()->to($request->input('redirect'))->with(
+        return Response::redirectTo($request->input('redirect'))->with(
             $request->input('status') === 'ok' ? 'success' : 'danger',
-            $request->input('status') === 'ok' ? trans('idir::payments.success.complete')
-                : trans('idir::payments.error.complete')
+            $request->input('status') === 'ok' ?
+                Lang::get('idir::payments.success.complete')
+                : Lang::get('idir::payments.error.complete')
         );
     }
 
@@ -82,9 +87,9 @@ class PaymentController implements Polymorphic
     public function verify(Payment $payment, VerifyRequest $request, Cashbill $cashbill) : string
     {
         // I can't' use the route binding, because cashbill returns id payment as part of $_POST['userdata'] variable
-        ($payment = $payment->makeRepo()->firstPendingByUuid($request->input('uuid'))) ?? abort(404);
+        ($payment = $payment->makeRepo()->firstPendingByUuid($request->input('uuid'))) ?? App::abort(404);
 
-        event(new VerifyAttemptEvent($payment));
+        Event::dispatch(App::make(VerifyAttemptEvent::class, ['payment' => $payment]));
 
         try {
             $cashbill->setup(['amount' => $payment->price->price])->authorize($request->validated());
@@ -94,7 +99,7 @@ class PaymentController implements Polymorphic
 
         $payment->makeRepo()->paid();
 
-        event(new VerifySuccessfulEvent($payment));
+        Event::dispatch(App::make(VerifySuccessfulEvent::class, ['payment' => $payment]));
 
         return 'OK';
     }

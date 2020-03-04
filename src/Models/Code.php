@@ -3,6 +3,7 @@
 namespace N1ebieski\IDir\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\App;
 use N1ebieski\IDir\Models\Price;
 use N1ebieski\IDir\Services\CodeService;
 use N1ebieski\IDir\Repositories\CodeRepo;
@@ -74,7 +75,7 @@ class Code extends Model
      */
     public function makeService()
     {
-        return app()->make(CodeService::class, ['code' => $this]);
+        return App::make(CodeService::class, ['code' => $this]);
     }
 
     /**
@@ -83,6 +84,6 @@ class Code extends Model
      */
     public function makeRepo()
     {
-        return app()->make(CodeRepo::class, ['code' => $this]);
+        return App::make(CodeRepo::class, ['code' => $this]);
     }
 }

@@ -4,6 +4,7 @@ namespace N1ebieski\IDir\Models;
 
 use N1ebieski\ICore\Models\User as BaseUser;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\App;
 use N1ebieski\IDir\Repositories\UserRepo;
 
 /**
@@ -46,8 +47,8 @@ class User extends BaseUser
      * [makeRepo description]
      * @return UserRepo [description]
      */
-    public function makeRepo() 
+    public function makeRepo()
     {
-        return app()->make(UserRepo::class, ['user' => $this]);
-    } 
+        return App::make(UserRepo::class, ['user' => $this]);
+    }
 }

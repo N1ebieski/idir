@@ -7,7 +7,7 @@ use N1ebieski\IDir\Models\Payment\Dir\Payment;
 use N1ebieski\IDir\Models\Price;
 use N1ebieski\IDir\Models\Dir;
 use Illuminate\Contracts\Session\Session;
-use Carbon\Carbon;
+use Illuminate\Support\Carbon;
 use N1ebieski\ICore\Services\Interfaces\Creatable;
 use N1ebieski\ICore\Services\Interfaces\Updatable;
 use N1ebieski\ICore\Services\Interfaces\StatusUpdatable;
@@ -45,21 +45,31 @@ class DirService implements
     protected $session;
 
     /**
+     * Undocumented variable
+     *
+     * @var Carbon
+     */
+    protected $carbon;
+
+    /**
      * Undocumented function
      *
      * @param Dir $dir
      * @param Price $price
      * @param Session $session
+     * @param Carbon $carbon
      */
     public function __construct(
         Dir $dir,
         Price $price,
-        Session $session
+        Session $session,
+        Carbon $carbon
     ) {
         $this->dir = $dir;
         $this->price = $price;
 
         $this->session = $session;
+        $this->carbon = $carbon;
     }
 
     /**
@@ -300,11 +310,11 @@ class DirService implements
     public function updatePrivileged(array $attributes) : bool
     {
         return $this->dir->update([
-            'privileged_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'privileged_at' => $this->carbon->now()->format('Y-m-d H:i:s'),
             'privileged_to' => is_int($attributes['days']) ?
                 $this->dir->privileged_to !== null ?
-                    Carbon::parse($this->dir->privileged_to)->addDays($attributes['days'])
-                    : Carbon::now()->addDays($attributes['days'])
+                    $this->carbon->parse($this->dir->privileged_to)->addDays($attributes['days'])
+                    : $this->carbon->now()->addDays($attributes['days'])
                 : null
         ]);
     }

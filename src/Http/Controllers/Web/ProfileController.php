@@ -2,10 +2,13 @@
 
 namespace N1ebieski\IDir\Http\Controllers\Web;
 
-use Illuminate\View\View;
+use N1ebieski\IDir\Models\Group;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Http\Response as HttpResponse;
 use N1ebieski\IDir\Filters\Web\Profile\EditDirFilter;
 use N1ebieski\IDir\Http\Requests\Web\Profile\EditDirRequest;
-use N1ebieski\IDir\Models\Group;
 
 /**
  * [ProfileController description]
@@ -17,17 +20,17 @@ class ProfileController
      * @param  Group          $group   [description]
      * @param  EditDirRequest $request [description]
      * @param  EditDirFilter  $filter  [description]
-     * @return View                    [description]
+     * @return HttpResponse            [description]
      */
-    public function editDir(Group $group, EditDirRequest $request, EditDirFilter $filter) : View
+    public function editDir(Group $group, EditDirRequest $request, EditDirFilter $filter) : HttpResponse
     {
-        return view('idir::web.profile.edit_dir', [
+        return Response::view('idir::web.profile.edit_dir', [
             'filter' => $filter->all(),
             'groups' => $group->makeRepo()->getPublic(),
-            'dirs' => auth()->user()->makeRepo()->paginateDirsByFilter($filter->all() + [
+            'dirs' => Auth::user()->makeRepo()->paginateDirsByFilter($filter->all() + [
                 'except' => $request->input('except')
             ]),
-            'paginate' => config('database.paginate')
+            'paginate' => Config::get('database.paginate')
         ]);
     }
 }

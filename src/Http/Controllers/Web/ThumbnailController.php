@@ -2,11 +2,13 @@
 
 namespace N1ebieski\IDir\Http\Controllers\Web;
 
-use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use N1ebieski\IDir\Http\Requests\Web\Thumbnail\ShowRequest;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Config;
 use N1ebieski\IDir\Utils\ThumbnailUtil;
-use Carbon\Carbon;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Http\Response as HttpResponse;
+use N1ebieski\IDir\Http\Requests\Web\Thumbnail\ShowRequest;
 
 class ThumbnailController extends Controller
 {
@@ -14,14 +16,14 @@ class ThumbnailController extends Controller
      * Undocumented function
      *
      * @param ShowRequest $request
-     * @return void
+     * @return HttpResponse
      */
-    public function show(ShowRequest $request)
+    public function show(ShowRequest $request) : HttpResponse
     {
-        $thumbnail = app()->make(ThumbnailUtil::class, ['url' => $request->input('url')]);
+        $thumbnail = App::make(ThumbnailUtil::class, ['url' => $request->input('url')]);
 
-        return response()->make($thumbnail->generate(), 200, ['Content-Type' => 'image'])
-            ->setMaxAge(config('idir.dir.thumbnail.cache.days')*24*60*60)
+        return Response::make($thumbnail->generate(), 200, ['Content-Type' => 'image'])
+            ->setMaxAge(Config::get('idir.dir.thumbnail.cache.days')*24*60*60)
             ->setPublic();
     }
 }

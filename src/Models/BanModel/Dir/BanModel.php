@@ -56,9 +56,8 @@ class BanModel extends BaseBanModel
      */
     public function paginateByFilter(array $filter) : LengthAwarePaginator
     {
-        return $this->select('users.id as id_user', 'users.name', 'users.email',
-            'users.ip', 'bans_models.*', 'bans_models.id as id_ban')
-            ->leftJoin('users', function($query) {
+        return $this->select('users.id as id_user', 'users.*', 'bans_models.*', 'bans_models.id as id_ban')
+            ->leftJoin('users', function ($query) {
                 $query->on('bans_models.model_id', '=', 'users.id');
                 $query->where('bans_models.model_type', '=', 'N1ebieski\ICore\Models\User');
             })

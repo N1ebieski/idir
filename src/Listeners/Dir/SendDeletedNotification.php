@@ -2,8 +2,9 @@
 
 namespace N1ebieski\IDir\Listeners\Dir;
 
-use Illuminate\Support\Facades\Mail;
+use Illuminate\Contracts\Mail\Mailer;
 use N1ebieski\IDir\Mail\Dir\DeletedMail;
+use Illuminate\Contracts\Foundation\Application as App;
 
 /**
  * [SendDeleteNotification description]
@@ -16,6 +17,32 @@ class SendDeletedNotification
      * @var object
      */
     protected object $event;
+
+    /**
+     * Undocumented variable
+     *
+     * @var Mailer
+     */
+    protected $mailer;
+
+    /**
+     * Undocumented variable
+     *
+     * @var App
+     */
+    protected $app;
+
+    /**
+     * Undocumented function
+     *
+     * @param Mailer $mailer
+     * @param App $app
+     */
+    public function __construct(Mailer $mailer, App $app)
+    {
+        $this->mailer = $mailer;
+        $this->app = $app;
+    }
 
     /**
      *
@@ -41,7 +68,7 @@ class SendDeletedNotification
             return;
         }
 
-        Mail::send(app()->makeWith(DeletedMail::class, [
+        $this->mailer->send($this->app->make(DeletedMail::class, [
             'dir' => $event->dir,
             'reason' => $event->reason
         ]));

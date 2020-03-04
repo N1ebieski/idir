@@ -73,8 +73,8 @@ class Field extends BaseFieldModel
      */
     public function scopeFilterMorph(Builder $query, Group $morph = null) : ?Builder
     {
-        return $query->when($morph !== null, function($query) use ($morph) {
-            $query->whereHas('morphs', function($query) use ($morph) {
+        return $query->when($morph !== null, function ($query) use ($morph) {
+            $query->whereHas('morphs', function ($query) use ($morph) {
                 $query->where('model_id', $morph->id);
             });
         });

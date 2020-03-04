@@ -4,6 +4,7 @@ namespace N1ebieski\IDir\Http\Requests\Admin\Group;
 
 use Illuminate\Foundation\Http\FormRequest;
 use N1ebieski\IDir\Models\Price;
+use Illuminate\Support\Collection as Collect;
 
 class CreateRequest extends FormRequest
 {
@@ -52,12 +53,14 @@ class CreateRequest extends FormRequest
     protected function preparePricesCollectionOldAttribute() : void
     {
         foreach ($this->types as $type) {
-            session()->flash("_old_input.prices_collection.{$type}",
+            $this->session()->flash(
+                "_old_input.prices_collection.{$type}",
                 $this->price->hydrate(array_merge(
                     is_array($this->old("prices.{$type}")) ?
-                        collect($this->old("prices.{$type}"))->filter(function($item) {
+                        Collect::make($this->old("prices.{$type}"))->filter(function ($item) {
                             return isset($item['select']) && $item['price'] !== null;
-                        })->toArray() : [], [['type' => $type]]
+                        })->toArray() : [],
+                    [['type' => $type]]
                 ))
             );
         }

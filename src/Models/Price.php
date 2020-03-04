@@ -7,6 +7,7 @@ use N1ebieski\IDir\Models\Group;
 use N1ebieski\IDir\Services\PriceService;
 use N1ebieski\IDir\Repositories\PriceRepo;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\App;
 
 /**
  * [Price description]
@@ -106,7 +107,7 @@ class Price extends Model
      */
     public function makeService()
     {
-        return app()->make(PriceService::class, ['price' => $this]);
+        return App::make(PriceService::class, ['price' => $this]);
     }
 
     /**
@@ -115,6 +116,6 @@ class Price extends Model
      */
     public function makeRepo()
     {
-        return app()->make(PriceRepo::class, ['price' => $this]);
+        return App::make(PriceRepo::class, ['price' => $this]);
     }
 }

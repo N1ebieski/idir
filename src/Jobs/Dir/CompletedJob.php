@@ -2,17 +2,18 @@
 
 namespace N1ebieski\IDir\Jobs\Dir;
 
+use Exception;
 use Illuminate\Bus\Queueable;
+use Illuminate\Support\Carbon;
+use N1ebieski\IDir\Models\Dir;
+use Illuminate\Contracts\Mail\Mailer;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Foundation\Bus\Dispatchable;
-use N1ebieski\IDir\Models\Dir;
 use N1ebieski\IDir\Repositories\DirRepo;
 use N1ebieski\IDir\Mail\Dir\CompletedMail;
-use Exception;
-use Illuminate\Support\Facades\Mail;
-use Carbon\Carbon;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Contracts\Foundation\Application as App;
 
 class CompletedJob implements ShouldQueue
 {
@@ -38,6 +39,27 @@ class CompletedJob implements ShouldQueue
     protected $dirRepo;
 
     /**
+     * Undocumented variable
+     *
+     * @var Carbon
+     */
+    protected $carbon;
+
+    /**
+     * Undocumented variable
+     *
+     * @var App
+     */
+    protected $app;
+
+    /**
+     * Undocumented variable
+     *
+     * @var Mailer
+     */
+    protected $mailer;
+
+    /**
      * Create a new job instance.
      *
      * @param Dir $dir
@@ -56,26 +78,36 @@ class CompletedJob implements ShouldQueue
     {
         return $this->dir->isActive() && (
             (
-                $this->dir->privileged_to !== null 
-                && Carbon::parse($this->dir->privileged_to)->lessThanOrEqualTo(
-                    Carbon::now()
+                $this->dir->privileged_to !== null
+                && $this->carbon->parse($this->dir->privileged_to)->lessThanOrEqualTo(
+                    $this->carbon->now()
                 )
             ) || $this->dir->isNulledPrivileges()
         );
     }
 
     /**
-     * Execute the job.
+     * Undocumented function
      *
+     * @param Mailer $mailer
+     * @param App $app
+     * @param Carbon $carbon
      * @return void
      */
-    public function handle() : void
-    {
+    public function handle(
+        Mailer $mailer,
+        App $app,
+        Carbon $carbon
+    ) : void {
+        $this->dirRepo = $this->dir->makeRepo();
+
+        $this->mailer = $mailer;
+        $this->app = $app;
+        $this->carbon = $carbon;
+
         if (!$this->verify()) {
             return;
         }
-
-        $this->dirRepo = $this->dir->makeRepo();
 
         $this->executeResult();
 
@@ -127,7 +159,9 @@ class CompletedJob implements ShouldQueue
      */
     protected function sendNotification() : void
     {
-        Mail::send(app()->make(CompletedMail::class, ['dir' => $this->dir]));
+        $this->mailer->send(
+            $this->app->make(CompletedMail::class, ['dir' => $this->dir])
+        );
     }
 
     /**

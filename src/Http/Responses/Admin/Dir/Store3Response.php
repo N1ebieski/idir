@@ -5,6 +5,8 @@ namespace N1ebieski\IDir\Http\Responses\Admin\Dir;
 use N1ebieski\IDir\Models\Dir;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Contracts\Config\Repository as Config;
+use Illuminate\Contracts\Translation\Translator as Lang;
+use Illuminate\Contracts\Routing\UrlGenerator as URL;
 use Illuminate\Http\RedirectResponse;
 
 /**
@@ -31,13 +33,33 @@ class Store3Response
     protected $config;
 
     /**
-     * @param ResponseFactory $response
-     * @param Config          $config
+     * Undocumented variable
+     *
+     * @var Lang
      */
-    public function __construct(ResponseFactory $response, Config $config)
+    protected $lang;
+
+    /**
+     * Undocumented variable
+     *
+     * @var URL
+     */
+    protected $url;
+
+    /**
+     * Undocumented function
+     *
+     * @param ResponseFactory $response
+     * @param Config $config
+     * @param Lang $lang
+     * @param URL $url
+     */
+    public function __construct(ResponseFactory $response, Config $config, Lang $lang, URL $url)
     {
         $this->response = $response;
         $this->config = $config;
+        $this->lang = $lang;
+        $this->url = $url;
     }
 
     /**
@@ -59,16 +81,16 @@ class Store3Response
     public function makeResponse() : RedirectResponse
     {
         switch ($this->dir->status) {
-            case 0:
+            case Dir::INACTIVE:
                 return $this->response->redirectToRoute('admin.dir.index')
-                    ->with('success', trans('idir::dirs.success.store.status_0'));
-            case 1:
+                    ->with('success', $this->lang->get('idir::dirs.success.store.status_0'));
+            case Dir::ACTIVE:
                 return $this->response->redirectToRoute('admin.dir.index')
-                    ->with('success', trans('idir::dirs.success.store.status_1'));
-            case 2:
+                    ->with('success', $this->lang->get('idir::dirs.success.store.status_1'));
+            case DIR::PAYMENT_INACTIVE:
                 return $this->response->redirectToRoute('web.payment.dir.show', [
                     $this->dir->getPayment()->uuid,
-                    'redirect' => route('admin.dir.index')
+                    'redirect' => $this->url->route('admin.dir.index')
                 ]);
         }
     }

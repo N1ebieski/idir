@@ -3,9 +3,11 @@
 namespace N1ebieski\IDir\Http\Requests\Web\Comment\Dir;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Lang;
 use Illuminate\Validation\Rule;
 use N1ebieski\ICore\Http\ViewComponents\CaptchaComponent as Captcha;
 use N1ebieski\ICore\Models\BanValue;
+use N1ebieski\IDir\Models\Comment\Dir\Comment;
 
 class StoreRequest extends FormRequest
 {
@@ -28,6 +30,8 @@ class StoreRequest extends FormRequest
      */
     public function __construct(Captcha $captcha, BanValue $banValue)
     {
+        parent::__construct();
+
         $this->captcha = $captcha;
 
         $this->bans = $banValue->makeCache()->rememberAllWordsAsString();
@@ -40,10 +44,6 @@ class StoreRequest extends FormRequest
      */
     public function authorize()
     {
-        // if ((bool)$this->post->comment === false) {
-        //     abort(403, 'Adding comments has been disabled for this post.');
-        // }
-
         return true;
     }
 
@@ -58,9 +58,7 @@ class StoreRequest extends FormRequest
 
     public function attributes()
     {
-        return array_merge([
-
-        ], $this->captcha->toAttributes());
+        return array_merge([], $this->captcha->toAttributes());
     }
 
     /**
@@ -80,8 +78,8 @@ class StoreRequest extends FormRequest
             'parent_id' => [
                 'nullable',
                 'integer',
-                Rule::exists('comments', 'id')->where(function($query) {
-                    $query->where('status', 1);
+                Rule::exists('comments', 'id')->where(function ($query) {
+                    $query->where('status', Comment::ACTIVE);
                 }),
             ]
         ], $this->captcha->toRules());
@@ -95,7 +93,9 @@ class StoreRequest extends FormRequest
     public function messages()
     {
         return [
-            'content.not_regex' => trans('icore::validation.not_regex_contains', ['words' => str_replace('|', ', ', $this->bans)])
+            'content.not_regex' => Lang::get('icore::validation.not_regex_contains', [
+                'words' => str_replace('|', ', ', $this->bans)
+            ])
         ];
     }
 }

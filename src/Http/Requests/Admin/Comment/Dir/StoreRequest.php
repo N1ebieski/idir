@@ -4,6 +4,7 @@ namespace N1ebieski\IDir\Http\Requests\Admin\Comment\Dir;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use N1ebieski\IDir\Models\Comment\Dir\Comment;
 
 class StoreRequest extends FormRequest
 {
@@ -33,8 +34,8 @@ class StoreRequest extends FormRequest
             'parent_id' => [
                 'required',
                 'integer',
-                Rule::exists('comments', 'id')->where(function($query) {
-                    $query->where('status', 1);
+                Rule::exists('comments', 'id')->where(function ($query) {
+                    $query->where('status', Comment::ACTIVE);
                 }),
             ]
         ];

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use N1ebieski\IDir\Models\Dir;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Contracts\Config\Repository as Config;
+use Illuminate\Contracts\Translation\Translator as Lang;
 use Illuminate\Http\RedirectResponse;
 
 /**
@@ -38,16 +39,26 @@ class UpdateRenewResponse
     protected $config;
 
     /**
-     * [__construct description]
-     * @param Request         $request  [description]
-     * @param ResponseFactory $response [description]
-     * @param Config          $config   [description]
+     * Undocumented variable
+     *
+     * @var Lang
      */
-    public function __construct(Request $request, ResponseFactory $response, Config $config)
+    protected $lang;
+
+    /**
+     * Undocumented function
+     *
+     * @param Request $request
+     * @param ResponseFactory $response
+     * @param Config $config
+     * @param Lang $lang
+     */
+    public function __construct(Request $request, ResponseFactory $response, Config $config, Lang $lang)
     {
         $this->request = $request;
         $this->response = $response;
         $this->config = $config;
+        $this->lang = $lang;
     }
 
     /**
@@ -73,12 +84,12 @@ class UpdateRenewResponse
         }
 
         switch ($this->dir->status) {
-            case 1:
+            case Dir::ACTIVE:
                 return $this->response->redirectToRoute('web.profile.edit_dir')
-                    ->with('success', trans('idir::dirs.success.update_renew.status_1'));
+                    ->with('success', $this->lang->get('idir::dirs.success.update_renew.status_1'));
             default:
                 return $this->response->redirectToRoute('web.profile.edit_dir')
-                    ->with('success', trans('idir::dirs.success.update_renew.status_0'));
+                    ->with('success', $this->lang->get('idir::dirs.success.update_renew.status_0'));
         }
     }
 }

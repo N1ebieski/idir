@@ -2,8 +2,9 @@
 
 namespace N1ebieski\IDir\Http\Controllers\Web;
 
-use Illuminate\Support\Facades\View;
 use N1ebieski\IDir\Models\Dir;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Http\Response as HttpResponse;
 
 /**
  * [HomeController description]
@@ -11,13 +12,14 @@ use N1ebieski\IDir\Models\Dir;
 class HomeController
 {
     /**
-     * Show the application dashboard.
+     * Undocumented function
      *
-     * @return \Illuminate\Contracts\Support\Renderable
+     * @param Dir $dir
+     * @return HttpResponse
      */
-    public function index(Dir $dir)
+    public function index(Dir $dir) : HttpResponse
     {
-        return View::make('idir::web.home.index', [
+        return Response::view('idir::web.home.index', [
             'dirs' => $dir->makeCache()->rememberLatestForHome()
         ]);
     }

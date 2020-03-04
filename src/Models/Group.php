@@ -12,6 +12,7 @@ use N1ebieski\ICore\Models\Traits\Positionable;
 use N1ebieski\IDir\Repositories\GroupRepo;
 use N1ebieski\IDir\Services\GroupService;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\App;
 
 /**
  * [Group description]
@@ -50,7 +51,7 @@ class Group extends Model
      * [public description]
      * @var int
      */
-    public const WITH_URL = 1;
+    public const OPTIONAL_URL = 1;
 
     /**
      * [public description]
@@ -62,13 +63,25 @@ class Group extends Model
      * [public description]
      * @var int
      */
-    public const WITH_BACKLINK = 1;
+    public const OBLIGATORY_URL = 2;
+
+    /**
+     * [public description]
+     * @var int
+     */
+    public const OPTIONAL_BACKLINK = 1;
 
     /**
      * [public description]
      * @var int
      */
     public const WITHOUT_BACKLINK = 0;
+
+    /**
+     * [public description]
+     * @var int
+     */
+    public const OBLIGATORY_BACKLINK = 2;
 
     /**
      * The attributes that are mass assignable.
@@ -155,7 +168,13 @@ class Group extends Model
      */
     public function fields()
     {
-        return $this->morphToMany('N1ebieski\IDir\Models\Field\Field', 'model', 'fields_models', 'model_id', 'field_id');
+        return $this->morphToMany(
+            'N1ebieski\IDir\Models\Field\Field',
+            'model',
+            'fields_models',
+            'model_id',
+            'field_id'
+        );
     }
 
     /**
@@ -171,7 +190,7 @@ class Group extends Model
      * [dirs description]
      * @return [type] [description]
      */
-    public function dirs_today()
+    public function dirsToday()
     {
         return $this->hasMany('N1ebieski\IDir\Models\Dir')
             ->whereDate('created_at', '=', Carbon::now()->format('Y-m-d'))
@@ -235,7 +254,7 @@ class Group extends Model
      */
     public function scopeObligatoryBacklink(Builder $query) : Builder
     {
-        return $query->where('backlink', static::WITH_BACKLINK);
+        return $query->where('backlink', static::OBLIGATORY_BACKLINK);
     }
 
     // Checkers
@@ -337,7 +356,7 @@ class Group extends Model
      */
     public function makeRepo()
     {
-        return app()->make(GroupRepo::class, ['group' => $this]);
+        return App::make(GroupRepo::class, ['group' => $this]);
     }
 
     /**
@@ -346,6 +365,6 @@ class Group extends Model
      */
     public function makeService()
     {
-        return app()->make(GroupService::class, ['group' => $this]);
+        return App::make(GroupService::class, ['group' => $this]);
     }
 }

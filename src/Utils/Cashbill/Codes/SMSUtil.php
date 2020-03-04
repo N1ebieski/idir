@@ -4,6 +4,7 @@ namespace N1ebieski\IDir\Utils\Cashbill\Codes;
 
 use Illuminate\Contracts\Config\Repository as Config;
 use GuzzleHttp\Client as GuzzleClient;
+use GuzzleHttp\Psr7\Response as GuzzleResponse;
 
 /**
  * [Cashbill description]
@@ -26,7 +27,7 @@ class SMSUtil
      * [protected description]
      * @var object
      */
-    protected $response;
+    public $response;
 
     /**
      * [protected description]
@@ -44,16 +45,7 @@ class SMSUtil
         $this->check_url = $config->get('services.cashbill.code_sms.check_url');
         $this->token = $config->get('services.cashbill.code_sms.token');
 
-        $this->guzzle = $guzzle;    
-    }
-
-    /**
-     * [getResponse description]
-     * @return object [description]
-     */
-    public function getResponse() : object
-    {
-        return $this->response;
+        $this->guzzle = $guzzle;
     }
 
     /**
@@ -62,17 +54,19 @@ class SMSUtil
      */
     public function authorize(array $attributes) : void
     {
-        $this->response($attributes['code']);
+        $this->prepareResponse($attributes['code']);
 
         if (!$this->isActive()) {
             throw new \N1ebieski\IDir\Exceptions\Cashbill\Codes\SMS\InactiveCodeException(
-                'Code is inactive.', 403
+                'Code is inactive.',
+                403
             );
         }
 
         if (!$this->isNumber($attributes['number'])) {
             throw new \N1ebieski\IDir\Exceptions\Cashbill\Codes\SMS\InvalidNumberException(
-                'Number is invalid.', 403
+                'Number is invalid.',
+                403
             );
         }
     }
@@ -83,7 +77,8 @@ class SMSUtil
      */
     public function isActive() : bool
     {
-        return isset($this->response->active) && (bool)$this->response->active === true;
+        return isset($this->response->active)
+            && (bool)$this->response->active === true;
     }
 
     /**
@@ -93,23 +88,40 @@ class SMSUtil
      */
     public function isNumber(int $number) : bool
     {
-        return isset($this->response->number) && (int)$this->response->number === $number;
+        return isset($this->response->number)
+            && (int)$this->response->number === $number;
     }
 
     /**
-     * [response description]
-     * @param string $code [description]
+     * Undocumented function
+     *
+     * @param string $code
+     * @return object
      */
-    public function response(string $code) : void
+    public function prepareResponse(string $code) : object
+    {
+        $this->makeResponse($code);
+
+        return $this->response = json_decode($this->response->getBody());
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param string $code
+     * @return GuzzleResponse
+     */
+    public function makeResponse(string $code) : GuzzleResponse
     {
         try {
-            $response = $this->guzzle->request('GET', $this->check_url . $this->token . '/' . $code);
+            $this->response = $this->guzzle->request('GET', $this->check_url . $this->token . '/' . $code);
         } catch (\GuzzleHttp\Exception\GuzzleException $e) {
             throw new \N1ebieski\IDir\Exceptions\Cashbill\Exception(
-                $e->getMessage(), $e->getCode()
+                $e->getMessage(),
+                $e->getCode()
             );
         }
 
-        $this->response = json_decode($response->getBody());
+        return $this->response;
     }
 }

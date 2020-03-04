@@ -16,10 +16,10 @@ class EditFull1Load
     public function __construct(Request $request)
     {
         $request->route('dir')->load([
-            'fields', 
+            'fields',
             'regions',
-            'categories', 
-            'group', 
+            'categories',
+            'group',
             'group.prices'
         ]);
     }

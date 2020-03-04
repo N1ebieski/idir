@@ -3,7 +3,9 @@
 namespace N1ebieski\IDir\Http\Requests\Web\Profile;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Validation\Rule;
+use N1ebieski\IDir\Models\Group;
 
 class EditDirRequest extends FormRequest
 {
@@ -24,7 +26,7 @@ class EditDirRequest extends FormRequest
      */
     public function rules()
     {
-        $paginate = config('database.paginate');
+        $paginate = Config::get('database.paginate');
 
         return [
             'page' => 'integer',
@@ -33,11 +35,11 @@ class EditDirRequest extends FormRequest
             'filter.search' => 'bail|nullable|string|min:3|max:255',
             'filter.status' => 'bail|nullable|integer|between:0,4|no_js_validation',
             'filter.group' => [
-                'bail', 
-                'nullable', 
-                'integer', 
+                'bail',
+                'nullable',
+                'integer',
                 'no_js_validation',
-                Rule::exists('groups', 'id')->where('visible', 1)
+                Rule::exists('groups', 'id')->where('visible', Group::VISIBLE)
             ],
             'filter.orderby' => [
                 'bail',

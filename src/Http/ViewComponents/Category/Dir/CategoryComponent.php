@@ -4,6 +4,7 @@ namespace N1ebieski\IDir\Http\ViewComponents\Category\Dir;
 
 use N1ebieski\IDir\Models\Category\Dir\Category;
 use Illuminate\Contracts\Support\Htmlable;
+use Illuminate\Contracts\View\Factory as ViewFactory;
 use Illuminate\View\View;
 
 /**
@@ -18,12 +19,23 @@ class CategoryComponent implements Htmlable
     protected $category;
 
     /**
-     * [__construct description]
-     * @param Category      $category      [description]
+     * Undocumented variable
+     *
+     * @var ViewFactory
      */
-    public function __construct(Category $category)
+    protected $view;
+
+    /**
+     * Undocumented function
+     *
+     * @param Category $category
+     * @param ViewFactory $view
+     */
+    public function __construct(Category $category, ViewFactory $view)
     {
         $this->category = $category;
+
+        $this->view = $view;
     }
 
     /**
@@ -32,7 +44,7 @@ class CategoryComponent implements Htmlable
      */
     public function toHtml() : View
     {
-        return view('idir::web.components.category.dir.category', [
+        return $this->view->make('idir::web.components.category.dir.category', [
             'categories' => $this->category->makeCache()->rememberRootsWithNestedMorphsCount()
         ]);
     }

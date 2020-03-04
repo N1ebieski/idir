@@ -2,7 +2,7 @@
 
 namespace N1ebieski\IDir\Http\Controllers\Admin;
 
-use Illuminate\View\View;
+use Illuminate\Support\Facades\View;
 use N1ebieski\IDir\Models\Dir;
 use N1ebieski\ICore\Models\Link;
 use N1ebieski\IDir\Models\Group;

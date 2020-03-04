@@ -2,6 +2,7 @@
 
 namespace N1ebieski\IDir\Observers;
 
+use Illuminate\Support\Facades\Cache;
 use N1ebieski\IDir\Models\Dir;
 
 /**
@@ -17,7 +18,7 @@ class DirObserver
      */
     public function created(Dir $dir)
     {
-        cache()->tags(['dirs', 'links'])->flush();
+        Cache::tags(['dirs', 'links'])->flush();
     }
 
     /**
@@ -28,7 +29,7 @@ class DirObserver
      */
     public function updated(Dir $dir)
     {
-        cache()->tags(['dir.'.$dir->slug, 'dirs', 'links'])->flush();
+        Cache::tags(['dir.'.$dir->slug, 'dirs', 'links'])->flush();
     }
 
     /**
@@ -39,7 +40,7 @@ class DirObserver
      */
     public function deleted(Dir $dir)
     {
-        cache()->tags(['dir.'.$dir->slug, 'dirs', 'links'])->flush();
+        Cache::tags(['dir.'.$dir->slug, 'dirs', 'links'])->flush();
     }
 
     /**

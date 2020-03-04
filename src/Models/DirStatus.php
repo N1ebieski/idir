@@ -3,6 +3,7 @@
 namespace N1ebieski\IDir\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\App;
 use N1ebieski\IDir\Models\Dir;
 use N1ebieski\IDir\Repositories\DirStatusRepo;
 use N1ebieski\IDir\Services\DirStatusService;
@@ -76,7 +77,7 @@ class DirStatus extends Model
         return $this->belongsTo('N1ebieski\IDir\Models\Dir');
     }
 
-    // // Makers
+    // Makers
 
     /**
      * [makeRepo description]
@@ -84,7 +85,7 @@ class DirStatus extends Model
      */
     public function makeRepo()
     {
-        return app()->make(DirStatusRepo::class, ['dirStatus' => $this]);
+        return App::make(DirStatusRepo::class, ['dirStatus' => $this]);
     }
 
     /**
@@ -93,6 +94,6 @@ class DirStatus extends Model
      */
     public function makeService()
     {
-        return app()->make(DirStatusService::class, ['dirStatus' => $this]);
+        return App::make(DirStatusService::class, ['dirStatus' => $this]);
     }
 }

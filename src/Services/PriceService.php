@@ -2,10 +2,10 @@
 
 namespace N1ebieski\IDir\Services;
 
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Collection as Collect;
 use N1ebieski\IDir\Models\Price;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Collection as Collect;
 use N1ebieski\ICore\Services\Interfaces\Creatable;
 use N1ebieski\ICore\Services\Interfaces\Updatable;
 
@@ -78,7 +78,7 @@ class PriceService implements Creatable, Updatable
     {
         return $this->prices = $this->price->makeRepo()
             ->getByIds($ids)
-            ->map(function($item) {
+            ->map(function ($item) {
                 return $item->setGroup($this->price->getGroup());
             });
     }

@@ -2,9 +2,10 @@
 
 namespace N1ebieski\IDir\Http\Requests\Traits;
 
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\UploadedFile;
 use N1ebieski\IDir\Models\Field\Field;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Collection as Collect;
 
 /**
  * [trait description]
@@ -44,12 +45,14 @@ trait FieldsExtended
 
         $this->merge([
             'field' => [
-                $field->id => collect($this->input("field.{$field->id}"))->filter(function($item) {
-                    return isset($item['lat']) && $item['lat'] !== null
-                        && isset($item['long']) && $item['long'] !== null;
-                })->toArray()
+                $field->id => Collect::make($this->input("field.{$field->id}"))
+                    ->filter(function ($item) {
+                        return isset($item['lat']) && $item['lat'] !== null
+                            && isset($item['long']) && $item['long'] !== null;
+                    })
+                    ->toArray()
             ] + $this->input('field')
-        ]);      
+        ]);
     }
 
     /**
@@ -93,39 +96,39 @@ trait FieldsExtended
                 'required' : 'nullable';
 
             switch ($field->type) {
-                case 'map' :
+                case 'map':
                     $rules["field.{$field->id}"] = [
                         'array',
                         'max:1',
                         'no_js_validation'
                     ];
                     $rules["field.{$field->id}.*.lat"] = [
-                        'bail', 
+                        'bail',
                         (bool)$field->options->required === true ? 'required' : 'nullable',
-                        "required_with:field.{$field->id}.*.long", 
+                        "required_with:field.{$field->id}.*.long",
                         'numeric',
                         'between:-90,90'
                     ];
                     $rules["field.{$field->id}.*.long"] = [
-                        'bail', 
-                        (bool)$field->options->required === true ? 'required' : 'nullable',                        
-                        "required_with:field.{$field->id}.*.lat", 
+                        'bail',
+                        (bool)$field->options->required === true ? 'required' : 'nullable',
+                        "required_with:field.{$field->id}.*.lat",
                         'numeric',
                         'between:-180,180'
                     ];
                     break;
 
-                case 'regions' :
+                case 'regions':
                     $rules["field.{$field->id}"][] = 'array';
                     $rules["field.{$field->id}"][] = 'exists:regions,id';
                     break;
 
-                case 'multiselect' :
-                case 'checkbox' :
+                case 'multiselect':
+                case 'checkbox':
                     $rules["field.{$field->id}"][] = 'array';
                     break;
 
-                case 'image' :
+                case 'image':
                     $rules["field.{$field->id}"][] = 'image';
                     $rules["field.{$field->id}"][] = 'mimes:jpeg,png,jpg';
                     $rules["field.{$field->id}"][] = 'max:' . $field->options->size;
@@ -133,7 +136,7 @@ trait FieldsExtended
                     // $rules["field.{$field->id}"][] = 'no_js_validation';
                     break;
 
-                default :
+                default:
                     $rules["field.{$field->id}"][] = 'string';
             }
 

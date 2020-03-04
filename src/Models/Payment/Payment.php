@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use N1ebieski\IDir\Services\PaymentService;
 use N1ebieski\IDir\Repositories\PaymentRepo;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\App;
 use N1ebieski\ICore\Models\Traits\Carbonable;
 use N1ebieski\ICore\Models\Traits\Polymorphic;
 use Ramsey\Uuid\Uuid;
@@ -92,7 +93,7 @@ class Payment extends Model
      * [priceMorph description]
      * @return [type] [description]
      */
-    public function price_morph()
+    public function priceMorph()
     {
         return $this->morphTo('price', 'price_type', 'price_id');
     }
@@ -166,7 +167,7 @@ class Payment extends Model
      */
     public function makeService()
     {
-        return app()->make(PaymentService::class, ['payment' => $this]);
+        return App::make(PaymentService::class, ['payment' => $this]);
     }
 
     /**
@@ -175,6 +176,6 @@ class Payment extends Model
      */
     public function makeRepo()
     {
-        return app()->make(PaymentRepo::class, ['payment' => $this]);
+        return App::make(PaymentRepo::class, ['payment' => $this]);
     }
 }

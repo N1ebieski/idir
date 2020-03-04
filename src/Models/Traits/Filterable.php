@@ -20,7 +20,7 @@ trait Filterable
      */
     public function scopeFilterVisible(Builder $query, int $visible = null) : ?Builder
     {
-        return $query->when($visible !== null, function($query) use ($visible) {
+        return $query->when($visible !== null, function ($query) use ($visible) {
             return $query->where('visible', $visible);
         });
     }
@@ -33,10 +33,10 @@ trait Filterable
      */
     public function scopeFilterRegion(Builder $query, string $region = null) : ?Builder
     {
-        return $query->when($region !== null, function($query) use ($region) {
-            return $query->whereHas('regions', function($query) use ($region) {
+        return $query->when($region !== null, function ($query) use ($region) {
+            return $query->whereHas('regions', function ($query) use ($region) {
                 $query->where('slug', $region);
             });
         });
-    }    
+    }
 }

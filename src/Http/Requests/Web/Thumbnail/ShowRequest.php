@@ -2,7 +2,10 @@
 
 namespace N1ebieski\IDir\Http\Requests\Web\Thumbnail;
 
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Response;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Response as HttpResponse;
 
 class ShowRequest extends FormRequest
 {
@@ -35,9 +38,9 @@ class ShowRequest extends FormRequest
     {
         if ($this->has('url') && is_string($this->input('url'))) {
             try {
-                $url = app()->make('crypt.thumbnail')->decryptString($this->input('url'));
+                $url = App::make('crypt.thumbnail')->decryptString($this->input('url'));
             } catch (\Exception $e) {
-                abort(403, $e->getMessage());
+                Response::abort(HttpResponse::HTTP_FORBIDDEN, $e->getMessage());
             }
 
             $this->merge(['url' => $url]);

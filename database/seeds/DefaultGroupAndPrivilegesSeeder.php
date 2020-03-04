@@ -38,7 +38,7 @@ class DefaultGroupAndPrivilegesSeeder extends Seeder
             'visible' => Group::INVISIBLE,
             'backlink' => Group::WITHOUT_BACKLINK,
             'apply_status' => Group::APPLY_INACTIVE,
-            'url' => Group::WITH_URL
+            'url' => Group::OPTIONAL_URL
         ]);
     }
 }
