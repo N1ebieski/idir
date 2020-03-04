@@ -4,6 +4,7 @@ namespace N1ebieski\IDir\Http\Requests\Admin\Group;
 
 use Illuminate\Foundation\Http\FormRequest;
 use N1ebieski\IDir\Http\Requests\Admin\Group\Traits\CodePayable;
+use Illuminate\Support\Collection as Collect;
 
 class UpdateRequest extends FormRequest
 {
@@ -49,9 +50,9 @@ class UpdateRequest extends FormRequest
 
             $this->merge([
                 'prices' => [
-                    $type => collect($this->input("prices.{$type}"))->filter(function($item) {
+                    $type => Collect::make($this->input("prices.{$type}"))->filter(function ($item) {
                         return isset($item['select']) && $item['price'] !== null;
-                    })->map(function($item) {
+                    })->map(function ($item) {
                         if (isset($item['codes']['codes']) && is_string($item['codes']['codes'])) {
                             $item['codes']['codes'] = $this->prepareCodes($item['codes']['codes']);
                         }

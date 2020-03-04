@@ -35,7 +35,7 @@
                     <div class="btn text-dark">
                     {{ trans('idir::dirs.group_limit', [
                         'dirs' => $group->max_models ?? trans('idir::dirs.unlimited'),
-                        'dirs_today' =>$group->max_models_daily ?? trans('idir::dirs.unlimited')
+                        'dirs_today' => $group->max_models_daily ?? trans('idir::dirs.unlimited')
                     ]) }}
                     </div>
                     @endcan

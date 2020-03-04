@@ -4,6 +4,7 @@ namespace N1ebieski\IDir\Http\ViewComponents\Dir;
 
 use N1ebieski\IDir\Models\Dir;
 use Illuminate\Contracts\Support\Htmlable;
+use Illuminate\Contracts\View\Factory as ViewFactory;
 use Illuminate\View\View;
 
 /**
@@ -20,6 +21,13 @@ class CarouselComponent implements Htmlable
     /**
      * Undocumented variable
      *
+     * @var ViewFactory
+     */
+    protected $view;
+
+    /**
+     * Undocumented variable
+     *
      * @var integer
      */
     protected $limit;
@@ -28,11 +36,14 @@ class CarouselComponent implements Htmlable
      * Undocumented function
      *
      * @param Dir $dir
+     * @param ViewFactory $view
      * @param integer $limit
      */
-    public function __construct(Dir $dir, int $limit = null)
+    public function __construct(Dir $dir, ViewFactory $view, int $limit = null)
     {
         $this->dir = $dir;
+
+        $this->view = $view;
 
         $this->limit = $limit;
     }
@@ -43,7 +54,7 @@ class CarouselComponent implements Htmlable
      */
     public function toHtml() : View
     {
-        return view('idir::web.components.dir.carousel', [
+        return $this->view->make('idir::web.components.dir.carousel', [
             'dirs' => $this->dir->makeCache()->rememberAdvertisingPrivilegedByComponent([
                 'limit' => $this->limit
             ])

@@ -2,9 +2,10 @@
 
 namespace N1ebieski\IDir\Rules\Codes;
 
-use Illuminate\Contracts\Validation\Rule;
-use N1ebieski\IDir\Models\Code;
 use Illuminate\Http\Request;
+use N1ebieski\IDir\Models\Code;
+use Illuminate\Contracts\Validation\Rule;
+use Illuminate\Contracts\Translation\Translator as Lang;
 
 /**
  * [Recaptcha_v2 description]
@@ -18,12 +19,22 @@ class CodesRule implements Rule
     protected $request;
 
     /**
-     * [__construct description]
-     * @param Request  $request  [description]
+     * Undocumented variable
+     *
+     * @var Lang
      */
-    public function __construct(Request $request)
+    protected $lang;
+
+    /**
+     * Undocumented function
+     *
+     * @param Request $request
+     * @param Lang $lang
+     */
+    public function __construct(Request $request, Lang $lang)
     {
         $this->request = $request;
+        $this->lang = $lang;
     }
 
     /**
@@ -51,7 +62,7 @@ class CodesRule implements Rule
         if (($check = $this->price->makeRepo()->firstCodeByCode($value)) instanceof Code) {
             if ($check->quantity === 1) {
                 $check->delete();
-            } else if ($check->quantity > 1) {
+            } elseif ($check->quantity > 1) {
                 $check->decrement('quantity');
             }
 
@@ -72,6 +83,6 @@ class CodesRule implements Rule
      */
     public function message()
     {
-        return trans('idir::validation.code');
+        return $this->lang->get('idir::validation.code');
     }
 }

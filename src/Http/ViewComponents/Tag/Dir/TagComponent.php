@@ -4,6 +4,7 @@ namespace N1ebieski\IDir\Http\ViewComponents\Tag\Dir;
 
 use N1ebieski\ICore\Http\ViewComponents\Tag\TagComponent as BaseTagComponent;
 use N1ebieski\IDir\Models\Tag\Dir\Tag;
+use Illuminate\Contracts\View\Factory as ViewFactory;
 use Illuminate\View\View;
 
 /**
@@ -22,13 +23,19 @@ class TagComponent extends BaseTagComponent
      * Undocumented function
      *
      * @param Tag $tag
+     * @param ViewFactory $view
      * @param integer $limit
-     * @param array $cats
      * @param array $colors
+     * @param array $cats
      */
-    public function __construct(Tag $tag, int $limit = 25, array $colors = null, array $cats = null)
-    {
-        parent::__construct($tag, $limit, $colors);
+    public function __construct(
+        Tag $tag,
+        ViewFactory $view,
+        int $limit = 25,
+        array $colors = null,
+        array $cats = null
+    ) {
+        parent::__construct($tag, $view, $limit, $colors);
 
         $this->cats = $cats;
     }
@@ -39,7 +46,7 @@ class TagComponent extends BaseTagComponent
      */
     public function toHtml() : View
     {
-        return view('idir::web.components.tag.dir.tag', [
+        return $this->view->make('idir::web.components.tag.dir.tag', [
             'tags' => $this->tag->makeCache()->rememberPopularByComponent([
                 'limit' => $this->limit,
                 'cats' => $this->cats

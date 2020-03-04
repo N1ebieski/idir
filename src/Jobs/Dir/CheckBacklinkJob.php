@@ -2,19 +2,21 @@
 
 namespace N1ebieski\IDir\Jobs\Dir;
 
+use Exception;
 use Illuminate\Bus\Queueable;
+use Illuminate\Support\Carbon;
+use Illuminate\Contracts\Mail\Mailer;
 use Illuminate\Queue\SerializesModels;
+use N1ebieski\IDir\Models\DirBacklink;
 use Illuminate\Queue\InteractsWithQueue;
+use N1ebieski\IDir\Repositories\DirRepo;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use N1ebieski\IDir\Models\DirBacklink;
 use N1ebieski\IDir\Repositories\DirBacklinkRepo;
-use N1ebieski\IDir\Repositories\DirRepo;
-use Illuminate\Support\Facades\Mail;
+use Illuminate\Contracts\Config\Repository as Config;
+use Illuminate\Contracts\Foundation\Application as App;
+use Illuminate\Contracts\Validation\Factory as Validator;
 use N1ebieski\IDir\Mail\DirBacklink\BacklinkNotFoundMail;
-use Illuminate\Support\Facades\Validator;
-use Carbon\Carbon;
-use Exception;
 
 /**
  * [CheckBacklink description]
@@ -49,6 +51,41 @@ class CheckBacklinkJob implements ShouldQueue
     protected $dirRepo;
 
     /**
+     * Undocumented variable
+     *
+     * @var Carbon
+     */
+    protected $carbon;
+
+    /**
+     * Undocumented variable
+     *
+     * @var App
+     */
+    protected $app;
+
+    /**
+     * Undocumented variable
+     *
+     * @var Mailer
+     */
+    protected $mailer;
+
+    /**
+     * Undocumented variable
+     *
+     * @var Validator
+     */
+    protected $validator;
+
+    /**
+     * Undocumented variable
+     *
+     * @var Config
+     */
+    protected $config;
+
+    /**
      * [protected description]
      * @var int
      */
@@ -69,9 +106,6 @@ class CheckBacklinkJob implements ShouldQueue
     public function __construct(DirBacklink $dirBacklink)
     {
         $this->dirBacklink = $dirBacklink;
-
-        $this->hours = config('idir.dir.backlink.check_hours');
-        $this->max_attempts = config('idir.dir.backlink.max_attempts');
     }
 
     /**
@@ -81,8 +115,8 @@ class CheckBacklinkJob implements ShouldQueue
     protected function isAttempt() : bool
     {
         return $this->dirBacklink->attempted_at === null ||
-            Carbon::parse($this->dirBacklink->attempted_at)->lessThanOrEqualTo(
-                Carbon::now()->subHours($this->hours)
+            $this->carbon->parse($this->dirBacklink->attempted_at)->lessThanOrEqualTo(
+                $this->carbon->now()->subHours($this->hours)
             );
     }
 
@@ -102,8 +136,8 @@ class CheckBacklinkJob implements ShouldQueue
      */
     protected function validateBacklink() : bool
     {
-        $validator = Validator::make(['backlink_url' => $this->dirBacklink->url], [
-            'backlink_url' => app()->make('N1ebieski\\IDir\\Rules\\BacklinkRule', [
+        $validator = $this->validator->make(['backlink_url' => $this->dirBacklink->url], [
+            'backlink_url' => $this->app->make('N1ebieski\\IDir\\Rules\\BacklinkRule', [
                 'link' => $this->dirBacklink->link->url
             ])
         ]);
@@ -116,7 +150,9 @@ class CheckBacklinkJob implements ShouldQueue
      */
     protected function sendMailToUser() : void
     {
-        Mail::send(app()->makeWith(BacklinkNotFoundMail::class, ['dirBacklink' => $this->dirBacklink]));
+        $this->mailer->send(
+            $this->app->make(BacklinkNotFoundMail::class, ['dirBacklink' => $this->dirBacklink])
+        );
     }
 
     /**
@@ -152,10 +188,23 @@ class CheckBacklinkJob implements ShouldQueue
      *
      * @return void
      */
-    public function handle() : void
-    {
+    public function handle(
+        Config $config,
+        Validator $validator,
+        Mailer $mailer,
+        App $app,
+        Carbon $carbon
+    ) : void {
         $this->dirBacklinkRepo = $this->dirBacklink->makeRepo();
         $this->dirRepo = $this->dirBacklink->dir->makeRepo();
+        
+        $this->validator = $validator;
+        $this->mailer = $mailer;
+        $this->app = $app;
+        $this->carbon = $carbon;
+
+        $this->hours = $config->get('idir.dir.backlink.check_hours');
+        $this->max_attempts = $config->get('idir.dir.backlink.max_attempts');
 
         if ($this->isAttempt()) {
             $this->dirBacklinkRepo->attemptedNow();

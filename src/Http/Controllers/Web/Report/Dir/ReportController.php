@@ -2,11 +2,14 @@
 
 namespace N1ebieski\IDir\Http\Controllers\Web\Report\Dir;
 
-use N1ebieski\IDir\Http\Requests\Web\Report\Dir\CreateRequest;
 use N1ebieski\IDir\Models\Dir;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Lang;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Response;
 use N1ebieski\IDir\Models\Report\Dir\Report;
 use N1ebieski\IDir\Http\Requests\Web\Report\Dir\StoreRequest;
-use Illuminate\Http\JsonResponse;
+use N1ebieski\IDir\Http\Requests\Web\Report\Dir\CreateRequest;
 use N1ebieski\IDir\Http\Controllers\Web\Report\Dir\Polymorphic;
 
 class ReportController implements Polymorphic
@@ -20,9 +23,9 @@ class ReportController implements Polymorphic
      */
     public function create(Dir $dir, CreateRequest $request) : JsonResponse
     {
-        return response()->json([
+        return Response::json([
             'success' => '',
-            'view' => view('icore::web.report.create', [
+            'view' => View::make('icore::web.report.create', [
                 'model' => $dir
             ])->render()
         ]);
@@ -40,8 +43,8 @@ class ReportController implements Polymorphic
     {
         $report->setMorph($dir)->makeService()->create($request->only('content'));
 
-        return response()->json([
-            'success' => trans('icore::reports.success.store')
+        return Response::json([
+            'success' => Lang::get('icore::reports.success.store')
         ]);
     }
 }

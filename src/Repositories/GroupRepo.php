@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Collection;
 use N1ebieski\IDir\Models\Group;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\Config\Repository as Config;
-use Illuminate\Support\Facades\DB;
 
 /**
  * [CommentRepo description]
@@ -33,6 +32,7 @@ class GroupRepo
     public function __construct(Group $group, Config $config)
     {
         $this->group = $group;
+
         $this->paginate = $config->get('database.paginate');
     }
 
@@ -70,7 +70,7 @@ class GroupRepo
     {
         return $this->group->public()
             ->with(['privileges', 'prices'])
-            ->withCount(['dirs', 'dirs_today'])
+            ->withCount(['dirs', 'dirsToday'])
             ->orderBy('position', 'asc')
             ->get();
     }
@@ -83,7 +83,7 @@ class GroupRepo
     {
         return $this->group
             ->with(['privileges', 'prices'])
-            ->withCount(['dirs', 'dirs_today'])
+            ->withCount(['dirs', 'dirsToday'])
             ->orderBy('position', 'asc')
             ->get();
     }
@@ -112,7 +112,7 @@ class GroupRepo
             ->with(['fields' => function ($query) {
                 return $query->public();
             }])
-            // ->withCount(['dirs', 'dirs_today'])
+            // ->withCount(['dirs', 'dirsToday'])
             ->first();
     }
 
@@ -134,7 +134,8 @@ class GroupRepo
      */
     public function getWithField(int $id) : Collection
     {
-        return $this->group->with(['fields' => function($query) use ($id) {
+        return $this->group->with([
+            'fields' => function ($query) use ($id) {
                 $query->where('field_id', $id);
             }])
             ->orderBy('position', 'asc')

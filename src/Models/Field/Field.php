@@ -11,6 +11,7 @@ use N1ebieski\IDir\Models\Traits\Filterable;
 use N1ebieski\IDir\Repositories\FieldRepo;
 use N1ebieski\IDir\Services\FieldService;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\App;
 
 /**
  * [Field description]
@@ -81,7 +82,7 @@ class Field extends Model
      */
     public function scopeFilterType(Builder $query, string $type = null) : ?Builder
     {
-        return $query->when($type !== null, function($query) use ($type) {
+        return $query->when($type !== null, function ($query) use ($type) {
             return $query->where('type', $type);
         });
     }
@@ -107,19 +108,19 @@ class Field extends Model
     {
         parent::boot();
 
-        static::saving(function(Field $field) {
+        static::saving(function (Field $field) {
             $field->position = $field->position ?? $field->getNextAfterLastPosition();
         });
 
         // Everytime the model is removed, we have to decrement siblings position by 1
-        static::deleted(function(Field $field) {
+        static::deleted(function (Field $field) {
             $field->decrementSiblings($field->position, null);
         });
 
         // Everytime the model's position
         // is changed, all siblings reordering will happen,
         // so they will always keep the proper order.
-        static::saved(function(Field $field) {
+        static::saved(function (Field $field) {
             $field->reorderSiblings();
         });
     }
@@ -180,7 +181,7 @@ class Field extends Model
      */
     public function makeRepo()
     {
-        return app()->make(FieldRepo::class, ['field' => $this]);
+        return App::make(FieldRepo::class, ['field' => $this]);
     }
 
     /**
@@ -189,6 +190,6 @@ class Field extends Model
      */
     public function makeService()
     {
-        return app()->make(FieldService::class, ['field' => $this]);
+        return App::make(FieldService::class, ['field' => $this]);
     }
 }

@@ -60,12 +60,8 @@ class AppServiceProvider extends ServiceProvider
             return $this->app->make(\N1ebieski\IDir\Http\Requests\Web\Search\IndexRequest::class, $with);
         });
 
-        $this->app->bindMethod(\N1ebieski\IDir\Jobs\Tag\Dir\CachePopularTags::class.'@handle', function ($job, $app) {
+        $this->app->bindMethod(\N1ebieski\IDir\Jobs\Tag\Dir\CachePopularTagsJob::class.'@handle', function ($job, $app) {
             return $job->handle($app->make(\N1ebieski\IDir\Models\Tag\Dir\Tag::class));
         });
-
-        // $this->app->bind(\N1ebieski\ICore\Models\User::class, function($app, array $with) {
-        //     return $this->app->make(\N1ebieski\IDir\Models\User::class, $with);
-        // });
     }
 }

@@ -2,9 +2,10 @@
 
 namespace N1ebieski\IDir\Rules;
 
-use Illuminate\Contracts\Validation\Rule;
-use GuzzleHttp\Client as GuzzleClient;
 use Illuminate\Support\Str;
+use GuzzleHttp\Client as GuzzleClient;
+use Illuminate\Contracts\Validation\Rule;
+use Illuminate\Contracts\Translation\Translator as Lang;
 
 /**
  * [Backlink description]
@@ -24,16 +25,25 @@ class BacklinkRule implements Rule
     protected $guzzle;
 
     /**
-     * Create a new rule instance.
+     * Undocumented variable
      *
-     * @param string $link [description]
-     * @param GuzzleClient $guzzle [description]
-     * @return void
+     * @var Lang
      */
-    public function __construct(string $link, GuzzleClient $guzzle)
+    protected $lang;
+
+    /**
+     * Undocumented function
+     *
+     * @param string $link
+     * @param GuzzleClient $guzzle
+     * @param Lang $lang
+     */
+    public function __construct(string $link, GuzzleClient $guzzle, Lang $lang)
     {
         $this->link = $link;
+
         $this->guzzle = $guzzle;
+        $this->lang = $lang;
     }
 
     /**
@@ -64,8 +74,10 @@ class BacklinkRule implements Rule
             return false;
         }
 
-        return preg_match('/<a\s((?:(?!nofollow|>).)*)href=([\"\']??)' . Str::escaped($this->link) . '([\"\']??)((?:(?!nofollow|>).)*)>(.*)<\/a>/siU',
-            $response->getBody()->getContents());
+        return preg_match(
+            '/<a\s((?:(?!nofollow|>).)*)href=([\"\']??)' . Str::escaped($this->link) . '([\"\']??)((?:(?!nofollow|>).)*)>(.*)<\/a>/siU',
+            $response->getBody()->getContents()
+        );
     }
 
     /**
@@ -75,6 +87,6 @@ class BacklinkRule implements Rule
      */
     public function message()
     {
-        return trans('idir::validation.backlink');
+        return $this->lang->get('idir::validation.backlink');
     }
 }

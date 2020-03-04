@@ -2,11 +2,16 @@
 
 namespace N1ebieski\IDir\Http\Requests\Web\Dir;
 
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use N1ebieski\IDir\Models\Group;
+use Illuminate\Support\Facades\App;
 use Mews\Purifier\Facades\Purifier;
 use N1ebieski\IDir\Models\BanValue;
+use Illuminate\Support\Facades\Lang;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Database\Eloquent\Collection;
+use N1ebieski\IDir\Models\Category\Dir\Category;
 use N1ebieski\IDir\Http\Requests\Traits\FieldsExtended;
 
 /**
@@ -164,7 +169,7 @@ class Store2Request extends FormRequest
                 'distinct',
                 Rule::exists('categories', 'id')->where(function ($query) {
                     $query->where([
-                        ['status', 1],
+                        ['status', Category::ACTIVE],
                         ['model_type', 'N1ebieski\\IDir\\Models\\Dir']
                     ]);
                 })
@@ -179,17 +184,19 @@ class Store2Request extends FormRequest
                 'bail',
                 'required',
                 'string',
-                'between:' . config('idir.dir.min_content') . ',' . config('idir.dir.max_content'),
+                'between:' . Config::get('idir.dir.min_content') . ',' . Config::get('idir.dir.max_content'),
                 !empty($this->bans_words) ? 'not_regex:/(.*)(\s|^)('.$this->bans_words.')(\s|\.|,|\?|$)(.*)/i' : null
             ],
             'notes' => 'bail|nullable|string|between:3,255',
             'url' => [
                 'bail',
-                ($this->group->url === 2) ? 'required' : 'nullable',
+                ($this->group->url === Group::OBLIGATORY_URL) ?
+                    'required'
+                    : 'nullable',
                 'string',
                 'regex:/^(https|http):\/\/([\da-z\.-]+)(\.[a-z]{2,6})\/?$/',
                 !empty($this->bans_urls) ? 'not_regex:/('.$this->bans_urls.')/i' : null,
-                app()->make(\N1ebieski\IDir\Rules\UniqueUrlRule::class, [
+                App::make(\N1ebieski\IDir\Rules\UniqueUrlRule::class, [
                     'table' => 'dirs',
                     'column' => 'url'
                 ])
@@ -217,7 +224,7 @@ class Store2Request extends FormRequest
     public function messages()
     {
         return [
-            'content.not_regex' => trans('icore::validation.not_regex_contains', [
+            'content.not_regex' => Lang::get('icore::validation.not_regex_contains', [
                 'words' => str_replace('|', ', ', $this->bans)
             ]),
             'url.not_regex' => 'This address url is banned.'

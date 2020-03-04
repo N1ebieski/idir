@@ -3,6 +3,7 @@
 namespace N1ebieski\IDir\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\App;
 use N1ebieski\IDir\Repositories\PrivilegeRepo;
 
 /**
@@ -25,6 +26,6 @@ class Privilege extends Model
      */
     public function makeRepo()
     {
-        return app()->make(PrivilegeRepo::class, ['privilege' => $this]);
+        return App::make(PrivilegeRepo::class, ['privilege' => $this]);
     }
 }

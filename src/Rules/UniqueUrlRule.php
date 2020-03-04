@@ -3,13 +3,29 @@
 namespace N1ebieski\IDir\Rules;
 
 use Illuminate\Contracts\Validation\Rule;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Query\Builder;
+use Illuminate\Contracts\Translation\Translator as Lang;
+use Illuminate\Database\Connection as DB;
 
 /**
  * [UniqueUrl description]
  */
 class UniqueUrlRule implements Rule
 {
+    /**
+     * Undocumented variable
+     *
+     * @var DB
+     */
+    protected $db;
+
+    /**
+     * Undocumented variable
+     *
+     * @var Lang
+     */
+    protected $lang;
+
     /**
      * [private description]
      * @var string
@@ -30,13 +46,25 @@ class UniqueUrlRule implements Rule
     protected $ignore;
 
     /**
+     * Undocumented variable
+     *
+     * @var array
+     */
+    protected array $begins = ['http://', 'http://www.', 'https://', 'https://www.'];
+
+    /**
      * Undocumented function
      *
+     * @param DB $db
      * @param string $table
      * @param string $column
+     * @param integer $ignore
      */
-    public function __construct(string $table, string $column, int $ignore = null)
+    public function __construct(DB $db, Lang $lang, string $table, string $column, int $ignore = null)
     {
+        $this->db = $db;
+        $this->lang = $lang;
+
         $this->table = $table;
         $this->column = $column;
         $this->ignore = $ignore;
@@ -66,16 +94,13 @@ class UniqueUrlRule implements Rule
     {
         $url = str_replace('www.', '', parse_url($value, PHP_URL_HOST));
 
-        return DB::table($this->table)
-            ->where(function ($query) use ($url) {
-                return $query->whereRaw("MATCH (url) AGAINST (? IN BOOLEAN MODE)", [
-                    '+"/' . $url . '"'
-                ])
-                ->orWhereRaw("MATCH (url) AGAINST (? IN BOOLEAN MODE)", [
-                    '+"/www.' . $url . '"'
-                ]);
+        return $this->db->table($this->table)
+            ->where(function (Builder $query) use ($url) {
+                foreach ($this->begins as $begin) {
+                    $query->where('url', '=', $begin . $url, 'or');
+                }
             })
-            ->when($this->ignore !== null, function ($query) {
+            ->when($this->ignore !== null, function (Builder $query) {
                 $query->where('id', '<>', $this->ignore);
             })
             ->count() === 0;
@@ -88,7 +113,7 @@ class UniqueUrlRule implements Rule
      */
     public function message()
     {
-        return __('validation.unique');
+        return $this->lang->get('validation.unique');
     }
 
     /**

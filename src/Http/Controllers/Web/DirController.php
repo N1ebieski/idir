@@ -2,18 +2,21 @@
 
 namespace N1ebieski\IDir\Http\Controllers\Web;
 
-use Illuminate\View\View;
 use N1ebieski\IDir\Models\Dir;
 use N1ebieski\ICore\Models\Link;
 use N1ebieski\IDir\Models\Group;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\App;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Response;
 use N1ebieski\IDir\Loads\Web\Dir\ShowLoad;
 use N1ebieski\IDir\Loads\Web\Dir\Edit1Load;
 use N1ebieski\IDir\Loads\Web\Dir\Edit2Load;
 use N1ebieski\IDir\Loads\Web\Dir\Edit3Load;
 use N1ebieski\IDir\Loads\Web\Dir\Store2Load;
 use N1ebieski\IDir\Loads\Web\Dir\Store3Load;
+use Illuminate\Http\Response as HttpResponse;
 use N1ebieski\IDir\Loads\Web\Dir\Create2Load;
 use N1ebieski\IDir\Loads\Web\Dir\Create3Load;
 use N1ebieski\IDir\Loads\Web\Dir\DestroyLoad;
@@ -63,11 +66,11 @@ class DirController
      * @param Dir $dir
      * @param IndexRequest $request
      * @param ShowRequest $filter
-     * @return View
+     * @return HttpResponse
      */
-    public function index(Dir $dir, IndexRequest $request, IndexFilter $filter) : View
+    public function index(Dir $dir, IndexRequest $request, IndexFilter $filter) : HttpResponse
     {
-        return view('idir::web.dir.index', [
+        return Response::view('idir::web.dir.index', [
             'dirs' => $dir->makeCache()->rememberForWebByFilter(
                 $filter->all(),
                 $request->input('page') ?? 1
@@ -80,11 +83,11 @@ class DirController
      * [search description]
      * @param  Dir           $dir    [description]
      * @param  SearchRequest $request [description]
-     * @return View                   [description]
+     * @return HttpResponse                   [description]
      */
-    public function search(Dir $dir, SearchRequest $request, SearchFilter $filter) : View
+    public function search(Dir $dir, SearchRequest $request, SearchFilter $filter) : HttpResponse
     {
-        return view('idir::web.dir.search', [
+        return Response::view('idir::web.dir.search', [
             'dirs' => $dir->makeRepo()->paginateBySearchAndFilter(
                 $request->input('search'),
                 $filter->all()
@@ -102,7 +105,7 @@ class DirController
      * @param ShowLoad $load
      * @param ShowRequest $request
      * @param ShowFilter $filter
-     * @return View
+     * @return HttpResponse
      */
     public function show(
         Dir $dir,
@@ -110,16 +113,14 @@ class DirController
         ShowLoad $load,
         ShowRequest $request,
         ShowFilter $filter
-    ) : View {
-        $comments = $comment->setMorph($dir)->makeCache()->rememberRootsByFilter(
-            $filter->all() + ['except' => $request->input('except')],
-            $request->input('page') ?? 1
-        );
-
-        return view('idir::web.dir.show', [
+    ) : HttpResponse {
+        return Response::view('idir::web.dir.show', [
             'dir' => $dir,
             'related' => $dir->makeCache()->rememberRelated(),
-            'comments' => $comments,
+            'comments' => $comment->setMorph($dir)->makeCache()->rememberRootsByFilter(
+                $filter->all() + ['except' => $request->input('except')],
+                $request->input('page') ?? 1
+            ),
             'filter' => $filter->all()
         ]);
     }
@@ -127,11 +128,11 @@ class DirController
     /**
      * [create1 description]
      * @param Group     $group     [description]
-     * @return View
+     * @return HttpResponse
      */
-    public function create1(Group $group) : View
+    public function create1(Group $group) : HttpResponse
     {
-        return view('idir::web.dir.create.1', [
+        return Response::view('idir::web.dir.create.1', [
             'groups' => $group->makeRepo()->getPublicWithRels()
         ]);
     }
@@ -141,11 +142,11 @@ class DirController
      * @param  Group          $group   [description]
      * @param  Create2Load    $load    [description]
      * @param  Create2Request $request [description]
-     * @return View                    [description]
+     * @return HttpResponse            [description]
      */
-    public function create2(Group $group, Create2Load $load, Create2Request $request) : View
+    public function create2(Group $group, Create2Load $load, Create2Request $request) : HttpResponse
     {
-        return view('idir::web.dir.create.2', compact('group'));
+        return Response::view('idir::web.dir.create.2', compact('group'));
     }
 
     /**
@@ -160,7 +161,7 @@ class DirController
     {
         $dir->makeService()->createOrUpdateSession($request->validated());
 
-        return redirect()->route('web.dir.create_3', [$group->id]);
+        return Response::redirectToRoute('web.dir.create_3', [$group->id]);
     }
 
     /**
@@ -171,7 +172,7 @@ class DirController
      * @param  Link           $link     [description]
      * @param  Create3Load    $load     [description]
      * @param  Create3Request $request  [description]
-     * @return View                     [description]
+     * @return HttpResponse                     [description]
      */
     public function create3(
         Group $group,
@@ -180,7 +181,7 @@ class DirController
         Link $link,
         Create3Load $load,
         Create3Request $request
-    ) : View {
+    ) : HttpResponse {
         $dir->makeService()->createOrUpdateSession($request->validated());
 
         $categories = $category->makeRepo()->getByIds(
@@ -193,7 +194,7 @@ class DirController
                 $categories->pluck('id')->toArray()
             )) : null;
 
-        return view('idir::web.dir.create.3', compact('group', 'categories', 'backlinks'));
+        return Response::view('idir::web.dir.create.3', compact('group', 'categories', 'backlinks'));
     }
 
     /**
@@ -217,10 +218,10 @@ class DirController
         $dir->setGroup($group)->makeService()->create($request->validated());
 
         if (($payment = $dir->getPayment()) instanceof Payment) {
-            event(new PaymentStoreEvent($payment));
+            Event::dispatch(App::make(PaymentStoreEvent::class, ['payment' => $payment]));
         }
 
-        event(new DirStoreEvent($dir));
+        Event::dispatch(App::make(DirStoreEvent::class, ['dir' => $dir]));
 
         return $response->setDir($dir)->makeResponse();
     }
@@ -230,13 +231,13 @@ class DirController
      * @param  Dir       $dir   [description]
      * @param  Edit1Load $load  [description]
      * @param  Group     $group [description]
-     * @return View             [description]
+     * @return HttpResponse             [description]
      */
-    public function edit1(Dir $dir, Edit1Load $load, Group $group) : View
+    public function edit1(Dir $dir, Edit1Load $load, Group $group) : HttpResponse
     {
         $dir->makeService()->createOrUpdateSession($dir->attributes_as_array);
 
-        return view('idir::web.dir.edit.1', [
+        return Response::view('idir::web.dir.edit.1', [
             'dir' => $dir,
             'groups' => $group->makeRepo()->getPublicWithRels()
         ]);
@@ -248,11 +249,11 @@ class DirController
      * @param  Group        $group   [description]
      * @param  Edit2Load    $load    [description]
      * @param  Edit2Request $request [description]
-     * @return View                  [description]
+     * @return HttpResponse                  [description]
      */
-    public function edit2(Dir $dir, Group $group, Edit2Load $load, Edit2Request $request) : View
+    public function edit2(Dir $dir, Group $group, Edit2Load $load, Edit2Request $request) : HttpResponse
     {
-        return view('idir::web.dir.edit.2', compact('dir', 'group'));
+        return Response::view('idir::web.dir.edit.2', compact('dir', 'group'));
     }
 
     /**
@@ -267,7 +268,7 @@ class DirController
     {
         $dir->makeService()->createOrUpdateSession($request->validated());
 
-        return redirect()->route('web.dir.edit_3', [$dir->id, $group->id]);
+        return Response::redirectToRoute('web.dir.edit_3', [$dir->id, $group->id]);
     }
 
     /**
@@ -278,7 +279,7 @@ class DirController
      * @param  Link           $link     [description]
      * @param  Edit3Load      $load     [description]
      * @param  Edit3Request   $request  [description]
-     * @return View                     [description]
+     * @return HttpResponse                     [description]
      */
     public function edit3(
         Dir $dir,
@@ -287,7 +288,7 @@ class DirController
         Link $link,
         Edit3Load $load,
         Edit3Request $request
-    ) : View {
+    ) : HttpResponse {
         $dir->makeService()->createOrUpdateSession($request->validated());
 
         $categories = $category->makeRepo()->getByIds(
@@ -300,7 +301,7 @@ class DirController
                 $categories->pluck('id')->toArray()
             )) : null;
 
-        return view(
+        return Response::view(
             'idir::web.dir.edit.3',
             compact('dir', 'group', 'categories', 'backlinks')
         );
@@ -327,10 +328,10 @@ class DirController
         $dir->setGroup($group)->makeService()->updateFull($request->validated());
 
         if (($payment = $dir->getPayment()) instanceof Payment) {
-            event(new PaymentStoreEvent($payment));
+            Event::dispatch(App::make(PaymentStoreEvent::class, ['payment' => $payment]));
         }
 
-        event(new DirUpdateEvent($dir));
+        Event::dispatch(App::make(DirUpdateEvent::class, ['dir' => $dir]));
 
         return $response->setDir($dir)->makeResponse();
     }
@@ -340,11 +341,11 @@ class DirController
      * @param  Dir              $dir     [description]
      * @param  EditRenewLoad    $load    [description]
      * @param  EditRenewRequest $request [description]
-     * @return View                      [description]
+     * @return HttpResponse                      [description]
      */
-    public function editRenew(Dir $dir, EditRenewLoad $load, EditRenewRequest $request) : View
+    public function editRenew(Dir $dir, EditRenewLoad $load, EditRenewRequest $request) : HttpResponse
     {
-        return view('idir::web.dir.edit_renew', compact('dir'));
+        return Response::view('idir::web.dir.edit_renew', compact('dir'));
     }
 
     /**
@@ -365,9 +366,8 @@ class DirController
     ) : RedirectResponse {
         $payment = $dir->makeService()->createPayment($request->validated());
 
-        event(new PaymentStoreEvent($payment));
-
-        event(new DirUpdateRenewEvent($dir));
+        Event::dispatch(App::make(PaymentStoreEvent::class, ['payment' => $payment]));
+        Event::dispatch(App::make(DirUpdateRenewEvent::class, ['dir' => $dir]));
 
         return $response->setDir($dir)->makeResponse();
     }
@@ -383,8 +383,8 @@ class DirController
     {
         $dir->makeService()->delete();
 
-        event(new DirDestroyEvent($dir));
+        Event::dispatch(App::make(DirDestroyEvent::class, ['dir' => $dir]));
 
-        return response()->json(['success' => '']);
+        return Response::json(['success' => '']);
     }
 }

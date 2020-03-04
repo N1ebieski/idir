@@ -4,6 +4,7 @@ namespace N1ebieski\IDir\Http\ViewComponents\Comment\Dir;
 
 use N1ebieski\ICore\Http\ViewComponents\Comment\LatestComponent as BaseLatestComponent;
 use N1ebieski\IDir\Models\Comment\Dir\Comment;
+use Illuminate\Contracts\View\Factory as ViewFactory;
 use Illuminate\View\View;
 
 /**
@@ -12,13 +13,15 @@ use Illuminate\View\View;
 class LatestComponent extends BaseLatestComponent
 {
     /**
-     * [__construct description]
-     * @param Tag  $comment [description]
-     * @param int  $limit [description]
+     * Undocumented function
+     *
+     * @param Comment $comment
+     * @param ViewFactory $view
+     * @param integer $limit
      */
-    public function __construct(Comment $comment, int $limit = 5)
+    public function __construct(Comment $comment, ViewFactory $view, int $limit = 5)
     {
-        parent::__construct($comment, $limit);
+        parent::__construct($comment, $view, $limit);
     }
 
     /**
@@ -27,7 +30,7 @@ class LatestComponent extends BaseLatestComponent
      */
     public function toHtml() : View
     {
-        return view('idir::web.components.comment.dir.latest', [
+        return $this->view->make('idir::web.components.comment.dir.latest', [
             'comments' => $this->comment->makeCache()->rememberLatestByComponent([
                 'limit' => $this->limit
             ])

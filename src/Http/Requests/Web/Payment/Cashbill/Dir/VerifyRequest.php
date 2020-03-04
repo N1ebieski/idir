@@ -4,6 +4,9 @@ namespace N1ebieski\IDir\Http\Requests\Web\Payment\Cashbill\Dir;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\URL;
 
 /**
  * [VerifyRequest description]
@@ -24,17 +27,18 @@ class VerifyRequest extends FormRequest
      * [prepareForValidation description]
      * @return [type] [description]
      */
-    public function prepareForValidation() {
+    public function prepareForValidation()
+    {
         if ($this->has('userdata')) {
             $userdata = json_decode($this->input('userdata'));
 
             $this->merge([
                 'uuid' => $userdata->uuid,
-                'redirect' => $userdata->redirect ?? route('web.profile.edit_dir')
+                'redirect' => $userdata->redirect ?? URL::route('web.profile.edit_dir')
             ]);
         }
 
-        app(Request::class)->merge([
+        App::make(Request::class)->merge([
             'logs' => $this->all()
         ]);
     }
@@ -47,7 +51,7 @@ class VerifyRequest extends FormRequest
     public function rules()
     {
         return [
-            'service' => 'bail|required|string|in:' . config("services.cashbill.transfer.service"),
+            'service' => 'bail|required|string|in:' . Config::get("services.cashbill.transfer.service"),
             'orderid' => 'bail|required|string',
             'amount' => 'bail|required|numeric|between:0,9999.99',
             'userdata' => 'bail|required|json',
@@ -55,9 +59,9 @@ class VerifyRequest extends FormRequest
             'sign' => 'bail|required|string',
             'uuid' => 'bail|required|uuid',
             'redirect' => [
-                'bail', 
-                'nullable', 
-                'string', 
+                'bail',
+                'nullable',
+                'string',
                 'regex:/^(https|http):\/\/([\da-z\.-]+)(\.[a-z]{2,6})/'
             ]
         ];

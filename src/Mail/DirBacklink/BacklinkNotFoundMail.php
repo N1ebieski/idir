@@ -6,6 +6,8 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use N1ebieski\IDir\Models\DirBacklink;
+use Illuminate\Contracts\Translation\Translator as Lang;
+use Illuminate\Contracts\Config\Repository as Config;
 
 /**
  * [BacklinkNotFound description]
@@ -18,17 +20,36 @@ class BacklinkNotFoundMail extends Mailable
      * [public description]
      * @var DirBacklink
      */
-    protected $dirBacklink;
+    public $dirBacklink;
 
     /**
-     * Create a new event instance.
+     * Undocumented variable
+     *
+     * @var Lang
+     */
+    protected $lang;
+
+    /**
+     * Undocumented variable
+     *
+     * @var string
+     */
+    protected string $email;
+
+    /**
+     * Undocumented function
      *
      * @param DirBacklink $dirBacklink
-     * @return void
+     * @param Lang $lang
+     * @param Config $config
      */
-    public function __construct(DirBacklink $dirBacklink)
+    public function __construct(DirBacklink $dirBacklink, Lang $lang, Config $config)
     {
         $this->dirBacklink = $dirBacklink;
+
+        $this->lang = $lang;
+
+        $this->email = $config->get('mail.from.address');
     }
 
     /**
@@ -40,10 +61,9 @@ class BacklinkNotFoundMail extends Mailable
     {
         $this->dirBacklink->load(['link', 'dir', 'dir.user']);
 
-        return $this->subject(trans('idir::backlinks.not_found'))
-            ->from(config('mail.from.address'))
+        return $this->subject($this->lang->get('idir::backlinks.not_found'))
+            ->from($this->email)
             ->to($this->dirBacklink->dir->user->email)
-            ->markdown('idir::mails.backlink.not_found')
-            ->with(['dirBacklink' => $this->dirBacklink]);
+            ->markdown('idir::mails.backlink.not_found');
     }
 }

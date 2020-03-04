@@ -7,9 +7,10 @@ use N1ebieski\ICore\Http\Requests\Web\Category\SearchRequest;
 use N1ebieski\ICore\Http\Responses\Web\Category\SearchResponse;
 use N1ebieski\IDir\Http\Controllers\Web\Category\Dir\Polymorphic;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response as HttpResponse;
+use Illuminate\Support\Facades\Response;
 use N1ebieski\IDir\Filters\Web\Category\ShowFilter;
 use N1ebieski\IDir\Http\Requests\Web\Category\ShowRequest;
-use Illuminate\View\View;
 use N1ebieski\IDir\Models\Region\Region;
 
 /**
@@ -24,11 +25,11 @@ class CategoryController implements Polymorphic
      * @param  Region   $region   [description]
      * @param  ShowRequest $request
      * @param  ShowFilter $filter
-     * @return View [description]
+     * @return HttpResponse       [description]
      */
-    public function show(Category $category, Region $region, ShowRequest $request, ShowFilter $filter) : View
+    public function show(Category $category, Region $region, ShowRequest $request, ShowFilter $filter) : HttpResponse
     {
-        return view('idir::web.category.dir.show', [
+        return Response::view('idir::web.category.dir.show', [
             'dirs' => $category->makeCache()->rememberDirsByFilter(
                 $filter->all() + ['region' => $region->slug],
                 $request->input('page') ?? 1
@@ -39,7 +40,7 @@ class CategoryController implements Polymorphic
                 ['region' => $region->slug]
             ),
             'catsAsArray' => [
-                'ancestors' => $category->ancestors->pluck('id')->toArray(), 
+                'ancestors' => $category->ancestors->pluck('id')->toArray(),
                 'self' => [$category->id]
             ]
         ]);

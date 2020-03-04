@@ -41,8 +41,9 @@ class EditRenewRequest extends FormRequest
     protected function preparePaymentTypeOldAttribute() : void
     {
         if (!$this->old('payment_type')) {
-            session()->put(
-                '_old_input.payment_type', $this->dir->group->prices->sortByDesc('type')->first()->type
+            $this->session()->put(
+                '_old_input.payment_type',
+                $this->dir->group->prices->sortByDesc('type')->first()->type
             );
         }
     }
@@ -53,7 +54,8 @@ class EditRenewRequest extends FormRequest
     protected function preparePaymentCodeSmsModelOldAttribute() : void
     {
         if ($this->old('payment_code_sms')) {
-            session()->flash('_old_input.payment_code_sms_model',
+            $this->session()->flash(
+                '_old_input.payment_code_sms_model',
                 $this->dir->group->prices->where('id', old('payment_code_sms'))->first()
             );
         }
@@ -65,7 +67,8 @@ class EditRenewRequest extends FormRequest
     protected function preparePaymentCodeTransferModelOldAttribute() : void
     {
         if ($this->old('payment_code_transfer')) {
-            session()->flash('_old_input.payment_code_transfer_model',
+            $this->session()->flash(
+                '_old_input.payment_code_transfer_model',
                 $this->dir->group->prices->where('id', old('payment_code_transfer'))->first()
             );
         }

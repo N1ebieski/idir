@@ -24,9 +24,9 @@ class Edit3Request extends Update2Request
      */
     public function __construct(Link $link, BanValue $banValue)
     {
-        $this->link = $link;
-
         parent::__construct($banValue);
+
+        $this->link = $link;
     }
 
     /**
@@ -84,8 +84,9 @@ class Edit3Request extends Update2Request
     protected function preparePaymentTypeOldAttribute() : void
     {
         if (!$this->old('payment_type')) {
-            session()->put(
-                '_old_input.payment_type', $this->group->prices->sortByDesc('type')->first()->type
+            $this->session()->put(
+                '_old_input.payment_type',
+                $this->group->prices->sortByDesc('type')->first()->type
             );
         }
     }
@@ -96,7 +97,8 @@ class Edit3Request extends Update2Request
     protected function preparePaymentCodeSmsModelOldAttribute() : void
     {
         if ($this->old('payment_code_sms')) {
-            session()->flash('_old_input.payment_code_sms_model',
+            $this->session()->flash(
+                '_old_input.payment_code_sms_model',
                 $this->group->prices->where('id', old('payment_code_sms'))->first()
             );
         }
@@ -108,7 +110,8 @@ class Edit3Request extends Update2Request
     protected function preparePaymentCodeTransferModelOldAttribute() : void
     {
         if ($this->old('payment_code_transfer')) {
-            session()->flash('_old_input.payment_code_transfer_model',
+            $this->session()->flash(
+                '_old_input.payment_code_transfer_model',
                 $this->group->prices->where('id', old('payment_code_transfer'))->first()
             );
         }
@@ -120,7 +123,8 @@ class Edit3Request extends Update2Request
     protected function prepareBacklinkModelOldAttribute() : void
     {
         if ($this->old('backlink')) {
-            session()->flash('_old_input.backlink_model',
+            $this->session()->flash(
+                '_old_input.backlink_model',
                 $this->link->find($this->old('backlink'))
             );
         }

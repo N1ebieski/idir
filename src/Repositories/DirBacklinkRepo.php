@@ -8,6 +8,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\Config\Repository as Config;
 use Carbon\Carbon;
 use Closure;
+use N1ebieski\IDir\Models\Dir;
 
 /**
  * [DirBacklinkRepo description]
@@ -64,15 +65,15 @@ class DirBacklinkRepo
      *
      * @param Closure $closure
      * @param string $timestamp
-     * @return Collection
+     * @return bool
      */
     public function chunkAvailableHasBacklinkRequirementByAttemptedAt(
         Closure $closure,
         string $timestamp
-    ) : Collection {
+    ) : bool {
         return $this->dirBacklink
             ->whereHas('dir', function ($query) {
-                $query->whereIn('status', [1, 3])
+                $query->whereIn('status', [Dir::ACTIVE, Dir::BACKLINK_INACTIVE])
                     ->whereHas('group', function ($query) {
                         $query->obligatoryBacklink();
                     });

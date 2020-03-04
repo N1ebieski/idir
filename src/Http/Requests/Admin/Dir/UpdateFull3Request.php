@@ -2,12 +2,13 @@
 
 namespace N1ebieski\IDir\Http\Requests\Admin\Dir;
 
-use N1ebieski\IDir\Http\Requests\Admin\Dir\UpdateFull2Request;
-use Illuminate\Validation\Rule;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 use N1ebieski\ICore\Models\Link;
-// use Illuminate\Contracts\Validation\Validator;
-// use Illuminate\Http\Exceptions\HttpResponseException;
+use N1ebieski\IDir\Models\Group;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Lang;
+use N1ebieski\IDir\Http\Requests\Admin\Dir\UpdateFull2Request;
 
 /**
  * [UpdateFull3Request description]
@@ -56,25 +57,25 @@ class UpdateFull3Request extends UpdateFull2Request
     public function rules()
     {
         return array_merge(
-
             parent::rules(),
-
             [
                 'backlink' => [
                     'bail',
                     'integer',
-                    $this->group->backlink === 2 ? 'required' : 'nullable',
-                    Rule::exists('links', 'id')->where(function($query) {
+                    $this->group->backlink === Group::OBLIGATORY_BACKLINK ?
+                        'required'
+                        : 'nullable',
+                    Rule::exists('links', 'id')->where(function ($query) {
                         $query->where('links.type', 'backlink')
-                            ->whereNotExists(function($query) {
+                            ->whereNotExists(function ($query) {
                                 $query->from('categories_models')
                                     ->whereRaw('links.id = categories_models.model_id')
                                     ->where('categories_models.model_type', 'N1ebieski\\ICore\\Models\\Link');
-                            })->orWhereExists(function($query) {
+                            })->orWhereExists(function ($query) {
                                 $query->from('categories_models')
                                     ->whereRaw('links.id = categories_models.model_id')
                                     ->where('categories_models.model_type', 'N1ebieski\\ICore\\Models\\Link')
-                                    ->whereIn('categories_models.category_id', function($query) {
+                                    ->whereIn('categories_models.category_id', function ($query) {
                                         return $query->from('categories_closure')->select('ancestor')
                                             ->whereIn('descendant', $this->input('categories') ?? []);
                                     });
@@ -85,18 +86,19 @@ class UpdateFull3Request extends UpdateFull2Request
                 'backlink_url' => [
                     'bail',
                     'string',
-                    $this->group->backlink === 2 ? 'required' : 'nullable',
+                    $this->group->backlink === Group::OBLIGATORY_BACKLINK ?
+                        'required'
+                        : 'nullable',
                     $this->input('url') !== null ?
                         'regex:/^' . Str::escaped($this->input('url')) . '/'
                         : 'regex:/^(https|http):\/\/([\da-z\.-]+)(\.[a-z]{2,6})/',
-                    $this->group->backlink === 2 && $this->has('backlink') ?
-                        app()->make('N1ebieski\\IDir\\Rules\\BacklinkRule', [
+                    $this->group->backlink === Group::OBLIGATORY_BACKLINK && $this->has('backlink') ?
+                        App::make('N1ebieski\\IDir\\Rules\\BacklinkRule', [
                             'link' => Link::find($this->input('backlink'))->url
                         ]) : null,
                     'no_js_validation'
                 ]
             ],
-
             $this->dir->isPayment($this->group->id) && $this->group->prices->isNotEmpty() ?
             [
                 'payment_type' => 'bail|required|string|in:transfer,code_sms,code_transfer|no_js_validation',
@@ -105,7 +107,7 @@ class UpdateFull3Request extends UpdateFull2Request
                     'bail',
                     'required_if:payment_type,transfer',
                     'integer',
-                    Rule::exists('prices', 'id')->where(function($query) {
+                    Rule::exists('prices', 'id')->where(function ($query) {
                         $query->where([
                             ['type', 'transfer'],
                             ['group_id', $this->group->id]
@@ -117,7 +119,7 @@ class UpdateFull3Request extends UpdateFull2Request
                     'bail',
                     'required_if:payment_type,code_sms',
                     'integer',
-                    Rule::exists('prices', 'id')->where(function($query) {
+                    Rule::exists('prices', 'id')->where(function ($query) {
                         $query->where([
                             ['type', 'code_sms'],
                             ['group_id', $this->group->id]
@@ -129,7 +131,7 @@ class UpdateFull3Request extends UpdateFull2Request
                     'bail',
                     'required_if:payment_type,code_transfer',
                     'integer',
-                    Rule::exists('prices', 'id')->where(function($query) {
+                    Rule::exists('prices', 'id')->where(function ($query) {
                         $query->where([
                             ['type', 'code_transfer'],
                             ['group_id', $this->group->id]
@@ -148,18 +150,7 @@ class UpdateFull3Request extends UpdateFull2Request
     public function messages()
     {
         return [
-            'backlink_url.regex' => __('validation.regex') . ' ' . trans('idir::validation.backlink_url')
+            'backlink_url.regex' => __('validation.regex') . ' ' . Lang::get('idir::validation.backlink_url')
         ];
     }
-
-    // /**
-    //  * Failed validation disable redirect
-    //  *
-    //  * @param Validator $validator
-    //  */
-    // protected function failedValidation(Validator $validator)
-    // {
-    //     throw new HttpResponseException(response()->view('icore::web.home.index'));
-    //     // throw new HttpResponseException(response()->json($validator->errors(), 422));
-    // }
 }

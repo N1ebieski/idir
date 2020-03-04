@@ -3,7 +3,7 @@
 namespace N1ebieski\IDir\Services;
 
 use N1ebieski\IDir\Models\Code;
-use Carbon\Carbon;
+use Illuminate\Support\Carbon;
 
 /**
  * [CodeService description]
@@ -17,11 +17,23 @@ class CodeService
     protected $code;
 
     /**
-     * @param Code $code
+     * Undocumented variable
+     *
+     * @var Carbon
      */
-    public function __construct(Code $code)
+    protected $carbon;
+
+    /**
+     * Undocumented function
+     *
+     * @param Code $code
+     * @param Carbon $carbon
+     */
+    public function __construct(Code $code, Carbon $carbon)
     {
         $this->code = $code;
+
+        $this->carbon = $carbon;
     }
 
     /**
@@ -48,8 +60,8 @@ class CodeService
         foreach ($attributes as $attribute) {
             $code = $this->code->make($attribute);
             $code->price()->associate($this->code->getPrice());
-            $code->created_at = Carbon::now();
-            $code->updated_at = Carbon::now();
+            $code->created_at = $this->carbon->now();
+            $code->updated_at = $this->carbon->now();
 
             $codes_model[] = $code->attributesToArray();
         }

@@ -9,6 +9,8 @@ use N1ebieski\IDir\Models\Category\Category as BaseCategory;
  */
 class Category extends BaseCategory
 {
+    // Configuration
+
     /**
      * The model's default values for attributes.
      *
@@ -16,7 +18,7 @@ class Category extends BaseCategory
      */
     protected $attributes = [
         'model_type' => 'N1ebieski\\IDir\\Models\\Dir',
-        'status' => 1,
+        'status' => self::ACTIVE,
     ];
 
     /**
@@ -62,29 +64,29 @@ class Category extends BaseCategory
     {
         return $this
             ->loadCount([
-                'morphs' => function($query) use ($filter) {
+                'morphs' => function ($query) use ($filter) {
                     $query->active()->filterRegion($filter['region']);
                 }
             ])
             ->load([
-                'childrens' => function($query) use ($filter) {
+                'childrens' => function ($query) use ($filter) {
                     $query->active()
                         ->withCount([
-                            'morphs' => function($query) use ($filter) {
+                            'morphs' => function ($query) use ($filter) {
                                 $query->active()->filterRegion($filter['region']);
                             }
                         ])
                         ->orderBy('position', 'asc');
                 },
-                'ancestors' => function($query) use ($filter) {
+                'ancestors' => function ($query) use ($filter) {
                     $query->whereColumn('ancestor', '!=', 'descendant')
                         ->withCount([
-                            'morphs' => function($query) use ($filter) {
+                            'morphs' => function ($query) use ($filter) {
                                 $query->active()->filterRegion($filter['region']);
                             }
                         ])
                         ->orderBy('depth', 'desc');
                 }
             ]);
-    }    
+    }
 }

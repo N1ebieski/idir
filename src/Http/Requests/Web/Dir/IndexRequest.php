@@ -29,7 +29,7 @@ class IndexRequest extends FormRequest
                 'nullable',
                 'in:created_at|asc,created_at|desc,updated_at|asc,updated_at|desc,title|asc,title|desc,sum_rating|desc,sum_rating|asc',
                 'no_js_validation'
-            ],            
+            ],
             'page' => 'integer'
         ];
     }

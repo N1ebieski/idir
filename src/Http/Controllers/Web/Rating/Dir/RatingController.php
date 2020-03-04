@@ -3,9 +3,10 @@
 namespace N1ebieski\IDir\Http\Controllers\Web\Rating\Dir;
 
 use N1ebieski\IDir\Models\Dir;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Response;
 use N1ebieski\IDir\Models\Rating\Dir\Rating;
 use N1ebieski\IDir\Http\Requests\Web\Rating\Dir\RateRequest;
-use Illuminate\Http\JsonResponse;
 use N1ebieski\IDir\Http\Controllers\Web\Rating\Dir\Polymorphic;
 
 /**
@@ -25,7 +26,7 @@ class RatingController implements Polymorphic
     {
         $rating->setMorph($dir)->makeService()->createOrUpdateOrDelete($request->only('rating'));
 
-        return response()->json([
+        return Response::json([
             'success' => '',
             'sum_rating' => $dir->load('ratings')->sum_rating
         ]);

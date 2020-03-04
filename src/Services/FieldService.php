@@ -2,14 +2,14 @@
 
 namespace N1ebieski\IDir\Services;
 
+use Illuminate\Http\UploadedFile;
+use N1ebieski\IDir\Utils\FileUtil;
 use N1ebieski\IDir\Models\Field\Field;
 use Illuminate\Database\Eloquent\Model;
-use N1ebieski\IDir\Utils\FileUtil;
-use Illuminate\Contracts\Filesystem\Factory as Storage;
-use Illuminate\Http\UploadedFile;
-use Illuminate\Contracts\Container\Container as App;
 use N1ebieski\ICore\Services\Interfaces\Creatable;
 use N1ebieski\ICore\Services\Interfaces\Updatable;
+use Illuminate\Contracts\Container\Container as App;
+use Illuminate\Contracts\Filesystem\Factory as Storage;
 use N1ebieski\ICore\Services\Interfaces\PositionUpdatable;
 
 /**
@@ -103,7 +103,7 @@ class FieldService implements Creatable, Updatable, PositionUpdatable
                     $this->createRegionsValue($attributes[$field->id]);
                 }
     
-                if ($field->type === 'map') { 
+                if ($field->type === 'map') {
                     $this->updateOrCreateMapValue($attributes[$field->id]);
                 }
 
@@ -138,7 +138,7 @@ class FieldService implements Creatable, Updatable, PositionUpdatable
      * @return void
      */
     protected function updateOrCreateMapValue(array $attributes) : void
-    {       
+    {
         if (count($attributes) > 0) {
             $this->field->getMorph()->map()->updateOrCreate([], [
                 'lat' => $attributes[0]['lat'],
@@ -156,8 +156,8 @@ class FieldService implements Creatable, Updatable, PositionUpdatable
     protected function deleteMapValue(array $attributes) : void
     {
         if (count($attributes) === 0) {
-            $this->field->getMorph()->map()->delete();                
-        }    
+            $this->field->getMorph()->map()->delete();
+        }
     }
 
     /**
@@ -169,7 +169,7 @@ class FieldService implements Creatable, Updatable, PositionUpdatable
     protected function createRegionsValue(array $attributes) : void
     {
         $this->field->getMorph()->regions()->attach($attributes ?? []);
-    }    
+    }
 
     /**
      * Undocumented function
@@ -198,11 +198,11 @@ class FieldService implements Creatable, Updatable, PositionUpdatable
             }
 
             if (isset($attributes[$field->id]) && !empty($attributes[$field->id])) {
-                if ($field->type === 'regions') {            
+                if ($field->type === 'regions') {
                     $this->updateRegionsValue($attributes[$field->id]);
                 }
     
-                if ($field->type === 'map') { 
+                if ($field->type === 'map') {
                     $this->updateOrCreateMapValue($attributes[$field->id]);
                 }
 
@@ -227,7 +227,7 @@ class FieldService implements Creatable, Updatable, PositionUpdatable
                 $ids[$field->id] = ['value' => json_encode($value)];
                 $i++;
             } else {
-                if ($field->type === 'map') {                
+                if ($field->type === 'map') {
                     $this->deleteMapValue($attributes[$field->id]);
                 }
 

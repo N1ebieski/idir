@@ -2,13 +2,14 @@
 
 namespace N1ebieski\IDir\Http\Requests\Web\Dir;
 
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Lang;
 use N1ebieski\IDir\Http\Requests\Web\Dir\Store2Request;
 use N1ebieski\ICore\Http\ViewComponents\CaptchaComponent as Captcha;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Str;
 use N1ebieski\ICore\Models\Link;
-// use Illuminate\Contracts\Validation\Validator;
-// use Illuminate\Http\Exceptions\HttpResponseException;
+use N1ebieski\IDir\Models\Group;
 
 class Store3Request extends Store2Request
 {
@@ -59,7 +60,9 @@ class Store3Request extends Store2Request
                 'backlink' => [
                     'bail',
                     'integer',
-                    $this->group->backlink === 2 ? 'required' : 'nullable',
+                    $this->group->backlink === Group::OBLIGATORY_BACKLINK ?
+                        'required'
+                        : 'nullable',
                     Rule::exists('links', 'id')->where(function ($query) {
                         $query->where('links.type', 'backlink')
                             ->whereNotExists(function ($query) {
@@ -81,14 +84,17 @@ class Store3Request extends Store2Request
                 'backlink_url' => [
                     'bail',
                     'string',
-                    $this->group->backlink === 2 ? 'required' : 'nullable',
+                    $this->group->backlink === Group::OBLIGATORY_BACKLINK ?
+                        'required'
+                        : 'nullable',
                     $this->input('url') !== null ?
                         'regex:/^' . Str::escaped($this->input('url')) . '/'
                         : 'regex:/^(https|http):\/\/([\da-z\.-]+)(\.[a-z]{2,6})/',
-                    $this->group->backlink === 2 && $this->has('backlink') ?
-                        app()->make('N1ebieski\\IDir\\Rules\\BacklinkRule', [
+                    $this->group->backlink === Group::OBLIGATORY_BACKLINK && $this->has('backlink') ?
+                        App::make('N1ebieski\\IDir\\Rules\\BacklinkRule', [
                             'link' => Link::find($this->input('backlink'))->url
-                        ]) : null,
+                        ])
+                        : null,
                     'no_js_validation'
                 ]
             ],
@@ -131,7 +137,7 @@ class Store3Request extends Store2Request
                         ]);
                     })
                 ] : ['no_js_validation']
-            ] :  app()->make(Captcha::class)->toRules()
+            ] :  App::make(Captcha::class)->toRules()
         );
     }
 
@@ -143,23 +149,12 @@ class Store3Request extends Store2Request
     public function messages()
     {
         return [
-            'backlink_url.regex' => __('validation.regex') . ' ' . trans('idir::validation.backlink_url')
+            'backlink_url.regex' => __('validation.regex') . ' ' . Lang::get('idir::validation.backlink_url')
         ];
     }
 
-    // /**
-    //  * Failed validation disable redirect
-    //  *
-    //  * @param Validator $validator
-    //  */
-    // protected function failedValidation(Validator $validator)
-    // {
-    //     throw new HttpResponseException(response()->view('icore::web.home.index'));
-    //     // throw new HttpResponseException(response()->json($validator->errors(), 422));
-    // }
-
     public function attributes()
     {
-        return array_merge(parent::attributes(), app()->make(Captcha::class)->toAttributes());
+        return array_merge(parent::attributes(), App::make(Captcha::class)->toAttributes());
     }
 }

@@ -2,6 +2,7 @@
 
 namespace N1ebieski\IDir\Models;
 
+use Illuminate\Support\Facades\App;
 use N1ebieski\ICore\Models\Link as BaseLink;
 use N1ebieski\IDir\Cache\LinkCache;
 use N1ebieski\IDir\Repositories\LinkRepo;
@@ -31,7 +32,7 @@ class Link extends BaseLink
      */
     public function makeCache()
     {
-        return app()->make(LinkCache::class, ['link' => $this]);
+        return App::make(LinkCache::class, ['link' => $this]);
     }
 
      /**
@@ -40,6 +41,6 @@ class Link extends BaseLink
      */
     public function makeRepo()
     {
-        return app()->make(LinkRepo::class, ['link' => $this]);
-    }   
+        return App::make(LinkRepo::class, ['link' => $this]);
+    }
 }

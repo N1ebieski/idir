@@ -2,8 +2,10 @@
 
 namespace N1ebieski\IDir\Listeners\Dir;
 
-use Illuminate\Support\Facades\Mail;
+use N1ebieski\IDir\Models\Dir;
+use Illuminate\Contracts\Mail\Mailer;
 use N1ebieski\IDir\Mail\Dir\ActivationMail;
+use Illuminate\Contracts\Foundation\Application as App;
 
 /**
  * [SendActivationNotification description]
@@ -16,6 +18,32 @@ class SendActivationNotification
      * @var object
      */
     protected object $event;
+
+    /**
+     * Undocumented variable
+     *
+     * @var Mailer
+     */
+    protected $mailer;
+
+    /**
+     * Undocumented variable
+     *
+     * @var App
+     */
+    protected $app;
+
+    /**
+     * Undocumented function
+     *
+     * @param Mailer $mailer
+     * @param App $app
+     */
+    public function __construct(Mailer $mailer, App $app)
+    {
+        $this->mailer = $mailer;
+        $this->app = $app;
+    }
 
     /**
      *
@@ -41,8 +69,8 @@ class SendActivationNotification
             return;
         }
 
-        if ($event->dir->status === 1) {
-            Mail::send(app()->makeWith(ActivationMail::class, [
+        if ($event->dir->status === Dir::ACTIVE) {
+            $this->mailer->send($this->app->make(ActivationMail::class, [
                 'dir' => $event->dir
             ]));
         }

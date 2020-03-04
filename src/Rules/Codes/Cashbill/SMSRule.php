@@ -2,10 +2,11 @@
 
 namespace N1ebieski\IDir\Rules\Codes\Cashbill;
 
-use N1ebieski\IDir\Utils\Cashbill\Codes\SMSUtil as Cashbill;
-use N1ebieski\IDir\Models\Price;
 use Illuminate\Http\Request;
+use N1ebieski\IDir\Models\Price;
 use N1ebieski\IDir\Rules\Codes\CodesRule;
+use Illuminate\Contracts\Translation\Translator as Lang;
+use N1ebieski\IDir\Utils\Cashbill\Codes\SMSUtil as Cashbill;
 
 /**
  * [Recaptcha_v2 description]
@@ -20,29 +21,37 @@ class SMSRule extends CodesRule
 
     /**
      * [private description]
-     * @var Request
-     */
-    protected $request;
-
-    /**
-     * [private description]
      * @var Cashbill
      */
     protected $cashbill;
 
     /**
-     * [__construct description]
-     * @param Price    $price    [description]
-     * @param Request  $request  [description]
-     * @param Cashbill $cashbill [description]
+     * Undocumented function
+     *
+     * @param Price $price
+     * @param Request $request
+     * @param Lang $lang
+     * @param Cashbill $cashbill
      */
-    public function __construct(Price $price, Request $request, Cashbill $cashbill)
+    public function __construct(Price $price, Request $request, Lang $lang, Cashbill $cashbill)
     {
-        $this->cashbill = $cashbill;
-        $this->price = $price->find($request->input('payment_code_sms'));
-        $this->request = $request;
+        parent::__construct($request, $lang);
 
-        parent::__construct($request);
+        $this->price = $price;
+
+        $this->cashbill = $cashbill;
+
+        $this->makePrice();
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @return Price
+     */
+    protected function makePrice() : Price
+    {
+        return $this->price = $this->price->find($this->request->input('payment_code_sms'));
     }
 
     /**
@@ -81,7 +90,7 @@ class SMSRule extends CodesRule
         }
 
         $this->request->merge([
-            'logs' => (array)$this->cashbill->getResponse() + ['code' => $value]
+            'logs' => (array)$this->cashbill->response + ['code' => $value]
         ]);
 
         return true;
@@ -94,6 +103,6 @@ class SMSRule extends CodesRule
      */
     public function message()
     {
-        return trans('idir::validation.code');
+        return $this->lang->get('idir::validation.code');
     }
 }

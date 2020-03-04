@@ -2,19 +2,28 @@
 
 namespace N1ebieski\IDir\Listeners\Dir;
 
+use Illuminate\Contracts\Session\Session;
+
 /**
  * [ClearSession description]
  */
 class ClearSession
 {
     /**
+     * Undocumented variable
+     *
+     * @var Session
+     */
+    protected $session;
+
+    /**
      * Create the event listener.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(Session $session)
     {
-        //
+        $this->session = $session;
     }
 
     /**
@@ -25,6 +34,6 @@ class ClearSession
      */
     public function handle($event)
     {
-        session()->forget('dir');
+        $this->session->forget('dir');
     }
 }

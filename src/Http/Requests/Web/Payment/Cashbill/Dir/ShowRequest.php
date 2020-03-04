@@ -28,9 +28,9 @@ class ShowRequest extends FormRequest
     {
         return [
             'redirect' => [
-                'bail', 
-                'nullable', 
-                'string', 
+                'bail',
+                'nullable',
+                'string',
                 'regex:/^(https|http):\/\/([\da-z\.-]+)(\.[a-z]{2,6})/'
             ]
         ];

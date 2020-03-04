@@ -2,23 +2,25 @@
 
 namespace N1ebieski\IDir\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Cviebrock\EloquentSluggable\Sluggable;
-use Cviebrock\EloquentTaggable\Taggable;
-use N1ebieski\ICore\Models\Traits\Carbonable;
-use N1ebieski\ICore\Models\Traits\FullTextSearchable;
-use N1ebieski\IDir\Models\Traits\Filterable;
-use Illuminate\Database\Eloquent\Relations\MorphToMany;
-use N1ebieski\IDir\Services\DirService;
+use Carbon\Carbon;
+use N1ebieski\IDir\Models\Group;
+use Illuminate\Support\Facades\DB;
 use N1ebieski\IDir\Cache\DirCache;
+use Mews\Purifier\Facades\Purifier;
+use Illuminate\Database\Eloquent\Model;
+use N1ebieski\IDir\Services\DirService;
+use Cviebrock\EloquentTaggable\Taggable;
 use N1ebieski\IDir\Repositories\DirRepo;
 use Illuminate\Database\Eloquent\Builder;
-use N1ebieski\IDir\Models\Group;
+use Cviebrock\EloquentSluggable\Sluggable;
+use N1ebieski\IDir\Models\Traits\Filterable;
+use N1ebieski\ICore\Models\Traits\Carbonable;
 use N1ebieski\IDir\Models\Payment\Dir\Payment;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
-use Mews\Purifier\Facades\Purifier;
 use Fico7489\Laravel\Pivot\Traits\PivotEventTrait;
+use N1ebieski\ICore\Models\Traits\FullTextSearchable;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Config;
 
 /**
  * [Dir description]
@@ -256,7 +258,7 @@ class Dir extends Model
     public function map()
     {
         return $this->morphOne('N1ebieski\IDir\Models\Map\Map', 'model');
-    }    
+    }
 
     /**
      * [ratings description]
@@ -273,8 +275,14 @@ class Dir extends Model
      */
     public function regions()
     {
-        return $this->morphToMany('N1ebieski\IDir\Models\Region\Region', 'model', 'regions_models', 'model_id', 'region_id');
-    }    
+        return $this->morphToMany(
+            'N1ebieski\IDir\Models\Region\Region',
+            'model',
+            'regions_models',
+            'model_id',
+            'region_id'
+        );
+    }
 
     /**
      * [reports description]
@@ -291,7 +299,13 @@ class Dir extends Model
      */
     public function categories()
     {
-        return $this->morphToMany('N1ebieski\IDir\Models\Category\Dir\Category', 'model', 'categories_models', 'model_id', 'category_id');
+        return $this->morphToMany(
+            'N1ebieski\IDir\Models\Category\Dir\Category',
+            'model',
+            'categories_models',
+            'model_id',
+            'category_id'
+        );
     }
 
     /**
@@ -327,8 +341,13 @@ class Dir extends Model
      */
     public function fields()
     {
-        return $this->morphToMany('N1ebieski\IDir\Models\Field\Dir\Field', 'model', 'fields_values', 'model_id', 'field_id')
-            ->withPivot('value');
+        return $this->morphToMany(
+            'N1ebieski\IDir\Models\Field\Dir\Field',
+            'model',
+            'fields_values',
+            'model_id',
+            'field_id'
+        )->withPivot('value');
     }
 
     // Scopes
@@ -364,7 +383,7 @@ class Dir extends Model
     public function scopeWithSumRating(Builder $query) : Builder
     {
         return $query->withCount([
-            'ratings AS sum_rating' => function($query) {
+            'ratings AS sum_rating' => function ($query) {
                 $query->select(DB::raw('COALESCE(SUM(`ratings`.`rating`)/COUNT(*), 0) as `sum_rating`'));
             }
         ]);
@@ -417,7 +436,7 @@ class Dir extends Model
      */
     public function scopeFilterGroup(Builder $query, Group $group = null) : ?Builder
     {
-        return $query->when($group !== null, function($query) use ($group) {
+        return $query->when($group !== null, function ($query) use ($group) {
             $query->where('group_id', $group->id);
         });
     }
@@ -458,12 +477,12 @@ class Dir extends Model
      */
     public function getThumbnailUrlAttribute() : string
     {
-        if (($cache['url'] = config('idir.dir.thumbnail.cache.url')) 
-        && ($cache['key'] = config('idir.dir.thumbnail.key'))) {
+        if (($cache['url'] = Config::get('idir.dir.thumbnail.cache.url'))
+        && ($cache['key'] = Config::get('idir.dir.thumbnail.key'))) {
             return $this->makeCache()->rememberThumbnailUrl();
         }
 
-        return config('idir.dir.thumbnail.url').$this->url;
+        return Config::get('idir.dir.thumbnail.url').$this->url;
     }
 
     /**
@@ -563,7 +582,7 @@ class Dir extends Model
     {
         return $this->attributesToArray()
             + ['field' => $this->fields->keyBy('id')
-                ->map(function($item) {
+                ->map(function ($item) {
                     return $item->decode_value;
                 })
                 ->toArray()]
@@ -692,8 +711,8 @@ class Dir extends Model
      */
     public function loadCheckoutPayments() : self
     {
-        return $this->load(['payments' => function($query) {
-            $query->with('price_morph')->where('status', static::INACTIVE);
+        return $this->load(['payments' => function ($query) {
+            $query->with('priceMorph')->where('status', static::INACTIVE);
         }]);
     }
 
@@ -736,21 +755,6 @@ class Dir extends Model
         ]);
     }
 
-    // /**
-    //  * [loadGroupWithRels description]
-    //  * @return self [description]
-    //  */
-    // public function loadGroupWithRels() : self
-    // {
-    //     return $this->load([
-    //         'group',
-    //         'group.privileges',
-    //         'group.fields' => function($query) {
-    //             return $query->public();
-    //         }
-    //     ]);
-    // }
-
     // Mutators
 
     /**
@@ -770,7 +774,7 @@ class Dir extends Model
      */
     public function makeRepo()
     {
-        return app()->make(DirRepo::class, ['dir' => $this]);
+        return App::make(DirRepo::class, ['dir' => $this]);
     }
 
     /**
@@ -779,7 +783,7 @@ class Dir extends Model
      */
     public function makeCache()
     {
-        return app()->make(DirCache::class, ['dir' => $this]);
+        return App::make(DirCache::class, ['dir' => $this]);
     }
 
     /**
@@ -788,6 +792,6 @@ class Dir extends Model
      */
     public function makeService()
     {
-        return app()->make(DirService::class, ['dir' => $this]);
+        return App::make(DirService::class, ['dir' => $this]);
     }
 }

@@ -33,15 +33,16 @@ class LinkRepo extends BaseLinkRepo
     {
         return $this->link->where('type', 'link')
             ->whereDoesntHave('categories')
-            ->when($component['cats'] !== null, function($query) use ($component) {
+            ->when($component['cats'] !== null, function ($query) use ($component) {
                 $query->orWhereHas('categories', function ($query) use ($component) {
                     $query->whereIn('id', $component['cats']);
                 });
             })
             ->orderBy('position', 'asc')
-            ->when($component['cats'] !== null, function($query) use ($dirs) {
+            ->when($component['cats'] !== null, function ($query) use ($dirs) {
                 $query->union($dirs);
-            })->limit($component['limit'])
+            })
+            ->limit($component['limit'])
             ->get(['id', 'url', 'name', 'img_url']);
     }
 }

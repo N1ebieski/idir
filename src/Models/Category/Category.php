@@ -1,6 +1,7 @@
 <?php
 namespace N1ebieski\IDir\Models\Category;
 
+use Illuminate\Support\Facades\App;
 use N1ebieski\ICore\Models\Category\Category as BaseCategory;
 use N1ebieski\IDir\Repositories\CategoryRepo;
 use N1ebieski\IDir\Cache\CategoryCache;
@@ -18,7 +19,7 @@ class Category extends BaseCategory
      */
     public function makeRepo()
     {
-        return app()->make(CategoryRepo::class, ['category' => $this]);
+        return App::make(CategoryRepo::class, ['category' => $this]);
     }
 
     /**
@@ -27,6 +28,6 @@ class Category extends BaseCategory
      */
     public function makeCache()
     {
-        return app()->make(CategoryCache::class, ['category' => $this]);
+        return App::make(CategoryCache::class, ['category' => $this]);
     }
 }

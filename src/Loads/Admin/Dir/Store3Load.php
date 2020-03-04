@@ -16,7 +16,7 @@ class Store3Load
     public function __construct(Request $request)
     {
         $request->route('group')
-            ->loadCount(['dirs', 'dirs_today'])
+            ->loadCount(['dirs', 'dirsToday'])
             ->load(['privileges', 'fields']);
     }
 }

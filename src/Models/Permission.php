@@ -2,6 +2,7 @@
 
 namespace N1ebieski\IDir\Models;
 
+use Illuminate\Support\Facades\App;
 use N1ebieski\ICore\Models\Permission as BasePermission;
 use N1ebieski\IDir\Repositories\PermissionRepo;
 
@@ -18,6 +19,6 @@ class Permission extends BasePermission
      */
     public function makeRepo()
     {
-        return app()->make(PermissionRepo::class, ['permission' => $this]);
+        return App::make(PermissionRepo::class, ['permission' => $this]);
     }
 }

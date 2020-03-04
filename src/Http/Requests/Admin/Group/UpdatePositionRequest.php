@@ -27,7 +27,7 @@ class UpdatePositionRequest extends FormRequest
     public function rules()
     {
         return [
-            'position' => 'required|integer|between:0,' . ($this->group->countSiblings()-1)
+            'position' => 'required|integer|between:0,' . ($this->group->countSiblings() - 1)
         ];
     }
 }

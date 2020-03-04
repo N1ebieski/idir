@@ -4,6 +4,7 @@ namespace N1ebieski\IDir\Utils\Cashbill\Codes;
 
 use Illuminate\Contracts\Config\Repository as Config;
 use GuzzleHttp\Client as GuzzleClient;
+use GuzzleHttp\Psr7\Response as GuzzleResponse;
 
 /**
  * [Cashbill description]
@@ -20,7 +21,7 @@ class TransferUtil
      * [protected description]
      * @var object
      */
-    protected $response;
+    public $response;
 
     /**
      * [protected description]
@@ -41,25 +42,17 @@ class TransferUtil
     }
 
     /**
-     * [getResponse description]
-     * @return object [description]
-     */
-    public function getResponse() : object
-    {
-        return $this->response;
-    }
-
-    /**
      * [authorize description]
      * @param array $attributes [description]
      */
     public function authorize(array $attributes) : void
     {
-        $this->response($attributes['code'], $attributes['id']);
+        $this->prepareResponse($attributes['code'], $attributes['id']);
 
         if (!$this->isActive()) {
             throw new \N1ebieski\IDir\Exceptions\Cashbill\Codes\Transfer\InactiveCodeException(
-                'Code is inactive.', 403
+                'Code is inactive.',
+                403
             );
         }
     }
@@ -74,34 +67,42 @@ class TransferUtil
     }
 
     /**
-     * [response description]
-     * @param string $code [description]
-     * @param string $id   [description]
+     * Undocumented function
+     *
+     * @param string $code
+     * @param string $id
+     * @return object
      */
-    public function response(string $code, string $id) : void
+    public function prepareResponse(string $code, string $id) : object
     {
-        try {
-            $response = $this->guzzle->request('GET', $this->check_url . '?id=' . $id . '&check=' . $code);
-        } catch (\GuzzleHttp\Exception\GuzzleException $e) {
-            throw new \N1ebieski\IDir\Exceptions\Cashbill\Exception(
-                $e->getMessage(), $e->getCode()
-            );
-        }
+        $this->makeResponse($code, $id);
 
-        $this->prepareResponse($response->getBody()->getContents());
+        $content = explode("\n", trim($this->response->getBody()->getContents()));
+
+        return $this->response = (object)[
+            'status' => $content[0],
+            'timeRemaining' => $content[1] ?? null
+        ];
     }
 
     /**
-     * [prepareResponse description]
-     * @param string $body [description]
+     * Undocumented function
+     *
+     * @param string $code
+     * @param string $id
+     * @return GuzzleResponse
      */
-    protected function prepareResponse(string $body) : void
+    public function makeResponse(string $code, string $id) : GuzzleResponse
     {
-        $body = explode("\n", trim($body));
+        try {
+            $this->response = $this->guzzle->request('GET', $this->check_url . '?id=' . $id . '&check=' . $code);
+        } catch (\GuzzleHttp\Exception\GuzzleException $e) {
+            throw new \N1ebieski\IDir\Exceptions\Cashbill\Exception(
+                $e->getMessage(),
+                $e->getCode()
+            );
+        }
 
-        $this->response = (object)[
-            'status' => $body[0],
-            'timeRemaining' => $body[1] ?? null
-        ];
+        return $this->response;
     }
 }

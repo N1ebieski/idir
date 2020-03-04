@@ -3,6 +3,7 @@
 namespace N1ebieski\IDir\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\App;
 use N1ebieski\IDir\Models\Dir;
 use N1ebieski\IDir\Repositories\DirBacklinkRepo;
 use N1ebieski\IDir\Services\DirBacklinkService;
@@ -25,7 +26,7 @@ class DirBacklink extends Model
     *
     * @var array
     */
-    protected $fillable = ['backlink', 'attempts', 'attempted_at'];
+    protected $fillable = ['url', 'attempts', 'attempted_at'];
 
     /**
      * The table associated with the model.
@@ -93,7 +94,7 @@ class DirBacklink extends Model
      */
     public function makeRepo()
     {
-        return app()->make(DirBacklinkRepo::class, ['dirBacklink' => $this]);
+        return App::make(DirBacklinkRepo::class, ['dirBacklink' => $this]);
     }
 
     /**
@@ -102,7 +103,6 @@ class DirBacklink extends Model
      */
     public function makeService()
     {
-        return app()->make(DirBacklinkService::class, ['dirBacklink' => $this]);
+        return App::make(DirBacklinkService::class, ['dirBacklink' => $this]);
     }
-
 }

@@ -48,6 +48,12 @@ $factory->state(Dir::class, 'active', function (Faker $faker) {
     ];
 });
 
+$factory->state(Dir::class, 'backlink_inactive', function (Faker $faker) {
+    return [
+        'status' => 3
+    ];
+});
+
 $factory->state(Dir::class, 'inactive', function (Faker $faker) {
     return [
         'status' => 0

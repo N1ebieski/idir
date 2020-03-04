@@ -2,18 +2,19 @@
 
 namespace N1ebieski\IDir\Jobs\Dir;
 
-use GuzzleHttp\Client as GuzzleClient;
-use GuzzleHttp\Psr7\Response as GuzzleResponse;
+use Exception;
 use Illuminate\Bus\Queueable;
+use Illuminate\Support\Carbon;
+use N1ebieski\IDir\Models\DirStatus;
+use GuzzleHttp\Client as GuzzleClient;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
+use N1ebieski\IDir\Repositories\DirRepo;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use N1ebieski\IDir\Models\DirStatus;
 use N1ebieski\IDir\Repositories\DirStatusRepo;
-use N1ebieski\IDir\Repositories\DirRepo;
-use Carbon\Carbon;
-use Exception;
+use GuzzleHttp\Psr7\Response as GuzzleResponse;
+use Illuminate\Contracts\Config\Repository as Config;
 
 /**
  * [CheckStatus description]
@@ -60,6 +61,20 @@ class CheckStatusJob implements ShouldQueue
     protected $dirRepo;
 
     /**
+     * Undocumented variable
+     *
+     * @var Carbon
+     */
+    protected $carbon;
+    
+    /**
+     * Undocumented variable
+     *
+     * @var Config
+     */
+    protected $config;
+
+    /**
      * [protected description]
      * @var int
      */
@@ -80,9 +95,6 @@ class CheckStatusJob implements ShouldQueue
     public function __construct(DirStatus $dirStatus)
     {
         $this->dirStatus = $dirStatus;
-
-        $this->days = config('idir.dir.status.check_days');
-        $this->max_attempts = config('idir.dir.status.max_attempts');
     }
 
     /**
@@ -92,8 +104,8 @@ class CheckStatusJob implements ShouldQueue
     protected function isAttempt() : bool
     {
         return $this->dirStatus->attempted_at === null ||
-            Carbon::parse($this->dirStatus->attempted_at)->lessThanOrEqualTo(
-                Carbon::now()->subDays($this->days)
+            $this->carbon->parse($this->dirStatus->attempted_at)->lessThanOrEqualTo(
+                $this->carbon->now()->subDays($this->days)
             );
     }
 
@@ -110,11 +122,11 @@ class CheckStatusJob implements ShouldQueue
     /**
      * Undocumented function
      *
-     * @return void
+     * @return GuzzleResponse
      */
-    public function response() : void
+    public function makeResponse() : GuzzleResponse
     {
-        $this->response = $this->guzzle->request('GET', $this->dirStatus->dir->url, [
+        return $this->response = $this->guzzle->request('GET', $this->dirStatus->dir->url, [
             'http_errors' => true,
             'verify' => false
         ]);
@@ -127,7 +139,7 @@ class CheckStatusJob implements ShouldQueue
     protected function validateStatus() : bool
     {
         try {
-            $this->response();
+            $this->makeResponse();
         } catch (\GuzzleHttp\Exception\RequestException $e) {
             return false;
         }
@@ -162,16 +174,23 @@ class CheckStatusJob implements ShouldQueue
     }
 
     /**
-     * Execute the job.
+     * Undocumented function
      *
-     * @param  GuzzleClient  $guzzle
+     * @param GuzzleClient $guzzle
+     * @param Carbon $carbon
+     * @param Config $config
      * @return void
      */
-    public function handle(GuzzleClient $guzzle) : void
+    public function handle(GuzzleClient $guzzle, Carbon $carbon, Config $config) : void
     {
-        $this->guzzle = $guzzle;
         $this->dirStatusRepo = $this->dirStatus->makeRepo();
         $this->dirRepo = $this->dirStatus->dir->makeRepo();
+
+        $this->guzzle = $guzzle;
+        $this->carbon = $carbon;
+
+        $this->days = $config->get('idir.dir.status.check_days');
+        $this->max_attempts = $config->get('idir.dir.status.max_attempts');
 
         if ($this->isAttempt()) {
             $this->dirStatusRepo->attemptedNow();

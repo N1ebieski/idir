@@ -34,7 +34,7 @@ class UpdateRenewRequest extends FormRequest
                 'bail',
                 'required_if:payment_type,transfer',
                 'integer',
-                Rule::exists('prices', 'id')->where(function($query) {
+                Rule::exists('prices', 'id')->where(function ($query) {
                     $query->where([
                         ['type', 'transfer'],
                         ['group_id', $this->dir->group->id]
@@ -46,7 +46,7 @@ class UpdateRenewRequest extends FormRequest
                 'bail',
                 'required_if:payment_type,code_sms',
                 'integer',
-                Rule::exists('prices', 'id')->where(function($query) {
+                Rule::exists('prices', 'id')->where(function ($query) {
                     $query->where([
                         ['type', 'code_sms'],
                         ['group_id', $this->dir->group->id]
@@ -58,7 +58,7 @@ class UpdateRenewRequest extends FormRequest
                 'bail',
                 'required_if:payment_type,code_transfer',
                 'integer',
-                Rule::exists('prices', 'id')->where(function($query) {
+                Rule::exists('prices', 'id')->where(function ($query) {
                     $query->where([
                         ['type', 'code_transfer'],
                         ['group_id', $this->dir->group->id]

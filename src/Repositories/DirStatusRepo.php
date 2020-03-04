@@ -6,6 +6,7 @@ use N1ebieski\IDir\Models\DirStatus;
 use Illuminate\Contracts\Config\Repository as Config;
 use Carbon\Carbon;
 use Closure;
+use N1ebieski\IDir\Models\Dir;
 
 /**
  * [DirStatusRepo description]
@@ -68,7 +69,7 @@ class DirStatusRepo
     {
         return $this->dirStatus
             ->whereHas('dir', function ($query) {
-                $query->whereIn('status', [1, 4])
+                $query->whereIn('status', [Dir::ACTIVE, Dir::STATUS_INACTIVE])
                     ->whereNotNull('url');
             })
             ->where(function ($query) use ($timestamp) {

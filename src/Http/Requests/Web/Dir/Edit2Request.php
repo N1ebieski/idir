@@ -56,13 +56,14 @@ class Edit2Request extends FormRequest
         // a w widoku edycji wpisu potrzebujemy calej kolekcji, co w przypadku wstawiania
         // danych z helpera old() stanowi problem
         if ($this->old('categories') || $this->session()->get("dirId.{$this->dir->id}.categories")) {
-            session()->put('_old_input.categories_collection',
+            $this->session()->put(
+                '_old_input.categories_collection',
                 $this->category->makeRepo()->getByIds(
                     $this->old('categories') ?? $this->session()->get("dirId.{$this->dir->id}.categories")
                 )
             );
         } else {
-            session()->forget('_old_input.categories_collection');
+            $this->session()->forget('_old_input.categories_collection');
         }
     }
 
@@ -73,7 +74,7 @@ class Edit2Request extends FormRequest
     {
         if ($this->old('content_html')) {
             if (!$this->group->privileges->contains('name', 'additional options for editing content')) {
-                session()->put('_old_input.content_html', strip_tags($this->old('content_html')));
+                $this->session()->put('_old_input.content_html', strip_tags($this->old('content_html')));
             }
         }
     }

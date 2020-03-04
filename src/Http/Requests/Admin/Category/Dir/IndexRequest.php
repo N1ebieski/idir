@@ -32,9 +32,13 @@ class IndexRequest extends BaseIndexRequest
     public function rules()
     {
         return array_merge(parent::rules(), [
-            'filter._parent' => ['nullable', 'integer', Rule::exists('categories', 'id')->where(function($query) {
-                $query->where('model_type', $this->category->model_type);
-            })]
+            'filter._parent' => [
+                'nullable',
+                'integer',
+                Rule::exists('categories', 'id')->where(function ($query) {
+                    $query->where('model_type', $this->category->model_type);
+                })
+            ]
         ]);
     }
 }

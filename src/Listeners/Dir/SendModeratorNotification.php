@@ -2,14 +2,14 @@
 
 namespace N1ebieski\IDir\Listeners\Dir;
 
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Config;
-use N1ebieski\IDir\Mail\Dir\ModeratorMail;
 use N1ebieski\IDir\Models\Dir;
 use N1ebieski\IDir\Models\User;
+use Illuminate\Contracts\Mail\Mailer;
+use N1ebieski\IDir\Mail\Dir\ModeratorMail;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Contracts\Cache\Repository as Cache;
+use Illuminate\Contracts\Foundation\Application as App;
+use Illuminate\Contracts\Config\Repository as Config;
 
 class SendModeratorNotification
 {
@@ -37,6 +37,34 @@ class SendModeratorNotification
     /**
      * Undocumented variable
      *
+     * @var Mailer
+     */
+    protected $mailer;
+
+    /**
+     * Undocumented variable
+     *
+     * @var App
+     */
+    protected $app;
+
+    /**
+     * Undocumented variable
+     *
+     * @var Cache
+     */
+    protected $cache;
+
+    /**
+     * Undocumented variable
+     *
+     * @var Config
+     */
+    protected $config;
+
+    /**
+     * Undocumented variable
+     *
      * @var Collection
      */
     protected Collection $dirs;
@@ -49,16 +77,31 @@ class SendModeratorNotification
     protected int $counter;
 
     /**
-     * Create the event listener.
+     * Undocumented function
      *
-     * @return void
+     * @param User $user
+     * @param Dir $dir
+     * @param Mailer $mailer
+     * @param App $app
+     * @param Cache $cache
+     * @param Config $config
      */
-    public function __construct(User $user, Dir $dir)
-    {
+    public function __construct(
+        User $user,
+        Dir $dir,
+        Mailer $mailer,
+        App $app,
+        Cache $cache,
+        Config $config
+    ) {
         $this->user = $user;
         $this->dir = $dir;
 
-        $this->counter = (int)Config::get('idir.dir.notification.dirs');
+        $this->app = $app;
+        $this->mailer = $mailer;
+        $this->cache = $cache;
+
+        $this->counter = (int)$config->get('idir.dir.notification.dirs');
     }
 
     /**
@@ -87,7 +130,7 @@ class SendModeratorNotification
      */
     protected function isTimeToSend() : bool
     {
-        return Cache::get('dir.notification.dirs') >= $this->counter;
+        return $this->cache->get('dir.notification.dirs') >= $this->counter;
     }
 
     /**
@@ -97,9 +140,9 @@ class SendModeratorNotification
      */
     protected function incrementCounter() : bool
     {
-        return Cache::has('dir.notification.dirs') ?
-            Cache::increment('dir.notification.dirs') :
-            Cache::forever('dir.notification.dirs', 1);
+        return $this->cache->has('dir.notification.dirs') ?
+            $this->cache->increment('dir.notification.dirs')
+            : $this->cache->forever('dir.notification.dirs', 1);
     }
 
     /**
@@ -109,7 +152,7 @@ class SendModeratorNotification
      */
     protected function forgetCounter() : bool
     {
-        return Cache::forget('dir.notification.dirs');
+        return $this->cache->forget('dir.notification.dirs');
     }
 
     /**
@@ -163,7 +206,7 @@ class SendModeratorNotification
      */
     protected function sendMailToModerator(User $user) : void
     {
-        Mail::send(App::make(ModeratorMail::class, [
+        $this->mailer->send($this->app->make(ModeratorMail::class, [
             'user' => $user,
             'dirs' => $this->dirs
         ]));

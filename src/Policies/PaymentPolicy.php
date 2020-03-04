@@ -19,7 +19,9 @@ class PaymentPolicy
      * @return void
      */
     public function __construct()
-    {}
+    {
+        //
+    }
 
     /**
      * [show description]

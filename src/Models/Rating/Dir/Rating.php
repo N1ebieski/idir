@@ -38,7 +38,7 @@ class Rating extends RatingBaseModel
         return $this;
     }
 
-    // Makers
+    // Getters
 
     /**
      * [getMorph description]

@@ -24,25 +24,25 @@ class RouteServiceProvider extends ServiceProvider
     {
         parent::boot();
 
-        $this->app['router']->bind('payment_dir_pending', function($value) {
+        $this->app['router']->bind('payment_dir_pending', function ($value) {
             return $this->app->make(\N1ebieski\IDir\Models\Payment\Dir\Payment::class)
                 ->makeRepo()->firstPendingByUuid($value) ?? abort(404);
         });
 
-        $this->app['router']->bind('category_dir_cache', function($value) {
+        $this->app['router']->bind('category_dir_cache', function ($value) {
             return $this->app->make(\N1ebieski\IDir\Models\Category\Dir\Category::class)
                 ->makeCache()->rememberBySlug($value) ?? abort(404);
         });
 
-        $this->app['router']->bind('region_cache', function($value) {
+        $this->app['router']->bind('region_cache', function ($value) {
             return $this->app->make(\N1ebieski\IDir\Models\Region\Region::class)
                 ->makeCache()->rememberBySlug($value) ?? abort(404);
         });
         
-        $this->app['router']->bind('dir_cache', function($value) {
+        $this->app['router']->bind('dir_cache', function ($value) {
             return $this->app->make(\N1ebieski\IDir\Models\Dir::class)
                 ->makeCache()->rememberBySlug($value) ?? abort(404);
-        });         
+        });
     }
 
     /**
@@ -72,13 +72,13 @@ class RouteServiceProvider extends ServiceProvider
              ->as('web.')
              ->namespace($this->namespace.'\Web')
              ->group(function ($router) {
-                 foreach (glob(__DIR__ . '/../../routes/web/*.php') as $filename) {
-                     if (file_exists($override = base_path('routes') . '/vendor/idir/web/' . basename($filename))) {
-                         require($override);
-                     } else {
-                         require($filename);
-                     }
-                 }
+                foreach (glob(__DIR__ . '/../../routes/web/*.php') as $filename) {
+                    if (file_exists($override = base_path('routes') . '/vendor/idir/web/' . basename($filename))) {
+                        require($override);
+                    } else {
+                        require($filename);
+                    }
+                }
              });
     }
 
@@ -93,10 +93,10 @@ class RouteServiceProvider extends ServiceProvider
     {
         $this->app['router']->middleware('api')
             ->prefix('api')
-            ->as('api.')            
+            ->as('api.')
             ->namespace($this->namespace.'\Api')
             ->group(function ($router) {
-                foreach (glob(__DIR__ . '/../../routes/api/*.php') as $filename){
+                foreach (glob(__DIR__ . '/../../routes/api/*.php') as $filename) {
                     if (file_exists($override = base_path('routes') . '/vendor/idir/api/' . basename($filename))) {
                         require($override);
                     } else {
@@ -125,7 +125,7 @@ class RouteServiceProvider extends ServiceProvider
             ->as('admin.')
             ->namespace($this->namespace.'\Admin')
             ->group(function ($router) {
-                foreach (glob(__DIR__ . '/../../routes/admin/*.php') as $filename){
+                foreach (glob(__DIR__ . '/../../routes/admin/*.php') as $filename) {
                     if (file_exists($override = base_path('routes') . '/vendor/idir/admin/' . basename($filename))) {
                         require($override);
                     } else {

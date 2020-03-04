@@ -4,7 +4,7 @@ namespace N1ebieski\IDir\Services;
 
 use Illuminate\Database\Eloquent\Model;
 use N1ebieski\IDir\Models\Payment\Payment;
-use Carbon\Carbon;
+use Illuminate\Support\Carbon;
 use N1ebieski\ICore\Services\Interfaces\Creatable;
 use N1ebieski\ICore\Services\Interfaces\StatusUpdatable;
 
@@ -20,12 +20,23 @@ class PaymentService implements Creatable, StatusUpdatable
     protected $payment;
 
     /**
-     * [__construct description]
-     * @param Payment       $payment   [description]
+     * Undocumented variable
+     *
+     * @var Carbon
      */
-    public function __construct(Payment $payment)
+    protected $carbon;
+
+    /**
+     * Undocumented function
+     *
+     * @param Payment $payment
+     * @param Carbon $carbon
+     */
+    public function __construct(Payment $payment, Carbon $carbon)
     {
         $this->payment = $payment;
+
+        $this->carbon = $carbon;
     }
 
     /**
@@ -51,7 +62,7 @@ class PaymentService implements Creatable, StatusUpdatable
     {
         $this->payment->status = $this->makeStatus($attributes['payment_type'] ?? null);
         $this->payment->morph()->associate($this->payment->getMorph());
-        $this->payment->price_morph()->associate($this->payment->getPriceMorph());
+        $this->payment->priceMorph()->associate($this->payment->getPriceMorph());
         $this->payment->save();
 
         return $this->payment;
@@ -77,7 +88,7 @@ class PaymentService implements Creatable, StatusUpdatable
     public function updateLogs(array $attributes) : bool
     {
         return $this->payment->update([
-            'logs' => $this->payment->logs . "\r\n" . Carbon::now() . "\r\n" . $attributes['logs']
+            'logs' => $this->payment->logs . "\r\n" . $this->carbon->now() . "\r\n" . $attributes['logs']
         ]);
     }
 }

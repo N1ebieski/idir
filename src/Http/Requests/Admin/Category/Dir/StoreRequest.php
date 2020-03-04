@@ -15,7 +15,7 @@ class StoreRequest extends BaseStoreRequest
      * [protected description]
      * @var Category
      */
-    protected Category $category;
+    protected $category;
 
     /**
      * @param Category $category
@@ -36,9 +36,12 @@ class StoreRequest extends BaseStoreRequest
     public function rules()
     {
         return array_merge(parent::rules(), [
-            'parent_id' => ['nullable', Rule::exists('categories', 'id')->where(function($query) {
-                $query->where('model_type', $this->category->model_type);
-            })]
+            'parent_id' => [
+                'nullable',
+                Rule::exists('categories', 'id')->where(function ($query) {
+                    $query->where('model_type', $this->category->model_type);
+                })
+            ]
         ]);
     }
 }
