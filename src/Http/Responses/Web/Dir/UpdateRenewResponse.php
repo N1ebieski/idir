@@ -8,6 +8,7 @@ use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Contracts\Translation\Translator as Lang;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Contracts\Routing\UrlGenerator as URL;
 
 /**
  * [UpdateRenewResponse description]
@@ -46,19 +47,33 @@ class UpdateRenewResponse
     protected $lang;
 
     /**
+     * Undocumented variable
+     *
+     * @var URL
+     */
+    protected $url;
+
+    /**
      * Undocumented function
      *
      * @param Request $request
      * @param ResponseFactory $response
      * @param Config $config
      * @param Lang $lang
+     * @param URL $url
      */
-    public function __construct(Request $request, ResponseFactory $response, Config $config, Lang $lang)
-    {
+    public function __construct(
+        Request $request,
+        ResponseFactory $response,
+        Config $config,
+        Lang $lang,
+        URL $url
+    ) {
         $this->request = $request;
         $this->response = $response;
         $this->config = $config;
         $this->lang = $lang;
+        $this->url = $url;
     }
 
     /**
@@ -80,7 +95,10 @@ class UpdateRenewResponse
     public function makeResponse() : RedirectResponse
     {
         if ($this->request->input('payment_type') === 'transfer') {
-            return $this->response->redirectToRoute('web.payment.dir.show', [$this->dir->getPayment()->uuid]);
+            return $this->response->redirectToRoute('web.payment.dir.show', [
+                $this->dir->getPayment()->uuid,
+                'redirect' => $this->url->route('web.profile.edit_dir')
+            ]);
         }
 
         switch ($this->dir->status) {
