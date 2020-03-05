@@ -90,7 +90,7 @@ class SMSRule extends CodesRule
         }
 
         $this->request->merge([
-            'logs' => (array)$this->cashbill->response + ['code' => $value]
+            'logs' => (array)$this->cashbill->getResponse() + ['code' => $value]
         ]);
 
         return true;

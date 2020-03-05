@@ -53,7 +53,7 @@ class VerifyRequest extends FormRequest
         return [
             'service' => 'bail|required|string|in:' . Config::get("services.cashbill.transfer.service"),
             'orderid' => 'bail|required|string',
-            'amount' => 'bail|required|numeric|between:0,9999.99',
+            'amount' => 'bail|required|numeric|between:0,99999.99',
             'userdata' => 'bail|required|json',
             'status' => 'bail|required|in:ok,err',
             'sign' => 'bail|required|string',

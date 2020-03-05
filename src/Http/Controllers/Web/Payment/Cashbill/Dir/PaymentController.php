@@ -47,7 +47,7 @@ class PaymentController implements Polymorphic
                     'redirect' => $request->input('redirect')
                 ])
             ])
-            ->response();
+            ->makeResponse();
         } catch (\N1ebieski\IDir\Exceptions\Cashbill\Exception $e) {
             throw $e->setPayment($payment);
         }

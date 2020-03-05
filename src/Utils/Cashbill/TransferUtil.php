@@ -188,10 +188,10 @@ class TransferUtil
      *
      * @return GuzzleResponse
      */
-    public function response() : GuzzleResponse
+    public function makeResponse() : GuzzleResponse
     {
         try {
-            $response = $this->guzzle->request('POST', $this->transfer_url, [
+            $this->response = $this->guzzle->request('POST', $this->transfer_url, [
                 'allow_redirects' => ['track_redirects' => true],
                 'form_params' => $this->all()
             ]);
@@ -202,7 +202,7 @@ class TransferUtil
             );
         }
 
-        return $this->response = $response;
+        return $this->response;
     }
 
     /**
