@@ -21,7 +21,7 @@ class TransferUtil
      * [protected description]
      * @var object
      */
-    public $response;
+    protected object $response;
 
     /**
      * [protected description]
@@ -42,12 +42,23 @@ class TransferUtil
     }
 
     /**
+     * Get [protected description]
+     *
+     * @return  object
+     */
+    public function getResponse()
+    {
+        return $this->response;
+    }
+
+    /**
      * [authorize description]
      * @param array $attributes [description]
      */
     public function authorize(array $attributes) : void
     {
-        $this->prepareResponse($attributes['code'], $attributes['id']);
+        $this->makeResponse($attributes['code'], $attributes['id']);
+        $this->prepareResponse();
 
         if (!$this->isActive()) {
             throw new \N1ebieski\IDir\Exceptions\Cashbill\Codes\Transfer\InactiveCodeException(
@@ -73,10 +84,8 @@ class TransferUtil
      * @param string $id
      * @return object
      */
-    public function prepareResponse(string $code, string $id) : object
+    public function prepareResponse() : object
     {
-        $this->makeResponse($code, $id);
-
         $content = explode("\n", trim($this->response->getBody()->getContents()));
 
         return $this->response = (object)[

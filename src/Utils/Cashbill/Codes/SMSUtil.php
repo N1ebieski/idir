@@ -27,7 +27,7 @@ class SMSUtil
      * [protected description]
      * @var object
      */
-    public $response;
+    protected object $response;
 
     /**
      * [protected description]
@@ -49,12 +49,23 @@ class SMSUtil
     }
 
     /**
+     * Get [protected description]
+     *
+     * @return  object
+     */
+    public function getResponse()
+    {
+        return $this->response;
+    }
+
+    /**
      * [authorize description]
      * @param array $attributes [description]
      */
     public function authorize(array $attributes) : void
     {
-        $this->prepareResponse($attributes['code']);
+        $this->makeResponse($attributes['code']);
+        $this->prepareResponse();
 
         if (!$this->isActive()) {
             throw new \N1ebieski\IDir\Exceptions\Cashbill\Codes\SMS\InactiveCodeException(
@@ -95,13 +106,10 @@ class SMSUtil
     /**
      * Undocumented function
      *
-     * @param string $code
      * @return object
      */
-    public function prepareResponse(string $code) : object
+    public function prepareResponse() : object
     {
-        $this->makeResponse($code);
-
         return $this->response = json_decode($this->response->getBody());
     }
 
