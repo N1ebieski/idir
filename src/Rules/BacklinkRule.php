@@ -34,11 +34,11 @@ class BacklinkRule implements Rule
     /**
      * Undocumented function
      *
-     * @param string $link
      * @param GuzzleClient $guzzle
      * @param Lang $lang
+     * @param string $link
      */
-    public function __construct(string $link, GuzzleClient $guzzle, Lang $lang)
+    public function __construct(GuzzleClient $guzzle, Lang $lang, string $link)
     {
         $this->link = $link;
 

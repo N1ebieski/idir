@@ -40,24 +40,66 @@ class AppServiceProvider extends ServiceProvider
             );
         });
 
+        $this->app->bind(\N1ebieski\IDir\Utils\Payment\Interfaces\TransferUtilStrategy::class, function ($app) {
+            switch ($this->app['config']['idir.payment.transfer.driver']) {
+                case 'cashbill':
+                    return $this->app->make(\N1ebieski\IDir\Utils\Payment\Cashbill\TransferUtil::class);
+            }
+        });
+
+        $this->app->bind(\N1ebieski\IDir\Utils\Payment\Interfaces\Codes\TransferUtilStrategy::class, function ($app) {
+            switch ($this->app['config']['idir.payment.code_transfer.driver']) {
+                case 'cashbill':
+                    return $this->app->make(\N1ebieski\IDir\Utils\Payment\Cashbill\Codes\TransferUtil::class);
+            }
+        });
+
+        $this->app->bind(\N1ebieski\IDir\Utils\Payment\Interfaces\Codes\SMSUtilStrategy::class, function ($app) {
+            switch ($this->app['config']['idir.payment.code_sms.driver']) {
+                case 'cashbill':
+                    return $this->app->make(\N1ebieski\IDir\Utils\Payment\Cashbill\Codes\SMSUtil::class);
+            }
+        });
+
+        $this->app->bind(\N1ebieski\IDir\Http\Requests\Web\Payment\Interfaces\CompleteRequestStrategy::class, function ($app) {
+            switch ($this->app['config']['idir.payment.transfer.driver']) {
+                case 'cashbill':
+                    return new \N1ebieski\IDir\Http\Requests\Web\Payment\Cashbill\CompleteRequest;
+            }
+        });
+        
+        $this->app->bind(\N1ebieski\IDir\Http\Requests\Web\Payment\Interfaces\ShowRequestStrategy::class, function ($app) {
+            switch ($this->app['config']['idir.payment.transfer.driver']) {
+                case 'cashbill':
+                    return new \N1ebieski\IDir\Http\Requests\Web\Payment\Cashbill\ShowRequest;
+            }
+        });
+        
+        $this->app->bind(\N1ebieski\IDir\Http\Requests\Web\Payment\Interfaces\VerifyRequestStrategy::class, function ($app) {
+            switch ($this->app['config']['idir.payment.transfer.driver']) {
+                case 'cashbill':
+                    return new \N1ebieski\IDir\Http\Requests\Web\Payment\Cashbill\VerifyRequest;
+            }
+        });
+
         $this->app->bind(\N1ebieski\ICore\Http\Requests\Admin\BanValue\IndexRequest::class, function ($app, array $with) {
-            return $this->app->make(\N1ebieski\IDir\Http\Requests\Admin\BanValue\IndexRequest::class, $with);
+            return new \N1ebieski\IDir\Http\Requests\Admin\BanValue\IndexRequest;
         });
 
         $this->app->bind(\N1ebieski\ICore\Http\Requests\Admin\BanValue\CreateRequest::class, function ($app, array $with) {
-            return $this->app->make(\N1ebieski\IDir\Http\Requests\Admin\BanValue\CreateRequest::class, $with);
+            return new \N1ebieski\IDir\Http\Requests\Admin\BanValue\CreateRequest;
         });
 
         $this->app->bind(\N1ebieski\ICore\Http\Requests\Admin\BanValue\StoreRequest::class, function ($app, array $with) {
-            return $this->app->make(\N1ebieski\IDir\Http\Requests\Admin\BanValue\StoreRequest::class, $with);
+            return new \N1ebieski\IDir\Http\Requests\Admin\BanValue\StoreRequest;
         });
 
         $this->app->bind(\N1ebieski\ICore\Http\Requests\Admin\Role\UpdateRequest::class, function ($app, array $with) {
-            return $this->app->make(\N1ebieski\IDir\Http\Requests\Admin\Role\UpdateRequest::class, $with);
+            return new \N1ebieski\IDir\Http\Requests\Admin\Role\UpdateRequest;
         });
 
         $this->app->bind(\N1ebieski\ICore\Http\Requests\Web\Search\IndexRequest::class, function ($app, array $with) {
-            return $this->app->make(\N1ebieski\IDir\Http\Requests\Web\Search\IndexRequest::class, $with);
+            return new \N1ebieski\IDir\Http\Requests\Web\Search\IndexRequest;
         });
 
         $this->app->bindMethod(\N1ebieski\IDir\Jobs\Tag\Dir\CachePopularTagsJob::class.'@handle', function ($job, $app) {
