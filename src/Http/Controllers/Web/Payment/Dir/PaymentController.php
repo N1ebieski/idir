@@ -75,7 +75,7 @@ class PaymentController extends Controller implements Polymorphic
         TransferUtilStrategy $transferUtil
     ) : RedirectResponse {
         if (!$transferUtil->isSign($request->validated())) {
-            App::abort(403, 'Invalid signature of payment.');
+            App::abort(HttpResponse::HTTP_FORBIDDEN, 'Invalid signature of payment.');
         }
 
         return Response::redirectTo($request->input('redirect'))->with(
