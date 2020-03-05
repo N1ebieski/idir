@@ -8,6 +8,7 @@ use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Response as GuzzleResponse;
+use Illuminate\Support\Facades\App;
 
 /**
  * [BacklinkTest description]
@@ -31,7 +32,10 @@ class BacklinkTest extends TestCase
         $handler = HandlerStack::create($mock);
         $client = new GuzzleClient(['handler' => $handler]);
 
-        $rule = new \N1ebieski\IDir\Rules\BacklinkRule($this->url, $client);
+        $rule = App::make(\N1ebieski\IDir\Rules\BacklinkRule::class, [
+            'link' => $this->url,
+            'guzzle' => $client
+        ]);
         $response = $rule->passes(null, '/');
 
         $this->assertTrue($response === 0);
@@ -46,7 +50,10 @@ class BacklinkTest extends TestCase
         $handler = HandlerStack::create($mock);
         $client = new GuzzleClient(['handler' => $handler]);
 
-        $rule = new \N1ebieski\IDir\Rules\BacklinkRule($this->url, $client);
+        $rule = App::make(\N1ebieski\IDir\Rules\BacklinkRule::class, [
+            'link' => $this->url,
+            'guzzle' => $client
+        ]);
         $response = $rule->passes(null, '/');
 
         $this->assertTrue($response === 1);
