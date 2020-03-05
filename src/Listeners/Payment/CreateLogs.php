@@ -48,6 +48,7 @@ class CreateLogs
         }
 
         $logs = "";
+
         foreach (array_map('strval', $this->request->input('logs')) as $key => $value) {
             $logs .= $key . ': ' . $value . "\n";
         }
