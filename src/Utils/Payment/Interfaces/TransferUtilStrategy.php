@@ -33,4 +33,11 @@ interface TransferUtilStrategy
      * @return GuzzleResponse
      */
     public function makeResponse() : GuzzleResponse;
+
+    /**
+     * Undocumented function
+     *
+     * @return string
+     */
+    public function getUrlToPayment() : string;
 }

@@ -53,8 +53,8 @@ class CommentController implements Polymorphic
         Event::dispatch(App::make(CommentStoreEvent::class, ['comment' => $comment]));
 
         return Response::json([
-            'success' => $comment->status === Comment::ACTIVE ?:
-                Lang::get('icore::comments.success.store_0'),
+            'success' => $comment->status === Comment::ACTIVE ?
+                null : Lang::get('icore::comments.success.store_0'),
             'view' => $comment->status === Comment::ACTIVE ?
                 View::make('icore::web.comment.partials.comment', [
                     'comment' => $comment
