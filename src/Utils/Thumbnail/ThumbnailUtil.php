@@ -1,11 +1,12 @@
 <?php
 
-namespace N1ebieski\IDir\Utils;
+namespace N1ebieski\IDir\Utils\Thumbnail;
 
-use GuzzleHttp\Client as GuzzleClient;
-use Illuminate\Contracts\Filesystem\Factory as Storage;
-use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Support\Carbon;
+use GuzzleHttp\Client as GuzzleClient;
+use GuzzleHttp\Psr7\Response as GuzzleResponse;
+use Illuminate\Contracts\Config\Repository as Config;
+use Illuminate\Contracts\Filesystem\Factory as Storage;
 
 class ThumbnailUtil
 {
@@ -65,6 +66,34 @@ class ThumbnailUtil
     protected $config;
 
     /**
+     * Undocumented variable
+     *
+     * @var GuzzleResponse
+     */
+    protected $response;
+
+    /**
+     * Undocumented variable
+     *
+     * @var int
+     */
+    protected int $checkDays;
+
+    /**
+     * Undocumented variable
+     *
+     * @var string
+     */
+    protected string $thumbnailUrl;
+
+    /**
+     * Undocumented variable
+     *
+     * @var string|null
+     */
+    protected ?string $thumbnailReloadUrl;
+
+    /**
      * Undocumented function
      *
      * @param string $url
@@ -83,11 +112,15 @@ class ThumbnailUtil
         $this->guzzle = $guzzle;
         $this->storage = $storage;
         $this->carbon = $carbon;
-        $this->config = $config;
 
         $this->url = $url;
-        $this->host = $this->makeHost();
-        $this->file_path = $this->makeFilePath();
+
+        $this->checkDays = $config->get('idir.dir.thumbnail.cache.days');
+        $this->thumbnailUrl = $config->get('idir.dir.thumbnail.url');
+        $this->thumbnailReloadUrl = $config->get('idir.dir.thumbnail.reload_url');
+
+        $this->makeHost();
+        $this->makeFilePath();
     }
 
     /**
@@ -97,7 +130,7 @@ class ThumbnailUtil
      */
     protected function makeHost() : string
     {
-        return parse_url($this->url, PHP_URL_HOST);
+        return $this->host = parse_url($this->url, PHP_URL_HOST);
     }
 
     /**
@@ -108,8 +141,11 @@ class ThumbnailUtil
     protected function makeFilePath() : string
     {
         $hash = md5($this->host);
+        $path = implode('/', array_slice(str_split($hash), 0, 3));
 
-        return $this->path . '/' . implode('/', array_slice(str_split($hash), 0, 3)). '/' . $hash .'.jpg';
+        $this->file_path = $this->path . '/' . $path . '/' . $hash .'.jpg';
+
+        return $this->file_path;
     }
 
     /**
@@ -139,9 +175,8 @@ class ThumbnailUtil
     {
         $modified_at = $this->storage->disk('public')->lastModified($this->file_path);
 
-        return $this->carbon->parse($modified_at)->addDays(
-            $this->config->get('idir.dir.thumbnail.cache.days')
-        ) < $this->carbon->now();
+        return $this->carbon->parse($modified_at)
+            ->addDays($this->checkDays) < $this->carbon->now();
     }
 
     /**
@@ -158,12 +193,12 @@ class ThumbnailUtil
      * Undocumented function
      *
      * @param string $value
-     * @return string
+     * @return GuzzleResponse
      */
-    protected function response(string $value) : string
+    public function makeResponse(string $value) : GuzzleResponse
     {
         try {
-            $response = $this->guzzle->request('GET', $value);
+            $this->response = $this->guzzle->request('GET', $value);
         } catch (\GuzzleHttp\Exception\GuzzleException $e) {
             throw new \N1ebieski\IDir\Exceptions\Thumbnail\Exception(
                 $e->getMessage(),
@@ -171,7 +206,17 @@ class ThumbnailUtil
             );
         }
 
-        return $response->getBody()->getContents();
+        return $this->response;
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @return string
+     */
+    public function prepareResponse() : string
+    {
+        return $this->response = $this->response->getBody()->getContents();
     }
 
     /**
@@ -182,6 +227,9 @@ class ThumbnailUtil
     public function generate() : string
     {
         if ($this->isReload()) {
+            $this->makeResponse($this->thumbnailUrl . $this->url);
+            $this->prepareResponse();
+
             $this->put();
         }
 
@@ -195,8 +243,8 @@ class ThumbnailUtil
      */
     public function reload() : bool
     {
-        if ($this->config->has('idir.dir.thumbnail.reload_url')) {
-            $this->response($this->config->get('idir.dir.thumbnail.reload_url') . $this->url);
+        if ($this->thumbnailReloadUrl !== null) {
+            $this->makeResponse($this->thumbnailReloadUrl . $this->url);
         }
 
         if ($this->isExists()) {
@@ -223,10 +271,7 @@ class ThumbnailUtil
      */
     protected function put() : string
     {
-        return $this->storage->disk('public')->put(
-            $this->file_path,
-            $this->response($this->config->get('idir.dir.thumbnail.url') . $this->url)
-        );
+        return $this->storage->disk('public')->put($this->file_path, $this->response);
     }
 
     /**

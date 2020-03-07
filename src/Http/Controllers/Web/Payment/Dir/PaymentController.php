@@ -39,7 +39,7 @@ class PaymentController extends Controller implements Polymorphic
         $payment->load(['morph', 'priceMorph']);
 
         try {
-            $response = $transferUtil->setup([
+            $transferUtil->setup([
                 'amount' => $payment->price->price,
                 'desc' => trans('idir::payments.desc.dir', [
                     'title' => $payment->morph->title,
@@ -58,9 +58,7 @@ class PaymentController extends Controller implements Polymorphic
             throw $e->setPayment($payment);
         }
 
-        $redirects = $response->getHeader(\GuzzleHttp\RedirectMiddleware::HISTORY_HEADER);
-
-        return Response::redirectTo(end($redirects));
+        return Response::redirectTo($transferUtil->getUrlToPayment());
     }
 
     /**

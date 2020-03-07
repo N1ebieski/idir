@@ -21,7 +21,7 @@ jQuery(window).on('readyAndAjax', function() {
     }
 });
 
-jQuery(document).on('click', 'button.storeBanModel', function(e) {
+jQuery(document).on('click', 'button.storeBanModel', function (e) {
     e.preventDefault();
 
     let $form = $(this).closest('form');
@@ -38,25 +38,25 @@ jQuery(document).on('click', 'button.storeBanModel', function(e) {
         method: 'post',
         data: $form.serialize(),
         dataType: 'json',
-        beforeSend: function() {
+        beforeSend: function () {
             $form.btn.prop('disabled', true);
             $modal.body.append($.getLoader('spinner-border'));
             $('.invalid-feedback').remove();
             $form.input.removeClass('is-valid');
             $form.input.removeClass('is-invalid');
         },
-        complete: function() {
+        complete: function () {
             $form.btn.prop('disabled', false);
             $modal.body.find('div.loader-absolute').remove();
             $form.input.addClass('is-valid');
         },
-        success: function(response) {
+        success: function (response) {
             $modal.body.html($.getAlert(response.success, 'success'));
         },
-        error: function(response) {
+        error: function (response) {
             var errors = response.responseJSON;
 
-            $.each(errors.errors, function( key, value ) {
+            $.each(errors.errors, function (key, value) {
                 $form.find('[id="'+key+'"]').addClass('is-invalid');
                 $form.find('[id="'+key+'"]').closest('.form-group')
                                             .append($.getError(key, value));
