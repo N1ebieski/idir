@@ -82,6 +82,18 @@ class TransferUtil implements TransferUtilStrategy
     }
 
     /**
+     * Undocumented function
+     *
+     * @return string
+     */
+    public function getUrlToPayment() : string
+    {
+        $redirects = $this->response->getHeader(\GuzzleHttp\RedirectMiddleware::HISTORY_HEADER);
+
+        return end($redirects);
+    }
+
+    /**
      * [setup description]
      * @param  array $attributes [description]
      * @return static              [description]

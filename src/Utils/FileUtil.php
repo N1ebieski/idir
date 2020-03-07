@@ -59,8 +59,8 @@ class FileUtil
         $this->file = $file;
         $this->path = $path;
 
-        $this->setFileTempPath($this->makeFileTempPath());
-        $this->setFilePath($this->makeFilePath());
+        $this->makeFileTempPath();
+        $this->makeFilePath();
     }
 
     /**
@@ -80,36 +80,12 @@ class FileUtil
     }
 
     /**
-     * [setFileTempPath description]
-     * @param  string $path [description]
-     * @return self         [description]
-     */
-    public function setFileTempPath(string $path) : self
-    {
-        $this->file_temp_path = $path;
-
-        return $this;
-    }
-
-    /**
-     * [setFilePath description]
-     * @param  string $path [description]
-     * @return self         [description]
-     */
-    public function setFilePath(string $path) : self
-    {
-        $this->file_path = $path;
-
-        return $this;
-    }
-
-    /**
      * [getFileTempPath description]
      * @return string [description]
      */
     protected function makeFileTempPath() : string
     {
-        return $this->temp_path . "/" . $this->file->getClientOriginalName();
+        return $this->file_temp_path = $this->temp_path . "/" . $this->file->getClientOriginalName();
     }
 
     /**
@@ -118,7 +94,7 @@ class FileUtil
      */
     protected function makeFilePath() : string
     {
-        return $this->path . "/" . $this->file->getClientOriginalName();
+        return $this->file_path = $this->path . "/" . $this->file->getClientOriginalName();
     }
 
     /**
@@ -142,7 +118,8 @@ class FileUtil
      */
     public function moveFromTemp() : bool
     {
-        return $this->storage->disk('public')->move($this->getFileTempPath(), $this->getFilePath());
+        return $this->storage->disk('public')
+            ->move($this->getFileTempPath(), $this->getFilePath());
     }
 
     /**
@@ -151,9 +128,8 @@ class FileUtil
      */
     public function upload() : string
     {
-        $this->setFilePath(
-            $this->storage->disk('public')->putFile($this->path, $this->file)
-        );
+        $this->file_path = $this->storage->disk('public')
+            ->putFile($this->path, $this->file);
 
         return $this->getFilePath();
     }
@@ -164,13 +140,10 @@ class FileUtil
      */
     public function uploadToTemp() : string
     {
-        $this->setFileTempPath(
-            $this->storage->disk('public')->putFile($this->temp_path, $this->file)
-        );
+        $this->file_temp_path = $this->storage->disk('public')
+            ->putFile($this->temp_path, $this->file);
 
-        $this->setFilePath(
-            $this->path . "/" . basename($this->getFileTempPath())
-        );
+        $this->file_path = $this->path . "/" . basename($this->getFileTempPath());
 
         return $this->getFileTempPath();
     }
