@@ -1,6 +1,6 @@
 <?php
 
-namespace N1ebieski\IDir\Http\ViewComponents;
+namespace N1ebieski\IDir\View\Components;
 
 use Illuminate\View\View;
 use N1ebieski\IDir\Models\Dir;

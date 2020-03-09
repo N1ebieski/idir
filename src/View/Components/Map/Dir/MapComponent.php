@@ -1,12 +1,12 @@
 <?php
 
-namespace N1ebieski\IDir\Http\ViewComponents\Map\Dir;
+namespace N1ebieski\IDir\View\Components\Map\Dir;
 
 use Illuminate\View\View;
 use N1ebieski\IDir\Models\Dir;
 use Illuminate\Support\Collection as Collect;
 use Illuminate\Contracts\View\Factory as ViewFactory;
-use N1ebieski\ICore\Http\ViewComponents\Map\MapComponent as BaseMapComponent;
+use N1ebieski\ICore\View\Components\Map\MapComponent as BaseMapComponent;
 
 /**
  * [MapComponent description]

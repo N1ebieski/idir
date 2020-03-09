@@ -1,8 +1,8 @@
 <?php
 
-namespace N1ebieski\IDir\Http\ViewComponents\Tag\Dir;
+namespace N1ebieski\IDir\View\Components\Tag\Dir;
 
-use N1ebieski\ICore\Http\ViewComponents\Tag\TagComponent as BaseTagComponent;
+use N1ebieski\ICore\View\Components\Tag\TagComponent as BaseTagComponent;
 use N1ebieski\IDir\Models\Tag\Dir\Tag;
 use Illuminate\Contracts\View\Factory as ViewFactory;
 use Illuminate\View\View;

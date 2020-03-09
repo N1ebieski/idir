@@ -1,6 +1,6 @@
 <?php
 
-namespace N1ebieski\IDir\Http\ViewComponents\Dir;
+namespace N1ebieski\IDir\View\Components\Dir;
 
 use N1ebieski\IDir\Models\Dir;
 use Illuminate\Contracts\Support\Htmlable;

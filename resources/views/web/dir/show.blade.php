@@ -210,5 +210,5 @@
 @endsection
 
 @php
-App::make(N1ebieski\ICore\Http\ViewComponents\CaptchaComponent::class)->toHtml()->render();
+App::make(N1ebieski\ICore\View\Components\CaptchaComponent::class)->toHtml()->render();
 @endphp

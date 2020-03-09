@@ -1,6 +1,6 @@
 <?php
 
-namespace N1ebieski\IDir\Http\ViewComponents\Category\Dir;
+namespace N1ebieski\IDir\View\Components\Category\Dir;
 
 use N1ebieski\IDir\Models\Category\Dir\Category;
 use Illuminate\Contracts\Support\Htmlable;
