@@ -5,7 +5,7 @@ namespace N1ebieski\IDir\Http\Requests\Web\Dir;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Lang;
 use N1ebieski\IDir\Http\Requests\Web\Dir\Update2Request;
-use N1ebieski\ICore\Http\ViewComponents\CaptchaComponent as Captcha;
+use N1ebieski\ICore\View\Components\CaptchaComponent as Captcha;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Str;
 use N1ebieski\ICore\Models\Link;

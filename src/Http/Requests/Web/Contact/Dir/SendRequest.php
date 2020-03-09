@@ -3,7 +3,7 @@
 namespace N1ebieski\IDir\Http\Requests\Web\Contact\Dir;
 
 use N1ebieski\ICore\Http\Requests\Web\Contact\SendRequest as BaseSendRequest;
-use N1ebieski\ICore\Http\ViewComponents\CaptchaComponent as Captcha;
+use N1ebieski\ICore\View\Components\CaptchaComponent as Captcha;
 
 class SendRequest extends BaseSendRequest
 {

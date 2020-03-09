@@ -1,8 +1,8 @@
 <?php
 
-namespace N1ebieski\IDir\Http\ViewComponents\Comment\Dir;
+namespace N1ebieski\IDir\View\Components\Comment\Dir;
 
-use N1ebieski\ICore\Http\ViewComponents\Comment\LatestComponent as BaseLatestComponent;
+use N1ebieski\ICore\View\Components\Comment\LatestComponent as BaseLatestComponent;
 use N1ebieski\IDir\Models\Comment\Dir\Comment;
 use Illuminate\Contracts\View\Factory as ViewFactory;
 use Illuminate\View\View;

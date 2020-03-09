@@ -1,12 +1,12 @@
 <?php
 
-namespace N1ebieski\IDir\Http\ViewComponents\Region\Category;
+namespace N1ebieski\IDir\View\Components\Region\Category;
 
 use Illuminate\View\View;
 use N1ebieski\IDir\Models\Region\Region;
 use N1ebieski\ICore\Models\Category\Category;
 use Illuminate\Contracts\View\Factory as ViewFactory;
-use N1ebieski\IDir\Http\ViewComponents\Region\RegionComponent as BaseRegionComponent;
+use N1ebieski\IDir\View\Components\Region\RegionComponent as BaseRegionComponent;
 
 /**
  * [RegionComponent description]
