@@ -5,7 +5,7 @@ namespace N1ebieski\IDir\Http\Requests\Web\Comment\Dir;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Validation\Rule;
-use N1ebieski\ICore\Http\ViewComponents\CaptchaComponent as Captcha;
+use N1ebieski\ICore\View\Components\CaptchaComponent as Captcha;
 use N1ebieski\ICore\Models\BanValue;
 use N1ebieski\IDir\Models\Comment\Dir\Comment;
 

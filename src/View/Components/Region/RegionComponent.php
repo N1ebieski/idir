@@ -1,6 +1,6 @@
 <?php
 
-namespace N1ebieski\IDir\Http\ViewComponents\Region;
+namespace N1ebieski\IDir\View\Components\Region;
 
 use N1ebieski\IDir\Models\Region\Region;
 use Illuminate\Contracts\Support\Htmlable;
