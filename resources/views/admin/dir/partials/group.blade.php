@@ -16,25 +16,25 @@
         @endforeach
         @endif
         <li class="list-group-item">
-            {{ strtolower(trans('idir::groups.apply_status')) }}: {{ trans("idir::groups.apply_status_{$group->apply_status}") }}
+            {{ mb_strtolower(trans('idir::groups.apply_status.label')) }}: {{ trans("idir::groups.apply_status.{$group->apply_status}") }}
         </li>
         <li class="list-group-item">
-            {{ strtolower(trans('idir::groups.max_cats')) }}: {{ $group->max_cats }}
+            {{ mb_strtolower(trans('idir::groups.max_cats.label')) }}: {{ $group->max_cats }}
         </li>
         <li class="list-group-item">
-            {{ strtolower(trans('idir::groups.url')) }}: {{ trans("idir::groups.url_{$group->url}") }}
+            {{ mb_strtolower(trans('idir::groups.url.label')) }}: {{ trans("idir::groups.url.{$group->url}") }}
         </li>
         <li class="list-group-item">
-            {{ strtolower(trans('idir::groups.backlink')) }}: {{ trans("idir::groups.backlink_{$group->backlink}") }}
+            {{ mb_strtolower(trans('idir::groups.backlink.label')) }}: {{ trans("idir::groups.backlink.{$group->backlink}") }}
         </li>
         <li class="list-group-item">
-            {{ strtolower(trans('idir::groups.price')) }}:
+            {{ mb_strtolower(trans('idir::groups.price')) }}:
             <span class="font-weight-bold">
                 {{ $group->prices->isNotEmpty() ? trans('idir::groups.price_from', [
                     'price' => $group->prices->sortBy('price')->first()->price,
                     'days' => $days = $group->prices->sortBy('price')->first()->days,
-                    'limit' => $days !== null ? strtolower(trans('idir::groups.days')) : strtolower(trans('idir::groups.unlimited'))
-                ]) : trans('idir::groups.payment_0') }}
+                    'limit' => $days !== null ? mb_strtolower(trans('idir::groups.days')) : mb_strtolower(trans('idir::groups.unlimited'))
+                ]) : trans('idir::groups.payment.0') }}
             </span>
         </li>
     </ul>

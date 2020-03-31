@@ -11,6 +11,19 @@ use N1ebieski\IDir\Repositories\PrivilegeRepo;
  */
 class Privilege extends Model
 {
+    // Configuration
+
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'id' => 'integer',
+        'created_at' => 'timestamp',
+        'updated_at' => 'timestamp'
+    ];
+
     // Relations
 
     public function groups()

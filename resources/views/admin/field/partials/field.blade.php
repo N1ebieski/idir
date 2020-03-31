@@ -30,9 +30,9 @@ data-id="{{ $field->id }}">
                 <button class="btn btn-danger" data-status="delete" data-toggle="confirmation"
                 data-route="{{ route('admin.field.destroy', ['field' => $field->id]) }}" data-id="{{ $field->id }}"
                 type="button" data-btn-ok-label=" {{ trans('icore::default.yes') }}" data-btn-ok-icon-class="fas fa-check mr-1"
-                data-btn-ok-class="btn h-100 d-flex align-items-center btn-primary btn-popover destroyCategory" 
+                data-btn-ok-class="btn h-100 d-flex justify-content-center btn-primary btn-popover destroyCategory" 
                 data-btn-cancel-label=" {{ trans('icore::default.cancel') }}"
-                data-btn-cancel-class="btn h-100 d-flex align-items-center btn-secondary btn-popover"
+                data-btn-cancel-class="btn h-100 d-flex justify-content-center btn-secondary btn-popover"
                 data-btn-cancel-icon-class="fas fa-ban mr-1"
                 data-title="{{ trans('icore::default.confirm') }}">
                     <i class="far fa-trash-alt"></i>

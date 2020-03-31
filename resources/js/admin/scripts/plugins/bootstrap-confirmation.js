@@ -1,7 +1,7 @@
 jQuery(document).on('readyAndAjax', function() {
     $('[data-toggle=dir-confirmation]').confirmation({
         rootSelector: '[data-toggle=dir-confirmation]',
-        copyAttributes: 'data-route data-id',
+        copyAttributes: 'href data-route data-id',
         singleton: true,
         popout: false,
         onConfirm: function() {

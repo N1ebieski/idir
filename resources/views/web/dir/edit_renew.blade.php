@@ -1,20 +1,20 @@
 @extends(config('idir.layout') . '::web.layouts.layout', [
-    'title' => [$dir->title, trans('idir::dirs.page.edit.renew')],
-    'desc' => [$dir->title, trans('idir::dirs.page.edit.renew')],
-    'keys' => [$dir->title, trans('idir::dirs.page.edit.renew')]
+    'title' => [$dir->title, trans('idir::dirs.route.edit.renew')],
+    'desc' => [$dir->title, trans('idir::dirs.route.edit.renew')],
+    'keys' => [$dir->title, trans('idir::dirs.route.edit.renew')]
 ])
 
 @section('breadcrumb')
-<li class="breadcrumb-item"><a href="/">{{ trans('icore::home.page.index') }}</a></li>
-<li class="breadcrumb-item">{{ trans('idir::dirs.page.index') }}</li>
-<li class="breadcrumb-item">{{ trans('idir::dirs.page.edit.index') }}</li>
+<li class="breadcrumb-item"><a href="/">{{ trans('icore::home.route.index') }}</a></li>
+<li class="breadcrumb-item">{{ trans('idir::dirs.route.index') }}</li>
+<li class="breadcrumb-item">{{ trans('idir::dirs.route.edit.index') }}</li>
 <li class="breadcrumb-item">{{ $dir->title }}</li>
-<li class="breadcrumb-item active" aria-current="page">{{ trans('idir::dirs.page.edit.renew') }}</li>
+<li class="breadcrumb-item active" aria-current="page">{{ trans('idir::dirs.route.edit.renew') }}</li>
 @endsection
 
 @section('content')
 <div class="container">
-    <h3 class="h5 border-bottom pb-2">{{ trans('idir::dirs.page.edit.renew') }}</h3>
+    <h3 class="h5 border-bottom pb-2">{{ trans('idir::dirs.route.edit.renew') }}</h3>
     <div class="row mb-4">
         <div class="col-md-8">
             @include('idir::web.dir.partials.summary', [

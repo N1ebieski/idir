@@ -8,11 +8,12 @@ use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Contracts\Translation\Translator as Lang;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Contracts\Routing\UrlGenerator as URL;
+use N1ebieski\IDir\Http\Responses\RedirectResponseFactory;
 
 /**
  * [Update3Response description]
  */
-class Update3Response
+class Update3Response implements RedirectResponseFactory
 {
     /**
      * [private description]
@@ -83,10 +84,10 @@ class Update3Response
         switch ($this->dir->status) {
             case Dir::INACTIVE:
                 return $this->response->redirectToRoute('web.profile.edit_dir')
-                    ->with('success', $this->lang->get('idir::dirs.success.update.status_0'));
+                    ->with('success', $this->lang->get('idir::dirs.success.update.'.Dir::INACTIVE));
             case Dir::ACTIVE:
                 return $this->response->redirectToRoute('web.profile.edit_dir')
-                    ->with('success', $this->lang->get('idir::dirs.success.update.status_1'));
+                    ->with('success', $this->lang->get('idir::dirs.success.update.'.Dir::ACTIVE));
             case Dir::PAYMENT_INACTIVE:
                 return $this->response->redirectToRoute('web.payment.dir.show', [
                     $this->dir->getPayment()->uuid,

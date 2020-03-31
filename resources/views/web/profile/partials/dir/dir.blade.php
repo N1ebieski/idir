@@ -4,7 +4,7 @@ data-id="{{ $dir->id }}">
         <ul class="list-unstyled mb-0 pb-0">
             <li>
                 <a href="{{ route('web.dir.show', [$dir->slug]) }}" target="_blank">{{ $dir->title }}</a>
-                <span class="badge badge-{{ $dir->status === 1 ? 'success' : 'warning' }}">
+                <span class="badge badge-{{ $dir->status === $dir::ACTIVE ? 'success' : 'warning' }}">
                     {{ trans("idir::dirs.status.{$dir->status}") }}
                 </span>
             </li>
@@ -13,7 +13,7 @@ data-id="{{ $dir->id }}">
                 <div class="d-flex">
                     <small class="mr-auto">{{ trans('idir::dirs.group') }}: {{ $dir->group->name }}</small>
                     @if ($dir->tags->isNotEmpty())
-                    <small class="ml-auto text-right">{{ trans('idir::dirs.tags') }}:
+                    <small class="ml-auto text-right">{{ trans('idir::dirs.tags.label') }}:
                         @foreach ($dir->tags as $tag)
                         <a href="{{ route('web.tag.dir.show', [$tag->normalized]) }}">{{ $tag->name }}</a>
                         {{ (!$loop->last) ? ', ' : '' }}
@@ -43,9 +43,9 @@ data-id="{{ $dir->id }}">
                 <button class="btn btn-danger" data-status="delete" data-toggle="confirmation"
                 data-route="{{ route('web.dir.destroy', [$dir->id]) }}" data-id="{{ $dir->id }}"
                 type="button" data-btn-ok-label=" {{ trans('icore::default.yes') }}" data-btn-ok-icon-class="fas fa-check mr-1"
-                data-btn-ok-class="btn h-100 d-flex align-items-center btn-primary btn-popover destroy" 
+                data-btn-ok-class="btn h-100 d-flex justify-content-center btn-primary btn-popover destroy" 
                 data-btn-cancel-label=" {{ trans('icore::default.cancel') }}"
-                data-btn-cancel-class="btn h-100 d-flex align-items-center btn-secondary btn-popover" 
+                data-btn-cancel-class="btn h-100 d-flex justify-content-center btn-secondary btn-popover" 
                 data-btn-cancel-icon-class="fas fa-ban mr-1"
                 data-title="{{ trans('icore::default.confirm') }}">
                     <i class="far fa-trash-alt"></i>

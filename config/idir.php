@@ -2,25 +2,27 @@
 
 return [
 
-    'layout' => 'idir',
+    'version' => \N1ebieski\IDir\Providers\IDirServiceProvider::VERSION,
+
+    'layout' => env('IDIR_LAYOUT', 'idir'),
 
     'dir' => [
-        'max_tags' => env('IDIR_DIR_MAX_TAGS', 10),
-        'min_content' => env('IDIR_DIR_MIN_CONTENT', 255),
-        'max_content' => env('IDIR_DIR_MAX_CONTENT', 1000),
+        'max_tags' => (int)env('IDIR_DIR_MAX_TAGS', 10),
+        'min_content' => (int)env('IDIR_DIR_MIN_CONTENT', 255),
+        'max_content' => (int)env('IDIR_DIR_MAX_CONTENT', 1000),
 
         'backlink' => [
-            'check_hours' => env('IDIR_DIR_BACKLINK_CHECK_HOURS', 24),
-            'max_attempts' => env('IDIR_DIR_BACKLINK_MAX_ATTEMPTS', 3),
+            'check_hours' => (int)env('IDIR_DIR_BACKLINK_CHECK_HOURS', 24),
+            'max_attempts' => (int)env('IDIR_DIR_BACKLINK_MAX_ATTEMPTS', 3),
         ],
 
         'status' => [
-            'check_days' => env('IDIR_DIR_STATUS_CHECK_DAYS', 30),
-            'max_attempts' => env('IDIR_DIR_STATUS_MAX_ATTEMPTS', 2),
+            'check_days' => (int)env('IDIR_DIR_STATUS_CHECK_DAYS', 30),
+            'max_attempts' => (int)env('IDIR_DIR_STATUS_MAX_ATTEMPTS', 2),
         ],
 
         'reminder' => [
-            'left_days' => env('IDIR_DIR_REMINDER_LEFT_DAYS', 7)
+            'left_days' => (int)env('IDIR_DIR_REMINDER_LEFT_DAYS', 7)
         ],
 
         'delete_reasons' => [
@@ -36,7 +38,7 @@ return [
             'key' => env('IDIR_DIR_THUMBNAIL_KEY'), // 32 characters string
             'cache' => [
                 'url' => env('IDIR_DIR_THUMBNAIL_CACHE_URL'),
-                'days' => env('IDIR_DIR_THUMBNAIL_CACHE_DAYS', 30)
+                'days' => (int)env('IDIR_DIR_THUMBNAIL_CACHE_DAYS', 365)
             ],
             'api' => [
                 'reload_url' => env('IDIR_DIR_THUMBNAIL_API_RELOAD_URL')
@@ -44,15 +46,15 @@ return [
         ],
 
         'notification' => [
-            'dirs' => env('IDIR_DIR_NOTIFICATION_DIRS'),
-            'hours' => env('IDIR_DIR_NOTIFICATION_HOURS')
+            'dirs' => (int)env('IDIR_DIR_NOTIFICATION_DIRS'),
+            'hours' => (int)env('IDIR_DIR_NOTIFICATION_HOURS')
         ]
 
     ],
 
     'home' => [
-        'max' => env('IDIR_HOME_MAX', 10),
-        'max_privileged'=> env('IDIR_HOME_MAX_PRIVILEGED', 5)
+        'max' => (int)env('IDIR_HOME_MAX', 10),
+        'max_privileged' => (int)env('IDIR_HOME_MAX_PRIVILEGED', 5)
     ],
 
     'payment' => [

@@ -133,6 +133,26 @@ class Group extends Model
         'alt_id' => 1
     ];
 
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'id' => 'integer',
+        'alt_id' => 'integer',
+        'max_cats' => 'integer',
+        'max_models' => 'integer',
+        'max_models_daily' => 'integer',
+        'position' => 'integer',
+        'visible' => 'integer',
+        'apply_status' => 'integer',
+        'url' => 'integer',
+        'backlink' => 'integer',
+        'created_at' => 'timestamp',
+        'updated_at' => 'timestamp'
+    ];
+
     // Relations
 
     /**

@@ -30,21 +30,21 @@ class CategoryRepo extends BaseCategoryRepo
      */
     public function getRootsWithNestedMorphsCount() : Collection
     {
-        return $this->category
-            ->addSelect(['nested_morphs_count' => function ($query) {
-                $morph = $this->category->morphs()->make();
+        $morph = $this->category->morphs()->make();
 
-                return $query->selectRaw('COUNT(*)')
-                    ->from($morph->getTable())
-                    ->join('categories_models', "{$morph->getTable()}.id", '=', 'categories_models.model_id')
-                    ->where('categories_models.model_type', get_class($morph))
-                    ->whereIn('categories_models.category_id', function ($query) {
-                        return $query->from('categories_closure')
-                            ->select('descendant')
-                            ->whereColumn('ancestor', 'categories.id');
-                    })
+        return $this->category->selectRaw('`categories`.*, COUNT(`categories_models`.`model_id`) AS `nested_morphs_count`')
+            ->leftJoin('categories_closure', function ($query) {
+                $query->on('categories.id', '=', 'categories_closure.ancestor');
+            })
+            ->leftJoin('categories_models', function ($query) {
+                $query->on('categories_closure.descendant', '=', 'categories_models.category_id');
+            })
+            ->join($morph->getTable(), function ($query) use ($morph) {
+                $query->on('categories_models.model_id', '=', "{$morph->getTable()}.id")
+                    ->where('categories_models.model_type', $morph->getMorphClass())
                     ->where("{$morph->getTable()}.status", 1);
-            }])
+            })
+            ->groupBy('categories.id')
             ->poliType()
             ->active()
             ->root()
@@ -59,32 +59,25 @@ class CategoryRepo extends BaseCategoryRepo
      */
     public function paginateDirsByFilter(array $filter) : LengthAwarePaginator
     {
-        $sqlPrivilege = DB::table('privileges')
-            ->join('groups_privileges', 'privileges.id', '=', 'groups_privileges.privilege_id')
-            ->whereColumn('dirs.group_id', 'groups_privileges.group_id')
-            ->whereRaw('(`privileges`.`name` = "highest position in their categories" OR `privileges`.`name` = "highest position in ancestor categories")')
-            ->toSql();
+        $dir = $this->category->morphs()->make();
 
-        $dirs = $this->category->morphs()
-            ->selectRaw('`dirs`.*, CASE WHEN EXISTS (' . $sqlPrivilege . ') THEN TRUE ELSE FALSE END AS `privilege`')
+        // Rezygnuje z eloquentowych whereHas (whereExists) na rzecz joinów, bo rekordów jest dużo i siada wydajność
+        return $dir->selectRaw('`dirs`.*, IF(`privileges`.`name` IS NULL, 0, 1) as `privilege`')
             ->withAllPublicRels()
-            ->active()
-            ->filterRegion($filter['region']);
-
-        return $this->category->morphs()
-            ->make()
-            ->selectRaw('`dirs`.*, TRUE as `privilege`')
-            ->withAllPublicRels()
-            ->whereHas('group', function ($query) {
-                $query->whereHas('privileges', function ($query) {
-                    $query->where('name', 'highest position in ancestor categories');
-                });
+            ->leftJoin('groups_privileges', function ($query) {
+                $query->on('dirs.group_id', '=', 'groups_privileges.group_id')
+                    ->join('privileges', 'groups_privileges.privilege_id', '=', 'privileges.id')
+                    ->whereIn('privileges.name', [
+                        'highest position in ancestor categories',
+                        'highest position in their categories'
+                    ]);
             })
-            ->whereHas('categories', function ($query) {
-                $query->whereIn('id', $this->category->descendants->pluck('id')->toArray());
+            ->join('categories_models', function ($query) use ($dir) {
+                $query->on('dirs.id', '=', 'categories_models.model_id')
+                    ->where('categories_models.model_type', $dir->getMorphClass())
+                    ->whereIn('categories_models.category_id', $this->category->descendants->pluck('id')->toArray());
             })
             ->active()
-            ->union($dirs)
             ->filterRegion($filter['region'])
             ->when($filter['orderby'] === null, function ($query) {
                 $query->orderBy('privilege', 'desc')->latest();
@@ -92,6 +85,7 @@ class CategoryRepo extends BaseCategoryRepo
             ->when($filter['orderby'] !== null, function ($query) use ($filter) {
                 $query->filterOrderBy($filter['orderby']);
             })
+            ->groupBy('dirs.id', DB::raw('IF(`privileges`.`name` IS NULL, 0, 1)'))
             ->filterPaginate($this->paginate);
     }
 }

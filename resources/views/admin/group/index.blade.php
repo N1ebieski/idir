@@ -1,19 +1,19 @@
 @extends(config('idir.layout') . '::admin.layouts.layout', [
-    'title' => [trans('idir::groups.page.index'), trans('icore::pagination.page', ['num' => $groups->currentPage()])],
-    'desc' => [trans('idir::groups.page.index')],
-    'keys' => [trans('idir::groups.page.index')]
+    'title' => [trans('idir::groups.route.index'), trans('icore::pagination.page', ['num' => $groups->currentPage()])],
+    'desc' => [trans('idir::groups.route.index')],
+    'keys' => [trans('idir::groups.route.index')]
 ])
 
 @section('breadcrumb')
-<li class="breadcrumb-item"><a href="{{ route('admin.home.index') }}">{{ trans('icore::home.page.index') }}</a></li>
-<li class="breadcrumb-item active" aria-current="page">{{ trans('idir::groups.page.index') }}</li>
+<li class="breadcrumb-item"><a href="{{ route('admin.home.index') }}">{{ trans('icore::home.route.index') }}</a></li>
+<li class="breadcrumb-item active" aria-current="page">{{ trans('idir::groups.route.index') }}</li>
 @endsection
 
 @section('content')
 <h1 class="h5 border-bottom pb-2 d-flex">
     <div class="mr-auto my-auto">
         <i class="fas fa-fw fa-object-group"></i>
-        <span> {{ trans('idir::groups.page.index') }}</span>
+        <span> {{ trans('idir::groups.route.index') }}</span>
     </div>
     @can('create groups')
     <div class="ml-auto text-right responsive-btn-group">
@@ -42,7 +42,7 @@
 @slot('modal_id', 'editPositionModal')
 @slot('modal_title')
 <i class="fas fa-sort-amount-up"></i>
-<span> {{ trans('idir::groups.page.edit_position') }}</span>
+<span> {{ trans('idir::groups.route.edit_position') }}</span>
 @endslot
 @endcomponent
 

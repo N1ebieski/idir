@@ -2,7 +2,7 @@
     'region' => $region, 
     'category' => $category
 ])
-<h3 class="h5">{{ trans('icore::categories.categories') }}</h3>
+<h3 class="h5">{{ trans('icore::categories.categories.label') }}</h3>
 <div class="list-group list-group-flush mb-3">
     @if ($category->relationLoaded('ancestors'))
         @include('idir::web.category.dir.partials.categories', [

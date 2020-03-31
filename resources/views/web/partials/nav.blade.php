@@ -32,8 +32,8 @@
                     class="form-control border-right-0" placeholder="{{ trans('icore::search.search') }}"
                     value="{{ $search ?? null }}">
                     <select class="custom-select" name="source">
-                        <option value="post" @isRouteContains('post', 'selected')>{{ trans('icore::search.type.post') }}</option>
-                        <option value="dir" @isRouteContains('dir', 'selected')>{{ trans('idir::search.type.dir') }}</option>
+                        <option value="post" @isRouteContains('post', 'selected')>{{ trans('icore::search.post.post') }}</option>
+                        <option value="dir" @isRouteContains('dir', 'selected')>{{ trans('idir::search.dir.dir') }}</option>
                     </select>
                     <span class="input-group-append">
                         <button class="btn btn-outline-secondary border border-left-0"
@@ -69,7 +69,7 @@
                 <li class="nav-item mr-sm-0 mr-md-2 mb-2 mb-md-0">
                     <a class="nav-link text-primary btn btn-sm btn-outline-primary"
                     href="{{ route('web.dir.create_1') }}" role="button">
-                        {{ trans('idir::dirs.page.create.index') }}
+                        {{ trans('idir::dirs.route.create.index') }}
                     </a>
                 </li>
                 <li class="nav-item dropdown @isUrl([route('web.profile.edit')])">
@@ -80,16 +80,16 @@
                     </a>
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuProfile">
                         <h6 class="dropdown-header">{{ trans('icore::auth.hello')}}, {{ auth()->user()->name }}</h6>
-                        <a class="dropdown-item @isUrl(route('web.profile.edit'))" href="{{ route('web.profile.edit') }}">{{ trans('icore::profile.page.edit') }}</a>
+                        <a class="dropdown-item @isUrl(route('web.profile.edit'))" href="{{ route('web.profile.edit') }}">{{ trans('icore::profile.route.edit') }}</a>
                         @can('index dashboard')
-                        <a class="dropdown-item" href="{{ route('admin.home.index') }}">{{ trans('icore::admin.page.index') }}</a>
+                        <a class="dropdown-item" href="{{ route('admin.home.index') }}">{{ trans('icore::admin.route.index') }}</a>
                         @endcan
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="{{ route('logout') }}">{{ trans('icore::auth.page.logout') }}</a>
+                        <a class="dropdown-item" href="{{ route('logout') }}">{{ trans('icore::auth.route.logout') }}</a>
                     </div>
                     @else
                     <a class="nav-link btn btn-sm btn-primary text-white text-nowrap text-center" href="{{ route('login') }}"
-                    role="button">{{ trans('icore::auth.page.login') }}</a>
+                    role="button">{{ trans('icore::auth.route.login') }}</a>
                     @endauth
                 </li>
             </ul>

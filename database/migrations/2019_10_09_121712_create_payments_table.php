@@ -20,14 +20,14 @@ class CreatePaymentsTable extends Migration
             $table->uuid('uuid')->primary();
             $table->bigInteger('model_id')->unsigned()->nullable();
             $table->string('model_type')->nullable();
-            $table->bigInteger('price_id')->unsigned();
-            $table->string('price_type');
+            $table->bigInteger('order_id')->unsigned();
+            $table->string('order_type');
             $table->tinyInteger('status')->unsigned();
             $table->longText('logs')->nullable();
             $table->timestamps();
 
             $table->index(['model_type', 'model_id']);
-            $table->index(['price_type', 'price_id']);
+            $table->index(['order_type', 'order_id']);
         });
     }
 

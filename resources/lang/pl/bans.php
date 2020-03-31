@@ -4,7 +4,7 @@ return [
     'value' => [
         'url' => [
             'url' => 'Adres URL',
-            'page' => [
+            'route' => [
                 'index' => 'Zbanowane adresy URL'
             ],
         ],

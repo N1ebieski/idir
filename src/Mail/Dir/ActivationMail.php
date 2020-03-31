@@ -59,7 +59,7 @@ class ActivationMail extends Mailable
      */
     public function build() : self
     {
-        return $this->subject($this->lang->get('idir::dirs.success.update_status.status_1'))
+        return $this->subject($this->lang->get('idir::dirs.success.update_status.'.Dir::ACTIVE))
             ->from($this->email)
             ->to($this->dir->user->email)
             ->markdown('idir::mails.dir.activation');

@@ -10,7 +10,7 @@
                 aria-controls="nav-{{ $payment_type }}" aria-selected="true">
                     <input type="radio" name="payment_type" value="{{ $payment_type }}" id="nav-{{ $payment_type }}-tab"
                     autocomplete="off" {{ (old('payment_type') === $payment_type) ? 'checked' : null }}>
-                    {{ trans("idir::dirs.payment.{$payment_type}") }}
+                    {{ trans("idir::dirs.payment.{$payment_type}.label") }}
                 </a>
                 @endif
                 @endforeach
@@ -28,7 +28,7 @@
                             {{ trans('idir::dirs.price', [
                             'price' => $transfer->price,
                             'days' => $days = $transfer->days,
-                            'limit' => $days !== null ? strtolower(trans('idir::groups.days')) : strtolower(trans('idir::groups.unlimited'))
+                            'limit' => $days !== null ? mb_strtolower(trans('idir::groups.days')) : mb_strtolower(trans('idir::groups.unlimited'))
                             ]) }}
                         </option>
                         @endforeach
@@ -37,7 +37,7 @@
                 </div>
                 <p>
                     @php $driver['transfer'] = config('idir.payment.transfer.driver'); @endphp
-                    {!! trans('idir::dirs.payment.transfer_info', [
+                    {!! trans('idir::dirs.payment.transfer.info', [
                         'provider_url' => config("idir.payment.{$driver['transfer']}.url"),
                         'provider_name' => config("idir.payment.{$driver['transfer']}.name"),
                         'provider_docs_url' => config("idir.payment.{$driver['transfer']}.docs_url"),
@@ -59,7 +59,7 @@
                             {{ trans('idir::dirs.price', [
                             'price' => $code->price,
                             'days' => $days = $code->days,
-                            'limit' => $days !== null ? strtolower(trans('idir::groups.days')) : strtolower(trans('idir::groups.unlimited'))
+                            'limit' => $days !== null ? mb_strtolower(trans('idir::groups.days')) : mb_strtolower(trans('idir::groups.unlimited'))
                             ]) }}
                         </option>
                         @endforeach
@@ -73,7 +73,7 @@
                 </div>
                 <p>
                     @php $driver['code_transfer'] = config('idir.payment.code_transfer.driver'); @endphp
-                    {!! trans('idir::dirs.payment.code_transfer_info', [
+                    {!! trans('idir::dirs.payment.code_transfer.info', [
                         'code_transfer_url' => config("services.{$driver['code_transfer']}.code_transfer.url")
                         . old('payment_code_transfer_model', $codes->first())->code,
                         'price' => old('payment_code_transfer_model', $codes->first())->price,
@@ -98,7 +98,7 @@
                             {{ trans('idir::dirs.price', [
                             'price' => $code->price,
                             'days' => $days = $code->days,
-                            'limit' => $days !== null ? strtolower(trans('idir::groups.days')) : strtolower(trans('idir::groups.unlimited'))
+                            'limit' => $days !== null ? mb_strtolower(trans('idir::groups.days')) : mb_strtolower(trans('idir::groups.unlimited'))
                             ]) }}
                         </option>
                         @endforeach
@@ -112,7 +112,7 @@
                 </div>
                 @php $driver['code_sms'] = config('idir.payment.code_sms.driver') @endphp
                 <p>
-                    {!! trans('idir::dirs.payment.code_sms_info', [
+                    {!! trans('idir::dirs.payment.code_sms.info', [
                         'number' => old('payment_code_sms_model', $codes->first())->number,
                         'code_sms' => old('payment_code_sms_model', $codes->first())->code,
                         'price' => old('payment_code_sms_model', $codes->first())->price,

@@ -25,7 +25,10 @@ class CommandServiceProvider extends ServiceProvider
     {
         if ($this->app->runningInConsole()) {
             $this->commands([
-                \N1ebieski\IDir\Console\Commands\SEOKatalogCommand::class
+                \N1ebieski\IDir\Console\Commands\SEOKatalogCommand::class,
+                \N1ebieski\IDir\Console\Commands\EnvCommand::class,
+                \N1ebieski\IDir\Console\Commands\EnvTestingCommand::class,
+                \N1ebieski\IDir\Console\Commands\InstallCommand::class
             ]);
         }
     }

@@ -843,7 +843,7 @@ class DirTest extends TestCase
         $this->assertDatabaseHas('payments', [
             'model_id' => $dir->id,
             'model_type' => 'N1ebieski\\IDir\\Models\\Dir',
-            'price_id' => $price->id,
+            'order_id' => $price->id,
             'status' => 2
         ]);
 
@@ -885,7 +885,7 @@ class DirTest extends TestCase
         $this->assertDatabaseMissing('payments', [
             'model_id' => $dir->id,
             'model_type' => 'N1ebieski\\IDir\\Models\\Dir',
-            'price_id' => $price->id,
+            'order_id' => $price->id,
             'status' => 2
         ]);
 
@@ -960,7 +960,7 @@ class DirTest extends TestCase
         $this->assertDatabaseHas('payments', [
             'model_id' => $dir->id,
             'model_type' => 'N1ebieski\\IDir\\Models\\Dir',
-            'price_id' => $price->id,
+            'order_id' => $price->id,
             'status' => 1
         ]);
 

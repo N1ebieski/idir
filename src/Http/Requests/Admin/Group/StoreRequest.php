@@ -72,7 +72,7 @@ class StoreRequest extends FormRequest
     {
         return [
             'name' => 'bail|required|string|between:3,255|unique:groups,name',
-            'alt_id' => 'bail|integer|exists:groups,id',
+            'alt_id' => 'bail|nullable|integer|exists:groups,id',
             'visible' => 'bail|required|in:0,1',
             'border' => 'bail|nullable|string|max:255',
             'desc' => 'bail|nullable|string|max:500',

@@ -9,11 +9,12 @@ use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Contracts\Translation\Translator as Lang;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Contracts\Routing\UrlGenerator as URL;
+use N1ebieski\IDir\Http\Responses\RedirectResponseFactory;
 
 /**
  * [UpdateRenewResponse description]
  */
-class UpdateRenewResponse
+class UpdateRenewResponse implements RedirectResponseFactory
 {
     /**
      * [private description]
@@ -104,10 +105,10 @@ class UpdateRenewResponse
         switch ($this->dir->status) {
             case Dir::ACTIVE:
                 return $this->response->redirectToRoute('web.profile.edit_dir')
-                    ->with('success', $this->lang->get('idir::dirs.success.update_renew.status_1'));
+                    ->with('success', $this->lang->get('idir::dirs.success.update_renew.'.Dir::ACTIVE));
             default:
                 return $this->response->redirectToRoute('web.profile.edit_dir')
-                    ->with('success', $this->lang->get('idir::dirs.success.update_renew.status_0'));
+                    ->with('success', $this->lang->get('idir::dirs.success.update_renew.'.Dir::INACTIVE));
         }
     }
 }

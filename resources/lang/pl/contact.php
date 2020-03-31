@@ -2,7 +2,7 @@
 
 return [
     'dir' => [
-        'page' => [
+        'route' => [
             'show' => 'Kontakt z właścicielem wpisu'
         ],
         'success' => [
