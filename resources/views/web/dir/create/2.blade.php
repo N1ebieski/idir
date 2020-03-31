@@ -1,24 +1,24 @@
 @extends(config('idir.layout') . '::web.layouts.layout', [
-    'title' => [trans('idir::dirs.page.step', ['step' => 2]), trans('idir::dirs.page.create.form')],
-    'desc' => [trans('idir::dirs.page.create.form')],
-    'keys' => [trans('idir::dirs.page.create.form')]
+    'title' => [trans('idir::dirs.route.step', ['step' => 2]), trans('idir::dirs.route.create.2')],
+    'desc' => [trans('idir::dirs.route.create.2')],
+    'keys' => [trans('idir::dirs.route.create.2')]
 ])
 
 @section('breadcrumb')
-<li class="breadcrumb-item"><a href="/">{{ trans('icore::home.page.index') }}</a></li>
+<li class="breadcrumb-item"><a href="/">{{ trans('icore::home.route.index') }}</a></li>
 <li class="breadcrumb-item">
-    <a href="{{ route('web.dir.index') }}">{{ trans('idir::dirs.page.index') }}</a>
+    <a href="{{ route('web.dir.index') }}">{{ trans('idir::dirs.route.index') }}</a>
 </li>
-<li class="breadcrumb-item">{{ trans('idir::dirs.page.create.index') }}</li>
+<li class="breadcrumb-item">{{ trans('idir::dirs.route.create.index') }}</li>
 <li class="breadcrumb-item active" aria-current="page">
-    {{ trans('idir::dirs.page.step', ['step' => 2]) }} {{ trans('idir::dirs.page.create.form') }}
+    {{ trans('idir::dirs.route.step', ['step' => 2]) }} {{ trans('idir::dirs.route.create.2') }}
 </li>
 @endsection
 
 @section('content')
 <div class="container">
     @include('icore::web.partials.alerts')
-    <h3 class="h5 border-bottom pb-2">{{ trans('idir::dirs.page.create.form') }}</h3>
+    <h3 class="h5 border-bottom pb-2">{{ trans('idir::dirs.route.create.2') }}</h3>
     <div class="row mb-4">
         <div class="col-md-8">
             <form method="post" action="{{ route('web.dir.store_2', [$group->id]) }}"
@@ -32,7 +32,7 @@
                 </div>
                 <div class="form-group">
                     <label for="content_html{{ $group->hasEditorPrivilege() ? '_dir_trumbowyg' : null }}">
-                        {{ trans('idir::groups.content') }}:
+                        {{ trans('idir::dirs.content') }}:
                     </label>
                     <div class="@isTheme('dark', 'trumbowyg-dark')">
                         <textarea class="form-control @isValid('content')" 
@@ -49,13 +49,13 @@
                 </div>
                 <div class="form-group">
                     <label for="tags">
-                        {{ trans('idir::dirs.tags') }}: <i data-toggle="tooltip" data-placement="top"
-                        title="{{ trans('idir::dirs.tags_tooltip', ['max_tags' => $max_tags = config('idir.dir.max_tags')]) }}"
+                        {{ trans('idir::dirs.tags.label') }}: <i data-toggle="tooltip" data-placement="top"
+                        title="{{ trans('idir::dirs.tags.tooltip', ['max_tags' => $max_tags = config('idir.dir.max_tags')]) }}"
                         class="far fa-question-circle"></i>
                     </label>
                     <input name="tags" id="tags" class="form-control tagsinput @isValid('tags')"
                     value="{{ old('tags', session('dir.tags') !== null ? implode(',', session('dir.tags')) : null) }}"
-                    placeholder="{{ trans('idir::dirs.tags_placeholder') }}" data-max="{{ $max_tags }}">
+                    placeholder="{{ trans('idir::dirs.tags.placeholder') }}" data-max="{{ $max_tags }}">
                     @includeWhen($errors->has('tags'), 'icore::web.partials.errors', ['name' => 'tags'])
                 </div>
                 @if ($group->url > 0)
@@ -68,8 +68,8 @@
                 @endif
                 <div class="form-group">
                     <label for="category">
-                        {{ trans('icore::categories.categories') }}: <i data-toggle="tooltip" data-placement="top"
-                        title="{{ trans('icore::categories.categories_tooltip', ['max_categories' => $group->max_cats]) }}"
+                        {{ trans('icore::categories.categories.label') }}: <i data-toggle="tooltip" data-placement="top"
+                        title="{{ trans('icore::categories.categories.tooltip', ['max_categories' => $group->max_cats]) }}"
                         class="far fa-question-circle"></i>
                     </label>
                     <div id="category">

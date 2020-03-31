@@ -35,6 +35,21 @@ class Price extends Model
         'number'
     ];
 
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'id' => 'integer',
+        'group_id' => 'integer',
+        'price' => 'decimal:2',
+        'days' => 'integer',
+        'number' => 'integer',
+        'created_at' => 'timestamp',
+        'updated_at' => 'timestamp'
+    ];
+
     // Setters
 
     /**

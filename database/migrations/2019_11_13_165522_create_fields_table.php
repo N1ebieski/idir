@@ -23,7 +23,7 @@ class CreateFieldsTable extends Migration
             $table->text('desc')->nullable();
             $table->string('type')->index();
             $table->boolean('visible');
-            $table->json('options')->nullable();
+            $table->text('options')->nullable();
             $table->integer('position')->unsigned();
             $table->timestamps();
 
@@ -44,14 +44,14 @@ class CreateFieldsTable extends Migration
                 ->on('fields')
                 ->onDelete('cascade');
 
-            $table->primary(['field_id', 'model_type', 'model_id'], 'fields_primary');
+            $table->primary(['field_id', 'model_type', 'model_id']);
         });
 
         Schema::create('fields_values', function (Blueprint $table) {
             $table->bigInteger('field_id')->unsigned();
             $table->bigInteger('model_id')->unsigned();
             $table->string('model_type');
-            $table->json('value');
+            $table->text('value');
 
             $table->index(['model_type', 'model_id']);
 
@@ -60,7 +60,7 @@ class CreateFieldsTable extends Migration
                 ->on('fields')
                 ->onDelete('cascade');
 
-            $table->primary(['field_id', 'model_type', 'model_id'], 'fields_primary');
+            $table->primary(['field_id', 'model_type', 'model_id']);
         });
     }
 

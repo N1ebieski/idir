@@ -198,7 +198,7 @@ class DirService implements
     {
         return $this->dir->payments()->make()
             ->setMorph($this->dir)
-            ->setPriceMorph(
+            ->setOrderMorph(
                 $this->price->find($attributes["payment_{$attributes['payment_type']}"])
             )
             ->makeService()
@@ -355,34 +355,34 @@ class DirService implements
     {
         $this->dir->categories()->newPivotStatement()
             ->whereIn('model_id', $ids)
-            ->where('model_type', 'N1ebieski\IDir\Models\Dir')->delete();
+            ->where('model_type', $this->dir->getMorphClass())->delete();
 
         $this->dir->comments()->make()->whereIn('model_id', $ids)
-            ->where('model_type', 'N1ebieski\IDir\Models\Dir')->delete();
+            ->where('model_type', $this->dir->getMorphClass())->delete();
 
         $this->dir->fields()->newPivotStatement()
             ->whereIn('model_id', $ids)
-            ->where('model_type', 'N1ebieski\IDir\Models\Dir')->delete();
+            ->where('model_type', $this->dir->getMorphClass())->delete();
 
         $this->dir->payments()->make()->whereIn('model_id', $ids)
-            ->where('model_type', 'N1ebieski\IDir\Models\Dir')->delete();
+            ->where('model_type', $this->dir->getMorphClass())->delete();
 
         $this->dir->ratings()->make()->whereIn('model_id', $ids)
-            ->where('model_type', 'N1ebieski\IDir\Models\Dir')->delete();
+            ->where('model_type', $this->dir->getMorphClass())->delete();
 
         $this->dir->reports()->make()->whereIn('model_id', $ids)
-            ->where('model_type', 'N1ebieski\IDir\Models\Dir')->delete();
+            ->where('model_type', $this->dir->getMorphClass())->delete();
 
         $this->dir->regions()->newPivotStatement()
             ->whereIn('model_id', $ids)
-            ->where('model_type', 'N1ebieski\IDir\Models\Dir')->delete();
+            ->where('model_type', $this->dir->getMorphClass())->delete();
 
         $this->dir->tags()->newPivotStatement()
             ->whereIn('model_id', $ids)
-            ->where('model_type', 'N1ebieski\IDir\Models\Dir')->delete();
+            ->where('model_type', $this->dir->getMorphClass())->delete();
 
         $this->dir->map()->make()->whereIn('model_id', $ids)
-            ->where('model_type', 'N1ebieski\IDir\Models\Dir')->delete();
+            ->where('model_type', $this->dir->getMorphClass())->delete();
 
         return $this->dir->whereIn('id', $ids)->delete();
     }

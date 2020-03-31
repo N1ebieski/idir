@@ -1,25 +1,25 @@
 @extends(config('idir.layout') . '::admin.layouts.layout', [
-    'title' => [trans('idir::dirs.page.index'), trans('icore::pagination.page', ['num' => $dirs->currentPage()])],
-    'desc' => [trans('idir::dirs.page.index')],
-    'keys' => [trans('idir::dirs.page.index')]
+    'title' => [trans('idir::dirs.route.index'), trans('icore::pagination.page', ['num' => $dirs->currentPage()])],
+    'desc' => [trans('idir::dirs.route.index')],
+    'keys' => [trans('idir::dirs.route.index')]
 ])
 
 @section('breadcrumb')
-<li class="breadcrumb-item"><a href="{{ route('admin.home.index') }}">{{ trans('icore::home.page.index') }}</a></li>
-<li class="breadcrumb-item active" aria-current="page">{{ trans('idir::dirs.page.index') }}</li>
+<li class="breadcrumb-item"><a href="{{ route('admin.home.index') }}">{{ trans('icore::home.route.index') }}</a></li>
+<li class="breadcrumb-item active" aria-current="page">{{ trans('idir::dirs.route.index') }}</li>
 @endsection
 
 @section('content')
 <h1 class="h5 border-bottom pb-2 d-flex">
     <div class="mr-auto my-auto">
         <i class="far fa-fw fa-folder-open"></i>
-        <span> {{ trans('idir::dirs.page.index') }}</span>
+        <span> {{ trans('idir::dirs.route.index') }}</span>
     </div>
     @can('create dirs')
     <div class="ml-auto text-right responsive-btn-group">
         <a href="{{ route('admin.dir.create_1') }}" role="button" class="btn btn-primary text-nowrap">
             <i class="far fa-plus-square"></i>
-            <span class="d-none d-sm-inline"> {{ trans('icore::default.create') }}</span>
+            <span class="d-none d-sm-inline">{{ trans('icore::default.create') }}</span>
         </a>
     </div>
     @endcan
@@ -51,9 +51,9 @@
         <div class="select-action rounded">
             <button class="btn btn-danger submit" data-toggle="confirmation"
             type="button" data-btn-ok-label=" {{ trans('icore::default.yes') }}" data-btn-ok-icon-class="fas fa-check mr-1"
-            data-btn-ok-class="btn h-100 d-flex align-items-center btn-primary btn-popover" 
+            data-btn-ok-class="btn h-100 d-flex justify-content-center btn-primary btn-popover" 
             data-btn-cancel-label=" {{ trans('icore::default.cancel') }}"
-            data-btn-cancel-class="btn h-100 d-flex align-items-center btn-secondary btn-popover" 
+            data-btn-cancel-class="btn h-100 d-flex justify-content-center btn-secondary btn-popover" 
             data-btn-cancel-icon-class="fas fa-ban mr-1"
             data-title="{{ trans('icore::default.confirm') }}">
                 <i class="far fa-trash-alt"></i>&nbsp;{{ trans('icore::default.delete_global') }}
@@ -71,7 +71,7 @@
 @slot('modal_size', 'modal-lg')
 @slot('modal_title')
 <i class="far fa-edit"></i>
-<span> {{ trans('idir::dirs.page.edit.index') }}</span>
+<span> {{ trans('idir::dirs.route.edit.index') }}</span>
 @endslot
 @endcomponent
 
@@ -79,21 +79,21 @@
 @slot('modal_id', 'createBanDirModal')
 @slot('modal_title')
 <i class="fas fa-user-slash"></i>
-<span> {{ trans('icore::bans.page.create') }}</span>
+<span> {{ trans('icore::bans.route.create') }}</span>
 @endslot
 @endcomponent
 
 @component('icore::admin.partials.modal')
 @slot('modal_id', 'showReportDirModal')
 @slot('modal_title')
-<span>{{ trans('icore::reports.page.show') }}</span>
+<span>{{ trans('icore::reports.route.show') }}</span>
 @endslot
 @endcomponent
 
 @component('icore::admin.partials.modal')
 @slot('modal_id', 'showPaymentLogsDirModal')
 @slot('modal_title')
-<span>{{ trans('idir::payments.page.show_logs') }}</span>
+<span>{{ trans('idir::payments.route.show_logs') }}</span>
 @endslot
 @endcomponent
 @endsection

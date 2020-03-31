@@ -1,19 +1,19 @@
 @extends(config('idir.layout') . '::admin.layouts.layout', [
-    'title' => [trans('idir::fields.page.index'), trans('icore::pagination.page', ['num' => $fields->currentPage()])],
-    'desc' => [trans('idir::fields.page.index')],
-    'keys' => [trans('idir::fields.page.index')]
+    'title' => [trans('idir::fields.route.index'), trans('icore::pagination.page', ['num' => $fields->currentPage()])],
+    'desc' => [trans('idir::fields.route.index')],
+    'keys' => [trans('idir::fields.route.index')]
 ])
 
 @section('breadcrumb')
-<li class="breadcrumb-item"><a href="{{ route('admin.home.index') }}">{{ trans('icore::home.page.index') }}</a></li>
-<li class="breadcrumb-item active" aria-current="page">{{ trans('idir::fields.page.index') }}</li>
+<li class="breadcrumb-item"><a href="{{ route('admin.home.index') }}">{{ trans('icore::home.route.index') }}</a></li>
+<li class="breadcrumb-item active" aria-current="page">{{ trans('idir::fields.route.index') }}</li>
 @endsection
 
 @section('content')
 <h1 class="h5 border-bottom pb-2 d-flex">
     <div class="mr-auto my-auto">
         <i class="fab fa-fw fa-wpforms"></i>
-        <span> {{ trans('idir::fields.page.index') }}</span>
+        <span> {{ trans('idir::fields.route.index') }}</span>
     </div>
     @can('create fields')
     <div class="ml-auto text-right">
@@ -46,7 +46,7 @@
 @slot('modal_size', 'modal-lg')
 @slot('modal_title')
 <i class="far fa-edit"></i>
-<span> {{ trans('idir::fields.page.edit') }}</span>
+<span> {{ trans('idir::fields.route.edit') }}</span>
 @endslot
 @endcomponent
 
@@ -54,7 +54,7 @@
 @slot('modal_id', 'editPositionModal')
 @slot('modal_title')
 <i class="fas fa-sort-amount-up"></i>
-<span> {{ trans('idir::fields.page.edit_position') }}</span>
+<span> {{ trans('idir::fields.route.edit_position') }}</span>
 @endslot
 @endcomponent
 
@@ -63,7 +63,7 @@
 @slot('modal_size', 'modal-lg')
 @slot('modal_title')
 <i class="far fa-plus-square"></i>
-<span> {{ trans('idir::fields.page.create') }}</span>
+<span> {{ trans('idir::fields.route.create') }}</span>
 @endslot
 @endcomponent
 

@@ -1,17 +1,17 @@
 @extends(config('idir.layout') . '::web.layouts.layout', [
     'title' => [
-        trans('icore::categories.page.show', ['category' => $category->name]), 
+        trans('icore::categories.route.show', ['category' => $category->name]), 
         $region->name,
         trans('icore::pagination.page', ['num' => $dirs->currentPage()])
     ],
-    'desc' => [trans('icore::categories.page.show', ['category' => $category->name]), $region->name],
-    'keys' => [trans('icore::categories.page.show', ['category' => $category->name]), $region->name]
+    'desc' => [trans('icore::categories.route.show', ['category' => $category->name]), $region->name],
+    'keys' => [trans('icore::categories.route.show', ['category' => $category->name]), $region->name]
 ])
 
 @section('breadcrumb')
-<li class="breadcrumb-item"><a href="{{ route('web.home.index') }}">{{ trans('icore::home.page.index') }}</a></li>
-<li class="breadcrumb-item"><a href="{{ route('web.dir.index') }}">{{ trans('idir::dirs.page.index') }}</a></li>
-<li class="breadcrumb-item">{{ trans('icore::categories.page.index') }}</li>
+<li class="breadcrumb-item"><a href="{{ route('web.home.index') }}">{{ trans('icore::home.route.index') }}</a></li>
+<li class="breadcrumb-item"><a href="{{ route('web.dir.index') }}">{{ trans('idir::dirs.route.index') }}</a></li>
+<li class="breadcrumb-item">{{ trans('icore::categories.route.index') }}</li>
 @if ($category->ancestors->count() > 0)
 @foreach ($category->ancestors as $ancestor)
 <li class="breadcrumb-item">
@@ -37,7 +37,7 @@
                 @if (!empty($category->icon))
                     <i class="{{ $category->icon }}"></i>
                 @endif
-                <span> {{ trans('icore::categories.page.show', ['category' => $category->name]) }}</span>
+                <span>{{ trans('icore::categories.route.show', ['category' => $category->name]) }}</span>
             </h1>
             <div id="filterContent">
                 @include('idir::web.dir.partials.filter')            

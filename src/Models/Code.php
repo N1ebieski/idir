@@ -31,6 +31,19 @@ class Code extends Model
         'quantity'
     ];
 
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'id' => 'integer',
+        'price_id' => 'integer',
+        'quantity' => 'integer',
+        'created_at' => 'timestamp',
+        'updated_at' => 'timestamp'
+    ];
+
     // Setters
 
     /**

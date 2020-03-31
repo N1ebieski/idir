@@ -40,8 +40,8 @@ class Checkout
         $event->dir->loadCheckoutPayments();
 
         $event->dir->payments->each(function ($payment) use ($event) {
-            if (optional($payment->price)->group_id === $event->dir->group_id) {
-                $event->dir->makeService()->updatePrivileged(['days' => $payment->price->days]);
+            if (optional($payment->order)->group_id === $event->dir->group_id) {
+                $event->dir->makeService()->updatePrivileged(['days' => $payment->order->days]);
                 $payment->makeRepo()->finished();
             }
         });

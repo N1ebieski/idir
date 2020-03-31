@@ -56,7 +56,7 @@ class PaymentTest extends TestCase
     {
         $provider['service'] = config('services.' . static::PAYMENT_PROVIDER . '.transfer.service');
         $provider['orderid'] = '2372832783';
-        $provider['amount'] = $payment->price->price;
+        $provider['amount'] = $payment->order->price;
         $provider['userdata'] = json_encode(['uuid' => $payment->uuid, 'redirect' => route('web.profile.edit_dir')]);
         $provider['status'] = 'ok';
         $provider['sign'] = md5($provider['service'].$provider['orderid'].$provider['amount']
@@ -77,7 +77,7 @@ class PaymentTest extends TestCase
 
         $payment = factory(Payment::class)->states(['pending'])->make();
         $payment->morph()->associate($dir);
-        $payment->priceMorph()->associate($price);
+        $payment->orderMorph()->associate($price);
         $payment->save();
 
         $response = $this->post(route('web.payment.dir.verify'), $this->providerSetup($payment));
@@ -88,7 +88,7 @@ class PaymentTest extends TestCase
             'uuid' => $payment->uuid,
             'model_id' => $dir->id,
             'model_type' => 'N1ebieski\\IDir\\Models\\Dir',
-            'price_id' => $price->id,
+            'order_id' => $price->id,
             'status' => 0
         ]);
 
@@ -110,7 +110,7 @@ class PaymentTest extends TestCase
 
         $payment = factory(Payment::class)->states(['pending'])->make();
         $payment->morph()->associate($dir);
-        $payment->priceMorph()->associate($price);
+        $payment->orderMorph()->associate($price);
         $payment->save();
 
         $response = $this->post(route('web.payment.dir.verify'), $this->providerSetup($payment));
@@ -121,7 +121,7 @@ class PaymentTest extends TestCase
             'uuid' => $payment->uuid,
             'model_id' => $dir->id,
             'model_type' => 'N1ebieski\\IDir\\Models\\Dir',
-            'price_id' => $price->id,
+            'order_id' => $price->id,
             'status' => 1
         ]);
 
@@ -143,7 +143,7 @@ class PaymentTest extends TestCase
 
         $payment = factory(Payment::class)->states(['pending'])->make();
         $payment->morph()->associate($dir);
-        $payment->priceMorph()->associate($price);
+        $payment->orderMorph()->associate($price);
         $payment->save();
 
         $providerSetup = $this->providerSetup($payment);
@@ -166,7 +166,7 @@ class PaymentTest extends TestCase
 
         $payment = factory(Payment::class)->states(['pending'])->make();
         $payment->morph()->associate($dir);
-        $payment->priceMorph()->associate($price);
+        $payment->orderMorph()->associate($price);
         $payment->save();
 
         $providerSetup = $this->providerSetup($payment);
@@ -189,7 +189,7 @@ class PaymentTest extends TestCase
 
         $payment = factory(Payment::class)->states(['pending'])->make();
         $payment->morph()->associate($dir);
-        $payment->priceMorph()->associate($price);
+        $payment->orderMorph()->associate($price);
         $payment->save();
 
         $providerSetup = $this->providerSetup($payment);

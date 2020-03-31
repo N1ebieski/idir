@@ -2,6 +2,7 @@
 
 namespace N1ebieski\IDir\Http\Controllers\Web;
 
+use Carbon\Carbon;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
@@ -24,6 +25,9 @@ class ThumbnailController extends Controller
 
         return Response::make($thumbnail->generate(), 200, ['Content-Type' => 'image'])
             ->setMaxAge(Config::get('idir.dir.thumbnail.cache.days')*24*60*60)
+            ->setLastModified(
+                Carbon::createFromTimestamp($thumbnail->getLastModified())->toDateTime()
+            )
             ->setPublic();
     }
 }

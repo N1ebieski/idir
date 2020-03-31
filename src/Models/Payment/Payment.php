@@ -69,6 +69,20 @@ class Payment extends Model
      */
     protected $keyType = 'string';
 
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'id' => 'integer',
+        'model_id' => 'integer',
+        'order_id' => 'integer',
+        'status' => 'integer',
+        'created_at' => 'timestamp',
+        'updated_at' => 'timestamp'
+    ];
+
     // Relations
 
     /**
@@ -90,12 +104,12 @@ class Payment extends Model
     }
 
     /**
-     * [priceMorph description]
+     * [orderMorph description]
      * @return [type] [description]
      */
-    public function priceMorph()
+    public function orderMorph()
     {
-        return $this->morphTo('price', 'price_type', 'price_id');
+        return $this->morphTo('order', 'order_type', 'order_id');
     }
 
     // Overrides

@@ -1,17 +1,17 @@
 <div>
     <form data-route="{{ url()->current() }}" id="showContact">
         <div class="form-group">
-            <label for="email">{{ trans('icore::contact.address') }}</label>
+            <label for="email">{{ trans('icore::contact.address.label') }}</label>
             <input type="email" name="email" id="email" 
             value="{{ old('email', auth()->user()->email ?? null) }}"
             class="form-control"
-            placeholder="{{ trans('icore::contact.enter_address') }}">
+            placeholder="{{ trans('icore::contact.address.placeholder') }}">
         </div>
         <div class="form-group">
-            <label for="title">{{ trans('icore::contact.title') }}</label>
+            <label for="title">{{ trans('icore::contact.title.label') }}</label>
             <input type="text" name="title" id="title"
             class="form-control"
-            placeholder="{{ trans('icore::contact.enter_title') }}">
+            placeholder="{{ trans('icore::contact.title.placeholder') }}">
         </div>
         <div class="form-group">
             <label for="content">{{ trans('icore::contact.content') }}</label>

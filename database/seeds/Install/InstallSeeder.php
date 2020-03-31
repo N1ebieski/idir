@@ -1,0 +1,21 @@
+<?php
+
+namespace N1ebieski\IDir\Seeds\Install;
+
+use Illuminate\Database\Seeder;
+
+class InstallSeeder extends Seeder
+{
+    /**
+     * Seed the application's database.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        $this->call(DefaultRolesAndPermissionsSeeder::class);
+        $this->call(DefaultGroupAndPrivilegesSeeder::class);
+        $this->call(DefaultFieldsSeeder::class);
+        $this->call(DefaultRegionsSeeder::class);
+    }
+}

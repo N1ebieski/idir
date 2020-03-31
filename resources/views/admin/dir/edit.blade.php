@@ -21,13 +21,13 @@
     </div>
     <div class="form-group">
         <label for="tags">
-            {{ trans('idir::dirs.tags') }}: <i data-toggle="tooltip" data-placement="top"
-            title="{{ trans('idir::dirs.tags_tooltip', ['max_tags' => $max_tags = config('idir.dir.max_tags')]) }}"
+            {{ trans('idir::dirs.tags.label') }}: <i data-toggle="tooltip" data-placement="top"
+            title="{{ trans('idir::dirs.tags.tooltip', ['max_tags' => $max_tags = config('idir.dir.max_tags')]) }}"
             class="far fa-question-circle"></i>
         </label>
         <input name="tags" id="tags" class="form-control tagsinput"
         value="{{ $dir->tagList }}"
-        placeholder="{{ trans('idir::dirs.tags_placeholder') }}" data-max="{{ $max_tags }}">
+        placeholder="{{ trans('idir::dirs.tags.placeholder') }}" data-max="{{ $max_tags }}">
     </div>
     @if ($dir->group->url > 0)
     <div class="form-group">
@@ -38,8 +38,8 @@
     @endif
     <div class="form-group">
         <label for="category">
-            {{ trans('icore::categories.categories') }}: <i data-toggle="tooltip" data-placement="top"
-            title="{{ trans('icore::categories.categories_tooltip', ['max_categories' => $dir->group->max_cats]) }}"
+            {{ trans('icore::categories.categories.label') }}: <i data-toggle="tooltip" data-placement="top"
+            title="{{ trans('icore::categories.categories.tooltip', ['max_categories' => $dir->group->max_cats]) }}"
             class="far fa-question-circle"></i>
         </label>
         <div id="category">

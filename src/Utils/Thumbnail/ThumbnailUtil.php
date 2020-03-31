@@ -283,4 +283,14 @@ class ThumbnailUtil
     {
         return $this->storage->disk('public')->get($this->file_path);
     }
+
+    /**
+     * Undocumented function
+     *
+     * @return string
+     */
+    public function getLastModified() : string
+    {
+        return $this->storage->disk('public')->lastModified($this->file_path);
+    }
 }

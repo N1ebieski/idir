@@ -2,7 +2,7 @@
 
 namespace N1ebieski\IDir\Seeds\SEOKatalog;
 
-use N1ebieski\IDir\Seeds\SEOKatalogSeeder;
+use N1ebieski\IDir\Seeds\SEOKatalog\SEOKatalogSeeder;
 use N1ebieski\IDir\Models\Field\Group\Field;
 use Illuminate\Support\Facades\DB;
 

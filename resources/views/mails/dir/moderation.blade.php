@@ -22,7 +22,7 @@
     @if ($dirs_reported_count > 0)
     <span>
         <a style="color:red" href="{{ route('admin.dir.index', ['filter[report]' => '1']) }}">
-            ({{ trans('icore::filter.report_1') }}: {{ $dirs_reported_count }})
+            ({{ trans('icore::filter.report.1') }}: {{ $dirs_reported_count }})
         </a>
     </span>
     @endif    
@@ -39,7 +39,7 @@
     </span>
     @if ($dir->group->prices->isNotEmpty() && $dir->payments->isNotEmpty())
     <span style="background-color:yellow;color:initial">
-        <b>({{ trans('idir::groups.payment_1') }})</b>
+        <b>({{ trans('idir::groups.payment.1') }})</b>
     </span>
     @endif 
 </p>       

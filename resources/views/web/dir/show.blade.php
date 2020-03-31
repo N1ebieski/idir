@@ -13,8 +13,8 @@
 ])
 
 @section('breadcrumb')
-<li class="breadcrumb-item"><a href="{{ route('web.home.index') }}">{{ trans('icore::home.page.index') }}</a></li>
-<li class="breadcrumb-item"><a href="{{ route('web.dir.index') }}">{{ trans('idir::dirs.page.index') }}</a></li>
+<li class="breadcrumb-item"><a href="{{ route('web.home.index') }}">{{ trans('icore::home.route.index') }}</a></li>
+<li class="breadcrumb-item"><a href="{{ route('web.dir.index') }}">{{ trans('idir::dirs.route.index') }}</a></li>
 <li class="breadcrumb-item active" aria-current="page">{{ $dir->title }}</li>
 @endsection
 
@@ -30,7 +30,7 @@
                 <div class="mb-3">{!! $dir->content_as_html !!}</div>
                 <div class="d-flex mb-3">
                     @if ($dir->categories->isNotEmpty())
-                    <small class="mr-auto">{{ trans('icore::categories.categories') }}:
+                    <small class="mr-auto">{{ trans('icore::categories.categories.label') }}:
                         @foreach ($dir->categories as $category)
                         <a href="{{ route('web.category.dir.show', [$category->slug]) }}">{{ $category->name }}</a>
                         {{ (!$loop->last) ? ', ' : '' }}
@@ -38,7 +38,7 @@
                     </small>
                     @endif
                     @if ($dir->tags->isNotEmpty())
-                    <small class="ml-auto text-right">{{ trans('icore::dirs.tags') }}:
+                    <small class="ml-auto text-right">{{ trans('idir::dirs.tags.label') }}:
                         @foreach ($dir->tags as $tag)
                         <a href="{{ route('web.tag.dir.show', [$tag->normalized]) }}">{{ $tag->name }}</a>
                         {{ (!$loop->last) ? ', ' : '' }}
@@ -152,7 +152,7 @@
                     <a href="#" data-route="{{ route('web.contact.dir.show', [$dir->id]) }}"
                     data-toggle="modal" data-target="#contactModal" class="showContact">
                         <i class="fas fa-paper-plane"></i>
-                        <span>{{ trans('idir::contact.dir.page.show') }}</span>
+                        <span>{{ trans('idir::contact.dir.route.show') }}</span>
                     </a>
                 </div>
                 @endif
@@ -160,7 +160,7 @@
                     <a href="#" data-route="{{ route('web.report.dir.create', [$dir->id]) }}"
                     data-toggle="modal" data-target="#createReportModal" class="createReport">
                         <i class="fas fa-exclamation-triangle"></i>
-                        <span>{{ trans('icore::reports.page.create') }}</span>
+                        <span>{{ trans('icore::reports.route.create') }}</span>
                     </a>
                 </div>
                 @endauth
@@ -179,7 +179,7 @@
 @slot('modal_id', 'linkModal')
 @slot('modal_title')
 <i class="fas fa-link"></i>
-<span>{{ trans('idir::dirs.link_dir_page') }}</span>
+<span> {{ trans('idir::dirs.link_dir_page') }}</span>
 @endslot
 @slot('modal_body')
 <div class="form-group">
@@ -193,7 +193,7 @@
 @slot('modal_id', 'createReportModal')
 @slot('modal_title')
 <i class="fas fa-exclamation-triangle"></i>
-<span>{{ trans('icore::reports.page.create') }}</span>
+<span> {{ trans('icore::reports.route.create') }}</span>
 @endslot
 @endcomponent
 
@@ -202,7 +202,7 @@
 @slot('modal_size', 'modal-lg')
 @slot('modal_title')
 <i class="fas fa-paper-plane"></i>
-<span>{{ trans('idir::contact.dir.page.show') }}</span>
+<span> {{ trans('idir::contact.dir.route.show') }}</span>
 @endslot
 @endcomponent
 @endauth

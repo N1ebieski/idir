@@ -1,18 +1,18 @@
 @extends(config('idir.layout') . '::web.layouts.layout', [
-    'title' => [trans('idir::dirs.page.index'), trans('icore::pagination.page', ['num' => $dirs->currentPage()])],
-    'desc' => [trans('idir::dirs.page.index')],
-    'keys' => [trans('idir::dirs.page.index')]
+    'title' => [trans('idir::dirs.route.index'), trans('icore::pagination.page', ['num' => $dirs->currentPage()])],
+    'desc' => [trans('idir::dirs.route.index')],
+    'keys' => [trans('idir::dirs.route.index')]
 ])
 
 @section('breadcrumb')
-<li class="breadcrumb-item"><a href="{{ route('web.home.index') }}">{{ trans('icore::home.page.index') }}</a></li>
-<li class="breadcrumb-item active" aria-current="page">{{ trans('idir::dirs.page.index') }}</li>
+<li class="breadcrumb-item"><a href="{{ route('web.home.index') }}">{{ trans('icore::home.route.index') }}</a></li>
+<li class="breadcrumb-item active" aria-current="page">{{ trans('idir::dirs.route.index') }}</li>
 @endsection
 
 @section('content')
 <div class="container">
     @render('idir::dir.carouselComponent')
-    <div class="row">
+    <div class="row mt-3">
         <div class="col-md-8 order-sm-1 order-md-2">
             <div id="filterContent">
                 @include('idir::web.dir.partials.filter')

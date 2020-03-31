@@ -10,6 +10,12 @@ use Illuminate\Support\ServiceProvider;
 class IDirServiceProvider extends ServiceProvider
 {
     /**
+     * [public description]
+     * @var string
+     */
+    public const VERSION = "0.9.0-alpha";
+
+    /**
      * Register services.
      *
      * @return void
@@ -53,6 +59,26 @@ class IDirServiceProvider extends ServiceProvider
 
         $this->loadTranslationsFrom(__DIR__ . '/../../resources/lang', 'idir');
 
+        if ($this->app->environment('local')) {
+            $this->app->make('Illuminate\Database\Eloquent\Factory')->load(base_path('database/factories') . '/vendor/idir');
+        }
+
+        $this->publishes([
+            __DIR__ . '/../../config/idir.php' => config_path('idir.php'),
+        ], 'idir.config');
+
+        $this->publishes([
+            __DIR__.'/../../routes/web' => base_path('routes') . '/vendor/idir/web'
+        ], 'idir.routes.web');
+
+        $this->publishes([
+            __DIR__.'/../../routes/admin' => base_path('routes') . '/vendor/idir/admin'
+        ], 'idir.routes.admin');
+
+        $this->publishes([
+            __DIR__.'/../../routes/api' => base_path('routes') . '/vendor/idir/api'
+        ], 'idir.routes.api');
+
         $this->publishes([
             __DIR__ . '/../../resources/lang/en' => resource_path('lang/vendor/idir/en'),
             __DIR__ . '/../../resources/lang/pl' => resource_path('lang/vendor/idir/pl'),
@@ -60,8 +86,21 @@ class IDirServiceProvider extends ServiceProvider
         ], 'idir.lang');
 
         $this->publishes([
-            __DIR__ . '/../../resources/views' => resource_path('views/vendor/idir'),
-        ], 'idir.views');
+            __DIR__ . '/../../resources/js' => resource_path('js/vendor/idir'),
+        ], 'idir.js');
+
+        $this->publishes([
+            __DIR__ . '/../../resources/sass' => resource_path('sass/vendor/idir'),
+        ], 'idir.sass');
+
+        $this->publishes([
+            __DIR__ . '/../../resources/views/admin' => resource_path('views/vendor/idir/admin'),
+        ], 'idir.views.admin');
+
+        $this->publishes([
+            __DIR__ . '/../../resources/views/web' => resource_path('views/vendor/idir/web'),
+            __DIR__ . '/../../resources/views/mails' => resource_path('views/vendor/idir/mails')
+        ], 'idir.views.web');
 
         $this->publishes([
             __DIR__ . '/../../public/css' => public_path('css/vendor/idir'),
@@ -71,10 +110,6 @@ class IDirServiceProvider extends ServiceProvider
             // __DIR__ . '/../../public/fonts/vendor' => public_path('fonts/vendor'),
             __DIR__ . '/../../public/mix-manifest.json' => public_path('mix-manifest.json')
         ], 'idir.public');
-
-        if ($this->app->environment('local')) {
-            $this->app->make('Illuminate\Database\Eloquent\Factory')->load(base_path('database/factories') . '/vendor/idir');
-        }
 
         $this->publishes([
             __DIR__ . '/../../database/factories' => base_path('database/factories') . '/vendor/idir',

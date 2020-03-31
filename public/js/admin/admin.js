@@ -86,10 +86,10 @@
 /************************************************************************/
 /******/ ({
 
-/***/ "../laravel-icore/packages/n1ebieski/icore/resources/js/admin/admin.js":
-/*!*****************************************************************************!*\
-  !*** ../laravel-icore/packages/n1ebieski/icore/resources/js/admin/admin.js ***!
-  \*****************************************************************************/
+/***/ "../icore/packages/n1ebieski/icore/resources/js/admin/admin.js":
+/*!*********************************************************************!*\
+  !*** ../icore/packages/n1ebieski/icore/resources/js/admin/admin.js ***!
+  \*********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -104,7 +104,7 @@
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! ../../../../../../vendor/n1ebieski/icore/resources/js/admin/admin.js */ "../laravel-icore/packages/n1ebieski/icore/resources/js/admin/admin.js");
+__webpack_require__(/*! ~/../vendor/n1ebieski/icore/resources/js/admin/admin.js */ "../icore/packages/n1ebieski/icore/resources/js/admin/admin.js");
 
 /***/ }),
 
@@ -115,7 +115,7 @@ __webpack_require__(/*! ../../../../../../vendor/n1ebieski/icore/resources/js/ad
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! D:\Work\laravel-idir\packages\n1ebieski\idir\resources\js\admin\admin.js */"./packages/n1ebieski/idir/resources/js/admin/admin.js");
+module.exports = __webpack_require__(/*! D:\Work\idir\packages\n1ebieski\idir\resources\js\admin\admin.js */"./packages/n1ebieski/idir/resources/js/admin/admin.js");
 
 
 /***/ })

@@ -19,7 +19,7 @@
     @endif
     @if (isset($value['tags']) && $value['tags'] !== null)
     <p>
-        {{ trans('idir::dirs.tags') }}:<br>
+        {{ trans('idir::dirs.tags.label') }}:<br>
         <span>{{ implode(', ', $value['tags']) }}</span>
     </p>
     @endif

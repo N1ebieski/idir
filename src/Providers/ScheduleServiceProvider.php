@@ -51,11 +51,9 @@ class ScheduleServiceProvider extends ServiceProvider
             //     ->runInBackground();
 
             $schedule->command('clean:directories')
+                ->name('CleanDirectories')
                 ->hourly()
                 ->runInBackground();
-
-            $schedule->command('queue:restart')->runInBackground();
-            $schedule->command('queue:work --daemon --stop-when-empty --tries=3')->runInBackground();
         });
     }
 }

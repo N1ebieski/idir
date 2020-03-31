@@ -1,23 +1,23 @@
 @extends(config('idir.layout') . '::web.layouts.layout', [
-    'title' => [trans('idir::dirs.page.step', ['step' => 3]), trans('idir::dirs.page.create.summary')],
-    'desc' => [trans('idir::dirs.page.create.summary')],
-    'keys' => [trans('idir::dirs.page.create.summary')]
+    'title' => [trans('idir::dirs.route.step', ['step' => 3]), trans('idir::dirs.route.create.3')],
+    'desc' => [trans('idir::dirs.route.create.3')],
+    'keys' => [trans('idir::dirs.route.create.3')]
 ])
 
 @section('breadcrumb')
-<li class="breadcrumb-item"><a href="/">{{ trans('icore::home.page.index') }}</a></li>
+<li class="breadcrumb-item"><a href="/">{{ trans('icore::home.route.index') }}</a></li>
 <li class="breadcrumb-item">
-    <a href="{{ route('web.dir.index') }}">{{ trans('idir::dirs.page.index') }}</a>
+    <a href="{{ route('web.dir.index') }}">{{ trans('idir::dirs.route.index') }}</a>
 </li>
-<li class="breadcrumb-item">{{ trans('idir::dirs.page.create.index') }}</li>
+<li class="breadcrumb-item">{{ trans('idir::dirs.route.create.index') }}</li>
 <li class="breadcrumb-item active" aria-current="page">
-    {{ trans('idir::dirs.page.step', ['step' => 3]) }} {{ trans('idir::dirs.page.create.summary') }}
+    {{ trans('idir::dirs.route.step', ['step' => 3]) }} {{ trans('idir::dirs.route.create.3') }}
 </li>
 @endsection
 
 @section('content')
 <div class="container">
-    <h3 class="h5 border-bottom pb-2">{{ trans('idir::dirs.page.create.summary') }}</h3>
+    <h3 class="h5 border-bottom pb-2">{{ trans('idir::dirs.route.create.3') }}</h3>
     <div class="row mb-4">
         <div class="col-md-8">
             @include('idir::web.dir.partials.summary', ['value' => session('dir')])

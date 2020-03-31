@@ -1,39 +1,41 @@
 <?php
 
+use N1ebieski\IDir\Models\Dir;
+
 return [
-    'page' => [
+    'route' => [
         'index' => 'Katalog',
-        'search' => 'Wyszukiwanie: :search',        
+        'search' => 'Wyszukiwanie: :search',
         'create' => [
             'index' => 'Dodaj wpis',
-            'group' => 'Wybierz typ wpisu',
-            'form' => 'Wypełnij formularz',
-            'summary' => 'Podsumowanie'
+            '1' => 'Wybierz typ wpisu',
+            '2' => 'Wypełnij formularz',
+            '3' => 'Podsumowanie'
         ],
         'edit' => [
             'index' => 'Edytuj wpis',
             'renew' => 'Przedłuż ważność',
-            'group' => 'Wybierz typ wpisu',
-            'form' => 'Wypełnij formularz',
-            'summary' => 'Podsumowanie'
+            '1' => 'Wybierz typ wpisu',
+            '2' => 'Wypełnij formularz',
+            '3' => 'Podsumowanie'
         ],
         'step' => 'Krok :step'
     ],
     'success' => [
         'store' => [
-            'status_0' => 'Wpis został dodany i oczekuje na akceptację przez moderatora.',
-            'status_1' => 'Wpis został dodany i jest aktywny.'
+            Dir::INACTIVE => 'Wpis został dodany i oczekuje na akceptację przez moderatora.',
+            Dir::ACTIVE => 'Wpis został dodany i jest aktywny.'
         ],
         'update' => [
-            'status_0' => 'Wpis został edytowany i oczekuje na akceptację przez moderatora.',
-            'status_1' => 'Wpis został edytowany i jest aktywny.'
+            Dir::INACTIVE => 'Wpis został edytowany i oczekuje na akceptację przez moderatora.',
+            Dir::ACTIVE => 'Wpis został edytowany i jest aktywny.'
         ],
         'update_status' => [
-            'status_1' => 'Wpis został aktywowany'
+            Dir::ACTIVE => 'Wpis został aktywowany'
         ],
         'update_renew' => [
-            'status_0' => 'Dziękujemy. Czas ważności wpisu zostanie przedłużony w momencie akceptacji wpisu przed moderację.',
-            'status_1' => 'Dziękujemy. Czas ważności wpisu został przedłużony.'
+            Dir::INACTIVE => 'Dziękujemy. Czas ważności wpisu zostanie przedłużony w momencie akceptacji wpisu przed moderację.',
+            Dir::ACTIVE => 'Dziękujemy. Czas ważności wpisu został przedłużony.'
         ],
         'destroy' => 'Wpis został usunięty',
         'destroy_global' => 'Pomyślnie usunięto :affected wpisów'
@@ -42,29 +44,25 @@ return [
     'change_group' => 'Zmień grupę',
     'renew_group' => 'Przedłuż ważność',
     'categories' => 'Kategorie',
-    'tags' => 'Tagi',
-    'tags_tooltip' => 'Min 3 znaki, max 30 znaków, max :max_tags tagów',
-    'tags_placeholder' => 'Dodaj tag',
+    'tags' => [
+        'label' => 'Tagi',
+        'tooltip' => 'Min 3 znaki, max 30 znaków, max :max_tags tagów',
+        'placeholder' => 'Dodaj tag'
+    ],
     'choose_payment_type' => 'Wybierz typ płatności',
     'payment' => [
-        'transfer' => 'Przelew online',
-        'transfer_info' => 'Płatności internetowe przelewem realizuje <a href=":provider_url" target="_blank">:provider_name</a>.
-        Dokumenty dotyczące systemu płatności dostępne są na stronie <a href=":provider_docs_url" target="_blank">:provider_name dokumenty</a>.
-        Regulamin usługi dostępny jest na stronie <a href=":provider_rules_url" target="_blank">:provider_name regulamin</a>.
-        Zgłoszenie strony do katalogu równoznaczne jest z akceptacją <a href=":rules_url" target="_blank">regulaminu</a>.',
-        'code_sms' => 'Kod automatyczny SMS',
-        'code_sms_info' => 'Aby otrzymać kod dostępu - wyślij SMS na numer <b><span id="number">:number</span></b> o treści
-        <b><span id="code_sms">:code_sms</span></b>. Koszt SMSa to <b><span id="price">:price</span></b> PLN. Usługa SMS dostępna jest dla wszystkich operatorów
-        sieci komórkowych w Polsce. Płatności SMS w serwisie obsługuje <a href=":provider_url" target="_blank">:provider_name</a>.
-        Dokumenty dotyczące systemu płatności dostępne są na stronie <a href=":provider_docs_url" target="_blank">:provider_name dokumenty</a>.
-        Regulamin usługi dostępny jest na stronie <a href=":provider_rules_url" target="_blank">:provider_name regulamin</a>.
-        Zgłoszenie strony do katalogu równoznaczne jest z akceptacją <a href=":rules_url" target="_blank">regulaminu</a>.',
-        'code_transfer' => 'Kod automatyczny przelewem',
-        'code_transfer_info' => 'Aby otrzymać kod dostępu - dokonaj płatności przelewem na stronie zakupu kodów
-        <a id="code_transfer" href=":code_transfer_url" target="blank"><b>:provider_name</b></a>. Koszt <b><span id="price">:price</span></b> PLN.
-        Dokumenty dotyczące systemu płatności dostępne są na stronie <a href=":provider_docs_url" target="_blank">:provider_name dokumenty</a>.
-        Regulamin usługi dostępny jest na stronie <a href=":provider_rules_url" target="_blank">:provider_name regulamin</a>.
-        Zgłoszenie strony do katalogu równoznaczne jest z akceptacją <a href=":rules_url" target="_blank">regulaminu</a>.'
+        'transfer' => [
+            'label' => 'Przelew online',
+            'info' => 'Płatności internetowe przelewem realizuje <a href=":provider_url" target="_blank">:provider_name</a>. Dokumenty dotyczące systemu płatności dostępne są na stronie <a href=":provider_docs_url" target="_blank">:provider_name dokumenty</a>. Regulamin usługi dostępny jest na stronie <a href=":provider_rules_url" target="_blank">:provider_name regulamin</a>. Zgłoszenie strony do katalogu równoznaczne jest z akceptacją <a href=":rules_url" target="_blank">regulaminu</a>.',
+        ],
+        'code_sms' => [
+            'label' => 'Kod automatyczny SMS',
+            'info' => 'Aby otrzymać kod dostępu - wyślij SMS na numer <b><span id="number">:number</span></b> o treści <b><span id="code_sms">:code_sms</span></b>. Koszt SMSa to <b><span id="price">:price</span></b> PLN. Usługa SMS dostępna jest dla wszystkich operatorów sieci komórkowych w Polsce. Płatności SMS w serwisie obsługuje <a href=":provider_url" target="_blank">:provider_name</a>. Dokumenty dotyczące systemu płatności dostępne są na stronie <a href=":provider_docs_url" target="_blank">:provider_name dokumenty</a>. Regulamin usługi dostępny jest na stronie <a href=":provider_rules_url" target="_blank">:provider_name regulamin</a>. Zgłoszenie strony do katalogu równoznaczne jest z akceptacją <a href=":rules_url" target="_blank">regulaminu</a>.'
+        ],
+        'code_transfer' => [
+            'label' => 'Kod automatyczny przelewem',
+            'info' => 'Aby otrzymać kod dostępu - dokonaj płatności przelewem na stronie zakupu kodów <a id="code_transfer" href=":code_transfer_url" target="blank"><b>:provider_name</b></a>. Koszt <b><span id="price">:price</span></b> PLN. Dokumenty dotyczące systemu płatności dostępne są na stronie <a href=":provider_docs_url" target="_blank">:provider_name dokumenty</a>. Regulamin usługi dostępny jest na stronie <a href=":provider_rules_url" target="_blank">:provider_name regulamin</a>. Zgłoszenie strony do katalogu równoznaczne jest z akceptacją <a href=":rules_url" target="_blank">regulaminu</a>.'
+        ]
     ],
     'price' => ':price PLN / :days :limit',
     'rules' => 'Regulamin',
@@ -75,12 +73,12 @@ return [
     'group_limit' => 'Limit wyczerpany (max: :dirs, dzienny: :dirs_today)',
     'unlimited' => 'nieograniczony',
     'status' => [
-        'index' => 'Status',
-        '1' => 'aktywny',
-        '0' => 'oczekujący na moderację',
-        '2' => 'oczekujący na płatność',
-        '3' => 'oczekujący na backlink',
-        '4' => 'oczekujący na status 200'
+        'label' => 'Status',
+        Dir::ACTIVE => 'aktywny',
+        Dir::INACTIVE => 'oczekujący na moderację',
+        Dir::PAYMENT_INACTIVE => 'oczekujący na płatność',
+        Dir::BACKLINK_INACTIVE => 'oczekujący na backlink',
+        Dir::STATUS_INACTIVE => 'oczekujący na status 200'
     ],
     'privileged_to' => 'Data wygaśnięcia',
     'delete_reason' => 'Powód usunięcia',
@@ -89,27 +87,21 @@ return [
             'info' => 'Niestety przykro nam, ale Twój wpis :dir_link został usunięty z naszego katalogu.'
         ],
         'activation' => [
-            'info' => 'Gratulujemy, Twój wpis :dir_link został poprawnie dodany do naszego katalogu
-            i znajduje się na stronie: :dir_page. Zapraszamy do kolejnych wpisów!'
+            'info' => 'Gratulujemy, Twój wpis :dir_link został poprawnie dodany do naszego katalogu i znajduje się na stronie: :dir_page. Zapraszamy do kolejnych wpisów!'
         ],
         'reminder' => [
             'title' => 'Przypomnienie o wygasającym wpisie',
-            'info' => 'Przypominamy, że kończy się czas ważności Twojego wpisu :dir_link 
-            znajdującego się na stronie: :dir_page w grupie :group.',
-            'alt' => 'Po upływie czasu ważności :days, wpis zostanie przeniesiony do
-            niższej grupy :alt_group.',
-            'deactivation' => 'Po upływie czasu ważności :days, wpis zostanie deaktywowany
-            ze statusem "oczekujący na płatność".',
-            'renew_dir' => 'Możesz temu zapobiec przedłużając czas ważności wpisu w aktualnej grupie.
-            Przedłużenia swojego wpisu dokonasz klikając w przycisk poniżej:'
+            'info' => 'Przypominamy, że kończy się czas ważności Twojego wpisu :dir_link znajdującego się na stronie: :dir_page w grupie :group.',
+            'alt' => 'Po upływie czasu ważności :days, wpis zostanie przeniesiony do niższej grupy :alt_group.',
+            'deactivation' => 'Po upływie czasu ważności :days, wpis zostanie deaktywowany ze statusem "oczekujący na płatność".',
+            'renew_dir' => 'Możesz temu zapobiec przedłużając czas ważności wpisu w aktualnej grupie. Przedłużenia swojego wpisu dokonasz klikając w przycisk poniżej:'
         ],
         'completed' => [
             'title' => 'Koniec czasu ważności',
             'info' => 'informujemy, że zakończył się czas ważności Twojego wpisu :dir_link w grupie :group.',
             'alt' => 'Tym samym wpis został przeniesiony do niższej grupy :alt_group.',
             'deactivation' => 'Tym samym wpis został deaktywowany ze statusem "oczekujący na płatność".',
-            'edit_dir' => 'Możesz odnowić wpis lub zmienić grupę. Edycji swojego wpisu dokonasz 
-            klikając w przycisk poniżej:'
+            'edit_dir' => 'Możesz odnowić wpis lub zmienić grupę. Edycji swojego wpisu dokonasz klikając w przycisk poniżej:'
         ]
     ],
     'link_dir_page' => 'Podlinkuj swój wpis by przyśpieszyć indeksację',
@@ -120,5 +112,7 @@ return [
     'rating' => 'Ocena',
     'url' => 'Adres strony',
     'related' => 'Podobne wpisy',
-    'latest' => 'Najnowsze wpisy'
+    'latest' => 'Najnowsze wpisy',
+    'title' => 'Tytuł',
+    'notes' => 'Uwagi dla moderatora'
 ];
