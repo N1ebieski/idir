@@ -1,9 +1,7 @@
 <?php
 
 return [
-    'page' => [
-        'type' => [
-            'dir' => 'Katalog',
-        ],
+    'dir' => [
+        'dir' => 'Katalog',
     ]
 ];

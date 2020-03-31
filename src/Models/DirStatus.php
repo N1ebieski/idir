@@ -45,6 +45,20 @@ class DirStatus extends Model
         'attempted_at' => null
     ];
 
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'id' => 'integer',
+        'dir_id' => 'integer',
+        'attempts' => 'integer',
+        'attempted_at' => 'timestamp',
+        'created_at' => 'timestamp',
+        'updated_at' => 'timestamp'
+    ];
+
     // Setters
 
     /**

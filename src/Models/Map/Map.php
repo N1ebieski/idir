@@ -23,4 +23,18 @@ class Map extends Model
         'lat',
         'long'
     ];
+
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'id' => 'integer',
+        'model_id' => 'integer',
+        'lat' => 'decimal:14',
+        'long' => 'decimal:14',
+        'created_at' => 'timestamp',
+        'updated_at' => 'timestamp'
+    ];
 }

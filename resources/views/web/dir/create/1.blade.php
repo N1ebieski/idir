@@ -1,24 +1,24 @@
 @extends(config('idir.layout') . '::web.layouts.layout', [
-    'title' => [trans('idir::dirs.page.step', ['step' => 1]), trans('idir::dirs.page.create.group')],
-    'desc' => [trans('idir::dirs.page.create.group')],
-    'keys' => [trans('idir::dirs.page.create.group')]
+    'title' => [trans('idir::dirs.route.step', ['step' => 1]), trans('idir::dirs.route.create.1')],
+    'desc' => [trans('idir::dirs.route.create.1')],
+    'keys' => [trans('idir::dirs.route.create.1')]
 ])
 
 @section('breadcrumb')
-<li class="breadcrumb-item"><a href="/">{{ trans('icore::home.page.index') }}</a></li>
+<li class="breadcrumb-item"><a href="/">{{ trans('icore::home.route.index') }}</a></li>
 <li class="breadcrumb-item">
-    <a href="{{ route('web.dir.index') }}">{{ trans('idir::dirs.page.index') }}</a>
+    <a href="{{ route('web.dir.index') }}">{{ trans('idir::dirs.route.index') }}</a>
 </li>
-<li class="breadcrumb-item">{{ trans('idir::dirs.page.create.index') }}</li>
+<li class="breadcrumb-item">{{ trans('idir::dirs.route.create.index') }}</li>
 <li class="breadcrumb-item active" aria-current="page">
-    {{ trans('idir::dirs.page.step', ['step' => 1]) }} {{ trans('idir::dirs.page.create.group') }}
+    {{ trans('idir::dirs.route.step', ['step' => 1]) }} {{ trans('idir::dirs.route.create.1') }}
 </li>
 @endsection
 
 @section('content')
 <div class="container">
     @include('icore::web.partials.alerts')
-    <h3 class="h5 border-bottom pb-2">{{ trans('idir::dirs.page.create.group') }}</h3>
+    <h3 class="h5 border-bottom pb-2">{{ trans('idir::dirs.route.create.1') }}</h3>
     @if ($groups->isNotEmpty())
     <div class="row">
         @foreach($groups as $group)

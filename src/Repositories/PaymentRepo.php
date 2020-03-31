@@ -36,7 +36,7 @@ class PaymentRepo
         return $this->payment->where('uuid', $uuid)
             ->pending()
             ->poliType()
-            ->with(['morph', 'priceMorph'])
+            ->with(['morph', 'orderMorph'])
             ->first();
     }
 

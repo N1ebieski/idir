@@ -36,6 +36,18 @@ class Field extends Model
 
     /**
      * [public description]
+     * @var int
+     */
+    public const REQUIRED = 1;
+
+    /**
+     * [public description]
+     * @var int
+     */
+    public const OPTIONAL = 0;
+
+    /**
+     * [public description]
      * @var array
      */
     public const DEFAULT = ['regions', 'map'];
@@ -60,6 +72,19 @@ class Field extends Model
      * @var array
      */
     protected $fillable = ['title', 'desc', 'type', 'options', 'position', 'visible'];
+
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'id' => 'integer',
+        'visible' => 'integer',
+        'position' => 'integer',
+        'created_at' => 'timestamp',
+        'updated_at' => 'timestamp'
+    ];
 
     // Relations
 

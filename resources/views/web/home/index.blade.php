@@ -1,4 +1,4 @@
-@extends(config('icore.layout') . '::web.layouts.layout')
+@extends(config('idir.layout') . '::web.layouts.layout')
 
 @section('content')
 @include('icore::web.partials.alerts-absolute')
@@ -33,22 +33,20 @@
 </div>
 <div class="container">
     @render('idir::dir.carouselComponent')
-    <div class="row">
+    <div class="row mt-3">
+        @if ($dirs->isNotEmpty())
         <div class="col-md-8 order-sm-1 order-md-2">
-            @if ($dirs->isNotEmpty())
             <div>
                 @foreach ($dirs as $dir)
                     @include('idir::web.dir.partials.dir')
                 @endforeach
             </div>
-            @else
-            <p>{{ trans('icore::default.empty') }}</p>
-            @endif
         </div>
         <div class="col-md-4 order-sm-2 order-md-1">
             @render('idir::category.dir.categoryComponent')
             @render('idir::comment.dir.latestComponent')
         </div>
+        @endif
     </div>
 </div>
 @endsection

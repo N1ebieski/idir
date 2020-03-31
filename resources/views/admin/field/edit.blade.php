@@ -89,28 +89,36 @@
     @endif
     <div class="form-group">
         <label for="visible">
-            {{ trans('idir::fields.visible') }}: <i data-toggle="tooltip" data-placement="top"
-            title="{{ trans("idir::fields.visible_tooltip") }}" class="far fa-question-circle"></i>
+            {{ trans('idir::fields.visible.label') }}: <i data-toggle="tooltip" data-placement="top"
+            title="{{ trans("idir::fields.visible.tooltip") }}" class="far fa-question-circle"></i>
         </label>
         <select class="form-control" id="visible" name="visible">
-            <option value="1" {{ $field->visible == 1 ? 'selected' : null }}>{{ trans('idir::fields.visible_1') }}</option>
-            <option value="0" {{ $field->visible == 0 ? 'selected' : null }}>{{ trans('idir::fields.visible_0') }}</option>
+            <option value="{{ $field::VISIBLE }}" {{ $field->visible == $field::VISIBLE ? 'selected' : null }}>
+                {{ trans('idir::fields.visible.'.$field::VISIBLE) }}
+            </option>
+            <option value="{{ $field::INVISIBLE }}" {{ $field->visible == $field::INVISIBLE ? 'selected' : null }}>
+                {{ trans('idir::fields.visible.'.$field::INVISIBLE) }}
+            </option>
         </select>
     </div>
     <div class="form-group">
-        <label for="required">{{ trans('idir::fields.required') }}:</label>
+        <label for="required">{{ trans('idir::fields.required.label') }}:</label>
         <select class="form-control" id="required" name="required">
-            <option value="0" {{ $field->options->required == 0 ? 'selected' : null }}>{{ trans('idir::fields.required_0') }}</option>
-            <option value="1" {{ $field->options->required == 1 ? 'selected' : null }}>{{ trans('idir::fields.required_1') }}</option>
+            <option value="{{ $field::OPTIONAL }}" {{ $field->options->required == $field::OPTIONAL ? 'selected' : null }}>
+                {{ trans('idir::fields.required.'.$field::OPTIONAL) }}
+            </option>
+            <option value="{{ $field::REQUIRED }}" {{ $field->options->required == $field::REQUIRED ? 'selected' : null }}>
+                {{ trans('idir::fields.required.'.$field::REQUIRED) }}
+            </option>
         </select>
     </div>
     @yield('morphs')
     <button type="button" class="btn btn-primary update">
         <i class="fas fa-check"></i>
-        {{ trans('icore::default.save') }}
+        <span>{{ trans('icore::default.save') }}</span>
     </button>
     <button type="button" class="btn btn-secondary" data-dismiss="modal">
         <i class="fas fa-ban"></i>
-        {{ trans('icore::default.cancel') }}
+        <span>{{ trans('icore::default.cancel') }}</span>
     </button>
 </form>

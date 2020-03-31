@@ -5,7 +5,7 @@ namespace N1ebieski\IDir\Rules;
 use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Contracts\Translation\Translator as Lang;
-use Illuminate\Database\Connection as DB;
+use Illuminate\Database\DatabaseManager as DB;
 
 /**
  * [UniqueUrl description]

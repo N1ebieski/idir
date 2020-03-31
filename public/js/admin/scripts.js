@@ -1015,7 +1015,7 @@ jQuery(document).on('click', 'button.clearReport', function(e) {
 jQuery(document).on('readyAndAjax', function() {
     $('[data-toggle=confirmation]').confirmation({
         rootSelector: '[data-toggle=confirmation]',
-        copyAttributes: 'data-route data-id',
+        copyAttributes: 'href data-route data-id',
         singleton: true,
         popout: true,      
         onConfirm: function() {
@@ -1357,7 +1357,7 @@ jQuery(document).on('click', 'a.reloadThumbnail', function(e) {
 jQuery(document).on('readyAndAjax', function() {
     $('[data-toggle=dir-confirmation]').confirmation({
         rootSelector: '[data-toggle=dir-confirmation]',
-        copyAttributes: 'data-route data-id',
+        copyAttributes: 'href data-route data-id',
         singleton: true,
         popout: false,
         onConfirm: function() {

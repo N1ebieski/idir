@@ -1,20 +1,23 @@
 @extends(config('idir.layout') . '::admin.layouts.layout', [
-    'title' => [trans('idir::groups.page.create')],
-    'desc' => [trans('idir::groups.page.create')],
-    'keys' => [trans('idir::groups.page.create')]
+    'title' => [trans('idir::groups.route.create')],
+    'desc' => [trans('idir::groups.route.create')],
+    'keys' => [trans('idir::groups.route.create')]
 ])
 
+@inject('group', 'N1ebieski\IDir\Models\Group')
+
 @section('breadcrumb')
-<li class="breadcrumb-item"><a href="{{ route('admin.home.index') }}">{{ trans('icore::home.page.index') }}</a></li>
-<li class="breadcrumb-item"><a href="{{ route("admin.group.index") }}">{{ trans('idir::groups.page.index') }}</a></li>
-<li class="breadcrumb-item active" aria-current="page">{{ trans('idir::groups.page.create') }}</li>
+<li class="breadcrumb-item"><a href="{{ route('admin.home.index') }}">{{ trans('icore::home.route.index') }}</a></li>
+<li class="breadcrumb-item"><a href="{{ route("admin.group.index") }}">{{ trans('idir::groups.route.index') }}</a></li>
+<li class="breadcrumb-item active" aria-current="page">{{ trans('idir::groups.route.create') }}</li>
 @endsection
 
 @section('content')
+
 <div class="w-100">
     <h1 class="h5 mb-4 border-bottom pb-2">
         <i class="far fa-plus-square"></i>
-        <span> {{ trans('idir::groups.page.create') }}:</span>
+        <span>{{ trans('idir::groups.route.create') }}:</span>
     </h1>
     <form class="mb-3" method="post" action="{{ route("admin.group.store") }}" id="createGroup">
         @csrf
@@ -34,8 +37,8 @@
                 @endforeach
                 <div class="form-group">
                     <label for="max_cats">
-                        <span>{{ trans('idir::groups.max_cats') }}: </span>
-                        <i data-toggle="tooltip" data-placement="top" title="{{ trans('idir::groups.max_cats_tooltip') }}"
+                        <span>{{ trans('idir::groups.max_cats.label') }}: </span>
+                        <i data-toggle="tooltip" data-placement="top" title="{{ trans('idir::groups.max_cats.tooltip') }}"
                         class="far fa-question-circle"></i>
                     </label>
                     <input type="text" value="{{ old('max_cats', 3) }}" name="max_cats"
@@ -43,19 +46,29 @@
                     @includeWhen($errors->has('max_cats'), 'icore::admin.partials.errors', ['name' => 'max_cats'])
                 </div>
                 <div class="form-group">
-                    <label for="url">{{ trans('idir::groups.url') }}:</label>
+                    <label for="url">{{ trans('idir::groups.url.label') }}:</label>
                     <select class="form-control @isValid('url')" id="url" name="url">
-                        <option value="0" {{ old('url') === "0" ? 'selected' : null }}>{{ trans('idir::groups.url_0') }}</option>
-                        <option value="1" {{ (!old('url') || old('url') === "1") ? 'selected' : null }}>{{ trans('idir::groups.url_1') }}</option>
-                        <option value="2" {{ old('url') === "2" ? 'selected' : null }}>{{ trans('idir::groups.url_2') }}</option>
+                        <option value="{{ $group::WITHOUT_URL }}" {{ old('url') == $group::WITHOUT_URL ? 'selected' : null }}>
+                            {{ trans('idir::groups.url.'.$group::WITHOUT_URL) }}
+                        </option>
+                        <option value="{{ $group::OPTIONAL_URL }}" {{ (!old('url') || old('url') == $group::OPTIONAL_URL) ? 'selected' : null }}>
+                            {{ trans('idir::groups.url.'.$group::OPTIONAL_URL) }}
+                        </option>
+                        <option value="{{ $group::OBLIGATORY_URL }}" {{ old('url') == $group::OBLIGATORY_URL ? 'selected' : null }}>
+                            {{ trans('idir::groups.url.'.$group::OBLIGATORY_URL) }}
+                        </option>
                     </select>
                     @includeWhen($errors->has('url'), 'icore::admin.partials.errors', ['name' => 'url'])
                 </div>
                 <div class="form-group">
-                    <label for="apply_status">{{ trans('idir::groups.apply_status') }}:</label>
+                    <label for="apply_status">{{ trans('idir::groups.apply_status.label') }}:</label>
                     <select class="form-control @isValid('apply_status')" id="apply_status" name="apply_status">
-                        <option value="0" {{ (!old('apply_status') || old('apply_status') === "0") ? 'selected' : null }}>{{ trans('idir::groups.apply_status_0') }}</option>
-                        <option value="1" {{ old('apply_status') === "1" ? 'selected' : null }}>{{ trans('idir::groups.apply_status_1') }}</option>
+                        <option value="{{ $group::APPLY_INACTIVE }}" {{ (!old('apply_status') || old('apply_status') == $group::APPLY_INACTIVE) ? 'selected' : null }}>
+                            {{ trans('idir::groups.apply_status.'.$group::APPLY_INACTIVE) }}
+                        </option>
+                        <option value="{{ $group::APPLY_ACTIVE }}" {{ old('apply_status') == $group::APPLY_ACTIVE ? 'selected' : null }}>
+                            {{ trans('idir::groups.apply_status.'.$group::APPLY_ACTIVE) }}
+                        </option>
                     </select>
                     @includeWhen($errors->has('apply_status'), 'icore::admin.partials.errors', ['name' => 'apply_status'])
                 </div>
@@ -68,20 +81,24 @@
                     @includeWhen($errors->has('name'), 'icore::admin.partials.errors', ['name' => 'name'])
                 </div>
                 <div class="form-group">
-                    <label for="visible">{{ trans('idir::groups.visible') }}:</label>
+                    <label for="visible">{{ trans('idir::groups.visible.label') }}:</label>
                     <select class="form-control @isValid('visible')" id="visible" name="visible">
-                        <option value="1" {{ (!old('visible') || old('visible') === "1") ? 'selected' : null }}>{{ trans('idir::groups.visible_1') }}</option>
-                        <option value="0" {{ old('visible') === "0" ? 'selected' : null }}>{{ trans('idir::groups.visible_0') }}</option>
+                        <option value="{{ $group::VISIBLE }}" {{ (!old('visible') || old('visible') == $group::VISIBLE) ? 'selected' : null }}>
+                            {{ trans('idir::groups.visible.'.$group::VISIBLE) }}
+                        </option>
+                        <option value="{{ $group::INVISIBLE }}" {{ old('visible') == $group::INVISIBLE ? 'selected' : null }}>
+                            {{ trans('idir::groups.visible.'.$group::INVISIBLE) }}
+                        </option>
                     </select>
                     @includeWhen($errors->has('visible'), 'icore::admin.partials.errors', ['name' => 'visible'])
                 </div>
                 <div class="form-group">
                     <label for="icon">
-                        {{ trans('idir::groups.border') }}: <i data-toggle="tooltip" data-placement="top"
-                        title="{{ trans('idir::groups.border_tooltip') }}" class="far fa-question-circle"></i>
+                        {{ trans('idir::groups.border.label') }}: <i data-toggle="tooltip" data-placement="top"
+                        title="{{ trans('idir::groups.border.tooltip') }}" class="far fa-question-circle"></i>
                     </label>
                     <input type="text" value="{{ old('border') }}" name="border" id="border"
-                    class="form-control @isValid('border')" placeholder="{{ trans('idir::groups.border_placeholder') }}">
+                    class="form-control @isValid('border')" placeholder="{{ trans('idir::groups.border.placeholder') }}">
                     @includeWhen($errors->has('border'), 'icore::admin.partials.errors', ['name' => 'border'])
                 </div>
                 <div class="form-group">
@@ -102,11 +119,17 @@
                     @includeWhen($errors->has('max_models_daily'), 'icore::admin.partials.errors', ['name' => 'max_models_daily'])
                 </div>
                 <div class="form-group">
-                    <label for="backlink">{{ trans('idir::groups.backlink') }}:</label>
+                    <label for="backlink">{{ trans('idir::groups.backlink.label') }}:</label>
                     <select class="form-control @isValid('backlink')" id="backlink" name="backlink">
-                        <option value="0" {{ (!old('backlink') || old('backlink') === "0") ? 'selected' : null }}>{{ trans('idir::groups.backlink_0') }}</option>
-                        <option value="1" {{ old('backlink') === "1" ? 'selected' : null }}>{{ trans('idir::groups.backlink_1') }}</option>
-                        <option value="2" {{ old('backlink') === "2" ? 'selected' : null }}>{{ trans('idir::groups.backlink_2') }}</option>
+                        <option value="{{ $group::WITHOUT_BACKLINK }}" {{ (!old('backlink') || old('backlink') == $group::WITHOUT_BACKLINK) ? 'selected' : null }}>
+                            {{ trans('idir::groups.backlink.'.$group::WITHOUT_BACKLINK) }}
+                        </option>
+                        <option value="{{ $group::OPTIONAL_BACKLINK }}" {{ old('backlink') == $group::OPTIONAL_BACKLINK ? 'selected' : null }}>
+                            {{ trans('idir::groups.backlink.'.$group::OPTIONAL_BACKLINK) }}
+                        </option>
+                        <option value="{{ $group::OBLIGATORY_BACKLINK }}" {{ old('backlink') == $group::OBLIGATORY_BACKLINK ? 'selected' : null }}>
+                            {{ trans('idir::groups.backlink.'.$group::OBLIGATORY_BACKLINK) }}
+                        </option>
                     </select>
                     @includeWhen($errors->has('backlink'), 'icore::admin.partials.errors', ['name' => 'backlink'])
                 </div>
@@ -114,8 +137,8 @@
                     <label for="payment">{{ trans('idir::groups.payment.index') }}:</label>
                     <select class="form-control" id="payment" name="payment"
                     data-toggle="collapse" aria-expanded="false" aria-controls="collapsePayments">
-                        <option value="0" {{ (!old('payment') || old('payment') === "0") ? 'selected' : null }}>{{ trans('idir::groups.payment_0') }}</option>
-                        <option value="1" {{ old('payment') === "1" ? 'selected' : null }}>{{ trans('idir::groups.payment_1') }}</option>
+                        <option value="0" {{ (!old('payment') || old('payment') === "0") ? 'selected' : null }}>{{ trans('idir::groups.payment.0') }}</option>
+                        <option value="1" {{ old('payment') === "1" ? 'selected' : null }}>{{ trans('idir::groups.payment.1') }}</option>
                     </select>
                     @includeWhen($errors->has('payment'), 'icore::admin.partials.errors', ['name' => 'payment'])
                 </div>

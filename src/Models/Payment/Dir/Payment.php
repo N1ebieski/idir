@@ -22,7 +22,7 @@ class Payment extends PaymentBaseModel
      * [protected description]
      * @var Price
      */
-    protected $priceMorph;
+    protected $orderMorph;
 
     /**
      * [getModelTypeAttribute description]
@@ -97,13 +97,13 @@ class Payment extends PaymentBaseModel
     }
 
     /**
-     * [setPriceMorph description]
+     * [setOrderMorph description]
      * @param Price $price [description]
      * @return $this
      */
-    public function setPriceMorph(Price $price)
+    public function setOrderMorph(Price $price)
     {
-        $this->priceMorph = $price;
+        $this->orderMorph = $price;
 
         return $this;
     }
@@ -120,11 +120,11 @@ class Payment extends PaymentBaseModel
     }
 
     /**
-     * [getPrice description]
+     * [getOrder description]
      * @return Price [description]
      */
-    public function getPriceMorph()
+    public function getOrderMorph()
     {
-        return $this->priceMorph;
+        return $this->orderMorph;
     }
 }

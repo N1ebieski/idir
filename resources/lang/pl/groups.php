@@ -1,43 +1,57 @@
 <?php
 
+use N1ebieski\IDir\Models\Group;
+
 return [
+    'dir' => [
+        'dir' => 'Katalog'
+    ],
     'success' => [
         'store' => 'Grupa została dodana.',
         'update' => 'Grupa została edytowana.',
         'destroy' => 'Pomyślnie usunięto grupę.'
     ],
-    'page' => [
+    'route' => [
         'index' => 'Grupy',
-        'type' => [
-            'dir' => 'Katalog',
-        ],
         'edit' => 'Edycja grupy',
         'create' => 'Dodaj grupę',
         'edit_position' => 'Edycja pozycji',
         'show' => 'Grupa: :group'
     ],
     'name' => 'Nazwa',
-    'border' => 'Klasa ramki',
-    'border_tooltip' => 'Klasa ramki. Służy do wyróżnienia wpisu na liście.',
-    'border_placeholder' => 'przykład bootstrap 4: border-primary',
-    'max_cats' => 'Maksymalna ilość kategorii',
-    'max_cats_tooltip' => 'Maksymalna wartość kategorii do której można dodać wpis.',
+    'border' => [
+        'label' => 'Klasa ramki',
+        'tooltip' => 'Klasa ramki. Służy do wyróżnienia wpisu na liście.',
+        'placeholder' => 'przykład bootstrap 4: border-primary'
+    ],
+    'max_cats' => [
+        'label' => 'Maksymalna ilość kategorii',
+        'tooltip' => 'Maksymalna wartość kategorii do której można dodać wpis.'
+    ],
     'desc' => 'Opis grupy',
-    'visible' => 'Widoczność',
-    'visible_tooltip' => 'Publiczna - widoczna dla wszystkich. Prywatna - widoczna dla ról z uprawnieniem admina.',
-    'visible_0' => 'prywatna',
-    'visible_1' => 'publiczna',
-    'backlink' => 'Link zwrotny',
-    'backlink_0' => 'brak',
-    'backlink_1' => 'nieobowiązkowy',
-    'backlink_2' => 'obowiązkowy',
-    'url' => 'Adres strony',
-    'url_0' => 'brak',
-    'url_1' => 'nieobowiązkowy',
-    'url_2' => 'obowiązkowy',
-    'apply_status' => 'Status po dodaniu wpisu',
-    'apply_status_0' => 'oczekujący na moderację',
-    'apply_status_1' => 'natychmiast aktywny',
+    'visible' => [
+        'label' => 'Widoczność',
+        'tooltip' => 'Publiczna - widoczna dla wszystkich. Prywatna - widoczna dla ról z uprawnieniem admina.',
+        Group::INVISIBLE => 'prywatna',
+        Group::VISIBLE => 'publiczna'
+    ],
+    'backlink' => [
+        'label' => 'Link zwrotny',
+        Group::WITHOUT_BACKLINK => 'brak',
+        Group::OPTIONAL_BACKLINK => 'nieobowiązkowy',
+        Group::OBLIGATORY_BACKLINK => 'obowiązkowy'
+    ],
+    'url' => [
+        'label' => 'Adres strony',
+        Group::WITHOUT_URL => 'brak',
+        Group::OPTIONAL_URL => 'nieobowiązkowy',
+        Group::OBLIGATORY_URL => 'obowiązkowy'
+    ],
+    'apply_status' => [
+        'label' => 'Status po dodaniu wpisu',
+        Group::APPLY_INACTIVE => 'oczekujący na moderację',
+        Group::APPLY_ACTIVE => 'natychmiast aktywny'
+    ],
     'days' => 'Dni',
     'price' => 'Cena',
     'max_models' => 'Maksymalna ilość wpisów w grupie',
@@ -47,10 +61,10 @@ return [
         'index' => 'Płatność',
         'transfer' => 'Płatności przelewem',
         'code_sms' => 'Płatności przez kody SMS',
-        'code_transfer' => 'Płatności przez kody przelewem'
+        'code_transfer' => 'Płatności przez kody przelewem',
+        '0' => 'darmowy',
+        '1' => 'płatny'
     ],
-    'payment_0' => 'darmowy',
-    'payment_1' => 'płatny',
     'price_from' => 'płatny już od :price PLN / :days :limit',
     'unlimited' => 'nieograniczony czasowo',
     'alt' => [

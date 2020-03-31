@@ -4,24 +4,25 @@
 @slot('modal_id', 'filterModal')
 
 @slot('modal_title')
-<i class="fas fa-sort-amount-up"></i> {{ trans('icore::filter.filter_title') }}
+<i class="fas fa-sort-amount-up"></i>
+<span> {{ trans('icore::filter.filter_title') }}</span>
 @endslot
 
 @slot('modal_body')
 <div class="form-group">
-    <label for="FormSearch">{{ trans('icore::filter.search') }}</label>
-    <input type="text" class="form-control" id="FormSearch" placeholder="{{ trans('icore::filter.search_placeholder') }}"
+    <label for="FormSearch">{{ trans('icore::filter.search.label') }}</label>
+    <input type="text" class="form-control" id="FormSearch" placeholder="{{ trans('icore::filter.search.placeholder') }}"
     name="filter[search]" value="{{ isset($filter['search']) ? $filter['search'] : '' }}">
 </div>
 <div class="form-group">
-    <label for="FormVisible">{{ trans('icore::filter.filter') }} "{{ trans('idir::groups.visible') }}"</label>
+    <label for="FormVisible">{{ trans('icore::filter.filter') }} "{{ trans('idir::groups.visible.label') }}"</label>
     <select class="form-control custom-select" id="FormVisible" name="filter[visible]">
         <option value="">{{ trans('icore::filter.default') }}</option>
         <option value="{{ $group::VISIBLE }}" {{ ($filter['visible'] === $group::VISIBLE) ? 'selected' : '' }}>
-            {{ trans('idir::groups.visible_'.$group::VISIBLE) }}
+            {{ trans('idir::groups.visible.'.$group::VISIBLE) }}
         </option>
         <option value="{{ $group::INVISIBLE }}" {{ ($filter['visible'] === $group::INVISIBLE) ? 'selected' : '' }}>
-            {{ trans('idir::groups.visible_'.$group::INVISIBLE) }}
+            {{ trans('idir::groups.visible.'.$group::INVISIBLE) }}
         </option>
     </select>
 </div>

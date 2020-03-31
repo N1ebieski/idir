@@ -119,6 +119,22 @@ class Dir extends Model
     ];
 
     /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'id' => 'integer',
+        'group_id' => 'integer',
+        'user_id' => 'integer',
+        'status' => 'integer',
+        'privileged_at' => 'timestamp',
+        'privileged_to' => 'timestamp',
+        'created_at' => 'timestamp',
+        'updated_at' => 'timestamp'
+    ];
+
+    /**
      * Return the sluggable configuration array for this model.
      *
      * @return array
@@ -422,9 +438,24 @@ class Dir extends Model
                 $query->whereHas('privileges', function ($query) {
                     $query->where('name', 'place in the links component');
                 });
-            })->whereHas('categories', function ($query) use ($component) {
-                $query->whereIn('id', $component['cats']);
-            })->where('url', '<>', null)
+            })
+            ->join('categories_models', function ($query) use ($component) {
+                $query->on('dirs.id', '=', 'categories_models.model_id')
+                    ->whereIn('categories_models.category_id', $component['cats'])
+                    ->where('categories_models.model_type', $this->getMorphClass());
+            })
+            // Rezygnuje z whereHas bo wydajność strasznie siada przy dużej ilości rekordów
+            // ->whereIn('id', function ($query) use ($component) {
+            //     $query->select('model_id')
+            //         ->from('categories_models')
+            //         ->whereIn('category_id', $component['cats'])
+            //         ->where('model_type', get_class())
+            //         ->get();
+            // })
+            // ->whereHas('categories', function ($query) use ($component) {
+            //     $query->whereIn('categories.id', $component['cats']);
+            // })
+            ->where('url', '<>', null)
             ->active();
     }
 
@@ -712,7 +743,7 @@ class Dir extends Model
     public function loadCheckoutPayments() : self
     {
         return $this->load(['payments' => function ($query) {
-            $query->with('priceMorph')->where('status', static::INACTIVE);
+            $query->with('orderMorph')->where('status', static::INACTIVE);
         }]);
     }
 

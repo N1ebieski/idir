@@ -1,0 +1,156 @@
+/*!
+  * Bootstrap v4.4.1 (https://getbootstrap.com/)
+  * Copyright 2011-2019 The Bootstrap Authors (https://github.com/twbs/bootstrap/graphs/contributors)
+  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+  */
+
+/*!
+ * Bootstrap Confirmation (v4.1.0)
+ * @copyright 2013 Nimit Suwannagate <ethaizone@hotmail.com>
+ * @copyright 2014-2018 Damien "Mistic" Sorel <contact@git.strangeplanet.fr>
+ * @licence Apache License, Version 2.0
+ */
+
+/*!
+ * Date picker for pickadate.js v3.6.4
+ * http://amsul.github.io/pickadate.js/date.htm
+ */
+
+/*!
+ * Krajee SVG Theme Configuration for bootstrap-star-rating.
+ * This file must be loaded after 'star-rating.js'.
+ *
+ * @see http://github.com/kartik-v/bootstrap-star-rating
+ * @author Kartik Visweswaran <kartikv2@gmail.com>
+ */
+
+/*!
+ * Sizzle CSS Selector Engine v2.3.4
+ * https://sizzlejs.com/
+ *
+ * Copyright JS Foundation and other contributors
+ * Released under the MIT license
+ * https://js.foundation/
+ *
+ * Date: 2019-04-08
+ */
+
+/*!
+ * Star Rating Polish Translations
+ *
+ * This file must be loaded after 'star-rating.js'. Patterns in braces '{}', or
+ * any HTML markup tags in the messages must not be converted or translated.
+ *
+ * NOTE: this file must be saved in UTF-8 encoding.
+ *
+ * @see http://github.com/kartik-v/bootstrap-star-rating
+ * @author Kartik Visweswaran <kartikv2@gmail.com>
+ */
+
+/*!
+ * Time picker for pickadate.js v3.6.4
+ * http://amsul.github.io/pickadate.js/time.htm
+ */
+
+/*!
+ * bootstrap-star-rating v4.0.6
+ * http://plugins.krajee.com/star-rating
+ *
+ * Author: Kartik Visweswaran
+ * Copyright: 2013 - 2019, Kartik Visweswaran, Krajee.com
+ *
+ * Licensed under the BSD 3-Clause
+ * https://github.com/kartik-v/bootstrap-star-rating/blob/master/LICENSE.md
+ */
+
+/*!
+ * jQuery Cookie Plugin v1.4.1
+ * https://github.com/carhartl/jquery-cookie
+ *
+ * Copyright 2006, 2014 Klaus Hartl
+ * Released under the MIT license
+ */
+
+/*!
+ * jQuery JavaScript Library v3.4.1
+ * https://jquery.com/
+ *
+ * Includes Sizzle.js
+ * https://sizzlejs.com/
+ *
+ * Copyright JS Foundation and other contributors
+ * Released under the MIT license
+ * https://jquery.org/license
+ *
+ * Date: 2019-05-01T21:04Z
+ */
+
+/*!
+ * jScroll - jQuery Plugin for Infinite Scrolling / Auto-Paging
+ * @see @link{https://jscroll.com}
+ *
+ * @copyright Philip Klauzinski
+ * @license Dual licensed under the MIT and GPL Version 2 licenses
+ * @author Philip Klauzinski (https://webtopian.com)
+ * @version 2.4.1
+ * @requires jQuery v1.8.0+
+ * @preserve
+ */
+
+/*!
+ * pickadate.js v3.6.4, 2019/05/25
+ * By Amsul, http://amsul.ca
+ * Hosted on http://amsul.github.io/pickadate.js
+ * Licensed under MIT
+ */
+
+/*!
+ * typeahead.js 1.3.0
+ * https://github.com/corejavascript/typeahead.js
+ * Copyright 2013-2019 Twitter, Inc. and other contributors; Licensed MIT
+ */
+
+/**
+ * @license
+ * Lodash <https://lodash.com/>
+ * Copyright OpenJS Foundation and other contributors <https://openjsf.org/>
+ * Released under MIT license <https://lodash.com/license>
+ * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
+ * Copyright Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
+ */
+
+/**
+ * Trumbowyg v2.21.0 - A lightweight WYSIWYG editor
+ * Trumbowyg core file
+ * ------------------------
+ * @link http://alex-d.github.io/Trumbowyg
+ * @license MIT
+ * @author Alexandre Demode (Alex-D)
+ *         Twitter : @AlexandreDemode
+ *         Website : alex-d.fr
+ */
+
+/**!
+ * @fileOverview Kickass library to create and place poppers near their reference elements.
+ * @version 1.16.1
+ * @license
+ * Copyright (c) 2016 Federico Zivolo and contributors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */

@@ -51,8 +51,6 @@ class DirTest extends TestCase
         $schedule = app()->make(CompletedCron::class);
         $schedule();
 
-        exec('php artisan queue:work --env=testing --daemon --stop-when-empty --tries=3');
-
         Mail::assertSent(CompletedMail::class, function ($mail) use ($dir) {
             $mail->build();
 
@@ -95,8 +93,6 @@ class DirTest extends TestCase
         $schedule = app()->make(CompletedCron::class);
         $schedule();
 
-        exec('php artisan queue:work --env=testing --daemon --stop-when-empty --tries=3');
-
         Mail::assertSent(CompletedMail::class, function ($mail) use ($dir) {
             $mail->build();
 
@@ -138,8 +134,6 @@ class DirTest extends TestCase
 
         $schedule = app()->make(CompletedCron::class);
         $schedule();
-
-        exec('php artisan queue:work --env=testing --daemon --stop-when-empty --tries=3');
 
         Mail::assertNotSent(CompletedMail::class, function ($mail) use ($dir) {
             $mail->build();
@@ -190,8 +184,6 @@ class DirTest extends TestCase
 
         $schedule = app()->make(BacklinkCron::class);
         $schedule();
-
-        exec('php artisan queue:work --env=testing --daemon --stop-when-empty --tries=3');
 
         Mail::assertSent(BacklinkNotFoundMail::class, function ($mail) use ($dir) {
             $mail->build();
@@ -248,8 +240,6 @@ class DirTest extends TestCase
 
         $schedule = app()->make(BacklinkCron::class);
         $schedule();
-
-        exec('php artisan queue:work --env=testing --daemon --stop-when-empty --tries=3');
 
         Mail::assertNotSent(BacklinkNotFoundMail::class, function ($mail) use ($dir) {
             $mail->build();

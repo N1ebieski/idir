@@ -32,7 +32,7 @@ class CreateRegionsTable extends Migration
                 ->on('regions')
                 ->onDelete('cascade');
 
-            $table->primary(['region_id', 'model_type', 'model_id'], 'regions_primary');
+            $table->primary(['region_id', 'model_type', 'model_id']);
         });
     }
 

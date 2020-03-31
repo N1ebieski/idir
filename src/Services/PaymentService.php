@@ -62,7 +62,7 @@ class PaymentService implements Creatable, StatusUpdatable
     {
         $this->payment->status = $this->makeStatus($attributes['payment_type'] ?? null);
         $this->payment->morph()->associate($this->payment->getMorph());
-        $this->payment->priceMorph()->associate($this->payment->getPriceMorph());
+        $this->payment->orderMorph()->associate($this->payment->getOrderMorph());
         $this->payment->save();
 
         return $this->payment;

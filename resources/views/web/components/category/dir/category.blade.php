@@ -1,5 +1,5 @@
 @if ($categories->isNotEmpty())
-<h3 class="h5">{{ trans('icore::categories.categories') }}</h3>
+<h3 class="h5">{{ trans('icore::categories.categories.label') }}</h3>
 <div class="list-group list-group-flush mb-3">
     @foreach ($categories as $category)
     <div class="list-group-item d-flex justify-content-between align-items-center">

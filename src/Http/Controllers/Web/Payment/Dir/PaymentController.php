@@ -16,6 +16,7 @@ use N1ebieski\IDir\Http\Controllers\Web\Payment\Dir\Polymorphic;
 use N1ebieski\IDir\Http\Requests\Web\Payment\Interfaces\CompleteRequestStrategy;
 use N1ebieski\IDir\Http\Requests\Web\Payment\Interfaces\ShowRequestStrategy;
 use N1ebieski\IDir\Http\Requests\Web\Payment\Interfaces\VerifyRequestStrategy;
+use N1ebieski\IDir\Loads\Web\Payment\ShowLoad;
 use N1ebieski\IDir\Utils\Payment\Interfaces\TransferUtilStrategy;
 
 /**
@@ -27,24 +28,24 @@ class PaymentController extends Controller implements Polymorphic
      * Undocumented function
      *
      * @param Payment $payment
+     * @param ShowLoad $load
      * @param ShowRequestStrategy $request
      * @param TransferUtilStrategy $transferUtil
      * @return RedirectResponse
      */
     public function show(
         Payment $payment,
+        ShowLoad $load,
         ShowRequestStrategy $request,
         TransferUtilStrategy $transferUtil
     ) : RedirectResponse {
-        $payment->load(['morph', 'priceMorph']);
-
         try {
             $transferUtil->setup([
-                'amount' => $payment->price->price,
-                'desc' => trans('idir::payments.desc.dir', [
+                'amount' => $payment->order->price,
+                'desc' => trans('idir::payments.dir.desc', [
                     'title' => $payment->morph->title,
-                    'group' => $payment->price->group->name,
-                    'days' => $days = $payment->price->days,
+                    'group' => $payment->order->group->name,
+                    'days' => $days = $payment->order->days,
                     'limit' => $days !== null ? strtolower(trans('idir::groups.days'))
                         : strtolower(trans('idir::groups.unlimited'))
                 ]),
@@ -107,7 +108,7 @@ class PaymentController extends Controller implements Polymorphic
         Event::dispatch(App::make(VerifyAttemptEvent::class, ['payment' => $payment]));
 
         try {
-            $transferUtil->setup(['amount' => $payment->price->price])->authorize($request->validated());
+            $transferUtil->setup(['amount' => $payment->order->price])->authorize($request->validated());
         } catch (\N1ebieski\IDir\Exceptions\Payment\Exception $e) {
             throw $e->setPayment($payment);
         }

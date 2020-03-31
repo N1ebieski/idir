@@ -86,10 +86,10 @@
 /************************************************************************/
 /******/ ({
 
-/***/ "../laravel-icore/packages/n1ebieski/icore/resources/js/web/web.js":
-/*!*************************************************************************!*\
-  !*** ../laravel-icore/packages/n1ebieski/icore/resources/js/web/web.js ***!
-  \*************************************************************************/
+/***/ "../icore/packages/n1ebieski/icore/resources/js/web/web.js":
+/*!*****************************************************************!*\
+  !*** ../icore/packages/n1ebieski/icore/resources/js/web/web.js ***!
+  \*****************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -179,7 +179,7 @@ eval(function (p, a, c, k, _e, r) {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! ../../../../../../vendor/n1ebieski/icore/resources/js/web/web.js */ "../laravel-icore/packages/n1ebieski/icore/resources/js/web/web.js");
+__webpack_require__(/*! ~/../vendor/n1ebieski/icore/resources/js/web/web.js */ "../icore/packages/n1ebieski/icore/resources/js/web/web.js");
 
 __webpack_require__(/*! ../web/cssmap-poland/jquery.cssmap.min.js */ "./packages/n1ebieski/idir/resources/js/web/cssmap-poland/jquery.cssmap.min.js");
 
@@ -192,7 +192,7 @@ __webpack_require__(/*! ../web/cssmap-poland/jquery.cssmap.min.js */ "./packages
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! D:\Work\laravel-idir\packages\n1ebieski\idir\resources\js\web\web.js */"./packages/n1ebieski/idir/resources/js/web/web.js");
+module.exports = __webpack_require__(/*! D:\Work\idir\packages\n1ebieski\idir\resources\js\web\web.js */"./packages/n1ebieski/idir/resources/js/web/web.js");
 
 
 /***/ })

@@ -86,10 +86,10 @@
 /************************************************************************/
 /******/ ({
 
-/***/ "../laravel-icore/node_modules/bootstrap-confirmation2/dist/bootstrap-confirmation.js":
-/*!********************************************************************************************!*\
-  !*** ../laravel-icore/node_modules/bootstrap-confirmation2/dist/bootstrap-confirmation.js ***!
-  \********************************************************************************************/
+/***/ "../icore/node_modules/bootstrap-confirmation2/dist/bootstrap-confirmation.js":
+/*!************************************************************************************!*\
+  !*** ../icore/node_modules/bootstrap-confirmation2/dist/bootstrap-confirmation.js ***!
+  \************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -100,7 +100,7 @@
  * @licence Apache License, Version 2.0
  */
 (function (global, factory) {
-   true ? factory(__webpack_require__(/*! jquery */ "../laravel-icore/node_modules/jquery/dist/jquery.js"), __webpack_require__(/*! bootstrap */ "../laravel-icore/node_modules/bootstrap/dist/js/bootstrap.js")) :
+   true ? factory(__webpack_require__(/*! jquery */ "../icore/node_modules/jquery/dist/jquery.js"), __webpack_require__(/*! bootstrap */ "../icore/node_modules/bootstrap/dist/js/bootstrap.js")) :
   undefined;
 }(this, function ($) { 'use strict';
 
@@ -690,10 +690,10 @@
 
 /***/ }),
 
-/***/ "../laravel-icore/node_modules/bootstrap/dist/js/bootstrap.js":
-/*!********************************************************************!*\
-  !*** ../laravel-icore/node_modules/bootstrap/dist/js/bootstrap.js ***!
-  \********************************************************************/
+/***/ "../icore/node_modules/bootstrap/dist/js/bootstrap.js":
+/*!************************************************************!*\
+  !*** ../icore/node_modules/bootstrap/dist/js/bootstrap.js ***!
+  \************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -703,7 +703,7 @@
   * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
   */
 (function (global, factory) {
-   true ? factory(exports, __webpack_require__(/*! jquery */ "../laravel-icore/node_modules/jquery/dist/jquery.js"), __webpack_require__(/*! popper.js */ "../laravel-icore/node_modules/popper.js/dist/esm/popper.js")) :
+   true ? factory(exports, __webpack_require__(/*! jquery */ "../icore/node_modules/jquery/dist/jquery.js"), __webpack_require__(/*! popper.js */ "../icore/node_modules/popper.js/dist/esm/popper.js")) :
   undefined;
 }(this, (function (exports, $, Popper) { 'use strict';
 
@@ -5221,10 +5221,10 @@
 
 /***/ }),
 
-/***/ "../laravel-icore/node_modules/corejs-typeahead/dist/bloodhound.js":
-/*!*************************************************************************!*\
-  !*** ../laravel-icore/node_modules/corejs-typeahead/dist/bloodhound.js ***!
-  \*************************************************************************/
+/***/ "../icore/node_modules/corejs-typeahead/dist/bloodhound.js":
+/*!*****************************************************************!*\
+  !*** ../icore/node_modules/corejs-typeahead/dist/bloodhound.js ***!
+  \*****************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -5237,7 +5237,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 
 (function(root, factory) {
     if (true) {
-        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(/*! jquery */ "../laravel-icore/node_modules/jquery/dist/jquery.js") ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(a0) {
+        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(/*! jquery */ "../icore/node_modules/jquery/dist/jquery.js") ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(a0) {
             return root["Bloodhound"] = factory(a0);
         }).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
@@ -6181,10 +6181,10 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 
 /***/ }),
 
-/***/ "../laravel-icore/node_modules/corejs-typeahead/dist/typeahead.jquery.js":
-/*!*******************************************************************************!*\
-  !*** ../laravel-icore/node_modules/corejs-typeahead/dist/typeahead.jquery.js ***!
-  \*******************************************************************************/
+/***/ "../icore/node_modules/corejs-typeahead/dist/typeahead.jquery.js":
+/*!***********************************************************************!*\
+  !*** ../icore/node_modules/corejs-typeahead/dist/typeahead.jquery.js ***!
+  \***********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -6197,7 +6197,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 
 (function(root, factory) {
     if (true) {
-        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(/*! jquery */ "../laravel-icore/node_modules/jquery/dist/jquery.js") ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(a0) {
+        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(/*! jquery */ "../icore/node_modules/jquery/dist/jquery.js") ], __WEBPACK_AMD_DEFINE_RESULT__ = (function(a0) {
             return factory(a0);
         }).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
@@ -7868,14 +7868,14 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
         }
     })();
 });
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../../laravel-idir/node_modules/timers-browserify/main.js */ "./node_modules/timers-browserify/main.js").setImmediate))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../../idir/node_modules/timers-browserify/main.js */ "./node_modules/timers-browserify/main.js").setImmediate))
 
 /***/ }),
 
-/***/ "../laravel-icore/node_modules/jquery-googlemap/jquery.googlemap.js":
-/*!**************************************************************************!*\
-  !*** ../laravel-icore/node_modules/jquery-googlemap/jquery.googlemap.js ***!
-  \**************************************************************************/
+/***/ "../icore/node_modules/jquery-googlemap/jquery.googlemap.js":
+/*!******************************************************************!*\
+  !*** ../icore/node_modules/jquery-googlemap/jquery.googlemap.js ***!
+  \******************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -8255,10 +8255,10 @@ $(function() {
 
 /***/ }),
 
-/***/ "../laravel-icore/node_modules/jquery.cookie/src/jquery.cookie.js":
-/*!************************************************************************!*\
-  !*** ../laravel-icore/node_modules/jquery.cookie/src/jquery.cookie.js ***!
-  \************************************************************************/
+/***/ "../icore/node_modules/jquery.cookie/src/jquery.cookie.js":
+/*!****************************************************************!*\
+  !*** ../icore/node_modules/jquery.cookie/src/jquery.cookie.js ***!
+  \****************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -8272,7 +8272,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 (function (factory) {
 	if (true) {
 		// AMD (Register as an anonymous module)
-		!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(/*! jquery */ "../laravel-icore/node_modules/jquery/dist/jquery.js")], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+		!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(/*! jquery */ "../icore/node_modules/jquery/dist/jquery.js")], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
 				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
 				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
@@ -8377,10 +8377,10 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
 /***/ }),
 
-/***/ "../laravel-icore/node_modules/jquery.easing/jquery.easing.js":
-/*!********************************************************************!*\
-  !*** ../laravel-icore/node_modules/jquery.easing/jquery.easing.js ***!
-  \********************************************************************/
+/***/ "../icore/node_modules/jquery.easing/jquery.easing.js":
+/*!************************************************************!*\
+  !*** ../icore/node_modules/jquery.easing/jquery.easing.js ***!
+  \************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -8394,7 +8394,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*
 
 (function (factory) {
 	if (true) {
-		!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(/*! jquery */ "../laravel-icore/node_modules/jquery/dist/jquery.js")], __WEBPACK_AMD_DEFINE_RESULT__ = (function ($) {
+		!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(/*! jquery */ "../icore/node_modules/jquery/dist/jquery.js")], __WEBPACK_AMD_DEFINE_RESULT__ = (function ($) {
 			return factory($);
 		}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
@@ -8551,10 +8551,10 @@ $.extend( $.easing,
 
 /***/ }),
 
-/***/ "../laravel-icore/node_modules/jquery.tagsinput-revisited/dist/jquery.tagsinput-revisited.min.js":
-/*!*******************************************************************************************************!*\
-  !*** ../laravel-icore/node_modules/jquery.tagsinput-revisited/dist/jquery.tagsinput-revisited.min.js ***!
-  \*******************************************************************************************************/
+/***/ "../icore/node_modules/jquery.tagsinput-revisited/dist/jquery.tagsinput-revisited.min.js":
+/*!***********************************************************************************************!*\
+  !*** ../icore/node_modules/jquery.tagsinput-revisited/dist/jquery.tagsinput-revisited.min.js ***!
+  \***********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -8566,10 +8566,10 @@ $.extend( $.easing,
 
 /***/ }),
 
-/***/ "../laravel-icore/node_modules/jquery/dist/jquery.js":
-/*!***********************************************************!*\
-  !*** ../laravel-icore/node_modules/jquery/dist/jquery.js ***!
-  \***********************************************************/
+/***/ "../icore/node_modules/jquery/dist/jquery.js":
+/*!***************************************************!*\
+  !*** ../icore/node_modules/jquery/dist/jquery.js ***!
+  \***************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -19176,10 +19176,10 @@ return jQuery;
 
 /***/ }),
 
-/***/ "../laravel-icore/node_modules/jscroll/jquery.jscroll.js":
-/*!***************************************************************!*\
-  !*** ../laravel-icore/node_modules/jscroll/jquery.jscroll.js ***!
-  \***************************************************************/
+/***/ "../icore/node_modules/jscroll/jquery.jscroll.js":
+/*!*******************************************************!*\
+  !*** ../icore/node_modules/jscroll/jquery.jscroll.js ***!
+  \*******************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -19418,10 +19418,10 @@ return jQuery;
 
 /***/ }),
 
-/***/ "../laravel-icore/node_modules/lodash/lodash.js":
-/*!******************************************************!*\
-  !*** ../laravel-icore/node_modules/lodash/lodash.js ***!
-  \******************************************************/
+/***/ "../icore/node_modules/lodash/lodash.js":
+/*!**********************************************!*\
+  !*** ../icore/node_modules/lodash/lodash.js ***!
+  \**********************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -36530,14 +36530,14 @@ return jQuery;
   else {}
 }.call(this));
 
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../laravel-idir/node_modules/webpack/buildin/global.js */ "./node_modules/webpack/buildin/global.js"), __webpack_require__(/*! ./../../../laravel-idir/node_modules/webpack/buildin/module.js */ "./node_modules/webpack/buildin/module.js")(module)))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../idir/node_modules/webpack/buildin/global.js */ "./node_modules/webpack/buildin/global.js"), __webpack_require__(/*! ./../../../idir/node_modules/webpack/buildin/module.js */ "./node_modules/webpack/buildin/module.js")(module)))
 
 /***/ }),
 
-/***/ "../laravel-icore/node_modules/pickadate/lib/compressed/translations/pl_PL.js":
-/*!************************************************************************************!*\
-  !*** ../laravel-icore/node_modules/pickadate/lib/compressed/translations/pl_PL.js ***!
-  \************************************************************************************/
+/***/ "../icore/node_modules/pickadate/lib/compressed/translations/pl_PL.js":
+/*!****************************************************************************!*\
+  !*** ../icore/node_modules/pickadate/lib/compressed/translations/pl_PL.js ***!
+  \****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -36545,10 +36545,10 @@ jQuery.extend(jQuery.fn.pickadate.defaults,{monthsFull:["styczeń","luty","marze
 
 /***/ }),
 
-/***/ "../laravel-icore/node_modules/pickadate/lib/picker.date.js":
-/*!******************************************************************!*\
-  !*** ../laravel-icore/node_modules/pickadate/lib/picker.date.js ***!
-  \******************************************************************/
+/***/ "../icore/node_modules/pickadate/lib/picker.date.js":
+/*!**********************************************************!*\
+  !*** ../icore/node_modules/pickadate/lib/picker.date.js ***!
+  \**********************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -36561,7 +36561,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
     // AMD.
     if ( true )
-        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(/*! ./picker */ "../laravel-icore/node_modules/pickadate/lib/picker.js"), __webpack_require__(/*! jquery */ "../laravel-icore/node_modules/jquery/dist/jquery.js")], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(/*! ./picker */ "../icore/node_modules/pickadate/lib/picker.js"), __webpack_require__(/*! jquery */ "../icore/node_modules/jquery/dist/jquery.js")], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
 				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
 				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__))
@@ -37912,10 +37912,10 @@ Picker.extend( 'pickadate', DatePicker )
 
 /***/ }),
 
-/***/ "../laravel-icore/node_modules/pickadate/lib/picker.js":
-/*!*************************************************************!*\
-  !*** ../laravel-icore/node_modules/pickadate/lib/picker.js ***!
-  \*************************************************************/
+/***/ "../icore/node_modules/pickadate/lib/picker.js":
+/*!*****************************************************!*\
+  !*** ../icore/node_modules/pickadate/lib/picker.js ***!
+  \*****************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -37930,7 +37930,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
     // AMD.
     if ( true )
-        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(/*! jquery */ "../laravel-icore/node_modules/jquery/dist/jquery.js")], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(/*! jquery */ "../icore/node_modules/jquery/dist/jquery.js")], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
 				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
 				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__))
@@ -39142,10 +39142,10 @@ return PickerConstructor
 
 /***/ }),
 
-/***/ "../laravel-icore/node_modules/pickadate/lib/picker.time.js":
-/*!******************************************************************!*\
-  !*** ../laravel-icore/node_modules/pickadate/lib/picker.time.js ***!
-  \******************************************************************/
+/***/ "../icore/node_modules/pickadate/lib/picker.time.js":
+/*!**********************************************************!*\
+  !*** ../icore/node_modules/pickadate/lib/picker.time.js ***!
+  \**********************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -39158,7 +39158,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
     // AMD.
     if ( true )
-        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(/*! ./picker */ "../laravel-icore/node_modules/pickadate/lib/picker.js"), __webpack_require__(/*! jquery */ "../laravel-icore/node_modules/jquery/dist/jquery.js")], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(/*! ./picker */ "../icore/node_modules/pickadate/lib/picker.js"), __webpack_require__(/*! jquery */ "../icore/node_modules/jquery/dist/jquery.js")], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
 				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
 				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__))
@@ -40168,10 +40168,10 @@ Picker.extend( 'pickatime', TimePicker )
 
 /***/ }),
 
-/***/ "../laravel-icore/node_modules/popper.js/dist/esm/popper.js":
-/*!******************************************************************!*\
-  !*** ../laravel-icore/node_modules/popper.js/dist/esm/popper.js ***!
-  \******************************************************************/
+/***/ "../icore/node_modules/popper.js/dist/esm/popper.js":
+/*!**********************************************************!*\
+  !*** ../icore/node_modules/popper.js/dist/esm/popper.js ***!
+  \**********************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -42794,14 +42794,14 @@ Popper.Defaults = Defaults;
 /* harmony default export */ __webpack_exports__["default"] = (Popper);
 //# sourceMappingURL=popper.js.map
 
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../../../laravel-idir/node_modules/webpack/buildin/global.js */ "./node_modules/webpack/buildin/global.js")))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../../../idir/node_modules/webpack/buildin/global.js */ "./node_modules/webpack/buildin/global.js")))
 
 /***/ }),
 
-/***/ "../laravel-icore/node_modules/trumbowyg/dist/langs/pl.min.js":
-/*!********************************************************************!*\
-  !*** ../laravel-icore/node_modules/trumbowyg/dist/langs/pl.min.js ***!
-  \********************************************************************/
+/***/ "../icore/node_modules/trumbowyg/dist/langs/pl.min.js":
+/*!************************************************************!*\
+  !*** ../icore/node_modules/trumbowyg/dist/langs/pl.min.js ***!
+  \************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -42817,10 +42817,10 @@ jQuery.trumbowyg.langs.pl={viewHTML:"Pokaż HTML",formatting:"Format",p:"Akapit"
 
 /***/ }),
 
-/***/ "../laravel-icore/node_modules/trumbowyg/dist/plugins/colors/trumbowyg.colors.min.js":
-/*!*******************************************************************************************!*\
-  !*** ../laravel-icore/node_modules/trumbowyg/dist/plugins/colors/trumbowyg.colors.min.js ***!
-  \*******************************************************************************************/
+/***/ "../icore/node_modules/trumbowyg/dist/plugins/colors/trumbowyg.colors.min.js":
+/*!***********************************************************************************!*\
+  !*** ../icore/node_modules/trumbowyg/dist/plugins/colors/trumbowyg.colors.min.js ***!
+  \***********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -42828,10 +42828,10 @@ jQuery.trumbowyg.langs.pl={viewHTML:"Pokaż HTML",formatting:"Format",p:"Akapit"
 
 /***/ }),
 
-/***/ "../laravel-icore/node_modules/trumbowyg/dist/plugins/history/trumbowyg.history.min.js":
-/*!*********************************************************************************************!*\
-  !*** ../laravel-icore/node_modules/trumbowyg/dist/plugins/history/trumbowyg.history.min.js ***!
-  \*********************************************************************************************/
+/***/ "../icore/node_modules/trumbowyg/dist/plugins/history/trumbowyg.history.min.js":
+/*!*************************************************************************************!*\
+  !*** ../icore/node_modules/trumbowyg/dist/plugins/history/trumbowyg.history.min.js ***!
+  \*************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -42839,10 +42839,10 @@ jQuery.trumbowyg.langs.pl={viewHTML:"Pokaż HTML",formatting:"Format",p:"Akapit"
 
 /***/ }),
 
-/***/ "../laravel-icore/node_modules/trumbowyg/dist/trumbowyg.js":
-/*!*****************************************************************!*\
-  !*** ../laravel-icore/node_modules/trumbowyg/dist/trumbowyg.js ***!
-  \*****************************************************************/
+/***/ "../icore/node_modules/trumbowyg/dist/trumbowyg.js":
+/*!*********************************************************!*\
+  !*** ../icore/node_modules/trumbowyg/dist/trumbowyg.js ***!
+  \*********************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -44777,14 +44777,14 @@ Object.defineProperty(jQuery.trumbowyg, 'defaultOptions', {
 
 /***/ }),
 
-/***/ "../laravel-icore/packages/n1ebieski/icore/resources/js/vendor/vendor.js":
-/*!*******************************************************************************!*\
-  !*** ../laravel-icore/packages/n1ebieski/icore/resources/js/vendor/vendor.js ***!
-  \*******************************************************************************/
+/***/ "../icore/packages/n1ebieski/icore/resources/js/vendor/vendor.js":
+/*!***********************************************************************!*\
+  !*** ../icore/packages/n1ebieski/icore/resources/js/vendor/vendor.js ***!
+  \***********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-window._ = __webpack_require__(/*! lodash */ "../laravel-icore/node_modules/lodash/lodash.js");
+window._ = __webpack_require__(/*! lodash */ "../icore/node_modules/lodash/lodash.js");
 /**
  * We'll load jQuery and the Bootstrap jQuery plugin which provides support
  * for JavaScript based Bootstrap features such as modals and tabs. This
@@ -44792,42 +44792,42 @@ window._ = __webpack_require__(/*! lodash */ "../laravel-icore/node_modules/loda
  */
 
 try {
-  window.Popper = __webpack_require__(/*! popper.js */ "../laravel-icore/node_modules/popper.js/dist/esm/popper.js")["default"];
-  window.$ = window.jQuery = __webpack_require__(/*! jquery */ "../laravel-icore/node_modules/jquery/dist/jquery.js");
+  window.Popper = __webpack_require__(/*! popper.js */ "../icore/node_modules/popper.js/dist/esm/popper.js")["default"];
+  window.$ = window.jQuery = __webpack_require__(/*! jquery */ "../icore/node_modules/jquery/dist/jquery.js");
 
-  __webpack_require__(/*! bootstrap */ "../laravel-icore/node_modules/bootstrap/dist/js/bootstrap.js");
+  __webpack_require__(/*! bootstrap */ "../icore/node_modules/bootstrap/dist/js/bootstrap.js");
 
-  __webpack_require__(/*! jscroll */ "../laravel-icore/node_modules/jscroll/jquery.jscroll.js");
+  __webpack_require__(/*! jscroll */ "../icore/node_modules/jscroll/jquery.jscroll.js");
 
-  __webpack_require__(/*! jquery.cookie */ "../laravel-icore/node_modules/jquery.cookie/src/jquery.cookie.js");
+  __webpack_require__(/*! jquery.cookie */ "../icore/node_modules/jquery.cookie/src/jquery.cookie.js");
 
-  __webpack_require__(/*! jquery.easing */ "../laravel-icore/node_modules/jquery.easing/jquery.easing.js");
+  __webpack_require__(/*! jquery.easing */ "../icore/node_modules/jquery.easing/jquery.easing.js");
 
-  __webpack_require__(/*! trumbowyg */ "../laravel-icore/node_modules/trumbowyg/dist/trumbowyg.js");
+  __webpack_require__(/*! trumbowyg */ "../icore/node_modules/trumbowyg/dist/trumbowyg.js");
 
-  __webpack_require__(/*! trumbowyg/dist/langs/pl.min.js */ "../laravel-icore/node_modules/trumbowyg/dist/langs/pl.min.js");
+  __webpack_require__(/*! trumbowyg/dist/langs/pl.min.js */ "../icore/node_modules/trumbowyg/dist/langs/pl.min.js");
 
-  __webpack_require__(/*! trumbowyg/dist/plugins/colors/trumbowyg.colors.min.js */ "../laravel-icore/node_modules/trumbowyg/dist/plugins/colors/trumbowyg.colors.min.js");
+  __webpack_require__(/*! trumbowyg/dist/plugins/colors/trumbowyg.colors.min.js */ "../icore/node_modules/trumbowyg/dist/plugins/colors/trumbowyg.colors.min.js");
 
-  __webpack_require__(/*! trumbowyg/dist/plugins/history/trumbowyg.history.min.js */ "../laravel-icore/node_modules/trumbowyg/dist/plugins/history/trumbowyg.history.min.js");
+  __webpack_require__(/*! trumbowyg/dist/plugins/history/trumbowyg.history.min.js */ "../icore/node_modules/trumbowyg/dist/plugins/history/trumbowyg.history.min.js");
 
-  __webpack_require__(/*! jquery.tagsinput-revisited/dist/jquery.tagsinput-revisited.min.js */ "../laravel-icore/node_modules/jquery.tagsinput-revisited/dist/jquery.tagsinput-revisited.min.js");
+  __webpack_require__(/*! jquery.tagsinput-revisited/dist/jquery.tagsinput-revisited.min.js */ "../icore/node_modules/jquery.tagsinput-revisited/dist/jquery.tagsinput-revisited.min.js");
 
-  __webpack_require__(/*! bootstrap-confirmation2/dist/bootstrap-confirmation.js */ "../laravel-icore/node_modules/bootstrap-confirmation2/dist/bootstrap-confirmation.js");
+  __webpack_require__(/*! bootstrap-confirmation2/dist/bootstrap-confirmation.js */ "../icore/node_modules/bootstrap-confirmation2/dist/bootstrap-confirmation.js");
 
-  __webpack_require__(/*! pickadate/lib/picker.js */ "../laravel-icore/node_modules/pickadate/lib/picker.js");
+  __webpack_require__(/*! pickadate/lib/picker.js */ "../icore/node_modules/pickadate/lib/picker.js");
 
-  __webpack_require__(/*! pickadate/lib/picker.date.js */ "../laravel-icore/node_modules/pickadate/lib/picker.date.js");
+  __webpack_require__(/*! pickadate/lib/picker.date.js */ "../icore/node_modules/pickadate/lib/picker.date.js");
 
-  __webpack_require__(/*! pickadate/lib/picker.time.js */ "../laravel-icore/node_modules/pickadate/lib/picker.time.js");
+  __webpack_require__(/*! pickadate/lib/picker.time.js */ "../icore/node_modules/pickadate/lib/picker.time.js");
 
-  __webpack_require__(/*! pickadate/lib/compressed/translations/pl_PL.js */ "../laravel-icore/node_modules/pickadate/lib/compressed/translations/pl_PL.js");
+  __webpack_require__(/*! pickadate/lib/compressed/translations/pl_PL.js */ "../icore/node_modules/pickadate/lib/compressed/translations/pl_PL.js");
 
-  __webpack_require__(/*! jquery-googlemap/jquery.googlemap.js */ "../laravel-icore/node_modules/jquery-googlemap/jquery.googlemap.js");
+  __webpack_require__(/*! jquery-googlemap/jquery.googlemap.js */ "../icore/node_modules/jquery-googlemap/jquery.googlemap.js");
 
-  __webpack_require__(/*! corejs-typeahead/dist/typeahead.jquery.js */ "../laravel-icore/node_modules/corejs-typeahead/dist/typeahead.jquery.js");
+  __webpack_require__(/*! corejs-typeahead/dist/typeahead.jquery.js */ "../icore/node_modules/corejs-typeahead/dist/typeahead.jquery.js");
 
-  Bloodhound = __webpack_require__(/*! corejs-typeahead/dist/bloodhound.js */ "../laravel-icore/node_modules/corejs-typeahead/dist/bloodhound.js");
+  Bloodhound = __webpack_require__(/*! corejs-typeahead/dist/bloodhound.js */ "../icore/node_modules/corejs-typeahead/dist/bloodhound.js");
 } catch (e) {}
 
 $.ajaxSetup({
@@ -46094,7 +46094,7 @@ module.exports = function(module) {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! ../../../../../../vendor/n1ebieski/icore/resources/js/vendor/vendor.js */ "../laravel-icore/packages/n1ebieski/icore/resources/js/vendor/vendor.js");
+__webpack_require__(/*! ~/../vendor/n1ebieski/icore/resources/js/vendor/vendor.js */ "../icore/packages/n1ebieski/icore/resources/js/vendor/vendor.js");
 
 __webpack_require__(/*! bootstrap-star-rating/js/star-rating.js */ "./node_modules/bootstrap-star-rating/js/star-rating.js");
 
@@ -46166,12 +46166,12 @@ __webpack_require__(/*! bootstrap-star-rating/js/locales/pl.js */ "./node_module
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! D:\Work\laravel-idir\packages\n1ebieski\idir\resources\js\vendor\vendor.js */"./packages/n1ebieski/idir/resources/js/vendor/vendor.js");
-__webpack_require__(/*! D:\Work\laravel-idir\packages\n1ebieski\idir\resources\sass\vendor\vendor.scss */"./packages/n1ebieski/idir/resources/sass/vendor/vendor.scss");
-__webpack_require__(/*! D:\Work\laravel-idir\packages\n1ebieski\idir\resources\sass\web\web.scss */"./packages/n1ebieski/idir/resources/sass/web/web.scss");
-__webpack_require__(/*! D:\Work\laravel-idir\packages\n1ebieski\idir\resources\sass\web\web-dark.scss */"./packages/n1ebieski/idir/resources/sass/web/web-dark.scss");
-__webpack_require__(/*! D:\Work\laravel-idir\packages\n1ebieski\idir\resources\sass\admin\admin.scss */"./packages/n1ebieski/idir/resources/sass/admin/admin.scss");
-module.exports = __webpack_require__(/*! D:\Work\laravel-idir\packages\n1ebieski\idir\resources\sass\admin\admin-dark.scss */"./packages/n1ebieski/idir/resources/sass/admin/admin-dark.scss");
+__webpack_require__(/*! D:\Work\idir\packages\n1ebieski\idir\resources\js\vendor\vendor.js */"./packages/n1ebieski/idir/resources/js/vendor/vendor.js");
+__webpack_require__(/*! D:\Work\idir\packages\n1ebieski\idir\resources\sass\vendor\vendor.scss */"./packages/n1ebieski/idir/resources/sass/vendor/vendor.scss");
+__webpack_require__(/*! D:\Work\idir\packages\n1ebieski\idir\resources\sass\web\web.scss */"./packages/n1ebieski/idir/resources/sass/web/web.scss");
+__webpack_require__(/*! D:\Work\idir\packages\n1ebieski\idir\resources\sass\web\web-dark.scss */"./packages/n1ebieski/idir/resources/sass/web/web-dark.scss");
+__webpack_require__(/*! D:\Work\idir\packages\n1ebieski\idir\resources\sass\admin\admin.scss */"./packages/n1ebieski/idir/resources/sass/admin/admin.scss");
+module.exports = __webpack_require__(/*! D:\Work\idir\packages\n1ebieski\idir\resources\sass\admin\admin-dark.scss */"./packages/n1ebieski/idir/resources/sass/admin/admin-dark.scss");
 
 
 /***/ })

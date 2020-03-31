@@ -112,7 +112,7 @@ class CategoryCache extends BaseCategoryCache
         }
 
         return $dirs;
-    }  
+    }
     
     /**
      * [rememberLoadNestedWithMorphsCount description]

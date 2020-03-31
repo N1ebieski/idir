@@ -1,16 +1,16 @@
 @extends(config('idir.layout') . '::admin.layouts.layout', [
-    'title' => [$dir->title, trans('idir::dirs.page.step', ['step' => 1]), trans('idir::dirs.page.edit.group')],
-    'desc' => [$dir->title, trans('idir::dirs.page.edit.group')],
-    'keys' => [$dir->title, trans('idir::dirs.page.edit.group')]
+    'title' => [$dir->title, trans('idir::dirs.route.step', ['step' => 1]), trans('idir::dirs.route.edit.1')],
+    'desc' => [$dir->title, trans('idir::dirs.route.edit.1')],
+    'keys' => [$dir->title, trans('idir::dirs.route.edit.1')]
 ])
 
 @section('breadcrumb')
-<li class="breadcrumb-item"><a href="{{ route('admin.home.index') }}">{{ trans('icore::home.page.index') }}</a></li>
-<li class="breadcrumb-item"><a href="{{ route('admin.dir.index') }}">{{ trans('idir::dirs.page.index') }}</a></li>
-<li class="breadcrumb-item">{{ trans('idir::dirs.page.edit.index') }}</li>
+<li class="breadcrumb-item"><a href="{{ route('admin.home.index') }}">{{ trans('icore::home.route.index') }}</a></li>
+<li class="breadcrumb-item"><a href="{{ route('admin.dir.index') }}">{{ trans('idir::dirs.route.index') }}</a></li>
+<li class="breadcrumb-item">{{ trans('idir::dirs.route.edit.index') }}</li>
 <li class="breadcrumb-item">{{ $dir->title }}</li>
 <li class="breadcrumb-item active" aria-current="page">
-    {{ trans('idir::dirs.page.step', ['step' => 1]) }} {{ trans('idir::dirs.page.edit.group') }}
+    {{ trans('idir::dirs.route.step', ['step' => 1]) }} {{ trans('idir::dirs.route.edit.1') }}
 </li>
 @endsection
 
@@ -19,7 +19,7 @@
     @include('icore::admin.partials.alerts')
     <h1 class="h5 border-bottom pb-2">
         <i class="fas fa-edit"></i>
-        <span> {{ trans('idir::dirs.page.edit.group') }}</span>
+        <span>{{ trans('idir::dirs.route.edit.1') }}</span>
     </h1>
     @if ($groups->isNotEmpty())
     <div class="row">

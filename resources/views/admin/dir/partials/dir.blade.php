@@ -16,7 +16,8 @@ data-id="{{ $dir->id }}">
     <div class="col my-auto d-flex w-100 justify-content-between">
         <div class="custom-control custom-checkbox">
             @can('destroy dirs')
-            <input name="select[]" type="checkbox" class="custom-control-input select" id="select{{ $dir->id }}" value="{{ $dir->id }}">
+            <input name="select[]" type="checkbox" class="custom-control-input select" 
+            id="select{{ $dir->id }}" value="{{ $dir->id }}">
             <label class="custom-control-label" for="select{{ $dir->id }}">
             @endcan
             <ul class="list-unstyled mb-0 pb-0">
@@ -27,7 +28,7 @@ data-id="{{ $dir->id }}">
                         <a href="#" class="badge badge-danger show" data-toggle="modal"
                         data-route="{{ route('admin.report.dir.show', [$dir->id]) }}"
                         data-target="#showReportDirModal">
-                            {{ trans('icore::reports.page.show') }}: {{ $dir->reports_count }}
+                            {{ trans('icore::reports.route.show') }}: {{ $dir->reports_count }}
                         </a>
                     </span>
                     @endif
@@ -88,12 +89,12 @@ data-id="{{ $dir->id }}">
             <div class="d-flex">
                 <ul class="list-unstyled mb-0 pb-0 flex-grow-1">
                     @if ($dir->tagList)
-                    <li class="text-break"><small>{{ trans('idir::dirs.tags') }}: {{ $dir->tagList }}</small></li>
+                    <li class="text-break"><small>{{ trans('idir::dirs.tags.label') }}: {{ $dir->tagList }}</small></li>
                     @endif
                     @if ($dir->categories->isNotEmpty())
                     <li>
                         <small>
-                            <span>{{ trans('icore::categories.categories') }}:</span> 
+                            <span>{{ trans('icore::categories.categories.label') }}:</span> 
                             <span>
                                 @foreach ($dir->categories as $category)
                                 <a href="{{ route('admin.dir.index', ['filter[category]' => $category->id]) }}">{{ $category->name }}</a>
@@ -115,7 +116,7 @@ data-id="{{ $dir->id }}">
                             <a href="#" class="badge badge-warning show" data-toggle="modal"
                             data-route="{{ route('admin.payment.dir.show_logs', [$dir->id]) }}"
                             data-target="#showPaymentLogsDirModal">
-                                {{ trans('idir::payments.page.show_logs') }}
+                                {{ trans('idir::payments.route.show_logs') }}
                             </a>
                         </span>
                         @endif
@@ -179,13 +180,13 @@ data-id="{{ $dir->id }}">
                     <button class="btn btn-danger" data-status="delete" data-toggle="dir-confirmation"
                     data-route="{{ route('admin.dir.destroy', [$dir->id]) }}" data-id="{{ $dir->id }}"
                     type="button" data-btn-ok-label=" {{ trans('icore::default.yes') }}" data-btn-ok-icon-class="fas fa-check mr-1"
-                    data-btn-ok-class="btn h-100 d-flex align-items-center btn-primary btn-popover destroyDir" 
+                    data-btn-ok-class="btn h-100 d-flex justify-content-center btn-primary btn-popover destroyDir" 
                     data-btn-cancel-label=" {{ trans('icore::default.cancel') }}"
-                    data-btn-cancel-class="btn h-100 d-flex align-items-center btn-secondary btn-popover" 
+                    data-btn-cancel-class="btn h-100 d-flex justify-content-center btn-secondary btn-popover" 
                     data-btn-cancel-icon-class="fas fa-ban mr-1"
                     data-title="{{ trans('icore::default.confirm') }}">
                         <i class="far fa-trash-alt"></i>
-                        <span class="d-none d-sm-inline">&nbsp;{{ trans('icore::default.delete') }}</span>
+                        <span class="d-none d-sm-inline">{{ trans('icore::default.delete') }}</span>
                     </button>
                     @endcan
                     @can('create bans')
@@ -193,7 +194,7 @@ data-id="{{ $dir->id }}">
                     data-route="{{ route('admin.banmodel.dir.create', [$dir->id]) }}"
                     data-toggle="modal" data-target="#createBanDirModal">
                         <i class="fas fa-user-slash"></i>
-                        <span class="d-none d-sm-inline"> {{ trans('icore::default.ban') }}</span>
+                        <span class="d-none d-sm-inline">{{ trans('icore::default.ban') }}</span>
                     </button>
                     @endcan
                 </div>

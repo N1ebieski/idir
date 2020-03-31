@@ -54,7 +54,7 @@ class CommentController implements Polymorphic
 
         return Response::json([
             'success' => $comment->status === Comment::ACTIVE ?
-                null : Lang::get('icore::comments.success.store_0'),
+                null : Lang::get('icore::comments.success.store.'.Comment::INACTIVE),
             'view' => $comment->status === Comment::ACTIVE ?
                 View::make('icore::web.comment.partials.comment', [
                     'comment' => $comment

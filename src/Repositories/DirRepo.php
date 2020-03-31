@@ -8,7 +8,6 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\Config\Repository as Config;
 use Carbon\Carbon;
 use Closure;
-use Illuminate\Support\Facades\DB;
 use N1ebieski\IDir\Models\Rating\Dir\Rating;
 
 /**
@@ -151,7 +150,11 @@ class DirRepo
      */
     public function countReported() : int
     {
-        return $this->dir->whereHas('reports')->count();
+        return $this->dir->reports()
+            ->make()
+            ->where('model_type', $this->dir->getMorphClass())
+            ->distinct()
+            ->count('model_id');
     }
 
     /**
@@ -177,19 +180,17 @@ class DirRepo
      */
     public function paginateBySearchAndFilter(string $name, array $filter) : LengthAwarePaginator
     {
-        $sqlPrivilege = DB::table('privileges')
-            ->join('groups_privileges', 'privileges.id', '=', 'groups_privileges.privilege_id')
-            ->whereColumn('dirs.group_id', 'groups_privileges.group_id')
-            ->whereRaw('`privileges`.`name` = "highest position in search results"')
-            ->toSql();
-
-        return $this->dir
-            ->selectRaw('`dirs`.*, CASE WHEN EXISTS (' . $sqlPrivilege . ') THEN TRUE ELSE FALSE END AS `privilege`')
+        return $this->dir->selectRaw('`dirs`.*, `privileges`.`name`')
             ->withAllPublicRels()
+            ->leftJoin('groups_privileges', function ($query) {
+                $query->on('dirs.group_id', '=', 'groups_privileges.group_id')
+                    ->join('privileges', 'groups_privileges.privilege_id', '=', 'privileges.id')
+                    ->where('privileges.name', 'highest position in search results');
+            })
             ->active()
             ->search($name)
             ->when($filter['orderby'] === null, function ($query) {
-                $query->orderBy('privilege', 'desc')->latest();
+                $query->orderBy('privileges.name', 'desc')->latest();
             })
             ->when($filter['orderby'] !== null, function ($query) use ($filter) {
                 $query->filterOrderBy($filter['orderby']);
@@ -206,10 +207,10 @@ class DirRepo
     public function getAdvertisingPrivilegedByComponent(array $component) : Collection
     {
         return $this->dir->active()
-            ->whereHas('group', function ($query) {
-                $query->whereHas('privileges', function ($query) {
-                    $query->where('name', 'place in the advertising component');
-                });
+            ->join('groups_privileges', function ($query) {
+                $query->on('dirs.group_id', '=', 'groups_privileges.group_id')
+                    ->join('privileges', 'groups_privileges.privilege_id', '=', 'privileges.id')
+                    ->where('privileges.name', 'place in the advertising component');
             })
             ->withAllPublicRels()
             ->when($component['limit'] !== null, function ($query) use ($component) {
@@ -246,11 +247,18 @@ class DirRepo
      */
     public function getRelated(int $limit = 5)
     {
-        return $this->dir->active()
-            ->whereHas('categories', function ($query) {
-                $query->whereIn('category_id', $this->dir->categories->pluck('id')->toArray());
+        return $this->dir->selectRaw('`dirs`.*')
+            ->join('categories_models', function ($query) {
+                $query->on('dirs.id', '=', 'categories_models.model_id')
+                    ->where('categories_models.model_type', $this->dir->getMorphClass())
+                    ->whereIn(
+                        'categories_models.category_id',
+                        $this->dir->categories->pluck('id')->toArray()
+                    );
             })
+            ->active()
             ->where('dirs.id', '<>', $this->dir->id)
+            ->groupBy('dirs.id')
             ->inRandomOrder()
             ->limit($limit)
             ->get();
@@ -274,37 +282,45 @@ class DirRepo
     }
 
     /**
-     * Undocumented function
+     * Returns latest + privileged dirs collection. Two separated queries, because
+     * union has huge performance impact. Other method is order by privilege, but its
+     * also very slow (probably by field hasnt index)
      *
      * @return Collection
      */
     public function getLatestForHome() : Collection
     {
-        $dirs = $this->dir->selectRaw('`dirs`.*, TRUE as `privilege`')
-            ->withAllPublicRels()
-            ->whereHas('group', function ($query) {
-                $query->whereHas('privileges', function ($query) {
-                    $query->where('name', 'highest position on homepage');
-                });
+        $privileged = $this->dir->selectRaw('`dirs`.*')
+            ->join('groups_privileges', function ($query) {
+                $query->on('dirs.group_id', '=', 'groups_privileges.group_id')
+                    ->join('privileges', 'groups_privileges.privilege_id', '=', 'privileges.id')
+                    ->where('privileges.name', 'highest position on homepage');
             })
             ->active()
             ->latest()
-            ->limit($this->config->get('idir.home.max_privileged'));
-
-        $sqlPrivilege = DB::table('privileges')
-            ->join('groups_privileges', 'privileges.id', '=', 'groups_privileges.privilege_id')
-            ->whereColumn('dirs.group_id', 'groups_privileges.group_id')
-            ->whereRaw('`privileges`.`name` = "highest position on homepage"')
-            ->toSql();
-
-        return $this->dir->selectRaw('`dirs`.*, CASE WHEN EXISTS (' . $sqlPrivilege . ') THEN TRUE ELSE FALSE END AS `privilege`')
-            ->withAllPublicRels()
-            ->active()
-            ->union($dirs)
-            ->limit($this->config->get('idir.home.max'))
-            ->orderBy('privilege', 'desc')
-            ->latest()
+            ->limit($this->config->get('idir.home.max_privileged'))
             ->get();
+
+        $dirs = $this->dir
+            ->whereNotIn('id', $privileged->pluck('id')->toArray())
+            ->active()
+            ->latest()
+            ->limit($this->config->get('idir.home.max') - $privileged->count())
+            ->get();
+
+        return $privileged->merge($dirs)
+            ->load([
+                'fields',
+                'categories',
+                'group',
+                'group.privileges',
+                'group.fields' => function ($query) {
+                    return $query->public();
+                },
+                'tags',
+                'regions',
+                'ratings'
+            ]);
     }
 
     /**

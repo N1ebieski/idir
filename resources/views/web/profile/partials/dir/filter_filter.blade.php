@@ -4,17 +4,18 @@
 @slot('modal_id', 'filterModal')
 
 @slot('modal_title')
-<i class="fas fa-sort-amount-up"></i> {{ trans('icore::filter.filter_title') }}
+<i class="fas fa-sort-amount-up"></i>
+<span> {{ trans('icore::filter.filter_title') }}</span>
 @endslot
 
 @slot('modal_body')
 <div class="form-group">
-    <label for="FormSearch">{{ trans('icore::filter.search') }}</label>
-    <input type="text" class="form-control" id="FormSearch" placeholder="{{ trans('icore::filter.search_placeholder') }}"
+    <label for="FormSearch">{{ trans('icore::filter.search.label') }}</label>
+    <input type="text" class="form-control" id="FormSearch" placeholder="{{ trans('icore::filter.search.placeholder') }}"
     name="filter[search]" value="{{ isset($filter['search']) ? $filter['search'] : '' }}">
 </div>
 <div class="form-group">
-    <label for="FormStatus">{{ trans('icore::filter.filter') }} "{{ trans('icore::filter.status') }}"</label>
+    <label for="FormStatus">{{ trans('icore::filter.filter') }} "{{ trans('icore::filter.status.label') }}"</label>
     <select class="form-control custom-select" id="FormVisible" name="filter[status]">
         <option value="">{{ trans('icore::filter.default') }}</option>
         <option value="{{ $dir::ACTIVE }}" {{ ($filter['status'] == $dir::ACTIVE) ? 'selected' : '' }}>
