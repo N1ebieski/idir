@@ -52,6 +52,18 @@ class TransferUtil implements TransferUtilStrategy
      * [protected description]
      * @var string
      */
+    protected $currency;
+
+    /**
+     * [protected description]
+     * @var string
+     */
+    protected $lang;
+
+    /**
+     * [protected description]
+     * @var string
+     */
     protected $desc;
 
     /**
@@ -79,6 +91,8 @@ class TransferUtil implements TransferUtilStrategy
         $this->service = $config->get("services.cashbill.transfer.service");
         $this->transfer_url = $config->get("services.cashbill.transfer.url");
         $this->key = $config->get("services.cashbill.transfer.key");
+        $this->currency = $config->get("services.cashbill.transfer.currency");
+        $this->lang = $config->get("services.cashbill.transfer.lang");
     }
 
     /**
@@ -115,8 +129,8 @@ class TransferUtil implements TransferUtilStrategy
      */
     public function makeSign() : string
     {
-        return md5($this->service.'|'.$this->amount.'||'.$this->desc.'||'.$this->userdata
-            .'||||||||||||'.$this->key);
+        return md5($this->service.'|'.$this->amount.'|'.$this->currency.'|'
+            .$this->desc.'|'.$this->lang.'|'.$this->userdata.'||||||||||||'.$this->key);
     }
 
     /**
@@ -228,6 +242,8 @@ class TransferUtil implements TransferUtilStrategy
             'service' => $this->service,
             'transfer_url' => $this->transfer_url,
             'amount' => $this->amount,
+            'currency' => $this->currency,
+            'lang' => $this->lang,
             'desc' => $this->desc,
             'userdata' => $this->userdata,
             'sign' => $this->makeSign()

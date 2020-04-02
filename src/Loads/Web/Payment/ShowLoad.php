@@ -12,6 +12,6 @@ class ShowLoad
      */
     public function __construct(Request $request)
     {
-        $request->route('payment')->load(['morph', 'orderMorph']);
+        $request->route('payment_dir_pending')->load(['morph', 'orderMorph']);
     }
 }
