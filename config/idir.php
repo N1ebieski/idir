@@ -4,6 +4,8 @@ return [
 
     'version' => \N1ebieski\IDir\Providers\IDirServiceProvider::VERSION,
 
+    'license_key' => env('IDIR_LICENSE_KEY'),
+
     'layout' => env('IDIR_LAYOUT', 'idir'),
 
     'dir' => [
