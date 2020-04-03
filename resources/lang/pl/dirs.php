@@ -87,11 +87,11 @@ return [
             'info' => 'Niestety przykro nam, ale Twój wpis :dir_link został usunięty z naszego katalogu.'
         ],
         'activation' => [
-            'info' => 'Gratulujemy, Twój wpis :dir_link został poprawnie dodany do naszego katalogu i znajduje się na stronie: :dir_page. Zapraszamy do kolejnych wpisów!'
+            'info' => 'Gratulujemy, Twój wpis :dir_link został poprawnie dodany do naszego katalogu i znajduje się na stronie: <a href=":dir_page">:dir_page</a>. Zapraszamy do kolejnych wpisów!'
         ],
         'reminder' => [
             'title' => 'Przypomnienie o wygasającym wpisie',
-            'info' => 'Przypominamy, że kończy się czas ważności Twojego wpisu :dir_link znajdującego się na stronie: :dir_page w grupie :group.',
+            'info' => 'Przypominamy, że kończy się czas ważności Twojego wpisu :dir_link znajdującego się na stronie: <a href=":dir_page">:dir_page</a> w grupie :group.',
             'alt' => 'Po upływie czasu ważności :days, wpis zostanie przeniesiony do niższej grupy :alt_group.',
             'deactivation' => 'Po upływie czasu ważności :days, wpis zostanie deaktywowany ze statusem "oczekujący na płatność".',
             'renew_dir' => 'Możesz temu zapobiec przedłużając czas ważności wpisu w aktualnej grupie. Przedłużenia swojego wpisu dokonasz klikając w przycisk poniżej:'
