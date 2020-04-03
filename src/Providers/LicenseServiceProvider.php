@@ -5,9 +5,9 @@ namespace N1ebieski\IDir\Providers;
 use Illuminate\Support\ServiceProvider;
 
 /**
- * [AppServiceProvider description]
+ * [LicenseServiceProvider description]
  */
-class AppServiceProvider extends ServiceProvider
+class LicenseServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap any application services.
