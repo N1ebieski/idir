@@ -1,1 +1,1 @@
-fsdfsdf
+<?php phpinfo(); ?>
