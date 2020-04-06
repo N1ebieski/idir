@@ -1,7 +1,7 @@
 @section('logo')
 <div id="navbarLogo" class="flex-grow-1 mr-2">
     <a href="/" class="navbar-brand">
-        <img src="{{ asset('svg/vendor/icore/logo.svg') }}" class="pb-1 logo" alt="{{ config('app.name') }}">
+        <img src="{{ asset('svg/vendor/idir/logo.svg') }}" class="pb-1 logo" alt="{{ config('app.name') }}">
         <span class="pl-1 d-none d-lg-inline">
             {{ config('app.name') }}
         </span>

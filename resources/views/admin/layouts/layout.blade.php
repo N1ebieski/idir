@@ -12,7 +12,7 @@
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <link rel="icon" href="{{ asset('svg/vendor/icore/logo.svg') }}" type="image/svg+xml">
+    <link rel="icon" href="{{ asset('svg/vendor/idir/logo.svg') }}" type="image/svg+xml">
     <link href="{{ mix('css/vendor/idir/vendor/vendor.css') }}" rel="stylesheet">
     <link href="{{ mix(app('Helpers\View')->getStylesheet('css/vendor/idir')) }}" rel="stylesheet">
 
@@ -21,7 +21,7 @@
 </head>
 <body>
 
-    @include('icore::admin.partials.nav')
+    @include('idir::admin.partials.nav')
 
     <div class="wrapper">
 

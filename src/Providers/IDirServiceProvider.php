@@ -25,6 +25,7 @@ class IDirServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(__DIR__.  '/../../config/idir.php', 'idir');
 
         $this->app->register(LicenseServiceProvider::class);
+        $this->app->register(AppServiceProvider::class);
         $this->app->register(RouteServiceProvider::class);
         $this->app->register(AuthServiceProvider::class);
         $this->app->register(EventServiceProvider::class);
@@ -106,7 +107,7 @@ class IDirServiceProvider extends ServiceProvider
             __DIR__ . '/../../public/css' => public_path('css/vendor/idir'),
             __DIR__ . '/../../public/img' => public_path('img/vendor/idir'),
             __DIR__ . '/../../public/js' => public_path('js/vendor/idir'),
-            // __DIR__ . '/../../public/svg' => public_path('svg/vendor/idir'),
+            __DIR__ . '/../../public/svg' => public_path('svg/vendor/idir'),
             // __DIR__ . '/../../public/fonts/vendor' => public_path('fonts/vendor'),
             __DIR__ . '/../../public/mix-manifest.json' => public_path('mix-manifest.json')
         ], 'idir.public');
