@@ -408,4 +408,19 @@ class DirRepo
             ->with('user')
             ->get();
     }
+
+    /**
+     * Undocumented function
+     *
+     * @param Closure $callback
+     * @return boolean
+     */
+    public function chunkActiveWithModelsCount(Closure $callback) : bool
+    {
+        return $this->dir->active()
+            ->withCount(['comments AS models_count' => function ($query) {
+                $query->root()->active();
+            }])
+            ->chunk(1000, $callback);
+    }
 }

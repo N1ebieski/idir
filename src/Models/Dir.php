@@ -426,6 +426,26 @@ class Dir extends Model
     }
 
     /**
+     * [scopePending description]
+     * @param  Builder $query [description]
+     * @return Builder        [description]
+     */
+    public function scopePending(Builder $query) : Builder
+    {
+        return $query->where('dirs.status', static::PAYMENT_INACTIVE);
+    }
+
+    /**
+     * [scopeBacklinkInactive description]
+     * @param  Builder $query [description]
+     * @return Builder        [description]
+     */
+    public function scopeBacklinkInactive(Builder $query) : Builder
+    {
+        return $query->where('dirs.status', static::BACKLINK_INACTIVE);
+    }
+
+    /**
      * [scopeActiveHasLinkPriviligeByComponent description]
      * @param  Builder $query     [description]
      * @param  array   $component [description]

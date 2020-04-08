@@ -116,6 +116,7 @@ class GroupService implements Creatable, Updatable, PositionUpdatable, Deletable
             'privileged_to' => null
         ]);
         $this->group->dirs()->pending()->update(['status' => 0]);
+        $this->group->dirs()->backlinkInactive()->update(['status' => 0]);
 
         // Manually remove relations, because the field model is polymorfic and foreign key doesn't work
         $this->group->fields()->detach();
