@@ -371,6 +371,9 @@ class DirRepo
             ->whereHas('group', function ($query) {
                 $query->whereHas('prices');
             })
+            ->whereHas('user', function ($query) {
+                $query->permission('notification dirs');
+            })
             ->where(function ($query) use ($timestamp) {
                 $query->whereDate(
                     'privileged_to',

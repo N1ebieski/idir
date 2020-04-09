@@ -74,7 +74,7 @@ class CompletedJob implements ShouldQueue
      *
      * @return bool
      */
-    protected function verify() : bool
+    protected function verifyJob() : bool
     {
         return $this->dir->isActive() && (
             (
@@ -84,6 +84,17 @@ class CompletedJob implements ShouldQueue
                 )
             ) || $this->dir->isNulledPrivileges()
         );
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @return boolean
+     */
+    protected function verifyNotification() : bool
+    {
+        return optional($this->dir->user)->email
+            && optional($this->dir->user)->hasPermissionTo('notification dirs');
     }
 
     /**
@@ -105,7 +116,7 @@ class CompletedJob implements ShouldQueue
         $this->app = $app;
         $this->carbon = $carbon;
 
-        if (!$this->verify()) {
+        if (!$this->verifyJob()) {
             return;
         }
 
@@ -159,6 +170,10 @@ class CompletedJob implements ShouldQueue
      */
     protected function sendNotification() : void
     {
+        if (!$this->verifyNotification()) {
+            return;
+        }
+
         $this->mailer->send(
             $this->app->make(CompletedMail::class, ['dir' => $this->dir])
         );

@@ -38,7 +38,7 @@ $factory->state(Dir::class, 'content_text', function (Faker $faker) {
 
 $factory->state(Dir::class, 'with_user', function (Faker $faker) {
     return [
-        'user_id' => factory(User::class)->create()->id
+        'user_id' => factory(User::class)->states('user')->create()->id
     ];
 });
 

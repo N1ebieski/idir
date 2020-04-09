@@ -109,6 +109,17 @@ class CheckBacklinkJob implements ShouldQueue
     }
 
     /**
+     * Undocumented function
+     *
+     * @return boolean
+     */
+    protected function verifyNotification() : bool
+    {
+        return optional($this->dirBacklink->dir->user)->email
+            && optional($this->dirBacklink->dir->user)->hasPermissionTo('notification dirs');
+    }
+
+    /**
      * [isAttempt description]
      * @return bool [description]
      */
@@ -150,6 +161,10 @@ class CheckBacklinkJob implements ShouldQueue
      */
     protected function sendMailToUser() : void
     {
+        if (!$this->verifyNotification()) {
+            return;
+        }
+
         $this->mailer->send(
             $this->app->make(BacklinkNotFoundMail::class, ['dirBacklink' => $this->dirBacklink])
         );

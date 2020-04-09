@@ -4,8 +4,9 @@ namespace N1ebieski\IDir\Crons\Dir;
 
 use Illuminate\Support\Carbon;
 use N1ebieski\IDir\Models\Dir;
-use Illuminate\Support\Facades\Mail;
+use Illuminate\Contracts\Mail\Mailer;
 use N1ebieski\IDir\Mail\Dir\ReminderMail;
+use Illuminate\Contracts\Container\Container as App;
 use Illuminate\Contracts\Config\Repository as Config;
 
 class ReminderCron
@@ -33,6 +34,20 @@ class ReminderCron
     /**
      * Undocumented variable
      *
+     * @var Mailer
+     */
+    protected $mailer;
+
+    /**
+     * Undocumented variable
+     *
+     * @var App
+     */
+    protected $app;
+
+    /**
+     * Undocumented variable
+     *
      * @var int
      */
     protected int $left_days;
@@ -42,12 +57,16 @@ class ReminderCron
      *
      * @param Dir $dir
      * @param Config $config
+     * @param Mailer $mailer
+     * @param App $app
      * @param Carbon $carbon
      */
-    public function __construct(Dir $dir, Config $config, Carbon $carbon)
+    public function __construct(Dir $dir, Config $config, Mailer $mailer, App $app, Carbon $carbon)
     {
         $this->dir = $dir;
         $this->config = $config;
+        $this->mailer = $mailer;
+        $this->app = $app;
         $this->carbon = $carbon;
 
         $this->left_days = (int)$this->config->get('idir.dir.reminder.left_days');
@@ -79,7 +98,9 @@ class ReminderCron
         $this->dir->makeRepo()->chunkAvailableHasPaidRequirementByPrivilegedTo(
             function ($dirs) {
                 $dirs->each(function ($dir) {
-                    Mail::send(app()->make(ReminderMail::class, ['dir' => $dir]));
+                    $this->mailer->send(
+                        $this->app->make(ReminderMail::class, ['dir' => $dir])
+                    );
                 });
             },
             $this->makeReminderTimestamp()

@@ -53,7 +53,7 @@ class ActivationMail extends Mailable
     }
 
     /**
-     * Build the message.
+     * Undocumented function
      *
      * @return self
      */

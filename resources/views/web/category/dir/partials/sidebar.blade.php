@@ -16,7 +16,7 @@
             @if (!empty($category->icon))
             <i class="{{ $category->icon }}"></i>
             @endif
-            <span>{{ $category->name }}</span>            
+            <span> {{ $category->name }}</span>            
         </a>
         <span class="badge badge-primary badge-pill">{{ $category->morphs_count }}</span>
     </div>
