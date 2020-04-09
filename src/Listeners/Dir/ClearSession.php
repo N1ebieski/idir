@@ -34,6 +34,6 @@ class ClearSession
      */
     public function handle($event)
     {
-        $this->session->forget('dir');
+        $this->session->forget(['dir', 'dirId']);
     }
 }

@@ -24,12 +24,12 @@ class EventServiceProvider extends ServiceProvider
             \N1ebieski\IDir\Listeners\Dir\SendActivationNotification::class
         ],
         \N1ebieski\IDir\Events\Admin\Dir\StoreEvent::class => [
-            // \N1ebieski\IDir\Listeners\Dir\ClearSession::class
+            \N1ebieski\IDir\Listeners\Dir\ClearSession::class,
             \N1ebieski\IDir\Listeners\Dir\Checkout::class,
             \N1ebieski\IDir\Listeners\Dir\SendActivationNotification::class
         ],
         \N1ebieski\IDir\Events\Admin\Dir\UpdateFullEvent::class => [
-            // \N1ebieski\IDir\Listeners\ClearDirSession::class
+            \N1ebieski\IDir\Listeners\Dir\ClearSession::class,
             \N1ebieski\IDir\Listeners\Dir\Checkout::class,
             \N1ebieski\IDir\Listeners\Dir\SendActivationNotification::class
         ],
@@ -37,13 +37,13 @@ class EventServiceProvider extends ServiceProvider
             \N1ebieski\IDir\Listeners\Dir\SendDeletedNotification::class
         ],
         \N1ebieski\IDir\Events\Web\Dir\StoreEvent::class => [
-            // \N1ebieski\IDir\Listeners\Dir\ClearSession::class
+            \N1ebieski\IDir\Listeners\Dir\ClearSession::class,
             \N1ebieski\IDir\Listeners\Dir\Checkout::class,
             \N1ebieski\IDir\Listeners\Dir\SendActivationNotification::class,
             \N1ebieski\IDir\Listeners\Dir\SendModeratorNotification::class
         ],
         \N1ebieski\IDir\Events\Web\Dir\UpdateEvent::class => [
-            // \N1ebieski\IDir\Listeners\ClearDirSession::class
+            \N1ebieski\IDir\Listeners\Dir\ClearSession::class,
             \N1ebieski\IDir\Listeners\Dir\Checkout::class,
             \N1ebieski\IDir\Listeners\Dir\SendActivationNotification::class,
             \N1ebieski\IDir\Listeners\Dir\SendModeratorNotification::class
