@@ -105,12 +105,18 @@ class IDirServiceProvider extends ServiceProvider
 
         $this->publishes([
             __DIR__ . '/../../public/css' => public_path('css/vendor/idir'),
-            __DIR__ . '/../../public/images' => public_path('images/vendor/idir'),
-            __DIR__ . '/../../public/js' => public_path('js/vendor/idir'),
-            __DIR__ . '/../../public/svg' => public_path('svg/vendor/idir'),
-            // __DIR__ . '/../../public/fonts/vendor' => public_path('fonts/vendor'),
             __DIR__ . '/../../public/mix-manifest.json' => public_path('mix-manifest.json')
-        ], 'idir.public');
+        ], 'idir.public.css');
+
+        $this->publishes([
+            __DIR__ . '/../../public/images' => public_path('images/vendor/idir'),
+            __DIR__ . '/../../public/svg' => public_path('svg/vendor/idir')
+        ], 'idir.public.images');
+
+        $this->publishes([
+            __DIR__ . '/../../public/js' => public_path('js/vendor/idir'),
+            __DIR__ . '/../../public/mix-manifest.json' => public_path('mix-manifest.json')
+        ], 'idir.public.js');
 
         $this->publishes([
             __DIR__ . '/../../database/factories' => base_path('database/factories') . '/vendor/idir',
