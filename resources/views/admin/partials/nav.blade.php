@@ -4,7 +4,7 @@
     </a>
     <a href="/" class="navbar-brand">
         <img src="{{ asset('svg/vendor/idir/logo.svg') }}" class="pb-1 pr-1 logo" alt="{{ config('app.name') }}">
-        {{ config('app.name') }}
+        {{ config('app.name_short') }}
     </a>
     <ul class="navbar-nav ml-auto">
         <li class="nav-item dropdown">

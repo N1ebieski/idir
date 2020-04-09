@@ -3,7 +3,7 @@
     <a href="/" class="navbar-brand">
         <img src="{{ asset('svg/vendor/idir/logo.svg') }}" class="pb-1 logo" alt="{{ config('app.name') }}">
         <span class="pl-1 d-none d-lg-inline">
-            {{ config('app.name') }}
+            {{ config('app.name_short') }}
         </span>
     </a>
 </div>
