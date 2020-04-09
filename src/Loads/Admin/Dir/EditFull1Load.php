@@ -16,6 +16,7 @@ class EditFull1Load
     public function __construct(Request $request)
     {
         $request->route('dir')->load([
+            'tags',
             'fields',
             'regions',
             'categories',

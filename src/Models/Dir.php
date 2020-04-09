@@ -212,14 +212,14 @@ class Dir extends Model
         });
 
         static::pivotAttached(function ($model, $relationName, $pivotIds, $pivotIdsAttributes) {
-            if ($model->pivotEvent === false && in_array($relationName, ['fields', 'categories', 'regions'])) {
+            if ($model->pivotEvent === false && in_array($relationName, ['fields', 'categories', 'tags', 'regions'])) {
                 $model->fireModelEvent('updated');
                 $model->pivotEvent = true;
             }
         });
 
         static::pivotDetached(function ($model, $relationName, $pivotIds) {
-            if ($model->pivotEvent === false && in_array($relationName, ['fields', 'categories', 'regions'])) {
+            if ($model->pivotEvent === false && in_array($relationName, ['fields', 'categories', 'tags', 'regions'])) {
                 $model->fireModelEvent('updated');
                 $model->pivotEvent = true;
             }
@@ -637,7 +637,8 @@ class Dir extends Model
                     return $item->decode_value;
                 })
                 ->toArray()]
-            + ['categories' => $this->categories->pluck('id')->toArray()];
+            + ['categories' => $this->categories->pluck('id')->toArray()]
+            + ['tags' => $this->tags->pluck('name')->toArray()];
     }
 
     /**
