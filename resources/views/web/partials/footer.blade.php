@@ -41,6 +41,12 @@
                             {{ trans('icore::contact.route.show') }}
                         </a>
                     </li>
+                    <li class="list-group-item">
+                        <a href="{{ route('web.friend.index') }}"
+                        class="@isUrl(route('web.friend.index'), 'font-weight-bold')">
+                            {{ trans('icore::friends.route.index') }}
+                        </a>
+                    </li>                    
                 </ul>
             </div>
         </div>        

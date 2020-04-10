@@ -114,5 +114,6 @@ return [
     'related' => 'Podobne wpisy',
     'latest' => 'Najnowsze wpisy',
     'title' => 'Tytuł',
-    'notes' => 'Uwagi dla moderatora'
+    'notes' => 'Uwagi dla moderatora',
+    'more' => 'pokaż więcej &raquo'
 ];

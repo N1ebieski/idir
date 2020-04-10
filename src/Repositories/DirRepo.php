@@ -426,4 +426,21 @@ class DirRepo
             }])
             ->chunk(1000, $callback);
     }
+
+    /**
+     * Undocumented function
+     *
+     * @return Collection
+     */
+    public function getFriendsPrivileged() : Collection
+    {
+        return $this->dir->active()
+            ->join('groups_privileges', function ($query) {
+                $query->on('dirs.group_id', '=', 'groups_privileges.group_id')
+                    ->join('privileges', 'groups_privileges.privilege_id', '=', 'privileges.id')
+                    ->where('privileges.name', 'additional link on the friends subpage');
+            })
+            ->withAllPublicRels()
+            ->get();
+    }
 }

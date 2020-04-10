@@ -270,4 +270,20 @@ class DirCache
             }
         );
     }
+
+    /**
+     * Undocumented function
+     *
+     * @return Collection
+     */
+    public function rememberFriendsPrivileged() : Collection
+    {
+        return $this->cache->tags(["dirs"])->remember(
+            "dir.getFriendsPrivileged",
+            $this->carbon->now()->addMinutes($this->minutes),
+            function () {
+                return $this->dir->makeRepo()->getFriendsPrivileged();
+            }
+        );
+    }
 }

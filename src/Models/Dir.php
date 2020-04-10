@@ -21,6 +21,8 @@ use N1ebieski\ICore\Models\Traits\FullTextSearchable;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Lang;
+use Illuminate\Support\Facades\URL;
 
 /**
  * [Dir description]
@@ -595,7 +597,7 @@ class Dir extends Model
             }
         }
 
-        return '<a href="' . route('web.dir.show', [$this->slug]) . '">' . e($this->title) . '</a>';
+        return $this->link_as_html;
     }
 
     /**
@@ -623,6 +625,16 @@ class Dir extends Model
         }
 
         return $this->content_html;
+    }
+
+    /**
+     * Content to the point of more link
+     * @return string [description]
+     */
+    public function getLessContentHtmlAttribute() : string
+    {
+        return $this->short_content . '... <a href="' . URL::route('web.dir.show', [$this->slug])
+        . '">' . Lang::get('idir::dirs.more') . '</a>';
     }
 
     /**
