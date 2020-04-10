@@ -33,7 +33,7 @@ class ModeratorNotificationCron
      *
      * @var Collection
      */
-    protected Collection $dirs;
+    protected $dirs;
 
     /**
      * Undocumented variable
@@ -75,7 +75,7 @@ class ModeratorNotificationCron
      *
      * @var int
      */
-    protected int $hours;
+    protected $hours;
 
     /**
      * Create the event listener.

@@ -57,10 +57,10 @@ class PaymentService implements Creatable, StatusUpdatable
     protected function makeStatus(string $payment_type = null) : int
     {
         if ($payment_type === 'transfer') {
-            return 2;
+            return Payment::PENDING;
         }
 
-        return 0;
+        return Payment::UNFINISHED;
     }
 
     /**

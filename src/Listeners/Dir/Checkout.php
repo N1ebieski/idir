@@ -12,7 +12,7 @@ class Checkout
      *
      * @var object
      */
-    protected object $event;
+    protected $event;
 
     /**
      *

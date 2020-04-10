@@ -32,7 +32,7 @@ class CompletedMail extends Mailable
      *
      * @var string
      */
-    protected string $email;
+    protected $email;
 
     /**
      * Undocumented function

@@ -10,5 +10,5 @@ class SitemapBuilder extends BaseSitemapBuilder
      * [protected description]
      * @var string
      */
-    protected string $path = 'vendor/idir/sitemap';
+    protected $path = 'vendor/idir/sitemap';
 }

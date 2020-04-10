@@ -50,7 +50,7 @@ class ReminderCron
      *
      * @var int
      */
-    protected int $left_days;
+    protected $left_days;
 
     /**
      * Undocumented function

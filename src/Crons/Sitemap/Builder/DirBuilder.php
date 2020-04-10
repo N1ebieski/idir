@@ -26,27 +26,27 @@ class DirBuilder extends Builder
      *
      * @var string
      */
-    protected string $route = 'web.dir.show';
+    protected $route = 'web.dir.show';
 
     /**
      * [protected description]
      * @var string
      */
-    protected string $path = 'vendor/idir/sitemap/dirs';
+    protected $path = 'vendor/idir/sitemap/dirs';
 
     /**
      * Undocumented variable
      *
      * @var string
      */
-    protected string $priority = '0.8';
+    protected $priority = '0.8';
 
     /**
      * Undocumented variable
      *
      * @var string
      */
-    protected string $changefreq = 'daily';
+    protected $changefreq = 'daily';
 
     /**
      * Undocumented function

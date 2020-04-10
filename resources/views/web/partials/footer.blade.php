@@ -54,7 +54,8 @@
         <div class="d-flex justify-content-center">
             <div class="footer-copyright text-center py-3 mr-3">
                 <small>
-                    2019-{{ now()->year }} Copyright © <a href="">iDir v{{ config('idir.version') }}</a> by Mariusz Wysokiński
+                    2019-{{ now()->year }} Copyright © <a href="https://intelekt.net.pl/idir">iDir 
+                    v{{ config('idir.version') }}</a> by Mariusz Wysokiński
                 </small>
             </div>
             <div class="btn-group my-auto" id="themeToggle" role="group" aria-label="Zmień motyw">

@@ -34,7 +34,7 @@ class DeletedMail extends Mailable
      *
      * @var string
      */
-    protected string $email;
+    protected $email;
 
     /**
      * [public description]

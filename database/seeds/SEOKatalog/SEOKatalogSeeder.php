@@ -15,28 +15,28 @@ class SEOKatalogSeeder extends Seeder
      *
      * @var int
      */
-    public int $group_last_id;
+    public $group_last_id;
 
     /**
      * Undocumented variable
      *
      * @var int
      */
-    public int $field_last_id;
+    public $field_last_id;
 
     /**
      * Undocumented variable
      *
      * @var int
      */
-    public int $sub_last_id;
+    public $sub_last_id;
 
     /**
      * Undocumented variable
      *
      * @var int
      */
-    public int $user_last_id;
+    public $user_last_id;
 
     /**
      * Undocumented function

@@ -54,7 +54,7 @@ class InstallCommand extends BaseInstallCommand
         $this->line($this->lang->get('icore::install.validate.license'));
 
         try {
-            \N1ebieski\ICore\Providers\License::checkKey(
+            \N1ebieski\IDir\Providers\LicenseServiceProvider::checkKey(
                 $this->config->get('idir.license'),
                 $this->config->get('app.url')
             );

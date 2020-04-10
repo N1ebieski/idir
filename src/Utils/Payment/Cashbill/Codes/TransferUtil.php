@@ -22,7 +22,7 @@ class TransferUtil implements TransferUtilStrategy
      * [protected description]
      * @var object
      */
-    protected object $response;
+    protected $response;
 
     /**
      * [protected description]

@@ -39,7 +39,7 @@ class BacklinkCron
      * [protected description]
      * @var int
      */
-    protected int $checkHours;
+    protected $checkHours;
 
     /**
      * Undocumented function

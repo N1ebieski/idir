@@ -67,7 +67,7 @@ class Dir extends Model
      * [private description]
      * @var bool
      */
-    private bool $pivotEvent = false;
+    private $pivotEvent = false;
 
     /**
      * [private description]

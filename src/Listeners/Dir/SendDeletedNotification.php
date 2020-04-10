@@ -16,7 +16,7 @@ class SendDeletedNotification
      *
      * @var object
      */
-    protected object $event;
+    protected $event;
 
     /**
      * Undocumented variable

@@ -12454,6 +12454,13 @@ button[class^=trumbowyg-] {
   color: #fff;
 }
 
+.content .background {
+  background: url("/images/vendor/idir/background.jpg") no-repeat center center;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+}
+
 .carousel .bottom-controls {
   margin-top: 40px;
 }

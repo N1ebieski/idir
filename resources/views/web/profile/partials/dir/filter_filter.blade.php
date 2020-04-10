@@ -18,19 +18,19 @@
     <label for="FormStatus">{{ trans('icore::filter.filter') }} "{{ trans('icore::filter.status.label') }}"</label>
     <select class="form-control custom-select" id="FormVisible" name="filter[status]">
         <option value="">{{ trans('icore::filter.default') }}</option>
-        <option value="{{ $dir::ACTIVE }}" {{ ($filter['status'] == $dir::ACTIVE) ? 'selected' : '' }}>
+        <option value="{{ $dir::ACTIVE }}" {{ ($filter['status'] === $dir::ACTIVE) ? 'selected' : '' }}>
             {{ trans('idir::dirs.status.'.$dir::ACTIVE) }}
         </option>
-        <option value="{{ $dir::INACTIVE }}" {{ ($filter['status'] == $dir::INACTIVE) ? 'selected' : '' }}>
+        <option value="{{ $dir::INACTIVE }}" {{ ($filter['status'] === $dir::INACTIVE) ? 'selected' : '' }}>
             {{ trans('idir::dirs.status.'.$dir::INACTIVE) }}
         </option>
-        <option value="{{ $dir::PAYMENT_INACTIVE }}" {{ ($filter['status'] == $dir::PAYMENT_INACTIVE) ? 'selected' : '' }}>
+        <option value="{{ $dir::PAYMENT_INACTIVE }}" {{ ($filter['status'] === $dir::PAYMENT_INACTIVE) ? 'selected' : '' }}>
             {{ trans('idir::dirs.status.'.$dir::PAYMENT_INACTIVE) }}
         </option>
-        <option value="{{ $dir::BACKLINK_INACTIVE }}" {{ ($filter['status'] == $dir::BACKLINK_INACTIVE) ? 'selected' : '' }}>
+        <option value="{{ $dir::BACKLINK_INACTIVE }}" {{ ($filter['status'] === $dir::BACKLINK_INACTIVE) ? 'selected' : '' }}>
             {{ trans('idir::dirs.status.'.$dir::BACKLINK_INACTIVE) }}
         </option>
-        <option value="{{ $dir::STATUS_INACTIVE }}" {{ ($filter['status'] == $dir::STATUS_INACTIVE) ? 'selected' : '' }}>
+        <option value="{{ $dir::STATUS_INACTIVE }}" {{ ($filter['status'] === $dir::STATUS_INACTIVE) ? 'selected' : '' }}>
             {{ trans('idir::dirs.status.'.$dir::STATUS_INACTIVE) }}
         </option>      
     </select>

@@ -11982,6 +11982,13 @@ span.twitter-typeahead .sidebar .nav-item.tt-suggestion.tt-cursor .nav-link {
   width: 100%;
 }
 
+.content .background {
+  background: url("/images/vendor/idir/background.jpg") no-repeat center center;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+}
+
 .carousel .bottom-controls {
   margin-top: 40px;
 }

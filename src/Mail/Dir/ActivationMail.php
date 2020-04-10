@@ -34,7 +34,7 @@ class ActivationMail extends Mailable
      *
      * @var string
      */
-    protected string $email;
+    protected $email;
 
     /**
      * Undocumented function

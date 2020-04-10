@@ -34,7 +34,7 @@ class BacklinkNotFoundMail extends Mailable
      *
      * @var string
      */
-    protected string $email;
+    protected $email;
 
     /**
      * Undocumented function

@@ -20,13 +20,13 @@ class FileUtil
      * [protected description]
      * @var string
      */
-    protected string $file_path;
+    protected $file_path;
 
     /**
      * [protected description]
      * @var string
      */
-    protected string $file_temp_path;
+    protected $file_temp_path;
 
     /**
      * [protected description]
@@ -38,7 +38,7 @@ class FileUtil
      * [protected description]
      * @var string
      */
-    protected string $temp_path = 'vendor/idir/temp';
+    protected $temp_path = 'vendor/idir/temp';
 
     /**
      * [private description]

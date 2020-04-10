@@ -22,20 +22,20 @@ class ThumbnailUtil
      *
      * @var string
      */
-    protected string $host;
+    protected $host;
 
     /**
      * [protected description]
      * @var string
      */
-    protected string $path = 'vendor/idir/thumbnails';
+    protected $path = 'vendor/idir/thumbnails';
 
     /**
      * Undocumented variable
      *
      * @var string
      */
-    protected string $file_path;
+    protected $file_path;
 
     /**
      * Undocumented variable
@@ -77,21 +77,21 @@ class ThumbnailUtil
      *
      * @var int
      */
-    protected int $checkDays;
+    protected $checkDays;
 
     /**
      * Undocumented variable
      *
      * @var string
      */
-    protected string $thumbnailUrl;
+    protected $thumbnailUrl;
 
     /**
      * Undocumented variable
      *
      * @var string|null
      */
-    protected ?string $thumbnailReloadUrl;
+    protected $thumbnailReloadUrl;
 
     /**
      * Undocumented function

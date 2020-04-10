@@ -50,7 +50,7 @@ class UniqueUrlRule implements Rule
      *
      * @var array
      */
-    protected array $begins = ['http://', 'http://www.', 'https://', 'https://www.'];
+    protected $begins = ['http://', 'http://www.', 'https://', 'https://www.'];
 
     /**
      * Undocumented function

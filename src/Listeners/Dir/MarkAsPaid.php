@@ -12,7 +12,7 @@ class MarkAsPaid
      *
      * @var object
      */
-    protected object $event;
+    protected $event;
 
     /**
      *

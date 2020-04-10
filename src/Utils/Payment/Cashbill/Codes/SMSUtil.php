@@ -28,7 +28,7 @@ class SMSUtil implements SMSUtilStrategy
      * [protected description]
      * @var object
      */
-    protected object $response;
+    protected $response;
 
     /**
      * [protected description]

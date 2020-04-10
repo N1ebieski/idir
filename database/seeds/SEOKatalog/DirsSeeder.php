@@ -133,7 +133,9 @@ class DirsSeeder extends SEOKatalogSeeder
         
                     $dir->tag(
                         collect(explode(',', $item->keywords))
-                            ->filter(fn($item) => !is_null($item) && strlen($item) <= 30)
+                            ->filter(function ($item) {
+                                return !is_null($item) && strlen($item) <= 30;
+                            })
                     );
 
                     if ($item->total_votes > 0) {

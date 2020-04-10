@@ -18,7 +18,7 @@ class SendModeratorNotification
      *
      * @var object
      */
-    protected object $event;
+    protected $event;
 
     /**
      * Undocumented variable
@@ -67,14 +67,14 @@ class SendModeratorNotification
      *
      * @var Collection
      */
-    protected Collection $dirs;
+    protected $dirs;
 
     /**
      * Undocumented variable
      *
      * @var int
      */
-    protected int $counter;
+    protected $counter;
 
     /**
      * Undocumented function

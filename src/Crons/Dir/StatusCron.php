@@ -42,13 +42,13 @@ class StatusCron
      * [protected description]
      * @var int
      */
-    protected int $checkDays;
+    protected $checkDays;
 
     /**
      * [protected description]
      * @var int
      */
-    protected int $maxAttempts;
+    protected $maxAttempts;
 
     /**
      * Undocumented function

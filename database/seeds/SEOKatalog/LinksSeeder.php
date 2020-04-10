@@ -42,7 +42,9 @@ class LinksSeeder extends SEOKatalogSeeder
                         $item->cat === 'all' ?
                         null :
                         collect(array_filter(explode(',', $item->cat)))
-                            ->filter(fn($item) => $item > 0)
+                            ->filter(function ($item) {
+                                return $item > 0;
+                            })
                             ->map(function ($item) {
                                 return $this->sub_last_id + $item;
                             })

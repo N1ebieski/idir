@@ -39,7 +39,7 @@ class FieldService implements Creatable, Updatable, PositionUpdatable
      * [protected description]
      * @var string
      */
-    protected string $file_dir = 'vendor/idir/dirs/fields';
+    protected $file_dir = 'vendor/idir/dirs/fields';
 
     /**
      * [__construct description]

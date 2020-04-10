@@ -17,7 +17,7 @@ class SendActivationNotification
      *
      * @var object
      */
-    protected object $event;
+    protected $event;
 
     /**
      * Undocumented variable
