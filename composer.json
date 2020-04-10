@@ -4,7 +4,7 @@
     "keywords": ["iDir"],
     "type": "package",
     "require": {
-        "php": "^7.4",
+        "php": "^7.3",
         "spatie/laravel-directory-cleanup": "^1.4",
         "n1ebieski/icore": "dev-master"
     },
