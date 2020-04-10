@@ -24,6 +24,7 @@ class CreatePaymentsTable extends Migration
             $table->string('order_type');
             $table->tinyInteger('status')->unsigned();
             $table->longText('logs')->nullable();
+            $table->string('driver');
             $table->timestamps();
 
             $table->index(['model_type', 'model_id']);

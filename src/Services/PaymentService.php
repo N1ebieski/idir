@@ -5,6 +5,7 @@ namespace N1ebieski\IDir\Services;
 use Illuminate\Database\Eloquent\Model;
 use N1ebieski\IDir\Models\Payment\Payment;
 use Illuminate\Support\Carbon;
+use Illuminate\Contracts\Config\Repository as Config;
 use N1ebieski\ICore\Services\Interfaces\Creatable;
 use N1ebieski\ICore\Services\Interfaces\StatusUpdatable;
 
@@ -27,16 +28,25 @@ class PaymentService implements Creatable, StatusUpdatable
     protected $carbon;
 
     /**
+     * Undocumented variable
+     *
+     * @var Config
+     */
+    protected $config;
+
+    /**
      * Undocumented function
      *
      * @param Payment $payment
      * @param Carbon $carbon
+     * @param Config $config
      */
-    public function __construct(Payment $payment, Carbon $carbon)
+    public function __construct(Payment $payment, Carbon $carbon, Config $config)
     {
         $this->payment = $payment;
 
         $this->carbon = $carbon;
+        $this->config = $config;
     }
 
     /**
@@ -61,6 +71,7 @@ class PaymentService implements Creatable, StatusUpdatable
     public function create(array $attributes) : Model
     {
         $this->payment->status = $this->makeStatus($attributes['payment_type'] ?? null);
+        $this->payment->driver = $this->config->get("idir.payment.{$attributes['payment_type']}.driver");
         $this->payment->morph()->associate($this->payment->getMorph());
         $this->payment->orderMorph()->associate($this->payment->getOrderMorph());
         $this->payment->save();
