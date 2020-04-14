@@ -93,11 +93,15 @@ class ReminderCron
     /**
      * Adds new jobs to the queue.
      */
-    private function addToQueue() : void
+    protected function addToQueue() : void
     {
         $this->dir->makeRepo()->chunkAvailableHasPaidRequirementByPrivilegedTo(
             function ($dirs) {
                 $dirs->each(function ($dir) {
+                    if (!$this->verifyNotification($dir)) {
+                        return;
+                    }
+                    
                     $this->mailer->send(
                         $this->app->make(ReminderMail::class, ['dir' => $dir])
                     );
@@ -105,5 +109,17 @@ class ReminderCron
             },
             $this->makeReminderTimestamp()
         );
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param Dir $dir
+     * @return boolean
+     */
+    protected function verifyNotification(Dir $dir) : bool
+    {
+        return optional($dir->user)->email
+            && optional($dir->user)->hasPermissionTo('notification dirs');
     }
 }

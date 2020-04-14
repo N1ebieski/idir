@@ -40,7 +40,7 @@ class ShowRequest extends FormRequest
             try {
                 $url = App::make('crypt.thumbnail')->decryptString($this->input('url'));
             } catch (\Exception $e) {
-                Response::abort(HttpResponse::HTTP_FORBIDDEN, $e->getMessage());
+                App::abort(HttpResponse::HTTP_FORBIDDEN, $e->getMessage());
             }
 
             $this->merge(['url' => $url]);

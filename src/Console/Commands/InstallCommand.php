@@ -3,10 +3,11 @@
 namespace N1ebieski\IDir\Console\Commands;
 
 use Illuminate\Support\Composer;
+use GuzzleHttp\Client as GuzzleClient;
+use Illuminate\Database\DatabaseManager as DB;
 use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Contracts\Translation\Translator as Lang;
 use Illuminate\Contracts\Validation\Factory as Validator;
-use Illuminate\Database\DatabaseManager as DB;
 use N1ebieski\ICore\Console\Commands\InstallCommand as BaseInstallCommand;
 
 class InstallCommand extends BaseInstallCommand
@@ -26,6 +27,12 @@ class InstallCommand extends BaseInstallCommand
     protected $description = 'iDir application installer.';
 
     /**
+     * [protected description]
+     * @var GuzzleClient
+     */
+    protected $guzzle;
+
+    /**
      * Undocumented function
      *
      * @param Composer $composer
@@ -33,15 +40,20 @@ class InstallCommand extends BaseInstallCommand
      * @param Lang $lang
      * @param Validator $validator
      * @param DB $db
+     * @param GuzzleClient $guzzle
      */
     public function __construct(
         Composer $composer,
         Config $config,
         Lang $lang,
         Validator $validator,
-        DB $db
+        DB $db,
+        GuzzleClient $guzzle
+
     ) {
         parent::__construct($composer, $config, $lang, $validator, $db);
+
+        $this->guzzle = $guzzle;
     }
 
     /**
@@ -54,13 +66,17 @@ class InstallCommand extends BaseInstallCommand
         $this->line($this->lang->get('icore::install.validate.license'));
 
         try {
-            \N1ebieski\IDir\Providers\LicenseServiceProvider::checkKey(
-                $this->config->get('idir.license'),
-                $this->config->get('app.url')
-            );
+            $this->guzzle->request('GET', $this->config->get('app.url'), [
+                'verify' => false,
+                'headers' => [
+                    'Accept' => 'application/json'
+                ]
+            ]);
+        } catch (\GuzzleHttp\Exception\ClientException $e) {
+            $this->error(json_decode($e->getResponse()->getBody())->message);
+            exit;
         } catch (\Exception $e) {
-            $this->error($e->getMessage());
-            // exit;
+            //
         }
 
         $this->info('OK');
@@ -92,9 +108,9 @@ class InstallCommand extends BaseInstallCommand
         $bar->advance();
         $this->line("\n");
         $this->validateUrl();
-        $this->validateLicense();
         $this->validateConnectionMail();
         $this->validateConnectionDatabase();
+        $this->validateLicense();
         $this->line("\n");
         $bar->advance();
         $this->line("\n");

@@ -35,6 +35,16 @@ class ScheduleServiceProvider extends ServiceProvider
                 ->daily()
                 ->runInBackground();
 
+            $schedule->call($this->app->make(\N1ebieski\IDir\Crons\Dir\ReminderCron::class))
+                ->name('ReminderCron')
+                ->weekly()
+                ->runInBackground();
+
+            $schedule->call($this->app->make(\N1ebieski\IDir\Crons\Dir\CompletedCron::class))
+                ->name('CompletedCron')
+                ->daily()
+                ->runInBackground();
+
             $schedule->call($this->app->make(\N1ebieski\IDir\Crons\Dir\StatusCron::class))
                 ->name('StatusCron')
                 ->daily()
