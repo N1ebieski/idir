@@ -13,7 +13,6 @@
         "mockery/mockery": "^1.0",
         "phpunit/phpunit": "^7.0"
     },
-    "license": "Paid",
     "authors": [
         {
             "name": "Mariusz Wysokiński N1ebieski",
