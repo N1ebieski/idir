@@ -2,10 +2,8 @@
     <div class="container text-center text-md-left">
         <div class="row ">
             <div class="col-md mx-auto">
-                <h5 class="mt-3 mb-4">Footer Content:</h5>
-                <p>Here you can use rows and columns here to organize your footer content. Lorem
-                    ipsum dolor sit amet, consectetur
-                    adipisicing elit.</p>
+                <h5 class="mt-3 mb-4">{{ config('app.name') }}</h5>
+                <p>{{ config('app.desc') }}</p>
             </div>
             <hr class="clearfix w-100 d-md-none">
             <div class="col-md mx-auto">
