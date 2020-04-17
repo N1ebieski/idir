@@ -23,7 +23,7 @@
 
 <nav class="navbar menu navbar-expand-md navbar-light bg-light fixed-top border-bottom">
     <div class="container">
-        @if (!app('Helpers\Active')->isUrl(route('web.home.index')))
+        @if (!app('icore.helpers.active')->isUrl(route('web.home.index')))
         <div class="d-flex flex-grow-1 navbar-search pr-3 pr-md-0">
             @yield('logo')
             <form id="searchForm" method="GET" action="{{ route('web.search.index') }}" class="my-auto w-100 hide search">
@@ -61,7 +61,7 @@
         <div class="navbar-collapse scroll collapse flex-grow-0 justify-content-end">
             @render('icore::page.menuComponent', ['limit' => 3])
             <ul class="navbar-nav pr-3 pr-md-0">
-                @if (!app('Helpers\Active')->isUrl(route('web.home.index')))
+                @if (!app('icore.helpers.active')->isUrl(route('web.home.index')))
                 <li class="nav-item d-none d-md-inline mr-1">
                     @yield('search-toggler')
                 </li>
