@@ -40,6 +40,7 @@
     <i class="fas fa-check"></i>
     {{ trans('icore::default.apply') }}
 </button>
+&nbsp;
 <button type="button" class="btn btn-secondary" data-dismiss="modal">
     <i class="fas fa-ban"></i>
     {{ trans('icore::default.cancel') }}

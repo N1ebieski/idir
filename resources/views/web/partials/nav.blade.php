@@ -72,7 +72,7 @@
                         {{ trans('idir::dirs.route.create.index') }}
                     </a>
                 </li>
-                <li class="nav-item dropdown @isUrl([route('web.profile.edit')])">
+                <li class="nav-item dropdown @isRouteContains('profile')">
                     @auth
                     <a class="nav-link text-nowrap" href="#" role="button" id="navbarDropdownMenuProfile"
                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
