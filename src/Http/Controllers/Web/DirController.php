@@ -121,7 +121,11 @@ class DirController
                 $filter->all() + ['except' => $request->input('except')],
                 $request->input('page') ?? 1
             ),
-            'filter' => $filter->all()
+            'filter' => $filter->all(),
+            'catsAsArray' => [
+                'ancestors' => $dir->categories->pluck('ancestors')->flatten()->pluck('id')->toArray(),
+                'self' => $dir->categories->pluck('id')->toArray()
+            ]
         ]);
     }
 

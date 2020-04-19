@@ -789,7 +789,9 @@ class Dir extends Model
     {
         return $this->load([
                 'fields',
-                'categories',
+                'categories' => function ($query) {
+                    return $query->withAncestorsExceptSelf();
+                },
                 'group',
                 'group.privileges',
                 'group.fields' => function ($query) {

@@ -44,7 +44,7 @@ class RegionComponent implements Htmlable
      */
     public function toHtml() : View
     {
-        return $this->view->make('idir::web.components.region.region', [
+        return $this->view->make('idir::web.components.region.category.region', [
             'regions' => $this->region->makeCache()->rememberAll()
         ]);
     }
