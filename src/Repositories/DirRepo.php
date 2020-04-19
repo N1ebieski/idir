@@ -382,7 +382,7 @@ class DirRepo
                         ->whereNull('privileged_to');
                 });
             })
-            ->with('user')            
+            ->with('user')
             ->chunk(1000, $callback);
     }
 
