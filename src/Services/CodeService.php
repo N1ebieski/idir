@@ -58,15 +58,18 @@ class CodeService
     public function createGlobal(array $attributes) : void
     {
         foreach ($attributes as $attribute) {
-            $code = $this->code->make($attribute);
-            $code->price()->associate($this->code->getPrice());
-            $code->created_at = $this->carbon->now();
-            $code->updated_at = $this->carbon->now();
-
-            $codes_model[] = $code->attributesToArray();
+            // Create attributes manually, no within model because multiple
+            // models may be huge performance impact
+            $codes[] = [
+                'price_id' => $this->code->getPrice()->id,
+                'code' => $attribute['code'],
+                'quantity' => $attribute['quantity'],
+                'created_at' => $this->carbon->now(),
+                'updated_at' => $this->carbon->now()
+            ];
         }
 
-        $this->code->insert($codes_model);
+        $this->code->insert($codes);
     }
 
     /**

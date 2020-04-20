@@ -17,14 +17,16 @@ trait CodePayable
         $codes = explode("\r\n", $codes);
 
         foreach ($codes as $code) {
-            $_code = explode('|', $code);
+            $c = explode('|', $code);
 
-            $_codes[] = [
-                'code' => $_code[0],
-                'quantity' => (int)($_code[1] ?? 1)
+            $cs[] = [
+                'code' => $c[0],
+                'quantity' => isset($c[1]) ?
+                    ((int)$c[1] === 0 ? null : $c[1])
+                    : 1
             ];
         }
 
-        return $_codes;
+        return $cs;
     }
 }

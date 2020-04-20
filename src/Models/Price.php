@@ -105,7 +105,7 @@ class Price extends Model
     {
         if ($this->codes instanceof Collection && $this->codes->isNotEmpty()) {
             foreach ($this->codes as $code) {
-                $codes[] = $code->code . ($code->quantity !== null ? '|' . $code->quantity : null);
+                $codes[] = $code->code . '|' . ($code->quantity !== null ? $code->quantity : 0);
             }
 
             return (string)implode("\r\n", $codes);

@@ -20,7 +20,7 @@ class CreateCodesTable extends Migration
             $table->bigIncrements('id');
             $table->bigInteger('price_id')->unsigned();
             $table->string('code');
-            $table->integer('quantity')->unsigned();
+            $table->integer('quantity')->nullable()->unsigned();
             $table->timestamps();
 
             $table->foreign('price_id')
