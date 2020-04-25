@@ -147,7 +147,7 @@
                 @endforeach
                 @endif
                 @auth
-                @if (isset($dir->user->email))
+                @if (isset($dir->user->email) && app('router')->has('web.contact.dir.show'))
                 <div class="list-group-item">
                     <a href="#" data-route="{{ route('web.contact.dir.show', [$dir->id]) }}"
                     data-toggle="modal" data-target="#contactModal" class="showContact">

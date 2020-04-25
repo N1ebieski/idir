@@ -14,7 +14,7 @@
 <div class="container">
     <div class="row">
         <div class="col-md-8 order-sm-1 order-md-2">
-            <h1 class="h4 border-bottom pb-2 mb-4">
+            <h1 class="h4 border-bottom pb-2">
                 {{ trans('idir::dirs.route.search', ['search' => $search]) }}
             </h1>
             <div id="filterContent">

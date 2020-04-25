@@ -5,10 +5,12 @@
                 <h5 class="mt-3 mb-4">{{ config('app.name') }}</h5>
                 <p>{{ config('app.desc') }}</p>
             </div>
+            @if (app('router')->has('web.newsletter.store'))
             <hr class="clearfix w-100 d-md-none">
             <div class="col-md mx-auto">
                 @render('icore::newsletterComponent')
             </div>
+            @endif
             <hr class="clearfix w-100 d-md-none">
             <div class="col-md-auto mx-auto">
                 @render('idir::linkComponent', ['limit' => 5, 'cats' => $catsAsArray ?? null])
