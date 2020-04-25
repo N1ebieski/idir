@@ -8,7 +8,7 @@ Route::get('dirs/index', 'DirController@index')
 Route::get('dirs/search', 'DirController@search')
     ->name('dir.search');
 
-Route::get('dirs/{dir_cache}', 'DirController@show')
+Route::match(['get', 'post'], 'dirs/{dir_cache}', 'DirController@show')
     ->name('dir.show')
     ->where('dir_cache', '[0-9A-Za-z,_-]+');
 
