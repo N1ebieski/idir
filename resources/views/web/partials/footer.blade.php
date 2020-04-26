@@ -12,14 +12,9 @@
             </div>
             @endif
             <hr class="clearfix w-100 d-md-none">
-            <div class="col-md-auto mx-auto">
-                @render('idir::linkComponent', ['limit' => 5, 'cats' => $catsAsArray ?? null])
-            </div>
-            <hr class="clearfix w-100 d-md-none">
         </div>
         <h5 class="mt-3 mb-2">{{ trans('icore::pages.map') }}:</h5>
         <div class="row">
-            {{-- @render('icore::page.footerComponent', ['pattern' => [[18, 19, 32], [45], [3, 1]]]) --}}
             @render('icore::page.footerComponent', ['cols' => 3])
             <div class="col-md-3 col-sm-6">
                 <ul class="list-group list-group-flush">
@@ -48,7 +43,8 @@
                         </a>
                     </li>                    
                 </ul>
-            </div>
+                @render('idir::linkComponent', ['limit' => 5, 'cats' => $catsAsArray ?? null])
+            </div>       
         </div>        
         <hr>
         <div class="d-flex justify-content-center">
