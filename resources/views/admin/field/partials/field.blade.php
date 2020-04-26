@@ -7,8 +7,9 @@ data-id="{{ $field->id }}">
                 data-toggle="modal" data-target="#editPositionModal" role="button">
                     <span id="position" class="badge badge-pill badge-primary">{{ $field->position + 1 }}</span>
                 </a>
-                <span> {{ $field->title }}</span>
-                <span class="badge badge-primary">{{ $field->type }}</span>
+                <span> {{ $field->title }}</span>&nbsp;
+                <span class="badge badge-primary">{{ $field->type }}</span>&nbsp;
+                <span class="badge badge-success">ID {{ $field->id }}</span>
             </li>
             <li><small>{{ trans('icore::filter.created_at') }}: {{ $field->created_at_diff }}</small></li>
             <li><small>{{ trans('icore::filter.updated_at') }}: {{ $field->updated_at_diff }}</small></li>
