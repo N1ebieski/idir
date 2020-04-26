@@ -2,7 +2,7 @@
 
 namespace N1ebieski\IDir\Http\Controllers\Admin;
 
-use Illuminate\View\View;
+use Illuminate\Support\Facades\View;
 use N1ebieski\IDir\Models\Group;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Lang;
@@ -116,7 +116,7 @@ class GroupController
     {
         return Response::json([
             'success' => '',
-            'view' => View::get('idir::admin.group.edit_position', [
+            'view' => View::make('idir::admin.group.edit_position', [
                 'group' => $group,
                 'siblings_count' => $group->count()
             ])->render()
