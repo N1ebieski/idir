@@ -147,7 +147,7 @@
         </li>
         @endcan
         @canany(['index groups', 'index fields'])
-        <li class="nav-item dropdown @isUrlContains(['*/groups', '*/groups/*', '*/fields/group', 'fields/group/*'])">
+        <li class="nav-item dropdown @isUrlContains(['*/groups', '*/groups/*', '*/fields/group', '*/fields/group/*'])">
             <a class="nav-link dropdown-toggle"
             href="#" id="groupDropdown" role="button"
             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
