@@ -19,6 +19,15 @@
             class="form-control"
             rows="3"></textarea>
         </div>
+        <div class="form-group">
+            <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" 
+                id="contact_agreement" name="contact_agreement" value="1">
+                <label class="custom-control-label text-left" for="contact_agreement">
+                    <small>{{ trans('icore::policy.agreement.contact') }}</small>
+                </label>
+            </div>
+        </div>        
         @render('icore::captchaComponent', ['id' => 1000])
         <button type="button" class="btn btn-primary sendContact">
             <i class="fas fa-check"></i>
