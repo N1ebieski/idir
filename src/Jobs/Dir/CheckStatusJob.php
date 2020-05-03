@@ -116,7 +116,7 @@ class CheckStatusJob implements ShouldQueue
      *
      * @return string
      */
-    public function getEndUrlFromRedirect() : string
+    public function getLastUrlFromRedirect() : string
     {
         $redirects = $this->response->getHeader(\GuzzleHttp\RedirectMiddleware::HISTORY_HEADER);
 
@@ -152,11 +152,15 @@ class CheckStatusJob implements ShouldQueue
      */
     public function makeResponse() : GuzzleResponse
     {
-        return $this->response = $this->guzzle->request('GET', $this->dirStatus->dir->url, [
-            'allow_redirects' => ['track_redirects' => true],
-            'http_errors' => true,
-            'verify' => false
-        ]);
+        return $this->response = $this->guzzle->request(
+            'GET',
+            $this->dirStatus->dir->url,
+            [
+                'allow_redirects' => ['track_redirects' => true],
+                'http_errors' => true,
+                'verify' => false
+            ]
+        );
     }
 
     /**
@@ -199,7 +203,7 @@ class CheckStatusJob implements ShouldQueue
      */
     protected function isParked() : bool
     {
-        if (count($this->parked_domains) > 0 && $redirect = $this->getEndUrlFromRedirect()) {
+        if (count($this->parked_domains) > 0 && $redirect = $this->getLastUrlFromRedirect()) {
             return preg_match('/(' . $this->prepareParkedDomains() . ')/', $redirect);
         }
 
