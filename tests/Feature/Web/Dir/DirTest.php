@@ -4,16 +4,20 @@ namespace N1ebieski\IDir\Tests\Feature\Web\Dir;
 
 use Carbon\Carbon;
 use Tests\TestCase;
+use GuzzleHttp\HandlerStack;
 use N1ebieski\IDir\Models\Dir;
 use N1ebieski\ICore\Models\Link;
 use N1ebieski\IDir\Models\Group;
 use N1ebieski\IDir\Models\Price;
+use GuzzleHttp\Handler\MockHandler;
 use Illuminate\Support\Facades\Mail;
 use GuzzleHttp\Client as GuzzleClient;
 use Illuminate\Support\Facades\Config;
+use N1ebieski\IDir\Crons\Dir\StatusCron;
 use N1ebieski\IDir\Crons\Dir\BacklinkCron;
 use N1ebieski\IDir\Mail\Dir\CompletedMail;
 use N1ebieski\IDir\Crons\Dir\CompletedCron;
+use GuzzleHttp\Middleware as GuzzleMiddleware;
 use GuzzleHttp\Psr7\Response as GuzzleResponse;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use N1ebieski\IDir\Mail\DirBacklink\BacklinkNotFoundMail;
@@ -256,6 +260,203 @@ class DirTest extends TestCase
         $this->assertDatabaseHas('dirs_backlinks', [
             'id' => $dirBacklink->id,
             'attempts' => 0
+        ]);
+    }
+
+    public function test_status_known_parked_domain_queue_job()
+    {
+        $group = factory(Group::class)->states(['required_url'])->create();
+
+        $dir = factory(Dir::class)->states(['with_user', 'active'])
+            ->create([
+                'group_id' => $group->id,
+                'url' => 'https://parked-domain.pl'
+            ]);
+
+        $this->assertDatabaseHas('dirs', [
+            'id' => $dir->id,
+            'status' => Dir::ACTIVE
+        ]);
+
+        $dirStatus = $dir->status()->make();
+        $dirStatus->dir()->associate($dir);
+        $dirStatus->save();
+
+        Config::set('idir.dir.status.max_attempts', 1);
+        Config::set('idir.dir.status.parked_domains', [
+            'aftermarket.pl',
+            'blablabla.pl'
+        ]);
+
+        $mock = new MockHandler([
+            new GuzzleResponse(302, [
+                'Location' => 'https://gzermplatz.aftermarket.pl/redir.php?panel=Market_Auction&params=id%3D2493603&type=auction&id=2493603&medium=direct:direct'
+            ]),
+            new GuzzleResponse(302, [
+                'Location' => 'https://www.aftermarket.pl/aukcja/2493603/?_track=504ea78ba428635f7787e4f49c326f88',
+            ]),
+            new GuzzleResponse(200)
+        ]);
+
+        $stack = new HandlerStack($mock);
+        $stack->push(GuzzleMiddleware::redirect());
+        $client = new GuzzleClient(['handler' => $stack]);
+
+        $this->instance(GuzzleClient::class, $client);
+    
+        $schedule = app()->make(StatusCron::class);
+        $schedule();
+
+        $this->assertDatabaseHas('dirs_status', [
+            'dir_id' => $dir->id,
+            'attempts' => 1
+        ]);
+
+        $this->assertDatabaseHas('dirs', [
+            'id' => $dir->id,
+            'status' => Dir::STATUS_INACTIVE
+        ]);
+    }
+
+    public function test_status_unknown_parked_domain_queue_job()
+    {
+        $group = factory(Group::class)->states(['required_url'])->create();
+
+        $dir = factory(Dir::class)->states(['with_user', 'active'])
+            ->create([
+                'group_id' => $group->id,
+                'url' => 'https://parked-domain.pl'
+            ]);
+
+        $this->assertDatabaseHas('dirs', [
+            'id' => $dir->id,
+            'status' => Dir::ACTIVE
+        ]);
+
+        $dirStatus = $dir->status()->make();
+        $dirStatus->dir()->associate($dir);
+        $dirStatus->save();
+
+        Config::set('idir.dir.status.max_attempts', 1);
+        Config::set('idir.dir.status.parked_domains', []);
+
+        $mock = new MockHandler([
+            new GuzzleResponse(302, [
+                'Location' => 'https://gzermplatz.dasdasdasd.pl/redir.php?panel=Market_Auction&params=id%3D2493603&type=auction&id=2493603&medium=direct:direct'
+            ]),
+            new GuzzleResponse(302, [
+                'Location' => 'https://www.dasdasdas.pl/aukcja/2493603/?_track=504ea78ba428635f7787e4f49c326f88',
+            ]),
+            new GuzzleResponse(200)
+        ]);
+
+        $stack = new HandlerStack($mock);
+        $stack->push(GuzzleMiddleware::redirect());
+        $client = new GuzzleClient(['handler' => $stack]);
+
+        $this->instance(GuzzleClient::class, $client);
+    
+        $schedule = app()->make(StatusCron::class);
+        $schedule();
+
+        $this->assertDatabaseHas('dirs_status', [
+            'dir_id' => $dir->id,
+            'attempts' => 0
+        ]);
+
+        $this->assertDatabaseHas('dirs', [
+            'id' => $dir->id,
+            'status' => Dir::ACTIVE
+        ]);
+    }
+
+    public function test_status_queue_job_failed()
+    {
+        $group = factory(Group::class)->states(['required_url'])->create();
+
+        $dir = factory(Dir::class)->states(['with_user', 'active'])
+            ->create([
+                'group_id' => $group->id,
+                'url' => 'https://domain.pl'
+            ]);
+
+        $this->assertDatabaseHas('dirs', [
+            'id' => $dir->id,
+            'status' => Dir::ACTIVE
+        ]);
+
+        $dirStatus = $dir->status()->make();
+        $dirStatus->dir()->associate($dir);
+        $dirStatus->save();
+
+        Config::set('idir.dir.status.max_attempts', 1);
+
+        $mock = new MockHandler([
+            new GuzzleResponse(404)
+        ]);
+
+        $stack = new HandlerStack($mock);
+        $client = new GuzzleClient(['handler' => $stack]);
+
+        $this->instance(GuzzleClient::class, $client);
+    
+        $schedule = app()->make(StatusCron::class);
+        $schedule();
+
+        $this->assertDatabaseHas('dirs_status', [
+            'dir_id' => $dir->id,
+            'attempts' => 1
+        ]);
+
+        $this->assertDatabaseHas('dirs', [
+            'id' => $dir->id,
+            'status' => Dir::STATUS_INACTIVE
+        ]);
+    }
+
+    public function test_status_queue_job_pass()
+    {
+        $group = factory(Group::class)->states(['required_url'])->create();
+
+        $dir = factory(Dir::class)->states(['with_user', 'status_inactive'])
+            ->create([
+                'group_id' => $group->id,
+                'url' => 'https://domain.pl'
+            ]);
+
+        $this->assertDatabaseHas('dirs', [
+            'id' => $dir->id,
+            'status' => Dir::STATUS_INACTIVE
+        ]);
+
+        $dirStatus = $dir->status()->make([
+            'attempts' => 10
+        ]);
+        $dirStatus->dir()->associate($dir);
+        $dirStatus->save();
+
+        Config::set('idir.dir.status.max_attempts', 1);
+
+        $mock = new MockHandler([
+            new GuzzleResponse(200)
+        ]);
+
+        $stack = new HandlerStack($mock);
+        $client = new GuzzleClient(['handler' => $stack]);
+
+        $this->instance(GuzzleClient::class, $client);
+    
+        $schedule = app()->make(StatusCron::class);
+        $schedule();
+
+        $this->assertDatabaseHas('dirs_status', [
+            'dir_id' => $dir->id,
+            'attempts' => 0
+        ]);
+
+        $this->assertDatabaseHas('dirs', [
+            'id' => $dir->id,
+            'status' => Dir::ACTIVE
         ]);
     }
 }

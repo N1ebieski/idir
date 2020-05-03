@@ -21,6 +21,9 @@ return [
         'status' => [
             'check_days' => (int)env('IDIR_DIR_STATUS_CHECK_DAYS', 30),
             'max_attempts' => (int)env('IDIR_DIR_STATUS_MAX_ATTEMPTS', 2),
+            'parked_domains' => [
+                'aftermarket.pl'
+            ]
         ],
 
         'reminder' => [

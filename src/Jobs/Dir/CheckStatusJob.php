@@ -15,6 +15,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use N1ebieski\IDir\Repositories\DirStatusRepo;
 use GuzzleHttp\Psr7\Response as GuzzleResponse;
 use Illuminate\Contracts\Config\Repository as Config;
+use Illuminate\Support\Str;
 
 /**
  * [CheckStatus description]
@@ -66,7 +67,14 @@ class CheckStatusJob implements ShouldQueue
      * @var Carbon
      */
     protected $carbon;
-    
+
+    /**
+     * Undocumented variable
+     *
+     * @var Str
+     */
+    protected $str;
+
     /**
      * Undocumented variable
      *
@@ -87,6 +95,12 @@ class CheckStatusJob implements ShouldQueue
     protected $days;
 
     /**
+     * [protected description]
+     * @var array
+     */
+    protected $parked_domains;
+
+    /**
      * Create a new job instance.
      *
      * @param DirStatus $dirStatus
@@ -95,6 +109,18 @@ class CheckStatusJob implements ShouldQueue
     public function __construct(DirStatus $dirStatus)
     {
         $this->dirStatus = $dirStatus;
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @return string
+     */
+    public function getEndUrlFromRedirect() : string
+    {
+        $redirects = $this->response->getHeader(\GuzzleHttp\RedirectMiddleware::HISTORY_HEADER);
+
+        return end($redirects);
     }
 
     /**
@@ -127,13 +153,14 @@ class CheckStatusJob implements ShouldQueue
     public function makeResponse() : GuzzleResponse
     {
         return $this->response = $this->guzzle->request('GET', $this->dirStatus->dir->url, [
+            'allow_redirects' => ['track_redirects' => true],
             'http_errors' => true,
             'verify' => false
         ]);
     }
 
     /**
-     * [validateStatus description]
+     * [validate description]
      * @return bool [description]
      */
     protected function validateStatus() : bool
@@ -144,6 +171,48 @@ class CheckStatusJob implements ShouldQueue
             return false;
         }
 
+        if ($this->isParked()) {
+            return false;
+        }
+
+        if (!$this->isStatus()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @return string
+     */
+    protected function prepareParkedDomains() : string
+    {
+        return $this->parked_domains = $this->str->escaped(implode('|', $this->parked_domains));
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @return boolean
+     */
+    protected function isParked() : bool
+    {
+        if (count($this->parked_domains) > 0 && $redirect = $this->getEndUrlFromRedirect()) {
+            return preg_match('/(' . $this->prepareParkedDomains() . ')/', $redirect);
+        }
+
+        return false;
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @return boolean
+     */
+    protected function isStatus() : bool
+    {
         return $this->response->getStatusCode() === 200;
     }
 
@@ -181,16 +250,22 @@ class CheckStatusJob implements ShouldQueue
      * @param Config $config
      * @return void
      */
-    public function handle(GuzzleClient $guzzle, Carbon $carbon, Config $config) : void
-    {
+    public function handle(
+        GuzzleClient $guzzle,
+        Carbon $carbon,
+        Config $config,
+        Str $str
+    ) : void {
         $this->dirStatusRepo = $this->dirStatus->makeRepo();
         $this->dirRepo = $this->dirStatus->dir->makeRepo();
 
         $this->guzzle = $guzzle;
         $this->carbon = $carbon;
+        $this->str = $str;
 
         $this->days = $config->get('idir.dir.status.check_days');
         $this->max_attempts = $config->get('idir.dir.status.max_attempts');
+        $this->parked_domains = $config->get('idir.dir.status.parked_domains');
 
         if ($this->isAttempt()) {
             $this->dirStatusRepo->attemptedNow();
