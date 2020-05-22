@@ -89,9 +89,8 @@ class UpdateFull3Response implements RedirectResponseFactory
                 return $this->response->redirectToRoute('admin.dir.index')
                     ->with('success', $this->lang->get('idir::dirs.success.update.'.Dir::ACTIVE));
             case Dir::PAYMENT_INACTIVE:
-                return $this->response->redirectToRoute('web.payment.dir.show', [
-                    $this->dir->getPayment()->uuid,
-                    'redirect' => $this->url->route('admin.dir.index')
+                return $this->response->redirectToRoute('admin.payment.dir.show', [
+                    $this->dir->getPayment()->uuid
                 ]);
         }
     }

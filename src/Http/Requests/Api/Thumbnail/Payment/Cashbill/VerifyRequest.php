@@ -1,12 +1,12 @@
 <?php
 
-namespace N1ebieski\IDir\Http\Requests\Web\Payment\Cashbill;
+namespace N1ebieski\IDir\Http\Requests\Api\Payment\Cashbill;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
-use N1ebieski\IDir\Http\Requests\Web\Payment\Interfaces\VerifyRequestStrategy;
+use N1ebieski\IDir\Http\Requests\Api\Payment\Interfaces\VerifyRequestStrategy;
 
 /**
  * [VerifyRequest description]

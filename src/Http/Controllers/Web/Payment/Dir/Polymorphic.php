@@ -7,7 +7,6 @@ use N1ebieski\IDir\Loads\Web\Payment\ShowLoad;
 use N1ebieski\IDir\Models\Payment\Dir\Payment;
 use N1ebieski\IDir\Http\Requests\Web\Payment\Interfaces\CompleteRequestStrategy;
 use N1ebieski\IDir\Http\Requests\Web\Payment\Interfaces\ShowRequestStrategy;
-use N1ebieski\IDir\Http\Requests\Web\Payment\Interfaces\VerifyRequestStrategy;
 use N1ebieski\IDir\Utils\Payment\Interfaces\TransferUtilStrategy;
 
 /**
@@ -42,18 +41,4 @@ interface Polymorphic
         CompleteRequestStrategy $request,
         TransferUtilStrategy $transferUtil
     ) : RedirectResponse;
-
-    /**
-     * Undocumented function
-     *
-     * @param Payment $payment
-     * @param VerifyRequestStrategy $request
-     * @param TransferUtilStrategy $transferUtil
-     * @return string
-     */
-    public function verify(
-        Payment $payment,
-        VerifyRequestStrategy $request,
-        TransferUtilStrategy $transferUtil
-    ) : string;
 }

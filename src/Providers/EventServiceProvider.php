@@ -55,13 +55,13 @@ class EventServiceProvider extends ServiceProvider
             \N1ebieski\IDir\Listeners\Dir\MarkAsPaid::class,
             \N1ebieski\IDir\Listeners\Payment\CreateLogs::class
         ],
-        \N1ebieski\IDir\Events\Web\Payment\Dir\VerifySuccessfulEvent::class => [
+        \N1ebieski\IDir\Events\Api\Payment\Dir\VerifySuccessfulEvent::class => [
             \N1ebieski\IDir\Listeners\Dir\MarkAsPaid::class,
             \N1ebieski\IDir\Listeners\Dir\Checkout::class,
             \N1ebieski\IDir\Listeners\Dir\SendActivationNotification::class,
             \N1ebieski\IDir\Listeners\Dir\SendModeratorNotification::class
         ],
-        \N1ebieski\IDir\Events\Web\Payment\Dir\VerifyAttemptEvent::class => [
+        \N1ebieski\IDir\Events\Api\Payment\Dir\VerifyAttemptEvent::class => [
             \N1ebieski\IDir\Listeners\Payment\CreateLogs::class
         ],
         \N1ebieski\IDir\Events\Web\Payment\Dir\StoreEvent::class => [

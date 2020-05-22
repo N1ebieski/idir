@@ -13,7 +13,7 @@ class IDirServiceProvider extends ServiceProvider
      * [public description]
      * @var string
      */
-    public const VERSION = "1.0.0-beta.7";
+    public const VERSION = "1.0.0-beta.10";
 
     /**
      * Register services.
@@ -40,12 +40,20 @@ class IDirServiceProvider extends ServiceProvider
             \Illuminate\Session\Middleware\StartSession::class,
             \Illuminate\Session\Middleware\AuthenticateSession::class,
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
-            \N1ebieski\IDir\Http\Middleware\VerifyCsrfToken::class,
+            \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \N1ebieski\ICore\Http\Middleware\XSSProtection::class,
             \N1ebieski\ICore\Http\Middleware\ClearWhitespacesInStrings::class,
             \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
             \Nckg\Minify\Middleware\MinifyResponse::class
+        ]);
+
+        $this->app['router']->middlewareGroup('idir.api', [
+            'throttle:60,1',
+            'bindings',
+            \N1ebieski\ICore\Http\Middleware\XSSProtection::class,
+            \N1ebieski\ICore\Http\Middleware\ClearWhitespacesInStrings::class,
+            \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class
         ]);
     }
 

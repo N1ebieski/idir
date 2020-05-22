@@ -64,7 +64,7 @@ return [
             'info' => 'Aby otrzymać kod dostępu - dokonaj płatności przelewem na stronie zakupu kodów <a id="code_transfer" href=":code_transfer_url" target="blank"><b>:provider_name</b></a>. Koszt <b><span id="price">:price</span></b> PLN. Dokumenty dotyczące systemu płatności dostępne są na stronie <a href=":provider_docs_url" target="_blank">:provider_name dokumenty</a>. Regulamin usługi dostępny jest na stronie <a href=":provider_rules_url" target="_blank">:provider_name regulamin</a>. Zgłoszenie strony do katalogu równoznaczne jest z akceptacją <a href=":rules_url" target="_blank">regulaminu</a>.'
         ]
     ],
-    'price' => ':price PLN / :days :limit',
+    'price' => ':price :currency / :days :limit',
     'rules' => 'Regulamin',
     'code' => 'Wpisz kod',
     'choose_backlink' => 'Wybierz link zwrotny',

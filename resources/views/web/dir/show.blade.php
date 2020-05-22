@@ -4,6 +4,7 @@
         trans('icore::pagination.page', ['num' => $comments->currentPage()])
     ],
     'desc' => [$dir->short_content],
+    // TODO #54 @N1ebieski
     'keys' => [$dir->tagList],
     'og' => [
         'title' => $dir->title,

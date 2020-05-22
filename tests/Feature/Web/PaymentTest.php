@@ -80,7 +80,7 @@ class PaymentTest extends TestCase
         $payment->orderMorph()->associate($price);
         $payment->save();
 
-        $response = $this->post(route('web.payment.dir.verify'), $this->providerSetup($payment));
+        $response = $this->post(route('api.payment.dir.verify'), $this->providerSetup($payment));
 
         $response->assertSeeText('OK');
 
@@ -113,7 +113,7 @@ class PaymentTest extends TestCase
         $payment->orderMorph()->associate($price);
         $payment->save();
 
-        $response = $this->post(route('web.payment.dir.verify'), $this->providerSetup($payment));
+        $response = $this->post(route('api.payment.dir.verify'), $this->providerSetup($payment));
 
         $response->assertSeeText('OK');
 
@@ -149,7 +149,7 @@ class PaymentTest extends TestCase
         $providerSetup = $this->providerSetup($payment);
         $providerSetup['status'] = 'err';
 
-        $response = $this->post(route('web.payment.dir.verify'), $providerSetup);
+        $response = $this->post(route('api.payment.dir.verify'), $providerSetup);
 
         $response->assertStatus(403)->assertSeeText('Invalid status');
     }
@@ -172,7 +172,7 @@ class PaymentTest extends TestCase
         $providerSetup = $this->providerSetup($payment);
         $providerSetup['amount'] = "999.99";
 
-        $response = $this->post(route('web.payment.dir.verify'), $providerSetup);
+        $response = $this->post(route('api.payment.dir.verify'), $providerSetup);
 
         $response->assertStatus(403)->assertSeeText('Invalid amount');
     }
@@ -195,7 +195,7 @@ class PaymentTest extends TestCase
         $providerSetup = $this->providerSetup($payment);
         $providerSetup['sign'] = "dupa";
 
-        $response = $this->post(route('web.payment.dir.verify'), $providerSetup);
+        $response = $this->post(route('api.payment.dir.verify'), $providerSetup);
 
         $response->assertStatus(403)->assertSeeText('Invalid sign');
     }

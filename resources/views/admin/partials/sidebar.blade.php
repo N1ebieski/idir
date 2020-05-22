@@ -6,12 +6,14 @@
                 <span class="navbar-toggler-icon"></span>
             </a>
         </li>
+        @can('index dashboard')
         <li class="nav-item">
             <a class="nav-link" href="{{ route('admin.home.index') }}">
                 <i class="fas fa-fw fa-tachometer-alt"></i>
                 <span>Dashboard</span>
             </a>
         </li>
+        @endcan
         @can('index pages')
         <li class="nav-item @isUrlContains(['*/pages', '*/pages/*'])">
             <a class="nav-link" href="{{ route('admin.page.index') }}">

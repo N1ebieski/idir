@@ -18,6 +18,7 @@
         </nav>
         <div class="tab-content mt-3" id="nav-tabContent">
             @if ($group->prices->where('type', 'transfer')->isNotEmpty())
+            @php $driver['transfer'] = config('idir.payment.transfer.driver') @endphp
             <div class="tab-pane fade {{ old('payment_type') === "transfer" ? 'show active' : null }}"
             id="nav-transfer" role="tabpanel" aria-labelledby="nav-transfer-tab">
                 <div class="form-group">
@@ -27,6 +28,7 @@
                         <option value="{{ $transfer->id }}" {{ old('payment_transfer') == $transfer->id ? 'selected' : null }}>
                             {{ trans('idir::dirs.price', [
                             'price' => $transfer->price,
+                            'currency' => config("services.{$driver['transfer']}.transfer.currency"),
                             'days' => $days = $transfer->days,
                             'limit' => $days !== null ? mb_strtolower(trans('idir::groups.days')) : mb_strtolower(trans('idir::groups.unlimited'))
                             ]) }}
@@ -35,7 +37,6 @@
                     </select>
                     @includeWhen($errors->has('payment_transfer'), 'icore::web.partials.errors', ['name' => 'payment_transfer'])
                 </div>
-                @php $driver['transfer'] = config('idir.payment.transfer.driver') @endphp
                 <p>
                     {!! trans('idir::dirs.payment.transfer.info', [
                         'provider_url' => config("idir.payment.{$driver['transfer']}.url"),
@@ -48,6 +49,7 @@
             </div>
             @endif
             @if ($group->prices->where('type', 'code_transfer')->isNotEmpty())
+            @php $driver['code_transfer'] = config('idir.payment.code_transfer.driver') @endphp 
             <div class="tab-pane fade {{ old('payment_type') === "code_transfer" ? 'show active' : null }}"
             id="nav-code_transfer" role="tabpanel" aria-labelledby="nav-code_transfer-tab">
                 <div class="form-group">
@@ -58,6 +60,7 @@
                         data="{{ json_encode($code->only(['code', 'price'])) }}">
                             {{ trans('idir::dirs.price', [
                             'price' => $code->price,
+                            'currency' => config("services.{$driver['code_transfer']}.code_transfer.currency"),
                             'days' => $days = $code->days,
                             'limit' => $days !== null ? mb_strtolower(trans('idir::groups.days')) : mb_strtolower(trans('idir::groups.unlimited'))
                             ]) }}
@@ -70,8 +73,7 @@
                     <label for="code_transfer">{{ trans('idir::dirs.code') }}:</label>
                     <input type="text" value="" name="code_transfer" id="code_transfer" class="form-control @isValid('code_transfer')">
                     @includeWhen($errors->has('code_transfer'), 'icore::web.partials.errors', ['name' => 'code_transfer'])
-                </div>
-                @php $driver['code_transfer'] = config('idir.payment.code_transfer.driver') @endphp                
+                </div>               
                 <p>
                     {!! trans('idir::dirs.payment.code_transfer.info', [
                         'code_transfer_url' => config("services.{$driver['code_transfer']}.code_transfer.url")
@@ -87,6 +89,7 @@
             </div>
             @endif
             @if ($group->prices->where('type', 'code_sms')->isNotEmpty())
+            @php $driver['code_sms'] = config('idir.payment.code_sms.driver') @endphp 
             <div class="tab-pane fade {{ old('payment_type') === "code_sms" ? 'show active' : null }}"
             id="nav-code_sms" role="tabpanel" aria-labelledby="nav-code_sms-tab">
                 <div class="form-group">
@@ -97,6 +100,7 @@
                         data="{{ json_encode($code->only(['code', 'price', 'number'])) }}">
                             {{ trans('idir::dirs.price', [
                             'price' => $code->price,
+                            'currency' => config("services.{$driver['code_sms']}.code_sms.currency"),                            
                             'days' => $days = $code->days,
                             'limit' => $days !== null ? mb_strtolower(trans('idir::groups.days')) : mb_strtolower(trans('idir::groups.unlimited'))
                             ]) }}
@@ -109,8 +113,7 @@
                     <label for="code_sms">{{ trans('idir::dirs.code') }}:</label>
                     <input type="text" value="" name="code_sms" id="code_sms" class="form-control @isValid('code_sms')">
                     @includeWhen($errors->has('code_sms'), 'icore::web.partials.errors', ['name' => 'code_sms'])
-                </div>
-                @php $driver['code_sms'] = config('idir.payment.code_sms.driver') @endphp                 
+                </div>              
                 <p>
                     {!! trans('idir::dirs.payment.code_sms.info', [
                         'number' => old('payment_code_sms_model', $codes->first())->number,

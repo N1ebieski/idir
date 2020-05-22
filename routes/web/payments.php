@@ -11,6 +11,3 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('payments/dir/complete', 'Payment\Dir\PaymentController@complete')
         ->name('payment.dir.complete');
 });
-
-Route::post('payments/dir/verify', 'Payment\Dir\PaymentController@verify')
-    ->name('payment.dir.verify');

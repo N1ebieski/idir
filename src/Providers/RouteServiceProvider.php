@@ -91,7 +91,7 @@ class RouteServiceProvider extends ServiceProvider
      */
     protected function mapApiRoutes()
     {
-        $this->app['router']->middleware('api')
+        $this->app['router']->middleware('idir.api')
             ->prefix('api')
             ->as('api.')
             ->namespace($this->namespace.'\Api')
