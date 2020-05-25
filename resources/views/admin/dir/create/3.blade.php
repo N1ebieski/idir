@@ -21,10 +21,13 @@
     </h1>
     <div class="row mb-4">
         <div class="col-lg-8">
-            @include('idir::admin.dir.partials.summary', ['value' => session('dir')])
+            @include('idir::admin.dir.partials.summary', [
+                'value' => session('dir'),
+                'categories' => $categoriesSelection
+            ])
             <form method="post" action="{{ route('admin.dir.store_3', [$group->id]) }}" id="createSummary">
                 @csrf
-                @includeWhen($group->backlink > 0 && $backlinks->isNotEmpty(), 'idir::admin.dir.partials.backlink')
+                @includeWhen($group->backlink > 0 && optional($backlinks)->isNotEmpty(), 'idir::admin.dir.partials.backlink')
                 @if ($group->prices->isNotEmpty())
                 @include('idir::admin.dir.partials.payment')
                 @endif

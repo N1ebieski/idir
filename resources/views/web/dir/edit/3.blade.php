@@ -21,11 +21,14 @@
     <h3 class="h5 border-bottom pb-2">{{ trans('idir::dirs.route.edit.3') }}</h3>
     <div class="row mb-4">
         <div class="col-md-8">
-            @include('idir::web.dir.partials.summary', ['value' => session("dirId.{$dir->id}")])
+            @include('idir::web.dir.partials.summary', [
+                'value' => session("dirId.{$dir->id}"),
+                'categories' => $categoriesSelection
+            ])
             <form method="post" action="{{ route('web.dir.update_3', [$dir->id, $group->id]) }}" id="edit3">
                 @csrf
                 @method('put')
-                @includeWhen($group->backlink > 0 && $backlinks->isNotEmpty(), 'idir::web.dir.partials.backlink')
+                @includeWhen($group->backlink > 0 && optional($backlinks)->isNotEmpty(), 'idir::web.dir.partials.backlink')
                 @if ($dir->isPayment($group->id) && $group->prices->isNotEmpty())
                 @include('idir::web.dir.partials.payment')
                 @else

@@ -3,7 +3,6 @@
 namespace N1ebieski\IDir\Http\Controllers\Web;
 
 use N1ebieski\IDir\Models\Dir;
-use N1ebieski\ICore\Models\Link;
 use N1ebieski\IDir\Models\Group;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\App;
@@ -28,7 +27,6 @@ use N1ebieski\IDir\Models\Payment\Dir\Payment;
 use N1ebieski\IDir\Filters\Web\Dir\IndexFilter;
 use N1ebieski\IDir\Loads\Web\Dir\EditRenewLoad;
 use N1ebieski\IDir\Filters\Web\Dir\SearchFilter;
-use N1ebieski\IDir\Models\Category\Dir\Category;
 use N1ebieski\IDir\Loads\Web\Dir\UpdateRenewLoad;
 use N1ebieski\IDir\Http\Requests\Web\Dir\ShowRequest;
 use N1ebieski\IDir\Http\Requests\Web\Dir\Edit2Request;
@@ -54,6 +52,11 @@ use N1ebieski\IDir\Http\Requests\Web\Dir\UpdateRenewCodeRequest;
 use N1ebieski\IDir\Events\Web\Dir\DestroyEvent as DirDestroyEvent;
 use N1ebieski\IDir\Events\Web\Dir\UpdateRenewEvent as DirUpdateRenewEvent;
 use N1ebieski\IDir\Events\Web\Payment\Dir\StoreEvent as PaymentStoreEvent;
+use N1ebieski\IDir\View\ViewModels\Web\Dir\Create2ViewModel;
+use N1ebieski\IDir\View\ViewModels\Web\Dir\Create3ViewModel;
+use N1ebieski\IDir\View\ViewModels\Web\Dir\Edit2ViewModel;
+use N1ebieski\IDir\View\ViewModels\Web\Dir\Edit3ViewModel;
+use N1ebieski\IDir\View\ViewModels\Web\Dir\EditRenewViewModel;
 
 /**
  * [DirController description]
@@ -150,7 +153,12 @@ class DirController
      */
     public function create2(Group $group, Create2Load $load, Create2Request $request) : HttpResponse
     {
-        return Response::view('idir::web.dir.create.2', compact('group'));
+        return Response::view(
+            'idir::web.dir.create.2',
+            App::make(Create2ViewModel::class, [
+                'group' => $group
+            ])
+        );
     }
 
     /**
@@ -172,8 +180,6 @@ class DirController
      * [create3 description]
      * @param  Group          $group    [description]
      * @param  Dir            $dir      [description]
-     * @param  Category       $category [description]
-     * @param  Link           $link     [description]
      * @param  Create3Load    $load     [description]
      * @param  Create3Request $request  [description]
      * @return HttpResponse                     [description]
@@ -181,24 +187,17 @@ class DirController
     public function create3(
         Group $group,
         Dir $dir,
-        Category $category,
-        Link $link,
         Create3Load $load,
         Create3Request $request
     ) : HttpResponse {
         $dir->makeService()->createOrUpdateSession($request->validated());
 
-        $categories = $category->makeRepo()->getByIds(
-            $request->session()->get('dir.categories')
+        return Response::view(
+            'idir::web.dir.create.3',
+            App::make(Create3ViewModel::class, [
+                'group' => $group
+            ])
         );
-
-        $backlinks = $group->backlink > 0 ?
-            $link->makeRepo()->getAvailableBacklinksByCats(array_merge(
-                $categories->pluck('ancestors')->flatten()->pluck('id')->toArray(),
-                $categories->pluck('id')->toArray()
-            )) : null;
-
-        return Response::view('idir::web.dir.create.3', compact('group', 'categories', 'backlinks'));
     }
 
     /**
@@ -257,7 +256,13 @@ class DirController
      */
     public function edit2(Dir $dir, Group $group, Edit2Load $load, Edit2Request $request) : HttpResponse
     {
-        return Response::view('idir::web.dir.edit.2', compact('dir', 'group'));
+        return Response::view(
+            'idir::web.dir.edit.2',
+            App::make(Edit2ViewModel::class, [
+                'dir' => $dir,
+                'group' => $group
+            ])
+        );
     }
 
     /**
@@ -279,8 +284,6 @@ class DirController
      * [edit3 description]
      * @param  Group          $group    [description]
      * @param  Dir            $dir      [description]
-     * @param  Category       $category [description]
-     * @param  Link           $link     [description]
      * @param  Edit3Load      $load     [description]
      * @param  Edit3Request   $request  [description]
      * @return HttpResponse                     [description]
@@ -288,26 +291,17 @@ class DirController
     public function edit3(
         Dir $dir,
         Group $group,
-        Category $category,
-        Link $link,
         Edit3Load $load,
         Edit3Request $request
     ) : HttpResponse {
         $dir->makeService()->createOrUpdateSession($request->validated());
 
-        $categories = $category->makeRepo()->getByIds(
-            $request->session()->get("dirId.{$dir->id}.categories")
-        );
-
-        $backlinks = $group->backlink > 0 ?
-            $link->makeRepo()->getAvailableBacklinksByCats(array_merge(
-                $categories->pluck('ancestors')->flatten()->pluck('id')->toArray(),
-                $categories->pluck('id')->toArray()
-            )) : null;
-
         return Response::view(
             'idir::web.dir.edit.3',
-            compact('dir', 'group', 'categories', 'backlinks')
+            App::make(Edit3ViewModel::class, [
+                'dir' => $dir,
+                'group' => $group
+            ])
         );
     }
 
@@ -349,7 +343,12 @@ class DirController
      */
     public function editRenew(Dir $dir, EditRenewLoad $load, EditRenewRequest $request) : HttpResponse
     {
-        return Response::view('idir::web.dir.edit_renew', compact('dir'));
+        return Response::view(
+            'idir::web.dir.edit_renew',
+            App::make(EditRenewViewModel::class, [
+                'dir' => $dir
+            ])
+        );
     }
 
     /**

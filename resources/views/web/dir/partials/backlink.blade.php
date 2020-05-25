@@ -12,7 +12,7 @@
     @includeWhen($errors->has('backlink'), 'icore::web.partials.errors', ['name' => 'backlink'])
 </div>
 <div class="form-group">
-    <textarea class="form-control" id="backlink_code" rows="5" readonly>{{ optional(old('backlink_model', $backlinks->first()))->link_as_html }}</textarea>
+    <textarea class="form-control" id="backlink_code" rows="5" readonly>{{ optional($backlinkSelection)->link_as_html }}</textarea>
 </div>
 <div class="form-group">
     <label for="backlink_url">{{ trans('idir::dirs.backlink_url') }}:</label>

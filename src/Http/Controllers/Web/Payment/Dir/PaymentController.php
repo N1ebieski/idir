@@ -40,7 +40,8 @@ class PaymentController extends Controller implements Polymorphic
                     'title' => $payment->morph->title,
                     'group' => $payment->order->group->name,
                     'days' => $days = $payment->order->days,
-                    'limit' => $days !== null ? strtolower(Lang::get('idir::groups.days'))
+                    'limit' => $days !== null ?
+                        strtolower(Lang::get('idir::groups.days'))
                         : strtolower(Lang::get('idir::groups.unlimited'))
                 ]),
                 'userdata' => json_encode([

@@ -2,14 +2,13 @@
 
 namespace N1ebieski\IDir\Http\Controllers\Admin;
 
-use Illuminate\Support\Facades\View;
 use N1ebieski\IDir\Models\Dir;
-use N1ebieski\ICore\Models\Link;
 use N1ebieski\IDir\Models\Group;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Lang;
+use Illuminate\Support\Facades\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Response;
@@ -41,10 +40,14 @@ use N1ebieski\IDir\Http\Requests\Admin\Dir\EditFull3Request;
 use N1ebieski\IDir\Http\Requests\Admin\Dir\Store3CodeRequest;
 use N1ebieski\IDir\Http\Requests\Admin\Dir\UpdateFull2Request;
 use N1ebieski\IDir\Http\Requests\Admin\Dir\UpdateFull3Request;
+use N1ebieski\IDir\View\ViewModels\Admin\Dir\Create2ViewModel;
+use N1ebieski\IDir\View\ViewModels\Admin\Dir\Create3ViewModel;
 use N1ebieski\IDir\Http\Requests\Admin\Dir\UpdateStatusRequest;
 use N1ebieski\IDir\Events\Admin\Dir\StoreEvent as DirStoreEvent;
 use N1ebieski\IDir\Http\Requests\Admin\Dir\DestroyGlobalRequest;
 use N1ebieski\IDir\Http\Responses\Admin\Dir\UpdateFull3Response;
+use N1ebieski\IDir\View\ViewModels\Admin\Dir\EditFull2ViewModel;
+use N1ebieski\IDir\View\ViewModels\Admin\Dir\EditFull3ViewModel;
 use N1ebieski\IDir\Http\Requests\Admin\Dir\UpdateFull3CodeRequest;
 use N1ebieski\IDir\Events\Admin\Dir\DestroyEvent as DirDestroyEvent;
 use N1ebieski\IDir\Events\Admin\Dir\UpdateFullEvent as DirUpdateFullEvent;
@@ -103,7 +106,12 @@ class DirController
      */
     public function create2(Group $group, Create2Load $load, Create2Request $request) : HttpResponse
     {
-        return Response::view('idir::admin.dir.create.2', compact('group'));
+        return Response::view(
+            'idir::admin.dir.create.2',
+            App::make(Create2ViewModel::class, [
+                'group' => $group
+            ])
+        );
     }
 
     /**
@@ -125,8 +133,6 @@ class DirController
      * [create3 description]
      * @param  Group          $group    [description]
      * @param  Dir            $dir      [description]
-     * @param  Category       $category [description]
-     * @param  Link           $link     [description]
      * @param  Create3Load    $load     [description]
      * @param  Create3Request $request  [description]
      * @return HttpResponse             [description]
@@ -134,24 +140,17 @@ class DirController
     public function create3(
         Group $group,
         Dir $dir,
-        Category $category,
-        Link $link,
         Create3Load $load,
         Create3Request $request
     ) : HttpResponse {
         $dir->makeService()->createOrUpdateSession($request->validated());
 
-        $categories = $category->makeRepo()->getByIds(
-            $request->session()->get('dir.categories')
+        return Response::view(
+            'idir::admin.dir.create.3',
+            App::make(Create3ViewModel::class, [
+                'group' => $group
+            ])
         );
-
-        $backlinks = $group->backlink > 0 ?
-            $link->makeRepo()->getAvailableBacklinksByCats(array_merge(
-                $categories->pluck('ancestors')->flatten()->pluck('id')->toArray(),
-                $categories->pluck('id')->toArray()
-            )) : null;
-
-        return Response::view('idir::admin.dir.create.3', compact('group', 'categories', 'backlinks'));
     }
 
     /**
@@ -210,7 +209,13 @@ class DirController
      */
     public function editFull2(Dir $dir, Group $group, EditFull2Load $load, EditFull2Request $request) : HttpResponse
     {
-        return Response::view('idir::admin.dir.edit_full.2', compact('dir', 'group'));
+        return Response::view(
+            'idir::admin.dir.edit_full.2',
+            App::make(EditFull2ViewModel::class, [
+                'dir' => $dir,
+                'group' => $group
+            ])
+        );
     }
 
     /**
@@ -236,8 +241,6 @@ class DirController
      * [editFull3 description]
      * @param  Group              $group    [description]
      * @param  Dir                $dir      [description]
-     * @param  Category           $category [description]
-     * @param  Link               $link     [description]
      * @param  EditFull3Load      $load     [description]
      * @param  EditFull3Request   $request  [description]
      * @return HttpResponse                 [description]
@@ -245,26 +248,17 @@ class DirController
     public function editFull3(
         Dir $dir,
         Group $group,
-        Category $category,
-        Link $link,
         EditFull3Load $load,
         EditFull3Request $request
     ) : HttpResponse {
         $dir->makeService()->createOrUpdateSession($request->validated());
 
-        $categories = $category->makeRepo()->getByIds(
-            $request->session()->get("dirId.{$dir->id}.categories")
-        );
-
-        $backlinks = $group->backlink > 0 ?
-            $link->makeRepo()->getAvailableBacklinksByCats(array_merge(
-                $categories->pluck('ancestors')->flatten()->pluck('id')->toArray(),
-                $categories->pluck('id')->toArray()
-            )) : null;
-
         return Response::view(
             'idir::admin.dir.edit_full.3',
-            compact('dir', 'group', 'categories', 'backlinks')
+            App::make(EditFull3ViewModel::class, [
+                'dir' => $dir,
+                'group' => $group
+            ])
         );
     }
 

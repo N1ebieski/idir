@@ -22,11 +22,14 @@
     </h1>
     <div class="row mb-4">
         <div class="col-lg-8">
-            @include('idir::admin.dir.partials.summary', ['value' => session("dirId.{$dir->id}")])
+            @include('idir::admin.dir.partials.summary', [
+                'value' => session("dirId.{$dir->id}"),
+                'categories' => $categoriesSelection
+            ])
             <form method="post" action="{{ route('admin.dir.update_full_3', [$dir->id, $group->id]) }}" id="edit3">
                 @csrf
                 @method('put')
-                @includeWhen($group->backlink > 0 && $backlinks->isNotEmpty(), 'idir::admin.dir.partials.backlink')
+                @includeWhen($group->backlink > 0 && optional($backlinks)->isNotEmpty(), 'idir::admin.dir.partials.backlink')
                 @if ($dir->isPayment($group->id) && $group->prices->isNotEmpty())
                 @include('idir::admin.dir.partials.payment')
                 @endif

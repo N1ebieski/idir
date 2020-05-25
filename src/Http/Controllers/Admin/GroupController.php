@@ -11,6 +11,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Http\Response as HttpResponse;
+use Illuminate\Support\Facades\App;
 use N1ebieski\IDir\Filters\Admin\Group\IndexFilter;
 use N1ebieski\IDir\Http\Requests\Admin\Group\EditRequest;
 use N1ebieski\IDir\Http\Requests\Admin\Group\IndexRequest;
@@ -19,6 +20,9 @@ use N1ebieski\IDir\Http\Requests\Admin\Group\CreateRequest;
 use N1ebieski\IDir\Http\Requests\Admin\Group\UpdateRequest;
 use N1ebieski\IDir\Http\Requests\Admin\Group\DestroyRequest;
 use N1ebieski\IDir\Http\Requests\Admin\Group\UpdatePositionRequest;
+use N1ebieski\IDir\Loads\Admin\Group\EditLoad;
+use N1ebieski\IDir\View\ViewModels\Admin\Group\CreateViewModel;
+use N1ebieski\IDir\View\ViewModels\Admin\Group\EditViewModel;
 
 /**
  * Base Group Controller
@@ -47,17 +51,11 @@ class GroupController
     /**
      * Show the form for creating a new Group.
      *
-     * @param  Group      $group      [description]
-     * @param Privilege   $privilege  [description]
-     * @param CreateRequest $request  [description]
      * @return HttpResponse
      */
-    public function create(Group $group, Privilege $privilege, CreateRequest $request) : HttpResponse
+    public function create() : HttpResponse
     {
-        return Response::view('idir::admin.group.create', [
-            'privileges' => $privilege->orderBy('name', 'asc')->get(),
-            'groups' => $group->orderBy('id', 'asc')->get()
-        ]);
+        return Response::view('idir::admin.group.create', App::make(CreateViewModel::class));
     }
 
     /**
@@ -79,17 +77,18 @@ class GroupController
      * Show the form for editing the specified Group.
      *
      * @param  Group       $group
-     * @param  Privilege   $privilege  [description]
+     * @param  EditLoad    $load
      * @param  EditRequest $request    [description]
      * @return HttpResponse
      */
-    public function edit(Group $group, Privilege $privilege, EditRequest $request) : HttpResponse
+    public function edit(Group $group, EditLoad $load, EditRequest $request) : HttpResponse
     {
-        return Response::view('idir::admin.group.edit', [
-            'group' => $group,
-            'groups' => $group->orderBy('id', 'asc')->get(),
-            'privileges' => $privilege->makeRepo()->getWithGroup($group->id)
-        ]);
+        return Response::view(
+            'idir::admin.group.edit',
+            App::make(EditViewModel::class, [
+                'group' => $group
+            ])
+        );
     }
 
     /**

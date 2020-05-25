@@ -20,10 +20,13 @@
     <h3 class="h5 border-bottom pb-2">{{ trans('idir::dirs.route.create.3') }}</h3>
     <div class="row mb-4">
         <div class="col-md-8">
-            @include('idir::web.dir.partials.summary', ['value' => session('dir')])
+            @include('idir::web.dir.partials.summary', [
+                'value' => session('dir'),
+                'categories' => $categoriesSelection
+            ])
             <form method="post" action="{{ route('web.dir.store_3', [$group->id]) }}" id="createSummary">
                 @csrf
-                @includeWhen($group->backlink > 0 && $backlinks->isNotEmpty(), 'idir::web.dir.partials.backlink')
+                @includeWhen($group->backlink > 0 && optional($backlinks)->isNotEmpty(), 'idir::web.dir.partials.backlink')
                 @if ($group->prices->isNotEmpty())
                 @include('idir::web.dir.partials.payment')
                 @else

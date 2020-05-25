@@ -850,10 +850,7 @@ class DirTest extends TestCase
         $payment = Payment::orderBy('created_at', 'desc')->first();
 
         $response->assertSessionDoesntHaveErrors('payment_transfer');
-        $response->assertRedirect(route('web.payment.dir.show', [
-            $payment->uuid,
-            'redirect' => route('web.profile.edit_dir')
-        ]));
+        $response->assertRedirect(route('web.payment.dir.show', [$payment->uuid]));
     }
 
     public function test_dir_update_3_old_group_without_payment()

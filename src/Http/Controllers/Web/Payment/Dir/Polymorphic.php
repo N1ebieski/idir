@@ -6,7 +6,6 @@ use Illuminate\Http\RedirectResponse;
 use N1ebieski\IDir\Loads\Web\Payment\ShowLoad;
 use N1ebieski\IDir\Models\Payment\Dir\Payment;
 use N1ebieski\IDir\Http\Requests\Web\Payment\Interfaces\CompleteRequestStrategy;
-use N1ebieski\IDir\Http\Requests\Web\Payment\Interfaces\ShowRequestStrategy;
 use N1ebieski\IDir\Utils\Payment\Interfaces\TransferUtilStrategy;
 
 /**
@@ -19,14 +18,12 @@ interface Polymorphic
      *
      * @param Payment $payment
      * @param ShowLoad $load
-     * @param ShowRequestStrategy $request
      * @param TransferUtilStrategy $transferUtil
      * @return RedirectResponse
      */
     public function show(
         Payment $payment,
         ShowLoad $load,
-        ShowRequestStrategy $request,
         TransferUtilStrategy $transferUtil
     ) : RedirectResponse;
 

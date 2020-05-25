@@ -38,7 +38,7 @@
                     <div class="@isTheme('dark', 'trumbowyg-dark')">
                         <textarea class="form-control @isValid('content')" 
                         id="content_html{{ $group->hasEditorPrivilege() ? '_dir_trumbowyg' : null }}"
-                        name="content_html" rows="5">{{ old('content_html', session('dir.content_html')) }}</textarea>
+                        name="content_html" rows="5">{{ $oldContentHtml }}</textarea>
                     </div>
                     @includeWhen($errors->has('content'), 'icore::admin.partials.errors', ['name' => 'content'])
                 </div>
@@ -76,10 +76,10 @@
                     <div id="category">
                         <div id="categoryOptions">
                             @include('icore::admin.category.partials.search', ['categories'
-                            => old('categories_collection', collect([])), 'checked' => true])
+                            => collect($categoriesSelection), 'checked' => true])
                         </div>
                         <div id="searchCategory"
-                        {{ (old('categories_collection', collect([]))->count() >= $group->max_cats) ? 'style=display:none' : '' }}
+                        {{ collect($categoriesSelection)->count() >= $group->max_cats ? 'style=display:none' : '' }}
                         data-route="{{ route('admin.category.dir.search') }}" data-max="{{ $group->max_cats }}"
                         class="position-relative">
                             <div class="input-group">

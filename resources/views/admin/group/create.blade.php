@@ -158,9 +158,9 @@
                         </select>
                         @includeWhen($errors->has('alt_id'), 'icore::admin.partials.errors', ['name' => 'alt_id'])
                     </div>
-                    @include('idir::admin.group.partials.payment.transfer', ['prices' => old('prices_collection.transfer')])
-                    @include('idir::admin.group.partials.payment.code_sms', ['prices' => old('prices_collection.code_sms')])
-                    @include('idir::admin.group.partials.payment.code_transfer', ['prices' => old('prices_collection.code_transfer')])
+                    @include('idir::admin.group.partials.payment.transfer', ['prices' => $pricesSelectionByType('transfer')])
+                    @include('idir::admin.group.partials.payment.code_sms', ['prices' => $pricesSelectionByType('code_sms')])
+                    @include('idir::admin.group.partials.payment.code_transfer', ['prices' => $pricesSelectionByType('code_transfer')])
                 </div>
                 <hr>
                 <button type="submit" class="btn btn-primary">{{ trans('icore::default.save') }}</button>
