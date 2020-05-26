@@ -312,9 +312,11 @@ class DirService implements
         return $this->dir->update([
             'privileged_at' => $this->carbon->now()->format('Y-m-d H:i:s'),
             'privileged_to' => is_int($attributes['days']) ?
-                $this->dir->privileged_to !== null ?
-                    $this->carbon->parse($this->dir->privileged_to)->addDays($attributes['days'])
-                    : $this->carbon->now()->addDays($attributes['days'])
+                (
+                    $this->dir->privileged_to !== null ?
+                        $this->carbon->parse($this->dir->privileged_to)->addDays($attributes['days'])
+                        : $this->carbon->now()->addDays($attributes['days'])
+                )
                 : null
         ]);
     }
