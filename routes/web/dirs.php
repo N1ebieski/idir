@@ -12,11 +12,10 @@ Route::match(['get', 'post'], 'dirs/{dir_cache}', 'DirController@show')
     ->name('dir.show')
     ->where('dir_cache', '[0-9A-Za-z,_-]+');
 
-Route::group(['middleware' => ['auth', 'icore.ban.user', 'icore.ban.ip']], function () {
-    Route::get('dirs/create/1', 'DirController@create1')
-        ->middleware('permission:create dirs')
-        ->name('dir.create_1');
+Route::get('dirs/create/1', 'DirController@create1')
+    ->name('dir.create_1');
 
+Route::group(['middleware' => ['auth', 'icore.ban.user', 'icore.ban.ip']], function () {
     Route::get('dirs/group/{group}/create/2', 'DirController@create2')
         ->where('group', '[0-9]+')
         ->middleware('permission:create dirs')
