@@ -48,15 +48,16 @@
     </select>
 </div>
 @endif
-<button type="button" class="btn btn-primary btn-send" id="filterFilter">
-    <i class="fas fa-check"></i>
-    {{ trans('icore::default.apply') }}
-</button>
-&nbsp;
-<button type="button" class="btn btn-secondary" data-dismiss="modal">
-    <i class="fas fa-ban"></i>
-    {{ trans('icore::default.cancel') }}
-</button>
+<div class="d-inline">
+    <button type="button" class="btn btn-primary btn-send" id="filterFilter">
+        <i class="fas fa-check"></i>
+        {{ trans('icore::default.apply') }}
+    </button>
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+        <i class="fas fa-ban"></i>
+        {{ trans('icore::default.cancel') }}
+    </button>
+</div>
 @endslot
 @endcomponent
 

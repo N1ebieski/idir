@@ -77,15 +77,16 @@
         </option>
     </select>
 </div>
-<button type="button" class="btn btn-primary btn-send" id="filterFilter">
-    <i class="fas fa-check"></i>
-    <span>{{ trans('icore::default.apply') }}</span>
-</button>
-&nbsp;
-<button type="button" class="btn btn-secondary" data-dismiss="modal">
-    <i class="fas fa-ban"></i>
-    <span>{{ trans('icore::default.cancel') }}</span>
-</button>
+<div class="d-inline">
+    <button type="button" class="btn btn-primary btn-send" id="filterFilter">
+        <i class="fas fa-check"></i>
+        <span>{{ trans('icore::default.apply') }}</span>
+    </button>
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+        <i class="fas fa-ban"></i>
+        <span>{{ trans('icore::default.cancel') }}</span>
+    </button>
+</div>
 @endslot
 @endcomponent
 
