@@ -47,7 +47,8 @@ class DirRepo
      */
     public function paginateForAdminByFilter(array $filter) : LengthAwarePaginator
     {
-        return $this->dir->withCount('reports')
+        return $this->dir->selectRaw('`dirs`.*')
+            ->withCount('reports')
             ->with([
                 'group',
                 'group.prices',
@@ -64,7 +65,38 @@ class DirRepo
             ->withSumRating()
             ->filterAuthor($filter['author'])
             ->filterExcept($filter['except'])
-            ->filterSearch($filter['search'])
+            ->when($filter['search'] !== null, function ($query) use ($filter) {
+                $query->filterSearch($filter['search'])
+                    ->when(array_key_exists('payment', $this->dir->search), function ($query) {
+                        $payment = $this->dir->payments()->make();
+
+                        $columns = implode(',', $payment->searchable);
+
+                        $query->leftJoin('payments', function ($query) use ($payment) {
+                            $query->on('payments.model_id', '=', 'dirs.id')
+                                ->where([
+                                    ['payments.model_type', $this->dir->getMorphClass()],
+                                    ['payments.status', $payment::FINISHED]
+                                ]);
+                        })
+                        ->whereRaw("MATCH ({$columns}) AGAINST (? IN BOOLEAN MODE)", [
+                            $this->dir->search['payment']
+                        ])
+                        ->groupBy('dirs.id');
+                    })
+                    ->when(array_key_exists('user', $this->dir->search), function ($query) {
+                        $user = $this->dir->user()->make();
+
+                        $columns = implode(',', $user->searchable);
+
+                        $query->leftJoin('users', function ($query) use ($user) {
+                            $query->on('users.id', '=', 'dirs.user_id');
+                        })
+                        ->whereRaw("MATCH ({$columns}) AGAINST (? IN BOOLEAN MODE)", [
+                            $this->dir->search['user']
+                        ]);
+                    });
+            })
             ->filterStatus($filter['status'])
             ->filterGroup($filter['group'])
             ->filterCategory($filter['category'])

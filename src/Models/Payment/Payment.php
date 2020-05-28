@@ -8,6 +8,7 @@ use N1ebieski\IDir\Repositories\PaymentRepo;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\App;
 use N1ebieski\ICore\Models\Traits\Carbonable;
+use N1ebieski\ICore\Models\Traits\FullTextSearchable;
 use N1ebieski\ICore\Models\Traits\Polymorphic;
 use Ramsey\Uuid\Uuid;
 
@@ -16,7 +17,7 @@ use Ramsey\Uuid\Uuid;
  */
 class Payment extends Model
 {
-    use Polymorphic, Carbonable;
+    use Polymorphic, Carbonable, FullTextSearchable;
 
     // Configuration
 
@@ -45,6 +46,15 @@ class Payment extends Model
      */
     protected $fillable = [
         'status',
+        'logs'
+    ];
+
+    /**
+     * The columns of the full text index
+     *
+     * @var array
+     */
+    public $searchable = [
         'logs'
     ];
 
