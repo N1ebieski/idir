@@ -126,6 +126,7 @@ data-id="{{ $dir->id }}">
                         <small>
                             <span>{{ trans('idir::dirs.author') }}:</span>
                             <span><a href="{{ route('admin.dir.index', ['filter[author]' => $dir->user->id]) }}">{{ $dir->user->name }}</a></span>
+                            <span><a href="{{ route('admin.dir.index', ['filter[search]' => "user:\"{$dir->user->ip}\""]) }}">{{ $dir->user->ip }}</a></span>
                         </small>
                     </li>
                     @endif

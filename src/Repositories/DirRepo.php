@@ -89,7 +89,7 @@ class DirRepo
 
                         $columns = implode(',', $user->searchable);
 
-                        $query->leftJoin('users', function ($query) use ($user) {
+                        $query->leftJoin('users', function ($query) {
                             $query->on('users.id', '=', 'dirs.user_id');
                         })
                         ->whereRaw("MATCH ({$columns}) AGAINST (? IN BOOLEAN MODE)", [
