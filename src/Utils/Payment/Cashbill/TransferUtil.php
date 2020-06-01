@@ -150,7 +150,7 @@ class TransferUtil implements TransferUtilStrategy
      */
     public function isAmount(float $amount) : bool
     {
-        return $this->amount === number_format($amount, 2);
+        return $this->amount === number_format($amount, 2, '.', '');
     }
 
     /**
