@@ -18,9 +18,10 @@ class EditLoad
         $request->route('dir')->load([
             'group',
             'group.privileges',
-            'group.fields',
+            'group.fields' => function ($query) {
+                $query->orderBy('position', 'asc');
+            },
             'regions',
-            'fields',
             'categories' => function ($query) {
                 $query->withAncestorsExceptSelf();
             },
