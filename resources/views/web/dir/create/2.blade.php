@@ -125,8 +125,8 @@
 </div>
 @endsection
 
-{{-- @push('script')
+@push('script')
 @component('icore::web.partials.jsvalidation')
 {!! str_replace('"content"', '"content_html"', JsValidator::formRequest(\N1ebieski\IDir\Http\Requests\Web\Dir\Store2Request::class, '#createForm')); !!}
 @endcomponent
-@endpush --}}
+@endpush
