@@ -776,7 +776,7 @@ class Dir extends Model
     public function loadCheckoutPayments() : self
     {
         return $this->load(['payments' => function ($query) {
-            $query->with('orderMorph')->where('status', static::INACTIVE);
+            $query->with('orderMorph')->where('status', Payment::UNFINISHED);
         }]);
     }
 
@@ -795,7 +795,8 @@ class Dir extends Model
                 'group',
                 'group.privileges',
                 'group.fields' => function ($query) {
-                    return $query->public();
+                    return $query->orderBy('position', 'asc')
+                        ->public();
                 },
                 'tags',
                 'regions',
