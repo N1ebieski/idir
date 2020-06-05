@@ -162,18 +162,26 @@ data-id="{{ $dir->id }}">
                 @endcan
                 @can('status dirs')
                 @if ($dir->isUpdateStatus())
-                <button data-status="1" type="button" class="btn btn-success status"
+                <button data-status="{{ $dir::ACTIVE }}" type="button" class="btn btn-success status"
                 data-route="{{ route('admin.dir.update_status', [$dir->id]) }}"
-                {{ $dir->status == 1 ? 'disabled' : '' }}>
+                {{ $dir->status == $dir::ACTIVE ? 'disabled' : '' }}>
                     <i class="fas fa-toggle-on"></i>
                     <span class="d-none d-sm-inline"> {{ trans('icore::default.active') }}</span>
                 </button>
-                <button data-status="0" type="button" class="btn btn-warning status"
-                data-route="{{ route('admin.dir.update_status', [$dir->id]) }}"
-                {{ $dir->status == 0 ? 'disabled' : '' }}>
-                    <i class="fas fa-toggle-off"></i>
-                    <span class="d-none d-sm-inline"> {{ trans('icore::default.inactive') }}</span>
-                </button>
+                <div class="btn-group-vertical">
+                    <button data-status="{{ $dir::INACTIVE }}" type="button" class="btn btn-warning status"
+                    data-route="{{ route('admin.dir.update_status', [$dir->id]) }}"
+                    {{ $dir->status == $dir::INACTIVE ? 'disabled' : '' }}>
+                        <i class="fas fa-toggle-off"></i>
+                        <span class="d-none d-sm-inline"> {{ trans('icore::default.inactive') }}</span>
+                    </button>
+                    <button data-status="{{ $dir::CORRECT_INACTIVE }}" type="button" class="btn btn-warning status"
+                    data-route="{{ route('admin.dir.update_status', [$dir->id]) }}"
+                    {{ $dir->status == $dir::CORRECT_INACTIVE ? 'disabled' : '' }}>
+                        <i class="far fa-times-circle"></i>
+                        <span class="d-none d-sm-inline"> {{ trans('idir::dirs.correct') }}</span>
+                    </button>                    
+                </div>
                 @endif
                 @endcan
                 <div class="btn-group-vertical">

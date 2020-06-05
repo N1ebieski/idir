@@ -64,6 +64,12 @@ class Dir extends Model
     public const STATUS_INACTIVE = 4;
 
     /**
+     * [public description]
+     * @var int
+     */
+    public const CORRECT_INACTIVE = 5;
+
+    /**
      * [private description]
      * @var bool
      */

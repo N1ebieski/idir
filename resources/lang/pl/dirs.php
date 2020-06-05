@@ -78,7 +78,8 @@ return [
         Dir::INACTIVE => 'oczekujący na moderację',
         Dir::PAYMENT_INACTIVE => 'oczekujący na płatność',
         Dir::BACKLINK_INACTIVE => 'oczekujący na backlink',
-        Dir::STATUS_INACTIVE => 'oczekujący na status 200'
+        Dir::STATUS_INACTIVE => 'oczekujący na status 200',
+        Dir::CORRECT_INACTIVE => 'oczekujący na poprawę'
     ],
     'privileged_to' => 'Data wygaśnięcia',
     'delete_reason' => 'Powód usunięcia',
@@ -115,5 +116,6 @@ return [
     'latest' => 'Najnowsze wpisy',
     'title' => 'Tytuł',
     'notes' => 'Uwagi dla moderatora',
-    'more' => 'pokaż więcej &raquo'
+    'more' => 'pokaż więcej &raquo',
+    'correct' => 'Poprawa'
 ];
