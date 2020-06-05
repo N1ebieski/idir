@@ -1,6 +1,6 @@
 <?php
 
-namespace N1ebieski\IDir\Tests\Feature\Web;
+namespace N1ebieski\IDir\Tests\Feature\Api\Payment\Dir;
 
 use Illuminate\Support\Facades\Config;
 use N1ebieski\ICore\Models\Link;
