@@ -23,6 +23,9 @@ data-id="{{ $dir->id }}">
             <ul class="list-unstyled mb-0 pb-0">
                 <li>
                     {!! $dir->title_as_link !!}
+                    @if ($dir->isUrl())
+                    <span> - {{ $dir->url_as_host }}</span>
+                    @endif
                     @if ($dir->reports_count > 0)
                     <span>
                         <a href="#" class="badge badge-danger show" data-toggle="modal"
