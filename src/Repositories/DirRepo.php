@@ -54,7 +54,9 @@ class DirRepo
                 'group.prices',
                 'group.fields',
                 'group.privileges',
-                'fields',
+                'fields' => function ($query) {
+                    $query->orderBy('position', 'asc');
+                },
                 'regions',
                 'categories',
                 'tags',
