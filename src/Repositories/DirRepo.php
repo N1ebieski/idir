@@ -52,11 +52,11 @@ class DirRepo
             ->with([
                 'group',
                 'group.prices',
-                'group.fields',
-                'group.privileges',
-                'fields' => function ($query) {
+                'group.fields' => function ($query) {
                     $query->orderBy('position', 'asc');
                 },
+                'group.privileges',
+                'fields',
                 'regions',
                 'categories',
                 'tags',
