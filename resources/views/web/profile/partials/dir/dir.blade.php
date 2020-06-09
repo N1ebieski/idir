@@ -8,7 +8,12 @@ data-id="{{ $dir->id }}">
                     {{ trans("idir::dirs.status.{$dir->status}") }}
                 </span>
             </li>
-            <li class="my-2 text-break">{{ $dir->short_content }}...</li>
+            <li class="text-break">{{ $dir->short_content }}...</li>
+            @if ($dir->notes)
+            <li class="text-break font-weight-bold">
+                {{ $dir->notes }}
+            </li>
+            @endif
             <li>
                 <div class="d-flex">
                     <small class="mr-auto">{{ trans('idir::dirs.group') }}: {{ $dir->group->name }}</small>

@@ -66,9 +66,21 @@ class SendIncorrectNotification
             return;
         }
 
+        $this->updateNotes();
+
         $this->mailer->send($this->app->make(IncorrectMail::class, [
             'dir' => $event->dir,
             'reason' => $event->reason
         ]));
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @return boolean
+     */
+    protected function updateNotes() : bool
+    {
+        return $this->event->dir->update(['notes' => $this->event->reason]);
     }
 }

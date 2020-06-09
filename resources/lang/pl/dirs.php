@@ -123,7 +123,7 @@ return [
     'related' => 'Podobne wpisy',
     'latest' => 'Najnowsze wpisy',
     'title' => 'Tytuł',
-    'notes' => 'Uwagi dla moderatora',
+    'notes' => 'Uwagi moderatora',
     'more' => 'pokaż więcej &raquo',
     'correct' => 'Poprawa',
     'confirm' => [
