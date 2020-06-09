@@ -35,7 +35,7 @@ class IndexRequest extends FormRequest
             'except' => 'filled|array',
             'except.*' => 'integer',
             'filter.search' => 'bail|nullable|string|min:3|max:255',
-            'filter.status' => 'bail|nullable|integer|between:0,4|no_js_validation',
+            'filter.status' => 'bail|nullable|integer|between:0,5|no_js_validation',
             'filter.group' => 'bail|nullable|integer|exists:groups,id|no_js_validation',
             'filter.category' => 'bail|nullable|integer|exists:categories,id|no_js_validation',
             'filter.author' => 'bail|nullable|integer|exists:users,id|no_js_validation',

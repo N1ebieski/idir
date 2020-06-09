@@ -162,22 +162,29 @@ data-id="{{ $dir->id }}">
                 @endcan
                 @can('status dirs')
                 @if ($dir->isUpdateStatus())
-                <button data-status="{{ $dir::ACTIVE }}" type="button" class="btn btn-success status"
-                data-route="{{ route('admin.dir.update_status', [$dir->id]) }}"
+                <button data-status="{{ $dir::ACTIVE }}" type="button" class="btn btn-success statusDir"
+                data-route="{{ route('admin.dir.update_status', [$dir->id]) }}" data-id="{{ $dir->id }}"
                 {{ $dir->status == $dir::ACTIVE ? 'disabled' : '' }}>
                     <i class="fas fa-toggle-on"></i>
                     <span class="d-none d-sm-inline"> {{ trans('icore::default.active') }}</span>
                 </button>
                 <div class="btn-group-vertical">
-                    <button data-status="{{ $dir::INACTIVE }}" type="button" class="btn btn-warning status"
-                    data-route="{{ route('admin.dir.update_status', [$dir->id]) }}"
+                    <button data-status="{{ $dir::INACTIVE }}" type="button" class="btn btn-warning statusDir"
+                    data-route="{{ route('admin.dir.update_status', [$dir->id]) }}" data-id="{{ $dir->id }}"
                     {{ $dir->status == $dir::INACTIVE ? 'disabled' : '' }}>
                         <i class="fas fa-toggle-off"></i>
                         <span class="d-none d-sm-inline"> {{ trans('icore::default.inactive') }}</span>
                     </button>
-                    <button data-status="{{ $dir::CORRECT_INACTIVE }}" type="button" class="btn btn-warning status"
+                    <button data-status="{{ $dir::INCORRECT_INACTIVE }}" type="button" class="btn btn-warning"
                     data-route="{{ route('admin.dir.update_status', [$dir->id]) }}"
-                    {{ $dir->status == $dir::CORRECT_INACTIVE ? 'disabled' : '' }}>
+                    data-toggle="dir-confirmation" data-id="{{ $dir->id }}" data-btn-ok-label=" {{ trans('icore::default.yes') }}" 
+                    data-btn-ok-icon-class="fas fa-check mr-1"
+                    data-btn-ok-class="btn h-100 d-flex justify-content-center btn-primary btn-popover statusDir" 
+                    data-btn-cancel-label=" {{ trans('icore::default.cancel') }}"
+                    data-btn-cancel-class="btn h-100 d-flex justify-content-center btn-secondary btn-popover" 
+                    data-btn-cancel-icon-class="fas fa-ban mr-1"
+                    data-title="{{ trans('idir::dirs.confirm.correct') }}"
+                    {{ $dir->status == $dir::INCORRECT_INACTIVE ? 'disabled' : '' }}>
                         <i class="far fa-times-circle"></i>
                         <span class="d-none d-sm-inline"> {{ trans('idir::dirs.correct') }}</span>
                     </button>                    

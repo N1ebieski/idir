@@ -21,7 +21,8 @@ class EventServiceProvider extends ServiceProvider
         ],
         \N1ebieski\IDir\Events\Admin\Dir\UpdateStatusEvent::class => [
             \N1ebieski\IDir\Listeners\Dir\Checkout::class,
-            \N1ebieski\IDir\Listeners\Dir\SendActivationNotification::class
+            \N1ebieski\IDir\Listeners\Dir\SendActivationNotification::class,
+            \N1ebieski\IDir\Listeners\Dir\SendIncorrectNotification::class,
         ],
         \N1ebieski\IDir\Events\Admin\Dir\StoreEvent::class => [
             \N1ebieski\IDir\Listeners\Dir\ClearSession::class,

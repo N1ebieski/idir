@@ -30,7 +30,7 @@ return [
             'left_days' => (int)env('IDIR_DIR_REMINDER_LEFT_DAYS', 7)
         ],
 
-        'delete_reasons' => [
+        'reasons' => [
             'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
             'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
             'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.',

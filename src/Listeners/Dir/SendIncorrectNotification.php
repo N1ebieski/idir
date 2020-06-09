@@ -2,15 +2,11 @@
 
 namespace N1ebieski\IDir\Listeners\Dir;
 
-use N1ebieski\IDir\Models\Dir;
 use Illuminate\Contracts\Mail\Mailer;
-use N1ebieski\IDir\Mail\Dir\ActivationMail;
+use N1ebieski\IDir\Mail\Dir\IncorrectMail;
 use Illuminate\Contracts\Foundation\Application as App;
 
-/**
- * [SendActivationNotification description]
- */
-class SendActivationNotification
+class SendIncorrectNotification
 {
     /**
      * Undocumented variable
@@ -51,7 +47,7 @@ class SendActivationNotification
      */
     public function verify() : bool
     {
-        return $this->event->dir->isActive()
+        return $this->event->dir->isIncorrect()
             && optional($this->event->dir->user)->email
             && optional($this->event->dir->user)->hasPermissionTo('notification dirs');
     }
@@ -70,10 +66,9 @@ class SendActivationNotification
             return;
         }
 
-        if ($event->dir->status === Dir::ACTIVE) {
-            $this->mailer->send($this->app->make(ActivationMail::class, [
-                'dir' => $event->dir
-            ]));
-        }
+        $this->mailer->send($this->app->make(IncorrectMail::class, [
+            'dir' => $event->dir,
+            'reason' => $event->reason
+        ]));
     }
 }

@@ -7,7 +7,7 @@ jQuery(document).on('click', 'a.destroyDir', function (e) {
     jQuery.ajax({
         url: $element.attr('data-route'),
         data: {
-            reason: $element.closest('.popover-body').find('select#reason').val(),
+            reason: $element.closest('.popover-body').find('#reason').val(),
         },
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

@@ -33,7 +33,7 @@ class EditDirRequest extends FormRequest
             'except' => 'filled|array',
             'except.*' => 'integer',
             'filter.search' => 'bail|nullable|string|min:3|max:255',
-            'filter.status' => 'bail|nullable|integer|between:0,4|no_js_validation',
+            'filter.status' => 'bail|nullable|integer|between:0,5|no_js_validation',
             'filter.group' => [
                 'bail',
                 'nullable',

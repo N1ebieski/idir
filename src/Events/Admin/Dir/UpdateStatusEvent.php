@@ -21,11 +21,20 @@ class UpdateStatusEvent
     public $dir;
 
     /**
-     * [__construct description]
-     * @param Dir $dir [description]
+     * [public description]
+     * @var string|null
      */
-    public function __construct(Dir $dir)
+    public $reason;
+
+    /**
+     * [__construct description]
+     * @param Dir    $dir    [description]
+     * @param string|null $reason [description]
+     */
+    public function __construct(Dir $dir, string $reason = null)
     {
         $this->dir = $dir;
+        
+        $this->reason = $reason;
     }
 }

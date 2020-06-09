@@ -19,7 +19,7 @@
         <a class="nav-link @isUrl(route('web.profile.edit_dir'))"
         href="{{ route('web.profile.edit_dir') }}">
             <i class="far fa-fw fa-folder-open"></i>
-            <span>{{ trans('idir::profile.page.edit_dir') }}</span>
+            <span>{{ trans('idir::profile.route.edit_dir') }}</span>
         </a>
     </li>
     @endcan

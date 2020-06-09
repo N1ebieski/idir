@@ -3,10 +3,8 @@
 namespace N1ebieski\IDir\Http\Requests\Admin\Dir;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
-/**
- * [UpdateStatusRequest description]
- */
 class UpdateStatusRequest extends FormRequest
 {
     /**
@@ -27,7 +25,16 @@ class UpdateStatusRequest extends FormRequest
     public function rules()
     {
         return [
-            'status' => 'required|integer|in:0,1'
+            'status' => [
+                'required',
+                'integer',
+                Rule::in([
+                    $this->dir::ACTIVE,
+                    $this->dir::INACTIVE,
+                    $this->dir::INCORRECT_INACTIVE
+                ])
+            ],
+            'reason' => 'nullable|string'
         ];
     }
 }

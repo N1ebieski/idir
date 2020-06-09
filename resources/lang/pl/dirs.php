@@ -31,7 +31,8 @@ return [
             Dir::ACTIVE => 'Wpis został edytowany i jest aktywny.'
         ],
         'update_status' => [
-            Dir::ACTIVE => 'Wpis został aktywowany'
+            Dir::ACTIVE => 'Wpis został aktywowany',
+            Dir::INCORRECT_INACTIVE => 'Wpis został zgłoszony do poprawy'
         ],
         'update_renew' => [
             Dir::INACTIVE => 'Dziękujemy. Czas ważności wpisu zostanie przedłużony w momencie akceptacji wpisu przed moderację.',
@@ -79,16 +80,23 @@ return [
         Dir::PAYMENT_INACTIVE => 'oczekujący na płatność',
         Dir::BACKLINK_INACTIVE => 'oczekujący na backlink',
         Dir::STATUS_INACTIVE => 'oczekujący na status 200',
-        Dir::CORRECT_INACTIVE => 'oczekujący na poprawę'
+        Dir::INCORRECT_INACTIVE => 'oczekujący na poprawę'
     ],
     'privileged_to' => 'Data wygaśnięcia',
-    'delete_reason' => 'Powód usunięcia',
+    'reason' => [
+        'label' => 'Powód odrzucenia',
+        'custom' => 'Inny powód'
+    ],
     'mail' => [
         'delete' => [
             'info' => 'Niestety przykro nam, ale Twój wpis :dir_link został usunięty z naszego katalogu.'
         ],
         'activation' => [
             'info' => 'Gratulujemy, Twój wpis :dir_link został poprawnie dodany do naszego katalogu i znajduje się na stronie: <a href=":dir_page">:dir_page</a>. Zapraszamy do kolejnych wpisów!'
+        ],
+        'incorrect' => [
+            'info' => 'Niestety przykro nam, ale Twój wpis :dir_link nie jest zgodny z naszym regulaminem i wymaga poprawy treści. Do tego czasu pozostanie nieaktywny.',
+            'edit_dir' => 'Edycji swojego wpisu dokonasz klikając w przycisk poniżej:'
         ],
         'reminder' => [
             'title' => 'Przypomnienie o wygasającym wpisie',
@@ -117,5 +125,8 @@ return [
     'title' => 'Tytuł',
     'notes' => 'Uwagi dla moderatora',
     'more' => 'pokaż więcej &raquo',
-    'correct' => 'Poprawa'
+    'correct' => 'Poprawa',
+    'confirm' => [
+        'correct' => 'Czy na pewno chcesz zgłosić wpis do poprawy?'
+    ]
 ];

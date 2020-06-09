@@ -12,7 +12,7 @@
 
 {!! trans('idir::dirs.mail.delete.info', ['dir_link' => $dir->title_as_link]) !!}
 
-{{ $reason !== null ? trans('idir::dirs.delete_reason') . ': ' . $reason : null }}
+{{ $reason !== null ? trans('idir::dirs.reason.label') . ': ' . $reason : null }}
 
 {{ trans('idir::dirs.content') }}: {{ $dir->content }}
 

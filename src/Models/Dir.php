@@ -67,7 +67,7 @@ class Dir extends Model
      * [public description]
      * @var int
      */
-    public const CORRECT_INACTIVE = 5;
+    public const INCORRECT_INACTIVE = 5;
 
     /**
      * [private description]
@@ -743,6 +743,16 @@ class Dir extends Model
     }
 
     /**
+     * Undocumented function
+     *
+     * @return boolean
+     */
+    public function isIncorrect() : bool
+    {
+        return $this->status === static::INCORRECT_INACTIVE;
+    }
+
+    /**
      * [isActive description]
      * @return bool [description]
      */
@@ -768,8 +778,9 @@ class Dir extends Model
     public function isUpdateStatus() : bool
     {
         return in_array($this->status, [
+            static::ACTIVE,
             static::INACTIVE,
-            static::ACTIVE
+            static::INCORRECT_INACTIVE
         ]);
     }
 

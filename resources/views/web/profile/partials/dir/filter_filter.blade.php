@@ -32,7 +32,10 @@
         </option>
         <option value="{{ $dir::STATUS_INACTIVE }}" {{ ($filter['status'] === $dir::STATUS_INACTIVE) ? 'selected' : '' }}>
             {{ trans('idir::dirs.status.'.$dir::STATUS_INACTIVE) }}
-        </option>      
+        </option>
+        <option value="{{ $dir::INCORRECT_INACTIVE }}" {{ ($filter['status'] === $dir::INCORRECT_INACTIVE) ? 'selected' : '' }}>
+            {{ trans('idir::dirs.status.'.$dir::INCORRECT_INACTIVE) }}
+        </option>
     </select>
 </div>
 @if ($groups->isNotEmpty())

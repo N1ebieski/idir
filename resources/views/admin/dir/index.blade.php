@@ -28,7 +28,9 @@
     @include('idir::admin.dir.partials.filter')
     @if ($dirs->isNotEmpty())
     <form action="{{ route('admin.dir.destroy_global') }}" method="post" id="selectForm"
-    data-reasons="{{ json_encode(config('idir.dir.delete_reasons')) }}" data-reasons-label="{{ trans('idir::dirs.delete_reason') }}">
+    data-reasons="{{ json_encode(config('idir.dir.reasons')) }}" 
+    data-reasons-label="{{ trans('idir::dirs.reason.label') }}"
+    data-reasons-custom="{{ trans('idir::dirs.reason.custom') }}">
         @csrf
         @method('delete')
         @can('destroy dirs')

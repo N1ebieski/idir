@@ -336,7 +336,12 @@ class DirController
 
         $dir->loadAllRels();
 
-        Event::dispatch(App::make(DirUpdateStatusEvent::class, ['dir' => $dir]));
+        Event::dispatch(
+            App::make(DirUpdateStatusEvent::class, [
+                'dir' => $dir,
+                'reason' => $request->input('reason')
+            ])
+        );
 
         return Response::json([
             'success' => '',

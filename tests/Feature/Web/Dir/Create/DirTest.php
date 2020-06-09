@@ -82,12 +82,12 @@ class DirTest extends TestCase
         return $fields;
     }
 
-    public function test_dir_create_1_as_guest()
-    {
-        $response = $this->get(route('web.dir.create_1'));
+    // public function test_dir_create_1_as_guest()
+    // {
+    //     $response = $this->get(route('web.dir.create_1'));
 
-        $response->assertRedirect(route('login'));
-    }
+    //     $response->assertRedirect(route('login'));
+    // }
 
     public function test_dir_create_1()
     {

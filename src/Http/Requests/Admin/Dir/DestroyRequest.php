@@ -3,8 +3,6 @@
 namespace N1ebieski\IDir\Http\Requests\Admin\Dir;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Validation\Rule;
 
 /**
  * [DestroyRequest description]
@@ -29,7 +27,7 @@ class DestroyRequest extends FormRequest
     public function rules()
     {
         return [
-            'reason' => 'nullable|string|' . Rule::in(Config::get('idir.dir.delete_reasons'))
+            'reason' => 'nullable|string'
         ];
     }
 }
