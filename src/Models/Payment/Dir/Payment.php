@@ -66,7 +66,7 @@ class Payment extends PaymentBaseModel
             'N1ebieski\IDir\Models\Price',
             'id',
             'id',
-            'price_id',
+            'order_id',
             'group_id'
         );
     }
