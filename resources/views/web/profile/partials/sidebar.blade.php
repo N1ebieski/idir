@@ -1,4 +1,4 @@
-<h3 class="h5 d-md-none">{{ trans('icore::profile.pages') }}</h3>
+<h3 class="h5 d-sm-none">{{ trans('icore::profile.pages') }}</h3>
 <ul class="sidebar navbar-nav h-100">
     <li class="nav-item @isUrl(route('web.profile.edit'))">
         <a class="nav-link @isUrl(route('web.profile.edit'))"

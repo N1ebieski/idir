@@ -40,7 +40,7 @@ data-id="{{ $dir->id }}">
                     <a class="btn btn-primary align-bottom" href="{{ route('web.dir.edit_1', [$dir->id]) }}"
                     role="button" target="_blank">
                         <i class="fas fa-edit"></i>
-                        <span class="d-none d-sm-inline">&nbsp;{{ trans('icore::default.edit') }}</span>
+                        <span class="d-none d-md-inline">&nbsp;{{ trans('icore::default.edit') }}</span>
                     </a>
                 </div>
                 @endcan
@@ -54,7 +54,7 @@ data-id="{{ $dir->id }}">
                 data-btn-cancel-icon-class="fas fa-ban mr-1"
                 data-title="{{ trans('icore::default.confirm') }}">
                     <i class="far fa-trash-alt"></i>
-                    <span class="d-none d-sm-inline">&nbsp;{{ trans('icore::default.delete') }}</span>
+                    <span class="d-none d-md-inline">&nbsp;{{ trans('icore::default.delete') }}</span>
                 </button>
                 @endcan
             </div>
