@@ -9,7 +9,7 @@
     <div id="field.{{ $field->id }}">
         @foreach ($field->options->options as $option)
         <div class="custom-control custom-checkbox">
-            <input type="checkbox" class="custom-control-input @isValid("field.{$field->id}")"
+            <input type="checkbox" class="custom-control-input {{ $isValid("field.{$field->id}") }}"
             id="field.{{ $field->id }}.{{ $loop->index }}" name="field[{{ $field->id }}][]"
             value="{{ $option }}" {{ in_array($option, old("field.{$field->id}", $value ?? null) ?? []) ? 'checked' : null }}>
             <label class="custom-control-label" for="field.{{ $field->id }}.{{ $loop->index }}">{{ $option }}</label>

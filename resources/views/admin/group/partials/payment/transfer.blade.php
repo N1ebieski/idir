@@ -22,14 +22,14 @@
                         {{ trans('idir::groups.price') }}
                     </div>
                 </div>
-                <input type="text" class="form-control @isValid("prices.transfer.{$loop->index}.price")"
+                <input type="text" class="form-control {{ $isValid("prices.transfer.{$loop->index}.price") }}"
                 name="prices[transfer][{{ $loop->index }}][price]" value="{{ $price->price ?? null }}">
                 <div class="input-group-prepend">
                     <div class="input-group-text">
                         {{ trans('idir::groups.days') }}
                     </div>
                 </div>
-                <input type="text" class="form-control @isValid("prices.transfer.{$loop->index}.days")"
+                <input type="text" class="form-control {{ $isValid("prices.transfer.{$loop->index}.days") }}"
                 name="prices[transfer][{{ $loop->index }}][days]" value="{{ $price->days ?? null }}">
                 @includeWhen($errors->has("prices.transfer.{$loop->index}.price"), 'icore::admin.partials.errors', ['name' => "prices.transfer.{$loop->index}.price"])
                 @includeWhen($errors->has("prices.transfer.{$loop->index}.days"), 'icore::admin.partials.errors', ['name' => "prices.transfer.{$loop->index}.days"])

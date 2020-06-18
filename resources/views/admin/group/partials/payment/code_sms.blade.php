@@ -23,7 +23,7 @@
                         {{ trans('idir::groups.price') }}
                     </div>
                 </div>
-                <input type="text" class="form-control @isValid("prices.code_sms.{$loop->index}.price")"
+                <input type="text" class="form-control {{ $isValid("prices.code_sms.{$loop->index}.price") }}"
                 name="prices[code_sms][{{ $loop->index }}][price]" value="{{ $price->price ?? null }}">
 
                 <div class="input-group-prepend">
@@ -31,7 +31,7 @@
                         {{ trans('idir::groups.days') }}
                     </div>
                 </div>
-                <input type="text" class="form-control @isValid("prices.code_sms.{$loop->index}.days")"
+                <input type="text" class="form-control {{ $isValid("prices.code_sms.{$loop->index}.days") }}"
                 name="prices[code_sms][{{ $loop->index }}][days]" value="{{ $price->days ?? null }}">
             </div>
 
@@ -44,7 +44,7 @@
                         {{ trans('idir::groups.code_sms') }}
                     </div>
                 </div>
-                <input type="text" class="form-control @isValid("prices.code_sms.{$loop->index}.code")"
+                <input type="text" class="form-control {{ $isValid("prices.code_sms.{$loop->index}.code") }}"
                 name="prices[code_sms][{{ $loop->index }}][code]" value="{{ $price->code ?? null }}">
 
                 <div class="input-group-prepend">
@@ -52,7 +52,7 @@
                         {{ trans('idir::groups.number') }}
                     </div>
                 </div>
-                <input type="text" class="form-control @isValid("prices.code_sms.{$loop->index}.number")"
+                <input type="text" class="form-control {{ $isValid("prices.code_sms.{$loop->index}.number") }}"
                 name="prices[code_sms][{{ $loop->index }}][number]" value="{{ $price->number ?? null }}">
             </div>
 
@@ -74,7 +74,7 @@
                         </div>
                     </div>
                 </div>
-                <textarea class="form-control @isValid("prices.code_sms.{$loop->index}.codes")"
+                <textarea class="form-control {{ $isValid("prices.code_sms.{$loop->index}.codes") }}"
                 name="prices[code_sms][{{ $loop->index }}][codes][codes]" readonly>{{ $price->codes_as_string }}</textarea>
             </div>
 

@@ -22,7 +22,7 @@
             id="nav-transfer" role="tabpanel" aria-labelledby="nav-transfer-tab">
                 <div class="form-group">
                     <label for="payment_transfer" class="sr-only"> {{ trans('idir::dirs.payment_transfer') }}</label>
-                    <select class="form-control @isValid('payment_transfer')" id="payment_transfer" name="payment_transfer">
+                    <select class="form-control {{ $isValid('payment_transfer') }}" id="payment_transfer" name="payment_transfer">
                         @foreach ($pricesByType('transfer') as $price)
                         <option value="{{ $price->id }}" {{ old('payment_transfer') == $price->id ? 'selected' : null }}>
                             {{ trans('idir::dirs.price', [
@@ -54,7 +54,7 @@
             id="nav-code_transfer" role="tabpanel" aria-labelledby="nav-code_transfer-tab">
                 <div class="form-group">
                     <label for="payment_code_transfer" class="sr-only"> {{ trans('idir::dirs.payment_code_transfer') }}</label>
-                    <select class="form-control @isValid('payment_code_transfer')" id="payment_code_transfer" name="payment_code_transfer">
+                    <select class="form-control {{ $isValid('payment_code_transfer') }}" id="payment_code_transfer" name="payment_code_transfer">
                         @foreach ($pricesByType('code_transfer') as $price)
                         <option value="{{ $price->id }}" {{ old('payment_code_transfer') == $price->id ? 'selected' : null }}
                         data="{{ json_encode($price->only(['code', 'price'])) }}">
@@ -73,7 +73,7 @@
                 </div>
                 <div class="form-group">
                     <label for="code_transfer">{{ trans('idir::dirs.code') }}:</label>
-                    <input type="text" value="" name="code_transfer" id="code_transfer" class="form-control @isValid('code_transfer')">
+                    <input type="text" value="" name="code_transfer" id="code_transfer" class="form-control {{ $isValid('code_transfer') }}">
                     @includeWhen($errors->has('code_transfer'), 'icore::admin.partials.errors', ['name' => 'code_transfer'])
                 </div>
                 <p>
@@ -95,7 +95,7 @@
             id="nav-code_sms" role="tabpanel" aria-labelledby="nav-code_sms-tab">
                 <div class="form-group">
                     <label for="payment_code_sms" class="sr-only"> {{ trans('idir::dirs.payment_code_sms') }}</label>
-                    <select class="form-control @isValid('payment_code_sms')" id="payment_code_sms" name="payment_code_sms">
+                    <select class="form-control {{ $isValid('payment_code_sms') }}" id="payment_code_sms" name="payment_code_sms">
                         @foreach ($pricesByType('code_sms') as $price)
                         <option value="{{ $price->id }}" {{ old('payment_code_sms') == $price->id ? 'selected' : null }}
                         data="{{ json_encode($price->only(['code', 'price', 'number'])) }}">
@@ -114,7 +114,7 @@
                 </div>
                 <div class="form-group">
                     <label for="code_sms">{{ trans('idir::dirs.code') }}:</label>
-                    <input type="text" value="" name="code_sms" id="code_sms" class="form-control @isValid('code_sms')">
+                    <input type="text" value="" name="code_sms" id="code_sms" class="form-control {{ $isValid('code_sms') }}">
                     @includeWhen($errors->has('code_sms'), 'icore::admin.partials.errors', ['name' => 'code_sms'])
                 </div>
                 <p>

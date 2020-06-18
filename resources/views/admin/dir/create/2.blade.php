@@ -28,15 +28,15 @@
                 <div class="form-group">
                     <label for="title">{{ trans('idir::dirs.title') }}:</label>
                     <input type="text" value="{{ old('title', session('dir.title')) }}" name="title"
-                    id="title" class="form-control @isValid('title')">
+                    id="title" class="form-control {{ $isValid('title') }}">
                     @includeWhen($errors->has('title'), 'icore::admin.partials.errors', ['name' => 'title'])
                 </div>
                 <div class="form-group">
                     <label for="content_html{{ $group->hasEditorPrivilege() ? '_dir_trumbowyg' : null }}">
                         {{ trans('idir::dirs.content') }}:
                     </label>
-                    <div class="@isTheme('dark', 'trumbowyg-dark')">
-                        <textarea class="form-control @isValid('content')" 
+                    <div class="{{ $isTheme('dark', 'trumbowyg-dark') }}">
+                        <textarea class="form-control {{ $isValid('content') }}" 
                         id="content_html{{ $group->hasEditorPrivilege() ? '_dir_trumbowyg' : null }}"
                         name="content_html" rows="5">{{ $oldContentHtml }}</textarea>
                     </div>
@@ -45,7 +45,7 @@
                 <div class="form-group">
                     <label for="notes">{{ trans('idir::dirs.notes') }}:</label>
                     <input type="text" value="{{ old('notes', session('dir.notes')) }}" name="notes"
-                    id="notes" class="form-control @isValid('notes')">
+                    id="notes" class="form-control {{ $isValid('notes') }}">
                     @includeWhen($errors->has('notes'), 'icore::admin.partials.errors', ['name' => 'notes'])
                 </div>
                 <div class="form-group">
@@ -54,7 +54,7 @@
                         title="{{ trans('idir::dirs.tags.tooltip', ['max_tags' => $max_tags = config('idir.dir.max_tags')]) }}"
                         class="far fa-question-circle"></i>
                     </label>
-                    <input name="tags" id="tags" class="form-control tagsinput @isValid('tags')"
+                    <input name="tags" id="tags" class="form-control tagsinput {{ $isValid('tags') }}"
                     value="{{ old('tags', session('dir.tags') !== null ? implode(',', session('dir.tags')) : null) }}"
                     placeholder="{{ trans('idir::dirs.tags.placeholder') }}" data-max="{{ $max_tags }}">
                     @includeWhen($errors->has('tags'), 'icore::admin.partials.errors', ['name' => 'tags'])
@@ -63,7 +63,7 @@
                 <div class="form-group">
                     <label for="url">{{ trans('idir::dirs.url') }}:</label>
                     <input type="text" value="{{ old('url', session('dir.url')) }}" name="url"
-                    id="url" class="form-control @isValid('url')" placeholder="https://">
+                    id="url" class="form-control {{ $isValid('url') }}" placeholder="https://">
                     @includeWhen($errors->has('url'), 'icore::admin.partials.errors', ['name' => 'url'])
                 </div>
                 @endif
@@ -83,7 +83,7 @@
                         data-route="{{ route('admin.category.dir.search') }}" data-max="{{ $group->max_cats }}"
                         class="position-relative">
                             <div class="input-group">
-                                <input type="text" class="form-control @isValid('category')"
+                                <input type="text" class="form-control {{ $isValid('category') }}"
                                 placeholder="{{ trans('icore::categories.search_categories') }}">
                                 <span class="input-group-append">
                                     <button class="btn btn-outline-secondary border border-left-0"

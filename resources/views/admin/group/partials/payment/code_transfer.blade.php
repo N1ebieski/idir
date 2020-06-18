@@ -23,7 +23,7 @@
                         {{ trans('idir::groups.price') }}
                     </div>
                 </div>
-                <input type="text" class="form-control @isValid("prices.code_transfer.{$loop->index}.price")"
+                <input type="text" class="form-control {{ $isValid("prices.code_transfer.{$loop->index}.price") }}"
                 name="prices[code_transfer][{{ $loop->index }}][price]" value="{{ $price->price ?? null }}">
 
                 <div class="input-group-prepend">
@@ -31,7 +31,7 @@
                         {{ trans('idir::groups.days') }}
                     </div>
                 </div>
-                <input type="text" class="form-control @isValid("prices.code_transfer.{$loop->index}.days")"
+                <input type="text" class="form-control {{ $isValid("prices.code_transfer.{$loop->index}.days") }}"
                 name="prices[code_transfer][{{ $loop->index }}][days]" value="{{ $price->days ?? null }}">
             </div>
 
@@ -44,7 +44,7 @@
                         {{ trans('idir::groups.code_transfer') }}
                     </div>
                 </div>
-                <input type="text" class="form-control @isValid("prices.code_transfer.{$loop->index}.code")"
+                <input type="text" class="form-control {{ $isValid("prices.code_transfer.{$loop->index}.code") }}"
                 name="prices[code_transfer][{{ $loop->index }}][code]" value="{{ $price->code ?? null }}">
             </div>
 
@@ -65,7 +65,7 @@
                         </div>
                     </div>
                 </div>
-                <textarea class="form-control @isValid("prices.code_transfer.{$loop->index}.codes")"
+                <textarea class="form-control {{ $isValid("prices.code_transfer.{$loop->index}.codes") }}"
                 name="prices[code_transfer][{{ $loop->index }}][codes][codes]" readonly>{{ $price->codes_as_string }}</textarea>
             </div>
 

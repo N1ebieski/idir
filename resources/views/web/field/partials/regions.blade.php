@@ -6,7 +6,7 @@
         title="{{ $field->desc }}" class="far fa-question-circle"></i>
         @endif
     </label>
-    <select multiple class="form-control @isValid("field.{$field->id}")" id="field.{{ $field->id }}"
+    <select multiple class="form-control {{ $isValid("field.{$field->id}") }}" id="field.{{ $field->id }}"
     name="field[{{ $field->id }}][]">
         @foreach ($regions as $region)
         <option value="{{ $region->id }}"

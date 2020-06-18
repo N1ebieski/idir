@@ -20,25 +20,25 @@
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">
                         <a href="{{ route('web.dir.index') }}"
-                        class="@isUrl(route('web.dir.index'), 'font-weight-bold')">
+                        class="{{ $isUrl(route('web.dir.index'), 'font-weight-bold') }}">
                             {{ trans('idir::dirs.route.index') }}
                         </a>
                     </li>                    
                     <li class="list-group-item">
                         <a href="{{ route('web.post.index') }}"
-                        class="@isUrl(route('web.post.index'), 'font-weight-bold')">
+                        class="{{ $isUrl(route('web.post.index'), 'font-weight-bold') }}">
                             {{ trans('icore::posts.route.blog') }}
                         </a>
                     </li>
                     <li class="list-group-item">
                         <a href="{{ route('web.contact.show') }}"
-                        class="@isUrl(route('web.contact.show'), 'font-weight-bold')">
+                        class="{{ $isUrl(route('web.contact.show'), 'font-weight-bold') }}">
                             {{ trans('icore::contact.route.show') }}
                         </a>
                     </li>
                     <li class="list-group-item">
                         <a href="{{ route('web.friend.index') }}"
-                        class="@isUrl(route('web.friend.index'), 'font-weight-bold')">
+                        class="{{ $isUrl(route('web.friend.index'), 'font-weight-bold') }}">
                             {{ trans('icore::friends.route.index') }}
                         </a>
                     </li>                    
@@ -56,9 +56,9 @@
             </div>
             <div class="btn-group my-auto" id="themeToggle" role="group" aria-label="Zmień motyw">
                 <button type="button" class="btn btn-sm btn-light border" style="width:80px;"
-                @isTheme(['', null], 'disabled')>{{ trans('icore::default.light') }}</button>
+                {{ $isTheme(['', null], 'disabled') }}>{{ trans('icore::default.light') }}</button>
                 <button type="button" class="btn btn-sm btn-dark border" style="width:80px;"
-                @isTheme('dark', 'disabled')>{{ trans('icore::default.dark') }}</button>
+                {{ $isTheme('dark', 'disabled') }}>{{ trans('icore::default.dark') }}</button>
             </div>
         </div>
     </div>

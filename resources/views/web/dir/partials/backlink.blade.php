@@ -1,6 +1,6 @@
 <div class="form-group">
     <label for="backlink">{{ trans('idir::dirs.choose_backlink') }}:</label>
-    <select class="form-control @isValid('backlink')" id="backlink" name="backlink">
+    <select class="form-control {{ $isValid('backlink') }}" id="backlink" name="backlink">
         @foreach ($backlinks as $backlink)
         <option value="{{ $backlink->id }}"
         {{ old('backlink', $dir->backlink->link_id ?? null) == $backlink->id ? 'selected' : null }}
@@ -17,6 +17,6 @@
 <div class="form-group">
     <label for="backlink_url">{{ trans('idir::dirs.backlink_url') }}:</label>
     <input type="text" name="backlink_url" id="backlink_url" placeholder="https://"
-    value="{{ old('backlink_url', $dir->backlink->url ?? null) }}" class="form-control @isValid('backlink_url')">
+    value="{{ old('backlink_url', $dir->backlink->url ?? null) }}" class="form-control {{ $isValid('backlink_url') }}">
     @includeWhen($errors->has('backlink_url'), 'icore::web.partials.errors', ['name' => 'backlink_url'])
 </div>

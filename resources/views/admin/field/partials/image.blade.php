@@ -7,7 +7,7 @@
         @endif
     </label>
     <div class="custom-file" id="field.{{ $field->id }}">
-        <input type="file" class="custom-file-input @isValid("field.{$field->id}")" id="img" name="field[{{ $field->id }}]"
+        <input type="file" class="custom-file-input {{ $isValid("field.{$field->id}") }}" id="img" name="field[{{ $field->id }}]"
         {{ $value !== null && !old("delete_img.{$field->id}") ? 'disabled' : null }}>
         <label class="custom-file-label" for="img">{{ trans('icore::default.choose_file') }}</label>
     </div>

@@ -14,7 +14,7 @@
             </a>
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
                 <h6 class="dropdown-header">{{ trans('icore::auth.hello')}}, {{ auth()->user()->name }}</h6>
-                <a class="dropdown-item @isUrl('profile.edit')" href="{{ route('web.profile.edit') }}">{{ trans('icore::profile.route.edit') }}</a>
+                <a class="dropdown-item {{ $isUrl(route('web.profile.edit')) }}" href="{{ route('web.profile.edit') }}">{{ trans('icore::profile.route.edit') }}</a>
                 @can('index dashboard')
                 <a class="dropdown-item" href="{{ route('admin.home.index') }}">{{ trans('icore::admin.route.index') }}</a>
                 @endcan

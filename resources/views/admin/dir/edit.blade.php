@@ -8,7 +8,7 @@
         <label for="content_html{{ $dir->group->hasEditorPrivilege() ? '_dir_trumbowyg' : null }}">
             {{ trans('idir::dirs.content') }}:
         </label>
-        <div id="content" class="@isTheme('dark', 'trumbowyg-dark')">
+        <div id="content" class="{{ $isTheme('dark', 'trumbowyg-dark') }}">
             <textarea class="form-control" 
             id="content_html{{ $dir->group->hasEditorPrivilege() ? '_dir_trumbowyg' : null }}"
             name="content_html" rows="5">{{ $dir->content_html }}</textarea>

@@ -5,8 +5,8 @@
     </div>
     <div class="btn-group my-auto" id="themeToggle" role="group" aria-label="Zmień motyw">
         <button type="button" class="btn btn-sm btn-light border" style="width:80px;"
-        @isTheme(['', null], 'disabled')>{{ trans('icore::default.light') }}</button>
+        {{ $isTheme(['', null], 'disabled') }}>{{ trans('icore::default.light') }}</button>
         <button type="button" class="btn btn-sm btn-dark border" style="width:80px;"
-        @isTheme('dark', 'disabled')>{{ trans('icore::default.dark') }}</button>
+        {{ $isTheme('dark', 'disabled') }}>{{ trans('icore::default.dark') }}</button>
     </div>
 </footer>
