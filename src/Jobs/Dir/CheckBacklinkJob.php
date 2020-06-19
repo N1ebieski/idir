@@ -116,7 +116,7 @@ class CheckBacklinkJob implements ShouldQueue
     protected function verifyNotification() : bool
     {
         return optional($this->dirBacklink->dir->user)->email
-            && optional($this->dirBacklink->dir->user)->hasPermissionTo('notification dirs');
+            && optional($this->dirBacklink->dir->user)->hasPermissionTo('web.dirs.notification');
     }
 
     /**

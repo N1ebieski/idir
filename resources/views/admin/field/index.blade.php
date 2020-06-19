@@ -15,7 +15,7 @@
         <i class="fab fa-fw fa-wpforms"></i>
         <span> {{ trans('idir::fields.route.index') }}</span>
     </div>
-    @can('create fields')
+    @can('admin.fields.create')
     <div class="ml-auto text-right">
         <div class="responsive-btn-group">
             <button type="button" class="btn btn-primary text-nowrap create" data-toggle="modal"

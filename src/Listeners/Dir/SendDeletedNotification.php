@@ -51,7 +51,7 @@ class SendDeletedNotification
     public function verify() : bool
     {
         return optional($this->event->dir->user)->email
-            && optional($this->event->dir->user)->hasPermissionTo('notification dirs');
+            && optional($this->event->dir->user)->hasPermissionTo('web.dirs.notification');
     }
 
     /**

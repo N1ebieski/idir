@@ -119,7 +119,7 @@ class RouteServiceProvider extends ServiceProvider
                 'idir.web',
                 'auth',
                 'verified',
-                'permission:access admin'
+                'permission:admin.access'
             ])
             ->prefix('admin')
             ->as('admin.')

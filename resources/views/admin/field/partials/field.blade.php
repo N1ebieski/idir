@@ -16,7 +16,7 @@ data-id="{{ $field->id }}">
         </ul>
         <div class="text-right ml-3">
             <div class="responsive-btn-group">
-                @can('edit fields')
+                @can('admin.fields.edit')
                 <div class="btn-group-vertical">
                     <button data-toggle="modal" data-target="#editModal"
                     data-route="{{ route("admin.field.{$field->poli}.edit", ['field' => $field->id]) }}"
@@ -26,7 +26,7 @@ data-id="{{ $field->id }}">
                     </button>
                 </div>
                 @endcan
-                @can('destroy fields')
+                @can('admin.fields.delete')
                 @if ($field->isNotDefault())
                 <button class="btn btn-danger" data-status="delete" data-toggle="confirmation"
                 data-route="{{ route('admin.field.destroy', ['field' => $field->id]) }}" data-id="{{ $field->id }}"

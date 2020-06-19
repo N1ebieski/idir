@@ -15,7 +15,7 @@
         <i class="far fa-fw fa-folder-open"></i>
         <span> {{ trans('idir::dirs.route.index') }}</span>
     </div>
-    @can('create dirs')
+    @can('admin.dirs.create')
     <div class="ml-auto text-right responsive-btn-group">
         <a href="{{ route('admin.dir.create_1') }}" role="button" class="btn btn-primary text-nowrap">
             <i class="far fa-plus-square"></i>
@@ -33,7 +33,7 @@
     data-reasons-custom="{{ trans('idir::dirs.reason.custom') }}">
         @csrf
         @method('delete')
-        @can('destroy dirs')
+        @can('admin.dirs.delete')
         <div class="row my-2">
             <div class="col my-auto">
                 <div class="custom-checkbox custom-control">
@@ -49,7 +49,7 @@
             @endforeach
             @include('icore::admin.partials.pagination', ['items' => $dirs])
         </div>
-        @can('destroy dirs')
+        @can('admin.dirs.delete')
         <div class="select-action rounded">
             <button class="btn btn-danger submit" data-toggle="confirmation"
             type="button" data-btn-ok-label=" {{ trans('icore::default.yes') }}" data-btn-ok-icon-class="fas fa-check mr-1"

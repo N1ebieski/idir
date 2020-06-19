@@ -120,6 +120,6 @@ class ReminderCron
     protected function verifyNotification(Dir $dir) : bool
     {
         return optional($dir->user)->email
-            && optional($dir->user)->hasPermissionTo('notification dirs');
+            && optional($dir->user)->hasPermissionTo('web.dirs.notification');
     }
 }

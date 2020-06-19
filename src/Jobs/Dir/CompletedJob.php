@@ -94,7 +94,7 @@ class CompletedJob implements ShouldQueue
     protected function verifyNotification() : bool
     {
         return optional($this->dir->user)->email
-            && optional($this->dir->user)->hasPermissionTo('notification dirs');
+            && optional($this->dir->user)->hasPermissionTo('web.dirs.notification');
     }
 
     /**

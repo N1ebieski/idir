@@ -8,6 +8,6 @@ Route::get('payments/{payment_dir_pending}/dir', 'Payment\Dir\PaymentController@
     ->name('payment.dir.show');
 
 Route::get('payments/dir/{dir}/logs', 'Payment\Dir\PaymentController@showLogs')
-    ->middleware('permission:index dirs')
+    ->middleware('permission:admin.dirs.view')
     ->name('payment.dir.show_logs')
     ->where('dir', '[0-9]+');

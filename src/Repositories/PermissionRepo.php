@@ -33,13 +33,16 @@ class PermissionRepo extends BasePermissionRepo
                 }
             ])
             ->whereIn('name', [
-                'create comments',
-                'suggest comments',
-                'edit comments',
-                'create dirs',
-                'edit dirs',
-                'destroy dirs',
-                'notification dirs'
+                'web.*',
+                'web.comments.*',
+                'web.comments.create',
+                'web.comments.suggest',
+                'web.comments.edit',
+                'web.dirs.*',
+                'web.dirs.create',
+                'web.dirs.edit',
+                'web.dirs.delete',
+                'web.dirs.notification'
             ])
             ->orderBy('name', 'asc')
             ->get();

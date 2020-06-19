@@ -14,7 +14,7 @@
             <span>{{ trans('icore::profile.route.edit_socialite') }}</span>
         </a>
     </li>
-    @canany(['edit dirs', 'destroy dirs'])
+    @canany(['web.dirs.edit', 'web.dirs.delete'])
     <li class="nav-item {{ $isUrl(route('web.profile.edit_dir')) }}">
         <a class="nav-link {{ $isUrl(route('web.profile.edit_dir')) }}"
         href="{{ route('web.profile.edit_dir') }}">

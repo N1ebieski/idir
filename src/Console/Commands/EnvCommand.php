@@ -88,13 +88,15 @@ class EnvCommand extends Command
         $this->info("\r");
         $bar->advance();
         $this->info("\n");
-        $this->call('db:seed', ['--class' => 'N1ebieski\ICore\Seeds\EnvSeeder'], $this->getOutput());
+        $this->call('db:seed', ['--class' => 'N1ebieski\ICore\Seeds\Env\EnvSeeder'], $this->getOutput());
         $this->info("\r");
         $bar->advance();
         $this->info("\n");
-        $this->call('db:seed', ['--class' => 'N1ebieski\IDir\Seeds\EnvSeeder'], $this->getOutput());
+        $this->call('db:seed', ['--class' => 'N1ebieski\IDir\Seeds\Env\EnvSeeder'], $this->getOutput());
         $this->info("\r");
         $bar->advance();
+        $this->line("\n");
+        $this->call('icore:superadmin', [], $this->getOutput());
         $this->info("\n");
         $bar->finish();
     }

@@ -35,7 +35,7 @@ data-id="{{ $dir->id }}">
         </ul>
         <div class="text-right ml-3">
             <div class="responsive-btn-group">
-                @can('edit dirs')
+                @can('web.dirs.edit')
                 <div class="btn-group-vertical">
                     <a class="btn btn-primary align-bottom" href="{{ route('web.dir.edit_1', [$dir->id]) }}"
                     role="button" target="_blank">
@@ -44,7 +44,7 @@ data-id="{{ $dir->id }}">
                     </a>
                 </div>
                 @endcan
-                @can('destroy dirs')
+                @can('web.dirs.delete')
                 <button class="btn btn-danger" data-status="delete" data-toggle="confirmation"
                 data-route="{{ route('web.dir.destroy', [$dir->id]) }}" data-id="{{ $dir->id }}"
                 type="button" data-btn-ok-label=" {{ trans('icore::default.yes') }}" data-btn-ok-icon-class="fas fa-check mr-1"

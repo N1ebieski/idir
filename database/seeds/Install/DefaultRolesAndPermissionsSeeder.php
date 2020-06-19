@@ -2,7 +2,6 @@
 
 namespace N1ebieski\IDir\Seeds\Install;
 
-use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Database\Seeder;
 
@@ -19,49 +18,30 @@ class DefaultRolesAndPermissionsSeeder extends Seeder
     public function run()
     {
         // create permdissions
-        Permission::create(['name' => 'index groups']);
-        Permission::create(['name' => 'create groups']);
-        Permission::create(['name' => 'edit groups']);
-        Permission::create(['name' => 'destroy groups']);
+        Permission::firstOrCreate(['name' => 'admin.groups.*']);
+        Permission::firstOrCreate(['name' => 'admin.groups.view']);
+        Permission::firstOrCreate(['name' => 'admin.groups.create']);
+        Permission::firstOrCreate(['name' => 'admin.groups.edit']);
+        Permission::firstOrCreate(['name' => 'admin.groups.delete']);
 
-        Permission::create(['name' => 'index fields']);
-        Permission::create(['name' => 'create fields']);
-        Permission::create(['name' => 'edit fields']);
-        Permission::create(['name' => 'destroy fields']);
+        Permission::firstOrCreate(['name' => 'admin.fields.*']);
+        Permission::firstOrCreate(['name' => 'admin.fields.view']);
+        Permission::firstOrCreate(['name' => 'admin.fields.create']);
+        Permission::firstOrCreate(['name' => 'admin.fields.edit']);
+        Permission::firstOrCreate(['name' => 'admin.fields.delete']);
 
-        Permission::create(['name' => 'index dirs']);
-        Permission::create(['name' => 'create dirs']);
-        Permission::create(['name' => 'status dirs']);
-        Permission::create(['name' => 'edit dirs']);
-        Permission::create(['name' => 'destroy dirs']);
-        Permission::create(['name' => 'notification dirs']);
+        Permission::firstOrCreate(['name' => 'admin.dirs.*']);
+        Permission::firstOrCreate(['name' => 'admin.dirs.view']);
+        Permission::firstOrCreate(['name' => 'admin.dirs.create']);
+        Permission::firstOrCreate(['name' => 'admin.dirs.status']);
+        Permission::firstOrCreate(['name' => 'admin.dirs.edit']);
+        Permission::firstOrCreate(['name' => 'admin.dirs.delete']);
+        Permission::firstOrCreate(['name' => 'admin.dirs.notification']);
 
-        $role = Role::whereName('admin')
-            ->first()
-            ->givePermissionTo([
-                'index groups',
-                'create groups',
-                'edit groups',
-                'destroy groups',
-                'index fields',
-                'create fields',
-                'edit fields',
-                'destroy fields',
-                'index dirs',
-                'create dirs',
-                'status dirs',
-                'edit dirs',
-                'destroy dirs',
-                'notification dirs'
-            ]);
-
-        $role = Role::whereName('user')
-            ->first()
-            ->givePermissionTo([
-                'create dirs',
-                'edit dirs',
-                'destroy dirs',
-                'notification dirs'
-            ]);
+        Permission::firstOrCreate(['name' => 'web.dirs.*']);
+        Permission::firstOrCreate(['name' => 'web.dirs.create']);
+        Permission::firstOrCreate(['name' => 'web.dirs.edit']);
+        Permission::firstOrCreate(['name' => 'web.dirs.delete']);
+        Permission::firstOrCreate(['name' => 'web.dirs.notification']);
     }
 }

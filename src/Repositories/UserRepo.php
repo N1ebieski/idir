@@ -52,6 +52,6 @@ class UserRepo extends BaseUserRepo
      */
     public function getModeratorsByNotificationDirsPermission() : Collection
     {
-        return $this->user->permission('access admin')->permission('notification dirs')->get();
+        return $this->user->permission('admin.access')->permission('admin.dirs.notification')->get();
     }
 }

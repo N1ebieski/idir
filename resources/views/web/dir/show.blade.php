@@ -70,7 +70,7 @@
                     @endif
                     <div id="comment">
                         @auth
-                        @canany(['create comments', 'suggest comments'])
+                        @canany(['web.comments.create', 'web.comments.suggest'])
                         @include('icore::web.comment.create', ['model' => $dir, 'parent_id' => 0])
                         @endcanany
                         @else

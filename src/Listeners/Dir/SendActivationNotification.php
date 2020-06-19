@@ -53,7 +53,7 @@ class SendActivationNotification
     {
         return $this->event->dir->isActive()
             && optional($this->event->dir->user)->email
-            && optional($this->event->dir->user)->hasPermissionTo('notification dirs');
+            && optional($this->event->dir->user)->hasPermissionTo('web.dirs.notification');
     }
 
     /**

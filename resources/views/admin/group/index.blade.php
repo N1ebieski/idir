@@ -15,7 +15,7 @@
         <i class="fas fa-fw fa-object-group"></i>
         <span> {{ trans('idir::groups.route.index') }}</span>
     </div>
-    @can('create groups')
+    @can('admin.groups.create')
     <div class="ml-auto text-right responsive-btn-group">
         <a href="{{ route("admin.group.create") }}" role="button" class="btn btn-primary text-nowrap">
             <i class="far fa-plus-square"></i>

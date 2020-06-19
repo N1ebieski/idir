@@ -15,7 +15,7 @@
 data-id="{{ $dir->id }}">
     <div class="col my-auto d-flex w-100 justify-content-between">
         <div class="custom-control custom-checkbox">
-            @can('destroy dirs')
+            @can('admin.dirs.delete')
             <input name="select[]" type="checkbox" class="custom-control-input select" 
             id="select{{ $dir->id }}" value="{{ $dir->id }}">
             <label class="custom-control-label" for="select{{ $dir->id }}">
@@ -86,7 +86,7 @@ data-id="{{ $dir->id }}">
                 @endforeach
                 @endif                
             </ul>
-            @can('destroy dirs')
+            @can('admin.dirs.delete')
             </label>
             @endcan            
             <div class="d-flex">
@@ -148,7 +148,7 @@ data-id="{{ $dir->id }}">
         </div>
         <div class="text-right ml-3 d-flex flex-column">
             <div class="responsive-btn-group">
-                @can('edit dirs')
+                @can('admin.dirs.edit')
                 <div class="btn-group-vertical">
                     <button data-toggle="modal" data-target="#editModal"
                     data-route="{{ route('admin.dir.edit', [$dir->id]) }}"
@@ -163,7 +163,7 @@ data-id="{{ $dir->id }}">
                     </a>
                 </div>
                 @endcan
-                @can('status dirs')
+                @can('admin.dirs.status')
                 @if ($dir->isUpdateStatus())
                 <button data-status="{{ $dir::ACTIVE }}" type="button" class="btn btn-success statusDir"
                 data-route="{{ route('admin.dir.update_status', [$dir->id]) }}" data-id="{{ $dir->id }}"
@@ -195,7 +195,7 @@ data-id="{{ $dir->id }}">
                 @endif
                 @endcan
                 <div class="btn-group-vertical">
-                    @can('destroy dirs')
+                    @can('admin.dirs.delete')
                     <button class="btn btn-danger" data-status="delete" data-toggle="dir-confirmation"
                     data-route="{{ route('admin.dir.destroy', [$dir->id]) }}" data-id="{{ $dir->id }}"
                     type="button" data-btn-ok-label=" {{ trans('icore::default.yes') }}" data-btn-ok-icon-class="fas fa-check mr-1"
@@ -208,7 +208,7 @@ data-id="{{ $dir->id }}">
                         <span class="d-none d-sm-inline">{{ trans('icore::default.delete') }}</span>
                     </button>
                     @endcan
-                    @can('create bans')
+                    @can('admin.bans.create')
                     <button type="button" class="btn btn-dark create"
                     data-route="{{ route('admin.banmodel.dir.create', [$dir->id]) }}"
                     data-toggle="modal" data-target="#createBanDirModal">

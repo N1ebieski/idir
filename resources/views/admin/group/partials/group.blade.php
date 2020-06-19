@@ -15,7 +15,7 @@ data-id="{{ $group->id }}">
         </ul>
         <div class="text-right ml-3">
             <div class="responsive-btn-group">
-                @can('edit groups')
+                @can('admin.groups.edit')
                 @if ($group->isNotDefault())
                 <a class="btn btn-primary align-bottom" href="{{ route('admin.group.edit', [$group->id]) }}"
                 role="button" target="_blank">
@@ -24,7 +24,7 @@ data-id="{{ $group->id }}">
                 </a>
                 @endif
                 @endcan
-                @can('destroy groups')
+                @can('admin.groups.delete')
                 @if ($group->isNotDefault())
                 <form action="{{ route('admin.group.destroy', [$group->id]) }}" method="post">
                     @csrf
