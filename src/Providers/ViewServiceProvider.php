@@ -30,14 +30,7 @@ class ViewServiceProvider extends ServiceProvider
 
         $this->app['view']->composer(
             $layout . '::admin.partials.sidebar',
-            function ($view) {
-                $view->with([
-                    'dirs_inactive_count' => $this->app->make(\N1ebieski\IDir\Repositories\DirRepo::class)
-                        ->countInactive(),
-                    'dirs_reported_count' => $this->app->make(\N1ebieski\IDir\Repositories\DirRepo::class)
-                        ->countReported()
-                ]);
-            }
+            \N1ebieski\IDir\View\Composers\Admin\SidebarComposer::class
         );
 
         $this->app['view']->composer(
@@ -47,12 +40,7 @@ class ViewServiceProvider extends ServiceProvider
                 $layout . '::web.dir.partials.summary',
                 $layout . '::admin.dir.partials.summary'
             ],
-            function ($view) {
-                $view->with([
-                    'regions' => $this->app->make(\N1ebieski\IDir\Models\Region\Region::class)
-                        ->makeCache()->rememberAll()
-                ]);
-            }
+            \N1ebieski\IDir\View\Composers\RegionsComposer::class
         );
     }
 }
