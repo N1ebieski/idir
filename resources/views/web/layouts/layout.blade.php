@@ -21,9 +21,11 @@
     <link rel="icon" href="{{ asset('svg/vendor/idir/logo.svg') }}" type="image/svg+xml">
     <link href="{{ mix('css/vendor/idir/vendor/vendor.css') }}" rel="stylesheet">
     <link href="{{ mix($getStylesheet('css/vendor/idir')) }}" rel="stylesheet">
+    <link href="{{ asset('css/custom/web/web.css') }}" rel="stylesheet">
 
     <script src="{{ mix('js/vendor/idir/vendor/vendor.js') }}" defer></script>
     <script src="{{ mix('js/vendor/idir/web/web.js') }}" defer></script>
+    <script src="{{ asset('js/custom/web/web.js') }}" defer></script>
 </head>
 <body>
 
@@ -44,6 +46,6 @@
 
     <script src="{{ mix('js/vendor/idir/web/scripts.js') }}" defer></script>
     @stack('script')
-
+    <script src="{{ asset('js/custom/web/scripts.js') }}" defer></script>
 </body>
 </html>
