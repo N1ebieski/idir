@@ -16,6 +16,12 @@
         </li>
         @endforeach
         @endif
+        @if (!empty($group->border))
+        <li class="list-group-item d-flex">
+            <i class="fas fa-check my-auto text-success"></i>
+            <div class="ml-3">{{ __('card of your site highlighted on listings') }}</div>
+        </li>      
+        @endif        
         <li class="list-group-item d-flex">
             <i class="fas fa-check my-auto text-success"></i>
             <div class="ml-3">        
