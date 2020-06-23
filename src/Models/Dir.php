@@ -568,7 +568,7 @@ class Dir extends Model
      */
     public function getShortContentAttribute() : string
     {
-        return mb_substr($this->content, 0, 500);
+        return mb_substr($this->content, 0, Config::get('idir.dir.short_content'));
     }
 
     /**
