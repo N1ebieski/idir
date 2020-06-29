@@ -97,7 +97,7 @@ class UniqueUrlRule implements Rule
         return $this->db->table($this->table)
             ->where(function (Builder $query) use ($url) {
                 foreach ($this->begins as $begin) {
-                    $query->where('url', '=', $begin . $url, 'or');
+                    $query->where($this->column, '=', $begin . $url, 'or');
                 }
             })
             ->when($this->ignore !== null, function (Builder $query) {
