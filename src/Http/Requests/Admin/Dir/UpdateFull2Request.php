@@ -138,7 +138,7 @@ class UpdateFull2Request extends FormRequest
     public function rules()
     {
         return array_merge([
-            'title' => 'bail|required|string|between:3,255',
+            'title' => 'bail|required|string|between:3,' . Config::get('idir.dir.max_title'),
             'tags' => [
                 'bail',
                 'nullable',

@@ -147,12 +147,12 @@ class Store2Request extends FormRequest
     public function rules()
     {
         return array_merge([
-            'title' => 'bail|required|string|between:3,255',
+            'title' => 'bail|required|string|between:3,' . Config::get('idir.dir.max_title'),
             'tags' => [
                 'bail',
                 'nullable',
                 'array',
-                'between:0,' . config('idir.dir.max_tags'),
+                'between:0,' . Config::get('idir.dir.max_tags'),
                 'no_js_validation'
             ],
             'tags.*' => 'bail|min:3|max:30|alpha_num_spaces',

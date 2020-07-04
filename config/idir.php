@@ -10,6 +10,7 @@ return [
 
     'dir' => [
         'max_tags' => (int)env('IDIR_DIR_MAX_TAGS', 10),
+        'max_title' => (int)env('IDIR_DIR_MAX_TITLE', 100),
         'min_content' => (int)env('IDIR_DIR_MIN_CONTENT', 255),
         'max_content' => (int)env('IDIR_DIR_MAX_CONTENT', 1000),
         'short_content' => (int)env('IDIR_DIR_SHORT_CONTENT', 500),
