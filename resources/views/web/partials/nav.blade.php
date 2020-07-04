@@ -1,7 +1,8 @@
 @section('logo')
 <div id="navbarLogo" class="flex-grow-1 mr-2">
-    <a href="/" class="navbar-brand">
-        <img src="{{ asset('svg/vendor/idir/logo.svg') }}" class="pb-1 logo" alt="{{ config('app.name') }}">
+    <a href="/" class="navbar-brand" title="{{ config('app.name') }}">
+        <img src="{{ asset('svg/vendor/idir/logo.svg') }}" class="pb-1 logo" 
+        alt="{{ config('app.name_short') }}" title="{{ config('app.name') }}">
         <span class="pl-1 d-none d-lg-inline">
             {{ config('app.name_short') }}
         </span>
@@ -76,20 +77,32 @@
                     @auth
                     <a class="nav-link text-nowrap" href="#" role="button" id="navbarDropdownMenuProfile"
                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="fas fa-fw fa-lg fa-users-cog"></i><span class="d-md-none d-lg-inline">&nbsp;{{ auth()->user()->short_name }}</span>
+                        <i class="fas fa-fw fa-lg fa-users-cog"></i>
+                        <span class="d-md-none d-lg-inline">&nbsp;{{ auth()->user()->short_name }}</span>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuProfile">
                         <h6 class="dropdown-header">{{ trans('icore::auth.hello')}}, {{ auth()->user()->name }}</h6>
-                        <a class="dropdown-item {{ $isUrl(route('web.profile.edit')) }}" href="{{ route('web.profile.edit') }}">{{ trans('icore::profile.route.edit') }}</a>
+                        <a class="dropdown-item {{ $isUrl(route('web.profile.edit')) }}" 
+                        href="{{ route('web.profile.edit') }}" title="{{ trans('icore::profile.route.edit') }}">
+                            {{ trans('icore::profile.route.edit') }}
+                        </a>
                         @can('admin.home.view')
-                        <a class="dropdown-item" href="{{ route('admin.home.index') }}">{{ trans('icore::admin.route.index') }}</a>
+                        <a class="dropdown-item" href="{{ route('admin.home.index') }}" 
+                        title="{{ trans('icore::admin.route.index') }}">
+                            {{ trans('icore::admin.route.index') }}
+                        </a>
                         @endcan
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="{{ route('logout') }}">{{ trans('icore::auth.route.logout') }}</a>
+                        <a class="dropdown-item" href="{{ route('logout') }}"
+                        title="{{ trans('icore::auth.route.logout') }}">
+                            {{ trans('icore::auth.route.logout') }}
+                        </a>
                     </div>
                     @else
-                    <a class="nav-link btn btn-sm btn-primary text-white text-nowrap text-center" href="{{ route('login') }}"
-                    role="button">{{ trans('icore::auth.route.login') }}</a>
+                    <a class="nav-link btn btn-sm btn-primary text-white text-nowrap text-center" 
+                    href="{{ route('login') }}" role="button" title="{{ trans('icore::auth.route.login') }}">
+                        {{ trans('icore::auth.route.login') }}
+                    </a>
                     @endauth
                 </li>
             </ul>

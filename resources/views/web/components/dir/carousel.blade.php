@@ -6,7 +6,9 @@
             <div class="row">
                 <div class="col-md-{{ $dir->isUrl() ? '8' : '12' }} order-2">
                     <h2 class="h5 border-bottom pb-2 my-2">
-                        <a href="{{ route('web.dir.show', [$dir->slug]) }}">{{ $dir->title }}</a>
+                        <a href="{{ route('web.dir.show', [$dir->slug]) }}" title="{{ $dir->title }}">
+                            {{ $dir->title }}
+                        </a>
                     </h2>
                     <div class="d-flex mb-2">
                         <small class="mr-auto">

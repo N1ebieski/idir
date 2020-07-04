@@ -19,25 +19,25 @@
             <div class="col-md-3 col-sm-6">
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">
-                        <a href="{{ route('web.dir.index') }}"
+                        <a href="{{ route('web.dir.index') }}" title="{{ trans('idir::dirs.route.index') }}"
                         class="{{ $isUrl(route('web.dir.index'), 'font-weight-bold') }}">
                             {{ trans('idir::dirs.route.index') }}
                         </a>
                     </li>                    
                     <li class="list-group-item">
-                        <a href="{{ route('web.post.index') }}"
+                        <a href="{{ route('web.post.index') }}" title="{{ trans('icore::posts.route.blog') }}"
                         class="{{ $isUrl(route('web.post.index'), 'font-weight-bold') }}">
                             {{ trans('icore::posts.route.blog') }}
                         </a>
                     </li>
                     <li class="list-group-item">
-                        <a href="{{ route('web.contact.show') }}"
+                        <a href="{{ route('web.contact.show') }}" title="{{ trans('icore::contact.route.show') }}" 
                         class="{{ $isUrl(route('web.contact.show'), 'font-weight-bold') }}">
                             {{ trans('icore::contact.route.show') }}
                         </a>
                     </li>
                     <li class="list-group-item">
-                        <a href="{{ route('web.friend.index') }}"
+                        <a href="{{ route('web.friend.index') }}" title="{{ trans('icore::friends.route.index') }}" 
                         class="{{ $isUrl(route('web.friend.index'), 'font-weight-bold') }}">
                             {{ trans('icore::friends.route.index') }}
                         </a>

@@ -1,12 +1,27 @@
 <form data-route="{{ route('admin.dir.update', [$dir->id]) }}" id="editDir" data-id="{{ $dir->id }}">
     <div class="form-group">
-        <label for="title">{{ trans('idir::dirs.title') }}:</label>
+        <label for="title" class="d-flex justify-content-between">
+            <div>{{ trans('idir::dirs.title') }}:</div>
+            @include('icore::admin.partials.counter', [
+                'string' => $dir->title,
+                'min' => 3,
+                'max' => config('idir.dir.max_title'),
+                'name' => 'title'
+            ])
+        </label>
         <input type="text" value="{{ $dir->title }}" name="title"
         id="title" class="form-control">
     </div>
     <div class="form-group">
-        <label for="content_html{{ $dir->group->hasEditorPrivilege() ? '_dir_trumbowyg' : null }}">
-            {{ trans('idir::dirs.content') }}:
+        <label class="d-flex justify-content-between" 
+        for="content_html{{ $dir->group->hasEditorPrivilege() ? '_dir_trumbowyg' : null }}">
+            <div>{{ trans('idir::dirs.content') }}:</div>
+            @include('icore::admin.partials.counter', [
+                'string' => $dir->content_html,
+                'min' => config('idir.dir.min_content'),
+                'max' => config('idir.dir.max_content'),
+                'name' => 'content_html'
+            ])
         </label>
         <div id="content" class="{{ $isTheme('dark', 'trumbowyg-dark') }}">
             <textarea class="form-control" 

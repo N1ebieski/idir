@@ -584,6 +584,7 @@ class Dir extends Model
                 $link .= 'rel="nofollow" ';
             }
 
+            $link .= 'target="_blank" title="' . e($this->title) . '" ';
             $link .= 'href="' . e($this->url) . '" target="_blank">' . e($this->title) . '</a>';
         }
 

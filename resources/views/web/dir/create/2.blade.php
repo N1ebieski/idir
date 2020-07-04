@@ -25,14 +25,29 @@
             enctype="multipart/form-data" id="createForm">
                 @csrf
                 <div class="form-group">
-                    <label for="title">{{ trans('idir::dirs.title') }}:</label>
+                    <label for="title" class="d-flex justify-content-between">
+                        <div>{{ trans('idir::dirs.title') }}:</div>
+                        @include('icore::web.partials.counter', [
+                            'string' => old('title', session('dir.title')),
+                            'min' => 3,
+                            'max' => config('idir.dir.max_title'),
+                            'name' => 'title'
+                        ])
+                    </label>
                     <input type="text" value="{{ old('title', session('dir.title')) }}" name="title"
                     id="title" class="form-control {{ $isValid('title') }}">
                     @includeWhen($errors->has('title'), 'icore::web.partials.errors', ['name' => 'title'])
                 </div>
                 <div class="form-group">
-                    <label for="content_html{{ $group->hasEditorPrivilege() ? '_dir_trumbowyg' : null }}">
-                        {{ trans('idir::dirs.content') }}:
+                    <label class="d-flex justify-content-between" 
+                    for="content_html{{ $group->hasEditorPrivilege() ? '_dir_trumbowyg' : null }}">
+                        <div>{{ trans('idir::dirs.content') }}:</div>
+                        @include('icore::web.partials.counter', [
+                            'string' => $oldContentHtml,
+                            'min' => config('idir.dir.min_content'),
+                            'max' => config('idir.dir.max_content'),
+                            'name' => 'content_html'
+                        ])
                     </label>
                     <div class="{{ $isTheme('dark', 'trumbowyg-dark') }}">
                         <textarea class="form-control {{ $isValid('content') }}" 

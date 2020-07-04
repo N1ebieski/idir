@@ -1,6 +1,7 @@
 <div class="mb-3">
     <h4 class="h6 border-bottom pb-2">
-        <a href="{{ route('web.dir.show', [$comment->morph->slug, '#comments']) }}">
+        <a href="{{ route('web.dir.show', [$comment->morph->slug, '#comments']) }}"
+        title="{{ $comment->morph->title }}">
             {{ $comment->morph->title }}
         </a>
     </h4>
