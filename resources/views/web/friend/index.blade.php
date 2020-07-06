@@ -5,7 +5,6 @@
 ])
 
 @section('breadcrumb')
-<li class="breadcrumb-item"><a href="{{ route('web.home.index') }}">{{ trans('icore::home.route.index') }}</a></li>
 <li class="breadcrumb-item active" aria-current="page">{{ trans('icore::friends.route.index') }}</li>
 @endsection
 
@@ -13,9 +12,24 @@
 <div class="container">
     <h1 class="h4 border-bottom pb-2">{{ trans('icore::friends.friends') }}</h1>
     <ul>
-        <li><a href="https://intelekt.net.pl/icore" target="_blank">iCore - mini platforma blogowa</a></li>
-        <li><a href="https://intelekt.net.pl/idir" target="_blank">iDir - nowoczesny katalog stron lub firm</a></li>
-        <li><a href="https://www.iconpacks.net" target="_blank">Iconpacks - completely free icons</a></li>
+        <li>
+            <a href="https://intelekt.net.pl/icore" target="_blank" 
+            title="iCore - mini platforma blogowa">
+                iCore - mini platforma blogowa
+            </a>
+        </li>
+        <li>
+            <a href="https://intelekt.net.pl/idir" target="_blank"
+            title="iDir - nowoczesny katalog stron lub firm">
+                iDir - nowoczesny katalog stron lub firm
+            </a>
+        </li>
+        <li>
+            <a href="https://www.iconpacks.net" target="_blank"
+            title="Iconpacks - completely free icons">
+                Iconpacks - completely free icons
+            </a>
+        </li>
         @foreach ($dirs as $dir)
         <li>{!! $dir->link !!}</li>
         @endforeach

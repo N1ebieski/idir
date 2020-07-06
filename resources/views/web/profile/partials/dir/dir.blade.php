@@ -3,7 +3,10 @@ data-id="{{ $dir->id }}">
     <div class="col my-auto d-flex justify-content-between">
         <ul class="list-unstyled mb-0 pb-0">
             <li>
-                <a href="{{ route('web.dir.show', [$dir->slug]) }}" target="_blank">{{ $dir->title }}</a>
+                <a href="{{ route('web.dir.show', [$dir->slug]) }}" target="_blank"
+                title="{{ $dir->title }}">
+                    {{ $dir->title }}
+                </a>
                 <span class="badge badge-{{ $dir->status === $dir::ACTIVE ? 'success' : 'warning' }}">
                     {{ trans("idir::dirs.status.{$dir->status}") }}
                 </span>
@@ -20,8 +23,10 @@ data-id="{{ $dir->id }}">
                     @if ($dir->tags->isNotEmpty())
                     <small class="ml-auto text-right">{{ trans('idir::dirs.tags.label') }}:
                         @foreach ($dir->tags as $tag)
-                        <a href="{{ route('web.tag.dir.show', [$tag->normalized]) }}">{{ $tag->name }}</a>
-                        {{ (!$loop->last) ? ', ' : '' }}
+                        <a href="{{ route('web.tag.dir.show', [$tag->normalized]) }}"
+                        title="{{ $tag->name }}">
+                            {{ $tag->name }}
+                        </a>{{ (!$loop->last) ? ', ' : '' }}
                         @endforeach
                     </small>
                     @endif

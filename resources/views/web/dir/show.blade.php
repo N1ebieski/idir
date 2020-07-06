@@ -4,7 +4,6 @@
         trans('icore::pagination.page', ['num' => $comments->currentPage()])
     ],
     'desc' => [$dir->short_content],
-    // TODO #54 @N1ebieski
     'keys' => [$dir->tagList],
     'og' => [
         'title' => $dir->title,
@@ -14,8 +13,11 @@
 ])
 
 @section('breadcrumb')
-<li class="breadcrumb-item"><a href="{{ route('web.home.index') }}">{{ trans('icore::home.route.index') }}</a></li>
-<li class="breadcrumb-item"><a href="{{ route('web.dir.index') }}">{{ trans('idir::dirs.route.index') }}</a></li>
+<li class="breadcrumb-item">
+    <a href="{{ route('web.dir.index') }}" title="{{ trans('idir::dirs.route.index') }}">
+        {{ trans('idir::dirs.route.index') }}
+    </a>
+</li>
 <li class="breadcrumb-item active" aria-current="page">{{ $dir->title }}</li>
 @endsection
 
@@ -33,16 +35,20 @@
                     @if ($dir->categories->isNotEmpty())
                     <small class="mr-auto">{{ trans('icore::categories.categories.label') }}:
                         @foreach ($dir->categories as $category)
-                        <a href="{{ route('web.category.dir.show', [$category->slug]) }}">{{ $category->name }}</a>
-                        {{ (!$loop->last) ? ', ' : '' }}
+                        <a href="{{ route('web.category.dir.show', [$category->slug]) }}"
+                        title="{{ $category->name }}">
+                            {{ $category->name }}
+                        </a>{{ (!$loop->last) ? ', ' : '' }}
                         @endforeach
                     </small>
                     @endif
                     @if ($dir->tags->isNotEmpty())
                     <small class="ml-auto text-right">{{ trans('idir::dirs.tags.label') }}:
                         @foreach ($dir->tags as $tag)
-                        <a href="{{ route('web.tag.dir.show', [$tag->normalized]) }}">{{ $tag->name }}</a>
-                        {{ (!$loop->last) ? ', ' : '' }}
+                        <a href="{{ route('web.tag.dir.show', [$tag->normalized]) }}"
+                        title="{{ $tag->name }}">
+                            {{ $tag->name }}
+                        </a>{{ (!$loop->last) ? ', ' : '' }}
                         @endforeach
                     </small>
                     @endif
@@ -58,7 +64,10 @@
                 <ul class="list-group list-group-flush mb-3">
                     @foreach ($related as $rel)
                     <li class="list-group-item">
-                        <a href="{{ route('web.dir.show', [$rel->slug]) }}">{{ $rel->title }}</a>
+                        <a href="{{ route('web.dir.show', [$rel->slug]) }}"
+                        title="{{ $rel->title }}">
+                            {{ $rel->title }}
+                        </a>
                     </li>
                     @endforeach
                 </ul>
@@ -74,7 +83,9 @@
                         @include('icore::web.comment.create', ['model' => $dir, 'parent_id' => 0])
                         @endcanany
                         @else
-                        <a href="{{ route('login') }}">{{ trans('icore::comments.log_to_comment') }}</a>
+                        <a href="{{ route('login') }}" title="{{ trans('icore::comments.log_to_comment') }}">
+                            {{ trans('icore::comments.log_to_comment') }}
+                        </a>
                         @endauth
                     </div>
                     @if ($comments->isNotEmpty())
@@ -151,6 +162,7 @@
                 @if (isset($dir->user->email) && app('router')->has('web.contact.dir.show'))
                 <div class="list-group-item">
                     <a href="#" data-route="{{ route('web.contact.dir.show', [$dir->id]) }}"
+                    title="{{ trans('idir::contact.dir.route.show') }}"
                     data-toggle="modal" data-target="#contactModal" class="showContact">
                         <i class="fas fa-paper-plane"></i>
                         <span>{{ trans('idir::contact.dir.route.show') }}</span>
@@ -159,6 +171,7 @@
                 @endif
                 <div class="list-group-item">
                     <a href="#" data-route="{{ route('web.report.dir.create', [$dir->id]) }}"
+                    title="{{ trans('icore::reports.route.create') }}"
                     data-toggle="modal" data-target="#createReportModal" class="createReport">
                         <i class="fas fa-exclamation-triangle"></i>
                         <span>{{ trans('icore::reports.route.create') }}</span>
@@ -166,7 +179,8 @@
                 </div>
                 @endauth
                 <div class="list-group-item">
-                    <a href="#" data-toggle="modal" data-target="#linkModal">
+                    <a href="#" data-toggle="modal" data-target="#linkModal"
+                    title="{{ trans('idir::dirs.link_dir_page') }}">
                         <i class="fas fa-link"></i>
                         <span>{{ trans('idir::dirs.link_dir_page') }}</span>
                     </a>

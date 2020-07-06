@@ -5,8 +5,11 @@
 ])
 
 @section('breadcrumb')
-<li class="breadcrumb-item"><a href="{{ route('admin.home.index') }}">{{ trans('icore::home.route.index') }}</a></li>
-<li class="breadcrumb-item"><a href="{{ route('admin.dir.index') }}">{{ trans('idir::dirs.route.index') }}</a></li>
+<li class="breadcrumb-item">
+    <a href="{{ route('admin.dir.index') }}" title="{{ trans('idir::dirs.route.index') }}">
+        {{ trans('idir::dirs.route.index') }}
+    </a>
+</li>
 <li class="breadcrumb-item">{{ trans('idir::dirs.route.create.index') }}</li>
 <li class="breadcrumb-item active" aria-current="page">
     {{ trans('idir::dirs.route.step', ['step' => 1]) }} {{ trans('idir::dirs.route.create.1') }}

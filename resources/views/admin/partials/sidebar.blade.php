@@ -8,7 +8,8 @@
         </li>
         @can('admin.home.view')
         <li class="nav-item">
-            <a class="nav-link" href="{{ route('admin.home.index') }}">
+            <a class="nav-link" href="{{ route('admin.home.index') }}"
+            title="Dashboard">
                 <i class="fas fa-fw fa-tachometer-alt"></i>
                 <span>Dashboard</span>
             </a>
@@ -16,7 +17,8 @@
         @endcan
         @can('admin.pages.view')
         <li class="nav-item {{ $isUrlContains(['*/pages', '*/pages/*']) }}">
-            <a class="nav-link" href="{{ route('admin.page.index') }}">
+            <a class="nav-link" href="{{ route('admin.page.index') }}"
+            title="{{ trans('icore::pages.route.index') }}">
                 <i class="fas fa-fw fa-file-word"></i>
                 <span>{{ trans('icore::pages.route.index') }}</span>
             </a>
@@ -24,7 +26,8 @@
         @endcan
         @can('admin.posts.view')
         <li class="nav-item {{ $isUrlContains(['*/posts', '*/posts/*']) }}">
-            <a class="nav-link" href="{{ route('admin.post.index') }}">
+            <a class="nav-link" href="{{ route('admin.post.index') }}"
+            title="{{ trans('icore::posts.route.index') }}">
                 <i class="fas fa-fw fa-blog"></i>
                 <span>{{ trans('icore::posts.route.index') }}</span>
             </a>
@@ -71,7 +74,8 @@
                 @endcan
                 @can('admin.bans.view')
                 <a class="dropdown-item {{ $isUrl(route('admin.banvalue.index', ['type' => 'url'])) }}"
-                href="{{ route('admin.banvalue.index', ['type' => 'url']) }}">
+                href="{{ route('admin.banvalue.index', ['type' => 'url']) }}"
+                title="{{ trans('idir::bans.value.url.route.index') }}">
                     {{ trans('idir::bans.value.url.route.index') }}
                 </a>
                 @endcan
@@ -138,11 +142,13 @@
             <div class="dropdown-menu" aria-labelledby="pagesDropdown">
                 <h6 class="dropdown-header">{{ trans('icore::default.type') }}:</h6>
                 <a class="dropdown-item {{ $isUrl(route('admin.category.post.index')) }}"
-                href="{{ route('admin.category.post.index') }}">
+                href="{{ route('admin.category.post.index') }}"
+                title="{{ trans('icore::categories.post.post') }}">
                     {{ trans('icore::categories.post.post') }}
                 </a>
                 <a class="dropdown-item {{ $isUrl(route('admin.category.dir.index')) }}"
-                href="{{ route('admin.category.dir.index') }}">
+                href="{{ route('admin.category.dir.index') }}"
+                title="{{ trans('idir::categories.dir.dir') }}">
                     {{ trans('idir::categories.dir.dir') }}
                 </a>
             </div>
@@ -159,13 +165,15 @@
             <div class="dropdown-menu" aria-labelledby="groupDropdown">
                 @can('admin.groups.view')
                 <a class="dropdown-item {{ $isUrlContains(['*/groups', '*/groups/*']) }}"
-                href="{{ route('admin.group.index') }}">
+                href="{{ route('admin.group.index') }}"
+                title="{{ trans('idir::groups.route.index') }}">
                     {{ trans('idir::groups.route.index') }}
                 </a>
                 @endcan
                 @can('admin.fields.view')
                 <a class="dropdown-item {{ $isUrl(route('admin.field.group.index')) }}"
-                href="{{ route('admin.field.group.index') }}">
+                href="{{ route('admin.field.group.index') }}"
+                title="{{ trans('idir::fields.route.index') }}">
                     {{ trans('idir::fields.route.index') }}
                 </a>
                 @endcan
@@ -174,7 +182,8 @@
         @endcan
         @can('admin.mailings.view')
         <li class="nav-item {{ $isUrlContains(['*/mailings', '*/mailings/*']) }}">
-            <a class="nav-link" href="{{ route('admin.mailing.index') }}">
+            <a class="nav-link" href="{{ route('admin.mailing.index') }}"
+            title="{{ trans('icore::mailings.route.index') }}">
                 <i class="fas fa-fw fa-envelope"></i>
                 <span>{{ trans('icore::mailings.route.index') }}</span>
             </a>
@@ -196,24 +205,28 @@
             <div class="dropdown-menu" aria-labelledby="userDropdown">
                 @can('admin.users.view')
                 <a class="dropdown-item {{ $isUrl(route('admin.user.index')) }}"
-                href="{{ route('admin.user.index') }}">
+                href="{{ route('admin.user.index') }}"
+                title="{{ trans('icore::users.route.index') }}">
                     {{ trans('icore::users.route.index') }}
                 </a>
                 @endcan
                 @can('admin.roles.view')
                 <a class="dropdown-item {{ $isUrlContains(['*/roles', '*/roles/*']) }}"
-                href="{{ route('admin.role.index') }}">
+                href="{{ route('admin.role.index') }}"
+                title="{{ trans('icore::roles.route.index') }}">
                     {{ trans('icore::roles.route.index') }}
                 </a>
                 @endcan
                 @can('admin.bans.view')
                 <h6 class="dropdown-header">{{ trans('icore::bans.route.index') }}:</h6>
                 <a class="dropdown-item {{ $isUrl(route('admin.banmodel.user.index')) }}"
-                href="{{ route('admin.banmodel.user.index') }}">
+                href="{{ route('admin.banmodel.user.index') }}"
+                title="{{ trans('icore::bans.model.user.route.index') }}">
                     {{ trans('icore::bans.model.user.route.index') }}
                 </a>
                 <a class="dropdown-item {{ $isUrl(route('admin.banvalue.index', ['type' => 'ip'])) }}"
-                href="{{ route('admin.banvalue.index', ['type' => 'ip']) }}">
+                href="{{ route('admin.banvalue.index', ['type' => 'ip']) }}"
+                title="{{ trans('icore::bans.value.ip.route.index') }}">
                     {{ trans('icore::bans.value.ip.route.index') }}
                 </a>
                 @endcan
@@ -235,17 +248,20 @@
             <div class="dropdown-menu" aria-labelledby="pagesDropdown">
                 @can('admin.bans.view')
                 <a class="dropdown-item {{ $isUrl(route('admin.banvalue.index', ['word'])) }}"
-                href="{{ route('admin.banvalue.index', ['word']) }}">
+                href="{{ route('admin.banvalue.index', ['word']) }}"
+                title="{{ trans('icore::bans.value.word.route.index') }}">
                     {{ trans('icore::bans.value.word.route.index') }}
                 </a>
                 @endcan
                 @can('admin.links.view')
                 <a class="dropdown-item {{ $isUrl(route('admin.link.index', ['link'])) }}"
-                href="{{ route('admin.link.index', ['link']) }}">
+                href="{{ route('admin.link.index', ['link']) }}"
+                title="{{ trans('icore::links.link.route.index') }}">
                     {{ trans('icore::links.link.route.index') }}
                 </a>
                 <a class="dropdown-item {{ $isUrl(route('admin.link.index', ['backlink'])) }}"
-                href="{{ route('admin.link.index', ['backlink']) }}">
+                href="{{ route('admin.link.index', ['backlink']) }}"
+                title="{{ trans('icore::links.backlink.route.index') }}">
                     {{ trans('icore::links.backlink.route.index') }}
                 </a>
                 @endcan

@@ -2,7 +2,7 @@
 <div class="d-flex flex-column">
     <div class="thumbnail d-inline position-relative" style="width:90px;height:68px">
         <img src="{{ $dir->thumbnail_url }}" class="img-fluid border"
-        alt="{{ $dir->title }}">
+        alt="{{ $dir->title }}" title="{{ $dir->title }}">
     </div>
     <a href="#" data-route="{{ route('admin.thumbnail.dir.reload', [$dir->id]) }}" 
     class="badge badge-primary reloadThumbnail">
@@ -100,8 +100,10 @@ data-id="{{ $dir->id }}">
                             <span>{{ trans('icore::categories.categories.label') }}:</span> 
                             <span>
                                 @foreach ($dir->categories as $category)
-                                <a href="{{ route('admin.dir.index', ['filter[category]' => $category->id]) }}">{{ $category->name }}</a>
-                                {{ (!$loop->last) ? ', ' : '' }}
+                                <a href="{{ route('admin.dir.index', ['filter[category]' => $category->id]) }}"
+                                title="{{ $category->name }}">
+                                    {{ $category->name }}
+                                </a>{{ (!$loop->last) ? ', ' : '' }}
                                 @endforeach
                             </span>
                         </small>
@@ -111,7 +113,10 @@ data-id="{{ $dir->id }}">
                         <small>
                             <span>{{ trans('idir::dirs.group') }}:</span>
                             <span>
-                                <a href="{{ route('admin.dir.index', ['filter[group]' => $dir->group->id]) }}">{{ $dir->group->name }}</a>
+                                <a href="{{ route('admin.dir.index', ['filter[group]' => $dir->group->id]) }}"
+                                title="{{ $dir->group->name }}">
+                                    {{ $dir->group->name }}
+                                </a>
                             </span>
                         </small>
                         @if ($dir->group->prices->isNotEmpty() && $dir->payments->isNotEmpty())
@@ -128,8 +133,18 @@ data-id="{{ $dir->id }}">
                     <li>
                         <small>
                             <span>{{ trans('idir::dirs.author') }}:</span>
-                            <span><a href="{{ route('admin.dir.index', ['filter[author]' => $dir->user->id]) }}">{{ $dir->user->name }}</a></span>
-                            <span><a href="{{ route('admin.dir.index', ['filter[search]' => "user:\"{$dir->user->ip}\""]) }}">{{ $dir->user->ip }}</a></span>
+                            <span>
+                                <a href="{{ route('admin.dir.index', ['filter[author]' => $dir->user->id]) }}"
+                                title="{{ $dir->user->name }}">
+                                    {{ $dir->user->name }}
+                                </a>
+                            </span>
+                            <span>
+                                <a href="{{ route('admin.dir.index', ['filter[search]' => "user:\"{$dir->user->ip}\""]) }}"
+                                title="{{ $dir->user->ip }}">
+                                    {{ $dir->user->ip }}
+                                </a>
+                            </span>
                         </small>
                     </li>
                     @endif

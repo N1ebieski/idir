@@ -3,7 +3,8 @@
         <span class="navbar-toggler-icon"></span>
     </a>
     <a href="/" class="navbar-brand">
-        <img src="{{ asset('svg/vendor/idir/logo.svg') }}" class="pb-1 pr-1 logo" alt="{{ config('app.name') }}">
+        <img src="{{ asset('svg/vendor/idir/logo.svg') }}" class="pb-1 pr-1 logo" 
+        alt="{{ config('app.name_short') }}" title="{{ config('app.name') }}">
         {{ config('app.name_short') }}
     </a>
     <ul class="navbar-nav ml-auto">
@@ -14,12 +15,21 @@
             </a>
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
                 <h6 class="dropdown-header">{{ trans('icore::auth.hello')}}, {{ auth()->user()->name }}</h6>
-                <a class="dropdown-item {{ $isUrl(route('web.profile.edit')) }}" href="{{ route('web.profile.edit') }}">{{ trans('icore::profile.route.edit') }}</a>
+                <a class="dropdown-item {{ $isUrl(route('web.profile.edit')) }}" 
+                href="{{ route('web.profile.edit') }}" title="{{ trans('icore::profile.route.edit') }}">
+                    {{ trans('icore::profile.route.edit') }}
+                </a>
                 @can('admin.home.view')
-                <a class="dropdown-item" href="{{ route('admin.home.index') }}">{{ trans('icore::admin.route.index') }}</a>
+                <a class="dropdown-item" href="{{ route('admin.home.index') }}"
+                title="{{ trans('icore::admin.route.index') }}">
+                    {{ trans('icore::admin.route.index') }}
+                </a>
                 @endcan
                 <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="{{ route('logout') }}">{{ trans('icore::auth.route.logout') }}</a>
+                <a class="dropdown-item" href="{{ route('logout') }}"
+                title="{{ trans('icore::auth.route.logout') }}">
+                    {{ trans('icore::auth.route.logout') }}
+                </a>
             </div>
         </li>
     </ul>
