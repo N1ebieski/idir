@@ -2,7 +2,7 @@
 
 namespace N1ebieski\IDir\Providers;
 
-use Illuminate\Support\ServiceProvider;
+use N1ebieski\ICore\Support\ServiceProvider;
 
 /**
  * [IDirServiceProvider description]
@@ -13,7 +13,7 @@ class IDirServiceProvider extends ServiceProvider
      * [public description]
      * @var string
      */
-    public const VERSION = "1.0.0-beta.19";
+    public const VERSION = "1.0.0-beta.20";
 
     /**
      * Register services.
