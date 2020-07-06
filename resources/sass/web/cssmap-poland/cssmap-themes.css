@@ -1,6 +1,6 @@
 /*
  * CSSMap plugin - THEMES
- * version: 5.5
+ * version: 5.6
  * web: http://cssmapsplugin.com
  *
  * author: Łukasz Popardowski { Winston_Wolf }
@@ -27,12 +27,13 @@
   -ms-border-radius: .4em;
   -webkit-border-radius: .4em;
   border-radius: .4em;
+  pointer-events: none;
  }
  .cssmap-1450 .cssmap > li a,.cssmap-1280 .cssmap > li a{ font-size: 14px }
  .cssmap-650 .cssmap > li a{ font-size: 11px }
  .cssmap-540 .cssmap > li a,.cssmap-430 .cssmap > li a,.cssmap-320 .cssmap > li a,
  .cssmap-250 .cssmap > li a,.cssmap-210 .cssmap > li a{ font-size: 10px !important}
- 
+
     /* tooltip arrow; when you change its size don't forget to set tooltipArrowHeight option in the cssMap(); function */
     .cssmap > li a .tooltip-arrow{
       bottom: -5px; /* must be the same as a border-width */
@@ -49,7 +50,7 @@
       border-width:0 5px 5px 5px;
       top: -5px;
     }
-  
+
   .cssmap > li a small,.cssmap > li a:hover small,.cssmap-tooltip-content small,
   .cssmap > li a abbr,.cssmap > li a:hover abbr,.cssmap-tooltip-content abbr{ display:block; font-size: .8em }
 
@@ -104,8 +105,8 @@
 
   /* LIST OF NAVIGATION CONTROLS */
   .cssmap-nav-list{}
-   .cssmap-nav-list li{ 
-     display:inline-block; 
+   .cssmap-nav-list li{
+     display:inline-block;
      margin: 0 .5em;
     }
     .cssmap-nav-next{} /* LIST ITEM */
@@ -142,4 +143,4 @@
 /* ---------------------------------------------------------------------------------------------------- *
  *                               DO NOT EDIT FROM THIS POINT!
  * ---------------------------------------------------------------------------------------------------- */
-.cssmap-container{margin:0 auto;overflow:hidden;padding:0 !important;position:relative} .cssmap-container,.cssmap-container *,.cssmap-markers-container,.cssmap-markers-container *{-moz-box-sizing: content-box !important;-webkit-box-sizing: content-box !important;box-sizing: content-box !important;-moz-backface-visibility: hidden;-ms-backface-visibility: hidden;-o-backface-visibility: hidden;-webkit-backface-visibility: hidden;backface-visibility: hidden} .cssmap{border:0 none !important;display:block;left:0;margin:0 !important;list-style:none !important;padding:0 !important;position:relative} .cssmap > li{height:0;width:0} .cssmap > li a{height:auto;margin:0 0 0 -9999px;position:absolute;text-decoration:none;width:auto;z-index:89} .cssmap > li a:focus{outline:0 none} .cssmap-container span,.cssmap-cities{display:block;height:0;left:0;position:absolute;top:-9999px;width:0} .cssmap > li a.tooltip-right{left:auto;right:0;width:auto} .cssmap > li a .tooltip-arrow{left:50%;top:auto} .cssmap > li a.tooltip-middle .tooltip-arrow{display:none} .cssmap > li a.tooltip-top .tooltip-arrow{bottom:auto} .cssmap > li a.tooltip-right .tooltip-arrow{left:auto} #cssmap-tooltip{position:absolute;z-index:999} .cssmap-container .cssmap-cities{top:0;z-index:88} .cssmap .bg{padding:10px} .cssmap .active-region .bg{z-index:87} .cssmap .m{cursor:pointer;z-index:99} .cssmap .m span{z-index:89} .cssmap-visible-list-container{margin:0;overflow:hidden;position:relative;z-index:300} .cssmap-visible-list{list-style:none;padding-left:0;padding-right:0} .cssmap-marker img{border:0 none} span.cssmap-loader{height:auto;position:absolute;text-align:center;width:auto;z-index:90} .cssmap-error{margin:2em 0;text-align:left;width:100%} .cssmap-signature{clear:both;font-size:10px;margin:1em 0;overflow:hidden;position:relative;text-align:center;width:100%} .cssmap-signature a{text-decoration: none !important} .cssmap-search-link{position:absolute;z-index:100 !important}
+.cssmap-container{margin:0 auto;overflow:hidden;padding:0 !important;position:relative} .cssmap-container,.cssmap-container *,.cssmap-markers-container,.cssmap-markers-container *{-moz-box-sizing: content-box !important;-webkit-box-sizing: content-box !important;box-sizing: content-box !important;-moz-backface-visibility: hidden;-ms-backface-visibility: hidden;-o-backface-visibility: hidden;-webkit-backface-visibility: hidden;backface-visibility: hidden} .cssmap{border:0 none !important;display:block;left:0;margin:0 !important;list-style:none !important;padding:0 !important;position:relative} .cssmap > li{height:0;width:0} .cssmap > li a{height:auto;margin:0 0 0 -9999px;position:absolute;text-decoration:none;width:auto;z-index:89} .cssmap > li a:focus{outline:0 none} .cssmap-container span,.cssmap-cities{display:block;height:0;left:0;position:absolute;top:-9999px;width:0} .cssmap > li a.tooltip-right{left:auto;right:0;width:auto} .cssmap > li a .tooltip-arrow{left:50%;top:auto} .cssmap > li a.tooltip-middle .tooltip-arrow{display:none} .cssmap > li a.tooltip-top .tooltip-arrow{bottom:auto} .cssmap > li a.tooltip-right .tooltip-arrow{left:auto} #cssmap-tooltip{position:absolute;z-index:999} .cssmap-container .cssmap-cities{top:0;z-index:88} .cssmap .bg{padding:10px} .cssmap .active-region .bg{z-index:87} .cssmap .m{cursor:pointer;z-index:99} .cssmap .m span{z-index:89} .cssmap-visible-list-container{margin:0;overflow:hidden;position:relative;z-index:300} .cssmap-pins,.cssmap-visible-list{list-style:none;padding-left:0;padding-right:0} .cssmap-marker img{border:0 none} span.cssmap-loader{height:auto;position:absolute;text-align:center;width:auto;z-index:90} .cssmap-error{margin:2em 0;text-align:left;width:100%} .cssmap-signature{clear:both;font-size:10px;margin:1em 0;overflow:hidden;position:relative;text-align:center;width:100%} .cssmap-signature a{text-decoration: none !important} .cssmap-search-link{position:absolute;z-index:100 !important}
