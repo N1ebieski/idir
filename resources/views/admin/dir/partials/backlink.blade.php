@@ -15,7 +15,12 @@
     <textarea class="form-control" id="backlink_code" rows="5" readonly>{{ optional($backlinkSelection)->link_as_html }}</textarea>
 </div>
 <div class="form-group">
-    <label for="backlink_url">{{ trans('idir::dirs.backlink_url') }}:</label>
+    <label for="backlink_url">
+        <span>{{ trans('idir::dirs.backlink_url') }}:</span>
+        @if ($group->backlink === $group::OBLIGATORY_BACKLINK)
+        <span>*</span>
+        @endif        
+    </label>
     <input type="text" name="backlink_url" id="backlink_url" placeholder="https://"
     value="{{ old('backlink_url', $dir->backlink->url ?? null) }}" class="form-control {{ $isValid('backlink_url') }}">
     @includeWhen($errors->has('backlink_url'), 'icore::admin.partials.errors', ['name' => 'backlink_url'])

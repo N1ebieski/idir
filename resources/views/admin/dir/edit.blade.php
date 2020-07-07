@@ -1,7 +1,7 @@
 <form data-route="{{ route('admin.dir.update', [$dir->id]) }}" id="editDir" data-id="{{ $dir->id }}">
     <div class="form-group">
         <label for="title" class="d-flex justify-content-between">
-            <div>{{ trans('idir::dirs.title') }}:</div>
+            <div>{{ trans('idir::dirs.title') }}: *</div>
             @include('icore::admin.partials.counter', [
                 'string' => $dir->title,
                 'min' => 3,
@@ -15,7 +15,7 @@
     <div class="form-group">
         <label class="d-flex justify-content-between" 
         for="content_html{{ $dir->group->hasEditorPrivilege() ? '_dir_trumbowyg' : null }}">
-            <div>{{ trans('idir::dirs.content') }}:</div>
+            <div>{{ trans('idir::dirs.content') }}: *</div>
             @include('icore::admin.partials.counter', [
                 'string' => $dir->content_html,
                 'min' => config('idir.dir.min_content'),
@@ -46,14 +46,20 @@
     </div>
     @if ($dir->group->url > 0)
     <div class="form-group">
-        <label for="url">{{ trans('idir::dirs.url') }}:</label>
+        <label for="url">
+            <span>{{ trans('idir::dirs.url') }}:</span>
+            @if ($dir->group->url === $dir->group::OBLIGATORY_URL)
+            <span>*</span>
+            @endif
+        </label>
         <input type="text" value="{{ $dir->url }}" name="url"
         id="url" class="form-control" placeholder="https://">
     </div>
     @endif
     <div class="form-group">
         <label for="category">
-            {{ trans('icore::categories.categories.label') }}: <i data-toggle="tooltip" data-placement="top"
+            <span>{{ trans('icore::categories.categories.label') }}: *</span>
+            <i data-toggle="tooltip" data-placement="top"
             title="{{ trans('icore::categories.categories.tooltip', ['max_categories' => $dir->group->max_cats]) }}"
             class="far fa-question-circle"></i>
         </label>

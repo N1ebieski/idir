@@ -92,7 +92,7 @@ trait FieldsExtended
     {
         foreach ($this->getFields() as $field) {
             $rules["field.{$field->id}"][] = 'bail';
-            $rules["field.{$field->id}"][] = (bool)$field->options->required === true ?
+            $rules["field.{$field->id}"][] = $field->isRequired() === true ?
                 'required' : 'nullable';
 
             switch ($field->type) {
@@ -104,14 +104,14 @@ trait FieldsExtended
                     ];
                     $rules["field.{$field->id}.*.lat"] = [
                         'bail',
-                        (bool)$field->options->required === true ? 'required' : 'nullable',
+                        $field->isRequired() ? 'required' : 'nullable',
                         "required_with:field.{$field->id}.*.long",
                         'numeric',
                         'between:-90,90'
                     ];
                     $rules["field.{$field->id}.*.long"] = [
                         'bail',
-                        (bool)$field->options->required === true ? 'required' : 'nullable',
+                        $field->isRequired() === true ? 'required' : 'nullable',
                         "required_with:field.{$field->id}.*.lat",
                         'numeric',
                         'between:-180,180'

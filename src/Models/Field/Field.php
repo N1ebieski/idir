@@ -198,6 +198,16 @@ class Field extends Model
         return !in_array($this->type, static::DEFAULT);
     }
 
+    /**
+     * Undocumented function
+     *
+     * @return boolean
+     */
+    public function isRequired() : bool
+    {
+        return (int)$this->options->required === static::REQUIRED;
+    }
+
     // Makers
 
     /**

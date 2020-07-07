@@ -27,7 +27,7 @@
                 @csrf
                 <div class="form-group">
                     <label for="title" class="d-flex justify-content-between">
-                        <div>{{ trans('idir::dirs.title') }}:</div>
+                        <div>{{ trans('idir::dirs.title') }}: *</div>
                         @include('icore::web.partials.counter', [
                             'string' => old('title', session('dir.title')),
                             'min' => 3,
@@ -42,7 +42,7 @@
                 <div class="form-group">
                     <label class="d-flex justify-content-between" 
                     for="content_html{{ $group->hasEditorPrivilege() ? '_dir_trumbowyg' : null }}">
-                        <div>{{ trans('idir::dirs.content') }}:</div>
+                        <div>{{ trans('idir::dirs.content') }}: *</div>
                         @include('icore::web.partials.counter', [
                             'string' => $oldContentHtml,
                             'min' => config('idir.dir.min_content'),
@@ -76,7 +76,12 @@
                 </div>
                 @if ($group->url > 0)
                 <div class="form-group">
-                    <label for="url">{{ trans('idir::dirs.url') }}:</label>
+                    <label for="url">
+                        <span>{{ trans('idir::dirs.url') }}:</span>
+                        @if ($group->url === $group::OBLIGATORY_URL)
+                        <span>*</span>
+                        @endif
+                    </label>
                     <input type="text" value="{{ old('url', session('dir.url')) }}" name="url"
                     id="url" class="form-control {{ $isValid('url') }}" placeholder="https://">
                     @includeWhen($errors->has('url'), 'icore::web.partials.errors', ['name' => 'url'])
@@ -84,7 +89,8 @@
                 @endif
                 <div class="form-group">
                     <label for="category">
-                        {{ trans('icore::categories.categories.label') }}: <i data-toggle="tooltip" data-placement="top"
+                        <span>{{ trans('icore::categories.categories.label') }}: *</span>
+                        <i data-toggle="tooltip" data-placement="top"
                         title="{{ trans('icore::categories.categories.tooltip', ['max_categories' => $group->max_cats]) }}"
                         class="far fa-question-circle"></i>
                     </label>

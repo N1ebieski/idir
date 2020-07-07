@@ -5,6 +5,9 @@ $value = old("field.{$field->id}", $value ?? null);
 <div class="form-group">
     <label for="field.{{ $field->id }}">
         <span>{{ $field->title }}:</span>
+        @if ($field->isRequired())
+        <span>*</span>
+        @endif      
         @if ($field->desc !== null)
         <i data-toggle="tooltip" data-placement="top"
         title="{{ $field->desc }}" class="far fa-question-circle"></i>

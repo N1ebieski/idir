@@ -72,7 +72,7 @@
                     @includeWhen($errors->has('payment_code_transfer'), 'icore::admin.partials.errors', ['name' => 'payment_code_transfer'])
                 </div>
                 <div class="form-group">
-                    <label for="code_transfer">{{ trans('idir::dirs.code') }}:</label>
+                    <label for="code_transfer">{{ trans('idir::dirs.code') }}: *</label>
                     <input type="text" value="" name="code_transfer" id="code_transfer" class="form-control {{ $isValid('code_transfer') }}">
                     @includeWhen($errors->has('code_transfer'), 'icore::admin.partials.errors', ['name' => 'code_transfer'])
                 </div>
@@ -113,7 +113,7 @@
                     @includeWhen($errors->has('payment_code_sms'), 'icore::admin.partials.errors', ['name' => 'payment_code_sms'])
                 </div>
                 <div class="form-group">
-                    <label for="code_sms">{{ trans('idir::dirs.code') }}:</label>
+                    <label for="code_sms">{{ trans('idir::dirs.code') }}: *</label>
                     <input type="text" value="" name="code_sms" id="code_sms" class="form-control {{ $isValid('code_sms') }}">
                     @includeWhen($errors->has('code_sms'), 'icore::admin.partials.errors', ['name' => 'code_sms'])
                 </div>
