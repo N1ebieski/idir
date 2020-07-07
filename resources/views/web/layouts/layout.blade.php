@@ -21,7 +21,7 @@
     <link rel="icon" href="{{ asset('svg/vendor/idir/logo.svg') }}" type="image/svg+xml">
     <link href="{{ mix('css/vendor/idir/vendor/vendor.css') }}" rel="stylesheet">
     <link href="{{ mix($getStylesheet('css/vendor/idir')) }}" rel="stylesheet">
-    <link href="{{ asset('css/custom/web/web.css') }}" rel="stylesheet">
+    <link href="{{ asset($getStylesheet('css/custom')) }}" rel="stylesheet">
 
     <script src="{{ mix('js/vendor/idir/vendor/vendor.js') }}" defer></script>
     <script src="{{ mix('js/vendor/idir/web/web.js') }}" defer></script>
