@@ -1,6 +1,6 @@
 <form data-route="{{ route("admin.field.{$field->poli}.index") }}" id="filter">
-    <div class="row position-relative">
-        <div class="col mb-3">
+    <div class="d-flex flex-wrap position-relative">
+        <div class="mb-3 mr-auto">
             <span class="badge badge-primary">{{ trans('icore::filter.items') }}: {{ $fields->total() }}</span>&nbsp;
             @if ($filter['search'] !== null)
             <a href="#" class="badge badge-primary filterOption" data-name="filter[search]">
@@ -25,7 +25,7 @@
             <a href="{{ route("admin.field.{$field->poli}.index") }}" class="badge badge-dark">{{ trans('icore::default.clear') }}</a>&nbsp;
             @endif
         </div>
-        <div class="col-xs-3 text-right mx-3">
+        <div class="ml-sm-auto">
             <div class="form-inline">
                 <div class="form-group col-xs-4">
                     <button class="btn border mr-2" href="#" type="button" data-toggle="modal"

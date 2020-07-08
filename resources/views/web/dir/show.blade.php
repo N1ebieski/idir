@@ -185,6 +185,17 @@
                         <span>{{ trans('idir::dirs.link_dir_page') }}</span>
                     </a>
                 </div>
+                @can('web.dirs.edit')
+                @can('edit', $dir)
+                <div class="list-group-item">
+                    <a href="{{ route('web.dir.edit_1', [$dir->id]) }}"
+                    title="{{ trans('idir::dirs.premium_dir') }}">
+                        <i class="fas fa-edit"></i>
+                        <span>{{ trans('idir::dirs.premium_dir') }}</span>
+                    </a>
+                </div>
+                @endcan
+                @endcan
             </div>
         </div>
     </div>
