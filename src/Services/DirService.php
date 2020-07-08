@@ -298,7 +298,14 @@ class DirService implements
      */
     public function moveToAltGroup() : bool
     {
-        return $this->dir->group()->associate($this->dir->group->alt_id)->save();
+        $this->dir->categories()->sync(
+            $this->dir->categories
+                ->pluck('id')
+                ->take($this->dir->getGroup()->max_cats)
+                ->toArray()
+        );
+
+        return $this->dir->group()->associate($this->dir->getGroup())->save();
     }
 
     /**

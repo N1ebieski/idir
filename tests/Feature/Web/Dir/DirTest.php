@@ -21,6 +21,7 @@ use GuzzleHttp\Middleware as GuzzleMiddleware;
 use GuzzleHttp\Psr7\Response as GuzzleResponse;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use N1ebieski\IDir\Mail\DirBacklink\BacklinkNotFoundMail;
+use N1ebieski\IDir\Models\Category\Dir\Category;
 
 /**
  * [DirTest description]
@@ -102,6 +103,60 @@ class DirTest extends TestCase
 
             return $mail->hasTo($dir->user->email);
         });
+
+        $this->assertDatabaseHas('dirs', [
+            'id' => $dir->id,
+            'status' => 1,
+            'group_id' => $group->alt_id,
+            'privileged_at' => null,
+            'privileged_to' => null
+        ]);
+    }
+
+    public function test_completed_alt_group_remove_cats_queue_job()
+    {
+        $group = factory(Group::class)->states(['apply_alt_group'])->create([
+            'max_cats' => 5
+        ]);
+
+        $price = factory(Price::class)->states(['seasonal'])->make();
+        $price->group()->associate($group)->save();
+
+        $categories = factory(Category::class, 5)->states(['active'])->create();
+
+        $dir = factory(Dir::class)->states(['with_user', 'paid_seasonal', 'active'])
+            ->create([
+                'group_id' => $group->id,
+                'privileged_at' => null,
+                'privileged_to' => null
+            ]);
+
+        $dir->categories()->attach($categories->pluck('id')->toArray());
+
+        Mail::fake();
+
+        $this->assertEquals($dir->categories->count(), 5);
+
+        $this->assertDatabaseHas('dirs', [
+            'id' => $dir->id,
+            'status' => 1,
+            'group_id' => $group->id,
+            'privileged_at' => null,
+            'privileged_to' => null
+        ]);
+
+        $schedule = app()->make(CompletedCron::class);
+        $schedule();
+
+        Mail::assertSent(CompletedMail::class, function ($mail) use ($dir) {
+            $mail->build();
+
+            return $mail->hasTo($dir->user->email);
+        });
+
+        $dir->refresh();
+
+        $this->assertEquals(3, $dir->categories->count());
 
         $this->assertDatabaseHas('dirs', [
             'id' => $dir->id,
