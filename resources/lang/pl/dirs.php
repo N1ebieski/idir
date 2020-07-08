@@ -114,6 +114,7 @@ return [
         ]
     ],
     'link_dir_page' => 'Podlinkuj swój wpis by przyśpieszyć indeksację',
+    'premium_dir' => 'Wyróżnij swój wpis na stronie',
     'content' => 'Opis',
     'author' => 'Autor',
     'reload_thumbnail' => 'Odśwież',
