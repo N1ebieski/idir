@@ -126,7 +126,12 @@ class Update2Request extends FormRequest
     {
         if ($this->has('tags') && is_string($this->input('tags'))) {
             $this->merge([
-                'tags' => explode(',', $this->input('tags'))
+                'tags' => explode(
+                    ',',
+                    Config::get('icore.tag.normalizer') !== null ?
+                        Config::get('icore.tag.normalizer')($this->input('tags'))
+                        : $this->input('tags')
+                )
             ]);
         }
     }

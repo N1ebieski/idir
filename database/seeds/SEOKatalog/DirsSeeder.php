@@ -7,6 +7,7 @@ use N1ebieski\IDir\Models\Dir;
 use Illuminate\Support\Facades\DB;
 use N1ebieski\IDir\Models\Link;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Config;
 use N1ebieski\IDir\Models\Field\Field;
 use N1ebieski\IDir\Models\Region\Region;
 
@@ -131,8 +132,12 @@ class DirsSeeder extends SEOKatalogSeeder
                         'updated_at' => Carbon::createFromTimestamp($item->date)
                     ]);
         
+                    $keywords = Config::get('icore.tag.normalizer') !== null ?
+                        Config::get('icore.tag.normalizer')($item->keywords)
+                        : $item->keywords;
+
                     $dir->tag(
-                        collect(explode(',', $item->keywords))
+                        collect(explode(',', $keywords))
                             ->filter(function ($item) {
                                 return !is_null($item) && strlen($item) <= 30;
                             })
