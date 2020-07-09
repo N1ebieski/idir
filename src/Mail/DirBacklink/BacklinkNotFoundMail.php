@@ -7,7 +7,6 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use N1ebieski\IDir\Models\DirBacklink;
 use Illuminate\Contracts\Translation\Translator as Lang;
-use Illuminate\Contracts\Config\Repository as Config;
 
 /**
  * [BacklinkNotFound description]
@@ -41,15 +40,12 @@ class BacklinkNotFoundMail extends Mailable
      *
      * @param DirBacklink $dirBacklink
      * @param Lang $lang
-     * @param Config $config
      */
-    public function __construct(DirBacklink $dirBacklink, Lang $lang, Config $config)
+    public function __construct(DirBacklink $dirBacklink, Lang $lang)
     {
         $this->dirBacklink = $dirBacklink;
 
         $this->lang = $lang;
-
-        $this->email = $config->get('mail.from.address');
     }
 
     /**
@@ -62,7 +58,6 @@ class BacklinkNotFoundMail extends Mailable
         $this->dirBacklink->load(['link', 'dir', 'dir.user']);
 
         return $this->subject($this->lang->get('idir::backlinks.not_found'))
-            ->from($this->email)
             ->to($this->dirBacklink->dir->user->email)
             ->markdown('idir::mails.backlink.not_found');
     }

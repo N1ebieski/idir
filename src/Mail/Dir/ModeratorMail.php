@@ -9,7 +9,6 @@ use N1ebieski\IDir\Models\User;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Contracts\Translation\Translator as Lang;
 
 class ModeratorMail extends Mailable implements ShouldQueue
@@ -48,15 +47,13 @@ class ModeratorMail extends Mailable implements ShouldQueue
      *
      * @param Dir $dir
      * @param Lang $lang
-     * @param Config $config
      * @return void
      */
-    public function build(Dir $dir, Lang $lang, Config $config)
+    public function build(Dir $dir, Lang $lang)
     {
         $dirRepo = $dir->makeRepo();
 
         return $this->subject($lang->get('idir::dirs.latest'))
-            ->from($config->get('mail.from.address'))
             ->to($this->user->email)
             ->with([
                 'dirs' => $this->dirs,

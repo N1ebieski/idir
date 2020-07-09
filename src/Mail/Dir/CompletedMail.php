@@ -7,7 +7,6 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use N1ebieski\IDir\Models\Dir;
 use Illuminate\Contracts\Translation\Translator as Lang;
-use Illuminate\Contracts\Config\Repository as Config;
 
 class CompletedMail extends Mailable
 {
@@ -39,15 +38,12 @@ class CompletedMail extends Mailable
      *
      * @param Dir $dir
      * @param Lang $lang
-     * @param Config $config
      */
-    public function __construct(Dir $dir, Lang $lang, Config $config)
+    public function __construct(Dir $dir, Lang $lang)
     {
         $this->dir = $dir;
 
         $this->lang = $lang;
-
-        $this->email = $config->get('mail.from.address');
     }
 
     /**
@@ -58,7 +54,6 @@ class CompletedMail extends Mailable
     public function build()
     {
         return $this->subject($this->lang->get('idir::dirs.mail.completed.title'))
-            ->from($this->email)
             ->to($this->dir->user->email)
             ->with([
                 'result' => $this->result()

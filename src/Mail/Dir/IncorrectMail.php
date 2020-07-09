@@ -7,7 +7,6 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use N1ebieski\IDir\Models\Dir;
 use Illuminate\Contracts\Translation\Translator as Lang;
-use Illuminate\Contracts\Config\Repository as Config;
 
 class IncorrectMail extends Mailable
 {
@@ -44,16 +43,14 @@ class IncorrectMail extends Mailable
      *
      * @param Dir $dir
      * @param Lang $lang
-     * @param Config $config
      * @param string|null $reason
      */
-    public function __construct(Dir $dir, Lang $lang, Config $config, string $reason = null)
+    public function __construct(Dir $dir, Lang $lang, string $reason = null)
     {
         $this->dir = $dir;
 
         $this->lang = $lang;
 
-        $this->email = $config->get('mail.from.address');
         $this->reason = $reason;
     }
 
@@ -65,7 +62,6 @@ class IncorrectMail extends Mailable
     public function build() : self
     {
         return $this->subject($this->lang->get('idir::dirs.success.update_status.' . $this->dir::INCORRECT_INACTIVE))
-            ->from($this->email)
             ->to($this->dir->user->email)
             ->markdown('idir::mails.dir.incorrect');
     }
