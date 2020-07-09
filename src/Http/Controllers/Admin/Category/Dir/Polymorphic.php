@@ -6,6 +6,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response as HttpResponse;
 use N1ebieski\IDir\Models\Category\Dir\Category;
 use N1ebieski\ICore\Filters\Admin\Category\IndexFilter;
+use N1ebieski\ICore\Http\Requests\Admin\Category\CreateRequest;
 use N1ebieski\ICore\Http\Requests\Admin\Category\SearchRequest;
 use N1ebieski\ICore\Http\Responses\Admin\Category\SearchResponse;
 use N1ebieski\IDir\Http\Requests\Admin\Category\Dir\IndexRequest;
@@ -28,12 +29,13 @@ interface Polymorphic
     public function index(Category $category, IndexRequest $request, IndexFilter $filter) : HttpResponse;
 
     /**
-     * Show the form for creating a new Category.
+     * Undocumented function
      *
-     * @param  Category      $category      [description]
+     * @param Category $category
+     * @param CreateRequest $request
      * @return JsonResponse
      */
-    public function create(Category $category) : JsonResponse;
+    public function create(Category $category, CreateRequest $request) : JsonResponse;
 
     /**
      * Store a newly created Category in storage.

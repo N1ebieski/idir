@@ -17,6 +17,7 @@ use N1ebieski\IDir\Http\Requests\Admin\Category\Dir\StoreRequest;
 use N1ebieski\IDir\Http\Controllers\Admin\Category\Dir\Polymorphic;
 use N1ebieski\IDir\Http\Requests\Admin\Category\Dir\StoreGlobalRequest;
 use N1ebieski\ICore\Http\Controllers\Admin\Category\CategoryController as BaseCategoryController;
+use N1ebieski\ICore\Http\Requests\Admin\Category\CreateRequest;
 
 /**
  * [CategoryController description]
@@ -65,17 +66,19 @@ class CategoryController implements Polymorphic
     }
 
     /**
-     * Show the form for creating a new Category.
+     * Undocumented function
      *
-     * @param  Category      $category      [description]
+     * @param Category $category
+     * @param CreateRequest $request
      * @return JsonResponse
      */
-    public function create(Category $category) : JsonResponse
+    public function create(Category $category, CreateRequest $request) : JsonResponse
     {
         return Response::json([
             'success' => '',
             'view' => View::make('icore::admin.category.create', [
                 'model' => $category,
+                'parent_id' => (int)$request->input('parent_id'),
                 'categories' => $category->makeService()->getAsFlatTree()
             ])->render()
         ]);
