@@ -77,6 +77,13 @@ class CategoryRepo extends BaseCategoryRepo
                     ->where('categories_models.model_type', $dir->getMorphClass())
                     ->whereIn('categories_models.category_id', $this->category->descendants->pluck('id')->toArray());
             })
+            ->where(function ($query) {
+                $query->where(DB::raw('IF(`privileges`.`name` IS NULL, 0, 1)'), 1)
+                    ->orWhere(function ($query) {
+                        $query->where(DB::raw('IF(`privileges`.`name` IS NULL, 0, 1)'), 0)
+                            ->where('categories_models.category_id', $this->category->id);
+                    });
+            })
             ->active()
             ->filterRegion($filter['region'])
             ->when($filter['orderby'] === null, function ($query) {
