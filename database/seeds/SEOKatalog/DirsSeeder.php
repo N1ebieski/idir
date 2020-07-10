@@ -180,6 +180,7 @@ class DirsSeeder extends SEOKatalogSeeder
                                                 ->map(function ($item) {
                                                     return ucfirst($item);
                                                 })
+                                                ->toArray()
                                         )
                                         ->pluck('id')->toArray();
 
