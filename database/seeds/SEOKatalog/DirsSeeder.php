@@ -176,7 +176,10 @@ class DirsSeeder extends SEOKatalogSeeder
                                     case 1:
                                         $value = $defaultRegions->whereIn(
                                             'name',
-                                            explode(',', $value)
+                                            collect(explode(',', $value))
+                                                ->map(function ($item) {
+                                                    return ucfirst($item);
+                                                })
                                         )
                                         ->pluck('id')->toArray();
 
