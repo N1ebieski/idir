@@ -21,7 +21,8 @@ $factory->state(Price::class, 'code_sms', function (Faker $faker) {
     return [
         'type' => 'code_sms',
         'number' => 99999,
-        'code' => 'XX.XXX'
+        'code' => 'XX.XXX',
+        'token' => 'c78zs8ds8ds'
     ];
 });
 

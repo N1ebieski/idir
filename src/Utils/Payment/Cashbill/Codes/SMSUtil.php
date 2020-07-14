@@ -19,12 +19,6 @@ class SMSUtil implements SMSUtilStrategy
     protected $check_url;
 
     /**
-     * [private description]
-     * @var string
-     */
-    protected $token;
-
-    /**
      * [protected description]
      * @var object
      */
@@ -44,7 +38,6 @@ class SMSUtil implements SMSUtilStrategy
     public function __construct(Config $config, GuzzleClient $guzzle)
     {
         $this->check_url = $config->get('services.cashbill.code_sms.check_url');
-        $this->token = $config->get('services.cashbill.code_sms.token');
 
         $this->guzzle = $guzzle;
     }
@@ -65,7 +58,7 @@ class SMSUtil implements SMSUtilStrategy
      */
     public function authorize(array $attributes) : void
     {
-        $this->makeResponse($attributes['code']);
+        $this->makeResponse($attributes['token'], $attributes['code']);
         $this->prepareResponse();
 
         if (!$this->isActive()) {
@@ -117,13 +110,14 @@ class SMSUtil implements SMSUtilStrategy
     /**
      * Undocumented function
      *
+     * @param string $token
      * @param string $code
      * @return GuzzleResponse
      */
-    public function makeResponse(string $code) : GuzzleResponse
+    public function makeResponse(string $token, string $code) : GuzzleResponse
     {
         try {
-            $this->response = $this->guzzle->request('GET', $this->check_url . $this->token . '/' . $code);
+            $this->response = $this->guzzle->request('GET', $this->check_url . $token . '/' . $code);
         } catch (\GuzzleHttp\Exception\GuzzleException $e) {
             throw new \N1ebieski\IDir\Exceptions\Payment\Cashbill\Exception(
                 $e->getMessage(),

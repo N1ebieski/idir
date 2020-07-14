@@ -80,10 +80,15 @@ class SMSRule extends CodesRule
             return true;
         }
 
+        if ($this->price->token === null) {
+            return false;
+        }
+
         try {
             $this->smsUtil->authorize([
                 'code' => $value,
-                'number' => $this->price->number
+                'number' => $this->price->number,
+                'token' => $this->price->token
             ]);
         } catch (\Exception $e) {
             return false;

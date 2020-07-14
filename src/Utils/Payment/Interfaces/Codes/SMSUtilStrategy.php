@@ -22,8 +22,9 @@ interface SMSUtilStrategy
     /**
      * Undocumented function
      *
+     * @param string $token
      * @param string $code
      * @return GuzzleResponse
      */
-    public function makeResponse(string $code) : GuzzleResponse;
+    public function makeResponse(string $token, string $code) : GuzzleResponse;
 }

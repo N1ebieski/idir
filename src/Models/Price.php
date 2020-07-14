@@ -32,6 +32,7 @@ class Price extends Model
         'price',
         'days',
         'code',
+        'token',
         'number'
     ];
 

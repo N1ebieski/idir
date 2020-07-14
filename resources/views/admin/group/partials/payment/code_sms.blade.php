@@ -62,6 +62,18 @@
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
                     <div class="input-group-text">
+                        {{ trans('idir::groups.token') }}
+                    </div>
+                </div>
+                <input type="text" class="form-control {{ $isValid("prices.code_sms.{$loop->index}.token") }}"
+                name="prices[code_sms][{{ $loop->index }}][token]" value="{{ $price->token ?? null }}">
+            </div>
+
+            @includeWhen($errors->has("prices.code_sms.{$loop->index}.token"), 'icore::admin.partials.errors', ['name' => "prices.code_transfer.{$loop->index}.token"])
+
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <div class="input-group-text">
                         <div>
                             {{ trans('idir::groups.codes') }}<br>
                             <div class="custom-control custom-checkbox">

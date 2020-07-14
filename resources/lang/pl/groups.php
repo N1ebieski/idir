@@ -74,6 +74,7 @@ return [
     ],
     'code_sms' => 'Kod SMS',
     'code_transfer' => 'Kod ID',
+    'token' => 'Token',
     'number' => 'Numer',
     'codes' => 'Kody manualne',
     'sync_codes' => 'Synchronizuj kody'
