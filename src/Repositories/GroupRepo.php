@@ -141,4 +141,16 @@ class GroupRepo
             ->orderBy('position', 'asc')
             ->get();
     }
+
+    /**
+     * Undocumented function
+     *
+     * @return Collection
+     */
+    public function getExceptSelf() : Collection
+    {
+        return $this->group->where('id', '!=', $this->group->id)
+            ->orderBy('position', 'asc')
+            ->get();
+    }
 }

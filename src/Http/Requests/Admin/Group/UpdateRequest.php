@@ -5,6 +5,7 @@ namespace N1ebieski\IDir\Http\Requests\Admin\Group;
 use Illuminate\Foundation\Http\FormRequest;
 use N1ebieski\IDir\Http\Requests\Admin\Group\Traits\CodePayable;
 use Illuminate\Support\Collection as Collect;
+use Illuminate\Validation\Rule;
 
 class UpdateRequest extends FormRequest
 {
@@ -72,7 +73,12 @@ class UpdateRequest extends FormRequest
     {
         return [
             'name' => 'bail|required|string|between:3,255|unique:groups,name,' . $this->group->id,
-            'alt_id' => 'bail|nullable|integer|exists:groups,id',
+            'alt_id' => [
+                'bail',
+                'nullable',
+                'integer',
+                Rule::exists('groups', 'id')->whereNot('id', $this->group->id)
+            ],
             'visible' => 'bail|required|in:0,1',
             'border' => 'bail|nullable|string|max:255',
             'desc' => 'bail|nullable|string|max:500',

@@ -88,7 +88,7 @@ class CreateViewModel extends ViewModel
      */
     public function groups() : Collection
     {
-        return $this->group->orderBy('id', 'asc')->get();
+        return $this->group->makeRepo()->getExceptSelf();
     }
 
     /**
