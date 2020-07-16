@@ -10,5 +10,5 @@
             data-size="xs" class="rating-loading">
         </small>
     </div>
-    <div class="text-break">{!! $dir->less_content_html !!}</div>
+    <div class="text-break" style="word-break:break-word">{!! $dir->less_content_html !!}</div>
 </div>  

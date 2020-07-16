@@ -36,7 +36,7 @@ data-id="{{ $dir->id }}">
                     </span>
                     @endif
                 </li>
-                <li class="text-break">
+                <li class="text-break" style="word-break:break-word">
                     <span contenteditable="true" spellcheck="true" id="content.{{ $dir->id }}">
                         {{ $dir->short_content }}...
                     </span>
@@ -45,14 +45,14 @@ data-id="{{ $dir->id }}">
                     </a>
                 </li>
                 @if ($dir->notes)
-                <li class="text-break font-weight-bold">
+                <li class="text-break font-weight-bold" style="word-break:break-word">
                     {{ $dir->notes }}
                 </li>
                 @endif                
                 @if ($dir->group->fields->isNotEmpty())
                 @foreach ($dir->group->fields as $field)
                 @if ($value = optional($dir->fields->where('id', $field->id)->first())->decode_value)
-                <li class="text-break">
+                <li class="text-break" style="word-break:break-word">
                     {{ $field->title }}: 
                     <span>
                     @switch($field->type)
@@ -92,7 +92,9 @@ data-id="{{ $dir->id }}">
             <div class="d-flex">
                 <ul class="list-unstyled mb-0 pb-0 flex-grow-1">
                     @if ($dir->tagList)
-                    <li class="text-break"><small>{{ trans('idir::dirs.tags.label') }}: {{ $dir->tagList }}</small></li>
+                    <li class="text-break" style="word-break:break-word">
+                        <small>{{ trans('idir::dirs.tags.label') }}: {{ $dir->tagList }}</small>
+                    </li>
                     @endif
                     @if ($dir->categories->isNotEmpty())
                     <li>
