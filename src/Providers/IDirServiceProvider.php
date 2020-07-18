@@ -13,7 +13,7 @@ class IDirServiceProvider extends ServiceProvider
      * [public description]
      * @var string
      */
-    public const VERSION = "1.0.0-beta.27";
+    public const VERSION = "1.0.0-beta.28";
 
     /**
      * Register services.
@@ -24,7 +24,7 @@ class IDirServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(__DIR__.  '/../../config/idir.php', 'idir');
 
-        $this->app->register(LicenseServiceProvider::class);
+        //$this->app->register(LicenseServiceProvider::class);
         $this->app->register(AppServiceProvider::class);
         $this->app->register(RouteServiceProvider::class);
         $this->app->register(AuthServiceProvider::class);
