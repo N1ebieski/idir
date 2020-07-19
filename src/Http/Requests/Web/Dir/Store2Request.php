@@ -74,6 +74,8 @@ class Store2Request extends FormRequest
     {
         $this->prepareTagsAttribute();
 
+        $this->prepareTitleAttribute();
+
         $this->prepareContentHtmlAttribute();
 
         $this->prepareContentAttribute();
@@ -123,6 +125,20 @@ class Store2Request extends FormRequest
         if ($this->has('content_html')) {
             $this->merge([
                 'content' => strip_tags($this->input('content_html'))
+            ]);
+        }
+    }
+
+    /**
+     * [prepareTitle description]
+     */
+    protected function prepareTitleAttribute() : void
+    {
+        if ($this->has('title')) {
+            $this->merge([
+                'title' => Config::get('idir.dir.title_normalizer') !== null ?
+                    Config::get('idir.dir.title_normalizer')($this->input('title'))
+                    : $this->input('title')
             ]);
         }
     }

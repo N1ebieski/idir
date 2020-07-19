@@ -15,7 +15,7 @@ return [
         'max_content' => (int)env('IDIR_DIR_MAX_CONTENT', 1000),
         'short_content' => (int)env('IDIR_DIR_SHORT_CONTENT', 500),
 
-        'title_normalizer' => '',
+        'title_normalizer' => null,
 
         'backlink' => [
             'check_hours' => (int)env('IDIR_DIR_BACKLINK_CHECK_HOURS', 24),
