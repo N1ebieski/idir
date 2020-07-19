@@ -1,7 +1,7 @@
 @section('thumbnail')
 <div class="d-flex flex-column">
     <div class="thumbnail d-inline position-relative" style="width:90px;height:68px">
-        <img src="{{ $dir->thumbnail_url }}" class="img-fluid border"
+        <img data-src="{{ $dir->thumbnail_url }}" class="lazy img-fluid border"
         alt="{{ $dir->title }}" title="{{ $dir->title }}">
     </div>
     <a href="#" data-route="{{ route('admin.thumbnail.dir.reload', [$dir->id]) }}" 
