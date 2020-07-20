@@ -39,7 +39,7 @@ class CategoryRepo extends BaseCategoryRepo
             ->leftJoin('categories_models', function ($query) {
                 $query->on('categories_closure.descendant', '=', 'categories_models.category_id');
             })
-            ->join($morph->getTable(), function ($query) use ($morph) {
+            ->leftJoin($morph->getTable(), function ($query) use ($morph) {
                 $query->on('categories_models.model_id', '=', "{$morph->getTable()}.id")
                     ->where('categories_models.model_type', $morph->getMorphClass())
                     ->where("{$morph->getTable()}.status", 1);
