@@ -2,7 +2,9 @@
     'title' => [
         trans('icore::categories.route.show', ['category' => $category->name]), 
         $region->name,
-        trans('icore::pagination.page', ['num' => $dirs->currentPage()])
+        $dirs->currentPage() > 1 ?
+            trans('icore::pagination.page', ['num' => $dirs->currentPage()])
+            : null
     ],
     'desc' => [trans('icore::categories.route.show', ['category' => $category->name]), $region->name],
     'keys' => [trans('icore::categories.route.show', ['category' => $category->name]), $region->name]

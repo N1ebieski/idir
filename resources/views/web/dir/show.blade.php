@@ -1,7 +1,9 @@
 @extends(config('idir.layout') . '::web.layouts.layout', [
     'title' => [
         $dir->title,
-        trans('icore::pagination.page', ['num' => $comments->currentPage()])
+        $comments->currentPage() > 1 ?
+            trans('icore::pagination.page', ['num' => $comments->currentPage()])
+            : null
     ],
     'desc' => [$dir->short_content],
     'keys' => [$dir->tagList],

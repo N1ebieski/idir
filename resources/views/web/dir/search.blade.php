@@ -1,5 +1,10 @@
 @extends(config('idir.layout') . '::web.layouts.layout', [
-    'title' => [trans('idir::dirs.route.search', ['search' => $search]), trans('icore::pagination.page', ['num' => $dirs->currentPage()])],
+    'title' => [
+        trans('idir::dirs.route.search', ['search' => $search]),
+        $dirs->currentPage() > 1 ?
+            trans('icore::pagination.page', ['num' => $dirs->currentPage()])
+            : null
+    ],
     'desc' => [trans('idir::dirs.route.search', ['search' => $search])],
     'keys' => [trans('idir::dirs.route.search', ['search' => $search])]
 ])

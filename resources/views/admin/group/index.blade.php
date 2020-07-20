@@ -1,5 +1,10 @@
 @extends(config('idir.layout') . '::admin.layouts.layout', [
-    'title' => [trans('idir::groups.route.index'), trans('icore::pagination.page', ['num' => $groups->currentPage()])],
+    'title' => [
+        trans('idir::groups.route.index'),
+        $groups->currentPage() > 1 ?
+            trans('icore::pagination.page', ['num' => $groups->currentPage()])
+            : null
+    ],
     'desc' => [trans('idir::groups.route.index')],
     'keys' => [trans('idir::groups.route.index')]
 ])

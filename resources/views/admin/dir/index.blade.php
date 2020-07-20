@@ -1,5 +1,10 @@
 @extends(config('idir.layout') . '::admin.layouts.layout', [
-    'title' => [trans('idir::dirs.route.index'), trans('icore::pagination.page', ['num' => $dirs->currentPage()])],
+    'title' => [
+        trans('idir::dirs.route.index'),
+        $dirs->currentPage() > 1 ?
+            trans('icore::pagination.page', ['num' => $dirs->currentPage()])
+            : null
+    ],
     'desc' => [trans('idir::dirs.route.index')],
     'keys' => [trans('idir::dirs.route.index')]
 ])

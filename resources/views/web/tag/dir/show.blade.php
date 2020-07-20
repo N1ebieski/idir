@@ -1,5 +1,10 @@
 @extends(config('icore.layout') . '::web.layouts.layout', [
-    'title' => [trans('icore::tags.route.show', ['tag' => $tag->name]), trans('icore::pagination.page', ['num' => $dirs->currentPage()])],
+    'title' => [
+        trans('icore::tags.route.show', ['tag' => $tag->name]),
+        $dirs->currentPage() > 1 ?
+            trans('icore::pagination.page', ['num' => $dirs->currentPage()])
+            : null
+    ],
     'desc' => [trans('icore::tags.route.show', ['tag' => $tag->name])],
     'keys' => [trans('icore::tags.route.show', ['tag' => $tag->name])],
     'index' => 'noindex'

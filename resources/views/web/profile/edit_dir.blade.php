@@ -1,5 +1,10 @@
 @extends(config('icore.layout') . '::web.profile.layouts.layout', [
-    'title' => [trans('idir::profile.route.edit_dir'), trans('icore::pagination.page', ['num' => $dirs->currentPage()])],
+    'title' => [
+        trans('idir::profile.route.edit_dir'),
+        $dirs->currentPage() > 1 ?
+            trans('icore::pagination.page', ['num' => $dirs->currentPage()])
+            : null
+    ],
     'desc' => [trans('idir::profile.route.edit_dir')],
     'keys' => [trans('idir::profile.route.edit_dir')]
 ])
