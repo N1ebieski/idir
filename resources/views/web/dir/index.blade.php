@@ -1,5 +1,5 @@
 @extends(config('idir.layout') . '::web.layouts.layout', [
-    'title' => 
+    'title' => [
         trans('idir::dirs.route.index'),
         $dirs->currentPage() > 1 ?
             trans('icore::pagination.page', ['num' => $dirs->currentPage()])
