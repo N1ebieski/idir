@@ -120,9 +120,9 @@ class CompletedJob implements ShouldQueue
             return;
         }
 
-        $this->executeResult();
-
         $this->sendNotification();
+
+        $this->executeResult();
     }
 
     /**
