@@ -25,7 +25,7 @@ class DirsSeeder extends SEOKatalogSeeder
         $desc = str_replace(array('<br /><br />[list', '<br />[list'), array('[list', '[list'), $desc);
         $desc = str_replace(array('[/list]<br /><br />', '[/list]<br />'), array('[/list]', '[/list]'), $desc);
      
-        $desc = preg_replace('#\[url=(.*?)\](.*?)\[/url\]#si', '<a href="\\1" target="_blank">\\2</a>', $desc);
+        $desc = preg_replace('#\[url=(.*?)\](.*?)\[/url\]#si', '<a href="\\1" target="_blank" rel="noreferrer noopener">\\2</a>', $desc);
         $desc = preg_replace('#\[b\](.*?)\[/b\]#si', '<strong>\\1</strong>', $desc);
         $desc = preg_replace('#\[i\](.*?)\[/i\]#si', '<i>\\1</i>', $desc);
         $desc = preg_replace('#\[u\](.*?)\[/u\]#si', '<u>\\1</u>', $desc);

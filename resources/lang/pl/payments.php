@@ -16,7 +16,6 @@ return [
     'error' => [
         'complete' => 'Odnotowano błąd związany z tą płatnością u operatora płatności.'
     ],
-    'redirect' => 'Za chwilę zostaniesz przekierowany na stronę płatności operatora :provider. Jeśli przekierowanie nie nastąpi automatycznie, proszę kliknąć przycisk poniżej',
     'status' => [
         'label' => 'Status',
         Payment::FINISHED => 'zrealizowana',

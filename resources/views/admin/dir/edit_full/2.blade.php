@@ -56,7 +56,7 @@
                         ])
                     </label>
                     <div class="{{ $isTheme('dark', 'trumbowyg-dark') }}">
-                        <textarea class="form-control {{ $isValid('content') }}" 
+                        <textarea class="form-control {{ $isValid('content') }}" data-lang="{{ config('app.locale') }}"
                         id="content_html{{ $group->hasEditorPrivilege() ? '_dir_trumbowyg' : null }}"
                         name="content_html" rows="5">{{ $oldContentHtml }}</textarea>
                     </div>

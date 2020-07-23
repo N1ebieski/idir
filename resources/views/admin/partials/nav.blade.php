@@ -17,7 +17,7 @@
                 <h6 class="dropdown-header">{{ trans('icore::auth.hello')}}, {{ auth()->user()->name }}</h6>
                 <a class="dropdown-item {{ $isUrl(route('web.profile.edit')) }}" 
                 href="{{ route('web.profile.edit') }}" title="{{ trans('icore::profile.route.edit') }}">
-                    {{ trans('icore::profile.route.edit') }}
+                    {{ trans('icore::profile.route.index') }}
                 </a>
                 @can('admin.home.view')
                 <a class="dropdown-item" href="{{ route('admin.home.index') }}"

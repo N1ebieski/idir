@@ -8,7 +8,7 @@ return [
     ],
     'success' => [
         'store' => 'Pole zostało dodane.',
-        'update' => 'Pole zostało edytowane.',
+        'update' => 'Pole zostało zaktualizowane.',
         'destroy' => 'Pomyślnie usunięto pole.'
     ],
     'route' => [

@@ -24,7 +24,7 @@
             ])
         </label>
         <div id="content" class="{{ $isTheme('dark', 'trumbowyg-dark') }}">
-            <textarea class="form-control" 
+            <textarea class="form-control" data-lang="{{ config('app.locale') }}"
             id="content_html{{ $dir->group->hasEditorPrivilege() ? '_dir_trumbowyg' : null }}"
             name="content_html" rows="5">{{ $dir->content_html }}</textarea>
         </div>

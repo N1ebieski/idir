@@ -4,7 +4,7 @@ data-id="{{ $dir->id }}">
         <ul class="list-unstyled mb-0 pb-0">
             <li>
                 <a href="{{ route('web.dir.show', [$dir->slug]) }}" target="_blank"
-                title="{{ $dir->title }}">
+                title="{{ $dir->title }}" rel="noreferrer noopener">
                     {{ $dir->title }}
                 </a>
                 <span class="badge badge-{{ $dir->status === $dir::ACTIVE ? 'success' : 'warning' }}">
@@ -43,7 +43,7 @@ data-id="{{ $dir->id }}">
                 @can('web.dirs.edit')
                 <div class="btn-group-vertical">
                     <a class="btn btn-primary align-bottom" href="{{ route('web.dir.edit_1', [$dir->id]) }}"
-                    role="button" target="_blank">
+                    role="button" target="_blank" rel="noreferrer noopener">
                         <i class="fas fa-edit"></i>
                         <span class="d-none d-md-inline">&nbsp;{{ trans('icore::default.edit') }}</span>
                     </a>

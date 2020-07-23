@@ -27,15 +27,15 @@ return [
             Dir::ACTIVE => 'Wpis został dodany i jest aktywny.'
         ],
         'update' => [
-            Dir::INACTIVE => 'Wpis został edytowany i oczekuje na akceptację przez moderatora.',
-            Dir::ACTIVE => 'Wpis został edytowany i jest aktywny.'
+            Dir::INACTIVE => 'Wpis został zaktualizowany i oczekuje na akceptację przez moderatora.',
+            Dir::ACTIVE => 'Wpis został zaktualizowany i jest aktywny.'
         ],
         'update_status' => [
             Dir::ACTIVE => 'Wpis został aktywowany',
             Dir::INCORRECT_INACTIVE => 'Wpis został zgłoszony do poprawy'
         ],
         'update_renew' => [
-            Dir::INACTIVE => 'Dziękujemy. Czas ważności wpisu zostanie przedłużony w momencie akceptacji wpisu przed moderację.',
+            Dir::INACTIVE => 'Dziękujemy. Czas ważności wpisu zostanie przedłużony w momencie akceptacji wpisu przez moderację.',
             Dir::ACTIVE => 'Dziękujemy. Czas ważności wpisu został przedłużony.'
         ],
         'destroy' => 'Wpis został usunięty',
@@ -54,15 +54,15 @@ return [
     'payment' => [
         'transfer' => [
             'label' => 'Przelew online',
-            'info' => 'Płatności internetowe przelewem realizuje <a href=":provider_url" target="_blank" title=":provider_name">:provider_name</a>. Dokumenty dotyczące systemu płatności dostępne są na stronie <a href=":provider_docs_url" target="_blank" title=":provider_name dokumenty">:provider_name dokumenty</a>. Regulamin usługi dostępny jest na stronie <a href=":provider_rules_url" target="_blank" title=":provider_name regulamin">:provider_name regulamin</a>. Zgłoszenie strony do katalogu równoznaczne jest z akceptacją <a href=":rules_url" target="_blank" title="Regulamin">regulaminu</a>.',
+            'info' => 'Płatności internetowe przelewem realizuje <a href=":provider_url" target="_blank" rel="noreferrer noopener" title=":provider_name">:provider_name</a>. Dokumenty dotyczące systemu płatności dostępne są na stronie <a href=":provider_docs_url" target="_blank" rel="noreferrer noopener" title=":provider_name dokumenty">:provider_name dokumenty</a>. Regulamin usługi dostępny jest na stronie <a href=":provider_rules_url" target="_blank" rel="noreferrer noopener" title=":provider_name regulamin">:provider_name regulamin</a>. Zgłoszenie strony do katalogu równoznaczne jest z akceptacją <a href=":rules_url" target="_blank" rel="noreferrer noopener" title="Regulamin">regulaminu</a>.',
         ],
         'code_sms' => [
             'label' => 'Kod automatyczny SMS',
-            'info' => 'Aby otrzymać kod dostępu - wyślij SMS o treści <b><span id="code_sms">:code_sms</span></b> na numer <b><span id="number">:number</span></b>. Koszt SMSa to <b><span id="price">:price</span></b> PLN. Usługa SMS dostępna jest dla wszystkich operatorów sieci komórkowych w Polsce. Płatności SMS w serwisie obsługuje <a href=":provider_url" target="_blank" title=":provider_name">:provider_name</a>. Dokumenty dotyczące systemu płatności dostępne są na stronie <a href=":provider_docs_url" target="_blank" title=":provider_name dokumenty">:provider_name dokumenty</a>. Regulamin usługi dostępny jest na stronie <a href=":provider_rules_url" target="_blank" title=":provider_name regulamin">:provider_name regulamin</a>. Zgłoszenie strony do katalogu równoznaczne jest z akceptacją <a href=":rules_url" target="_blank" title="Regulamin">regulaminu</a>.'
+            'info' => 'Aby otrzymać kod dostępu - wyślij SMS o treści <b><span id="code_sms">:code_sms</span></b> na numer <b><span id="number">:number</span></b>. Koszt SMSa to <b><span id="price">:price</span></b> PLN. Usługa SMS dostępna jest dla wszystkich operatorów sieci komórkowych w Polsce. Płatności SMS w serwisie obsługuje <a href=":provider_url" target="_blank" rel="noreferrer noopener" title=":provider_name">:provider_name</a>. Dokumenty dotyczące systemu płatności dostępne są na stronie <a href=":provider_docs_url" target="_blank" rel="noreferrer noopener" title=":provider_name dokumenty">:provider_name dokumenty</a>. Regulamin usługi dostępny jest na stronie <a href=":provider_rules_url" target="_blank" rel="noreferrer noopener" title=":provider_name regulamin">:provider_name regulamin</a>. Zgłoszenie strony do katalogu równoznaczne jest z akceptacją <a href=":rules_url" target="_blank" rel="noreferrer noopener" title="Regulamin">regulaminu</a>.'
         ],
         'code_transfer' => [
             'label' => 'Kod automatyczny przelewem',
-            'info' => 'Aby otrzymać kod dostępu - dokonaj płatności przelewem na stronie zakupu kodów <a id="code_transfer" href=":code_transfer_url" target="blank" title=":provider_name"><b>:provider_name</b></a>. Koszt to <b><span id="price">:price</span></b> PLN. Dokumenty dotyczące systemu płatności dostępne są na stronie <a href=":provider_docs_url" target="_blank" title=":provider_name dokumenty">:provider_name dokumenty</a>. Regulamin usługi dostępny jest na stronie <a href=":provider_rules_url" target="_blank" title=":provider_name regulamin">:provider_name regulamin</a>. Zgłoszenie strony do katalogu równoznaczne jest z akceptacją <a href=":rules_url" target="_blank" title="Regulamin">regulaminu</a>.'
+            'info' => 'Aby otrzymać kod dostępu - dokonaj płatności przelewem na stronie zakupu kodów <a id="code_transfer" href=":code_transfer_url" target="blank" title=":provider_name"><b>:provider_name</b></a>. Koszt to <b><span id="price">:price</span></b> PLN. Dokumenty dotyczące systemu płatności dostępne są na stronie <a href=":provider_docs_url" target="_blank" rel="noreferrer noopener" title=":provider_name dokumenty">:provider_name dokumenty</a>. Regulamin usługi dostępny jest na stronie <a href=":provider_rules_url" target="_blank" rel="noreferrer noopener" title=":provider_name regulamin">:provider_name regulamin</a>. Zgłoszenie strony do katalogu równoznaczne jest z akceptacją <a href=":rules_url" target="_blank" rel="noreferrer noopener" title="Regulamin">regulaminu</a>.'
         ]
     ],
     'price' => ':price :currency / :days :limit',
@@ -107,7 +107,7 @@ return [
         ],
         'completed' => [
             'title' => 'Koniec czasu ważności',
-            'info' => 'informujemy, że zakończył się czas ważności Twojego wpisu :dir_link w grupie :group.',
+            'info' => 'Informujemy, że zakończył się czas ważności Twojego wpisu :dir_link w grupie :group.',
             'alt' => 'Tym samym wpis został przeniesiony do niższej grupy :alt_group.',
             'deactivation' => 'Tym samym wpis został deaktywowany ze statusem "oczekujący na płatność".',
             'edit_dir' => 'Możesz odnowić wpis lub zmienić grupę. Edycji swojego wpisu dokonasz klikając w przycisk poniżej:'

@@ -14,19 +14,19 @@
     <ul>
         <li>
             <a href="https://intelekt.net.pl/icore" target="_blank" 
-            title="iCore - mini platforma blogowa">
+            title="iCore - mini platforma blogowa" rel="noreferrer noopener">
                 iCore - mini platforma blogowa
             </a>
         </li>
         <li>
             <a href="https://intelekt.net.pl/idir" target="_blank"
-            title="iDir - nowoczesny katalog stron lub firm">
+            title="iDir - nowoczesny katalog stron lub firm" rel="noreferrer noopener">
                 iDir - nowoczesny katalog stron lub firm
             </a>
         </li>
         <li>
             <a href="https://www.iconpacks.net" target="_blank"
-            title="Iconpacks - completely free icons">
+            title="Iconpacks - completely free icons" rel="noreferrer noopener">
                 Iconpacks - completely free icons
             </a>
         </li>

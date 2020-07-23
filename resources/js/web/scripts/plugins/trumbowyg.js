@@ -1,7 +1,9 @@
 jQuery(document).on('readyAndAjax', function() {
     if (!$('.trumbowyg-box').length) {
-        $('#content_html_dir_trumbowyg').trumbowyg({
-            lang: 'pl',
+        let $trumbowyg = $('#content_html_dir_trumbowyg');
+
+        $trumbowyg.trumbowyg({
+            lang: $trumbowyg.data('lang'),
             svgPath: false,
             hideButtonTexts: true,
             tagsToRemove: ['script'],

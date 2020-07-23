@@ -121,7 +121,7 @@
                     @else
                     data-display-only="true"
                     @endauth
-                    class="rating-loading">
+                    class="rating-loading" data-language="{{ config('app.locale') }}">
                 </div>
                 @if ($dir->url !== null)
                 <div class="list-group-item">

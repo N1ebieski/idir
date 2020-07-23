@@ -7,7 +7,7 @@
         <small class="ml-auto">
             <input id="star-rating{{ $dir->id }}" name="star-rating{{ $dir->id }}" 
             value="{{ $dir->sum_rating }}" data-stars="5" data-display-only="true"
-            data-size="xs" class="rating-loading">
+            data-size="xs" class="rating-loading" data-language="{{ config('app.locale') }}">
         </small>
     </div>
     <div class="text-break" style="word-break:break-word">{!! $dir->less_content_html !!}</div>

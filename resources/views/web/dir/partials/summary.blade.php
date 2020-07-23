@@ -26,7 +26,12 @@
     @if (isset($value['url']) && $value['url'] !== null)
     <p>
         {{ trans('idir::dirs.url') }}:<br>
-        <span><a href="{{ $value['url'] }}" target="_blank">{{ $value['url'] }}</a></span>
+        <span>
+            <a href="{{ $value['url'] }}" target="_blank"
+            rel="noreferrer noopener">
+                {{ $value['url'] }}
+            </a>
+        </span>
     </p>
     @endif
     @if ($categories->isNotEmpty())

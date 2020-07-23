@@ -8,7 +8,7 @@ return [
     ],
     'success' => [
         'store' => 'Grupa została dodana.',
-        'update' => 'Grupa została edytowana.',
+        'update' => 'Grupa została zaktualizowana.',
         'destroy' => 'Pomyślnie usunięto grupę.'
     ],
     'route' => [
