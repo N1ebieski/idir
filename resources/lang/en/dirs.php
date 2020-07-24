@@ -82,7 +82,7 @@ return [
         Dir::STATUS_INACTIVE => 'pending 200 status',
         Dir::INCORRECT_INACTIVE => 'waiting for correction'
     ],
-    'privileged_to' => 'Expiry date',
+    'privileged_to' => 'Expires at',
     'reason' => [
         'label' => 'Reason of rejection',
         'custom' => 'Other'
