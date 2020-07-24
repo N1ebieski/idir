@@ -7,6 +7,7 @@ return [
         ],
         'success' => [
             'send' => 'Wiadomość została wysłana do właściciela wpisu.'
-        ]
+        ],
+        'log_to_contact' => 'Zaloguj się, by skontaktować się z właścicielem wpisu'
     ],
 ];
