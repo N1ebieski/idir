@@ -152,7 +152,8 @@
                             @break;
 
                         @case ('image')
-                            <img class="img-fluid" src="{{ Storage::url($value) }}">
+                        {{-- {{ dd(app())}} --}}
+                            <img class="img-fluid" src="{{ app('filesystem')->url($value) }}">
                             @break;
                      @endswitch
                     </div>
@@ -160,33 +161,30 @@
                 @endif   
                 @endforeach
                 @endif
-                @auth
-                @if (isset($dir->user->email) && app('router')->has('web.contact.dir.show'))
-                <div class="list-group-item">
-                    <a href="#" data-route="{{ route('web.contact.dir.show', [$dir->id]) }}"
-                    title="{{ trans('idir::contact.dir.route.show') }}"
-                    data-toggle="modal" data-target="#contactModal" class="showContact">
-                        <i class="fas fa-paper-plane"></i>
-                        <span>{{ trans('idir::contact.dir.route.show') }}</span>
-                    </a>
-                </div>
-                @endif
-                <div class="list-group-item">
-                    <a href="#" data-route="{{ route('web.report.dir.create', [$dir->id]) }}"
-                    title="{{ trans('icore::reports.route.create') }}"
-                    data-toggle="modal" data-target="#createReportModal" class="createReport">
-                        <i class="fas fa-exclamation-triangle"></i>
-                        <span>{{ trans('icore::reports.route.create') }}</span>
-                    </a>
-                </div>
-                @endauth
                 <div class="list-group-item">
                     <a href="#" data-toggle="modal" data-target="#linkModal"
                     title="{{ trans('idir::dirs.link_dir_page') }}">
                         <i class="fas fa-link"></i>
                         <span>{{ trans('idir::dirs.link_dir_page') }}</span>
                     </a>
+                </div>                
+                @if (isset($dir->user->email) && app('router')->has('web.contact.dir.show'))
+                <div class="list-group-item">
+                @auth
+                    <a href="#" data-route="{{ route('web.contact.dir.show', [$dir->id]) }}"
+                    title="{{ trans('idir::contact.dir.route.show') }}"
+                    data-toggle="modal" data-target="#contactModal" class="showContact">
+                        <i class="fas fa-paper-plane"></i>
+                        <span>{{ trans('idir::contact.dir.route.show') }}</span>
+                    </a>
+                @else
+                    <a href="{{ route('login') }}" title="{{ trans('idir::contact.dir.log_to_contact') }}">
+                        <i class="fas fa-paper-plane"></i>
+                        <span> {{ trans('idir::contact.dir.log_to_contact') }}</span>
+                    </a>
+                @endauth
                 </div>
+                @endif           
                 @can('web.dirs.edit')
                 @can('edit', $dir)
                 <div class="list-group-item">
@@ -198,6 +196,21 @@
                 </div>
                 @endcan
                 @endcan
+                <div class="list-group-item">
+                @auth
+                    <a href="#" data-route="{{ route('web.report.dir.create', [$dir->id]) }}"
+                    title="{{ trans('icore::reports.route.create') }}"
+                    data-toggle="modal" data-target="#createReportModal" class="createReport">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <span>{{ trans('icore::reports.route.create') }}</span>
+                    </a>
+                @else
+                    <a href="{{ route('login') }}" title="{{ trans('icore::reports.log_to_report') }}">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <span> {{ trans('icore::reports.log_to_report') }}</span>
+                    </a>
+                @endauth  
+                </div>                 
             </div>
         </div>
     </div>

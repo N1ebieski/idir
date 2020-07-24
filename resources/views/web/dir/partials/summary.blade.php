@@ -83,7 +83,7 @@
                         @break;                        
 
                     @case('image')                    
-                        <img class="img-fluid" src="{{ Storage::url($value['field'][$field->id]) }}">
+                        <img class="img-fluid" src="{{ app('filesystem')->url($value['field'][$field->id]) }}">
                         @break
                 @endswitch
                 </span>

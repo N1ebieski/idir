@@ -73,7 +73,7 @@ data-id="{{ $dir->id }}">
 
                         @case('image')
                             <br>
-                            <img class="img-fluid" src="{{ Storage::url($value) }}">
+                            <img class="img-fluid" src="{{ app('filesystem')->url($value) }}">
                             @break
 
                         @case('map')
