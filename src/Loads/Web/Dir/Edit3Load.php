@@ -17,7 +17,12 @@ class Edit3Load
     {
         $request->route('group')
             ->loadCount(['dirs', 'dirsToday'])
-            ->load(['privileges', 'fields']);
+            ->load([
+                'privileges',
+                'fields' => function ($query) {
+                    $query->orderBy('position', 'asc');
+                }
+            ]);
 
         $request->route('dir')->load('backlink');
     }
