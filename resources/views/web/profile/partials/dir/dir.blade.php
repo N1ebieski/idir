@@ -32,8 +32,11 @@ data-id="{{ $dir->id }}">
                     @endif
                 </div>
             </li>
-            @if ($dir->privileged_to !== null)
-            <li><small>{{ trans('idir::dirs.privileged_to') }}: {{ $dir->privileged_to_diff }}</small></li>
+            @if ($dir->privileged_at !== null)
+            <li>
+                <small>{{ trans('idir::dirs.privileged_to') }}: </small>
+                <small>{{ $dir->privileged_to !== null ? $dir->privileged_to_diff : trans('idir::dirs.unlimited') }}</small>
+            </li>
             @endif
             <li><small>{{ trans('icore::filter.created_at') }}: {{ $dir->created_at_diff }}</small></li>
             <li><small>{{ trans('icore::filter.updated_at') }}: {{ $dir->updated_at_diff }}</small></li>
