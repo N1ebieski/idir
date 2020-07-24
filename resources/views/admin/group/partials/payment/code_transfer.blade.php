@@ -59,7 +59,10 @@
                                 <input type="checkbox" class="custom-control-input" id="price_code_transfer_sync_codes{{ $loop->index }}"
                                 name="prices[code_transfer][{{ $loop->index }}][codes][sync]">
                                 <label class="custom-control-label" for="price_code_transfer_sync_codes{{ $loop->index }}">
-                                    {{ trans('idir::groups.sync_codes') }}
+                                    <span>{{ trans('idir::groups.sync_codes') }} </span>
+                                    <span class="badge badge-pill badge-primary">
+                                        {{ $price->codes->count() }}
+                                    </span>                                    
                                 </label>
                             </div>
                         </div>
