@@ -113,7 +113,7 @@ return [
             'edit_dir' => 'You can renew the entry or change the group. You can edit your entry by clicking on the button below:'
         ]
     ],
-    'link_dir_page' => 'Link your entry to speed up the indexation',
+    'link_dir_page' => 'Link your entry to speed up indexation',
     'premium_dir' => 'Highlight your entry',
     'content' => 'Content',
     'author' => 'Author',
