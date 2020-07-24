@@ -32,7 +32,9 @@
     </div>
 </div>
 <div class="container">
-    @render('idir::dir.carouselComponent')
+    @render('idir::dir.carouselComponent', [
+        'max_content' => 500
+    ])
     <div class="row mt-3">
         @if ($dirs->isNotEmpty())
         <div class="col-md-8 order-sm-1 order-md-2">

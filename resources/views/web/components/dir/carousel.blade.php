@@ -20,7 +20,7 @@
                             data-size="xs" class="rating-loading">
                         </small>
                     </div>
-                    <div class="text-break" style="word-break:break-word">{{ $dir->short_content }}...</div>
+                    <div class="text-break" style="word-break:break-word">{{ $dir->content }}...</div>
                 </div>
                 @if ($dir->isUrl())
                 <div class="col-md-4 order-1">

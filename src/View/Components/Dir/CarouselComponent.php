@@ -33,19 +33,31 @@ class CarouselComponent implements Htmlable
     protected $limit;
 
     /**
+     * Undocumented variable
+     *
+     * @var int
+     */
+    protected $max_content;
+
+    /**
      * Undocumented function
      *
      * @param Dir $dir
      * @param ViewFactory $view
      * @param integer $limit
      */
-    public function __construct(Dir $dir, ViewFactory $view, int $limit = null)
-    {
+    public function __construct(
+        Dir $dir,
+        ViewFactory $view,
+        int $limit = null,
+        int $max_content = null
+    ) {
         $this->dir = $dir;
 
         $this->view = $view;
 
         $this->limit = $limit;
+        $this->max_content = $max_content;
     }
 
     /**
@@ -56,7 +68,8 @@ class CarouselComponent implements Htmlable
     {
         return $this->view->make('idir::web.components.dir.carousel', [
             'dirs' => $this->dir->makeCache()->rememberAdvertisingPrivilegedByComponent([
-                'limit' => $this->limit
+                'limit' => $this->limit,
+                'max_content' => $this->max_content
             ])
         ]);
     }
