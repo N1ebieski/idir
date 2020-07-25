@@ -37,7 +37,7 @@ data-id="{{ $group->id }}">
                     data-btn-cancel-icon-class="fas fa-ban mr-1"
                     data-title="{{ trans('icore::default.confirm') }}">
                         <i class="far fa-trash-alt"></i>
-                        <span class="d-none d-sm-inline">&nbsp;{{ trans('icore::default.delete') }}</span>
+                        <span class="d-none d-sm-inline"> {{ trans('icore::default.delete') }}</span>
                     </button>
                 </form>
                 @endif

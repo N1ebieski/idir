@@ -38,10 +38,9 @@ class ContactController implements Polymorphic
      *
      * @param Dir $dir
      * @param SendRequest $request
-     * @param ContactMail $mail
      * @return JsonResponse
      */
-    public function send(Dir $dir, SendRequest $request, ContactMail $mail) : JsonResponse
+    public function send(Dir $dir, SendRequest $request) : JsonResponse
     {
         Mail::send(App::make(ContactMail::class, ['dir' => $dir]));
 

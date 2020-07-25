@@ -21,6 +21,13 @@ class Mail extends BaseMail
     protected $dir;
 
     /**
+     * Undocumented variable
+     *
+     * @var string
+     */
+    protected $email;
+
+    /**
      * Undocumented function
      *
      * @param Request $request
