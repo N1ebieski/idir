@@ -6,7 +6,7 @@
     <div class="container">
         <div class="w-md-75 mx-auto">
             <h1 class="display-4 text-white text-center">{{ config('app.name') }}</h1>
-            <p class="lead text-white text-center">{{ config('app.desc') }}</p>
+            <p class="lead text-white text-center my-5">{{ config('app.desc') }}</p>
             <form id="searchForm" method="get" action="{{ route('web.search.index') }}" 
             class="justify-content-center search">
                 <div class="input-group justify-content-center">          
