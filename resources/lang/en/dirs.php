@@ -92,7 +92,7 @@ return [
             'info' => 'Sorry, but your entry :dir_link has been removed from our directory.'
         ],
         'activation' => [
-            'info' => 'Congratulations, your entry :dir_link has been correctly added to our directory and is on the website: <a href=":dir_page">:dir_page</a>. Welcome to another entry!'
+            'info' => 'Congratulations, your entry :dir_link has been correctly added to our directory and is on the page: <a href=":dir_page">:dir_page</a>. Welcome to another entry!'
         ],
         'incorrect' => [
             'info' => 'Sorry, but your entry :dir_link does not comply with our terms and conditions and needs to be corrected. Until then, it will remain inactive.',
@@ -100,7 +100,7 @@ return [
         ],
         'reminder' => [
             'title' => 'Reminder of expiring entry',
-            'info' => 'We would like to remind you that your entry :dir_link on the website: <a href=":dir_page">:dir_page</a> will expire soon in group :group.',
+            'info' => 'We would like to remind you that your entry :dir_link on the page: <a href=":dir_page">:dir_page</a> will expire soon in group :group.',
             'alt' => 'After the expiry date :days, the entry will be moved to a lower group :alt_group.',
             'deactivation' => 'After the expiry date :days, the entry will be deactivated with the status "waiting for payment".',
             'renew_dir' => 'You can prevent this by extending the validity of an entry in the current group. You can extend your entry by clicking on the button below:'
