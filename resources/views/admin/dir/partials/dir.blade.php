@@ -177,7 +177,7 @@ data-id="{{ $dir->id }}">
                         <span class="d-none d-sm-inline"> {{ trans('icore::default.edit') }}</span>
                     </button>
                     <a class="btn btn-primary align-bottom" href="{{ route('admin.dir.edit_full_1', [$dir->id]) }}"
-                    role="button" target="_blank" rel="noreferrer noopener">
+                    role="button" target="_blank" rel="noopener">
                         <i class="fas fa-edit"></i>
                         <span class="d-none d-sm-inline"> {{ trans('icore::default.editFull') }}</span>
                     </a>

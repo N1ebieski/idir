@@ -28,7 +28,7 @@
         {{ trans('idir::dirs.url') }}:<br>
         <span>
             <a href="{{ $value['url'] }}" target="_blank"
-            rel="noreferrer noopener">
+            rel="noopener">
                 {{ $value['url'] }}
             </a>
         </span>

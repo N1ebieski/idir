@@ -578,7 +578,7 @@ class Dir extends Model
     public function getTitleAsLinkAttribute() : string
     {
         if ($this->url !== null) {
-            $link = '<a rel="noreferrer noopener';
+            $link = '<a rel="noopener';
 
             if ($this->getRelation('group')->hasNoFollowPrivilege()) {
                 $link .= ' nofollow';
