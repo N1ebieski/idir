@@ -152,7 +152,6 @@
                             @break;
 
                         @case ('image')
-                        {{-- {{ dd(app())}} --}}
                             <img class="img-fluid" src="{{ app('filesystem')->url($value) }}">
                             @break;
                      @endswitch
