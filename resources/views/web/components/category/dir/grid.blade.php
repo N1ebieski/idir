@@ -3,7 +3,7 @@
 <div class="row">
     @foreach ($categories as $category)
     <div class="col-xl-{{ floor(12/$cols) }} col-md-6 col-12 mb-4">
-        <div class="card">
+        <div class="card h-100">
             <div class="card-header">
                 <div class="d-flex justify-content-between">
                     <a href="{{ route('web.category.dir.show', $category->slug) }}" title="{{ $category->name }}"
@@ -20,7 +20,7 @@
             @if ($category->childrens->isNotEmpty())
             <div class="d-flex">
                 @if ($category_icon === true && !empty($category->icon))
-                <i class="{{ $category->icon }} p-3 align-self-center" style="font-size:5rem"></i>
+                <i class="{{ $category->icon }} p-3 align-self-center" style="font-size:3rem"></i>
                 @endif
                 <ul class="list-group list-group-flush flex-grow-1">
                 @foreach ($category->childrens as $children)
