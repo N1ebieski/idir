@@ -26,16 +26,39 @@ class CategoryComponent implements Htmlable
     protected $view;
 
     /**
+     * Undocumented variable
+     *
+     * @var bool
+     */
+    protected $count;
+
+    /**
+     * Undocumented variable
+     *
+     * @var bool
+     */
+    protected $icon;
+
+    /**
      * Undocumented function
      *
      * @param Category $category
      * @param ViewFactory $view
+     * @param boolean $count
+     * @param boolean $icon
      */
-    public function __construct(Category $category, ViewFactory $view)
-    {
+    public function __construct(
+        Category $category,
+        ViewFactory $view,
+        bool $count = true,
+        bool $icon = true
+    ) {
         $this->category = $category;
 
         $this->view = $view;
+
+        $this->count = $count;
+        $this->icon = $icon;
     }
 
     /**
@@ -45,7 +68,11 @@ class CategoryComponent implements Htmlable
     public function toHtml() : View
     {
         return $this->view->make('idir::web.components.category.dir.category', [
-            'categories' => $this->category->makeCache()->rememberRootsWithNestedMorphsCount()
+            'categories' => $this->category->makeCache()
+                ->rememberRootsByComponent([
+                    'count' => $this->count
+                ]),
+            'icon' => $this->icon
         ]);
     }
 }

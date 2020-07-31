@@ -213,6 +213,7 @@
             </div>
         </div>
     </div>
+    @render('idir::category.dir.gridComponent')
 </div>
 
 @component('icore::web.partials.modal')

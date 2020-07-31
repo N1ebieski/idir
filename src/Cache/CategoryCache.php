@@ -48,16 +48,35 @@ class CategoryCache extends BaseCategoryCache
     }
 
     /**
-     * [rememberRootsWithNestedMorphsCount description]
-     * @return Collection [description]
+     * Undocumented function
+     *
+     * @param array $component
+     * @return Collection
      */
-    public function rememberRootsWithNestedMorphsCount() : Collection
+    public function rememberRootsByComponent(array $component) : Collection
     {
         return $this->cache->tags(['categories'])->remember(
-            "category.{$this->category->poli}.getRootsWithNestedMorphsCount",
+            "category.{$this->category->poli}.getRootsByComponent",
             $this->carbon->now()->addMinutes($this->minutes),
-            function () {
-                return $this->category->makeRepo()->getRootsWithNestedMorphsCount();
+            function () use ($component) {
+                return $this->category->makeRepo()->getRootsByComponent($component);
+            }
+        );
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param array $component
+     * @return Collection
+     */
+    public function rememberRootsWithChildrensByComponent(array $component) : Collection
+    {
+        return $this->cache->tags(['categories'])->remember(
+            "category.{$this->category->poli}.getRootsWithChildrensByComponent",
+            $this->carbon->now()->addMinutes($this->minutes),
+            function () use ($component) {
+                return $this->category->makeRepo()->getRootsWithChildrensByComponent($component);
             }
         );
     }
