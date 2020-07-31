@@ -7,7 +7,7 @@
         title="{{ $category->name }}"
         class="{{ $isUrl(route('web.category.dir.show', $category->slug), 'font-weight-bold') }}">
             @if ($icon === true && !empty($category->icon))
-            <i class="{{ $category->icon }}"></i>
+            <i class="{{ $category->icon }}" style="width:1rem"></i>
             @endif
             <span>{{ $category->name }}</span>
         </a>
