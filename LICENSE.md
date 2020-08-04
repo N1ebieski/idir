@@ -16,6 +16,6 @@ The SOFTWARE is protected by the Polish Law of 15 June 2018. on collective manag
 
 ## Licensing restrictions
 
-The purchased LICENSE shall entitle the LICENSEE without the right to exclusivity to use one copy of the SOFTWARE at the declared address of the Internet Domain belonging to the LICENSEE. Each additional domain using the SOFTWARE requires an additional purchased license.
+The purchased LICENSE shall entitle the LICENSEE without the right to exclusivity to use one copy of the SOFTWARE at the declared address of the Internet Domain belonging to the LICENSEE. Each additional domain using the SOFTWARE requires an additional purchased LICENSE.
 
 More > https://intelekt.net.pl/pages/regulamin
