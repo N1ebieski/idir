@@ -16,7 +16,7 @@ https://intelekt.net.pl/orders/product/idir/create/2
 
 ## Documentation
 
-https://intelekt.net.pl/pages/instalacja/idir
+https://intelekt.net.pl/pages/dokumentacja/idir
 
 ## Copyright and License
 
