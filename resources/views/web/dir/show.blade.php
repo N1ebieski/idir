@@ -56,10 +56,9 @@
                     @endif
                 </div>
                 <div class="mb-3">
-                    {{-- @render('idir::map.dir.mapComponent', [
-                        'dir' => $dir,
-                        'address_marker_pattern' => [[4]]
-                    ]) --}}
+                    @render('idir::map.dir.mapComponent', [
+                        'dir' => $dir
+                    ])
                 </div>
                 @if ($related->isNotEmpty())
                 <h3 class="h5">{{ trans('idir::dirs.related') }}</h3>
