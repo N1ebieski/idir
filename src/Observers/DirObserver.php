@@ -18,7 +18,7 @@ class DirObserver
      */
     public function created(Dir $dir)
     {
-        Cache::tags(['dirs', 'links'])->flush();
+        Cache::tags(['dirs', 'links', 'categories'])->flush();
     }
 
     /**
@@ -29,7 +29,7 @@ class DirObserver
      */
     public function updated(Dir $dir)
     {
-        Cache::tags(['dir.'.$dir->slug, 'dirs', 'links'])->flush();
+        Cache::tags(['dir.'.$dir->slug, 'dirs', 'links', 'categories'])->flush();
     }
 
     /**
@@ -40,7 +40,7 @@ class DirObserver
      */
     public function deleted(Dir $dir)
     {
-        Cache::tags(['dir.'.$dir->slug, 'dirs', 'links'])->flush();
+        Cache::tags(['dir.'.$dir->slug, 'dirs', 'links', 'categories'])->flush();
     }
 
     /**
