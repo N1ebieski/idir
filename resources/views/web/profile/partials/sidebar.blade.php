@@ -8,6 +8,7 @@
             <span>{{ trans('icore::profile.route.edit') }}</span>
         </a>
     </li>
+    @if (app('router')->has('web.profile.edit_socialite'))
     <li class="nav-item {{ $isUrl(route('web.profile.edit_socialite')) }}">
         <a class="nav-link {{ $isUrl(route('web.profile.edit_socialite')) }}"
         title="{{ trans('icore::profile.route.edit_socialite') }}"
@@ -16,6 +17,7 @@
             <span>{{ trans('icore::profile.route.edit_socialite') }}</span>
         </a>
     </li>
+    @endif
     @canany(['web.dirs.edit', 'web.dirs.delete'])
     <li class="nav-item {{ $isUrl(route('web.profile.edit_dir')) }}">
         <a class="nav-link {{ $isUrl(route('web.profile.edit_dir')) }}"
