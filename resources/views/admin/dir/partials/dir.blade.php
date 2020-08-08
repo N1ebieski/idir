@@ -89,7 +89,7 @@ data-id="{{ $dir->id }}">
             @can('admin.dirs.delete')
             </label>
             @endcan            
-            <div class="d-flex">
+            <div class="d-flex align-items-end">
                 <ul class="list-unstyled mb-0 pb-0 flex-grow-1">
                     @if ($dir->tagList)
                     <li class="text-break" style="word-break:break-word">
