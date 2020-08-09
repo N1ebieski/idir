@@ -214,18 +214,6 @@ class DirRepo
      */
     public function paginateBySearchAndFilter(string $name, array $filter) : LengthAwarePaginator
     {
-        // Rozbiłem wyszukiwanie na kilka zapytań gdyż chcę wyszukać dirsy zarówno
-        // po fulltext LUB po ids zawierających okreslony tag,
-        // a mysql może wykorzystać tylko 1 indeks
-        $dirs = $this->dir->active()
-            ->search($name)
-            ->get('id')
-            ->merge(
-                $this->dir->active()
-                    ->withAllTags($name)
-                    ->get('id')
-            );
-
         return $this->dir->selectRaw('`dirs`.*, `privileges`.`name`')
             ->withAllPublicRels()
             ->leftJoin('groups_privileges', function ($query) {
@@ -233,7 +221,27 @@ class DirRepo
                     ->join('privileges', 'groups_privileges.privilege_id', '=', 'privileges.id')
                     ->where('privileges.name', 'highest position in search results');
             })
-            ->whereIn('dirs.id', $dirs->pluck('id')->toArray())
+            // Rozbiłem wyszukiwanie na kilka zapytań gdyż chcę wyszukać dirsy
+            // po fulltext LUB po ids zawierających okreslony tag,
+            // a mysql może wykorzystać tylko 1 indeks    
+            ->from(
+                $this->dir->search($name)
+                    ->when($tag = $this->dir->tags()->make()->findByName($name), function ($query) use ($tag) {
+                        $query->unionAll(
+                            $this->dir->selectRaw('`dirs`.*')
+                                ->active()
+                                ->join('tags_models', function ($query) use ($tag) {
+                                    $query->on('dirs.id', '=', 'tags_models.model_id')
+                                        ->where('tags_models.model_type', $this->dir->getMorphClass())
+                                        ->where('tags_models.tag_id', $tag->tag_id);
+                                })
+                                ->groupBy('dirs.id')
+                        );
+                    })
+                    ->active()
+                    ->groupBy('dirs.id'),
+                'dirs'
+            )
             ->when($filter['orderby'] === null, function ($query) {
                 $query->orderBy('privileges.name', 'desc')->latest();
             })
