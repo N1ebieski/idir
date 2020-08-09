@@ -108,7 +108,7 @@ class Dir extends Model
      *
      * @var array
      */
-    protected $searchable = [
+    public $searchable = [
         'title',
         'content',
         'url'
@@ -589,6 +589,27 @@ class Dir extends Model
         }
 
         return $link ?? e($this->title);
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @return string
+     */
+    public function getUrlAsLinkAttribute() : ?string
+    {
+        if ($this->url !== null) {
+            $link = '<a rel="noopener';
+
+            if ($this->getRelation('group')->hasNoFollowPrivilege()) {
+                $link .= ' nofollow';
+            }
+
+            $link .= '" target="_blank" title="' . e($this->title) . '" ';
+            $link .= 'href="' . e($this->url) . '" target="_blank">' . e($this->url_as_host) . '</a>';
+        }
+
+        return $link ?? null;
     }
 
     /**

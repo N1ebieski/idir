@@ -28,7 +28,7 @@
     <div class="row">
         <div class="col-md-8 order-2">
             <div class="mb-5">
-                <h1 class="h4 border-bottom pb-2">{!! $dir->title_as_link !!}</h1>
+                <h1 class="h4 border-bottom pb-2">{{ $dir->title }}</h1>
                 <div class="d-flex mb-2">
                     <small class="mr-auto">{{ trans('icore::default.created_at_diff') }}: {{ $dir->created_at_diff }}</small>
                 </div>
@@ -125,7 +125,7 @@
                 @if ($dir->url !== null)
                 <div class="list-group-item">
                     <div class="float-left mr-2">{{ trans('idir::dirs.url') }}:</div>
-                    <div class="float-right">{{ $dir->url_as_host }}</div>
+                    <div class="float-right">{!! $dir->url_as_link !!}</div>
                 </div>
                 @endif
                 @if ($dir->group->fields->isNotEmpty())
