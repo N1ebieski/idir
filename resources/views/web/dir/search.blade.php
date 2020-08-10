@@ -32,7 +32,10 @@
                     @foreach ($dirs as $dir)
                         @include('idir::web.dir.partials.dir', [$dir])
                     @endforeach
-                    @include('icore::admin.partials.pagination', ['items' => $dirs, 'next' => true])
+                    @include('icore::admin.partials.pagination', [
+                        'items' => $dirs,
+                        'next' => true
+                    ])
                 </div>
                 @else
                 <p>{{ trans('icore::default.empty') }}</p>
