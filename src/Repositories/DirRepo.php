@@ -229,7 +229,6 @@ class DirRepo
                     ->when($tag = $this->dir->tags()->make()->findByName($name), function ($query) use ($tag) {
                         $query->unionAll(
                             $this->dir->selectRaw('`dirs`.*')
-                                ->active()
                                 ->join('tags_models', function ($query) use ($tag) {
                                     $query->on('dirs.id', '=', 'tags_models.model_id')
                                         ->where('tags_models.model_type', $this->dir->getMorphClass())
@@ -237,11 +236,11 @@ class DirRepo
                                 })
                                 ->groupBy('dirs.id')
                         );
-                    })
-                    ->active()
-                    ->groupBy('dirs.id'),
+                    }),
                 'dirs'
             )
+            ->groupBy('dirs.id')
+            ->active()
             ->when($filter['orderby'] === null, function ($query) {
                 $query->orderBy('privileges.name', 'desc')->latest();
             })
