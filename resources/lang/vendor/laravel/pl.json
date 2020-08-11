@@ -13,6 +13,7 @@
     "Hello!" : "Witaj!",
     "Regards" : "Pozdrawiamy",
     "If you’re having trouble clicking the \":actionText\" button, copy and paste the URL below\ninto your web browser: [:actionURL](:actionURL)" : "Jeśli twój klient pocztowy nie obsługuje przycisku \":actionText\", skopiuj poniższy adres i wklej\nw polu adresowym swojej przeglądarki: [:actionURL](:actionURL)",
+    "If you’re having trouble clicking the \":actionText\" button, copy and paste the URL below\ninto your web browser:" : "Jeśli twój klient pocztowy nie obsługuje przycisku \":actionText\", skopiuj poniższy adres i wklej\nw polu adresowym swojej przeglądarki:",
 
     "additional link on the friends subpage": "dodatkowy link na podstronie przyjaciół",
     "additional options for editing content": "dodatkowe opcje edycji treści opisu",
