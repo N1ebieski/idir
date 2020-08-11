@@ -20,7 +20,9 @@
             @if ($category->childrens->isNotEmpty())
             <div class="d-flex">
                 @if ($category_icon === true && !empty($category->icon))
-                <i class="{{ $category->icon }} p-3 align-self-center" style="font-size:3rem"></i>
+                <div style="width:5rem" class="align-self-center text-center">
+                    <i class="{{ $category->icon }} p-3" style="font-size:3rem"></i>
+                </div>
                 @endif
                 <ul class="list-group list-group-flush flex-grow-1">
                 @foreach ($category->childrens as $children)
