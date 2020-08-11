@@ -95,9 +95,9 @@ class DirBacklinkRepo
                         '<=',
                         Carbon::parse($timestamp)->format('H:i:s')
                     );
-                });
+                })
+                ->orWhere('attempted_at', null);
             })
-            ->orWhere('attempted_at', null)
             ->chunk(1000, $closure);
     }
 }

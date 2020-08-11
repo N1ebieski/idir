@@ -89,9 +89,9 @@ class DirStatusRepo
                         '<=',
                         Carbon::parse($timestamp)->format('H:i:s')
                     );
-                });
+                })
+                ->orWhere('attempted_at', null);
             })
-            ->orWhere('attempted_at', null)
             ->orderBy('attempted_at', 'asc')
             ->chunk(1000, $callback);
     }

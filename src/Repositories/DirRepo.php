@@ -407,10 +407,12 @@ class DirRepo
     {
         return $this->dir->withAllPublicRels()
             ->whereIn('status', [Dir::INACTIVE, Dir::ACTIVE])
-            ->whereDate('created_at', '>', Carbon::parse($timestamp)->format('Y-m-d'))
-            ->orWhere(function ($query) use ($timestamp) {
-                $query->whereDate('created_at', '=', Carbon::parse($timestamp)->format('Y-m-d'))
-                    ->whereTime('created_at', '>', Carbon::parse($timestamp)->format('H:i:s'));
+            ->where(function ($query) use ($timestamp) {
+                $query->whereDate('created_at', '>', Carbon::parse($timestamp)->format('Y-m-d'))
+                    ->orWhere(function ($query) use ($timestamp) {
+                        $query->whereDate('created_at', '=', Carbon::parse($timestamp)->format('Y-m-d'))
+                            ->whereTime('created_at', '>', Carbon::parse($timestamp)->format('H:i:s'));
+                    });
             })
             ->latest()
             ->limit(25)
