@@ -137,10 +137,11 @@ class DirService implements
     protected function makeStatus(string $payment_type = null) : int
     {
         if ($payment_type === 'transfer') {
-            return 2;
+            return $this->dir::PAYMENT_INACTIVE;
         }
 
-        return $this->dir->getGroup()->apply_status === 1 ? 1 : 0;
+        return $this->dir->getGroup()->apply_status === $this->dir::ACTIVE ?
+            $this->dir::ACTIVE : $this->dir::INACTIVE;
     }
 
     /**
