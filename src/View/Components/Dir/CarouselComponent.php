@@ -40,17 +40,27 @@ class CarouselComponent implements Htmlable
     protected $max_content;
 
     /**
+     * Undocumented variable
+     *
+     * @var bool
+     */
+    protected $shuffle;
+
+    /**
      * Undocumented function
      *
      * @param Dir $dir
      * @param ViewFactory $view
      * @param integer $limit
+     * @param integer $max_content
+     * @param boolean $shuffle
      */
     public function __construct(
         Dir $dir,
         ViewFactory $view,
         int $limit = null,
-        int $max_content = null
+        int $max_content = null,
+        bool $shuffle = false
     ) {
         $this->dir = $dir;
 
@@ -58,6 +68,7 @@ class CarouselComponent implements Htmlable
 
         $this->limit = $limit;
         $this->max_content = $max_content;
+        $this->shuffle = $shuffle;
     }
 
     /**
@@ -67,10 +78,14 @@ class CarouselComponent implements Htmlable
     public function toHtml() : View
     {
         return $this->view->make('idir::web.components.dir.carousel', [
-            'dirs' => $this->dir->makeCache()->rememberAdvertisingPrivilegedByComponent([
-                'limit' => $this->limit,
-                'max_content' => $this->max_content
-            ])
+            'dirs' => $this->dir->makeCache()
+                ->rememberAdvertisingPrivilegedByComponent([
+                    'limit' => $this->limit,
+                    'max_content' => $this->max_content
+                ])
+                ->when($this->shuffle === true, function ($collection) {
+                    return $collection->shuffle();
+                })
         ]);
     }
 }
