@@ -13,7 +13,15 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->app->bind(\GuzzleHttp\Client::class, function ($app) {
+            return new \GuzzleHttp\Client([
+                'headers' => [
+                    'User-Agent' => 'iDir v' . $this->app['config']->get('idir.version')
+                    . ' ' . parse_url($this->app['config']->get('app.url'), PHP_URL_HOST)
+                ],
+                'timeout' => 10.0
+            ]);
+        });
     }
 
     /**
