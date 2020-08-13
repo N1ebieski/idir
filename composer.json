@@ -6,7 +6,7 @@
     "require": {
         "php": "^7.3",
         "spatie/laravel-directory-cleanup": "^1.4",
-        "n1ebieski/icore": "dev-master"
+        "n1ebieski/icore": "^1.0.0-rc"
     },
     "require-dev": {
         "fzaninotto/faker": "^1.4",
