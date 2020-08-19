@@ -869,7 +869,7 @@ class Dir extends Model
      */
     public function setContentAttribute(string $value) : void
     {
-        $this->attributes['content'] = strip_tags($value);
+        $this->attributes['content'] = !empty($value) ? strip_tags($value) : null;
     }
 
     // Makers
