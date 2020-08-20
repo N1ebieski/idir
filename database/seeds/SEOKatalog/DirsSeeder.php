@@ -127,7 +127,7 @@ class DirsSeeder extends SEOKatalogSeeder
                         'privileged_at' => $item->date_mod !== 0 ? Carbon::createFromTimestamp($item->date_mod) : null,
                         'privileged_to' => $this->makePrivilegedTo(
                             $item->date_mod,
-                            ($groups->where('id', $item->id)->first()->days ?? 0)
+                            ($groups->where('id', $item->group)->first()->days ?? 0)
                         ),
                         'created_at' => Carbon::createFromTimestamp($item->date),
                         'updated_at' => Carbon::createFromTimestamp($item->date)
