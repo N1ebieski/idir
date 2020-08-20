@@ -2,14 +2,15 @@
 
 namespace N1ebieski\IDir\Seeds\SEOKatalog;
 
-use N1ebieski\IDir\Seeds\SEOKatalog\SEOKatalogSeeder;
-use N1ebieski\IDir\Models\Dir;
-use Illuminate\Support\Facades\DB;
-use N1ebieski\IDir\Models\Link;
 use Carbon\Carbon;
+use Illuminate\Support\Str;
+use N1ebieski\IDir\Models\Dir;
+use N1ebieski\IDir\Models\Link;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Config;
 use N1ebieski\IDir\Models\Field\Field;
 use N1ebieski\IDir\Models\Region\Region;
+use N1ebieski\IDir\Seeds\SEOKatalog\SEOKatalogSeeder;
 
 class DirsSeeder extends SEOKatalogSeeder
 {
@@ -53,7 +54,7 @@ class DirsSeeder extends SEOKatalogSeeder
      */
     protected static function makeUrl(string $url) : string
     {
-        return strpos($url, 'https://') ? $url : 'http://' . $url;
+        return Str::contains($url, 'https://') ? $url : 'http://' . $url;
     }
 
     /**
@@ -164,7 +165,9 @@ class DirsSeeder extends SEOKatalogSeeder
                     }
         
                     if (!empty($item->url)) {
-                        $dir->status()->create();
+                        $dir->status()->create([
+                            'attempted_at' => Carbon::now()->subDays(rand(1, 45))
+                        ]);
                     }
 
                     if ($fields->isNotEmpty()) {
