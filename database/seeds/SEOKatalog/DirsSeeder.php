@@ -67,11 +67,11 @@ class DirsSeeder extends SEOKatalogSeeder
     protected static function makePrivilegedTo(int $date, int $days) : ?string
     {
         if ($date !== 0) {
-            $privileged_to = Carbon::parse($date)->addDays($days);
+            return Carbon::createFromTimestamp($date)->addDays($days);
 
-            if ($privileged_to->greaterThan(Carbon::now())) {
-                return $privileged_to;
-            }
+            // if ($privileged_to->greaterThan(Carbon::now())) {
+            //     return $privileged_to;
+            // }
         }
 
         return null;
