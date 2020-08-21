@@ -245,8 +245,6 @@ class ThumbnailUtil
     {
         if ($this->thumbnailReloadUrl !== null) {
             $this->makeResponse($this->thumbnailReloadUrl . $this->url);
-
-            sleep(10);
         }
 
         if ($this->isExists()) {
