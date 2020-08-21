@@ -2,12 +2,13 @@
 
 namespace N1ebieski\IDir\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use N1ebieski\IDir\Models\Group;
+use Illuminate\Support\Facades\App;
+use Illuminate\Database\Eloquent\Model;
 use N1ebieski\IDir\Services\PriceService;
 use N1ebieski\IDir\Repositories\PriceRepo;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Facades\App;
+use Illuminate\Support\Collection as Collect;
 
 /**
  * [Price description]
@@ -119,7 +120,22 @@ class Price extends Model
             return (string)implode("\r\n", $codes);
         }
 
-        return $this->codes['codes'] ?? null;
+        return $this->attributes['codes']['codes'] ?? null;
+    }
+
+    /**
+     * [getCodesAttribute description]
+     * @return Collect|null [description]
+     */
+    public function getCodesAttribute() : Collect
+    {
+        if ($this->relationLoaded('codes') && $this->getRelation('codes') instanceof Collection) {
+            return $this->getRelation('codes');
+        }
+
+        return isset($this->attributes['codes']['codes']) ?
+            Collect::make(explode("\r\n", $this->attributes['codes']['codes']))
+            : Collect::make([]);
     }
 
     // Makers
