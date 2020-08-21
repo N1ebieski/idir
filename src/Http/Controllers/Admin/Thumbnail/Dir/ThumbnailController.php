@@ -36,6 +36,8 @@ class ThumbnailController implements Polymorphic
             );
         }
 
+        sleep(10);
+
         Cache::forget("dir.thumbnailUrl.{$dir->slug}");
 
         return Response::json([
