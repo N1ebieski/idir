@@ -54,7 +54,7 @@ class DirsSeeder extends SEOKatalogSeeder
      */
     protected static function makeUrl(string $url) : string
     {
-        return Str::contains($url, 'https://') ? $url : 'http://' . $url;
+        return trim(Str::contains($url, 'https://') ? $url : 'http://' . $url);
     }
 
     /**
