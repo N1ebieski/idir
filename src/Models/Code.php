@@ -40,8 +40,8 @@ class Code extends Model
         'id' => 'integer',
         'price_id' => 'integer',
         'quantity' => 'integer',
-        'created_at' => 'timestamp',
-        'updated_at' => 'timestamp'
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime'
     ];
 
     // Setters

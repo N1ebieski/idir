@@ -55,8 +55,8 @@ class Price extends Model
         'price' => 'decimal:2',
         'days' => 'integer',
         'number' => 'integer',
-        'created_at' => 'timestamp',
-        'updated_at' => 'timestamp'
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime'
     ];
 
     // Setters

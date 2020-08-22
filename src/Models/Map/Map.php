@@ -34,7 +34,7 @@ class Map extends Model
         'model_id' => 'integer',
         'lat' => 'decimal:14',
         'long' => 'decimal:14',
-        'created_at' => 'timestamp',
-        'updated_at' => 'timestamp'
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime'
     ];
 }

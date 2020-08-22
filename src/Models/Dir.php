@@ -136,10 +136,10 @@ class Dir extends Model
         'group_id' => 'integer',
         'user_id' => 'integer',
         'status' => 'integer',
-        'privileged_at' => 'timestamp',
-        'privileged_to' => 'timestamp',
-        'created_at' => 'timestamp',
-        'updated_at' => 'timestamp'
+        'privileged_at' => 'datetime',
+        'privileged_to' => 'datetime',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime'
     ];
 
     /**

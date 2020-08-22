@@ -55,9 +55,9 @@ class DirBacklink extends Model
         'dir_id' => 'integer',
         'link_id' => 'integer',
         'attempts' => 'integer',
-        'attempted_at' => 'timestamp',
-        'created_at' => 'timestamp',
-        'updated_at' => 'timestamp'
+        'attempted_at' => 'datetime',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime'
     ];
 
     // Setters

@@ -89,8 +89,8 @@ class Payment extends Model
         'model_id' => 'integer',
         'order_id' => 'integer',
         'status' => 'integer',
-        'created_at' => 'timestamp',
-        'updated_at' => 'timestamp'
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime'
     ];
 
     // Relations

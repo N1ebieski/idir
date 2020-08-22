@@ -54,9 +54,9 @@ class DirStatus extends Model
         'id' => 'integer',
         'dir_id' => 'integer',
         'attempts' => 'integer',
-        'attempted_at' => 'timestamp',
-        'created_at' => 'timestamp',
-        'updated_at' => 'timestamp'
+        'attempted_at' => 'datetime',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime'
     ];
 
     // Setters

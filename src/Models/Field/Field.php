@@ -82,8 +82,8 @@ class Field extends Model
         'id' => 'integer',
         'visible' => 'integer',
         'position' => 'integer',
-        'created_at' => 'timestamp',
-        'updated_at' => 'timestamp'
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime'
     ];
 
     // Relations
