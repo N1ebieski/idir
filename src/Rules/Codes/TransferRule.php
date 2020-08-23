@@ -80,6 +80,10 @@ class TransferRule extends CodesRule
             return true;
         }
 
+        if ($this->price->code === null) {
+            return false;
+        }
+
         try {
             $this->transferUtil->authorize([
                 'code' => $value,
