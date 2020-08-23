@@ -103,7 +103,7 @@ class UpdateRequest extends FormRequest
             'prices.*.*.price' => 'bail|numeric|between:0,9999.99|no_js_validation',
             'prices.*.*.days' => 'bail|nullable|integer|no_js_validation',
             'prices.*.*.type' => 'bail|in:transfer,code_sms,code_transfer|no_js_validation',
-            'prices.*.*.code' => 'bail|nullable|string|no_js_validation',
+            'prices.*.*.code' => 'bail|string|no_js_validation',
             'prices.*.*.token' => 'bail|nullable|string|no_js_validation',
             'prices.*.*.number' => 'bail|nullable|integer|no_js_validation',
             'prices.*.*.codes.codes' => 'bail|nullable|array|no_js_validation',
