@@ -6,9 +6,6 @@ use Illuminate\Support\Facades\App;
 use N1ebieski\ICore\Models\BanValue as BaseBanValue;
 use N1ebieski\IDir\Cache\BanValueCache;
 
-/**
- * [BanValue description]
- */
 class BanValue extends BaseBanValue
 {
     // Makers
