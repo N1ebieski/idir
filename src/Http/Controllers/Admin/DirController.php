@@ -79,7 +79,7 @@ class DirController
             'dirs' => $dir->makeRepo()->paginateForAdminByFilter($filter->all() + [
                 'except' => $request->input('except')
             ]),
-            'groups' => $group->all(),
+            'groups' => $group->orderBy('position', 'asc')->get(),
             'categories' => $category->makeService()->getAsFlatTree(),
             'filter' => $filter->all()
         ]);
