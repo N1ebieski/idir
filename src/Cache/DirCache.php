@@ -140,58 +140,62 @@ class DirCache
     }
 
     /**
-     * Undocumented function
-     *
-     * @param Tag $tag
-     * @param integer $page
-     * @return LengthAwarePaginator|null
+     * I have to disable cache in tags because it takes too much memory in Redis
      */
-    public function getByTagAndFilter(Tag $tag, int $page) : ?LengthAwarePaginator
-    {
-        return $this->cache->tags(['dirs'])->get("dir.paginateByTagAndFilter.{$tag->normalized}.{$page}");
-    }
 
-    /**
-     * Undocumented function
-     *
-     * @param LengthAwarePaginator $dirs
-     * @param Tag $tag
-     * @param integer $page
-     * @return boolean
-     */
-    public function putByTagAndFilter(LengthAwarePaginator $dirs, Tag $tag, int $page) : bool
-    {
-        return $this->cache->tags(['dirs'])
-            ->put(
-                "dir.paginateByTagAndFilter.{$tag->normalized}.{$page}",
-                $dirs,
-                $this->carbon->now()->addMinutes($this->minutes)
-            );
-    }
+    // /**
+    //  * Undocumented function
+    //  *
+    //  * @param Tag $tag
+    //  * @param integer $page
+    //  * @return LengthAwarePaginator|null
+    //  */
+    // public function getByTagAndFilter(Tag $tag, int $page) : ?LengthAwarePaginator
+    // {
+    //     return $this->cache->tags(['dirs'])->get("dir.paginateByTagAndFilter.{$tag->normalized}.{$page}");
+    // }
 
-    /**
-     * [rememberByTagAndFilter description]
-     * @param  Tag                  $tag  [description]
-     * @param  array                $filter  [description]
-     * @param  int                  $page [description]
-     * @return LengthAwarePaginator       [description]
-     */
-    public function rememberByTagAndFilter(Tag $tag, array $filter, int $page) : LengthAwarePaginator
-    {
-        if ($this->collect->make($filter)->isNullItems()) {
-            $dirs = $this->getByTagAndFilter($tag, $page);
-        }
+    // /**
+    //  * Undocumented function
+    //  *
+    //  * @param LengthAwarePaginator $dirs
+    //  * @param Tag $tag
+    //  * @param integer $page
+    //  * @return boolean
+    //  */
+    // public function putByTagAndFilter(LengthAwarePaginator $dirs, Tag $tag, int $page) : bool
+    // {
+    //     return $this->cache->tags(['dirs'])
+    //         ->put(
+    //             "dir.paginateByTagAndFilter.{$tag->normalized}.{$page}",
+    //             $dirs,
+    //             $this->carbon->now()->addMinutes($this->minutes)
+    //         );
+    // }
 
-        if (!isset($dirs) || !$dirs) {
-            $dirs = $this->dir->makeRepo()->paginateByTagAndFilter($tag->name, $filter);
+    // /**
+    //  * [rememberByTagAndFilter description]
+    //  * @param  Tag                  $tag  [description]
+    //  * @param  array                $filter  [description]
+    //  * @param  int                  $page [description]
+    //  * @return LengthAwarePaginator       [description]
+    //  */
+    // public function rememberByTagAndFilter(Tag $tag, array $filter, int $page) : LengthAwarePaginator
+    // {
+    //     if ($this->collect->make($filter)->isNullItems()) {
+    //         $dirs = $this->getByTagAndFilter($tag, $page);
+    //     }
 
-            if ($this->collect->make($filter)->isNullItems()) {
-                $this->putByTagAndFilter($dirs, $tag, $page);
-            }
-        }
+    //     if (!isset($dirs) || !$dirs) {
+    //         $dirs = $this->dir->makeRepo()->paginateByTagAndFilter($tag->name, $filter);
 
-        return $dirs;
-    }
+    //         if ($this->collect->make($filter)->isNullItems()) {
+    //             $this->putByTagAndFilter($dirs, $tag, $page);
+    //         }
+    //     }
+
+    //     return $dirs;
+    // }
     
     /**
      * Cache route binding of Dir

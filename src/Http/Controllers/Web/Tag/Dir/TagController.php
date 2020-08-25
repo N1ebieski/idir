@@ -29,10 +29,9 @@ class TagController implements Polymorphic
         return Response::view('idir::web.tag.dir.show', [
             'tag' => $tag,
             'filter' => $filter->all(),
-            'dirs' => $dir->makeCache()->rememberByTagAndFilter(
+            'dirs' => $dir->makeRepo()->paginateByTagAndFilter(
                 $tag,
-                $filter->all(),
-                $request->get('page') ?? 1
+                $filter->all()
             ),
         ]);
     }
