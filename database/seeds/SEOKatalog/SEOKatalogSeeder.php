@@ -87,7 +87,7 @@ class SEOKatalogSeeder extends Seeder
         return (
             (Field::orderBy('id', 'desc')->first()->id ?? 0)
             -
-            DB::connection('import')->table('forms')->where('mod', 0)->orderBy('id', 'desc')->first()->id
+            optional(DB::connection('import')->table('forms')->where('mod', 0)->orderBy('id', 'desc')->first())->id
         );
     }
 
