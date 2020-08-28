@@ -44,7 +44,8 @@
                     @if ($dir->reports_count > 0)
                     <span>
                         <a 
-                            href="#" class="badge badge-danger show" 
+                            href="#" 
+                            class="badge badge-danger show" 
                             data-toggle="modal"
                             data-route="{{ route('admin.report.dir.show', [$dir->id]) }}"
                             data-target="#showReportDirModal"
