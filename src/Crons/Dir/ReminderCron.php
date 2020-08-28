@@ -4,8 +4,7 @@ namespace N1ebieski\IDir\Crons\Dir;
 
 use Illuminate\Support\Carbon;
 use N1ebieski\IDir\Models\Dir;
-use Illuminate\Contracts\Mail\Mailer;
-use N1ebieski\IDir\Mail\Dir\ReminderMail;
+use N1ebieski\IDir\Jobs\Dir\ReminderJob;
 use Illuminate\Contracts\Container\Container as App;
 use Illuminate\Contracts\Config\Repository as Config;
 
@@ -34,16 +33,16 @@ class ReminderCron
     /**
      * Undocumented variable
      *
-     * @var Mailer
+     * @var App
      */
-    protected $mailer;
+    protected $app;
 
     /**
      * Undocumented variable
      *
-     * @var App
+     * @var ReminderJob
      */
-    protected $app;
+    protected $reminderJob;
 
     /**
      * Undocumented variable
@@ -56,16 +55,23 @@ class ReminderCron
      * Undocumented function
      *
      * @param Dir $dir
+     * @param ReminderJob $reminderJob
      * @param Config $config
-     * @param Mailer $mailer
      * @param App $app
      * @param Carbon $carbon
      */
-    public function __construct(Dir $dir, Config $config, Mailer $mailer, App $app, Carbon $carbon)
-    {
+    public function __construct(
+        Dir $dir,
+        ReminderJob $reminderJob,
+        Config $config,
+        App $app,
+        Carbon $carbon
+    ) {
         $this->dir = $dir;
+
+        $this->reminderJob = $reminderJob;
+
         $this->config = $config;
-        $this->mailer = $mailer;
         $this->app = $app;
         $this->carbon = $carbon;
 
@@ -77,7 +83,14 @@ class ReminderCron
      */
     public function __invoke() : void
     {
-        $this->addToQueue();
+        $this->dir->makeRepo()->chunkAvailableHasPaidRequirementByPrivilegedTo(
+            function ($dirs) {
+                $dirs->each(function ($dir) {
+                    $this->addToQueue($dir);
+                });
+            },
+            $this->makeReminderTimestamp()
+        );
     }
 
     /**
@@ -91,35 +104,13 @@ class ReminderCron
     }
 
     /**
-     * Adds new jobs to the queue.
-     */
-    protected function addToQueue() : void
-    {
-        $this->dir->makeRepo()->chunkAvailableHasPaidRequirementByPrivilegedTo(
-            function ($dirs) {
-                $dirs->each(function ($dir) {
-                    if (!$this->verifyNotification($dir)) {
-                        return;
-                    }
-                    
-                    $this->mailer->send(
-                        $this->app->make(ReminderMail::class, ['dir' => $dir])
-                    );
-                });
-            },
-            $this->makeReminderTimestamp()
-        );
-    }
-
-    /**
      * Undocumented function
      *
      * @param Dir $dir
-     * @return boolean
+     * @return void
      */
-    protected function verifyNotification(Dir $dir) : bool
+    protected function addToQueue(Dir $dir) : void
     {
-        return optional($dir->user)->email
-            && optional($dir->user)->hasPermissionTo('web.dirs.notification');
+        $this->reminderJob->dispatch($dir);
     }
 }

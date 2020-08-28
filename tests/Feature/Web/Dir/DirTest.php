@@ -14,14 +14,16 @@ use Illuminate\Support\Facades\Mail;
 use GuzzleHttp\Client as GuzzleClient;
 use Illuminate\Support\Facades\Config;
 use N1ebieski\IDir\Crons\Dir\StatusCron;
+use N1ebieski\IDir\Mail\Dir\ReminderMail;
 use N1ebieski\IDir\Crons\Dir\BacklinkCron;
+use N1ebieski\IDir\Crons\Dir\ReminderCron;
 use N1ebieski\IDir\Mail\Dir\CompletedMail;
 use N1ebieski\IDir\Crons\Dir\CompletedCron;
 use GuzzleHttp\Middleware as GuzzleMiddleware;
 use GuzzleHttp\Psr7\Response as GuzzleResponse;
+use N1ebieski\IDir\Models\Category\Dir\Category;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use N1ebieski\IDir\Mail\DirBacklink\BacklinkNotFoundMail;
-use N1ebieski\IDir\Models\Category\Dir\Category;
 
 /**
  * [DirTest description]
@@ -29,6 +31,33 @@ use N1ebieski\IDir\Models\Category\Dir\Category;
 class DirTest extends TestCase
 {
     use DatabaseTransactions;
+
+    public function test_reminder_queue_job()
+    {
+        $group = factory(Group::class)->states(['apply_alt_deactivation'])->create();
+
+        $price = factory(Price::class)->states(['seasonal'])->make();
+        $price->group()->associate($group)->save();
+
+        $dir = factory(Dir::class)->states(['with_user', 'paid_seasonal', 'active'])
+            ->create([
+                'group_id' => $group->id,
+                'privileged_to' => Carbon::now()->subDays(14)
+            ]);
+
+        Mail::fake();
+
+        $this->assertTrue($dir->privileged_to !== null);
+
+        $schedule = app()->make(ReminderCron::class);
+        $schedule();
+
+        Mail::assertSent(ReminderMail::class, function ($mail) use ($dir) {
+            $mail->build();
+
+            return $mail->hasTo($dir->user->email);
+        });
+    }
 
     public function test_completed_deactivation_queue_job()
     {

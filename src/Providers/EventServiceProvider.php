@@ -16,6 +16,12 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
+        \N1ebieski\IDir\Events\Job\Dir\CompletedEvent::class => [
+            \N1ebieski\IDir\Listeners\Dir\CompletedNotification::class
+        ],
+        \N1ebieski\IDir\Events\Job\Dir\InvalidBacklinkEvent::class => [
+            \N1ebieski\IDir\Listeners\Dir\InvalidBacklinkNotification::class
+        ],
         \N1ebieski\IDir\Events\Admin\Dir\DestroyEvent::class => [
             \N1ebieski\IDir\Listeners\Dir\SendDeletedNotification::class
         ],

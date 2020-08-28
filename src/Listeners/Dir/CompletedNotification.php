@@ -3,14 +3,11 @@
 namespace N1ebieski\IDir\Listeners\Dir;
 
 use Illuminate\Contracts\Mail\Mailer;
-use N1ebieski\IDir\Mail\Dir\DeletedMail;
 use Illuminate\Contracts\Foundation\Application as App;
 use Illuminate\Contracts\Debug\ExceptionHandler as Exception;
+use N1ebieski\IDir\Mail\Dir\CompletedMail;
 
-/**
- * [SendDeleteNotification description]
- */
-class SendDeletedNotification
+class CompletedNotification
 {
     /**
      * Undocumented variable
@@ -79,10 +76,9 @@ class SendDeletedNotification
         }
 
         try {
-            $this->mailer->send($this->app->make(DeletedMail::class, [
-                'dir' => $event->dir,
-                'reason' => $event->reason
-            ]));
+            $this->mailer->send(
+                $this->app->make(CompletedMail::class, ['dir' => $this->event->dir])
+            );
         } catch (\Throwable $e) {
             $this->exception->report($e);
         }

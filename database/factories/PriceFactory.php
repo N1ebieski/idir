@@ -35,6 +35,6 @@ $factory->state(Price::class, 'code_transfer', function (Faker $faker) {
 
 $factory->state(Price::class, 'seasonal', function (Faker $faker) {
     return [
-        'days' => $faker->randomElement([rand(7, 365)])
+        'days' => rand(7, 365)
     ];
 });

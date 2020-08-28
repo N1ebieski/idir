@@ -6,10 +6,9 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use N1ebieski\IDir\Models\Dir;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Contracts\Translation\Translator as Lang;
 
-class ReminderMail extends Mailable implements ShouldQueue
+class ReminderMail extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -31,22 +30,22 @@ class ReminderMail extends Mailable implements ShouldQueue
      * Undocumented function
      *
      * @param Dir $dir
+     * @param Lang $lang
      */
-    public function __construct(Dir $dir)
+    public function __construct(Dir $dir, Lang $lang)
     {
         $this->dir = $dir;
+
+        $this->lang = $lang;
     }
 
     /**
      * Undocumented function
      *
-     * @param Lang $lang
      * @return void
      */
-    public function build(Lang $lang)
+    public function build()
     {
-        $this->lang = $lang;
-
         return $this->subject($this->lang->get('idir::dirs.mail.reminder.title'))
             ->to($this->dir->user->email)
             ->with([

@@ -5,6 +5,7 @@ namespace N1ebieski\IDir\Listeners\Dir;
 use Illuminate\Contracts\Mail\Mailer;
 use N1ebieski\IDir\Mail\Dir\IncorrectMail;
 use Illuminate\Contracts\Foundation\Application as App;
+use Illuminate\Contracts\Debug\ExceptionHandler as Exception;
 
 class SendIncorrectNotification
 {
@@ -30,15 +31,24 @@ class SendIncorrectNotification
     protected $app;
 
     /**
+     * Undocumented variable
+     *
+     * @var Exception
+     */
+    protected $exception;
+
+    /**
      * Undocumented function
      *
      * @param Mailer $mailer
      * @param App $app
+     * @param Exception $exception
      */
-    public function __construct(Mailer $mailer, App $app)
+    public function __construct(Mailer $mailer, App $app, Exception $exception)
     {
         $this->mailer = $mailer;
         $this->app = $app;
+        $this->exception = $exception;
     }
 
     /**
@@ -68,10 +78,14 @@ class SendIncorrectNotification
 
         $this->updateNotes();
 
-        $this->mailer->send($this->app->make(IncorrectMail::class, [
-            'dir' => $event->dir,
-            'reason' => $event->reason
-        ]));
+        try {
+            $this->mailer->send($this->app->make(IncorrectMail::class, [
+                'dir' => $event->dir,
+                'reason' => $event->reason
+            ]));
+        } catch (\Throwable $e) {
+            $this->exception->report($e);
+        }
     }
 
     /**
