@@ -6,6 +6,7 @@ use N1ebieski\IDir\Models\Dir;
 use Illuminate\Contracts\Mail\Mailer;
 use N1ebieski\IDir\Mail\Dir\ActivationMail;
 use Illuminate\Contracts\Foundation\Application as App;
+use Illuminate\Contracts\Debug\ExceptionHandler as Exception;
 
 /**
  * [SendActivationNotification description]
@@ -34,15 +35,24 @@ class SendActivationNotification
     protected $app;
 
     /**
+     * Undocumented variable
+     *
+     * @var Exception
+     */
+    protected $exception;
+
+    /**
      * Undocumented function
      *
      * @param Mailer $mailer
      * @param App $app
+     * @param Exception $exception
      */
-    public function __construct(Mailer $mailer, App $app)
+    public function __construct(Mailer $mailer, App $app, Exception $exception)
     {
         $this->mailer = $mailer;
         $this->app = $app;
+        $this->exception = $exception;
     }
 
     /**
@@ -75,8 +85,8 @@ class SendActivationNotification
                 $this->mailer->send($this->app->make(ActivationMail::class, [
                     'dir' => $event->dir
                 ]));
-            } catch (\Exception $e) {
-                //
+            } catch (\Throwable $e) {
+                $this->exception->report($e);
             }
         }
     }
