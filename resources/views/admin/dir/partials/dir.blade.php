@@ -57,7 +57,7 @@
                 </li>
                 <li class="text-break" style="word-break:break-word">
                     <span contenteditable="true" spellcheck="true" id="content.{{ $dir->id }}">
-                        {{ $dir->short_content }}...
+                        {!! $dir->short_content !!}...
                     </span>
                     <a href="#" class="badge badge-primary checkContent">
                         {{ trans('idir::dirs.check_content') }}
