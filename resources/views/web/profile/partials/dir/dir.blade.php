@@ -9,7 +9,8 @@
                 <a 
                     href="{{ route('web.dir.show', [$dir->slug]) }}" 
                     target="_blank" 
-                    title="{{ $dir->title }}" rel="noopener"
+                    title="{{ $dir->title }}" 
+                    rel="noopener"
                 >
                     {{ $dir->title }}
                 </a>
@@ -87,7 +88,8 @@
                     class="btn btn-danger" 
                     data-status="delete" 
                     data-toggle="confirmation"
-                    data-route="{{ route('web.dir.destroy', [$dir->id]) }}" data-id="{{ $dir->id }}"
+                    data-route="{{ route('web.dir.destroy', [$dir->id]) }}" 
+                    data-id="{{ $dir->id }}"
                     type="button" 
                     data-btn-ok-label=" {{ trans('icore::default.yes') }}" 
                     data-btn-ok-icon-class="fas fa-check mr-1"
