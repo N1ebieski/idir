@@ -11,7 +11,7 @@ data-id="{{ $dir->id }}">
                     {{ trans("idir::dirs.status.{$dir->status}") }}
                 </span>
             </li>
-            <li class="text-break" style="word-break:break-word">{{ $dir->short_content }}...</li>
+            <li class="text-break" style="word-break:break-word">{!! $dir->short_content !!}...</li>
             @if ($dir->notes)
             <li class="text-break font-weight-bold" style="word-break:break-word">
                 {{ $dir->notes }}
