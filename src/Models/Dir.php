@@ -606,6 +606,11 @@ class Dir extends Model
             }
 
             $link .= '" target="_blank" title="' . e($this->title) . '" ';
+
+            if (true === true) {
+                $link .= ' class="statsClick" data-route="' . URL::route('web.stats.dir.click', [$this->id]) . '" ';
+            }
+
             $link .= 'href="' . e($this->url) . '" target="_blank">' . e($this->url_as_host) . '</a>';
         }
 
