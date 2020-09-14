@@ -1,4 +1,4 @@
-jQuery(document).on('click', 'a.statsClick', function(e) {
+jQuery(document).on('click', 'a.clickStat', function(e) {
     e.preventDefault();
 
     let $element = $(this);

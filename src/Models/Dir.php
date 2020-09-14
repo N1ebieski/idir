@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\URL;
+use N1ebieski\ICore\Utils\MigrationUtil;
 
 /**
  * [Dir description]
@@ -605,6 +606,11 @@ class Dir extends Model
             }
 
             $link .= '" target="_blank" title="' . e($this->title) . '" ';
+
+            if (App::make(MigrationUtil::class)->contains('create_stats_table')) {
+                $link .= 'class="clickStat" data-route="' . URL::route('web.stat.dir.click', [$this->id]) . '" ';
+            }
+
             $link .= 'href="' . e($this->url) . '" target="_blank">' . e($this->title) . '</a>';
         }
 
@@ -627,8 +633,8 @@ class Dir extends Model
 
             $link .= '" target="_blank" title="' . e($this->title) . '" ';
 
-            if (true === true) {
-                $link .= ' class="statsClick" data-route="' . URL::route('web.stats.dir.click', [$this->id]) . '" ';
+            if (App::make(MigrationUtil::class)->contains('create_stats_table')) {
+                $link .= 'class="clickStat" data-route="' . URL::route('web.stat.dir.click', [$this->id]) . '" ';
             }
 
             $link .= 'href="' . e($this->url) . '" target="_blank">' . e($this->url_as_host) . '</a>';
