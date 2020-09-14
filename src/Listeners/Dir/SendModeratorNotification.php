@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Contracts\Cache\Repository as Cache;
 use Illuminate\Contracts\Foundation\Application as App;
 use Illuminate\Contracts\Config\Repository as Config;
+use Illuminate\Contracts\Debug\ExceptionHandler as Exception;
 
 class SendModeratorNotification
 {
@@ -51,6 +52,13 @@ class SendModeratorNotification
     /**
      * Undocumented variable
      *
+     * @var Exception
+     */
+    protected $exception;
+
+    /**
+     * Undocumented variable
+     *
      * @var Cache
      */
     protected $cache;
@@ -85,6 +93,7 @@ class SendModeratorNotification
      * @param App $app
      * @param Cache $cache
      * @param Config $config
+     * @param Exception $exception
      */
     public function __construct(
         User $user,
@@ -92,7 +101,8 @@ class SendModeratorNotification
         Mailer $mailer,
         App $app,
         Cache $cache,
-        Config $config
+        Config $config,
+        Exception $exception
     ) {
         $this->user = $user;
         $this->dir = $dir;
@@ -100,6 +110,7 @@ class SendModeratorNotification
         $this->app = $app;
         $this->mailer = $mailer;
         $this->cache = $cache;
+        $this->exception = $exception;
 
         $this->counter = (int)$config->get('idir.dir.notification.dirs');
     }
@@ -206,9 +217,13 @@ class SendModeratorNotification
      */
     protected function sendMailToModerator(User $user) : void
     {
-        $this->mailer->send($this->app->make(ModeratorMail::class, [
-            'user' => $user,
-            'dirs' => $this->dirs
-        ]));
+        try {
+            $this->mailer->send($this->app->make(ModeratorMail::class, [
+                'user' => $user,
+                'dirs' => $this->dirs
+            ]));
+        } catch (\Throwable $e) {
+            $this->exception->report($e);
+        }
     }
 }

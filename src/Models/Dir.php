@@ -568,7 +568,11 @@ class Dir extends Model
      */
     public function getShortContentAttribute() : string
     {
-        return mb_substr($this->content, 0, Config::get('idir.dir.short_content'));
+        return mb_substr(
+            e($this->content, false),
+            0,
+            Config::get('idir.dir.short_content')
+        );
     }
 
     /**
@@ -654,7 +658,7 @@ class Dir extends Model
     public function getContentAsHtmlAttribute() : string
     {
         if (!$this->getRelation('group')->hasEditorPrivilege()) {
-            return nl2br(e($this->content_html));
+            return nl2br(e($this->content_html, false));
         }
 
         return $this->content_html;

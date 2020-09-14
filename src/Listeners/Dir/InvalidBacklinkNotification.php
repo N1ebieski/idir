@@ -3,14 +3,11 @@
 namespace N1ebieski\IDir\Listeners\Dir;
 
 use Illuminate\Contracts\Mail\Mailer;
-use N1ebieski\IDir\Mail\Dir\DeletedMail;
 use Illuminate\Contracts\Foundation\Application as App;
+use N1ebieski\IDir\Mail\DirBacklink\BacklinkNotFoundMail;
 use Illuminate\Contracts\Debug\ExceptionHandler as Exception;
 
-/**
- * [SendDeleteNotification description]
- */
-class SendDeletedNotification
+class InvalidBacklinkNotification
 {
     /**
      * Undocumented variable
@@ -60,8 +57,8 @@ class SendDeletedNotification
      */
     public function verify() : bool
     {
-        return optional($this->event->dir->user)->email
-            && optional($this->event->dir->user)->hasPermissionTo('web.dirs.notification');
+        return optional($this->event->dirBacklink->dir->user)->email
+            && optional($this->event->dirBacklink->dir->user)->hasPermissionTo('web.dirs.notification');
     }
 
     /**
@@ -79,10 +76,11 @@ class SendDeletedNotification
         }
 
         try {
-            $this->mailer->send($this->app->make(DeletedMail::class, [
-                'dir' => $event->dir,
-                'reason' => $event->reason
-            ]));
+            $this->mailer->send(
+                $this->app->make(BacklinkNotFoundMail::class, [
+                    'dirBacklink' => $this->event->dirBacklink
+                ])
+            );
         } catch (\Throwable $e) {
             $this->exception->report($e);
         }

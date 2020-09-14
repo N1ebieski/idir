@@ -34,12 +34,17 @@ jQuery(document).on('click', 'button.sendContact', function (e) {
             $modal.body.html($.getAlert(response.success, 'success'));
         },
         error: function (response) {
-            let errors = response.responseJSON;
+            if (response.responseJSON.errors) {
+                $.each(response.responseJSON.errors, function (key, value) {
+                    $form.find('[name="'+key+'"]').addClass('is-invalid');
+                    $form.find('[name="'+key+'"]').closest('.form-group').append($.getError(key, value));
+                });
+                return;
+            }
 
-            $.each(errors.errors, function (key, value) {
-                $form.find('[name="'+key+'"]').addClass('is-invalid');
-                $form.find('[name="'+key+'"]').closest('.form-group').append($.getError(key, value));
-            });
+            if (response.responseJSON.message) {
+                $form.prepend($.getAlert(response.responseJSON.message, 'danger'));
+            }            
         }
     });
 });

@@ -6,14 +6,14 @@ use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Support\Carbon;
 use N1ebieski\IDir\Models\Dir;
-use Illuminate\Contracts\Mail\Mailer;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use N1ebieski\IDir\Repositories\DirRepo;
-use N1ebieski\IDir\Mail\Dir\CompletedMail;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Contracts\Events\Dispatcher as Event;
 use Illuminate\Contracts\Foundation\Application as App;
+use N1ebieski\IDir\Events\Job\Dir\CompletedEvent;
 
 class CompletedJob implements ShouldQueue
 {
@@ -55,9 +55,9 @@ class CompletedJob implements ShouldQueue
     /**
      * Undocumented variable
      *
-     * @var Mailer
+     * @var Event
      */
-    protected $mailer;
+    protected $event;
 
     /**
      * Create a new job instance.
@@ -74,7 +74,7 @@ class CompletedJob implements ShouldQueue
      *
      * @return bool
      */
-    protected function verifyJob() : bool
+    protected function verify() : bool
     {
         return $this->dir->isActive() && (
             (
@@ -89,38 +89,28 @@ class CompletedJob implements ShouldQueue
     /**
      * Undocumented function
      *
-     * @return boolean
-     */
-    protected function verifyNotification() : bool
-    {
-        return optional($this->dir->user)->email
-            && optional($this->dir->user)->hasPermissionTo('web.dirs.notification');
-    }
-
-    /**
-     * Undocumented function
-     *
-     * @param Mailer $mailer
      * @param App $app
      * @param Carbon $carbon
+     * @param Event $event
      * @return void
      */
     public function handle(
-        Mailer $mailer,
         App $app,
-        Carbon $carbon
+        Carbon $carbon,
+        Event $event
     ) : void {
         $this->dirRepo = $this->dir->makeRepo();
 
-        $this->mailer = $mailer;
         $this->app = $app;
         $this->carbon = $carbon;
 
-        if (!$this->verifyJob()) {
+        if (!$this->verify()) {
             return;
         }
 
-        $this->sendNotification();
+        $event->dispatch(
+            $app->make(CompletedEvent::class, ['dir' => $this->dir])
+        );
 
         $this->executeResult();
     }
@@ -163,22 +153,6 @@ class CompletedJob implements ShouldQueue
         $this->dir->setGroup($this->dir->group()->make()->find($this->dir->group->alt_id))
             ->makeService()
             ->moveToAltGroup();
-    }
-
-    /**
-     * Undocumented function
-     *
-     * @return void
-     */
-    protected function sendNotification() : void
-    {
-        if (!$this->verifyNotification()) {
-            return;
-        }
-
-        $this->mailer->send(
-            $this->app->make(CompletedMail::class, ['dir' => $this->dir])
-        );
     }
 
     /**

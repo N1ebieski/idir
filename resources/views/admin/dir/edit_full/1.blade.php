@@ -1,17 +1,28 @@
 @extends(config('idir.layout') . '::admin.layouts.layout', [
-    'title' => [$dir->title, trans('idir::dirs.route.step', ['step' => 1]), trans('idir::dirs.route.edit.1')],
+    'title' => [
+        $dir->title,
+        trans('idir::dirs.route.step', ['step' => 1]),
+        trans('idir::dirs.route.edit.1')
+    ],
     'desc' => [$dir->title, trans('idir::dirs.route.edit.1')],
     'keys' => [$dir->title, trans('idir::dirs.route.edit.1')]
 ])
 
 @section('breadcrumb')
 <li class="breadcrumb-item">
-    <a href="{{ route('admin.dir.index') }}" title="{{ trans('idir::dirs.route.index') }}">
+    <a 
+        href="{{ route('admin.dir.index') }}" 
+        title="{{ trans('idir::dirs.route.index') }}"
+    >
         {{ trans('idir::dirs.route.index') }}
     </a>
 </li>
-<li class="breadcrumb-item">{{ trans('idir::dirs.route.edit.index') }}</li>
-<li class="breadcrumb-item">{{ $dir->title }}</li>
+<li class="breadcrumb-item">
+    {{ trans('idir::dirs.route.edit.index') }}
+</li>
+<li class="breadcrumb-item">
+    {{ $dir->title }}
+</li>
 <li class="breadcrumb-item active" aria-current="page">
     {{ trans('idir::dirs.route.step', ['step' => 1]) }} {{ trans('idir::dirs.route.edit.1') }}
 </li>
@@ -30,14 +41,19 @@
         <div class="col-lg-4 col-md-6 mb-4">
             <div class="card h-100 {{ $dir->isGroup($group->id) ? 'border-primary border' : null }}">
                 @include('idir::admin.dir.partials.group')
-                <div class="card-footer mt-auto
-                {{ $dir->isGroup($group->id) || $group->isAvailable() ? null : 'bg-warning' }}">
+                <div class="card-footer mt-auto {{ $dir->isGroup($group->id) || $group->isAvailable() ? null : 'bg-warning' }}">
                     @if ($dir->isGroup($group->id))
-                    <a href="{{ route('admin.dir.edit_full_2', [$dir->id, $group->id]) }}" class="btn btn-link">
+                    <a 
+                        href="{{ route('admin.dir.edit_full_2', [$dir->id, $group->id]) }}" 
+                        class="btn btn-link"
+                    >
                         {{ trans('idir::dirs.choose_group') }} &raquo;
                     </a>
                     @elseif ($group->isAvailable())
-                    <a href="{{ route('admin.dir.edit_full_2', [$dir->id, $group->id]) }}" class="btn btn-link">
+                    <a 
+                        href="{{ route('admin.dir.edit_full_2', [$dir->id, $group->id]) }}" 
+                        class="btn btn-link"
+                    >
                         {{ trans('idir::dirs.change_group') }} &raquo;
                     </a>
                     @else

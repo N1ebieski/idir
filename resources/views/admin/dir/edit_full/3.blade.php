@@ -1,17 +1,28 @@
 @extends(config('idir.layout') . '::admin.layouts.layout', [
-    'title' => [$dir->title, trans('idir::dirs.route.step', ['step' => 3]), trans('idir::dirs.route.edit.3')],
+    'title' => [
+        $dir->title,
+        trans('idir::dirs.route.step', ['step' => 3]),
+        trans('idir::dirs.route.edit.3')
+    ],
     'desc' => [$dir->title, trans('idir::dirs.route.edit.3')],
     'keys' => [$dir->title, trans('idir::dirs.route.edit.3')]
 ])
 
 @section('breadcrumb')
 <li class="breadcrumb-item">
-    <a href="{{ route('admin.dir.index') }}" title="{{ trans('idir::dirs.route.index') }}">
+    <a 
+        href="{{ route('admin.dir.index') }}" 
+        title="{{ trans('idir::dirs.route.index') }}"
+    >
         {{ trans('idir::dirs.route.index') }}
     </a>
 </li>
-<li class="breadcrumb-item">{{ trans('idir::dirs.route.edit.index') }}</li>
-<li class="breadcrumb-item">{{ $dir->title }}</li>
+<li class="breadcrumb-item">
+    {{ trans('idir::dirs.route.edit.index') }}
+</li>
+<li class="breadcrumb-item">
+    {{ $dir->title }}
+</li>
 <li class="breadcrumb-item active" aria-current="page">
     {{ trans('idir::dirs.route.step', ['step' => 3]) }} {{ trans('idir::dirs.route.edit.3') }}
 </li>
@@ -29,17 +40,30 @@
                 'value' => session("dirId.{$dir->id}"),
                 'categories' => $categoriesSelection
             ])
-            <form method="post" action="{{ route('admin.dir.update_full_3', [$dir->id, $group->id]) }}" id="edit3">
+            <form 
+                method="post" 
+                action="{{ route('admin.dir.update_full_3', [$dir->id, $group->id]) }}" 
+                id="edit3"
+            >
                 @csrf
                 @method('put')
-                @includeWhen($group->backlink > 0 && optional($backlinks)->isNotEmpty(), 'idir::admin.dir.partials.backlink')
+
+                @includeWhen(
+                    $group->backlink > 0 && optional($backlinks)->isNotEmpty(),
+                    'idir::admin.dir.partials.backlink'
+                )
+
                 @if ($dir->isPayment($group->id) && $group->prices->isNotEmpty())
-                @include('idir::admin.dir.partials.payment')
+                    @include('idir::admin.dir.partials.payment')
                 @endif
+
                 <div class="d-flex mb-3">
                     <div class="mr-auto">
-                        <a href="{{ route('admin.dir.edit_full_2', [$dir->id, $group->id]) }}" 
-                        class="btn btn-secondary" style="width:6rem">
+                        <a 
+                            href="{{ route('admin.dir.edit_full_2', [$dir->id, $group->id]) }}" 
+                            class="btn btn-secondary" 
+                            style="width:6rem"
+                        >
                             &laquo; {{ trans('icore::default.back') }}
                         </a>
                     </div>

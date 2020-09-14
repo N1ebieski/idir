@@ -5,7 +5,6 @@ namespace N1ebieski\IDir\Jobs\Dir;
 use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Support\Carbon;
-use Illuminate\Contracts\Mail\Mailer;
 use Illuminate\Queue\SerializesModels;
 use N1ebieski\IDir\Models\DirBacklink;
 use Illuminate\Queue\InteractsWithQueue;
@@ -13,10 +12,11 @@ use N1ebieski\IDir\Repositories\DirRepo;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use N1ebieski\IDir\Repositories\DirBacklinkRepo;
+use Illuminate\Contracts\Events\Dispatcher as Event;
 use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Contracts\Foundation\Application as App;
 use Illuminate\Contracts\Validation\Factory as Validator;
-use N1ebieski\IDir\Mail\DirBacklink\BacklinkNotFoundMail;
+use N1ebieski\IDir\Events\Job\Dir\InvalidBacklinkEvent;
 
 /**
  * [CheckBacklink description]
@@ -67,9 +67,9 @@ class CheckBacklinkJob implements ShouldQueue
     /**
      * Undocumented variable
      *
-     * @var Mailer
+     * @var Event
      */
-    protected $mailer;
+    protected $event;
 
     /**
      * Undocumented variable
@@ -106,17 +106,6 @@ class CheckBacklinkJob implements ShouldQueue
     public function __construct(DirBacklink $dirBacklink)
     {
         $this->dirBacklink = $dirBacklink;
-    }
-
-    /**
-     * Undocumented function
-     *
-     * @return boolean
-     */
-    protected function verifyNotification() : bool
-    {
-        return optional($this->dirBacklink->dir->user)->email
-            && optional($this->dirBacklink->dir->user)->hasPermissionTo('web.dirs.notification');
     }
 
     /**
@@ -157,20 +146,6 @@ class CheckBacklinkJob implements ShouldQueue
     }
 
     /**
-     * [sendMail description]
-     */
-    protected function sendMailToUser() : void
-    {
-        if (!$this->verifyNotification()) {
-            return;
-        }
-
-        $this->mailer->send(
-            $this->app->make(BacklinkNotFoundMail::class, ['dirBacklink' => $this->dirBacklink])
-        );
-    }
-
-    /**
      * Undocumented function
      *
      * @return void
@@ -193,20 +168,23 @@ class CheckBacklinkJob implements ShouldQueue
 
         if ($this->isMaxAttempt()) {
             $this->dirRepo->deactivateByBacklink();
-
-            $this->sendMailToUser();
         }
     }
 
     /**
-     * Execute the job.
+     * Undocumented function
      *
+     * @param Config $config
+     * @param Validator $validator
+     * @param Event $event
+     * @param App $app
+     * @param Carbon $carbon
      * @return void
      */
     public function handle(
         Config $config,
         Validator $validator,
-        Mailer $mailer,
+        Event $event,
         App $app,
         Carbon $carbon
     ) : void {
@@ -214,7 +192,6 @@ class CheckBacklinkJob implements ShouldQueue
         $this->dirRepo = $this->dirBacklink->dir->makeRepo();
         
         $this->validator = $validator;
-        $this->mailer = $mailer;
         $this->app = $app;
         $this->carbon = $carbon;
 
@@ -228,6 +205,12 @@ class CheckBacklinkJob implements ShouldQueue
                 $this->executeValidBacklink();
             } else {
                 $this->executeInvalidBacklink();
+
+                $event->dispatch(
+                    $app->make(InvalidBacklinkEvent::class, [
+                        'dirBacklink' => $this->dirBacklink
+                    ])
+                );
             }
         }
     }
