@@ -374,6 +374,22 @@ class Dir extends Model
         )->withPivot('value');
     }
 
+    /**
+     * Undocumented function
+     *
+     * @return void
+     */
+    public function stats()
+    {
+        return $this->morphToMany(
+            N1ebieski\IDir\Models\Stat\Dir\Stat::class,
+            'model',
+            'stats_values',
+            'model_id',
+            'field_id'
+        )->withPivot('value');
+    }
+
     // Scopes
 
     /**
