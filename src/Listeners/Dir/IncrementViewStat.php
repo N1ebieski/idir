@@ -64,8 +64,8 @@ class IncrementViewStat
             return;
         }
 
-        $this->stat->makeRepo()
-            ->firstBySlug($this->stat::VIEW)
+        $this->stat->makeCache()
+            ->rememberBySlug($this->stat::VIEW)
             ->setMorph($this->event->dir)
             ->makeService()
             ->increment();
