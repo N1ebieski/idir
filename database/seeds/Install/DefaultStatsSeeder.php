@@ -14,6 +14,6 @@ class DefaultStatsSeeder extends Seeder
      */
     public function run()
     {
-        Stat::firstOrCreate(['type' => 'clicks']);
+        Stat::firstOrCreate(['type' => Stat::CLICK]);
     }
 }
