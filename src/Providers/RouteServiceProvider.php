@@ -43,6 +43,11 @@ class RouteServiceProvider extends ServiceProvider
             return $this->app->make(\N1ebieski\IDir\Models\Dir::class)
                 ->makeCache()->rememberBySlug($value) ?? abort(404);
         });
+
+        $this->app['router']->bind('stat_dir_cache', function ($value) {
+            return $this->app->make(\N1ebieski\IDir\Models\Stat\Dir\Stat::class)
+                ->makeCache()->rememberBySlug($value) ?? abort(404);
+        });
     }
 
     /**

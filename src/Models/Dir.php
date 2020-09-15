@@ -378,16 +378,16 @@ class Dir extends Model
     /**
      * Undocumented function
      *
-     * @return void
+     * @return MorphToMany
      */
-    public function stats()
+    public function stats() : MorphToMany
     {
         return $this->morphToMany(
-            N1ebieski\IDir\Models\Stat\Dir\Stat::class,
+            \N1ebieski\IDir\Models\Stat\Dir\Stat::class,
             'model',
             'stats_values',
             'model_id',
-            'field_id'
+            'stat_id'
         )->withPivot('value');
     }
 
@@ -608,7 +608,7 @@ class Dir extends Model
             $link .= '" target="_blank" title="' . e($this->title) . '" ';
 
             if (App::make(MigrationUtil::class)->contains('create_stats_table')) {
-                $link .= 'class="clickStat" data-route="' . URL::route('web.stat.dir.click', [$this->id]) . '" ';
+                $link .= 'class="clickStat" data-route="' . URL::route('web.stat.dir.click', ['click', $this->id]) . '" ';
             }
 
             $link .= 'href="' . e($this->url) . '" target="_blank">' . e($this->title) . '</a>';
@@ -634,7 +634,7 @@ class Dir extends Model
             $link .= '" target="_blank" title="' . e($this->title) . '" ';
 
             if (App::make(MigrationUtil::class)->contains('create_stats_table')) {
-                $link .= 'class="clickStat" data-route="' . URL::route('web.stat.dir.click', [$this->id]) . '" ';
+                $link .= 'class="clickStat" data-route="' . URL::route('web.stat.dir.click', ['click', $this->id]) . '" ';
             }
 
             $link .= 'href="' . e($this->url) . '" target="_blank">' . e($this->url_as_host) . '</a>';
