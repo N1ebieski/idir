@@ -45,8 +45,14 @@ class RouteServiceProvider extends ServiceProvider
         });
 
         $this->app['router']->bind('stat_dir_cache', function ($value) {
-            return $this->app->make(\N1ebieski\IDir\Models\Stat\Dir\Stat::class)
-                ->makeCache()->rememberBySlug($value) ?? abort(404);
+            if ($this->app->make(\N1ebieski\ICore\Utils\MigrationUtil::class)
+            ->contains('create_stats_table')) {
+                return $this->app->make(\N1ebieski\IDir\Models\Stat\Dir\Stat::class)
+                    ->makeCache()->rememberBySlug($value)
+                    ?? $this->app->abort(404);
+            }
+
+            $this->app->abort(404);
         });
     }
 
