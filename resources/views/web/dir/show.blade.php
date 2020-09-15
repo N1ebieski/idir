@@ -104,7 +104,10 @@
                     <div id="comment">
                         @auth
                         @canany(['web.comments.create', 'web.comments.suggest'])
-                        @include('icore::web.comment.create', ['model' => $dir, 'parent_id' => 0])
+                        @include('icore::web.comment.create', [
+                            'model' => $dir,
+                            'parent_id' => 0
+                        ])
                         @endcanany
                         @else
                         <a 
@@ -118,7 +121,9 @@
                     @if ($comments->isNotEmpty())
                     <div id="infinite-scroll">
                         @foreach ($comments as $comment)
-                            @include('icore::web.comment.partials.comment', ['comment' => $comment])
+                            @include('icore::web.comment.partials.comment', [
+                                'comment' => $comment
+                            ])
                         @endforeach
                         @include('icore::web.partials.pagination', [
                             'items' => $comments,
@@ -154,8 +159,8 @@
                         data-size="sm" 
                         data-container-class="float-right ml-auto"
                         @auth
-                        data-user-value="{{ $rating = optional($dir->ratings->where('user_id', auth()->user()->id)->first())->rating ?? false }}"
-                        data-show-clear="{{ $rating ? true : false }}"
+                        data-user-value="{{ $ratingUserValue }}"
+                        data-show-clear="{{ $ratingUserValue ? true : false }}"
                         @else
                         data-display-only="true"
                         @endauth
@@ -184,6 +189,16 @@
                     </div>
                 </div>
                 @endforeach
+                @if ($statCtr > 0)
+                <div class="list-group-item">
+                    <div class="float-left mr-2">
+                        CTR:
+                    </div>
+                    <div class="float-right">
+                        {{ $statCtr }}%
+                    </div>
+                </div>
+                @endif
                 @endif
                 @if ($dir->group->fields->isNotEmpty())
                 @foreach ($dir->group->fields->where('type', '!=', 'map') as $field)

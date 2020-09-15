@@ -22,7 +22,6 @@ use N1ebieski\IDir\Loads\Web\Dir\DestroyLoad;
 use N1ebieski\IDir\Loads\Web\Dir\Update2Load;
 use N1ebieski\IDir\Loads\Web\Dir\Update3Load;
 use N1ebieski\IDir\Filters\Web\Dir\ShowFilter;
-use N1ebieski\IDir\Models\Comment\Dir\Comment;
 use N1ebieski\IDir\Models\Payment\Dir\Payment;
 use N1ebieski\IDir\Filters\Web\Dir\IndexFilter;
 use N1ebieski\IDir\Loads\Web\Dir\EditRenewLoad;
@@ -58,6 +57,7 @@ use N1ebieski\IDir\Http\Requests\Web\Dir\UpdateRenewCodeRequest;
 use N1ebieski\IDir\Events\Web\Dir\DestroyEvent as DirDestroyEvent;
 use N1ebieski\IDir\Events\Web\Dir\UpdateRenewEvent as DirUpdateRenewEvent;
 use N1ebieski\IDir\Events\Web\Payment\Dir\StoreEvent as PaymentStoreEvent;
+use N1ebieski\IDir\View\ViewModels\Web\Dir\ShowViewModel;
 
 /**
  * [DirController description]
@@ -105,7 +105,6 @@ class DirController
      * Undocumented function
      *
      * @param Dir $dir
-     * @param Comment $comment
      * @param ShowLoad $load
      * @param ShowRequest $request
      * @param ShowFilter $filter
@@ -113,26 +112,33 @@ class DirController
      */
     public function show(
         Dir $dir,
-        Comment $comment,
         ShowLoad $load,
         ShowRequest $request,
         ShowFilter $filter
     ) : HttpResponse {
         Event::dispatch(App::make(DirShowEvent::class, ['dir' => $dir]));
 
-        return Response::view('idir::web.dir.show', [
-            'dir' => $dir,
-            'related' => $dir->makeCache()->rememberRelated(),
-            'comments' => $comment->setMorph($dir)->makeCache()->rememberRootsByFilter(
-                $filter->all() + ['except' => $request->input('except')],
-                $request->input('page') ?? 1
-            ),
-            'filter' => $filter->all(),
-            'catsAsArray' => [
-                'ancestors' => $dir->categories->pluck('ancestors')->flatten()->pluck('id')->toArray(),
-                'self' => $dir->categories->pluck('id')->toArray()
-            ]
-        ]);
+        return Response::view(
+            'idir::web.dir.show',
+            App::make(ShowViewModel::class, [
+                'dir' => $dir,
+                'filter' => $filter
+            ])
+        );
+
+        // return Response::view('idir::web.dir.show', [
+        //     'dir' => $dir,
+        //     'related' => $dir->makeCache()->rememberRelated(),
+        //     'comments' => $comment->setMorph($dir)->makeCache()->rememberRootsByFilter(
+        //         $filter->all() + ['except' => $request->input('except')],
+        //         $request->input('page') ?? 1
+        //     ),
+        //     'filter' => $filter->all(),
+        //     'catsAsArray' => [
+        //         'ancestors' => $dir->categories->pluck('ancestors')->flatten()->pluck('id')->toArray(),
+        //         'self' => $dir->categories->pluck('id')->toArray()
+        //     ]
+        // ]);
     }
 
     /**

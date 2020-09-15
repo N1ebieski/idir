@@ -858,7 +858,7 @@ class Dir extends Model
      */
     public function loadAllPublicRels() : self
     {
-        return $this->load([
+        return $this->load(array_filter([
                 'fields',
                 'categories' => function ($query) {
                     return $query->withAncestorsExceptSelf();
@@ -874,7 +874,7 @@ class Dir extends Model
                 'ratings',
                 App::make(MigrationUtil::class)->contains('create_stats_table') ?
                     'stats' : null
-            ]);
+            ]));
     }
 
     /**
