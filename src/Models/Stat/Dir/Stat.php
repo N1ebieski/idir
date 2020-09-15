@@ -51,7 +51,7 @@ class Stat extends BaseStatModel
      */
     public function morphs()
     {
-        return $this->morphedByMany('N1ebieski\IDir\Models\Dir', 'model', 'stats_values');
+        return $this->morphedByMany(\N1ebieski\IDir\Models\Dir::class, 'model', 'stats_values');
     }
 
     // Setters
