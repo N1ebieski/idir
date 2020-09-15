@@ -125,20 +125,6 @@ class DirController
                 'filter' => $filter
             ])
         );
-
-        // return Response::view('idir::web.dir.show', [
-        //     'dir' => $dir,
-        //     'related' => $dir->makeCache()->rememberRelated(),
-        //     'comments' => $comment->setMorph($dir)->makeCache()->rememberRootsByFilter(
-        //         $filter->all() + ['except' => $request->input('except')],
-        //         $request->input('page') ?? 1
-        //     ),
-        //     'filter' => $filter->all(),
-        //     'catsAsArray' => [
-        //         'ancestors' => $dir->categories->pluck('ancestors')->flatten()->pluck('id')->toArray(),
-        //         'self' => $dir->categories->pluck('id')->toArray()
-        //     ]
-        // ]);
     }
 
     /**
