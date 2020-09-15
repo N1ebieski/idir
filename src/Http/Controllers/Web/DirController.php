@@ -42,21 +42,22 @@ use N1ebieski\IDir\Http\Requests\Web\Dir\Update3Request;
 use N1ebieski\IDir\Http\Responses\Web\Dir\Store3Response;
 use N1ebieski\IDir\Http\Requests\Web\Dir\EditRenewRequest;
 use N1ebieski\IDir\Http\Responses\Web\Dir\Update3Response;
+use N1ebieski\IDir\View\ViewModels\Web\Dir\Edit2ViewModel;
+use N1ebieski\IDir\View\ViewModels\Web\Dir\Edit3ViewModel;
 use N1ebieski\IDir\Http\Requests\Web\Dir\Store3CodeRequest;
+use N1ebieski\IDir\Events\Web\Dir\ShowEvent as DirShowEvent;
 use N1ebieski\IDir\Http\Requests\Web\Dir\Update3CodeRequest;
 use N1ebieski\IDir\Http\Requests\Web\Dir\UpdateRenewRequest;
+use N1ebieski\IDir\View\ViewModels\Web\Dir\Create2ViewModel;
+use N1ebieski\IDir\View\ViewModels\Web\Dir\Create3ViewModel;
 use N1ebieski\IDir\Events\Web\Dir\StoreEvent as DirStoreEvent;
 use N1ebieski\IDir\Http\Responses\Web\Dir\UpdateRenewResponse;
+use N1ebieski\IDir\View\ViewModels\Web\Dir\EditRenewViewModel;
 use N1ebieski\IDir\Events\Web\Dir\UpdateEvent as DirUpdateEvent;
 use N1ebieski\IDir\Http\Requests\Web\Dir\UpdateRenewCodeRequest;
 use N1ebieski\IDir\Events\Web\Dir\DestroyEvent as DirDestroyEvent;
 use N1ebieski\IDir\Events\Web\Dir\UpdateRenewEvent as DirUpdateRenewEvent;
 use N1ebieski\IDir\Events\Web\Payment\Dir\StoreEvent as PaymentStoreEvent;
-use N1ebieski\IDir\View\ViewModels\Web\Dir\Create2ViewModel;
-use N1ebieski\IDir\View\ViewModels\Web\Dir\Create3ViewModel;
-use N1ebieski\IDir\View\ViewModels\Web\Dir\Edit2ViewModel;
-use N1ebieski\IDir\View\ViewModels\Web\Dir\Edit3ViewModel;
-use N1ebieski\IDir\View\ViewModels\Web\Dir\EditRenewViewModel;
 
 /**
  * [DirController description]
@@ -117,6 +118,8 @@ class DirController
         ShowRequest $request,
         ShowFilter $filter
     ) : HttpResponse {
+        Event::dispatch(App::make(DirShowEvent::class, ['dir' => $dir]));
+
         return Response::view('idir::web.dir.show', [
             'dir' => $dir,
             'related' => $dir->makeCache()->rememberRelated(),

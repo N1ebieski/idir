@@ -6,10 +6,16 @@ use Carbon\Carbon;
 use N1ebieski\IDir\Models\Group;
 use Illuminate\Support\Facades\DB;
 use N1ebieski\IDir\Cache\DirCache;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\URL;
 use Mews\Purifier\Facades\Purifier;
+use Illuminate\Support\Facades\Lang;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Database\Eloquent\Model;
 use N1ebieski\IDir\Services\DirService;
 use Cviebrock\EloquentTaggable\Taggable;
+use N1ebieski\ICore\Utils\MigrationUtil;
+use N1ebieski\IDir\Models\Stat\Dir\Stat;
 use N1ebieski\IDir\Repositories\DirRepo;
 use Illuminate\Database\Eloquent\Builder;
 use Cviebrock\EloquentSluggable\Sluggable;
@@ -19,11 +25,6 @@ use N1ebieski\IDir\Models\Payment\Dir\Payment;
 use Fico7489\Laravel\Pivot\Traits\PivotEventTrait;
 use N1ebieski\ICore\Models\Traits\FullTextSearchable;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
-use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Lang;
-use Illuminate\Support\Facades\URL;
-use N1ebieski\ICore\Utils\MigrationUtil;
 
 /**
  * [Dir description]
@@ -608,7 +609,7 @@ class Dir extends Model
             $link .= '" target="_blank" title="' . e($this->title) . '" ';
 
             if (App::make(MigrationUtil::class)->contains('create_stats_table')) {
-                $link .= 'class="clickStat" data-route="' . URL::route('web.stat.dir.click', ['click', $this->id]) . '" ';
+                $link .= 'class="clickStat" data-route="' . URL::route('web.stat.dir.click', [Stat::CLICK, $this->slug]) . '" ';
             }
 
             $link .= 'href="' . e($this->url) . '" target="_blank">' . e($this->title) . '</a>';
@@ -634,7 +635,7 @@ class Dir extends Model
             $link .= '" target="_blank" title="' . e($this->title) . '" ';
 
             if (App::make(MigrationUtil::class)->contains('create_stats_table')) {
-                $link .= 'class="clickStat" data-route="' . URL::route('web.stat.dir.click', ['click', $this->id]) . '" ';
+                $link .= 'class="clickStat" data-route="' . URL::route('web.stat.dir.click', [Stat::CLICK, $this->slug]) . '" ';
             }
 
             $link .= 'href="' . e($this->url) . '" target="_blank">' . e($this->url_as_host) . '</a>';
@@ -857,21 +858,27 @@ class Dir extends Model
      */
     public function loadAllPublicRels() : self
     {
-        return $this->load([
-                'fields',
-                'categories' => function ($query) {
-                    return $query->withAncestorsExceptSelf();
-                },
-                'group',
-                'group.privileges',
-                'group.fields' => function ($query) {
-                    return $query->orderBy('position', 'asc')
-                        ->public();
-                },
-                'tags',
-                'regions',
-                'ratings'
-            ]);
+        $this->load([
+            'fields',
+            'categories' => function ($query) {
+                return $query->withAncestorsExceptSelf();
+            },
+            'group',
+            'group.privileges',
+            'group.fields' => function ($query) {
+                return $query->orderBy('position', 'asc')
+                    ->public();
+            },
+            'tags',
+            'regions',
+            'ratings'
+        ]);
+
+        if (App::make(MigrationUtil::class)->contains('create_stats_table')) {
+            $this->load('stats');
+        }
+
+        return $this;
     }
 
     /**

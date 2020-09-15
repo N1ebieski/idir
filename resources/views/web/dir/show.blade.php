@@ -16,11 +16,16 @@
 
 @section('breadcrumb')
 <li class="breadcrumb-item">
-    <a href="{{ route('web.dir.index') }}" title="{{ trans('idir::dirs.route.index') }}">
+    <a 
+        href="{{ route('web.dir.index') }}" 
+        title="{{ trans('idir::dirs.route.index') }}"
+    >
         {{ trans('idir::dirs.route.index') }}
     </a>
 </li>
-<li class="breadcrumb-item active" aria-current="page">{{ $dir->title }}</li>
+<li class="breadcrumb-item active" aria-current="page">
+    {{ $dir->title }}
+</li>
 @endsection
 
 @section('content')
@@ -28,27 +33,39 @@
     <div class="row">
         <div class="col-md-8 order-2">
             <div class="mb-5">
-                <h1 class="h4 border-bottom pb-2">{{ $dir->title }}</h1>
+                <h1 class="h4 border-bottom pb-2">
+                    {{ $dir->title }}
+                </h1>
                 <div class="d-flex mb-2">
-                    <small class="mr-auto">{{ trans('icore::default.created_at_diff') }}: {{ $dir->created_at_diff }}</small>
+                    <small class="mr-auto">
+                        {{ trans('icore::default.created_at_diff') }}: {{ $dir->created_at_diff }}
+                    </small>
                 </div>
-                <div class="mb-3">{!! $dir->content_as_html !!}</div>
+                <div class="mb-3">
+                    {!! $dir->content_as_html !!}
+                </div>
                 <div class="d-flex mb-3">
                     @if ($dir->categories->isNotEmpty())
-                    <small class="mr-auto">{{ trans('icore::categories.categories.label') }}:
+                    <small class="mr-auto">
+                        {{ trans('icore::categories.categories.label') }}:
                         @foreach ($dir->categories as $category)
-                        <a href="{{ route('web.category.dir.show', [$category->slug]) }}"
-                        title="{{ $category->name }}">
+                        <a 
+                            href="{{ route('web.category.dir.show', [$category->slug]) }}"
+                            title="{{ $category->name }}"
+                        >
                             {{ $category->name }}
                         </a>{{ (!$loop->last) ? ', ' : '' }}
                         @endforeach
                     </small>
                     @endif
                     @if ($dir->tags->isNotEmpty())
-                    <small class="ml-auto text-right">{{ trans('idir::dirs.tags.label') }}:
+                    <small class="ml-auto text-right">
+                        {{ trans('idir::dirs.tags.label') }}:
                         @foreach ($dir->tags as $tag)
-                        <a href="{{ route('web.tag.dir.show', [$tag->normalized]) }}"
-                        title="{{ $tag->name }}">
+                        <a 
+                            href="{{ route('web.tag.dir.show', [$tag->normalized]) }}"
+                            title="{{ $tag->name }}"
+                        >
                             {{ $tag->name }}
                         </a>{{ (!$loop->last) ? ', ' : '' }}
                         @endforeach
@@ -61,19 +78,25 @@
                     ])
                 </div>
                 @if ($related->isNotEmpty())
-                <h3 class="h5">{{ trans('idir::dirs.related') }}</h3>
+                <h3 class="h5">
+                    {{ trans('idir::dirs.related') }}
+                </h3>
                 <ul class="list-group list-group-flush mb-3">
                     @foreach ($related as $rel)
                     <li class="list-group-item">
-                        <a href="{{ route('web.dir.show', [$rel->slug]) }}"
-                        title="{{ $rel->title }}">
+                        <a 
+                            href="{{ route('web.dir.show', [$rel->slug]) }}"
+                            title="{{ $rel->title }}"
+                        >
                             {{ $rel->title }}
                         </a>
                     </li>
                     @endforeach
                 </ul>
                 @endif                
-                <h3 class="h5 border-bottom pb-2" id="comments">{{ trans('icore::comments.comments') }}</h3>
+                <h3 class="h5 border-bottom pb-2" id="comments">
+                    {{ trans('icore::comments.comments') }}
+                </h3>
                 <div id="filterContent">
                     @if ($comments->isNotEmpty())
                         @include('icore::web.comment.partials.filter')
@@ -84,7 +107,10 @@
                         @include('icore::web.comment.create', ['model' => $dir, 'parent_id' => 0])
                         @endcanany
                         @else
-                        <a href="{{ route('login') }}" title="{{ trans('icore::comments.log_to_comment') }}">
+                        <a 
+                            href="{{ route('login') }}" 
+                            title="{{ trans('icore::comments.log_to_comment') }}"
+                        >
                             {{ trans('icore::comments.log_to_comment') }}
                         </a>
                         @endauth
@@ -94,8 +120,10 @@
                         @foreach ($comments as $comment)
                             @include('icore::web.comment.partials.comment', ['comment' => $comment])
                         @endforeach
-                        @include('icore::web.partials.pagination', ['items' => $comments, 'fragment'
-                        => 'comments'])
+                        @include('icore::web.partials.pagination', [
+                            'items' => $comments,
+                            'fragment' => 'comments'
+                        ])
                     </div>
                     @endif
                 </div>
@@ -104,35 +132,66 @@
         <div class="col-md-4 order-1">
             @if ($dir->url !== null)
             <div>
-                <img src="{{ $dir->thumbnail_url }}" class="img-fluid border mx-auto d-block"
-                alt="{{ $dir->title }}">
+                <img 
+                    src="{{ $dir->thumbnail_url }}" 
+                    class="img-fluid border mx-auto d-block"
+                    alt="{{ $dir->title }}"
+                >
             </div>
             @endif
             <div class="list-group list-group-flush mb-3">   
                 <div class="list-group-item">
-                    <label for="star-rating" class="float-left mt-2 mr-2">{{ trans('idir::dirs.rating') }}:</label>
-                    <input id="star-rating" name="star-rating" data-route="{{ route('web.rating.dir.rate', [$dir->id]) }}"
-                    value="{{ $dir->sum_rating }}" data-stars="5" data-step="1"
-                    data-size="sm" data-container-class="float-right ml-auto"
-                    @auth
-                    data-user-value="{{ $rating = optional($dir->ratings->where('user_id', auth()->user()->id)->first())->rating ?? false }}"
-                    data-show-clear="{{ $rating ? true : false }}"
-                    @else
-                    data-display-only="true"
-                    @endauth
-                    class="rating-loading" data-language="{{ config('app.locale') }}">
+                    <label for="star-rating" class="float-left mt-2 mr-2">
+                        {{ trans('idir::dirs.rating') }}:
+                    </label>
+                    <input 
+                        id="star-rating" 
+                        name="star-rating" 
+                        data-route="{{ route('web.rating.dir.rate', [$dir->id]) }}"
+                        value="{{ $dir->sum_rating }}" 
+                        data-stars="5" 
+                        data-step="1"
+                        data-size="sm" 
+                        data-container-class="float-right ml-auto"
+                        @auth
+                        data-user-value="{{ $rating = optional($dir->ratings->where('user_id', auth()->user()->id)->first())->rating ?? false }}"
+                        data-show-clear="{{ $rating ? true : false }}"
+                        @else
+                        data-display-only="true"
+                        @endauth
+                        class="rating-loading" 
+                        data-language="{{ config('app.locale') }}"
+                    >
                 </div>
                 @if ($dir->url !== null)
                 <div class="list-group-item">
-                    <div class="float-left mr-2">{{ trans('idir::dirs.url') }}:</div>
-                    <div class="float-right">{!! $dir->url_as_link !!}</div>
+                    <div class="float-left mr-2">
+                        {{ trans('idir::dirs.url') }}:
+                    </div>
+                    <div class="float-right">
+                        {!! $dir->url_as_link !!}
+                    </div>
                 </div>
+                @endif
+                @if ($dir->relationLoaded('stats'))
+                @foreach ($dir->stats as $stat)
+                <div class="list-group-item">
+                    <div class="float-left mr-2">
+                        {{ trans("icore::stats.{$stat->slug}") }}:
+                    </div>
+                    <div class="float-right">
+                        {{ $stat->pivot->value }}
+                    </div>
+                </div>
+                @endforeach
                 @endif
                 @if ($dir->group->fields->isNotEmpty())
                 @foreach ($dir->group->fields->where('type', '!=', 'map') as $field)
                 @if ($value = optional($dir->fields->where('id', $field->id)->first())->decode_value)
                 <div class="list-group-item">
-                    <div class="float-left mr-2">{{ $field->title }}:</div>
+                    <div class="float-left mr-2">
+                        {{ $field->title }}:
+                    </div>
                     <div class="float-right">
                     @switch ($field->type)
                         @case ('input')
@@ -160,8 +219,12 @@
                 @endforeach
                 @endif
                 <div class="list-group-item">
-                    <a href="#" data-toggle="modal" data-target="#linkModal"
-                    title="{{ trans('idir::dirs.link_dir_page') }}">
+                    <a 
+                        href="#" 
+                        data-toggle="modal" 
+                        data-target="#linkModal"
+                        title="{{ trans('idir::dirs.link_dir_page') }}"
+                    >
                         <i class="fas fa-link"></i>
                         <span>{{ trans('idir::dirs.link_dir_page') }}</span>
                     </a>
@@ -169,14 +232,22 @@
                 @if (isset($dir->user->email) && app('router')->has('web.contact.dir.show'))
                 <div class="list-group-item">
                 @auth
-                    <a href="#" data-route="{{ route('web.contact.dir.show', [$dir->id]) }}"
-                    title="{{ trans('idir::contact.dir.route.show') }}"
-                    data-toggle="modal" data-target="#contactModal" class="showContact">
+                    <a 
+                        href="#" 
+                        data-route="{{ route('web.contact.dir.show', [$dir->id]) }}"
+                        title="{{ trans('idir::contact.dir.route.show') }}"
+                        data-toggle="modal" 
+                        data-target="#contactModal" 
+                        class="showContact"
+                    >
                         <i class="fas fa-paper-plane"></i>
                         <span>{{ trans('idir::contact.dir.route.show') }}</span>
                     </a>
                 @else
-                    <a href="{{ route('login') }}" title="{{ trans('idir::contact.dir.log_to_contact') }}">
+                    <a 
+                        href="{{ route('login') }}" 
+                        title="{{ trans('idir::contact.dir.log_to_contact') }}"
+                    >
                         <i class="fas fa-paper-plane"></i>
                         <span> {{ trans('idir::contact.dir.log_to_contact') }}</span>
                     </a>
@@ -186,8 +257,10 @@
                 @can('web.dirs.edit')
                 @can('edit', $dir)
                 <div class="list-group-item">
-                    <a href="{{ route('web.dir.edit_1', [$dir->id]) }}"
-                    title="{{ trans('idir::dirs.premium_dir') }}">
+                    <a 
+                        href="{{ route('web.dir.edit_1', [$dir->id]) }}"
+                        title="{{ trans('idir::dirs.premium_dir') }}"
+                    >
                         <i class="fas fa-edit"></i>
                         <span>{{ trans('idir::dirs.premium_dir') }}</span>
                     </a>
@@ -196,19 +269,27 @@
                 @endcan
                 <div class="list-group-item">
                 @auth
-                    <a href="#" data-route="{{ route('web.report.dir.create', [$dir->id]) }}"
-                    title="{{ trans('icore::reports.route.create') }}"
-                    data-toggle="modal" data-target="#createReportModal" class="createReport">
+                    <a 
+                        href="#" 
+                        data-route="{{ route('web.report.dir.create', [$dir->id]) }}"
+                        title="{{ trans('icore::reports.route.create') }}"
+                        data-toggle="modal" 
+                        data-target="#createReportModal" 
+                        class="createReport"
+                    >
                         <i class="fas fa-exclamation-triangle"></i>
                         <span>{{ trans('icore::reports.route.create') }}</span>
                     </a>
                 @else
-                    <a href="{{ route('login') }}" title="{{ trans('icore::reports.log_to_report') }}">
+                    <a 
+                        href="{{ route('login') }}" 
+                        title="{{ trans('icore::reports.log_to_report') }}"
+                    >
                         <i class="fas fa-exclamation-triangle"></i>
                         <span> {{ trans('icore::reports.log_to_report') }}</span>
                     </a>
-                @endauth  
-                </div>                 
+                @endauth
+                </div>
             </div>
         </div>
     </div>
