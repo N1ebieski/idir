@@ -33,7 +33,9 @@ class ClickRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->dir_cache->isActive() && $this->migrationUtil->contains('create_stats_table');
+        return $this->dir_cache->isActive()
+            && $this->dir_cache->isUrl()
+            && $this->migrationUtil->contains('create_stats_table');
     }
 
     /**

@@ -858,27 +858,23 @@ class Dir extends Model
      */
     public function loadAllPublicRels() : self
     {
-        $this->load([
-            'fields',
-            'categories' => function ($query) {
-                return $query->withAncestorsExceptSelf();
-            },
-            'group',
-            'group.privileges',
-            'group.fields' => function ($query) {
-                return $query->orderBy('position', 'asc')
-                    ->public();
-            },
-            'tags',
-            'regions',
-            'ratings'
-        ]);
-
-        if (App::make(MigrationUtil::class)->contains('create_stats_table')) {
-            $this->load('stats');
-        }
-
-        return $this;
+        return $this->load([
+                'fields',
+                'categories' => function ($query) {
+                    return $query->withAncestorsExceptSelf();
+                },
+                'group',
+                'group.privileges',
+                'group.fields' => function ($query) {
+                    return $query->orderBy('position', 'asc')
+                        ->public();
+                },
+                'tags',
+                'regions',
+                'ratings',
+                App::make(MigrationUtil::class)->contains('create_stats_table') ?
+                    'stats' : null
+            ]);
     }
 
     /**
