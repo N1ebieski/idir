@@ -129,7 +129,7 @@ class ShowViewModel extends ViewModel
      */
     protected function statBySlug(string $slug) : ?Stat
     {
-        return $this->dir->stats->firstWhere('slug', $slug);
+        return optional($this->dir->stats)->firstWhere('slug', $slug);
     }
 
     /**
@@ -139,10 +139,6 @@ class ShowViewModel extends ViewModel
      */
     public function statCtr() : ?float
     {
-        if (!$this->dir->relationLoaded('stats')) {
-            return null;
-        }
-
         $click = $this->statBySlug(Stat::CLICK);
         $view = $this->statBySlug(Stat::VIEW);
 
