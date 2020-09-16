@@ -41,8 +41,8 @@ class EventServiceProvider extends ServiceProvider
             \N1ebieski\IDir\Listeners\Dir\SendActivationNotification::class
         ],
         \N1ebieski\IDir\Events\Web\Dir\ShowEvent::class => [
-            \N1ebieski\IDir\Listeners\Dir\IncrementViewStat::class
-        ],        
+            \N1ebieski\IDir\Listeners\Stat\Dir\IncrementView::class
+        ],
         \N1ebieski\IDir\Events\Web\Dir\DestroyEvent::class => [
             \N1ebieski\IDir\Listeners\Dir\SendDeletedNotification::class
         ],

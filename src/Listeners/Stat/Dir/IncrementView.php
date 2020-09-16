@@ -1,11 +1,11 @@
 <?php
 
-namespace N1ebieski\IDir\Listeners\Dir;
+namespace N1ebieski\IDir\Listeners\Stat\Dir;
 
 use N1ebieski\ICore\Utils\MigrationUtil;
 use N1ebieski\IDir\Models\Stat\Dir\Stat;
 
-class IncrementViewStat
+class IncrementView
 {
     /**
      * Undocumented variable

@@ -135,9 +135,9 @@ class ShowViewModel extends ViewModel
     /**
      * Undocumented function
      *
-     * @return float|null
+     * @return float
      */
-    public function statCtr() : ?float
+    public function statCtr() : float
     {
         $click = $this->statBySlug(Stat::CLICK);
         $view = $this->statBySlug(Stat::VIEW);
