@@ -170,15 +170,6 @@ class DirRepo
     }
 
     /**
-     * [countInactive description]
-     * @return int [description]
-     */
-    public function countInactive() : int
-    {
-        return $this->dir->inactive()->count();
-    }
-
-    /**
      * [countReported description]
      * @return int [description]
      */
@@ -501,5 +492,32 @@ class DirRepo
             })
             ->withAllPublicRels()
             ->get();
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @return Collection
+     */
+    public function countByStatus() : Collection
+    {
+        return $this->dir->selectRaw("`status`, COUNT(`id`) AS `count`")
+            ->groupBy('status')
+            ->get();
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @return string
+     */
+    public function getLastActivity() : string
+    {
+        return optional(
+            $this->dir->active()
+            ->orderBy('updated_at', 'desc')
+            ->first('updated_at')
+        )
+        ->updated_at;
     }
 }
