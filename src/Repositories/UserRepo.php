@@ -35,8 +35,7 @@ class UserRepo extends BaseUserRepo
     public function paginateDirsByFilter(array $filter) : LengthAwarePaginator
     {
         return $this->user->dirs()
-            ->with(['group', 'categories', 'tags'])
-            ->withSumRating()
+            ->withAllPublicRels()
             ->filterExcept($filter['except'])
             ->filterSearch($filter['search'])
             ->filterStatus($filter['status'])

@@ -290,4 +290,36 @@ class DirCache
             }
         );
     }
+
+    /**
+     * Undocumented function
+     *
+     * @return Collection
+     */
+    public function rememberCountByStatus() : Collection
+    {
+        return $this->cache->tags(['dirs'])->remember(
+            "dir.countByStatus",
+            $this->carbon->now()->addMinutes($this->minutes),
+            function () {
+                return $this->dir->makeRepo()->countByStatus();
+            }
+        );
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @return string
+     */
+    public function rememberLastActivity() : string
+    {
+        return $this->cache->tags(['dirs'])->remember(
+            "dir.getlastActivity",
+            $this->carbon->now()->addMinutes($this->minutes),
+            function () {
+                return $this->dir->makeRepo()->getLastActivity();
+            }
+        );
+    }
 }

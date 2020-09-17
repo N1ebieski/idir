@@ -116,6 +116,12 @@ class DirRepo
     {
         return $this->dir
             ->withAllPublicRels()
+            ->when(
+                in_array($filter['orderby'], ['click|asc', 'click|desc']),
+                function ($query) {
+                    $query->withClicksStat();
+                }
+            )
             ->active()
             ->filterOrderBy($filter['orderby'])
             ->filterPaginate($this->paginate);
@@ -167,15 +173,6 @@ class DirRepo
             'privileged_at' => null,
             'privileged_to' => null
         ]);
-    }
-
-    /**
-     * [countInactive description]
-     * @return int [description]
-     */
-    public function countInactive() : int
-    {
-        return $this->dir->inactive()->count();
     }
 
     /**
@@ -501,5 +498,32 @@ class DirRepo
             })
             ->withAllPublicRels()
             ->get();
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @return Collection
+     */
+    public function countByStatus() : Collection
+    {
+        return $this->dir->selectRaw("`status`, COUNT(`id`) AS `count`")
+            ->groupBy('status')
+            ->get();
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @return string
+     */
+    public function getLastActivity() : string
+    {
+        return optional(
+            $this->dir->active()
+            ->orderBy('updated_at', 'desc')
+            ->first('updated_at')
+        )
+        ->updated_at;
     }
 }

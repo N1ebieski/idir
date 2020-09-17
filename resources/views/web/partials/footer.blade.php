@@ -15,8 +15,8 @@
         </div>
         <h5 class="mt-3 mb-2">{{ trans('icore::pages.map') }}:</h5>
         <div class="row">
-            @render('icore::page.footerComponent', ['cols' => 3])
-            <div class="col-md-3 col-sm-6">
+            @render('icore::page.footerComponent', ['cols' => 2])
+            <div class="col-lg-3 col-sm-6">
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">
                         <a href="{{ route('web.dir.index') }}" title="{{ trans('idir::dirs.route.index') }}"
@@ -44,7 +44,10 @@
                     </li>                    
                 </ul>
                 @render('idir::linkComponent', ['limit' => 5, 'cats' => $catsAsArray ?? null])
-            </div>       
+            </div> 
+            <div class="col-lg-3 col-sm-6">
+                @render('idir::statComponent')
+            </div>
         </div>        
         <hr>
         <div class="d-flex justify-content-center">

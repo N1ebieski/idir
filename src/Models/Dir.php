@@ -6,30 +6,36 @@ use Carbon\Carbon;
 use N1ebieski\IDir\Models\Group;
 use Illuminate\Support\Facades\DB;
 use N1ebieski\IDir\Cache\DirCache;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\URL;
 use Mews\Purifier\Facades\Purifier;
+use Illuminate\Support\Facades\Lang;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Database\Eloquent\Model;
 use N1ebieski\IDir\Services\DirService;
 use Cviebrock\EloquentTaggable\Taggable;
+use N1ebieski\ICore\Utils\MigrationUtil;
+use N1ebieski\IDir\Models\Stat\Dir\Stat;
 use N1ebieski\IDir\Repositories\DirRepo;
 use Illuminate\Database\Eloquent\Builder;
 use Cviebrock\EloquentSluggable\Sluggable;
 use N1ebieski\IDir\Models\Traits\Filterable;
+use N1ebieski\ICore\Models\Traits\StatFilterable;
 use N1ebieski\ICore\Models\Traits\Carbonable;
 use N1ebieski\IDir\Models\Payment\Dir\Payment;
 use Fico7489\Laravel\Pivot\Traits\PivotEventTrait;
 use N1ebieski\ICore\Models\Traits\FullTextSearchable;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
-use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Lang;
-use Illuminate\Support\Facades\URL;
 
 /**
  * [Dir description]
  */
 class Dir extends Model
 {
-    use Sluggable, Taggable, FullTextSearchable, Filterable, Carbonable, PivotEventTrait;
+    use Sluggable, Taggable, FullTextSearchable, Carbonable, PivotEventTrait;
+    use Filterable, StatFilterable {
+        StatFilterable::scopeFilterOrderBy insteadof Filterable;
+    }
 
     // Configuration
 
@@ -147,7 +153,7 @@ class Dir extends Model
      *
      * @return array
      */
-    public function sluggable()
+    public function sluggable() : array
     {
         return [
             'slug' => [
@@ -374,6 +380,22 @@ class Dir extends Model
         )->withPivot('value');
     }
 
+    /**
+     * Undocumented function
+     *
+     * @return MorphToMany
+     */
+    public function stats() : MorphToMany
+    {
+        return $this->morphToMany(
+            \N1ebieski\IDir\Models\Stat\Dir\Stat::class,
+            'model',
+            'stats_values',
+            'model_id',
+            'stat_id'
+        )->withPivot('value');
+    }
+
     // Scopes
 
     /**
@@ -396,6 +418,9 @@ class Dir extends Model
             'tags',
             'user'
         ])
+        ->when(App::make(MigrationUtil::class)->contains('create_stats_table'), function ($query) {
+            $query->with('stats');
+        })
         ->withSumRating();
     }
 
@@ -589,6 +614,11 @@ class Dir extends Model
             }
 
             $link .= '" target="_blank" title="' . e($this->title) . '" ';
+
+            if (App::make(MigrationUtil::class)->contains('create_stats_table')) {
+                $link .= 'class="clickStat" data-route="' . URL::route('web.stat.dir.click', [Stat::CLICK, $this->slug]) . '" ';
+            }
+
             $link .= 'href="' . e($this->url) . '" target="_blank">' . e($this->title) . '</a>';
         }
 
@@ -610,6 +640,11 @@ class Dir extends Model
             }
 
             $link .= '" target="_blank" title="' . e($this->title) . '" ';
+
+            if (App::make(MigrationUtil::class)->contains('create_stats_table')) {
+                $link .= 'class="clickStat" data-route="' . URL::route('web.stat.dir.click', [Stat::CLICK, $this->slug]) . '" ';
+            }
+
             $link .= 'href="' . e($this->url) . '" target="_blank">' . e($this->url_as_host) . '</a>';
         }
 
@@ -830,7 +865,7 @@ class Dir extends Model
      */
     public function loadAllPublicRels() : self
     {
-        return $this->load([
+        return $this->load(array_filter([
                 'fields',
                 'categories' => function ($query) {
                     return $query->withAncestorsExceptSelf();
@@ -843,8 +878,10 @@ class Dir extends Model
                 },
                 'tags',
                 'regions',
-                'ratings'
-            ]);
+                'ratings',
+                App::make(MigrationUtil::class)->contains('create_stats_table') ?
+                    'stats' : null
+            ]));
     }
 
     /**
