@@ -20,6 +20,7 @@ use N1ebieski\IDir\Repositories\DirRepo;
 use Illuminate\Database\Eloquent\Builder;
 use Cviebrock\EloquentSluggable\Sluggable;
 use N1ebieski\IDir\Models\Traits\Filterable;
+use N1ebieski\ICore\Models\Traits\StatFilterable;
 use N1ebieski\ICore\Models\Traits\Carbonable;
 use N1ebieski\IDir\Models\Payment\Dir\Payment;
 use Fico7489\Laravel\Pivot\Traits\PivotEventTrait;
@@ -31,7 +32,10 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
  */
 class Dir extends Model
 {
-    use Sluggable, Taggable, FullTextSearchable, Filterable, Carbonable, PivotEventTrait;
+    use Sluggable, Taggable, FullTextSearchable, Carbonable, PivotEventTrait;
+    use Filterable, StatFilterable {
+        StatFilterable::scopeFilterOrderBy insteadof Filterable;
+    }
 
     // Configuration
 
@@ -414,6 +418,9 @@ class Dir extends Model
             'tags',
             'user'
         ])
+        ->when(App::make(MigrationUtil::class)->contains('create_stats_table'), function ($query) {
+            $query->with('stats');
+        })
         ->withSumRating();
     }
 

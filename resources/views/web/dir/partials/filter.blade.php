@@ -31,6 +31,18 @@
                 <option value="sum_rating|asc"
                 {{ ($filter['orderby'] == 'sum_rating|asc') ? 'selected' : '' }}>{{ mb_strtolower(trans('icore::filter.sum_rating')) }}
                     {{ trans('icore::filter.asc') }}</option>
+                <option value="click|desc"
+                {{ ($filter['orderby'] == 'click|desc') ? 'selected' : '' }}>{{ mb_strtolower(trans('icore::filter.clicks')) }}
+                    {{ trans('icore::filter.desc') }}</option>
+                <option value="click|asc"
+                {{ ($filter['orderby'] == 'click|asc') ? 'selected' : '' }}>{{ mb_strtolower(trans('icore::filter.clicks')) }}
+                    {{ trans('icore::filter.asc') }}</option>
+                <option value="view|desc"
+                {{ ($filter['orderby'] == 'view|desc') ? 'selected' : '' }}>{{ mb_strtolower(trans('icore::filter.views')) }}
+                    {{ trans('icore::filter.desc') }}</option>
+                <option value="view|asc"
+                {{ ($filter['orderby'] == 'view|asc') ? 'selected' : '' }}>{{ mb_strtolower(trans('icore::filter.views')) }}
+                    {{ trans('icore::filter.asc') }}</option>                    
             </select>
         </div>
     </div>

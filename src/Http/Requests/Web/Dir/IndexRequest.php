@@ -27,7 +27,7 @@ class IndexRequest extends FormRequest
             'filter.orderby' => [
                 'bail',
                 'nullable',
-                'in:created_at|asc,created_at|desc,updated_at|asc,updated_at|desc,title|asc,title|desc,sum_rating|desc,sum_rating|asc',
+                'in:created_at|asc,created_at|desc,updated_at|asc,updated_at|desc,title|asc,title|desc,sum_rating|desc,sum_rating|asc,click|desc,click|asc,view|desc,view|asc',
                 'no_js_validation'
             ],
             'page' => 'integer'

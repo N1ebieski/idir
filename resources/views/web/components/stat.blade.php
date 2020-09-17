@@ -2,53 +2,45 @@
     {{ trans('icore::stats.stats') }}:
 </h5>
 <div class="list-group list-group-flush text-left">
-    @if ($countCategories)
     <div class="list-group-item d-flex justify-content-between">
         <div>
             {{ trans('icore::categories.route.index') }}:
         </div>
         <div class="text-right">
-            {{ $countCategories->count }}
+            {{ $countCategories->count ?? 0 }}
         </div>
     </div>
-    @endif
     @if ($countDirs->isNotEmpty())
     <div class="list-group-item">
         <div>
             {{ trans('icore::stats.dir.label') }}:
         </div>
-        @if ($activeDirs = $countDirs->firstWhere('status', 1))
         <div class="d-flex justify-content-between">
             <div>
-                - {{ trans("idir::stats.dir.status.{$activeDirs->status}") }}:
+                - {{ trans("idir::stats.dir.status.1") }}:
             </div>
             <div class="text-right">
-                {{ $activeDirs->count }}
+                {{ $countDirs->firstWhere('status', 1)->count ?? 0 }}
             </div>
         </div>
-        @endif
-        @if ($inactiveDirs = $countDirs->firstWhere('status', 0))
         <div class="d-flex justify-content-between">
             <div>
-                - {{ trans("idir::stats.dir.status.{$inactiveDirs->status}") }}:
+                - {{ trans("idir::stats.dir.status.0") }}:
             </div>
             <div class="text-right">
-                {{ $inactiveDirs->count }}
+                {{ $countDirs->firstWhere('status', 0)->count ?? 0 }}
             </div>
-        </div>
-        @endif        
+        </div>    
     </div>
     @endif
-    @if ($countComments)
     <div class="list-group-item d-flex justify-content-between">
         <div>
             {{ trans('icore::comments.route.index') }}:
         </div>
         <div class="text-right">
-            {{ $countComments }}
+            {{ $countComments->sum('count') ?? 0 }}
         </div>
-    </div>
-    @endif    
+    </div>   
     @if ($lastActivity)
     <div class="list-group-item d-flex justify-content-between">
         <div>
@@ -59,21 +51,25 @@
         </div>
     </div>
     @endif
-    @if ($countUsers)
     <div class="list-group-item">
         <div>
             {{ trans('icore::stats.user.label') }}:
         </div>
-        @foreach ($countUsers as $count)
         <div class="d-flex justify-content-between">
             <div>
-                - {{ trans("icore::stats.user.type.{$count->type}") }}:
+                - {{ trans("icore::stats.user.type.user") }}:
             </div>
             <div class="text-right">
-                {{ $count->count }}
+                {{ $countUsers->firstWhere('type', 'user')->count ?? 0 }}
             </div>
         </div>
-        @endforeach
-    </div>
-    @endif     
+        <div class="d-flex justify-content-between">
+            <div>
+                - {{ trans("icore::stats.user.type.guest") }}:
+            </div>
+            <div class="text-right">
+                {{ $countUsers->firstWhere('type', 'guest')->count ?? 0 }}
+            </div>
+        </div>        
+    </div>   
 </div>

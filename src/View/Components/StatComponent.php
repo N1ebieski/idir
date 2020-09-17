@@ -114,7 +114,7 @@ class StatComponent implements Htmlable
             'countDirs' => $this->dir->makeCache()->rememberCountByStatus(),
 
             'countComments' => $this->comment->makeCache()->rememberCountByModelTypeAndStatus()
-                ->where('status', $this->comment::ACTIVE)->sum('count'),
+                ->where('status', $this->comment::ACTIVE),
 
             'lastActivity' => $this->dir->makeCache()->rememberLastActivity(),
             

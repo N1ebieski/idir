@@ -116,6 +116,12 @@ class DirRepo
     {
         return $this->dir
             ->withAllPublicRels()
+            ->when(
+                in_array($filter['orderby'], ['click|asc', 'click|desc']),
+                function ($query) {
+                    $query->withClicksStat();
+                }
+            )
             ->active()
             ->filterOrderBy($filter['orderby'])
             ->filterPaginate($this->paginate);
