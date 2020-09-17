@@ -51,6 +51,7 @@
         </div>
     </div>
     @endif
+    @if ($countUsers)
     <div class="list-group-item">
         <div>
             {{ trans('icore::stats.user.label') }}:
@@ -71,5 +72,6 @@
                 {{ $countUsers->firstWhere('type', 'guest')->count ?? 0 }}
             </div>
         </div>        
-    </div>   
+    </div>
+    @endif
 </div>

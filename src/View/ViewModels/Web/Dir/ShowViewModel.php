@@ -129,7 +129,9 @@ class ShowViewModel extends ViewModel
      */
     protected function statBySlug(string $slug) : ?Stat
     {
-        return optional($this->dir->stats)->firstWhere('slug', $slug);
+        return $this->dir->relationLoaded('stats') ?
+            $this->dir->stats->firstWhere('slug', $slug)
+            : null;
     }
 
     /**
