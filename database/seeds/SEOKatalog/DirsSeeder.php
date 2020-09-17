@@ -8,6 +8,7 @@ use N1ebieski\IDir\Models\Dir;
 use N1ebieski\IDir\Models\Link;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Config;
+use N1ebieski\ICore\Models\Stat\Stat;
 use N1ebieski\IDir\Models\Field\Field;
 use N1ebieski\IDir\Models\Region\Region;
 use N1ebieski\IDir\Seeds\SEOKatalog\SEOKatalogSeeder;
@@ -91,6 +92,7 @@ class DirsSeeder extends SEOKatalogSeeder
         $defaultFields = [];
         $defaultFields['map'] = Field::where('type', 'map')->first(['id']);
         $defaultFields['regions'] = Field::where('type', 'regions')->first(['id']);
+        $defaultStats = Stat::all();
 
         DB::connection('import')
             ->table('sites')
@@ -100,7 +102,7 @@ class DirsSeeder extends SEOKatalogSeeder
                     ->groupBy('url');
             })
             ->orderBy('id', 'desc')
-            ->chunk(1000, function ($items) use ($groups, $fields, $defaultRegions, $defaultFields) {
+            ->chunk(1000, function ($items) use ($groups, $fields, $defaultRegions, $defaultFields, $defaultStats) {
                 $relations = DB::connection('import')
                     ->table('relations')
                     ->distinct()
@@ -113,7 +115,7 @@ class DirsSeeder extends SEOKatalogSeeder
                     ->select('id_sub', 'id_site')
                     ->get();
 
-                $items->each(function ($item) use ($groups, $relations, $fields, $defaultRegions, $defaultFields) {
+                $items->each(function ($item) use ($groups, $relations, $fields, $defaultRegions, $defaultFields, $defaultStats) {
 
                     $dir = Dir::create([
                         'id' => $item->id,
@@ -136,6 +138,15 @@ class DirsSeeder extends SEOKatalogSeeder
                     $keywords = Config::get('icore.tag.normalizer') !== null ?
                         Config::get('icore.tag.normalizer')($item->keywords)
                         : $item->keywords;
+
+                    $dir->stats()->attach([
+                        $defaultStats->firstWhere('slug', 'click')->id => [
+                            'value' => $dir->clicks
+                        ],
+                        $defaultStats->firstWhere('slug', 'view')->id => [
+                            'value' => $dir->views
+                        ]
+                    ]);
 
                     $dir->tag(
                         collect(explode(',', $keywords))
