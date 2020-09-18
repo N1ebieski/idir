@@ -1,6 +1,3 @@
-<h5 class="mt-4 mt-sm-0 mb-2">
-    {{ trans('icore::stats.stats') }}:
-</h5>
 <div class="list-group list-group-flush text-left">
     <div class="list-group-item d-flex justify-content-between">
         <div>
