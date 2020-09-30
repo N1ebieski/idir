@@ -310,9 +310,9 @@ class DirCache
     /**
      * Undocumented function
      *
-     * @return string
+     * @return string|null
      */
-    public function rememberLastActivity() : string
+    public function rememberLastActivity() : ?string
     {
         return $this->cache->tags(['dirs'])->remember(
             "dir.getlastActivity",
