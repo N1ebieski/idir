@@ -27,7 +27,7 @@
                 </h5>
             </div>
         </div>
-        <div class="row">
+        <div class="row justify-content-end">
             @render('icore::page.footerComponent', ['cols' => 2])
             <div class="col-lg-3 col-sm-6">
                 <ul class="list-group list-group-flush">
