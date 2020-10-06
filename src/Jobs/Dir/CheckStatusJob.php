@@ -157,6 +157,7 @@ class CheckStatusJob implements ShouldQueue
             $this->dirStatus->dir->url,
             [
                 'allow_redirects' => ['track_redirects' => true],
+                'decode_content' => false,
                 'http_errors' => true,
                 'verify' => false
             ]
@@ -172,6 +173,7 @@ class CheckStatusJob implements ShouldQueue
         try {
             $this->makeResponse();
         } catch (\GuzzleHttp\Exception\RequestException $e) {
+            dd($e->getMessage());
             return false;
         }
 
