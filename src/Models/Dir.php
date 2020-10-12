@@ -3,6 +3,7 @@
 namespace N1ebieski\IDir\Models;
 
 use Carbon\Carbon;
+use Carbon\CarbonInterface;
 use N1ebieski\IDir\Models\Group;
 use Illuminate\Support\Facades\DB;
 use N1ebieski\IDir\Cache\DirCache;
@@ -584,7 +585,7 @@ class Dir extends Model
      */
     public function getPrivilegedToDiffAttribute() : string
     {
-        return Carbon::parse($this->privileged_to)->diffForHumans();
+        return Carbon::parse($this->privileged_to)->diffForHumans(['parts' => 2]);
     }
 
     /**
