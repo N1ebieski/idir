@@ -2,15 +2,12 @@
 
 namespace N1ebieski\IDir\View\Components\Comment\Dir;
 
-use N1ebieski\ICore\View\Components\Comment\LatestComponent as BaseLatestComponent;
+use N1ebieski\ICore\View\Components\Comment\CommentComponent as BaseCommentComponent;
 use N1ebieski\IDir\Models\Comment\Dir\Comment;
 use Illuminate\Contracts\View\Factory as ViewFactory;
 use Illuminate\View\View;
 
-/**
- * [LatestComponent description]
- */
-class LatestComponent extends BaseLatestComponent
+class CommentComponent extends BaseCommentComponent
 {
     /**
      * Undocumented function
@@ -19,9 +16,13 @@ class LatestComponent extends BaseLatestComponent
      * @param ViewFactory $view
      * @param integer $limit
      */
-    public function __construct(Comment $comment, ViewFactory $view, int $limit = 5)
-    {
-        parent::__construct($comment, $view, $limit);
+    public function __construct(
+        Comment $comment,
+        ViewFactory $view,
+        int $limit = 5,
+        string $orderby = 'created_at|desc'
+    ) {
+        parent::__construct($comment, $view, $limit, $orderby);
     }
 
     /**
@@ -33,7 +34,7 @@ class LatestComponent extends BaseLatestComponent
         return $this->view->make('idir::web.components.comment.dir.comment', [
             'comments' => $this->comment->makeCache()->rememberByComponent([
                 'limit' => $this->limit,
-                'orderby' => 'created_at|desc'
+                'orderby' => $this->orderby
             ])
         ]);
     }
