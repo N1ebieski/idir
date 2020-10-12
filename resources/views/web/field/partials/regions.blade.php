@@ -5,15 +5,25 @@
         <span>*</span>
         @endif       
         @if ($field->desc !== null)
-        <i data-toggle="tooltip" data-placement="top"
-        title="{{ $field->desc }}" class="far fa-question-circle"></i>
+        <i 
+            data-toggle="tooltip" 
+            data-placement="top"
+            title="{{ $field->desc }}" 
+            class="far fa-question-circle"
+        ></i>
         @endif
     </label>
-    <select multiple class="form-control {{ $isValid("field.{$field->id}") }}" id="field.{{ $field->id }}"
-    name="field[{{ $field->id }}][]">
+    <select 
+        class="form-control {{ $isValid("field.{$field->id}") }}" 
+        id="field.{{ $field->id }}"
+        name="field[{{ $field->id }}][]"
+        multiple
+    >
         @foreach ($regions as $region)
-        <option value="{{ $region->id }}"
-        {{ in_array($region->id, old("field.{$field->id}", $value ?? null) ?? []) ? 'selected' : null }}>
+        <option 
+            value="{{ $region->id }}"
+            {{ in_array($region->id, old("field.{$field->id}", $value ?? null) ?? []) ? 'selected' : null }}
+        >
             {{ $region->name }}
         </option>
         @endforeach

@@ -11,11 +11,16 @@
 
 @section('breadcrumb')
 <li class="breadcrumb-item">
-    <a href="{{ route('web.dir.index') }}" title="{{ trans('idir::dirs.route.index') }}">
+    <a 
+        href="{{ route('web.dir.index') }}" 
+        title="{{ trans('idir::dirs.route.index') }}"
+    >
         {{ trans('idir::dirs.route.index') }}
     </a>
 </li>
-<li class="breadcrumb-item active" aria-current="page">{{ trans('idir::dirs.route.search', ['search' => $search]) }}</li>
+<li class="breadcrumb-item active" aria-current="page">
+    {{ trans('idir::dirs.route.search', ['search' => $search]) }}
+</li>
 @endsection
 
 @section('content')

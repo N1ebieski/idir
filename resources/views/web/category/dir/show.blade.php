@@ -12,27 +12,43 @@
 
 @section('breadcrumb')
 <li class="breadcrumb-item">
-    <a href="{{ route('web.dir.index') }}" title="{{ trans('idir::dirs.route.index') }}">
+    <a 
+        href="{{ route('web.dir.index') }}" 
+        title="{{ trans('idir::dirs.route.index') }}"
+    >
         {{ trans('idir::dirs.route.index') }}
     </a>
 </li>
-<li class="breadcrumb-item">{{ trans('icore::categories.route.index') }}</li>
+<li class="breadcrumb-item">
+    {{ trans('icore::categories.route.index') }}
+</li>
+
 @if ($category->ancestors->count() > 0)
 @foreach ($category->ancestors as $ancestor)
 <li class="breadcrumb-item">
-    <a href="{{ route('web.category.dir.show', [$ancestor->slug, $region->slug]) }}"
-    title="{{ $ancestor->name }}">
+    <a 
+        href="{{ route('web.category.dir.show', [$ancestor->slug, $region->slug]) }}"
+        title="{{ $ancestor->name }}"
+    >
         {{ $ancestor->name }}
     </a>
 </li>
 @endforeach
 @endif
+
 @if (isset($region->name))
-<li class="breadcrumb-item">{{ $category->name }}</li>
-<li class="breadcrumb-item active" aria-current="page">{{ $region->name }}</li>
+<li class="breadcrumb-item">
+    {{ $category->name }}
+</li>
+<li class="breadcrumb-item active" aria-current="page">
+    {{ $region->name }}
+</li>
 @else
-<li class="breadcrumb-item active" aria-current="page">{{ $category->name }}</li>
+<li class="breadcrumb-item active" aria-current="page">
+    {{ $category->name }}
+</li>
 @endif
+
 @endsection
 
 @section('content')
@@ -52,7 +68,10 @@
                     @foreach ($dirs as $dir)
                         @include('idir::web.dir.partials.dir', [$dir])
                     @endforeach
-                    @include('icore::web.partials.pagination', ['items' => $dirs, 'next' => true])
+                    @include('icore::web.partials.pagination', [
+                        'items' => $dirs, 
+                        'next' => true
+                    ])
                 </div>
                 @else
                 <p>{{ trans('icore::default.empty') }}</p>

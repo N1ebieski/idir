@@ -10,7 +10,9 @@
 ])
 
 @section('breadcrumb')
-<li class="breadcrumb-item active" aria-current="page">{{ trans('idir::dirs.route.index') }}</li>
+<li class="breadcrumb-item active" aria-current="page">
+    {{ trans('idir::dirs.route.index') }}
+</li>
 @endsection
 
 @section('content')

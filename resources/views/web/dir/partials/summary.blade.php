@@ -1,34 +1,42 @@
 <div>
     @if (isset($value['title']) && $value['title'] !== null)
     <p>
-        {{ trans('idir::dirs.title') }}:<br>
+        <span>{{ trans('idir::dirs.title') }}:</span><br>
         <span>{{ $value['title'] }}</span>
     </p>
     @endif
     @if (isset($value['content_html']) && $value['content_html'] !== null)
     <p>
-        {{ trans('idir::dirs.content') }}:<br>
-        <span>{!! $group->hasEditorPrivilege() ? $value['content_html'] : nl2br(e($value['content_html'])) !!}</span>
+        <span>{{ trans('idir::dirs.content') }}:</span><br>
+        <span>
+            {!! $group->hasEditorPrivilege() ? 
+                $value['content_html'] 
+                : nl2br(e($value['content_html'])) 
+            !!}
+        </span>
     </p>
     @endif
     @if (isset($value['notes']) && $value['notes'] !== null)
     <p>
-        {{ trans('idir::dirs.notes') }}:<br>
+        <span>{{ trans('idir::dirs.notes') }}:</span><br>
         <span>{{ $value['notes'] }}</span>
     </p>
     @endif
     @if (isset($value['tags']) && $value['tags'] !== null)
     <p>
-        {{ trans('idir::dirs.tags.label') }}:<br>
+        <span>{{ trans('idir::dirs.tags.label') }}:</span><br>
         <span>{{ implode(', ', $value['tags']) }}</span>
     </p>
     @endif
     @if (isset($value['url']) && $value['url'] !== null)
     <p>
-        {{ trans('idir::dirs.url') }}:<br>
+        <span>{{ trans('idir::dirs.url') }}:</span><br>
         <span>
-            <a href="{{ $value['url'] }}" target="_blank"
-            rel="noopener">
+            <a 
+                href="{{ $value['url'] }}" 
+                target="_blank"
+                rel="noopener"
+            >
                 {{ $value['url'] }}
             </a>
         </span>
@@ -36,15 +44,15 @@
     @endif
     @if ($categories->isNotEmpty())
     <div>
-        {{ trans('idir::dirs.categories') }}:<br>
+        <span>{{ trans('idir::dirs.categories') }}:</span><br>
         <ul class="pl-3">
         @foreach ($categories as $category)
             <li>
-            @if ($category->ancestors->count() > 0)
+                @if ($category->ancestors->count() > 0)
                 @foreach ($category->ancestors as $ancestor)
-                    {{ $ancestor->name }} &raquo;
+                <span>{{ $ancestor->name }} &raquo;</span>
                 @endforeach
-            @endif
+                @endif
                 <strong>{{ $category->name }}</strong>
             </li>
         @endforeach
@@ -56,7 +64,7 @@
     @foreach ($group->fields as $field)
         @if (isset($value['field'][$field->id]) && !empty($value['field'][$field->id]))
             <p>
-                {{ $field->title }}:<br>
+                <span>{{ $field->title }}:</span><br>
                 <span>
                 @switch($field->type)
                     @case('input')
@@ -83,7 +91,10 @@
                         @break;                        
 
                     @case('image')                    
-                        <img class="img-fluid" src="{{ app('filesystem')->url($value['field'][$field->id]) }}">
+                        <img 
+                            class="img-fluid" 
+                            src="{{ app('filesystem')->url($value['field'][$field->id]) }}"
+                        >
                         @break
                 @endswitch
                 </span>

@@ -25,34 +25,40 @@
         <li class="list-group-item d-flex">
             <i class="fas fa-check my-auto text-success"></i>
             <div class="ml-3">
-                {{ mb_strtolower(trans('idir::groups.apply_status.label')) }}: {{ trans("idir::groups.apply_status.{$group->apply_status}") }}
+                <span>{{ mb_strtolower(trans('idir::groups.apply_status.label')) }}:</span>
+                <span>{{ trans("idir::groups.apply_status.{$group->apply_status}") }}</span>
             </div>
         </li>
         <li class="list-group-item d-flex">
             <i class="fas fa-check my-auto text-success"></i>
             <div class="ml-3">
-                {{ mb_strtolower(trans('idir::groups.max_cats.label')) }}: {{ $group->max_cats }}
+                <span>{{ mb_strtolower(trans('idir::groups.max_cats.label')) }}:</span>
+                <span>{{ $group->max_cats }}</span>
             </div>
         </li>
         <li class="list-group-item d-flex">
             <i class="fas fa-check my-auto text-success"></i>
             <div class="ml-3">
-                {{ mb_strtolower(trans('idir::groups.url.label')) }}: {{ trans("idir::groups.url.{$group->url}") }}
+                <span>{{ mb_strtolower(trans('idir::groups.url.label')) }}:</span>
+                <span>{{ trans("idir::groups.url.{$group->url}") }}</span>
             </div>
         </li>
         <li class="list-group-item d-flex">
             <i class="fas fa-check my-auto text-success"></i>
             <div class="ml-3">
-                {{ mb_strtolower(trans('idir::groups.backlink.label')) }}: {{ trans("idir::groups.backlink.{$group->backlink}") }}
+                <span>{{ mb_strtolower(trans('idir::groups.backlink.label')) }}:</span>
+                <span>{{ trans("idir::groups.backlink.{$group->backlink}") }}</span>
             </div>
         </li>
         <li class="list-group-item">
-            {{ mb_strtolower(trans('idir::groups.price')) }}:
+            <span>{{ mb_strtolower(trans('idir::groups.price')) }}:</span>
             <span class="font-weight-bold">
                 {{ $group->prices->isNotEmpty() ? trans('idir::groups.price_from', [
                     'price' => $group->prices->sortBy('price')->first()->price,
                     'days' => $days = $group->prices->sortBy('price')->first()->days,
-                    'limit' => $days !== null ? mb_strtolower(trans('idir::groups.days')) : mb_strtolower(trans('idir::groups.unlimited'))
+                    'limit' => $days !== null ? 
+                        mb_strtolower(trans('idir::groups.days')) 
+                        : mb_strtolower(trans('idir::groups.unlimited'))
                 ]) : trans('idir::groups.payment.0') }}
             </span>
         </li>
