@@ -4,16 +4,12 @@ namespace N1ebieski\IDir\Cache;
 
 use Illuminate\Support\Carbon;
 use N1ebieski\IDir\Models\Dir;
-use N1ebieski\ICore\Models\Tag\Tag;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Collection as Collect;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\Cache\Repository as Cache;
 use Illuminate\Contracts\Config\Repository as Config;
 
-/**
- * [DirCache description]
- */
 class DirCache
 {
     /**
@@ -271,6 +267,23 @@ class DirCache
             $this->carbon->now()->addMinutes($this->minutes),
             function () use ($component) {
                 return $this->dir->makeRepo()->getAdvertisingPrivilegedByComponent($component);
+            }
+        );
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param array $component
+     * @return Collection
+     */
+    public function rememberByComponent(array $component) : Collection
+    {
+        return $this->cache->tags(["dirs"])->remember(
+            "dir.getByComponent.{$component['orderby']}",
+            $this->carbon->now()->addMinutes($this->minutes),
+            function () use ($component) {
+                return $this->dir->makeRepo()->getByComponent($component);
             }
         );
     }

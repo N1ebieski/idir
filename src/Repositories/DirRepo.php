@@ -520,4 +520,30 @@ class DirRepo
         )
         ->updated_at;
     }
+
+    /**
+     * Undocumented function
+     *
+     * @param array $component
+     * @return Collection
+     */
+    public function getByComponent(array $component) : Collection
+    {
+        return $this->dir->active()
+            ->withAllPublicRels()
+            ->when($component['orderby'] === 'rand', function ($query) {
+                $query->inRandomOrder();
+            }, function ($query) use ($component) {
+                $query->filterOrderBy($component['orderby']);
+            })
+            ->limit($component['limit'])
+            ->get()
+            ->map(function ($item) use ($component) {
+                if ($component['max_content'] !== null) {
+                    $item->content = mb_substr($item->content, 0, $component['max_content']);
+                }
+
+                return $item;
+            });
+    }
 }
