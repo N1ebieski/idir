@@ -28,4 +28,5 @@ jQuery(document).on('change', 'select#backlink', function() {
     link_as_html += '</a>';
 
     $('#backlink_code').val($.sanitize(link_as_html));
+    $('#backlink_preview').html($.sanitize(link_as_html));
 });
