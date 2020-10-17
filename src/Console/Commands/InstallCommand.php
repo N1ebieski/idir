@@ -89,7 +89,7 @@ class InstallCommand extends BaseInstallCommand
      */
     public function handle()
     {
-        $bar = $this->output->createProgressBar(16);
+        $bar = $this->output->createProgressBar(17);
 
         $this->line("iDir installer");
         $this->line("Author: Mariusz Wysokiński");
@@ -233,6 +233,12 @@ class InstallCommand extends BaseInstallCommand
         $this->line($this->lang->get('icore::install.cache.config'));
         $this->line("\n");
         $this->call('config:cache', [], $this->getOutput());
+        $this->line("\n");
+        $bar->advance();
+        $this->line("\n");
+        $this->line($this->lang->get('icore::install.storage_link'));
+        $this->line("\n");
+        $this->call('storage:link', [], $this->getOutput());
         $this->line("\n");
         $bar->finish();
     }
