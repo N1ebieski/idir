@@ -1,34 +1,37 @@
 <div>
     @if (isset($value['title']) && $value['title'] !== null)
     <p>
-        {{ trans('idir::dirs.title') }}:<br>
+        <span>{{ trans('idir::dirs.title') }}:</span><br>
         <span>{{ $value['title'] }}</span>
     </p>
     @endif
     @if (isset($value['content_html']) && $value['content_html'] !== null)
     <p>
-        {{ trans('idir::dirs.content') }}:<br>
+        <span>{{ trans('idir::dirs.content') }}:</span><br>
         <span>{!! $group->hasEditorPrivilege() ? $value['content_html'] : nl2br(e($value['content_html'])) !!}</span>
     </p>
     @endif
     @if (isset($value['notes']) && $value['notes'] !== null)
     <p>
-        {{ trans('idir::dirs.notes') }}:<br>
+        <span>{{ trans('idir::dirs.notes') }}:</span><br>
         <span>{{ $value['notes'] }}</span>
     </p>
     @endif
     @if (isset($value['tags']) && $value['tags'] !== null)
     <p>
-        {{ trans('idir::dirs.tags.label') }}:<br>
+        <span>{{ trans('idir::dirs.tags.label') }}:</span><br>
         <span>{{ implode(', ', $value['tags']) }}</span>
     </p>
     @endif
     @if (isset($value['url']) && $value['url'] !== null)
     <p>
-        {{ trans('idir::dirs.url') }}:<br>
+        <span>{{ trans('idir::dirs.url') }}:</span><br>
         <span>
-            <a href="{{ $value['url'] }}" target="_blank"
-            rel="noopener">
+            <a 
+                href="{{ $value['url'] }}" 
+                target="_blank"
+                rel="noopener"
+            >
                 {{ $value['url'] }}
             </a>
         </span>
@@ -83,7 +86,10 @@
                         @break;                        
 
                     @case('image')                    
-                        <img class="img-fluid" src="{{ app('filesystem')->url($value['field'][$field->id]) }}">
+                        <img 
+                            class="img-fluid" 
+                            src="{{ app('filesystem')->url($value['field'][$field->id]) }}"
+                        >
                         @break
                 @endswitch
                 </span>

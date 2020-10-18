@@ -10,23 +10,34 @@
 ])
 
 @section('breadcrumb')
-<li class="breadcrumb-item"><a href="{{ route('admin.home.index') }}">{{ trans('icore::home.route.index') }}</a></li>
-<li class="breadcrumb-item active" aria-current="page">{{ trans('idir::fields.route.index') }}</li>
+<li class="breadcrumb-item">
+    <a href="{{ route('admin.home.index') }}">
+        {{ trans('icore::home.route.index') }}
+    </a>
+</li>
+<li class="breadcrumb-item active" aria-current="page">
+    {{ trans('idir::fields.route.index') }}
+</li>
 @endsection
 
 @section('content')
 <h1 class="h5 border-bottom pb-2 d-flex">
     <div class="mr-auto my-auto">
         <i class="fab fa-fw fa-wpforms"></i>
-        <span> {{ trans('idir::fields.route.index') }}</span>
+        <span>{{ trans('idir::fields.route.index') }}</span>
     </div>
     @can('admin.fields.create')
     <div class="ml-auto text-right">
         <div class="responsive-btn-group">
-            <button type="button" class="btn btn-primary text-nowrap create" data-toggle="modal"
-            data-route="{{ route("admin.field.{$field->poli}.create") }}" data-target="#createModal">
+            <button 
+                type="button" 
+                class="btn btn-primary text-nowrap create" 
+                data-toggle="modal"
+                data-route="{{ route("admin.field.{$field->poli}.create") }}" 
+                data-target="#createModal"
+            >
                 <i class="far fa-plus-square"></i>
-                <span class="d-none d-sm-inline"> {{ trans('icore::default.create') }}</span>
+                <span class="d-none d-sm-inline">{{ trans('icore::default.create') }}</span>
             </button>
         </div>
     </div>
@@ -37,9 +48,13 @@
     @if ($fields->isNotEmpty())
     <div id="infinite-scroll">
         @foreach ($fields as $field)
-            @include("idir::admin.field.partials.field", ['field' => $field])
+            @include("idir::admin.field.partials.field", [
+                'field' => $field
+            ])
         @endforeach
-        @include('icore::admin.partials.pagination', ['items' => $fields])
+        @include('icore::admin.partials.pagination', [
+            'items' => $fields
+        ])
     </div>
     @else
     <p>{{ trans('icore::default.empty') }}</p>
@@ -51,7 +66,7 @@
 @slot('modal_size', 'modal-lg')
 @slot('modal_title')
 <i class="far fa-edit"></i>
-<span> {{ trans('idir::fields.route.edit') }}</span>
+<span>{{ trans('idir::fields.route.edit') }}</span>
 @endslot
 @endcomponent
 
@@ -59,7 +74,7 @@
 @slot('modal_id', 'editPositionModal')
 @slot('modal_title')
 <i class="fas fa-sort-amount-up"></i>
-<span> {{ trans('idir::fields.route.edit_position') }}</span>
+<span>{{ trans('idir::fields.route.edit_position') }}</span>
 @endslot
 @endcomponent
 
@@ -68,7 +83,7 @@
 @slot('modal_size', 'modal-lg')
 @slot('modal_title')
 <i class="far fa-plus-square"></i>
-<span> {{ trans('idir::fields.route.create') }}</span>
+<span>{{ trans('idir::fields.route.create') }}</span>
 @endslot
 @endcomponent
 

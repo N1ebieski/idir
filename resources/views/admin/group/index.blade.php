@@ -10,7 +10,9 @@
 ])
 
 @section('breadcrumb')
-<li class="breadcrumb-item active" aria-current="page">{{ trans('idir::groups.route.index') }}</li>
+<li class="breadcrumb-item active" aria-current="page">
+    {{ trans('idir::groups.route.index') }}
+</li>
 @endsection
 
 @section('content')
@@ -21,7 +23,11 @@
     </div>
     @can('admin.groups.create')
     <div class="ml-auto text-right responsive-btn-group">
-        <a href="{{ route("admin.group.create") }}" role="button" class="btn btn-primary text-nowrap">
+        <a 
+            href="{{ route("admin.group.create") }}" 
+            role="button" 
+            class="btn btn-primary text-nowrap"
+        >
             <i class="far fa-plus-square"></i>
             <span class="d-none d-sm-inline"> {{ trans('icore::default.create') }}</span>
         </a>
@@ -33,9 +39,13 @@
     @if ($groups->isNotEmpty())
     <div id="infinite-scroll">
         @foreach ($groups as $group)
-            @include('idir::admin.group.partials.group', ['group' => $group])
+            @include('idir::admin.group.partials.group', [
+                'group' => $group
+            ])
         @endforeach
-        @include('icore::admin.partials.pagination', ['items' => $groups])
+        @include('icore::admin.partials.pagination', [
+            'items' => $groups
+        ])
     </div>
     @else
     <p>{{ trans('icore::default.empty') }}</p>

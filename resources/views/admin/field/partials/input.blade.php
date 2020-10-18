@@ -6,8 +6,12 @@
             <span>*</span>
             @endif            
             @if ($field->desc !== null)
-            <i data-toggle="tooltip" data-placement="top"
-            title="{{ $field->desc }}" class="far fa-question-circle"></i>
+            <i 
+                data-toggle="tooltip" 
+                data-placement="top"
+                title="{{ $field->desc }}" 
+                class="far fa-question-circle"
+            ></i>
             @endif        
         </div>
         @include('icore::web.partials.counter', [
@@ -17,7 +21,12 @@
             'name' => "field[{$field->id}]"
         ])
     </label>
-    <input type="text" value="{{ old("field.{$field->id}", $value ?? null) }}" name="field[{{ $field->id }}]"
-    class="form-control {{ $isValid("field.{$field->id}") }}" id="field.{{ $field->id }}">
+    <input 
+        type="text" 
+        value="{{ old("field.{$field->id}", $value ?? null) }}" 
+        name="field[{{ $field->id }}]"
+        class="form-control {{ $isValid("field.{$field->id}") }}" 
+        id="field.{{ $field->id }}"
+    >
     @includeWhen($errors->has("field.{$field->id}"), 'icore::admin.partials.errors', ['name' => "field.{$field->id}"])
 </div>

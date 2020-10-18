@@ -161,7 +161,8 @@
                         >
                             <div class="input-group">
                                 <input 
-                                    type="text" class="form-control {{ $isValid('category') }}"
+                                    type="text" 
+                                    class="form-control {{ $isValid('category') }}"
                                     placeholder="{{ trans('icore::categories.search_categories') }}"
                                 >
                                 <span class="input-group-append">
