@@ -1,16 +1,24 @@
 @extends(config('idir.layout') . '::admin.layouts.layout', [
-    'title' => [trans('idir::dirs.route.step', ['step' => 1]), trans('idir::dirs.route.create.1')],
+    'title' => [
+        trans('idir::dirs.route.step', ['step' => 1]),
+        trans('idir::dirs.route.create.1')
+    ],
     'desc' => [trans('idir::dirs.route.create.1')],
     'keys' => [trans('idir::dirs.route.create.1')]
 ])
 
 @section('breadcrumb')
 <li class="breadcrumb-item">
-    <a href="{{ route('admin.dir.index') }}" title="{{ trans('idir::dirs.route.index') }}">
+    <a 
+        href="{{ route('admin.dir.index') }}" 
+        title="{{ trans('idir::dirs.route.index') }}"
+    >
         {{ trans('idir::dirs.route.index') }}
     </a>
 </li>
-<li class="breadcrumb-item">{{ trans('idir::dirs.route.create.index') }}</li>
+<li class="breadcrumb-item">
+    {{ trans('idir::dirs.route.create.index') }}
+</li>
 <li class="breadcrumb-item active" aria-current="page">
     {{ trans('idir::dirs.route.step', ['step' => 1]) }} {{ trans('idir::dirs.route.create.1') }}
 </li>
@@ -36,10 +44,10 @@
                     </a>
                     @else
                     <div class="btn text-dark">
-                    {{ trans('idir::dirs.group_limit', [
-                        'dirs' => $group->max_models ?? trans('idir::dirs.unlimited'),
-                        'dirs_today' => $group->max_models_daily ?? trans('idir::dirs.unlimited')
-                    ]) }}
+                        {{ trans('idir::dirs.group_limit', [
+                            'dirs' => $group->max_models ?? trans('idir::dirs.unlimited'),
+                            'dirs_today' => $group->max_models_daily ?? trans('idir::dirs.unlimited')
+                        ]) }}
                     </div>
                     @endcan
                 </div>

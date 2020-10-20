@@ -5,33 +5,68 @@
 
 @slot('modal_title')
 <i class="fas fa-sort-amount-up"></i>
-<span> {{ trans('icore::filter.filter_title') }}</span>
+<span>{{ trans('icore::filter.filter_title') }}</span>
 @endslot
 
 @slot('modal_body')
 <div class="form-group">
-    <label for="FormSearch">{{ trans('icore::filter.search.label') }}</label>
-    <input type="text" class="form-control" id="FormSearch" placeholder="{{ trans('icore::filter.search.placeholder') }}"
-    name="filter[search]" value="{{ isset($filter['search']) ? $filter['search'] : '' }}">
+    <label for="FormSearch">
+        {{ trans('icore::filter.search.label') }}
+    </label>
+    <input 
+        type="text" 
+        class="form-control" 
+        id="FormSearch" 
+        placeholder="{{ trans('icore::filter.search.placeholder') }}"
+        name="filter[search]" 
+        value="{{ isset($filter['search']) ? $filter['search'] : '' }}"
+    >
 </div>
 <div class="form-group">
-    <label for="FormVisible">{{ trans('icore::filter.filter') }} "{{ trans('idir::fields.visible.label') }}"</label>
-    <select class="form-control custom-select" id="FormVisible" name="filter[visible]">
-        <option value="">{{ trans('icore::filter.default') }}</option>
-        <option value="{{ $field::VISIBLE }}" {{ ($filter['visible'] === $field::VISIBLE) ? 'selected' : '' }}>
+    <label for="FormVisible">
+        {{ trans('icore::filter.filter') }} "{{ trans('idir::fields.visible.label') }}"
+    </label>
+    <select 
+        class="form-control custom-select" 
+        id="FormVisible" 
+        name="filter[visible]"
+    >
+        <option value="">
+            {{ trans('icore::filter.default') }}
+        </option>
+        <option 
+            value="{{ $field::VISIBLE }}" 
+            {{ ($filter['visible'] === $field::VISIBLE) ? 'selected' : '' }}
+        >
             {{ trans('idir::fields.visible_'.$field::VISIBLE) }}
         </option>
-        <option value="{{ $field::INVISIBLE }}" {{ ($filter['visible'] === $field::INVISIBLE) ? 'selected' : '' }}>
+        <option 
+            value="{{ $field::INVISIBLE }}" 
+            {{ ($filter['visible'] === $field::INVISIBLE) ? 'selected' : '' }}
+        >
             {{ trans('idir::fields.visible_'.$field::INVISIBLE) }}
         </option>
     </select>
 </div>
 <div class="form-group">
-    <label for="FormType">{{ trans('icore::filter.filter') }} "{{ trans('icore::filter.type') }}"</label>
-    <select class="form-control custom-select" id="FormType" name="filter[type]">
-        <option value="">{{ trans('icore::filter.default') }}</option>
+    <label for="FormType">
+        {{ trans('icore::filter.filter') }} "{{ trans('icore::filter.type') }}"
+    </label>
+    <select 
+        class="form-control custom-select" 
+        id="FormType" 
+        name="filter[type]"
+    >
+        <option value="">
+            {{ trans('icore::filter.default') }}
+        </option>
         @foreach (['input', 'textarea', 'select', 'multiselect', 'checkbox', 'image'] as $type)
-        <option value="{{ $type }}" {{ ($filter['type'] == $type) ? 'selected' : '' }}>{{ $type }}</option>
+        <option 
+            value="{{ $type }}" 
+            {{ ($filter['type'] == $type) ? 'selected' : '' }}
+        >
+            {{ $type }}
+        </option>
         @endforeach
     </select>
 </div>

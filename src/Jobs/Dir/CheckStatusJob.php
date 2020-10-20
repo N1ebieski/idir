@@ -173,7 +173,6 @@ class CheckStatusJob implements ShouldQueue
         try {
             $this->makeResponse();
         } catch (\GuzzleHttp\Exception\RequestException $e) {
-            dd($e->getMessage());
             return false;
         }
 

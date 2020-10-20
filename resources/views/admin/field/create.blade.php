@@ -1,30 +1,67 @@
-<form data-route="{{ route("admin.field.{$field->poli}.store") }}" id="store">
+<form 
+    data-route="{{ route("admin.field.{$field->poli}.store") }}" 
+    id="store"
+>
     <div class="form-group">
-        <label for="title">{{ trans('idir::fields.title') }}</label>
-        <input type="text" value="" name="title" class="form-control" id="title">
+        <label for="title">
+            {{ trans('idir::fields.title') }}
+        </label>
+        <input 
+            type="text" 
+            value="" 
+            name="title" 
+            class="form-control" 
+            id="title"
+        >
     </div>
     <div class="form-group">
-        <label for="desc">{{ trans('idir::fields.desc') }}:</label>
+        <label for="desc">
+            {{ trans('idir::fields.desc') }}:
+        </label>
         <textarea class="form-control" id="desc" name="desc" rows="3"></textarea>
     </div>
     <div class="form-group">
-        <label for="type">{{ trans('idir::fields.choose_type') }}:</label>
+        <label for="type">
+            {{ trans('idir::fields.choose_type') }}:
+        </label>
         <div id="type">
             <nav>
-                <div class="btn-group btn-group-toggle nav d-block" data-toggle="buttons" id="nav-tab" role="tablist">
+                <div 
+                    class="btn-group btn-group-toggle nav d-block" 
+                    data-toggle="buttons" 
+                    id="nav-tab" 
+                    role="tablist"
+                >
                     @foreach (['input', 'textarea', 'select', 'multiselect', 'checkbox', 'image'] as $type)
-                    <a class="nav-item btn btn-info {{ $loop->first ? 'active' : null }}" id="nav-{{ $type }}-tab"
-                    data-toggle="tab" href="#nav-{{ $type }}" role="tab"
-                    aria-controls="nav-{{ $type }}" aria-selected="true">
-                        <input type="radio" name="type" value="{{ $type }}" id="nav-{{ $type }}-tab"
-                        autocomplete="off" {{ $loop->first ? 'checked' : null }}>
+                    <a 
+                        class="nav-item btn btn-info {{ $loop->first ? 'active' : null }}" 
+                        id="nav-{{ $type }}-tab"
+                        data-toggle="tab" 
+                        href="#nav-{{ $type }}" 
+                        role="tab"
+                        aria-controls="nav-{{ $type }}" 
+                        aria-selected="true"
+                    >
+                        <input 
+                            type="radio" 
+                            name="type" 
+                            value="{{ $type }}" 
+                            id="nav-{{ $type }}-tab"
+                            autocomplete="off" 
+                            {{ $loop->first ? 'checked' : null }}
+                        >
                         {{ $type }}
                     </a>
                     @endforeach
                 </div>
             </nav>
             <div class="tab-content mt-3" id="nav-tabContent">
-                <div class="tab-pane fade show active" id="nav-input" role="tabpanel" aria-labelledby="nav-input-tab">
+                <div 
+                    class="tab-pane fade show active" 
+                    id="nav-input" 
+                    role="tabpanel" 
+                    aria-labelledby="nav-input-tab"
+                >
                     @component('idir::admin.field.partials.components.input')
                         @slot('name', ['input', 'min'])
                         @slot('value', 3)
@@ -34,7 +71,12 @@
                         @slot('value', 255)
                     @endcomponent
                 </div>
-                <div class="tab-pane fade" id="nav-textarea" role="tabpanel" aria-labelledby="nav-textarea-tab">
+                <div 
+                    class="tab-pane fade" 
+                    id="nav-textarea" 
+                    role="tabpanel" 
+                    aria-labelledby="nav-textarea-tab"
+                >
                     @component('idir::admin.field.partials.components.input')
                         @slot('name', ['textarea', 'min'])
                         @slot('value', 3)
@@ -44,22 +86,42 @@
                         @slot('value', 5000)
                     @endcomponent
                 </div>
-                <div class="tab-pane fade" id="nav-select" role="tabpanel" aria-labelledby="nav-select-tab">
+                <div 
+                    class="tab-pane fade" 
+                    id="nav-select" 
+                    role="tabpanel" 
+                    aria-labelledby="nav-select-tab"
+                >
                     @component('idir::admin.field.partials.components.textarea')
                         @slot('name', ['select', 'options'])
                     @endcomponent
                 </div>
-                <div class="tab-pane fade" id="nav-multiselect" role="tabpanel" aria-labelledby="nav-multiselect-tab">
+                <div 
+                    class="tab-pane fade" 
+                    id="nav-multiselect" 
+                    role="tabpanel" 
+                    aria-labelledby="nav-multiselect-tab"
+                >
                     @component('idir::admin.field.partials.components.textarea')
                         @slot('name', ['multiselect', 'options'])
                     @endcomponent
                 </div>
-                <div class="tab-pane fade" id="nav-checkbox" role="tabpanel" aria-labelledby="nav-checkbox-tab">
+                <div 
+                    class="tab-pane fade" 
+                    id="nav-checkbox" 
+                    role="tabpanel" 
+                    aria-labelledby="nav-checkbox-tab"
+                >
                     @component('idir::admin.field.partials.components.textarea')
                         @slot('name', ['checkbox', 'options'])
                     @endcomponent
                 </div>
-                <div class="tab-pane fade" id="nav-image" role="tabpanel" aria-labelledby="nav-image-tab">
+                <div 
+                    class="tab-pane fade" 
+                    id="nav-image" 
+                    role="tabpanel" 
+                    aria-labelledby="nav-image-tab"
+                >
                     @component('idir::admin.field.partials.components.input')
                         @slot('name', ['image', 'width'])
                         @slot('value', 720)
@@ -78,19 +140,34 @@
     </div>
     <div class="form-group">
         <label for="visible">
-            {{ trans('idir::fields.visible.label') }}: <i data-toggle="tooltip" data-placement="top"
-            title="{{ trans("idir::fields.visible.tooltip") }}" class="far fa-question-circle"></i>
+            <span>{{ trans('idir::fields.visible.label') }}:</span>
+            <i 
+                data-toggle="tooltip" 
+                data-placement="top"
+                title="{{ trans("idir::fields.visible.tooltip") }}" 
+                class="far fa-question-circle"
+            ></i>
         </label>
         <select class="form-control" id="visible" name="visible">
-            <option value="{{ $field::VISIBLE }}">{{ trans('idir::fields.visible.'.$field::VISIBLE) }}</option>
-            <option value="{{ $field::INVISIBLE }}">{{ trans('idir::fields.visible.'.$field::INVISIBLE) }}</option>
+            <option value="{{ $field::VISIBLE }}">
+                {{ trans('idir::fields.visible.'.$field::VISIBLE) }}
+            </option>
+            <option value="{{ $field::INVISIBLE }}">
+                {{ trans('idir::fields.visible.'.$field::INVISIBLE) }}
+            </option>
         </select>
     </div>
     <div class="form-group">
-        <label for="required">{{ trans('idir::fields.required.label') }}:</label>
+        <label for="required">
+            {{ trans('idir::fields.required.label') }}:
+        </label>
         <select class="form-control" id="required" name="required">
-            <option value="{{ $field::OPTIONAL }}">{{ trans('idir::fields.required.'.$field::OPTIONAL) }}</option>
-            <option value="{{ $field::REQUIRED }}">{{ trans('idir::fields.required.'.$field::REQUIRED) }}</option>
+            <option value="{{ $field::OPTIONAL }}">
+                {{ trans('idir::fields.required.'.$field::OPTIONAL) }}
+            </option>
+            <option value="{{ $field::REQUIRED }}">
+                {{ trans('idir::fields.required.'.$field::REQUIRED) }}
+            </option>
         </select>
     </div>
     @yield('morphs')

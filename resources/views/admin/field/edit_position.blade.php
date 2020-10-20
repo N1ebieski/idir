@@ -1,12 +1,20 @@
-<form data-route="{{ route('admin.field.update_position', [$field->id]) }}"
-data-id="{{ $field->id }}" id="update">
+<form 
+    data-route="{{ route('admin.field.update_position', [$field->id]) }}"
+    data-id="{{ $field->id }}" 
+    id="update"
+>
     @if ((int)$siblings_count > 0)
     <div class="form-group">
-        <label for="position">{{ trans('icore::default.position') }}</label>
+        <label for="position">
+            {{ trans('icore::default.position') }}
+        </label>
         <select class="form-control" id="position" name="position">
-        @for ($i=0; $i<$siblings_count; $i++)
-            <option value="{{ $i }}" {{ (old('position', $field->position) === $i) ? 'selected' : '' }}>
-                {{ $i+1 }}
+        @for ($i = 0; $i < $siblings_count; $i++)
+            <option 
+                value="{{ $i }}" 
+                {{ (old('position', $field->position) === $i) ? 'selected' : '' }}
+            >
+                {{ $i + 1 }}
             </option>
         @endfor
         </select>

@@ -4,7 +4,9 @@
 <div>
     @if (!empty($group->desc))
     <div class="card-body flex-wrap">
-        <p class="card-text">{{ $group->desc }}</p>
+        <p class="card-text">
+            {{ $group->desc }}
+        </p>
     </div>
     @endif
     <ul class="list-group list-group-flush">
@@ -52,7 +54,9 @@
                 {{ $group->prices->isNotEmpty() ? trans('idir::groups.price_from', [
                     'price' => $group->prices->sortBy('price')->first()->price,
                     'days' => $days = $group->prices->sortBy('price')->first()->days,
-                    'limit' => $days !== null ? mb_strtolower(trans('idir::groups.days')) : mb_strtolower(trans('idir::groups.unlimited'))
+                    'limit' => $days !== null ? 
+                        mb_strtolower(trans('idir::groups.days')) 
+                        : mb_strtolower(trans('idir::groups.unlimited'))
                 ]) : trans('idir::groups.payment.0') }}
             </span>
         </li>
