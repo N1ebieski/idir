@@ -61,6 +61,23 @@ return [
 
     ],
 
+    'field' => [
+        'gus' => [
+            'name' => null,
+            'street' => null,
+            'propertyNumber' => null,
+            'apartmentNumber' => null,
+            'zipCode' => null,
+            'city' => null,
+            'regions' => null,
+            'district' => null,
+            'community' => null,
+            'nip' => null,
+            'regon' => null,
+            'map' => null
+        ]
+    ],
+
     'home' => [
         'max' => (int)env('IDIR_HOME_MAX', 10),
         'max_privileged' => (int)env('IDIR_HOME_MAX_PRIVILEGED', 5)

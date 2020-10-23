@@ -37,26 +37,28 @@ $value = old("field.{$field->id}", $value ?? null);
             </a>
         </span>       
     </label>
-    @render('idir::map.dir.mapComponent', [
-        'selector' => 'map-select',
-        'zoom' => 8
-    ])
-    <div id="marker0">
-        <div>
-            <input 
-                type="hidden" 
-                id="field.{{ $field->id }}.0.lat" 
-                name="field[{{ $field->id }}][0][lat]" 
-                value="{{ $value[0]->lat ?? ($value[0]['lat'] ?? null) }}"
-            >
-            @includeWhen($errors->has("field.{$field->id}.0.lat"), 'icore::web.partials.errors', ['name' => "field.{$field->id}.0.lat"])
-            <input 
-                type="hidden" 
-                id="field.{{ $field->id }}.0.long" 
-                name="field[{{ $field->id }}][0][long]" 
-                value="{{ $value[0]->long ?? ($value[0]['long'] ?? null) }}"
-            >   
-            @includeWhen($errors->has("field.{$field->id}.0.long"), 'icore::web.partials.errors', ['name' => "field.{$field->id}.0.long"]) 
+    <div id="field.{{ $field->id }}">
+        @render('idir::map.dir.mapComponent', [
+            'selector' => 'map-select',
+            'zoom' => 8
+        ])
+        <div id="marker0">
+            <div>
+                <input 
+                    type="hidden" 
+                    id="field.{{ $field->id }}.0.lat" 
+                    name="field[{{ $field->id }}][0][lat]" 
+                    value="{{ $value[0]->lat ?? ($value[0]['lat'] ?? null) }}"
+                >
+                @includeWhen($errors->has("field.{$field->id}.0.lat"), 'icore::web.partials.errors', ['name' => "field.{$field->id}.0.lat"])
+                <input 
+                    type="hidden" 
+                    id="field.{{ $field->id }}.0.long" 
+                    name="field[{{ $field->id }}][0][long]" 
+                    value="{{ $value[0]->long ?? ($value[0]['long'] ?? null) }}"
+                >   
+                @includeWhen($errors->has("field.{$field->id}.0.long"), 'icore::web.partials.errors', ['name' => "field.{$field->id}.0.long"]) 
+            </div>
         </div>
     </div>
 </div>

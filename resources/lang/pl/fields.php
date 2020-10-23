@@ -11,6 +11,9 @@ return [
         'update' => 'Pole zostało zaktualizowane.',
         'destroy' => 'Pomyślnie usunięto pole.'
     ],
+    'error' => [
+        'gus' => 'Nie znaleziono żadnej firmy w bazie GUS.'
+    ],
     'route' => [
         'index' => 'Pola formularza',
         'edit' => 'Edycja pola',
@@ -52,5 +55,8 @@ return [
     ],
     'groups' => 'Dotyczy grup',
     'remove_marker' => 'Usuń marker',
-    'add_marker' => 'Dodaj marker'
+    'add_marker' => 'Dodaj marker',
+    'gus' => [
+        'placeholder' => 'Wpisz numer'
+    ]
 ];

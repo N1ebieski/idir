@@ -50,7 +50,7 @@ class Field extends Model
      * [public description]
      * @var array
      */
-    public const DEFAULT = ['regions', 'map'];
+    public const DEFAULT = ['regions', 'map', 'gus'];
 
     /**
      * The columns of the full text index

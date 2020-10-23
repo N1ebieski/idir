@@ -35,3 +35,7 @@ Route::delete('fields/{field}', 'Field\FieldController@destroy')
     ->middleware('permission:admin.fields.delete')
     ->name('field.destroy')
     ->where('field', '[0-9]+');
+
+Route::post('fields/gus', 'FieldController@gus')
+    ->name('field.gus')
+    ->where('field', '[0-9]+');
