@@ -1,14 +1,15 @@
 <?php
 
-namespace N1ebieski\IDir\Http\Responses\Field\Data;
+namespace N1ebieski\IDir\Http\Responses\Data\Field;
 
 use GusApi\SearchReport as GusReport;
-use Illuminate\Contracts\Config\Repository as Config;
+use N1ebieski\IDir\Http\Responses\Data\DataInterface;
 use Illuminate\Contracts\Container\Container as App;
-use N1ebieski\IDir\Http\Responses\Field\Data\Value\Types\Value;
-use N1ebieski\IDir\Http\Responses\Field\Data\Value\ValueFactory;
+use Illuminate\Contracts\Config\Repository as Config;
+use N1ebieski\IDir\Http\Responses\Data\Field\Value\Types\Value;
+use N1ebieski\IDir\Http\Responses\Data\Field\Value\ValueFactory;
 
-class FieldData
+class FieldData implements DataInterface
 {
     /**
      * Undocumented variable

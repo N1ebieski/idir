@@ -1,11 +1,11 @@
 <?php
 
-namespace N1ebieski\IDir\Http\Responses\Field\Data\Value;
+namespace N1ebieski\IDir\Http\Responses\Data\Field\Value;
 
 use GusApi\SearchReport as GusReport;
 use Illuminate\Contracts\Container\Container as App;
-use N1ebieski\IDir\Http\Responses\Field\Data\Value\Types\Gus;
-use N1ebieski\IDir\Http\Responses\Field\Data\Value\Types\Value;
+use N1ebieski\IDir\Http\Responses\Data\Field\Value\Types\Gus;
+use N1ebieski\IDir\Http\Responses\Data\Field\Value\Types\Value;
 
 class ValueFactory
 {
@@ -63,7 +63,7 @@ class ValueFactory
      */
     protected function className() : string
     {
-        return "\\N1ebieski\\IDir\\Http\\Responses\\Field\\Data\\Value\\Types\\" . ucfirst($this->type);
+        return "\\N1ebieski\\IDir\\Http\\Responses\\Data\\Field\\Value\\Types\\" . ucfirst($this->type);
     }
 
     /**

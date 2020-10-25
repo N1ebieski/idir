@@ -7,7 +7,7 @@ use Illuminate\Http\JsonResponse;
 use GusApi\Exception\NotFoundException;
 use Illuminate\Support\Facades\App;
 use N1ebieski\IDir\Http\Requests\Web\Field\GusRequest;
-use N1ebieski\IDir\Http\Responses\Field\GusResponse;
+use N1ebieski\IDir\Http\Responses\Web\Field\GusResponse;
 
 class FieldController
 {

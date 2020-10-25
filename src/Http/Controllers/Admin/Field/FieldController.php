@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\View;
 use N1ebieski\IDir\Models\Field\Field;
 use GusApi\Exception\NotFoundException;
 use Illuminate\Support\Facades\Response;
-use N1ebieski\IDir\Http\Responses\Field\GusResponse;
+use N1ebieski\IDir\Http\Responses\Admin\Field\GusResponse;
 use N1ebieski\IDir\Http\Requests\Admin\Field\GusRequest;
 use N1ebieski\IDir\Http\Controllers\Admin\Field\Polymorphic;
 use N1ebieski\IDir\Http\Requests\Admin\Field\DestroyRequest;

@@ -1,9 +1,9 @@
 <?php
 
-namespace N1ebieski\IDir\Http\Responses\Field\Data\Value\Types;
+namespace N1ebieski\IDir\Http\Responses\Data\Field\Value\Types;
 
 use GusApi\SearchReport as GusReport;
-use N1ebieski\IDir\Http\Responses\Field\Data\Value\Types\Value;
+use N1ebieski\IDir\Http\Responses\Data\Field\Value\Types\Value;
 
 class Gus extends Value
 {

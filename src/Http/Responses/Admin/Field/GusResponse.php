@@ -1,6 +1,6 @@
 <?php
 
-namespace N1ebieski\IDir\Http\Responses\Field;
+namespace N1ebieski\IDir\Http\Responses\Admin\Field;
 
 use Illuminate\Http\JsonResponse;
 use GusApi\SearchReport as GusReport;
@@ -9,7 +9,7 @@ use Illuminate\Contracts\Container\Container as App;
 use Illuminate\Contracts\Config\Repository as Config;
 use N1ebieski\ICore\Http\Responses\JsonResponseFactory;
 use Illuminate\Contracts\Routing\ResponseFactory as Response;
-use N1ebieski\IDir\Http\Responses\Field\Data\FieldData;
+use N1ebieski\IDir\Http\Responses\Data\Field\FieldData;
 
 class GusResponse implements JsonResponseFactory
 {
