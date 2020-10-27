@@ -274,7 +274,8 @@
                         type="button" 
                         class="btn btn-warning"
                         data-route="{{ route('admin.dir.update_status', [$dir->id]) }}"
-                        data-toggle="dir-confirmation" data-id="{{ $dir->id }}" 
+                        data-toggle="dir-confirmation-reason" 
+                        data-id="{{ $dir->id }}" 
                         data-btn-ok-label=" {{ trans('icore::default.yes') }}" 
                         data-btn-ok-icon-class="fas fa-check mr-1"
                         data-btn-ok-class="btn h-100 d-flex justify-content-center btn-primary btn-popover statusDir" 
@@ -282,6 +283,9 @@
                         data-btn-cancel-class="btn h-100 d-flex justify-content-center btn-secondary btn-popover" 
                         data-btn-cancel-icon-class="fas fa-ban mr-1"
                         data-title="{{ trans('idir::dirs.confirm.correct') }}"
+                        data-reasons="{{ json_encode(config('idir.dir.reasons')) }}" 
+                        data-reasons-label="{{ trans('idir::dirs.reason.label') }}"
+                        data-reasons-custom="{{ trans('idir::dirs.reason.custom') }}"                        
                         {{ $dir->status == $dir::INCORRECT_INACTIVE ? 'disabled' : '' }}
                     >
                         <i class="far fa-times-circle"></i>
@@ -290,6 +294,29 @@
                         </span>
                     </button>                    
                 </div>
+                @elseif ($dir->isNotOk())
+                <button 
+                    type="button" 
+                    class="btn btn-success"
+                    data-route="{{ route('admin.dir_status.delay', [$dir->getRelation('status')->id]) }}" 
+                    data-id="{{ $dir->id }}"
+                    data-toggle="dir-confirmation-delay" 
+                    data-btn-ok-label="{{ trans('icore::default.yes') }}" 
+                    data-btn-ok-icon-class="fas fa-check mr-1"
+                    data-btn-ok-class="btn h-100 d-flex justify-content-center btn-primary btn-popover delayDirStatus" 
+                    data-btn-cancel-label="{{ trans('icore::default.cancel') }}"
+                    data-btn-cancel-class="btn h-100 d-flex justify-content-center btn-secondary btn-popover" 
+                    data-btn-cancel-icon-class="fas fa-ban mr-1"
+                    data-title="{{ trans('idir::dir_status.confirm.delay') }}"
+                    data-delays="{{ json_encode(config('idir.dir.status.delays')) }}" 
+                    data-delays-label="{{ trans('idir::dir_status.delay_for.label') }}"
+                    data-delays-custom="{{ trans('idir::dir_status.delay_for.custom') }}"
+                >
+                    <i class="fas fa-toggle-on"></i>
+                    <span class="d-none d-sm-inline"> 
+                        {{ trans('idir::dir_status.delay') }}
+                    </span>
+                </button>
                 @endif
                 @endcan
                 <div class="btn-group-vertical">
@@ -297,7 +324,7 @@
                     <button 
                         class="btn btn-danger" 
                         data-status="delete" 
-                        data-toggle="dir-confirmation"
+                        data-toggle="dir-confirmation-reason"
                         data-route="{{ route('admin.dir.destroy', [$dir->id]) }}" 
                         data-id="{{ $dir->id }}"
                         type="button" 
@@ -308,6 +335,9 @@
                         data-btn-cancel-class="btn h-100 d-flex justify-content-center btn-secondary btn-popover" 
                         data-btn-cancel-icon-class="fas fa-ban mr-1"
                         data-title="{{ trans('icore::default.confirm') }}"
+                        data-reasons="{{ json_encode(config('idir.dir.reasons')) }}" 
+                        data-reasons-label="{{ trans('idir::dirs.reason.label') }}"
+                        data-reasons-custom="{{ trans('idir::dirs.reason.custom') }}"                        
                     >
                         <i class="far fa-trash-alt"></i>
                         <span class="d-none d-sm-inline">

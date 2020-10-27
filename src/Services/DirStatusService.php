@@ -2,6 +2,7 @@
 
 namespace N1ebieski\IDir\Services;
 
+use Carbon\Carbon;
 use N1ebieski\ICore\Services\Interfaces\Creatable;
 use Illuminate\Database\Eloquent\Model;
 use N1ebieski\IDir\Models\DirStatus;
@@ -18,11 +19,23 @@ class DirStatusService implements Creatable
     protected $dirStatus;
 
     /**
-     * @param DirStatus $dirStatus
+     * Undocumented variable
+     *
+     * @var Carbon
      */
-    public function __construct(DirStatus $dirStatus)
+    protected $carbon;
+
+    /**
+     * Undocumented function
+     *
+     * @param DirStatus $dirStatus
+     * @param Carbon $carbon
+     */
+    public function __construct(DirStatus $dirStatus, Carbon $carbon)
     {
         $this->dirStatus = $dirStatus;
+
+        $this->carbon = $carbon;
     }
 
     /**
@@ -61,5 +74,20 @@ class DirStatusService implements Creatable
     public function clear() : int
     {
         return $this->dirStatus->where('dir_id', $this->dirStatus->getDir()->id)->delete();
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param array $attributes
+     * @return boolean
+     */
+    public function delay(array $attributes) : bool
+    {
+        return $this->dirStatus->update([
+            'attempts' => 0,
+            'attempted_at' => $this->carbon->parse($this->dirStatus->attempted_at)
+                ->addDays($attributes['delay'])
+        ]);
     }
 }

@@ -4,9 +4,6 @@ namespace N1ebieski\IDir\Providers;
 
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
-/**
- * [EventServiceProvider description]
- */
 class EventServiceProvider extends ServiceProvider
 {
 
@@ -21,6 +18,12 @@ class EventServiceProvider extends ServiceProvider
         ],
         \N1ebieski\IDir\Events\Job\Dir\InvalidBacklinkEvent::class => [
             \N1ebieski\IDir\Listeners\Dir\InvalidBacklinkNotification::class
+        ],
+        \N1ebieski\IDir\Events\Admin\DirStatus\DelayEvent::class => [
+            \N1ebieski\IDir\Listeners\DirStatus\ForbiddenNotification::class
+        ],
+        \N1ebieski\IDir\Events\Admin\DirBacklink\DelayEvent::class => [
+            \N1ebieski\IDir\Listeners\DirBacklink\ForbiddenNotification::class
         ],
         \N1ebieski\IDir\Events\Admin\Dir\DestroyEvent::class => [
             \N1ebieski\IDir\Listeners\Dir\SendDeletedNotification::class

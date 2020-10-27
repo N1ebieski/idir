@@ -20,11 +20,13 @@ return [
         'backlink' => [
             'check_hours' => (int)env('IDIR_DIR_BACKLINK_CHECK_HOURS', 24),
             'max_attempts' => (int)env('IDIR_DIR_BACKLINK_MAX_ATTEMPTS', 3),
+            'delays' => [30, 60, 180, 365]
         ],
 
         'status' => [
             'check_days' => (int)env('IDIR_DIR_STATUS_CHECK_DAYS', 30),
             'max_attempts' => (int)env('IDIR_DIR_STATUS_MAX_ATTEMPTS', 2),
+            'delays' => [30, 60, 180, 365],
             'parked_domains' => [
                 'aftermarket.pl'
             ]

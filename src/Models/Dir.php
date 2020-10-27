@@ -899,7 +899,9 @@ class Dir extends Model
             'fields',
             'regions',
             'categories',
-            'tags'
+            'tags',
+            'status',
+            'backlink'
         ]);
     }
 
