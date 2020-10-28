@@ -89,10 +89,10 @@ class Store3Request extends Store2Request
                     $this->input('url') !== null ?
                         'regex:/^' . Str::escaped($this->input('url')) . '/'
                         : 'regex:/^(https|http):\/\/([\da-z\.-]+)(\.[a-z]{2,6})/',
-                    // $this->group->backlink === Group::OBLIGATORY_BACKLINK && $this->has('backlink') ?
-                    //     App::make('N1ebieski\\IDir\\Rules\\BacklinkRule', [
-                    //         'link' => Link::find($this->input('backlink'))->url
-                    //     ]) : null,
+                    $this->group->backlink === Group::OBLIGATORY_BACKLINK && $this->has('backlink') ?
+                        App::make('N1ebieski\\IDir\\Rules\\BacklinkRule', [
+                            'link' => Link::find($this->input('backlink'))->url
+                        ]) : null,
                     'no_js_validation'
                 ]
             ],
