@@ -1,5 +1,5 @@
 @extends(config('idir.layout') . '::admin.layouts.layout', [
-    'title' => 
+    'title' => [
         trans('idir::dirs.route.step', ['step' => 2]),
         trans('idir::dirs.route.create.2')
     ],
