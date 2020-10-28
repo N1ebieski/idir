@@ -176,8 +176,10 @@ class Edit3ViewModel extends ViewModel
      */
     public function backlinkSelection() : ?Link
     {
-        if ($this->request->old('backlink')) {
-            return $this->link->find($this->request->old('backlink'));
+        $linkId = $this->request->old('backlink', $this->dir->backlink->link_id ?? null);
+
+        if ($linkId !== null) {
+            return $this->link->find($linkId);
         }
 
         return optional($this->backlinks)->first();
