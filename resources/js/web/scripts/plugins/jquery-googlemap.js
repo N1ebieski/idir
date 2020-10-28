@@ -77,13 +77,18 @@ jQuery(document).on('click', '#remove-marker', function(e) {
     $(this).hide();
 });
 
-jQuery(document).on('click', '#add-marker', function(e) {
+jQuery(document).on('click', '#add-marker', function(e, coords, address) {
     e.preventDefault();
 
     let $map = $('#map-select');
 
+    if (!address && !coords) {
+        coords = $map.data('coords');
+    }
+
     $map.addMarker({
-        coords: $map.data('coords'),
+        coords: coords || null,
+        address: address || null,
         draggable: true,
         id: 'marker0',
         success: function(e) {

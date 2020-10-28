@@ -16,6 +16,7 @@ class InstallSeeder extends Seeder
         $this->call(DefaultRolesAndPermissionsSeeder::class);
         $this->call(DefaultGroupAndPrivilegesSeeder::class);
         $this->call(DefaultFieldsSeeder::class);
+        $this->call(DefaultGusFieldSeeder::class);
         $this->call(DefaultRegionsSeeder::class);
         $this->call(DefaultStatsSeeder::class);
     }

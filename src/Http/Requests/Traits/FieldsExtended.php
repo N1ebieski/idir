@@ -92,8 +92,7 @@ trait FieldsExtended
     {
         foreach ($this->getFields() as $field) {
             $rules["field.{$field->id}"][] = 'bail';
-            $rules["field.{$field->id}"][] = $field->isRequired() === true ?
-                'required' : 'nullable';
+            $rules["field.{$field->id}"][] = $field->isRequired() ? 'required' : 'nullable';
 
             switch ($field->type) {
                 case 'map':
@@ -111,7 +110,7 @@ trait FieldsExtended
                     ];
                     $rules["field.{$field->id}.*.long"] = [
                         'bail',
-                        $field->isRequired() === true ? 'required' : 'nullable',
+                        $field->isRequired() ? 'required' : 'nullable',
                         "required_with:field.{$field->id}.*.lat",
                         'numeric',
                         'between:-180,180'
@@ -121,6 +120,11 @@ trait FieldsExtended
                 case 'regions':
                     $rules["field.{$field->id}"][] = 'array';
                     $rules["field.{$field->id}"][] = 'exists:regions,id';
+                    break;
+
+                case 'gus':
+                    $rules["field.{$field->id}"][] = 'not_present';
+                    $rules["field.{$field->id}"][] = 'no_js_validation';
                     break;
 
                 case 'multiselect':
@@ -136,7 +140,8 @@ trait FieldsExtended
                     // $rules["field.{$field->id}"][] = 'no_js_validation';
                     break;
 
-                default:
+                case 'input':
+                case 'textarea':
                     $rules["field.{$field->id}"][] = 'string';
             }
 

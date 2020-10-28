@@ -42,9 +42,6 @@
         action="{{ route('admin.dir.destroy_global') }}" 
         method="post" 
         id="selectForm"
-        data-reasons="{{ json_encode(config('idir.dir.reasons')) }}" 
-        data-reasons-label="{{ trans('idir::dirs.reason.label') }}"
-        data-reasons-custom="{{ trans('idir::dirs.reason.custom') }}"
     >
         @csrf
         @method('delete')

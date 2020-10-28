@@ -11,6 +11,9 @@ return [
         'update' => 'The field has been updated.',
         'destroy' => 'The field was successfully deleted.'
     ],
+    'error' => [
+        'gus' => 'No company was found in the GUS database.'
+    ],
     'route' => [
         'index' => 'Form fields',
         'edit' => 'Edit field',
@@ -52,5 +55,8 @@ return [
     ],
     'groups' => 'Applies to groups',
     'remove_marker' => 'Remove marker',
-    'add_marker' => 'Add marker'
+    'add_marker' => 'Add marker',
+    'gus' => [
+        'placeholder' => 'Enter number'
+    ]
 ];

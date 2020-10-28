@@ -2,13 +2,11 @@
 
 namespace N1ebieski\IDir\Services;
 
+use Carbon\Carbon;
 use N1ebieski\ICore\Services\Interfaces\Creatable;
 use Illuminate\Database\Eloquent\Model;
 use N1ebieski\IDir\Models\DirStatus;
 
-/**
- * [DirStatusService description]
- */
 class DirStatusService implements Creatable
 {
     /**
@@ -18,11 +16,35 @@ class DirStatusService implements Creatable
     protected $dirStatus;
 
     /**
-     * @param DirStatus $dirStatus
+     * Undocumented variable
+     *
+     * @var Carbon
      */
-    public function __construct(DirStatus $dirStatus)
+    protected $carbon;
+
+    /**
+     * Undocumented function
+     *
+     * @param DirStatus $dirStatus
+     * @param Carbon $carbon
+     */
+    public function __construct(DirStatus $dirStatus, Carbon $carbon)
     {
         $this->dirStatus = $dirStatus;
+
+        $this->carbon = $carbon;
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param array $attributes
+     * @return boolean
+     */
+    protected function isSync(array $attributes) : bool
+    {
+        return isset($attributes['url'])
+            && $this->dirStatus->getDir()->url !== $attributes['url'];
     }
 
     /**
@@ -45,13 +67,13 @@ class DirStatusService implements Creatable
      */
     public function sync(array $attributes) : ?Model
     {
-        $this->clear();
-
-        if (isset($attributes['url'])) {
-            return $this->create($attributes);
+        if (!$this->isSync($attributes)) {
+            return null;
         }
 
-        return null;
+        $this->clear();
+
+        return $this->create($attributes);
     }
 
     /**
@@ -61,5 +83,20 @@ class DirStatusService implements Creatable
     public function clear() : int
     {
         return $this->dirStatus->where('dir_id', $this->dirStatus->getDir()->id)->delete();
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param array $attributes
+     * @return boolean
+     */
+    public function delay(array $attributes) : bool
+    {
+        return $this->dirStatus->update([
+            'attempts' => 0,
+            'attempted_at' => $this->carbon->parse($this->dirStatus->attempted_at)
+                ->addDays($attributes['delay'])
+        ]);
     }
 }

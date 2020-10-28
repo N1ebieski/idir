@@ -1,6 +1,6 @@
 <?php
 
-namespace N1ebieski\IDir\Events\Job\Dir;
+namespace N1ebieski\IDir\Events\Job\DirBacklink;
 
 use Illuminate\Queue\SerializesModels;
 use N1ebieski\IDir\Models\DirBacklink;

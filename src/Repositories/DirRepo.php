@@ -37,6 +37,7 @@ class DirRepo
         $this->dir = $dir;
 
         $this->config = $config;
+        
         $this->paginate = $config->get('database.paginate');
     }
 
@@ -62,7 +63,9 @@ class DirRepo
                 'tags',
                 'user',
                 'payments',
-                'payments.group'
+                'payments.group',
+                'backlink',
+                'status'
             ])
             ->withSumRating()
             ->filterAuthor($filter['author'])

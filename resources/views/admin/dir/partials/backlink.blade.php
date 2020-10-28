@@ -20,6 +20,11 @@
     @includeWhen($errors->has('backlink'), 'icore::admin.partials.errors', ['name' => 'backlink'])
 </div>
 <div class="form-group">
+    <div id="backlink_preview">
+        {!! optional($backlinkSelection)->link_as_html !!}
+    </div>
+</div>
+<div class="form-group">
     <textarea 
         class="form-control" 
         id="backlink_code" 

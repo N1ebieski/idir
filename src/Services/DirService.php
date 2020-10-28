@@ -213,8 +213,10 @@ class DirService implements
      */
     public function update(array $attributes) : bool
     {
-        $this->dir->fill($attributes);
-        $this->dir->content = $attributes['content_html'];
+        $this->dir->status()->make()
+            ->setDir($this->dir)
+            ->makeService()
+            ->sync($attributes);
 
         if (isset($attributes['field'])) {
             $this->dir->fields()->make()
@@ -223,10 +225,8 @@ class DirService implements
                 ->updateValues($attributes['field']);
         }
 
-        $this->dir->status()->make()
-            ->setDir($this->dir)
-            ->makeService()
-            ->sync($attributes);
+        $this->dir->fill($attributes);
+        $this->dir->content = $attributes['content_html'];
 
         $this->dir->categories()->sync($attributes['categories']);
 
@@ -242,15 +242,6 @@ class DirService implements
      */
     public function updateFull(array $attributes) : bool
     {
-        $this->dir->fill($attributes);
-
-        if (!$this->dir->isGroup($this->dir->getGroup()->id)) {
-            $this->dir->group()->associate($this->dir->getGroup());
-            $this->dir->makeRepo()->nullablePrivileged();
-        }
-        $this->dir->content = $attributes['content_html'];
-        $this->dir->status = $this->makeStatus($attributes['payment_type'] ?? null);
-
         if (isset($attributes['field'])) {
             $this->dir->fields()->make()
                 ->setMorph($this->dir)
@@ -269,6 +260,15 @@ class DirService implements
             ->setDir($this->dir)
             ->makeService()
             ->sync($attributes);
+
+        $this->dir->fill($attributes);
+
+        if (!$this->dir->isGroup($this->dir->getGroup()->id)) {
+            $this->dir->group()->associate($this->dir->getGroup());
+            $this->dir->makeRepo()->nullablePrivileged();
+        }
+        $this->dir->content = $attributes['content_html'];
+        $this->dir->status = $this->makeStatus($attributes['payment_type'] ?? null);
 
         $this->dir->categories()->sync($attributes['categories']);
 

@@ -22,6 +22,10 @@ class AppServiceProvider extends ServiceProvider
                 'timeout' => 10.0
             ]);
         });
+
+        $this->app->bind(\GusApi\GusApi::class, function ($app) {
+            return new \GusApi\GusApi($app['config']->get('services.gus.api_key'));
+        });
     }
 
     /**
