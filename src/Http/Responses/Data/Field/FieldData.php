@@ -65,7 +65,7 @@ class FieldData implements DataInterface
 
             $gusValue = $this->makeValue($key)();
 
-            if ($gusValue === null) {
+            if (empty($gusValue)) {
                 continue;
             }
 
