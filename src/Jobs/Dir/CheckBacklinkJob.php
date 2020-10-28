@@ -16,7 +16,7 @@ use Illuminate\Contracts\Events\Dispatcher as Event;
 use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Contracts\Foundation\Application as App;
 use Illuminate\Contracts\Validation\Factory as Validator;
-use N1ebieski\IDir\Events\Job\Dir\InvalidBacklinkEvent;
+use N1ebieski\IDir\Events\Job\DirBacklink\InvalidBacklinkEvent;
 
 /**
  * [CheckBacklink description]

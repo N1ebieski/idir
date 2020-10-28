@@ -1,6 +1,6 @@
 <?php
 
-namespace N1ebieski\IDir\Listeners\Dir;
+namespace N1ebieski\IDir\Listeners\DirBacklink;
 
 use Illuminate\Contracts\Mail\Mailer;
 use Illuminate\Contracts\Foundation\Application as App;

@@ -10,15 +10,15 @@
 @endif
 @endif
 
-{!! trans('idir::dir_status.mail.forbidden.info', [
-    'dir_link' => $dirStatus->dir->title_as_link,
-    'dir_page' => route('web.dir.show', [$dirStatus->dir->slug]),
-    'dir_url' => $dirStatus->dir->url_as_link
+{!! trans('idir::backlinks.mail.forbidden.info', [
+    'dir_link' => $dirBacklink->dir->title_as_link,
+    'dir_page' => route('web.dir.show', [$dirBacklink->dir->slug]),
+    'dir_url' => $dirBacklink->dir->url_as_link
 ]) !!}
 
-<p>{{ trans('idir::dir_status.mail.forbidden.result') }}</p>
+<p>{{ trans('idir::backlinks.mail.forbidden.result') }}</p>
 
-<p>{{ trans('idir::dir_status.mail.forbidden.solve') }}</p>
+<p>{{ trans('idir::backlinks.mail.forbidden.solve') }}</p>
 
 <ul>
     <li>IP: {{ request()->server('SERVER_ADDR') }}</li>

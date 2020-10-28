@@ -809,6 +809,16 @@ class Dir extends Model
      *
      * @return boolean
      */
+    public function isBacklinkNotOk() : bool
+    {
+        return $this->status === static::BACKLINK_INACTIVE;
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @return boolean
+     */
     public function isIncorrect() : bool
     {
         return $this->status === static::INCORRECT_INACTIVE;

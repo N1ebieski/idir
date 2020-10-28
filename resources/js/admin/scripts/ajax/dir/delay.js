@@ -1,4 +1,4 @@
-jQuery(document).on('click', '.delayDirStatus', function (e) {
+jQuery(document).on('click', '.delayDir', function (e) {
     e.preventDefault();
 
     let $element = $(this);
@@ -22,7 +22,7 @@ jQuery(document).on('click', '.delayDirStatus', function (e) {
             $row.find('div.loader-absolute').remove();
         },
         success: function (response) {
-            $row.find('[data-btn-ok-class*="delayDirStatus"]').prop('disabled', true);
+            $row.html($.sanitize($(response.view).html()));
 
             $row.addClass('alert-success');
             setTimeout(function () {

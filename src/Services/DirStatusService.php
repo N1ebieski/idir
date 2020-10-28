@@ -7,9 +7,6 @@ use N1ebieski\ICore\Services\Interfaces\Creatable;
 use Illuminate\Database\Eloquent\Model;
 use N1ebieski\IDir\Models\DirStatus;
 
-/**
- * [DirStatusService description]
- */
 class DirStatusService implements Creatable
 {
     /**
@@ -39,6 +36,18 @@ class DirStatusService implements Creatable
     }
 
     /**
+     * Undocumented function
+     *
+     * @param array $attributes
+     * @return boolean
+     */
+    protected function isSync(array $attributes) : bool
+    {
+        return isset($attributes['url'])
+            && $this->dirStatus->getDir()->url !== $attributes['url'];
+    }
+
+    /**
      * [create description]
      * @param  array $attributes [description]
      * @return Model             [description]
@@ -58,13 +67,13 @@ class DirStatusService implements Creatable
      */
     public function sync(array $attributes) : ?Model
     {
-        $this->clear();
-
-        if (isset($attributes['url'])) {
-            return $this->create($attributes);
+        if (!$this->isSync($attributes)) {
+            return null;
         }
 
-        return null;
+        $this->clear();
+
+        return $this->create($attributes);
     }
 
     /**

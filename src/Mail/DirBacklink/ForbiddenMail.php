@@ -1,10 +1,10 @@
 <?php
 
-namespace N1ebieski\IDir\Mail\DirStatus;
+namespace N1ebieski\IDir\Mail\DirBacklink;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
-use N1ebieski\IDir\Models\DirStatus;
+use N1ebieski\IDir\Models\DirBacklink;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Translation\Translator as Lang;
 
@@ -14,9 +14,9 @@ class ForbiddenMail extends Mailable
 
     /**
      * [public description]
-     * @var DirStatus
+     * @var DirBacklink
      */
-    public $dirStatus;
+    public $dirBacklink;
 
     /**
      * Undocumented variable
@@ -28,12 +28,12 @@ class ForbiddenMail extends Mailable
     /**
      * Undocumented function
      *
-     * @param DirStatus $dirStatus
+     * @param DirBacklink $dirBacklink
      * @param Lang $lang
      */
-    public function __construct(DirStatus $dirStatus, Lang $lang)
+    public function __construct(DirBacklink $dirBacklink, Lang $lang)
     {
-        $this->dirStatus = $dirStatus;
+        $this->dirBacklink = $dirBacklink;
 
         $this->lang = $lang;
     }
@@ -45,14 +45,14 @@ class ForbiddenMail extends Mailable
      */
     public function build() : self
     {
-        $this->dirStatus->load(['dir', 'dir.user', 'dir.group']);
+        $this->dirBacklink->load(['dir', 'dir.user', 'dir.group']);
 
-        return $this->subject($this->lang->get('idir::status.mail.forbidden.title'))
-            ->to($this->dirStatus->dir->user->email)
+        return $this->subject($this->lang->get('idir::backlinks.mail.forbidden.title'))
+            ->to($this->dirBacklink->dir->user->email)
             ->with([
                 'greeting' => $this->greeting()
             ])
-            ->markdown('idir::mails.status.forbidden');
+            ->markdown('idir::mails.backlink.forbidden');
     }
 
     /**
@@ -62,6 +62,6 @@ class ForbiddenMail extends Mailable
      */
     protected function greeting() : string
     {
-        return $this->lang->get('icore::auth.hello') . ' ' . $this->dirStatus->dir->user->name . '!';
+        return $this->lang->get('icore::auth.hello') . ' ' . $this->dirBacklink->dir->user->name . '!';
     }
 }

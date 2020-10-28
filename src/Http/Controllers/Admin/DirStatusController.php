@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\App;
 use N1ebieski\IDir\Models\DirStatus;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\View;
 use N1ebieski\IDir\Http\Requests\Admin\DirStatus\DelayRequest;
 use N1ebieski\IDir\Events\Admin\DirStatus\DelayEvent as DirStatusDelayEvent;
 
@@ -27,6 +28,12 @@ class DirStatusController
 
         Event::dispatch(App::make(DirStatusDelayEvent::class, ['dirStatus' => $dirStatus]));
 
-        return Response::json(['success' => '']);
+        return Response::json([
+            'success' => '',
+            'view' => View::make('idir::admin.dir.partials.dir', [
+                'dir' => $dirStatus->dir->loadAllRels()
+            ])
+            ->render()
+        ]);
     }
 }

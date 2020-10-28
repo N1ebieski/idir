@@ -16,8 +16,8 @@ class EventServiceProvider extends ServiceProvider
         \N1ebieski\IDir\Events\Job\Dir\CompletedEvent::class => [
             \N1ebieski\IDir\Listeners\Dir\CompletedNotification::class
         ],
-        \N1ebieski\IDir\Events\Job\Dir\InvalidBacklinkEvent::class => [
-            \N1ebieski\IDir\Listeners\Dir\InvalidBacklinkNotification::class
+        \N1ebieski\IDir\Events\Job\DirBacklink\InvalidBacklinkEvent::class => [
+            \N1ebieski\IDir\Listeners\DirBacklink\InvalidBacklinkNotification::class
         ],
         \N1ebieski\IDir\Events\Admin\DirStatus\DelayEvent::class => [
             \N1ebieski\IDir\Listeners\DirStatus\ForbiddenNotification::class
