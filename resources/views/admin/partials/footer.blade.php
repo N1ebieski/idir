@@ -9,7 +9,7 @@
         class="btn-group my-auto" 
         id="themeToggle" 
         role="group" 
-        aria-label="Zmień motyw"
+        aria-label="{{ trans('icore::default.theme_toggle') }}"
     >
         <button 
             type="button" 
