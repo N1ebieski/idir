@@ -92,7 +92,7 @@
                 @endif
                 <li class="nav-item mr-sm-0 mr-md-2 mb-2 mb-md-0">
                     <a 
-                        class="nav-link text-primary btn btn-sm btn-outline-primary"
+                        class="nav-link btn btn-sm btn-primary text-white"
                         href="{{ route('web.dir.create_1') }}" 
                         role="button"
                     >
@@ -147,7 +147,7 @@
                     </div>
                     @else
                     <a 
-                        class="nav-link btn btn-sm btn-primary text-white text-nowrap text-center" 
+                        class="nav-link btn btn-sm btn-outline-primary text-nowrap text-center text-primary" 
                         href="{{ route('login') }}" 
                         role="button" 
                         title="{{ trans('icore::auth.route.login') }}"
