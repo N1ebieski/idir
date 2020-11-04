@@ -45,9 +45,9 @@ class CategoryRepo extends BaseCategoryRepo
                     })
                     ->leftJoin($morph->getTable(), function ($query) use ($morph) {
                         $query->on('categories_models.model_id', '=', "{$morph->getTable()}.id")
-                            ->where('categories_models.model_type', $morph->getMorphClass());
+                            ->where('categories_models.model_type', $morph->getMorphClass())
+                            ->where("{$morph->getTable()}.status", 1);
                     })
-                    ->where("{$morph->getTable()}.status", 1)
                     ->groupBy('categories.id');
             })
             ->poliType()
