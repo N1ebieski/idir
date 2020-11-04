@@ -15,14 +15,17 @@ class CommentComponent extends BaseCommentComponent
      * @param Comment $comment
      * @param ViewFactory $view
      * @param integer $limit
+     * @param integer $max_content
+     * @param string $orderby
      */
     public function __construct(
         Comment $comment,
         ViewFactory $view,
         int $limit = 5,
+        int $max_content = null,
         string $orderby = 'created_at|desc'
     ) {
-        parent::__construct($comment, $view, $limit, $orderby);
+        parent::__construct($comment, $view, $limit, $max_content, $orderby);
     }
 
     /**
@@ -34,6 +37,7 @@ class CommentComponent extends BaseCommentComponent
         return $this->view->make('idir::web.components.comment.dir.comment', [
             'comments' => $this->comment->makeCache()->rememberByComponent([
                 'limit' => $this->limit,
+                'max_content' => $this->max_content,
                 'orderby' => $this->orderby
             ])
         ]);

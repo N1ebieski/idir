@@ -18,6 +18,6 @@
         @endif
     </div>
     <div>
-        {!! $comment->content_as_html !!}
+        {!! $comment->content !!}
     </div>
 </div>
