@@ -18,6 +18,6 @@
         @endif
     </div>
     <div>
-        {!! $comment->content !!}
+        {{ $comment->content }}
     </div>
 </div>
