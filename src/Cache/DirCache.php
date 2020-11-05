@@ -262,8 +262,10 @@ class DirCache
      */
     public function rememberAdvertisingPrivilegedByComponent(array $component) : Collection
     {
+        $json = json_encode($component);
+
         return $this->cache->tags(["dirs"])->remember(
-            "dir.getAdvertisingPrivilegedByComponent",
+            "dir.getAdvertisingPrivilegedByComponent.{$json}",
             $this->carbon->now()->addMinutes($this->minutes),
             function () use ($component) {
                 return $this->dir->makeRepo()->getAdvertisingPrivilegedByComponent($component);
@@ -279,8 +281,10 @@ class DirCache
      */
     public function rememberByComponent(array $component) : Collection
     {
+        $json = json_encode($component);
+
         return $this->cache->tags(["dirs"])->remember(
-            "dir.getByComponent.{$component['orderby']}",
+            "dir.getByComponent.{$json}",
             $this->carbon->now()->addMinutes($this->minutes),
             function () use ($component) {
                 return $this->dir->makeRepo()->getByComponent($component);

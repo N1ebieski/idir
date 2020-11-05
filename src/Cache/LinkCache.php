@@ -42,10 +42,10 @@ class LinkCache extends BaseLinkCache
      */
     public function rememberLinksUnionDirsByComponent(Builder $dirs = null, array $component) : Collection
     {
-        $cats = $component['cats'] !== null ? implode('.', $component['cats']) : null;
+        $json = json_encode($component);
 
         return $this->cache->tags(['links'])->remember(
-            "link.getLinksUnionDirsByComponent.{$cats}",
+            "link.getLinksUnionDirsByComponent.{$json}",
             $this->carbon->now()->addMinutes($this->minutes),
             function () use ($dirs, $component) {
                 return $this->link->makeRepo()->getLinksUnionDirsByComponent($dirs, $component);
