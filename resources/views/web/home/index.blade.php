@@ -1,7 +1,6 @@
 @extends(config('idir.layout') . '::web.layouts.layout')
 
 @section('content')
-@include('icore::web.partials.alerts-absolute')
 <div class="jumbotron jumbotron-fluid m-0 background">
     <div class="container">
         <div class="w-md-75 mx-auto">
@@ -67,4 +66,5 @@
         @endif
     </div>
 </div>
+@include('icore::web.partials.toasts')
 @endsection
