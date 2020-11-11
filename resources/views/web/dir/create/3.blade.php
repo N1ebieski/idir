@@ -35,12 +35,15 @@
                 'value' => session('dir'),
                 'categories' => $categoriesSelection
             ])
+            <hr>
             <form 
                 method="post" 
                 action="{{ route('web.dir.store_3', [$group->id]) }}" 
                 id="createSummary"
             >
                 @csrf
+
+                @includeWhen(!auth()->check(), 'idir::web.dir.partials.email')
 
                 @includeWhen($group->backlink > 0 && optional($backlinks)->isNotEmpty(), 'idir::web.dir.partials.backlink')
 
@@ -80,3 +83,9 @@
     </div>
 </div>
 @endsection
+
+@push('script')
+@component('icore::web.partials.jsvalidation')
+{!! JsValidator::formRequest(\N1ebieski\IDir\Http\Requests\Web\Dir\Store3Request::class, '#createSummary'); !!}
+@endcomponent
+@endpush

@@ -36,6 +36,7 @@
                 'categories' => $dir->categories,
                 'group' => $dir->group
             ])
+            <hr>
             <form 
                 method="post" 
                 action="{{ route('web.dir.update_renew', [$dir->id]) }}" 

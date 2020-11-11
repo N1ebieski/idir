@@ -124,6 +124,10 @@ return [
     'related' => 'Podobne wpisy',
     'latest' => 'Najnowsze wpisy',
     'title' => 'Tytuł',
+    'email' => [
+        'label' => 'Adres e-mail',
+        'tooltip' => 'Na ten adres zostanie założone konto użytkownika. Jesli masz już konto - zaloguj się.'
+    ],
     'notes' => 'Uwagi moderatora',
     'more' => 'pokaż więcej &raquo',
     'correct' => 'Poprawa',

@@ -39,7 +39,8 @@ class DefaultRolesAndPermissionsSeeder extends Seeder
         Permission::firstOrCreate(['name' => 'admin.dirs.notification']);
 
         Permission::firstOrCreate(['name' => 'web.dirs.*']);
-        Permission::firstOrCreate(['name' => 'web.dirs.create']);
+        // Delete because Version 1.3 introduced adding entries by non-logged guests        
+        // Permission::firstOrCreate(['name' => 'web.dirs.create']);
         Permission::firstOrCreate(['name' => 'web.dirs.edit']);
         Permission::firstOrCreate(['name' => 'web.dirs.delete']);
         Permission::firstOrCreate(['name' => 'web.dirs.notification']);
