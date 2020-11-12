@@ -18,10 +18,15 @@ class LatestComponent extends BaseLatestComponent
      * @param Comment $comment
      * @param ViewFactory $view
      * @param integer $limit
+     * @param integer $max_content
      */
-    public function __construct(Comment $comment, ViewFactory $view, int $limit = 5)
-    {
-        parent::__construct($comment, $view, $limit);
+    public function __construct(
+        Comment $comment,
+        ViewFactory $view,
+        int $limit = 5,
+        int $max_content = null
+    ) {
+        parent::__construct($comment, $view, $limit, $max_content);
     }
 
     /**
