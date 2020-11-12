@@ -347,7 +347,7 @@ class DirService implements
 
         $this->dir->reports()->delete();
 
-        $this->dir->regions()->delete();
+        $this->dir->regions()->detach();
 
         $this->dir->map()->delete();
 
