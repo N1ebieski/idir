@@ -341,6 +341,8 @@ class DirService implements
 
         $this->dir->fields()->detach();
 
+        $this->dir->stats()->detach();
+
         $this->dir->payments()->delete();
 
         $this->dir->ratings()->delete();
@@ -371,6 +373,10 @@ class DirService implements
             ->where('model_type', $this->dir->getMorphClass())->delete();
 
         $this->dir->fields()->newPivotStatement()
+            ->whereIn('model_id', $ids)
+            ->where('model_type', $this->dir->getMorphClass())->delete();
+
+        $this->dir->stats()->newPivotStatement()
             ->whereIn('model_id', $ids)
             ->where('model_type', $this->dir->getMorphClass())->delete();
 

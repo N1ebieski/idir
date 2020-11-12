@@ -61,9 +61,7 @@ class Store3Request extends Store2Request
             Auth::check() === false ?
             [
                 'email' => 'bail|required|string|email|unique:users,email'
-            ] : [
-                'email' => 'bail|not_present'
-            ],
+            ] : [],
             [
                 'backlink' => [
                     'bail',
