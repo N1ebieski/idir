@@ -1,12 +1,12 @@
 <?php
 
-namespace N1ebieski\IDir\Services;
+namespace N1ebieski\IDir\Services\Payment;
 
+use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use N1ebieski\IDir\Models\Payment\Payment;
-use Illuminate\Support\Carbon;
-use Illuminate\Contracts\Config\Repository as Config;
 use N1ebieski\ICore\Services\Interfaces\Creatable;
+use Illuminate\Contracts\Config\Repository as Config;
 use N1ebieski\ICore\Services\Interfaces\StatusUpdatable;
 
 /**

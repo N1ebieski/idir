@@ -1,6 +1,6 @@
 <?php
 
-namespace N1ebieski\IDir\Services\Dir\Factories;
+namespace N1ebieski\IDir\Services\Payment\Dir;
 
 use N1ebieski\IDir\Models\Dir;
 use N1ebieski\IDir\Models\Price;

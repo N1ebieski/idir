@@ -1,11 +1,11 @@
 <?php
 
-namespace N1ebieski\IDir\Services\Dir\Factories;
+namespace N1ebieski\IDir\Services\User;
 
 use Illuminate\Support\Str;
 use N1ebieski\IDir\Models\User;
 
-class UserFactory
+class AutoUserFactory
 {
     /**
      * Undocumented variable

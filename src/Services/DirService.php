@@ -1,6 +1,6 @@
 <?php
 
-namespace N1ebieski\IDir\Services\Dir;
+namespace N1ebieski\IDir\Services;
 
 use Illuminate\Support\Carbon;
 use N1ebieski\IDir\Models\Dir;
@@ -8,14 +8,16 @@ use N1ebieski\IDir\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Contracts\Session\Session;
 use Illuminate\Contracts\Auth\Guard as Auth;
+use N1ebieski\IDir\Services\User\AutoUserFactory;
 use N1ebieski\IDir\Models\Payment\Dir\Payment;
 use N1ebieski\ICore\Services\Interfaces\Creatable;
 use N1ebieski\ICore\Services\Interfaces\Deletable;
 use N1ebieski\ICore\Services\Interfaces\Updatable;
+use Illuminate\Contracts\Container\Container as App;
 use N1ebieski\ICore\Services\Interfaces\FullUpdatable;
+use N1ebieski\IDir\Services\Payment\Dir\PaymentFactory;
 use N1ebieski\ICore\Services\Interfaces\GlobalDeletable;
 use N1ebieski\ICore\Services\Interfaces\StatusUpdatable;
-use N1ebieski\IDir\Services\Dir\Factories\PaymentFactory;
 
 class DirService implements
     Creatable,
@@ -52,24 +54,34 @@ class DirService implements
     protected $auth;
 
     /**
+     * Undocumented variable
+     *
+     * @var App
+     */
+    protected $app;
+
+    /**
      * Undocumented function
      *
      * @param Dir $dir
      * @param Session $session
      * @param Carbon $carbon
      * @param Auth $auth
+     * @param App $app
      */
     public function __construct(
         Dir $dir,
         Session $session,
         Carbon $carbon,
-        Auth $auth
+        Auth $auth,
+        App $app
     ) {
         $this->dir = $dir;
 
         $this->session = $session;
         $this->carbon = $carbon;
         $this->auth = $auth;
+        $this->app = $app;
     }
 
     /**
@@ -217,9 +229,9 @@ class DirService implements
      * @param array $attributes
      * @return User
      */
-    public function makeUser(array $attributes) : User
+    protected function makeUser(array $attributes) : User
     {
-        return $this->app->make(UserFactory::class, [
+        return $this->app->make(AutoUserFactory::class, [
             'email' => $attributes['email']
         ])
         ->makeUser();
@@ -294,7 +306,7 @@ class DirService implements
         $this->dir->retag($attributes['tags'] ?? []);
 
         if (isset($attributes['payment_type'])) {
-            $this->dir->setPayment($this->createPayment($attributes));
+            $this->dir->setPayment($this->makePayment($attributes));
         }
 
         return $this->dir->save();
@@ -368,7 +380,7 @@ class DirService implements
 
         $this->dir->reports()->delete();
 
-        $this->dir->regions()->delete();
+        $this->dir->regions()->detach();
 
         $this->dir->map()->delete();
 

@@ -2,19 +2,16 @@
 
 namespace N1ebieski\IDir\Models\Payment;
 
-use Illuminate\Database\Eloquent\Model;
-use N1ebieski\IDir\Services\PaymentService;
-use N1ebieski\IDir\Repositories\PaymentRepo;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\App;
-use N1ebieski\ICore\Models\Traits\Carbonable;
-use N1ebieski\ICore\Models\Traits\FullTextSearchable;
-use N1ebieski\ICore\Models\Traits\Polymorphic;
 use Ramsey\Uuid\Uuid;
+use Illuminate\Support\Facades\App;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
+use N1ebieski\IDir\Repositories\PaymentRepo;
+use N1ebieski\ICore\Models\Traits\Carbonable;
+use N1ebieski\ICore\Models\Traits\Polymorphic;
+use N1ebieski\IDir\Services\Payment\PaymentService;
+use N1ebieski\ICore\Models\Traits\FullTextSearchable;
 
-/**
- * [Payment description]
- */
 class Payment extends Model
 {
     use Polymorphic, Carbonable, FullTextSearchable;
