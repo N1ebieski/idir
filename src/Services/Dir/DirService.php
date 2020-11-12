@@ -1,23 +1,22 @@
 <?php
 
-namespace N1ebieski\IDir\Services;
+namespace N1ebieski\IDir\Services\Dir;
 
-use Illuminate\Database\Eloquent\Model;
-use N1ebieski\IDir\Models\Payment\Dir\Payment;
-use N1ebieski\IDir\Models\Price;
-use N1ebieski\IDir\Models\Dir;
-use Illuminate\Contracts\Session\Session;
 use Illuminate\Support\Carbon;
+use N1ebieski\IDir\Models\Dir;
+use N1ebieski\IDir\Models\User;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Contracts\Session\Session;
+use Illuminate\Contracts\Auth\Guard as Auth;
+use N1ebieski\IDir\Models\Payment\Dir\Payment;
 use N1ebieski\ICore\Services\Interfaces\Creatable;
-use N1ebieski\ICore\Services\Interfaces\Updatable;
-use N1ebieski\ICore\Services\Interfaces\StatusUpdatable;
-use N1ebieski\ICore\Services\Interfaces\FullUpdatable;
 use N1ebieski\ICore\Services\Interfaces\Deletable;
+use N1ebieski\ICore\Services\Interfaces\Updatable;
+use N1ebieski\ICore\Services\Interfaces\FullUpdatable;
 use N1ebieski\ICore\Services\Interfaces\GlobalDeletable;
+use N1ebieski\ICore\Services\Interfaces\StatusUpdatable;
+use N1ebieski\IDir\Services\Dir\Factories\PaymentFactory;
 
-/**
- * [DirService description]
- */
 class DirService implements
     Creatable,
     Updatable,
@@ -33,12 +32,6 @@ class DirService implements
     protected $dir;
 
     /**
-     * Model
-     * @var Price
-     */
-    protected $price;
-
-    /**
      * [private description]
      * @var Session
      */
@@ -52,24 +45,31 @@ class DirService implements
     protected $carbon;
 
     /**
+     * Undocumented variable
+     *
+     * @var Auth
+     */
+    protected $auth;
+
+    /**
      * Undocumented function
      *
      * @param Dir $dir
-     * @param Price $price
      * @param Session $session
      * @param Carbon $carbon
+     * @param Auth $auth
      */
     public function __construct(
         Dir $dir,
-        Price $price,
         Session $session,
-        Carbon $carbon
+        Carbon $carbon,
+        Auth $auth
     ) {
         $this->dir = $dir;
-        $this->price = $price;
 
         $this->session = $session;
         $this->carbon = $carbon;
+        $this->auth = $auth;
     }
 
     /**
@@ -77,7 +77,7 @@ class DirService implements
      *
      * @return string
      */
-    protected function makeSessionName() : string
+    protected function sessionName() : string
     {
         return is_int($this->dir->id) ? 'dirId.' . $this->dir->id : 'dir';
     }
@@ -89,7 +89,7 @@ class DirService implements
      */
     public function createOrUpdateSession(array $attributes) : void
     {
-        if ($this->session->has($this->makeSessionName())) {
+        if ($this->session->has($this->sessionName())) {
             $this->updateSession($attributes);
         } else {
             $this->createSession($attributes);
@@ -104,7 +104,7 @@ class DirService implements
     public function createSession(array $attributes) : void
     {
         $this->session->put(
-            $this->makeSessionName(),
+            $this->sessionName(),
             $this->dir->fields()->make()
                 ->setMorph($this->dir)
                 ->makeService()
@@ -120,28 +120,29 @@ class DirService implements
     public function updateSession(array $attributes) : void
     {
         $this->session->put(
-            $this->makeSessionName(),
+            $this->sessionName(),
             $this->dir->fields()->make()
                 ->setMorph($this->dir)
                 ->makeService()
                 ->prepareFieldAttribute($attributes)
-            + $this->session->get($this->makeSessionName())
+            + $this->session->get($this->sessionName())
         );
     }
 
     /**
-     * [makeStatus description]
+     * [status description]
      * @param  string|null  $payment_type  [description]
      * @return int [description]
      */
-    protected function makeStatus(string $payment_type = null) : int
+    protected function status(string $payment_type = null) : int
     {
         if ($payment_type === 'transfer') {
             return $this->dir::PAYMENT_INACTIVE;
         }
 
         return $this->dir->getGroup()->apply_status === $this->dir::ACTIVE ?
-            $this->dir::ACTIVE : $this->dir::INACTIVE;
+            $this->dir::ACTIVE
+            : $this->dir::INACTIVE;
     }
 
     /**
@@ -152,10 +153,14 @@ class DirService implements
     public function create(array $attributes) : Model
     {
         $this->dir->fill($attributes);
-        $this->dir->user()->associate(auth()->user());
+
+        $this->dir->user()->associate(
+            $this->auth->user() ?? $this->makeUser($attributes)
+        );
+
         $this->dir->group()->associate($this->dir->getGroup());
         $this->dir->content = $attributes['content_html'];
-        $this->dir->status = $this->makeStatus($attributes['payment_type'] ?? null);
+        $this->dir->status = $this->status($attributes['payment_type'] ?? null);
         $this->dir->save();
 
         if (isset($attributes['field'])) {
@@ -184,26 +189,40 @@ class DirService implements
         $this->dir->tag($attributes['tags'] ?? []);
 
         if (isset($attributes['payment_type'])) {
-            $this->dir->setPayment($this->createPayment($attributes));
+            $this->dir->setPayment($this->makePayment($attributes));
         }
 
         return $this->dir;
     }
 
     /**
-     * [createPayment description]
-     * @param  array   $attributes [description]
-     * @return Payment             [description]
+     * Undocumented function
+     *
+     * @param array $attributes
+     * @return Payment
      */
-    public function createPayment(array $attributes) : Payment
+    public function makePayment(array $attributes) : Payment
     {
-        return $this->dir->payments()->make()
-            ->setMorph($this->dir)
-            ->setOrderMorph(
-                $this->price->find($attributes["payment_{$attributes['payment_type']}"])
-            )
-            ->makeService()
-            ->create($attributes);
+        return $this->app->make(PaymentFactory::class, [
+            'dir' => $this->dir,
+            'priceId' => (int)$attributes["payment_{$attributes['payment_type']}"],
+            'paymentType' => $attributes['payment_type']
+        ])
+        ->makePayment();
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param array $attributes
+     * @return User
+     */
+    public function makeUser(array $attributes) : User
+    {
+        return $this->app->make(UserFactory::class, [
+            'email' => $attributes['email']
+        ])
+        ->makeUser();
     }
 
     /**
@@ -268,7 +287,7 @@ class DirService implements
             $this->dir->makeRepo()->nullablePrivileged();
         }
         $this->dir->content = $attributes['content_html'];
-        $this->dir->status = $this->makeStatus($attributes['payment_type'] ?? null);
+        $this->dir->status = $this->status($attributes['payment_type'] ?? null);
 
         $this->dir->categories()->sync($attributes['categories']);
 

@@ -3,7 +3,6 @@
 namespace N1ebieski\IDir\Models;
 
 use Carbon\Carbon;
-use Carbon\CarbonInterface;
 use N1ebieski\IDir\Models\Group;
 use Illuminate\Support\Facades\DB;
 use N1ebieski\IDir\Cache\DirCache;
@@ -13,7 +12,7 @@ use Mews\Purifier\Facades\Purifier;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Database\Eloquent\Model;
-use N1ebieski\IDir\Services\DirService;
+use N1ebieski\IDir\Services\Dir\DirService;
 use Cviebrock\EloquentTaggable\Taggable;
 use N1ebieski\ICore\Utils\MigrationUtil;
 use N1ebieski\IDir\Models\Stat\Dir\Stat;

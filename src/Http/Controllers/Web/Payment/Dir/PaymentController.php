@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\URL;
@@ -36,7 +37,7 @@ class PaymentController extends Controller implements Polymorphic
         try {
             $transferUtil->setup([
                 'amount' => $payment->order->price,
-                'desc' => trans('idir::payments.dir.desc', [
+                'desc' => Lang::get('idir::payments.dir.desc', [
                     'title' => $payment->morph->title,
                     'group' => $payment->order->group->name,
                     'days' => $days = $payment->order->days,
@@ -46,7 +47,9 @@ class PaymentController extends Controller implements Polymorphic
                 ]),
                 'userdata' => json_encode([
                     'uuid' => $payment->uuid,
-                    'redirect' => URL::route('web.profile.edit_dir')
+                    'redirect' => Auth::check() ?
+                        URL::route('web.profile.edit_dir')
+                        : URL::route('web.dir.create_1')
                 ])
             ])
             ->makeResponse();
