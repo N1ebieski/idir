@@ -156,7 +156,7 @@ class Store3Request extends Store2Request
     {
         return [
             'backlink_url.regex' => __('validation.regex') . ' ' . Lang::get('idir::validation.backlink_url'),
-            'email.unique' => 'Taki adres email istnieje już w bazie. <a href="' . URL::route('login') .'">Zaloguj się</a> by dodać wpis na swoje konto.'
+            'email.unique' => Lang::get('idir::validation.email', ['login' => URL::route('login')])
         ];
     }
 
