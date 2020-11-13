@@ -17,6 +17,7 @@ use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Psr7\Response as GuzzleResponse;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Support\Facades\Lang;
 
 /**
  * [DirTest description]
@@ -106,13 +107,6 @@ class DirTest extends TestCase
         $response->assertDontSee($private_group->name);
     }
 
-    public function test_dir_create_2_as_guest()
-    {
-        $response = $this->get(route('web.dir.create_2', [34]));
-
-        $response->assertRedirect(route('login'));
-    }
-
     public function test_dir_create_2_noexist_group()
     {
         $user = factory(User::class)->states('user')->create();
@@ -178,13 +172,6 @@ class DirTest extends TestCase
         $response->assertOk()->assertViewIs('idir::web.dir.create.2');
         $response->assertSee('trumbowyg');
         $response->assertSee(route('web.dir.store_2', [$group->id]));
-    }
-
-    public function test_dir_store_2_as_guest()
-    {
-        $response = $this->post(route('web.dir.store_2', [34]));
-
-        $response->assertRedirect(route('login'));
     }
 
     public function test_dir_store_2_noexist_group()
@@ -260,16 +247,48 @@ class DirTest extends TestCase
 
     public function test_dir_create_3_as_guest()
     {
-        $response = $this->get(route('web.dir.create_3', [34]));
+        $group = factory(Group::class)
+            ->states([
+                'public',
+                'required_url',
+                'additional options for editing content'
+            ])->create();
 
-        $response->assertRedirect(route('login'));
+        $response1 = $this->post(route('web.dir.store_2', [$group->id]), $this->dirSetup());
+
+        $response2 = $this->get(route('web.dir.create_3', [$group->id]));
+
+        $response2->assertSeeInOrder([Lang::get('idir::dirs.email.tooltip'), 'name="email"']);
     }
 
-    public function test_dir_store_3_as_guest()
+    public function test_dir_create_3_as_logged()
     {
-        $response = $this->post(route('web.dir.store_3', [34]));
+        $user = factory(User::class)->states('user')->create();
 
-        $response->assertRedirect(route('login'));
+        Auth::login($user, true);
+
+        $group = factory(Group::class)
+            ->states([
+                'public',
+                'required_url',
+                'additional options for editing content'
+            ])->create();
+
+        $response1 = $this->post(route('web.dir.store_2', [$group->id]), $this->dirSetup());
+
+        $response2 = $this->get(route('web.dir.create_3', [$group->id]));
+
+        $response2->assertDontSee(Lang::get('idir::dirs.email.tooltip'));
+    }
+
+    public function test_dir_store_3_as_guest_validation_email_fail()
+    {
+        $group = factory(Group::class)->states(['public', 'required_url'])->create();
+
+        $response = $this->post(route('web.dir.store_3', [$group->id]), $this->dirSetup());
+
+        $response->assertSessionHasErrors(['email']);
+        $response->assertRedirect(route('web.dir.create_3', [$group->id]));
     }
 
     public function test_dir_store_3_validation_url_fail()
@@ -459,7 +478,8 @@ class DirTest extends TestCase
 
         $this->assertDatabaseHas('dirs', [
             'id' => $dir->id,
-            'status' => 2
+            'status' => 2,
+            'user_id' => $user->id
         ]);
 
         $this->assertDatabaseHas('payments', [
@@ -473,6 +493,29 @@ class DirTest extends TestCase
 
         $response->assertSessionDoesntHaveErrors('payment_transfer');
         $response->assertRedirect(route('web.payment.dir.show', [$payment->uuid]));
+    }
+
+    public function test_dir_store_3_as_guest()
+    {
+        $group = factory(Group::class)->states(['public', 'apply_inactive'])->create();
+
+        $response = $this->post(route('web.dir.store_3', [$group->id]), [
+            'email' => 'kontakt@intelekt.net.pl',
+        ] + $this->dirSetup());
+
+        $dir = Dir::orderBy('id', 'desc')->first();
+
+        $user = User::orderBy('id', 'desc')->first();
+
+        $this->assertDatabaseHas('dirs', [
+            'id' => $dir->id,
+            'status' => 0,
+            'user_id' => $user->id
+        ]);
+
+        $this->assertTrue($user->email === 'kontakt@intelekt.net.pl');
+
+        $response->assertRedirect(route('web.dir.create_1'));
     }
 
     public function test_dir_store_3_validation_payment_code_sms_fail()
