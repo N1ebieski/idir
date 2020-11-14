@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\UploadedFile;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Psr7\Response as GuzzleResponse;
+use Illuminate\Support\Str;
 
 /**
  * [DirTest description]
@@ -151,7 +152,11 @@ class PaymentTest extends TestCase
 
         $response = $this->post(route('api.payment.dir.verify'), $providerSetup);
 
-        $response->assertStatus(403)->assertSeeText('Invalid status');
+        $payment = $payment->find($payment->uuid);
+
+        $this->assertTrue(Str::contains($payment->logs, 'Invalid status'));
+
+        $response->assertOk();
     }
 
     public function test_payment_verify_amount_error()
@@ -174,7 +179,11 @@ class PaymentTest extends TestCase
 
         $response = $this->post(route('api.payment.dir.verify'), $providerSetup);
 
-        $response->assertStatus(403)->assertSeeText('Invalid amount');
+        $payment = $payment->find($payment->uuid);
+        
+        $this->assertTrue(Str::contains($payment->logs, 'Invalid amount'));
+
+        $response->assertOk();
     }
 
     public function test_payment_verify_sign_error()
@@ -197,6 +206,10 @@ class PaymentTest extends TestCase
 
         $response = $this->post(route('api.payment.dir.verify'), $providerSetup);
 
-        $response->assertStatus(403)->assertSeeText('Invalid sign');
+        $payment = $payment->find($payment->uuid);
+        
+        $this->assertTrue(Str::contains($payment->logs, 'Invalid sign'));
+
+        $response->assertOk(403);
     }
 }

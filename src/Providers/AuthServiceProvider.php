@@ -15,7 +15,6 @@ class AuthServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = [
-        \N1ebieski\IDir\Models\Payment\Dir\Payment::class => \N1ebieski\IDir\Policies\PaymentPolicy::class,
         \N1ebieski\IDir\Models\Dir::class => \N1ebieski\IDir\Policies\DirPolicy::class
     ];
 

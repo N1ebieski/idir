@@ -13,9 +13,6 @@ use N1ebieski\IDir\Http\Controllers\Api\Payment\Dir\Polymorphic;
 use N1ebieski\IDir\Http\Requests\Api\Payment\Interfaces\VerifyRequestStrategy;
 use N1ebieski\IDir\Utils\Payment\Interfaces\TransferUtilStrategy;
 
-/**
- * [PaymentController description]
- */
 class PaymentController extends Controller implements Polymorphic
 {
     /**
@@ -38,17 +35,17 @@ class PaymentController extends Controller implements Polymorphic
             App::abort(HttpResponse::HTTP_NOT_FOUND);
         }
 
-        Event::dispatch(App::make(VerifyAttemptEvent::class, ['payment' => $payment]));
-
         try {
-            $transferUtil->setup(['amount' => $payment->order->price])->authorize($request->validated());
-        } catch (\N1ebieski\IDir\Exceptions\Payment\Exception $e) {
-            throw $e->setPayment($payment);
-        }
+            Event::dispatch(App::make(VerifyAttemptEvent::class, ['payment' => $payment]));
 
-        $payment->makeRepo()->paid();
+            $transferUtil->setup(['amount' => $payment->order->price])->authorize($request->validated());
+
+            $payment->makeRepo()->paid();
         
-        Event::dispatch(App::make(VerifySuccessfulEvent::class, ['payment' => $payment]));
+            Event::dispatch(App::make(VerifySuccessfulEvent::class, ['payment' => $payment]));
+        } catch (\N1ebieski\IDir\Exceptions\Payment\Exception $e) {
+            $e->setPayment($payment)->report();
+        }
 
         return 'OK';
     }

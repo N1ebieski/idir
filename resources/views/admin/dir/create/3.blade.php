@@ -36,6 +36,7 @@
                 'value' => session('dir'),
                 'categories' => $categoriesSelection
             ])
+            <hr>
             <form 
                 method="post" 
                 action="{{ route('admin.dir.store_3', [$group->id]) }}" 

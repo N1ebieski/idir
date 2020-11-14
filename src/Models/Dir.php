@@ -3,7 +3,6 @@
 namespace N1ebieski\IDir\Models;
 
 use Carbon\Carbon;
-use Carbon\CarbonInterface;
 use N1ebieski\IDir\Models\Group;
 use Illuminate\Support\Facades\DB;
 use N1ebieski\IDir\Cache\DirCache;

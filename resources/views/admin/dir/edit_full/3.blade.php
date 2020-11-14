@@ -40,6 +40,7 @@
                 'value' => session("dirId.{$dir->id}"),
                 'categories' => $categoriesSelection
             ])
+            <hr>
             <form 
                 method="post" 
                 action="{{ route('admin.dir.update_full_3', [$dir->id, $group->id]) }}" 

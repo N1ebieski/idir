@@ -362,7 +362,9 @@ class DirController
         UpdateRenewCodeRequest $requestPayment,
         UpdateRenewResponse $response
     ) : RedirectResponse {
-        $dir->setPayment($payment = $dir->makeService()->createPayment($request->validated()));
+        $dir->setPayment(
+            $payment = $dir->makeService()->makePayment($request->validated())
+        );
 
         Event::dispatch(App::make(PaymentStoreEvent::class, ['payment' => $payment]));
         Event::dispatch(App::make(DirUpdateRenewEvent::class, ['dir' => $dir]));

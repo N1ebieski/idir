@@ -90,6 +90,7 @@
                     @yield('search-toggler')
                 </li>
                 @endif
+                @if (app('router')->has('web.dir.create_1'))
                 <li class="nav-item mr-sm-0 mr-md-2 mb-2 mb-md-0">
                     <a 
                         class="nav-link btn btn-sm btn-primary text-white"
@@ -99,6 +100,7 @@
                         {{ trans('idir::dirs.route.create.index') }}
                     </a>
                 </li>
+                @endif
                 <li class="nav-item dropdown {{ $isRouteContains('profile') }}">
                     @auth
                     <a 

@@ -124,6 +124,10 @@ return [
     'related' => 'Related entries',
     'latest' => 'Recent entries',
     'title' => 'Title',
+    'email' => [
+        'label' => 'E-mail adress',
+        'tooltip' => 'A user account will be created at this address. If you already have an account - log in.'
+    ],
     'notes' => 'Moderator\'s comments',
     'more' => 'show more &raquo',
     'correct' => 'Correct.',

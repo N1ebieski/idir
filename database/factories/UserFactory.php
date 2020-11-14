@@ -17,7 +17,7 @@ use Illuminate\Support\Str;
 
 $factory->define(User::class, function (Faker $faker) {
     return [
-        'name' => str_replace("'", '', $faker->name),
+        'name' => str_replace("'", '', $faker->unique()->name),
         'ip' => $faker->ipv4,
         'email' => $faker->unique()->safeEmail,
         'email_verified_at' => now(),

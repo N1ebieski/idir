@@ -2,14 +2,16 @@
 
 namespace N1ebieski\IDir\Http\Requests\Web\Dir;
 
+use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
+use N1ebieski\ICore\Models\Link;
+use N1ebieski\IDir\Models\Group;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Lang;
 use N1ebieski\IDir\Http\Requests\Web\Dir\Store2Request;
 use N1ebieski\ICore\View\Components\CaptchaComponent as Captcha;
-use Illuminate\Validation\Rule;
-use Illuminate\Support\Str;
-use N1ebieski\ICore\Models\Link;
-use N1ebieski\IDir\Models\Group;
 
 class Store3Request extends Store2Request
 {
@@ -56,6 +58,10 @@ class Store3Request extends Store2Request
     {
         return array_merge(
             parent::rules(),
+            Auth::check() === false ?
+            [
+                'email' => 'bail|required|string|email|unique:users,email'
+            ] : [],
             [
                 'backlink' => [
                     'bail',
@@ -149,7 +155,8 @@ class Store3Request extends Store2Request
     public function messages()
     {
         return [
-            'backlink_url.regex' => __('validation.regex') . ' ' . Lang::get('idir::validation.backlink_url')
+            'backlink_url.regex' => __('validation.regex') . ' ' . Lang::get('idir::validation.backlink_url'),
+            'email.unique' => Lang::get('idir::validation.email', ['login' => URL::route('login')])
         ];
     }
 
