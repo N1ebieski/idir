@@ -57,7 +57,8 @@ class AutoUserFactory
         return $this->user->makeService()
             ->create([
                 'email' => $this->email,
-                'name' => 'user-' . $this->str->uuid()
+                'name' => 'user-' . $this->str->uuid(),
+                'password' => $this->str->random(12)
             ]);
     }
 }
