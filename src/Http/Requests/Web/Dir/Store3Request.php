@@ -156,7 +156,10 @@ class Store3Request extends Store2Request
     {
         return [
             'backlink_url.regex' => __('validation.regex') . ' ' . Lang::get('idir::validation.backlink_url'),
-            'email.unique' => Lang::get('idir::validation.email', ['login' => URL::route('login')])
+            'email.unique' => Lang::get('idir::validation.email', [
+                'login' => URL::route('login'),
+                'reset' => URL::route('password.request')
+            ])
         ];
     }
 
