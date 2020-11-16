@@ -5,7 +5,7 @@
 
 @slot('modal_title')
 <i class="fas fa-sort-amount-up"></i>
-<span>{{ trans('icore::filter.filter_title') }}</span>
+<span> {{ trans('icore::filter.filter_title') }}</span>
 @endslot
 
 @slot('modal_body')

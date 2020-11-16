@@ -66,7 +66,7 @@
 @slot('modal_size', 'modal-lg')
 @slot('modal_title')
 <i class="far fa-edit"></i>
-<span>{{ trans('idir::fields.route.edit') }}</span>
+<span> {{ trans('idir::fields.route.edit') }}</span>
 @endslot
 @endcomponent
 
@@ -74,7 +74,7 @@
 @slot('modal_id', 'editPositionModal')
 @slot('modal_title')
 <i class="fas fa-sort-amount-up"></i>
-<span>{{ trans('idir::fields.route.edit_position') }}</span>
+<span> {{ trans('idir::fields.route.edit_position') }}</span>
 @endslot
 @endcomponent
 
@@ -83,7 +83,7 @@
 @slot('modal_size', 'modal-lg')
 @slot('modal_title')
 <i class="far fa-plus-square"></i>
-<span>{{ trans('idir::fields.route.create') }}</span>
+<span> {{ trans('idir::fields.route.create') }}</span>
 @endslot
 @endcomponent
 
