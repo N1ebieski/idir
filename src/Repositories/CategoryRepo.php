@@ -36,7 +36,7 @@ class CategoryRepo extends BaseCategoryRepo
             ->when($component['count'] === true, function ($query) {
                 $morph = $this->category->morphs()->make();
 
-                $query->selectRaw('`categories`.*, COUNT(`categories_models`.`model_id`) AS `nested_morphs_count`')
+                $query->selectRaw("`categories`.*, COUNT(`{$morph->getTable()}`.`id`) AS `nested_morphs_count`")
                     ->leftJoin('categories_closure', function ($query) {
                         $query->on('categories.id', '=', 'categories_closure.ancestor');
                     })
