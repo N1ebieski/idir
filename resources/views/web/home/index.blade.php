@@ -24,6 +24,7 @@
                         data-route="{{ route('web.search.autocomplete') }}"
                         placeholder="{{ trans('icore::search.search') }}" 
                         name="search"
+                        autocomplete="off"
                     >
                     <input type="hidden" name="source" value="dir">
                     <span class="input-group-append">

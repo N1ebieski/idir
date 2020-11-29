@@ -46,6 +46,7 @@
                         class="form-control border-right-0" 
                         placeholder="{{ trans('icore::search.search') }}"
                         value="{{ $search ?? null }}"
+                        autocomplete="off"
                     >
                     <select class="custom-select" name="source">
                         <option value="post" {{ $isRouteContains('post', 'selected') }}>
