@@ -54,12 +54,12 @@ class CategoryRepo extends BaseCategoryRepo
                 $query->selectRaw('`categories`.*, COUNT(`morphs`.`morph_id`) as `nested_morphs_count`')
                     ->joinSub($morphs, 'morphs', function ($query) {
                         $query->on('categories.id', '=', 'morphs.id');
-                    });
+                    })
+                    ->groupBy('categories.id');
             })
             ->poliType()
             ->active()
             ->root()
-            ->groupBy('categories.id')
             ->orderBy('position', 'asc')
             ->get();
     }
