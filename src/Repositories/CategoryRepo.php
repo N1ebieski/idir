@@ -36,7 +36,8 @@ class CategoryRepo extends BaseCategoryRepo
             ->when($component['count'] === true, function ($query) {
                 $morph = $this->category->morphs()->make();
 
-                $query->selectRaw("`categories`.*, COUNT(`{$morph->getTable()}`.`id`) AS `nested_morphs_count`")
+                $morphs = $this->category
+                    ->selectRaw("`categories`.`id`, `{$morph->getTable()}`.`id` as `morph_id`")
                     ->leftJoin('categories_closure', function ($query) {
                         $query->on('categories.id', '=', 'categories_closure.ancestor');
                     })
@@ -48,11 +49,17 @@ class CategoryRepo extends BaseCategoryRepo
                             ->where('categories_models.model_type', $morph->getMorphClass())
                             ->where("{$morph->getTable()}.status", 1);
                     })
-                    ->groupBy('categories.id');
+                    ->groupBy("{$morph->getTable()}.id", 'categories.id');
+
+                $query->selectRaw('`categories`.*, COUNT(`morphs`.`morph_id`) as `nested_morphs_count`')
+                    ->joinSub($morphs, 'morphs', function ($query) {
+                        $query->on('categories.id', '=', 'morphs.id');
+                    });
             })
             ->poliType()
             ->active()
             ->root()
+            ->groupBy('categories.id')
             ->orderBy('position', 'asc')
             ->get();
     }
