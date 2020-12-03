@@ -121,7 +121,7 @@ class ModeratorNotificationCron
     protected function isTimeToSend() : bool
     {
         return $this->carbon->parse($this->getCheckpoint())
-            ->addHours($this->hours) < $this->carbon->now();
+            ->addHours($this->hours)->lessThanOrEqualTo($this->carbon->now());
     }
 
     /**
