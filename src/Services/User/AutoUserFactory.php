@@ -3,6 +3,7 @@
 namespace N1ebieski\IDir\Services\User;
 
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
 use N1ebieski\IDir\Models\User;
 
 class AutoUserFactory
@@ -24,6 +25,13 @@ class AutoUserFactory
     /**
      * Undocumented variable
      *
+     * @var Request
+     */
+    protected $request;
+
+    /**
+     * Undocumented variable
+     *
      * @var string
      */
     protected $email;
@@ -38,11 +46,13 @@ class AutoUserFactory
     public function __construct(
         User $user,
         Str $str,
+        Request $request,
         string $email
     ) {
         $this->user = $user;
 
         $this->str = $str;
+        $this->request = $request;
 
         $this->email = $email;
     }
@@ -54,11 +64,17 @@ class AutoUserFactory
      */
     public function makeUser() : User
     {
-        return $this->user->makeService()
+        $user = $this->user->makeService()
             ->create([
                 'email' => $this->email,
                 'name' => 'user-' . $this->str->uuid(),
                 'password' => $this->str->random(12)
             ]);
+
+        $user->update([
+            'ip' => $this->request->ip()
+        ]);
+
+        return $user;
     }
 }
