@@ -2,22 +2,27 @@
 
 namespace N1ebieski\IDir\Tests\Feature\Web\Dir\Create;
 
-use N1ebieski\ICore\Models\Link;
+use Tests\TestCase;
 use N1ebieski\IDir\Models\Dir;
 use N1ebieski\IDir\Models\Code;
-use N1ebieski\IDir\Models\Field\Group\Field;
 use N1ebieski\IDir\Models\User;
+use N1ebieski\ICore\Models\Link;
 use N1ebieski\IDir\Models\Group;
-use N1ebieski\IDir\Models\Category\Dir\Category;
 use N1ebieski\IDir\Models\Price;
-use N1ebieski\IDir\Models\Payment\Dir\Payment;
-use Tests\TestCase;
-use Illuminate\Support\Facades\Auth;
-use GuzzleHttp\Client as GuzzleClient;
-use GuzzleHttp\Psr7\Response as GuzzleResponse;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Lang;
+use Illuminate\Support\Facades\Mail;
+use GuzzleHttp\Client as GuzzleClient;
+use Illuminate\Support\Facades\Config;
+use N1ebieski\IDir\Mail\Dir\ModeratorMail;
+use N1ebieski\IDir\Models\Field\Group\Field;
+use N1ebieski\IDir\Models\Payment\Dir\Payment;
+use GuzzleHttp\Psr7\Response as GuzzleResponse;
+use N1ebieski\IDir\Models\Category\Dir\Category;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Support\Facades\App;
+use N1ebieski\IDir\Crons\Dir\ModeratorNotificationCron;
 
 /**
  * [DirTest description]
@@ -782,5 +787,78 @@ class DirTest extends TestCase
         $response->assertSessionDoesntHaveErrors('code_sms');
         $this->assertTrue($dir->privileged_at !== null && $dir->status === 1);
         $response->assertRedirect(route('web.dir.show', [$dir->slug]));
+    }
+
+    public function test_moderator_notification_dirs()
+    {
+        $user = factory(User::class)->states('user')->create();
+        $admin = factory(User::class)->states('admin')->create();
+
+        Auth::login($user, true);
+
+        $group = factory(Group::class)->states(['public', 'apply_inactive', 'without_url'])->create();
+
+        Config::set('idir.dir.notification.hours', 0);
+        Config::set('idir.dir.notification.dirs', 1);
+
+        Mail::fake();
+
+        $response = $this->post(route('web.dir.store_3', [$group->id]), $this->dirSetup());
+
+        $dir = Dir::orderBy('id', 'desc')->first();
+
+        $this->assertDatabaseHas('dirs', [
+            'id' => $dir->id,
+            'status' => 0,
+            'group_id' => $group->id,
+            'privileged_to' => null
+        ]);
+
+        Mail::assertQueued(ModeratorMail::class, function ($mail) use ($admin) {
+            $mail->build(
+                App::make(Dir::class),
+                App::make(\Illuminate\Contracts\Translation\Translator::class)
+            );
+
+            return $mail->hasTo($admin->email);
+        });
+    }
+
+    public function test_moderator_notification_hours()
+    {
+        $user = factory(User::class)->states('user')->create();
+        $admin = factory(User::class)->states('admin')->create();
+
+        Auth::login($user, true);
+
+        $group = factory(Group::class)->states(['public', 'apply_inactive', 'without_url'])->create();
+
+        Config::set('idir.dir.notification.dirs', 0);
+        Config::set('idir.dir.notification.hours', 1);
+
+        Mail::fake();
+
+        $response = $this->post(route('web.dir.store_3', [$group->id]), $this->dirSetup());
+
+        $dir = Dir::orderBy('id', 'desc')->first();
+
+        $this->assertDatabaseHas('dirs', [
+            'id' => $dir->id,
+            'status' => 0,
+            'group_id' => $group->id,
+            'privileged_to' => null
+        ]);
+
+        $schedule = App::make(ModeratorNotificationCron::class);
+        $schedule();
+
+        Mail::assertQueued(ModeratorMail::class, function ($mail) use ($admin) {
+            $mail->build(
+                App::make(Dir::class),
+                App::make(\Illuminate\Contracts\Translation\Translator::class)
+            );
+
+            return $mail->hasTo($admin->email);
+        });
     }
 }

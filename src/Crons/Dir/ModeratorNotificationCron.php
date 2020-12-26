@@ -2,15 +2,15 @@
 
 namespace N1ebieski\IDir\Crons\Dir;
 
-use Illuminate\Contracts\Mail\Mailer;
-use N1ebieski\IDir\Mail\Dir\ModeratorMail;
+use Illuminate\Support\Carbon;
 use N1ebieski\IDir\Models\Dir;
 use N1ebieski\IDir\Models\User;
-use Illuminate\Contracts\Config\Repository as Config;
-use Illuminate\Contracts\Cache\Factory as Cache;
-use Illuminate\Support\Carbon;
-use Illuminate\Contracts\Container\Container as App;
+use Illuminate\Contracts\Mail\Mailer;
+use N1ebieski\IDir\Mail\Dir\ModeratorMail;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Contracts\Cache\Factory as Cache;
+use Illuminate\Contracts\Container\Container as App;
+use Illuminate\Contracts\Config\Repository as Config;
 
 class ModeratorNotificationCron
 {
@@ -96,7 +96,7 @@ class ModeratorNotificationCron
 
         $this->config = $config;
         $this->carbon = $carbon;
-        $this->cache = $cache;
+        $this->cache = $cache->store($config->has('cache.stores.system') ? 'system' : null);
         $this->mailer = $mailer;
         $this->app = $app;
 

@@ -7,7 +7,7 @@ use N1ebieski\IDir\Models\User;
 use Illuminate\Contracts\Mail\Mailer;
 use N1ebieski\IDir\Mail\Dir\ModeratorMail;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Contracts\Cache\Repository as Cache;
+use Illuminate\Contracts\Cache\Factory as Cache;
 use Illuminate\Contracts\Foundation\Application as App;
 use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Contracts\Debug\ExceptionHandler as Exception;
@@ -109,7 +109,7 @@ class SendModeratorNotification
 
         $this->app = $app;
         $this->mailer = $mailer;
-        $this->cache = $cache;
+        $this->cache = $cache->store($config->has('cache.stores.system') ? 'system' : null);
         $this->exception = $exception;
 
         $this->counter = (int)$config->get('idir.dir.notification.dirs');
