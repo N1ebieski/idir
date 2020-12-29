@@ -70,12 +70,14 @@ trait FieldsExtended
         }
 
         if (Storage::disk('public')->exists($this->input("field.{$field->id}"))) {
+            $path = public_path('storage/') . $this->input("field.{$field->id}");
+
             $this->merge([
                 'field' => [
                     $field->id => new UploadedFile(
-                        public_path('storage/') . $this->input("field.{$field->id}"),
+                        $path,
                         $this->input("field.{$field->id}"),
-                        null,
+                        mime_content_type($path),
                         null,
                         true
                     )
