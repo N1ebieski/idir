@@ -19,6 +19,7 @@
                     </span>
                 </a>
                 <span>{{ $group->name }}</span>
+                <span class="badge badge-success">ID {{ $group->id }}</span>                
             </li>
             <li>
                 {{ trans("idir::groups.visible.{$group->visible}") }}
