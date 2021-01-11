@@ -3,6 +3,7 @@
 namespace N1ebieski\IDir\View\Components;
 
 use Illuminate\View\View;
+use Illuminate\Http\Request;
 use N1ebieski\IDir\Models\Dir;
 use N1ebieski\IDir\Models\Link;
 use Illuminate\Contracts\Support\Htmlable;
@@ -40,6 +41,13 @@ class LinkComponent implements Htmlable
     protected $collect;
 
     /**
+     * Undocumented variable
+     *
+     * @var Request
+     */
+    protected $request;
+
+    /**
      * Number of columns
      * @var int
      */
@@ -58,6 +66,7 @@ class LinkComponent implements Htmlable
      * @param Link $link
      * @param ViewFactory $view
      * @param Collect $collect
+     * @param Request $request
      * @param integer $limit
      * @param array $cats
      */
@@ -66,6 +75,7 @@ class LinkComponent implements Htmlable
         Link $link,
         ViewFactory $view,
         Collect $collect,
+        Request $request,
         int $limit = 5,
         array $cats = null
     ) {
@@ -74,6 +84,7 @@ class LinkComponent implements Htmlable
 
         $this->view = $view;
         $this->collect = $collect;
+        $this->request = $request;
 
         $this->limit = $limit;
         $this->makeCats($cats);
@@ -105,6 +116,7 @@ class LinkComponent implements Htmlable
             : null;
 
         $links = $this->link->makeCache()->rememberLinksUnionDirsByComponent($dirs, [
+            'home' => $this->request->is('/'),
             'cats' => $this->cats,
             'limit' => $this->limit
         ]);
