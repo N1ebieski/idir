@@ -2,9 +2,10 @@
 
 namespace N1ebieski\IDir\Seeds\SEOKatalog;
 
-use N1ebieski\IDir\Seeds\SEOKatalog\SEOKatalogSeeder;
+use Illuminate\Support\Str;
 use N1ebieski\IDir\Models\User;
 use Illuminate\Support\Facades\DB;
+use N1ebieski\IDir\Seeds\SEOKatalog\SEOKatalogSeeder;
 
 class UsersSeeder extends SEOKatalogSeeder
 {
@@ -30,13 +31,16 @@ class UsersSeeder extends SEOKatalogSeeder
             ->orderBy('id', 'asc')
             ->chunk(1000, function ($items) {
                 $items->each(function ($item) {
+                    $name = User::firstWhere('name', '=', $item->nick) === null ?
+                        $item->nick : 'user-' . Str::uuid();
+
                     $user = User::firstOrCreate(
                         [
                             'email' => $item->email
                         ],
                         [
                             'id' => $this->user_last_id + $item->id,
-                            'name' => $item->nick,
+                            'name' => $name,
                             'status' => $item->active
                         ]
                     );
