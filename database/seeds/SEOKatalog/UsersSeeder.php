@@ -41,6 +41,7 @@ class UsersSeeder extends SEOKatalogSeeder
                         [
                             'id' => $this->user_last_id + $item->id,
                             'name' => $name,
+                            'password' => Str::random(12),
                             'status' => $item->active
                         ]
                     );

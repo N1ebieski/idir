@@ -141,10 +141,10 @@ class DirsSeeder extends SEOKatalogSeeder
 
                     $dir->stats()->attach([
                         $defaultStats->firstWhere('slug', 'click')->id => [
-                            'value' => $dir->clicks
+                            'value' => $item->clicks
                         ],
                         $defaultStats->firstWhere('slug', 'view')->id => [
-                            'value' => $dir->views
+                            'value' => $item->views
                         ]
                     ]);
 
