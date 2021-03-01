@@ -1,12 +1,12 @@
 {
     "/js/vendor/idir/admin/admin.js": "/js/vendor/idir/admin/admin.js?id=ce2bc9134e99ca7f1159",
-    "/js/vendor/idir/vendor/vendor.js": "/js/vendor/idir/vendor/vendor.js?id=c8bd143743a67a021656",
-    "/css/vendor/idir/vendor/vendor.css": "/css/vendor/idir/vendor/vendor.css?id=b13f1642111ed2e256ec",
+    "/js/vendor/idir/vendor/vendor.js": "/js/vendor/idir/vendor/vendor.js?id=ec80ff23c9997bc27c07",
+    "/css/vendor/idir/vendor/vendor.css": "/css/vendor/idir/vendor/vendor.css?id=45469b20b15199f3e477",
     "/css/vendor/idir/web/web.css": "/css/vendor/idir/web/web.css?id=a6343ebcc5739939590e",
     "/css/vendor/idir/web/web-dark.css": "/css/vendor/idir/web/web-dark.css?id=51ed878964940bac16b5",
     "/css/vendor/idir/admin/admin.css": "/css/vendor/idir/admin/admin.css?id=33ddf40c31fc4df0b86b",
-    "/css/vendor/idir/admin/admin-dark.css": "/css/vendor/idir/admin/admin-dark.css?id=53e1bfed44d7e323bad6",
+    "/css/vendor/idir/admin/admin-dark.css": "/css/vendor/idir/admin/admin-dark.css?id=3bc2632c25fc6a2e7961",
     "/js/vendor/idir/web/web.js": "/js/vendor/idir/web/web.js?id=27da2bcd56683041c903",
-    "/js/vendor/idir/web/scripts.js": "/js/vendor/idir/web/scripts.js?id=d6ba48ddc342be55e9a4",
-    "/js/vendor/idir/admin/scripts.js": "/js/vendor/idir/admin/scripts.js?id=f7a597bf99a24a25392e"
+    "/js/vendor/idir/web/scripts.js": "/js/vendor/idir/web/scripts.js?id=48141872addfd6cbc3ab",
+    "/js/vendor/idir/admin/scripts.js": "/js/vendor/idir/admin/scripts.js?id=81330ada8f4c0aa4f55a"
 }
