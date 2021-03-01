@@ -22,6 +22,7 @@ use GuzzleHttp\Psr7\Response as GuzzleResponse;
 use N1ebieski\IDir\Models\Category\Dir\Category;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Storage;
 use N1ebieski\IDir\Crons\Dir\ModeratorNotificationCron;
 
 /**
@@ -397,6 +398,8 @@ class DirTest extends TestCase
         $user = factory(User::class)->states('user')->create();
 
         Auth::login($user, true);
+
+        Storage::fake('public');
 
         $group = factory(Group::class)->states(['public', 'apply_active', 'required_url'])->create();
 
