@@ -22,7 +22,7 @@ jQuery(document).on('click', '.checkContent', function(e) {
             window.open(
                 'http://www.google.pl/search?hl=pl&q=' + encodeURI(content), 
                 'checkContent', 
-                'resizable=yes,status=no,scrollbars=yes,width=1366,height=768'
+                'resizable=yes,status=no,scrollbars=yes,toolbar=no,menubar=no,width=1366,height=768'
             ).focus();
 
             break;
