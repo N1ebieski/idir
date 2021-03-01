@@ -325,6 +325,18 @@
             </div>
         </li>
         @endcanany
+        @can('admin.filemanager.read')
+        <li class="nav-item {{ $isUrl(route('admin.filemanager.index')) }}">
+            <a 
+                class="nav-link" 
+                href="{{ route('admin.filemanager.index') }}" 
+                title="{{ trans('icore::filemanager.route.index') }}"
+            >
+                <i class="far fa-fw fa-image"></i>
+                <span> {{ trans('icore::filemanager.route.index') }}</span>
+            </a>
+        </li>
+        @endcan        
         @canany(['admin.bans.view', 'admin.links.view'])
         <li 
             class="nav-item dropdown {{ $isUrl([
