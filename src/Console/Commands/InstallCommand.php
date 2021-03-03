@@ -57,32 +57,6 @@ class InstallCommand extends BaseInstallCommand
     }
 
     /**
-     * Undocumented function
-     *
-     * @return void
-     */
-    protected function validateLicense() : void
-    {
-        $this->line($this->lang->get('icore::install.validate.license'));
-
-        try {
-            $this->guzzle->request('GET', $this->config->get('app.url'), [
-                'verify' => false,
-                'headers' => [
-                    'Accept' => 'application/json'
-                ]
-            ]);
-        } catch (\GuzzleHttp\Exception\ClientException $e) {
-            $this->error(json_decode($e->getResponse()->getBody())->message);
-            exit;
-        } catch (\Exception $e) {
-            //
-        }
-
-        $this->info('OK');
-    }
-
-    /**
      * Execute the console command.
      *
      * @return mixed
