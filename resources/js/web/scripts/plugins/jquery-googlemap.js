@@ -8,6 +8,7 @@ jQuery(document).ready(function() {
             if (!$map.html().length) {
                 $map.googleMap({
                     zoom: parseInt($map.data.zoom),
+                    coords: $map.data.coords,
                     scrollwheel: true,              
                     type: "ROADMAP"
                 })
