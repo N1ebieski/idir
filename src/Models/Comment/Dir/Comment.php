@@ -3,19 +3,12 @@
 namespace N1ebieski\IDir\Models\Comment\Dir;
 
 use N1ebieski\ICore\Models\Comment\Comment as CommentBaseModel;
-use N1ebieski\IDir\Models\Dir;
 
 /**
  * [Comment description]
  */
 class Comment extends CommentBaseModel
 {
-    /**
-     * [protected description]
-     * @var Dir
-     */
-    protected $morph;
-
     // Accessors
 
     /**
@@ -44,30 +37,5 @@ class Comment extends CommentBaseModel
     public function getMorphClass()
     {
         return 'N1ebieski\\ICore\\Models\\Comment\\Comment';
-    }
-
-    // Setters
-
-    /**
-     * [setMorph description]
-     * @param Dir $dir [description]
-     * @return $this
-     */
-    public function setMorph(Dir $dir)
-    {
-        $this->morph = $dir;
-
-        return $this;
-    }
-
-    // Getters
-
-    /**
-     * [getMorph description]
-     * @return Dir [description]
-     */
-    public function getMorph()
-    {
-        return $this->morph;
     }
 }

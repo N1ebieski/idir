@@ -43,8 +43,8 @@ class DirBacklinkService implements Creatable
         return isset($attributes['backlink'])
             && isset($attributes['backlink_url'])
             && (
-                optional($this->dirBacklink->getDir()->backlink)->link_id !== (int)$attributes['backlink']
-                || optional($this->dirBacklink->getDir()->backlink)->url !== $attributes['backlink_url']
+                optional($this->dirBacklink->dir->backlink)->link_id !== (int)$attributes['backlink']
+                || optional($this->dirBacklink->dir->backlink)->url !== $attributes['backlink_url']
             );
     }
 
@@ -55,7 +55,7 @@ class DirBacklinkService implements Creatable
      */
     public function create(array $attributes) : Model
     {
-        $this->dirBacklink->dir()->associate($this->dirBacklink->getDir());
+        $this->dirBacklink->dir()->associate($this->dirBacklink->dir);
         $this->dirBacklink->link()->associate($attributes['backlink']);
         $this->dirBacklink->url = $attributes['backlink_url'];
         $this->dirBacklink->save();
@@ -85,7 +85,7 @@ class DirBacklinkService implements Creatable
      */
     public function clear() : int
     {
-        return $this->dirBacklink->where('dir_id', $this->dirBacklink->getDir()->id)->delete();
+        return $this->dirBacklink->where('dir_id', $this->dirBacklink->dir->id)->delete();
     }
 
     /**

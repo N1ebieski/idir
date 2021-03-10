@@ -2,7 +2,6 @@
 
 namespace N1ebieski\IDir\Models;
 
-use N1ebieski\IDir\Models\Group;
 use Illuminate\Support\Facades\App;
 use Illuminate\Database\Eloquent\Model;
 use N1ebieski\IDir\Services\PriceService;
@@ -16,12 +15,6 @@ use Illuminate\Support\Collection as Collect;
 class Price extends Model
 {
     // Configuration
-
-    /**
-     * [protected description]
-     * @var Group
-     */
-    protected $group;
 
     /**
      * The attributes that are mass assignable.
@@ -58,31 +51,6 @@ class Price extends Model
         'created_at' => 'datetime',
         'updated_at' => 'datetime'
     ];
-
-    // Setters
-
-    /**
-     * @param Group $group
-     *
-     * @return static
-     */
-    public function setGroup(Group $group)
-    {
-        $this->group = $group;
-
-        return $this;
-    }
-
-    // Getters
-
-    /**
-     * [getGroup description]
-     * @return Group [description]
-     */
-    public function getGroup() : Group
-    {
-        return $this->group;
-    }
 
     // Relations
 

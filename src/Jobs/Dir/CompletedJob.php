@@ -150,7 +150,9 @@ class CompletedJob implements ShouldQueue
      */
     protected function executeAltGroup() : void
     {
-        $this->dir->setGroup($this->dir->group()->make()->find($this->dir->group->alt_id))
+        $this->dir->setRelations([
+                'group' => $this->dir->group()->make()->find($this->dir->group->alt_id)
+            ])
             ->makeService()
             ->moveToAltGroup();
     }

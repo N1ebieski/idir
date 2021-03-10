@@ -90,7 +90,7 @@ class ShowViewModel extends ViewModel
      */
     public function comments() : LengthAwarePaginator
     {
-        return $this->comment->setMorph($this->dir)
+        return $this->comment->setRelations(['morph' => $this->dir])
             ->makeCache()
             ->rememberRootsByFilter(
                 $this->filter->all() + ['except' => $this->request->input('except')],

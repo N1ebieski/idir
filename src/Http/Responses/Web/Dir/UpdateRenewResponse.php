@@ -97,7 +97,7 @@ class UpdateRenewResponse implements RedirectResponseFactory
     {
         if ($this->request->input('payment_type') === 'transfer') {
             return $this->response->redirectToRoute('web.payment.dir.show', [
-                $this->dir->getPayment()->uuid
+                $this->dir->payment->uuid
             ]);
         }
 

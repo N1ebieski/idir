@@ -171,9 +171,11 @@ class DirController
         Store3CodeRequest $requestPayment,
         Store3Response $response
     ) : RedirectResponse {
-        $dir->setGroup($group)->makeService()->create($request->validated());
+        $dir->setRelations(['group' => $group])
+            ->makeService()
+            ->create($request->validated());
 
-        if (($payment = $dir->getPayment()) instanceof Payment) {
+        if (($payment = $dir->getRelation('payment')) instanceof Payment) {
             Event::dispatch(App::make(PaymentStoreEvent::class, ['payment' => $payment]));
         }
 
@@ -280,9 +282,11 @@ class DirController
         UpdateFull3CodeRequest $requestPayment,
         UpdateFull3Response $response
     ) : RedirectResponse {
-        $dir->setGroup($group)->makeService()->updateFull($request->validated());
+        $dir->setRelations(['group' => $group])
+            ->makeService()
+            ->updateFull($request->validated());
 
-        if (($payment = $dir->getPayment()) instanceof Payment) {
+        if (($payment = $dir->getRelation('payment')) instanceof Payment) {
             Event::dispatch(App::make(PaymentStoreEvent::class, ['payment' => $payment]));
         }
 
@@ -315,7 +319,9 @@ class DirController
      */
     public function update(Dir $dir, UpdateRequest $request) : JsonResponse
     {
-        $dir->setGroup($dir->group)->makeService()->update($request->validated());
+        $dir->setRelations(['group' => $dir->group])
+            ->makeService()
+            ->update($request->validated());
 
         return Response::json([
             'success' => '',

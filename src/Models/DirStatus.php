@@ -4,7 +4,6 @@ namespace N1ebieski\IDir\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\App;
-use N1ebieski\IDir\Models\Dir;
 use N1ebieski\IDir\Repositories\DirStatusRepo;
 use N1ebieski\IDir\Services\DirStatusService;
 
@@ -14,12 +13,6 @@ use N1ebieski\IDir\Services\DirStatusService;
 class DirStatus extends Model
 {
     // Configuration
-
-    /**
-     * [private description]
-     * @var Dir
-     */
-    protected $dir;
 
     /**
     * The attributes that are mass assignable.
@@ -58,27 +51,6 @@ class DirStatus extends Model
         'created_at' => 'datetime',
         'updated_at' => 'datetime'
     ];
-
-    // Setters
-
-    /**
-     * @param Dir $dir
-     *
-     * @return static
-     */
-    public function setDir(Dir $dir)
-    {
-        $this->dir = $dir;
-
-        return $this;
-    }
-
-    // Getters
-
-    public function getDir() : Dir
-    {
-        return $this->dir;
-    }
 
     // Relations
 

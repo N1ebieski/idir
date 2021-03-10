@@ -4,26 +4,12 @@ namespace N1ebieski\IDir\Models\Payment\Dir;
 
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use N1ebieski\IDir\Models\Payment\Payment as PaymentBaseModel;
-use N1ebieski\IDir\Models\Dir;
-use N1ebieski\IDir\Models\Price;
 
 /**
  * [Payment description]
  */
 class Payment extends PaymentBaseModel
 {
-    /**
-     * [protected description]
-     * @var Dir
-     */
-    protected $morph;
-
-    /**
-     * [protected description]
-     * @var Price
-     */
-    protected $orderMorph;
-
     /**
      * [getModelTypeAttribute description]
      * @return [type] [description]
@@ -80,51 +66,5 @@ class Payment extends PaymentBaseModel
     public function getPoliAttribute() : string
     {
         return 'dir';
-    }
-
-    // Setters
-
-    /**
-     * [setMorph description]
-     * @param Dir $dir [description]
-     * @return $this
-     */
-    public function setMorph(Dir $dir)
-    {
-        $this->morph = $dir;
-
-        return $this;
-    }
-
-    /**
-     * [setOrderMorph description]
-     * @param Price $price [description]
-     * @return $this
-     */
-    public function setOrderMorph(Price $price)
-    {
-        $this->orderMorph = $price;
-
-        return $this;
-    }
-
-    // Getters
-
-    /**
-     * [getMorph description]
-     * @return Dir [description]
-     */
-    public function getMorph()
-    {
-        return $this->morph;
-    }
-
-    /**
-     * [getOrder description]
-     * @return Price [description]
-     */
-    public function getOrderMorph()
-    {
-        return $this->orderMorph;
     }
 }

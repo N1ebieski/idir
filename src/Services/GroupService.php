@@ -54,7 +54,7 @@ class GroupService implements Creatable, Updatable, PositionUpdatable, Deletable
         $this->group->privileges()->attach(array_filter($attributes['priv'] ?? []));
 
         $this->group->prices()->make()
-            ->setGroup($this->group)
+            ->setRelations(['group' => $this->group])
             ->makeService()
             ->createOrUpdateGlobal(array_filter(
                 (int)$attributes['payment'] === 1 ?
@@ -80,7 +80,7 @@ class GroupService implements Creatable, Updatable, PositionUpdatable, Deletable
         $this->group->privileges()->sync(array_filter($attributes['priv'] ?? []));
 
         $this->group->prices()->make()
-            ->setGroup($this->group)
+            ->setRelations(['group' => $this->group])
             ->makeService()
             ->organizeGlobal(array_filter(
                 (int)$attributes['payment'] === 1 ?

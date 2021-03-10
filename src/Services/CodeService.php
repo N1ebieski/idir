@@ -61,7 +61,7 @@ class CodeService
             // Create attributes manually, no within model because multiple
             // models may be huge performance impact
             $codes[] = [
-                'price_id' => $this->code->getPrice()->id,
+                'price_id' => $this->code->price->id,
                 'code' => $attribute['code'],
                 'quantity' => $attribute['quantity'],
                 'created_at' => $this->carbon->now(),
@@ -78,6 +78,6 @@ class CodeService
      */
     public function clear() : int
     {
-        return $this->code->where('price_id', $this->code->getPrice()->id)->delete();
+        return $this->code->where('price_id', $this->code->price->id)->delete();
     }
 }
