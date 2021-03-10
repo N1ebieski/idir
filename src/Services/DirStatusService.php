@@ -44,7 +44,7 @@ class DirStatusService implements Creatable
     protected function isSync(array $attributes) : bool
     {
         return isset($attributes['url'])
-            && $this->dirStatus->getDir()->url !== $attributes['url'];
+            && $this->dirStatus->dir->url !== $attributes['url'];
     }
 
     /**
@@ -54,7 +54,7 @@ class DirStatusService implements Creatable
      */
     public function create(array $attributes) : Model
     {
-        $this->dirStatus->dir()->associate($this->dirStatus->getDir());
+        $this->dirStatus->dir()->associate($this->dirStatus->dir);
         $this->dirStatus->save();
 
         return $this->dirStatus;
@@ -82,7 +82,7 @@ class DirStatusService implements Creatable
      */
     public function clear() : int
     {
-        return $this->dirStatus->where('dir_id', $this->dirStatus->getDir()->id)->delete();
+        return $this->dirStatus->where('dir_id', $this->dirStatus->dir->id)->delete();
     }
 
     /**

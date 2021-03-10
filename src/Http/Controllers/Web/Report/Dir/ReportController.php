@@ -41,7 +41,9 @@ class ReportController implements Polymorphic
      */
     public function store(Dir $dir, Report $report, StoreRequest $request) : JsonResponse
     {
-        $report->setMorph($dir)->makeService()->create($request->only('content'));
+        $report->setRelations(['morph' => $dir])
+            ->makeService()
+            ->create($request->only('content'));
 
         return Response::json([
             'success' => Lang::get('icore::reports.success.store')

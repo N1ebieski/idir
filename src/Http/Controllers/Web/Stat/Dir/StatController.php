@@ -21,7 +21,7 @@ class StatController implements Polymorphic
      */
     public function click(Stat $stat, Dir $dir, ClickRequest $request) : JsonResponse
     {
-        $stat->setMorph($dir)->makeService()->increment();
+        $stat->setRelations(['morph' => $dir])->makeService()->increment();
 
         return Response::json(['success' => '']);
     }

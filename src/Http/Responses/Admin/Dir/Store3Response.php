@@ -90,7 +90,7 @@ class Store3Response implements RedirectResponseFactory
                     ->with('success', $this->lang->get('idir::dirs.success.store.'.Dir::ACTIVE));
             case DIR::PAYMENT_INACTIVE:
                 return $this->response->redirectToRoute('admin.payment.dir.show', [
-                    $this->dir->getPayment()->uuid,
+                    $this->dir->payment->uuid,
                 ]);
         }
     }

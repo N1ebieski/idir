@@ -79,7 +79,7 @@ class PriceService implements Creatable, Updatable
         return $this->prices = $this->price->makeRepo()
             ->getByIds($ids)
             ->map(function ($item) {
-                return $item->setGroup($this->price->getGroup());
+                return $item->setRelations(['group' => $this->price->group]);
             });
     }
 
@@ -112,11 +112,11 @@ class PriceService implements Creatable, Updatable
     {
         $price = $this->price->make($attributes);
 
-        $price->group()->associate($this->price->getGroup());
+        $price->group()->associate($this->price->group);
         $price->save();
 
         $this->price->codes()->make()
-            ->setPrice($price)
+            ->setRelations(['price' => $price])
             ->makeService()
             ->organizeGlobal($attributes['codes'] ?? []);
 
@@ -131,7 +131,7 @@ class PriceService implements Creatable, Updatable
     public function update(array $attributes) : bool
     {
         $this->price->codes()->make()
-            ->setPrice($this->price)
+            ->setRelations(['price' => $this->price])
             ->makeService()
             ->organizeGlobal($attributes['codes'] ?? []);
 
@@ -146,6 +146,6 @@ class PriceService implements Creatable, Updatable
     public function deleteExceptGlobal(array $ids) : int
     {
         return $this->price->whereNotIn('id', array_filter($ids))
-            ->where('group_id', $this->price->getGroup()->id)->delete();
+            ->where('group_id', $this->price->group->id)->delete();
     }
 }

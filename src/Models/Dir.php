@@ -27,9 +27,6 @@ use Fico7489\Laravel\Pivot\Traits\PivotEventTrait;
 use N1ebieski\ICore\Models\Traits\FullTextSearchable;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
-/**
- * [Dir description]
- */
 class Dir extends Model
 {
     use Sluggable, Taggable, FullTextSearchable, Carbonable, PivotEventTrait;
@@ -80,18 +77,6 @@ class Dir extends Model
      * @var bool
      */
     private $pivotEvent = false;
-
-    /**
-     * [private description]
-     * @var Group
-     */
-    protected $group;
-
-    /**
-     * [private description]
-     * @var Payment
-     */
-    protected $payment;
 
     /**
      * The attributes that are mass assignable.
@@ -160,51 +145,6 @@ class Dir extends Model
                 'source' => 'title'
             ]
         ];
-    }
-
-    // Setters
-
-    /**
-     * @param Group $group
-     *
-     * @return static
-     */
-    public function setGroup(Group $group)
-    {
-        $this->group = $group;
-
-        return $this;
-    }
-
-    /**
-     * [setPayment description]
-     * @param Payment $payment [description]
-     */
-    public function setPayment(Payment $payment)
-    {
-        $this->payment = $payment;
-
-        return $this;
-    }
-
-    // Getters
-
-    /**
-     * [getGroup description]
-     * @return Group [description]
-     */
-    public function getGroup() : Group
-    {
-        return $this->group;
-    }
-
-    /**
-     * [getPayment description]
-     * @return Payment|null [description]
-     */
-    public function getPayment() : ?Payment
-    {
-        return $this->payment;
     }
 
     // Overrides

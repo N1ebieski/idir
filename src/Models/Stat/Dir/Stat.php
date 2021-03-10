@@ -3,16 +3,8 @@
 namespace N1ebieski\IDir\Models\Stat\Dir;
 
 use N1ebieski\ICore\Models\Stat\Stat as BaseStatModel;
-use N1ebieski\IDir\Models\Dir;
-
 class Stat extends BaseStatModel
 {
-    /**
-     * [protected description]
-     * @var Dir
-     */
-    protected $morph;
-
     // Accessors
 
     /**
@@ -52,30 +44,5 @@ class Stat extends BaseStatModel
     public function morphs()
     {
         return $this->morphedByMany(\N1ebieski\IDir\Models\Dir::class, 'model', 'stats_values');
-    }
-
-    // Setters
-
-    /**
-     * [setMorph description]
-     * @param Dir $dir [description]
-     * @return $this
-     */
-    public function setMorph(Dir $dir)
-    {
-        $this->morph = $dir;
-
-        return $this;
-    }
-
-    // Getters
-
-    /**
-     * [getMorph description]
-     * @return Dir [description]
-     */
-    public function getMorph()
-    {
-        return $this->morph;
     }
 }

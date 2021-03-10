@@ -66,8 +66,10 @@ class PaymentFactory
      */
     public function makePayment() : Payment
     {
-        return $this->payment->setMorph($this->dir)
-            ->setOrderMorph($this->price)
+        return $this->payment->setRelations([
+                'morph' => $this->dir,
+                'order' => $this->price
+            ])
             ->makeService()
             ->create([
                 'payment_type' => $this->paymentType

@@ -3,19 +3,12 @@
 namespace N1ebieski\IDir\Models\Field\Dir;
 
 use N1ebieski\IDir\Models\Field\Field as BaseFieldModel;
-use N1ebieski\IDir\Models\Dir;
 
 /**
  * [Field description]
  */
 class Field extends BaseFieldModel
 {
-    /**
-     * [protected description]
-     * @var Dir
-     */
-    protected $morph;
-
     // Accessors
 
     /**
@@ -44,30 +37,5 @@ class Field extends BaseFieldModel
     public function getMorphClass()
     {
         return 'N1ebieski\\IDir\\Models\\Field\\Field';
-    }
-
-    // Setters
-
-    /**
-     * [setMorph description]
-     * @param Dir $dir [description]
-     * @return $this
-     */
-    public function setMorph(Dir $dir)
-    {
-        $this->morph = $dir;
-
-        return $this;
-    }
-
-    // Getters
-
-    /**
-     * [getMorph description]
-     * @return Dir [description]
-     */
-    public function getMorph()
-    {
-        return $this->morph;
     }
 }

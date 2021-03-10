@@ -118,7 +118,7 @@ class DirService implements
         $this->session->put(
             $this->sessionName(),
             $this->dir->fields()->make()
-                ->setMorph($this->dir)
+                ->setRelations(['morph' => $this->dir])
                 ->makeService()
                 ->prepareFieldAttribute($attributes)
         );
@@ -134,7 +134,7 @@ class DirService implements
         $this->session->put(
             $this->sessionName(),
             $this->dir->fields()->make()
-                ->setMorph($this->dir)
+                ->setRelations(['morph' => $this->dir])
                 ->makeService()
                 ->prepareFieldAttribute($attributes)
             + $this->session->get($this->sessionName())
@@ -152,7 +152,7 @@ class DirService implements
             return $this->dir::PAYMENT_INACTIVE;
         }
 
-        return $this->dir->getGroup()->apply_status === $this->dir::ACTIVE ?
+        return $this->dir->group->apply_status === $this->dir::ACTIVE ?
             $this->dir::ACTIVE
             : $this->dir::INACTIVE;
     }
@@ -170,28 +170,28 @@ class DirService implements
             $this->auth->user() ?? $this->makeUser($attributes)
         );
 
-        $this->dir->group()->associate($this->dir->getGroup());
+        $this->dir->group()->associate($this->dir->group);
         $this->dir->content = $attributes['content_html'];
         $this->dir->status = $this->status($attributes['payment_type'] ?? null);
         $this->dir->save();
 
         if (isset($attributes['field'])) {
             $this->dir->fields()->make()
-                ->setMorph($this->dir)
+                ->setRelations(['morph' => $this->dir])
                 ->makeService()
                 ->createValues($attributes['field']);
         }
 
         if (isset($attributes['backlink']) && isset($attributes['backlink_url'])) {
             $this->dir->backlink()->make()
-                ->setDir($this->dir)
+                ->setRelations(['dir' => $this->dir])
                 ->makeService()
                 ->create($attributes);
         }
 
         if (isset($attributes['url'])) {
             $this->dir->status()->make()
-                ->setDir($this->dir)
+                ->setRelations(['dir' => $this->dir])
                 ->makeService()
                 ->create($attributes);
         }
@@ -201,7 +201,7 @@ class DirService implements
         $this->dir->tag($attributes['tags'] ?? []);
 
         if (isset($attributes['payment_type'])) {
-            $this->dir->setPayment($this->makePayment($attributes));
+            $this->dir->setRelations(['payment' => $this->makePayment($attributes)]);
         }
 
         return $this->dir;
@@ -245,13 +245,13 @@ class DirService implements
     public function update(array $attributes) : bool
     {
         $this->dir->status()->make()
-            ->setDir($this->dir)
+            ->setRelations(['dir' => $this->dir])
             ->makeService()
             ->sync($attributes);
 
         if (isset($attributes['field'])) {
             $this->dir->fields()->make()
-                ->setMorph($this->dir)
+                ->setRelations(['morph' => $this->dir])
                 ->makeService()
                 ->updateValues($attributes['field']);
         }
@@ -275,27 +275,27 @@ class DirService implements
     {
         if (isset($attributes['field'])) {
             $this->dir->fields()->make()
-                ->setMorph($this->dir)
+                ->setRelations(['morph' => $this->dir])
                 ->makeService()
                 ->updateValues($attributes['field']);
         }
 
         if (isset($attributes['backlink'])) {
             $this->dir->backlink()->make()
-                ->setDir($this->dir)
+                ->setRelations(['dir' => $this->dir])
                 ->makeService()
                 ->sync($attributes);
         }
 
         $this->dir->status()->make()
-            ->setDir($this->dir)
+            ->setRelations(['dir' => $this->dir])
             ->makeService()
             ->sync($attributes);
 
         $this->dir->fill($attributes);
 
-        if (!$this->dir->isGroup($this->dir->getGroup()->id)) {
-            $this->dir->group()->associate($this->dir->getGroup());
+        if (!$this->dir->isGroup($this->dir->group->id)) {
+            $this->dir->group()->associate($this->dir->group);
             $this->dir->makeRepo()->nullablePrivileged();
         }
         $this->dir->content = $attributes['content_html'];
@@ -306,7 +306,7 @@ class DirService implements
         $this->dir->retag($attributes['tags'] ?? []);
 
         if (isset($attributes['payment_type'])) {
-            $this->dir->setPayment($this->makePayment($attributes));
+            $this->dir->setRelations(['payment' => $this->makePayment($attributes)]);
         }
 
         return $this->dir->save();
@@ -333,11 +333,11 @@ class DirService implements
         $this->dir->categories()->sync(
             $this->dir->categories
                 ->pluck('id')
-                ->take($this->dir->getGroup()->max_cats)
+                ->take($this->dir->group->max_cats)
                 ->toArray()
         );
 
-        return $this->dir->group()->associate($this->dir->getGroup())->save();
+        return $this->dir->group()->associate($this->dir->group)->save();
     }
 
     /**

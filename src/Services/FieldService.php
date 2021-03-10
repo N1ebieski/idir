@@ -62,7 +62,7 @@ class FieldService implements Creatable, Updatable, PositionUpdatable
      */
     protected function makePath(int $id) : string
     {
-        return $this->file_dir . "/" . $id . "/" . $this->field->poli . "/" . $this->field->getMorph()->id;
+        return $this->file_dir . "/" . $id . "/" . $this->field->poli . "/" . $this->field->morph->id;
     }
 
     /**
@@ -77,7 +77,7 @@ class FieldService implements Creatable, Updatable, PositionUpdatable
                 if ($value instanceof UploadedFile) {
                     $file = $this->app->make(FileUtil::class, [
                         'file' => $value,
-                        'path' => is_int($this->field->getMorph()->id) ? $this->makePath($key) : null
+                        'path' => is_int($this->field->morph->id) ? $this->makePath($key) : null
                     ]);
 
                     $attributes['field'][$key] = $file->prepare();
@@ -97,7 +97,7 @@ class FieldService implements Creatable, Updatable, PositionUpdatable
     {
         $i = 0;
 
-        foreach ($this->field->getMorph()->getGroup()->fields()->get() as $field) {
+        foreach ($this->field->morph->group->fields()->get() as $field) {
             if (isset($attributes[$field->id])) {
                 if ($field->type === 'regions') {
                     $this->createRegionsValue($attributes[$field->id]);
@@ -126,7 +126,7 @@ class FieldService implements Creatable, Updatable, PositionUpdatable
             }
         }
 
-        $this->field->getMorph()->fields()->attach($ids ?? []);
+        $this->field->morph->fields()->attach($ids ?? []);
 
         return $i;
     }
@@ -140,7 +140,7 @@ class FieldService implements Creatable, Updatable, PositionUpdatable
     protected function updateOrCreateMapValue(array $attributes) : void
     {
         if (count($attributes) > 0) {
-            $this->field->getMorph()->map()->updateOrCreate([], [
+            $this->field->morph->map()->updateOrCreate([], [
                 'lat' => $attributes[0]['lat'],
                 'long' => $attributes[0]['long']
             ]);
@@ -156,7 +156,7 @@ class FieldService implements Creatable, Updatable, PositionUpdatable
     protected function deleteMapValue(array $attributes) : void
     {
         if (count($attributes) === 0) {
-            $this->field->getMorph()->map()->delete();
+            $this->field->morph->map()->delete();
         }
     }
 
@@ -168,7 +168,7 @@ class FieldService implements Creatable, Updatable, PositionUpdatable
      */
     protected function createRegionsValue(array $attributes) : void
     {
-        $this->field->getMorph()->regions()->attach($attributes ?? []);
+        $this->field->morph->regions()->attach($attributes ?? []);
     }
 
     /**
@@ -179,7 +179,7 @@ class FieldService implements Creatable, Updatable, PositionUpdatable
      */
     protected function updateRegionsValue(array $attributes) : void
     {
-        $this->field->getMorph()->regions()->sync($attributes ?? []);
+        $this->field->morph->regions()->sync($attributes ?? []);
     }
 
     /**
@@ -191,9 +191,9 @@ class FieldService implements Creatable, Updatable, PositionUpdatable
     {
         $i = 0;
 
-        foreach ($this->field->getMorph()->getGroup()->fields()->get() as $field) {
+        foreach ($this->field->morph->group->fields()->get() as $field) {
             if ($field->type === 'image') {
-                $path = optional($this->field->getMorph()->fields->where('id', $field->id)
+                $path = optional($this->field->morph->fields->where('id', $field->id)
                     ->first())->decode_value;
             }
 
@@ -237,7 +237,7 @@ class FieldService implements Creatable, Updatable, PositionUpdatable
             }
         }
 
-        $this->field->getMorph()->fields()->sync($ids ?? []);
+        $this->field->morph->fields()->sync($ids ?? []);
 
         return $i;
     }

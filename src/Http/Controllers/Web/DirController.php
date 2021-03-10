@@ -213,10 +213,12 @@ class DirController
         Store3CodeRequest $requestPayment,
         Store3Response $response
     ) : RedirectResponse {
-        $dir->setGroup($group)->makeService()->create($request->validated());
+        $dir->setRelations(['group' => $group])
+            ->makeService()
+            ->create($request->validated());
 
-        if (($payment = $dir->getPayment()) instanceof Payment) {
-            Event::dispatch(App::make(PaymentStoreEvent::class, ['payment' => $payment]));
+        if ($dir->payment instanceof Payment) {
+            Event::dispatch(App::make(PaymentStoreEvent::class, ['payment' => $dir->payment]));
         }
 
         Event::dispatch(App::make(DirStoreEvent::class, ['dir' => $dir]));
@@ -318,10 +320,12 @@ class DirController
         Update3CodeRequest $requestPayment,
         Update3Response $response
     ) : RedirectResponse {
-        $dir->setGroup($group)->makeService()->updateFull($request->validated());
+        $dir->setRelations(['group' => $group])
+            ->makeService()
+            ->updateFull($request->validated());
 
-        if (($payment = $dir->getPayment()) instanceof Payment) {
-            Event::dispatch(App::make(PaymentStoreEvent::class, ['payment' => $payment]));
+        if ($dir->payment instanceof Payment) {
+            Event::dispatch(App::make(PaymentStoreEvent::class, ['payment' => $dir->payment]));
         }
 
         Event::dispatch(App::make(DirUpdateEvent::class, ['dir' => $dir]));
@@ -362,9 +366,9 @@ class DirController
         UpdateRenewCodeRequest $requestPayment,
         UpdateRenewResponse $response
     ) : RedirectResponse {
-        $dir->setPayment(
-            $payment = $dir->makeService()->makePayment($request->validated())
-        );
+        $dir->setRelations([
+            'payment' => $payment = $dir->makeService()->makePayment($request->validated())
+        ]);
 
         Event::dispatch(App::make(PaymentStoreEvent::class, ['payment' => $payment]));
         Event::dispatch(App::make(DirUpdateRenewEvent::class, ['dir' => $dir]));
