@@ -2,10 +2,10 @@
 
 namespace N1ebieski\IDir\View\Components\Comment\Dir;
 
-use N1ebieski\ICore\View\Components\Comment\CommentComponent as BaseCommentComponent;
+use Illuminate\View\View;
 use N1ebieski\IDir\Models\Comment\Dir\Comment;
 use Illuminate\Contracts\View\Factory as ViewFactory;
-use Illuminate\View\View;
+use N1ebieski\ICore\View\Components\Comment\CommentComponent as BaseCommentComponent;
 
 class CommentComponent extends BaseCommentComponent
 {
