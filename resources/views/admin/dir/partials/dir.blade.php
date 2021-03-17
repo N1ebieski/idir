@@ -2,6 +2,7 @@
 <div class="d-flex flex-column">
     <div class="thumbnail d-inline position-relative" style="width:90px;height:68px">
         <img 
+            src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="
             data-src="{{ $dir->thumbnail_url }}" 
             class="lazy img-fluid border"
             alt="{{ $dir->title }}" 
