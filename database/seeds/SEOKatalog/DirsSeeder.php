@@ -6,9 +6,10 @@ use Carbon\Carbon;
 use Illuminate\Support\Str;
 use N1ebieski\IDir\Models\Dir;
 use N1ebieski\IDir\Models\Link;
+use N1ebieski\IDir\Models\Group;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Config;
 use N1ebieski\ICore\Models\Stat\Stat;
+use Illuminate\Support\Facades\Config;
 use N1ebieski\IDir\Models\Field\Field;
 use N1ebieski\IDir\Models\Region\Region;
 use N1ebieski\IDir\Seeds\SEOKatalog\SEOKatalogSeeder;
@@ -122,7 +123,9 @@ class DirsSeeder extends SEOKatalogSeeder
                         'title' => htmlspecialchars_decode($item->title),
                         'content_html' => $this->makeContentHtml($item->description),
                         'content' => $this->makeContentHtml($item->description),
-                        'group_id' => $this->group_last_id + $item->group,
+                        'group_id' => $groups->firstWhere('id', $item->group) !== null ?
+                            $this->group_last_id + $item->group
+                            : Group::DEFAULT,
                         'user_id' => $item->user > 0 ? $this->user_last_id + $item->user : null,
                         'url' => $this->makeUrl($item->url),
                         'status' => $item->active,

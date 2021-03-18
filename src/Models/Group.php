@@ -84,6 +84,12 @@ class Group extends Model
     public const OBLIGATORY_BACKLINK = 2;
 
     /**
+     * [public description]
+     * @var int
+     */
+    public const DEFAULT = 1;
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array

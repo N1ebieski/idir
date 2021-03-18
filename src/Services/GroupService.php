@@ -2,13 +2,14 @@
 
 namespace N1ebieski\IDir\Services;
 
+use N1ebieski\IDir\Models\Dir;
 use N1ebieski\IDir\Models\Group;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection as Collect;
 use N1ebieski\ICore\Services\Interfaces\Creatable;
+use N1ebieski\ICore\Services\Interfaces\Deletable;
 use N1ebieski\ICore\Services\Interfaces\Updatable;
 use N1ebieski\ICore\Services\Interfaces\PositionUpdatable;
-use N1ebieski\ICore\Services\Interfaces\Deletable;
 
 /**
  * [GroupService description]
@@ -107,16 +108,16 @@ class GroupService implements Creatable, Updatable, PositionUpdatable, Deletable
      */
     public function delete() : bool
     {
-        // W przypadku usuwania grupy trzeba zmienić alternative innych grup na Default 1
-        $this->group->where('alt_id', $this->group->id)->update(['alt_id' => 1]);
+        // W przypadku usuwania grupy trzeba zmienić alternative innych grup na Default
+        $this->group->where('alt_id', $this->group->id)->update(['alt_id' => Group::DEFAULT]);
 
         $this->group->dirs()->update([
-            'group_id' => 1,
+            'group_id' => Group::DEFAULT,
             'privileged_at' => null,
             'privileged_to' => null
         ]);
-        $this->group->dirs()->pending()->update(['status' => 0]);
-        $this->group->dirs()->backlinkInactive()->update(['status' => 0]);
+        $this->group->dirs()->pending()->update(['status' => Dir::INACTIVE]);
+        $this->group->dirs()->backlinkInactive()->update(['status' => Dir::INACTIVE]);
 
         // Manually remove relations, because the field model is polymorfic and foreign key doesn't work
         $this->group->fields()->detach();
