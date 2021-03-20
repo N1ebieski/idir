@@ -24,6 +24,12 @@ class DefaultRolesAndPermissionsSeeder extends Seeder
         Permission::firstOrCreate(['name' => 'admin.groups.edit']);
         Permission::firstOrCreate(['name' => 'admin.groups.delete']);
 
+        Permission::firstOrCreate(['name' => 'admin.prices.*']);
+        Permission::firstOrCreate(['name' => 'admin.prices.view']);
+        Permission::firstOrCreate(['name' => 'admin.prices.create']);
+        Permission::firstOrCreate(['name' => 'admin.prices.edit']);
+        Permission::firstOrCreate(['name' => 'admin.prices.delete']);
+
         Permission::firstOrCreate(['name' => 'admin.fields.*']);
         Permission::firstOrCreate(['name' => 'admin.fields.view']);
         Permission::firstOrCreate(['name' => 'admin.fields.create']);

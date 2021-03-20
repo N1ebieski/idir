@@ -215,7 +215,14 @@
         </li>
         @endcan
         @canany(['admin.groups.view', 'admin.fields.view'])
-        <li class="nav-item dropdown {{ $isUrlContains(['*/groups', '*/groups/*', '*/fields/group', '*/fields/group/*']) }}">
+        <li class="nav-item dropdown {{ $isUrlContains([
+            '*/groups',
+            '*/groups/*',
+            '*/prices',
+            '*/prices/*',            
+            '*/fields/group',
+            '*/fields/group/*',           
+        ]) }}">
             <a 
                 class="nav-link dropdown-toggle"
                 href="#" 
@@ -236,6 +243,15 @@
                     title="{{ trans('idir::groups.route.index') }}"
                 >
                     {{ trans('idir::groups.route.index') }}
+                </a>
+                @endcan
+                @can('admin.prices.view')
+                <a 
+                    class="dropdown-item {{ $isUrlContains(['*/prices', '*/prices/*']) }}"
+                    href="{{ route('admin.price.index') }}"
+                    title="{{ trans('idir::prices.route.index') }}"
+                >
+                    {{ trans('idir::prices.route.index') }}
                 </a>
                 @endcan
                 @can('admin.fields.view')
