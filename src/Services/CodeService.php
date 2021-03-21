@@ -5,9 +5,6 @@ namespace N1ebieski\IDir\Services;
 use N1ebieski\IDir\Models\Code;
 use Illuminate\Support\Carbon;
 
-/**
- * [CodeService description]
- */
 class CodeService
 {
     /**
@@ -37,17 +34,32 @@ class CodeService
     }
 
     /**
-     * [organizeGlobal description]
-     * @param array $attributes [description]
+     * Undocumented function
+     *
+     * @param array $attributes
+     * @return boolean
      */
-    public function organizeGlobal(array $attributes) : void
+    protected function isSync(array $attributes) : bool
     {
-        if (isset($attributes['sync'])) {
-            $this->clear();
+        return isset($attributes['sync']) || empty($attributes);
+    }
 
-            if (isset($attributes['codes'])) {
-                $this->createGlobal($attributes['codes']);
-            }
+    /**
+     * Undocumented function
+     *
+     * @param array $attributes
+     * @return void
+     */
+    public function sync(array $attributes) : void
+    {
+        if (!$this->isSync($attributes)) {
+            return;
+        }
+
+        $this->clear();
+
+        if (isset($attributes['codes'])) {
+            $this->createGlobal($attributes['codes']);
         }
     }
 

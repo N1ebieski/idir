@@ -4,15 +4,11 @@ namespace N1ebieski\IDir\Services;
 
 use N1ebieski\IDir\Models\Price;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Collection as Collect;
 use N1ebieski\ICore\Services\Interfaces\Creatable;
+use N1ebieski\ICore\Services\Interfaces\Deletable;
 use N1ebieski\ICore\Services\Interfaces\Updatable;
 
-/**
- * [PriceService description]
- */
-class PriceService implements Creatable, Updatable
+class PriceService implements Creatable, Updatable, Deletable
 {
     /**
      * Model
@@ -21,86 +17,12 @@ class PriceService implements Creatable, Updatable
     protected $price;
 
     /**
-     * [protected description]
-     * @var Collection
-     */
-    protected $prices;
-
-    /**
-     * [private description]
-     * @var Collect
-     */
-    protected $collect;
-
-    /**
      * [__construct description]
      * @param Price       $price   [description]
-     * @param Collect   $collect   [description]
      */
-    public function __construct(Price $price, Collect $collect)
+    public function __construct(Price $price)
     {
         $this->price = $price;
-
-        $this->collect = $collect;
-    }
-
-    /**
-     * @param Price $price
-     *
-     * @return static
-     */
-    public function setPrice(Price $price)
-    {
-        $this->price = $price;
-
-        return $this;
-    }
-
-    /**
-     * [organizeGlobal description]
-     * @param array $attributes [description]
-     */
-    public function organizeGlobal(array $attributes) : void
-    {
-        $this->deleteExceptGlobal(
-            $this->collect->make($attributes)->pluck('id')->toArray()
-        );
-
-        $this->createOrUpdateGlobal($attributes);
-    }
-
-    /**
-     * [findByIds description]
-     * @param  array      $ids [description]
-     * @return Collection      [description]
-     */
-    public function findByIds(array $ids) : Collection
-    {
-        return $this->prices = $this->price->makeRepo()
-            ->getByIds($ids)
-            ->map(function ($item) {
-                return $item->setRelations(['group' => $this->price->group]);
-            });
-    }
-
-    /**
-     * [createOrUpdateGlobal description]
-     * @param array $attributes [description]
-     */
-    public function createOrUpdateGlobal(array $attributes) : void
-    {
-        $this->findByIds(
-            $this->collect->make($attributes)->pluck('id')->toArray()
-        );
-
-        foreach ($attributes as $attribute) {
-            if (isset($attribute['id'])
-            && ($price = $this->prices->where('id', $attribute['id'])->first()) instanceof Price) {
-                $this->setPrice($price)->update($attribute);
-            } else {
-                $this->create($attribute);
-            }
-        }
     }
 
     /**
@@ -110,15 +32,22 @@ class PriceService implements Creatable, Updatable
      */
     public function create(array $attributes) : Model
     {
-        $price = $this->price->make($attributes);
+        $price = $this->price->make();
 
-        $price->group()->associate($this->price->group);
+        $price->price = $attributes['price'];
+        $price->days = $attributes['days'];
+        $price->type = $attributes['type'];
+        $price->code = $attributes[$attributes['type']]['code'] ?? null;
+        $price->token = $attributes[$attributes['type']]['token'] ?? null;
+        $price->number = $attributes[$attributes['type']]['number'] ?? null;
+
+        $price->group()->associate($attributes['group']);
         $price->save();
 
         $this->price->codes()->make()
             ->setRelations(['price' => $price])
             ->makeService()
-            ->organizeGlobal($attributes['codes'] ?? []);
+            ->sync($attributes[$attributes['type']]['codes'] ?? []);
 
         return $price;
     }
@@ -130,22 +59,30 @@ class PriceService implements Creatable, Updatable
      */
     public function update(array $attributes) : bool
     {
+        $this->price->price = $attributes['price'];
+        $this->price->days = $attributes['days'];
+        $this->price->type = $attributes['type'];
+        $this->price->code = $attributes[$attributes['type']]['code'] ?? null;
+        $this->price->token = $attributes[$attributes['type']]['token'] ?? null;
+        $this->price->number = $attributes[$attributes['type']]['number'] ?? null;
+
+        $this->price->group()->associate($attributes['group']);
+
         $this->price->codes()->make()
             ->setRelations(['price' => $this->price])
             ->makeService()
-            ->organizeGlobal($attributes['codes'] ?? []);
+            ->sync($attributes[$attributes['type']]['codes'] ?? []);
 
-        return $this->price->update($attributes);
+        return $this->price->save();
     }
 
     /**
-     * [deleteNotExists description]
-     * @param  array $ids [description]
-     * @return int          [description]
+     * Undocumented function
+     *
+     * @return boolean
      */
-    public function deleteExceptGlobal(array $ids) : int
+    public function delete() : bool
     {
-        return $this->price->whereNotIn('id', array_filter($ids))
-            ->where('group_id', $this->price->group->id)->delete();
+        return $this->price->delete();
     }
 }

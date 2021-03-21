@@ -2,11 +2,20 @@
     {{ $group->name }}
 </div>
 <div>
-    @if (!empty($group->desc))
     <div class="card-body flex-wrap">
+        @if (!empty($group->desc))
         <p class="card-text">{{ $group->desc }}</p>
+        @endif
+        <p class="card-text h4">
+            {!! $group->prices->isNotEmpty() ? trans('idir::prices.price_from', [
+                'price' => $group->prices->sortBy('price')->first()->price,
+                'days' => $days = $group->prices->sortBy('price')->first()->days,
+                'limit' => $days !== null ? 
+                    mb_strtolower(trans('idir::prices.days')) 
+                    : mb_strtolower(trans('idir::prices.unlimited'))
+            ]) : trans('idir::groups.payment.0') !!}
+        </p>
     </div>
-    @endif
     <ul class="list-group list-group-flush">
         @if ($group->privileges->isNotEmpty())
         @foreach ($group->privileges as $privilege)
@@ -49,18 +58,6 @@
                 <span>{{ mb_strtolower(trans('idir::groups.backlink.label')) }}:</span>
                 <span>{{ trans("idir::groups.backlink.{$group->backlink}") }}</span>
             </div>
-        </li>
-        <li class="list-group-item">
-            <span>{{ mb_strtolower(trans('idir::groups.price')) }}:</span>
-            <span class="font-weight-bold">
-                {{ $group->prices->isNotEmpty() ? trans('idir::groups.price_from', [
-                    'price' => $group->prices->sortBy('price')->first()->price,
-                    'days' => $days = $group->prices->sortBy('price')->first()->days,
-                    'limit' => $days !== null ? 
-                        mb_strtolower(trans('idir::groups.days')) 
-                        : mb_strtolower(trans('idir::groups.unlimited'))
-                ]) : trans('idir::groups.payment.0') }}
-            </span>
         </li>
     </ul>
 </div>

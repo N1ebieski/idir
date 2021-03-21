@@ -52,30 +52,17 @@ return [
         Group::APPLY_INACTIVE => 'oczekujący na moderację',
         Group::APPLY_ACTIVE => 'natychmiast aktywny'
     ],
-    'days' => 'Dni',
-    'price' => 'Cena',
     'max_models' => 'Maksymalna ilość wpisów w grupie',
     'max_models_daily' => 'Dzienna maksymalna ilość wpisów w grupie',
     'empty' => 'Brak dostępnych grup',
     'payment' => [
-        'index' => 'Płatność',
-        'transfer' => 'Płatności przelewem',
-        'code_sms' => 'Płatności przez kody SMS',
-        'code_transfer' => 'Płatności przez kody przelewem',
-        '0' => 'darmowy',
-        '1' => 'płatny'
+        'label' => 'Płatność',
+        Group::WITHOUT_PAYMENT => 'darmowa',
+        Group::PAYMENT => 'płatna'
     ],
-    'price_from' => 'płatny już od :price PLN / :days :limit',
-    'unlimited' => 'nieograniczony czasowo',
     'alt' => [
-        'index' => 'Alternatywna grupa',
+        'label' => 'Alternatywna grupa',
         'tooltip' => 'Grupa do której spadnie wpis w przypadku braku przedłużenia okresu czasowego.',
         'null' => 'Brak (po upływie czasu nastąpi deaktywacja ze statusem "oczekujący na płatność")'
-    ],
-    'code_sms' => 'Kod SMS',
-    'code_transfer' => 'Kod ID',
-    'token' => 'Token',
-    'number' => 'Numer',
-    'codes' => 'Kody manualne',
-    'sync_codes' => 'Synchronizuj kody'
+    ]
 ];

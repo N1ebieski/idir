@@ -53,6 +53,12 @@ class Field extends Model
     public const DEFAULT = ['regions', 'map', 'gus'];
 
     /**
+     * [public description]
+     * @var array
+     */
+    public const AVAILABLE = ['input', 'textarea', 'select', 'multiselect', 'checkbox', 'image'];
+
+    /**
      * The columns of the full text index
      *
      * @var array
@@ -98,19 +104,6 @@ class Field extends Model
     }
 
     // Scopes
-
-    /**
-     * [scopeFilterType description]
-     * @param  Builder $query [description]
-     * @param  string|null  $type  [description]
-     * @return Builder|null         [description]
-     */
-    public function scopeFilterType(Builder $query, string $type = null) : ?Builder
-    {
-        return $query->when($type !== null, function ($query) use ($type) {
-            return $query->where('type', $type);
-        });
-    }
 
     /**
      * [scopePublic description]

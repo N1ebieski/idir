@@ -72,7 +72,7 @@ return [
     'backlink_url' => 'Adres z linkiem',
     'group' => 'Grupa',
     'group_limit' => 'Limit wyczerpany (max: :dirs, dzienny: :dirs_today)',
-    'unlimited' => 'nieograniczony',
+    'unlimited' => 'nielimitowany',
     'status' => [
         'label' => 'Status',
         Dir::ACTIVE => 'aktywny',

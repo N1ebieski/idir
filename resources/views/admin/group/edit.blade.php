@@ -285,7 +285,7 @@
                 >
                     <div class="form-group">
                         <label for="alt">
-                            <span>{{ trans('idir::groups.alt.index') }}: </span>
+                            <span>{{ trans('idir::groups.alt.label') }}: </span>
                             <i 
                                 data-toggle="tooltip" 
                                 data-placement="top" 

@@ -39,7 +39,7 @@
                     id="nav-tab" 
                     role="tablist"
                 >
-                    @foreach (['input', 'textarea', 'select', 'multiselect', 'checkbox', 'image'] as $type)
+                    @foreach ($field::AVAILABLE as $type)
                     <a 
                         class="nav-item btn btn-info {{ $field->type == $type ? 'active' : null }}" 
                         id="nav-{{ $type }}-tab"

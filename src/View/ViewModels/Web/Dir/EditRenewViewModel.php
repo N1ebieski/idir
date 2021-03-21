@@ -4,11 +4,11 @@ namespace N1ebieski\IDir\View\ViewModels\Web\Dir;
 
 use Illuminate\Http\Request;
 use N1ebieski\IDir\Models\Dir;
+use N1ebieski\IDir\Models\Price;
 use Spatie\ViewModels\ViewModel;
 use Illuminate\Database\Eloquent\Collection;
 use N1ebieski\IDir\Models\Category\Dir\Category;
 use Illuminate\Contracts\Config\Repository as Config;
-use N1ebieski\IDir\Models\Price;
 
 class EditRenewViewModel extends ViewModel
 {
@@ -70,7 +70,12 @@ class EditRenewViewModel extends ViewModel
     public function paymentType() : ?string
     {
         if (!$this->request->old('payment_type') && $this->dir->group->prices->isNotEmpty()) {
-            return $this->dir->group->prices->sortByDesc('type')->first()->type;
+            return $this->dir->group->prices
+                ->sortBy(function ($item) {
+                    return array_search($item->type, Price::AVAILABLE);
+                })
+                ->first()
+                ->type;
         }
 
         return null;

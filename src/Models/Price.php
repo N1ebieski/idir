@@ -7,14 +7,21 @@ use Illuminate\Database\Eloquent\Model;
 use N1ebieski\IDir\Services\PriceService;
 use N1ebieski\IDir\Repositories\PriceRepo;
 use Illuminate\Database\Eloquent\Collection;
+use N1ebieski\IDir\Models\Traits\Filterable;
 use Illuminate\Support\Collection as Collect;
+use N1ebieski\ICore\Models\Traits\Carbonable;
 
-/**
- * [Price description]
- */
 class Price extends Model
 {
+    use Filterable, Carbonable;
+
     // Configuration
+
+    /**
+     * [public description]
+     * @var array
+     */
+    public const AVAILABLE = ['transfer', 'code_transfer', 'code_sms', 'paypal_express'];
 
     /**
      * The attributes that are mass assignable.
@@ -104,6 +111,18 @@ class Price extends Model
         return isset($this->attributes['codes']['codes']) ?
             Collect::make(explode("\r\n", $this->attributes['codes']['codes']))
             : Collect::make([]);
+    }
+
+    // Checkers
+
+    /**
+     * Undocumented function
+     *
+     * @return boolean
+     */
+    public function isUnlimited() : bool
+    {
+        return $this->days === null;
     }
 
     // Makers

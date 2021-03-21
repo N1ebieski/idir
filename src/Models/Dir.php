@@ -3,7 +3,6 @@
 namespace N1ebieski\IDir\Models;
 
 use Carbon\Carbon;
-use N1ebieski\IDir\Models\Group;
 use Illuminate\Support\Facades\DB;
 use N1ebieski\IDir\Cache\DirCache;
 use Illuminate\Support\Facades\App;
@@ -450,19 +449,6 @@ class Dir extends Model
             // })
             ->where('url', '<>', null)
             ->active();
-    }
-
-    /**
-     * [scopeFilterGroup description]
-     * @param  Builder $query [description]
-     * @param  Group|null  $group  [description]
-     * @return Builder|null         [description]
-     */
-    public function scopeFilterGroup(Builder $query, Group $group = null) : ?Builder
-    {
-        return $query->when($group !== null, function ($query) use ($group) {
-            $query->where('group_id', $group->id);
-        });
     }
 
     // Accessors

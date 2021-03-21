@@ -52,30 +52,17 @@ return [
         Group::APPLY_INACTIVE => 'pending acceptance',
         Group::APPLY_ACTIVE => 'active immediately'
     ],
-    'days' => 'Days',
-    'price' => 'Price',
     'max_models' => 'Maximum number of entries in the group',
     'max_models_daily' => 'Daily maximum number of entries in the group',
     'empty' => 'No groups available',
     'payment' => [
-        'index' => 'Payment',
-        'transfer' => 'Transfer online',
-        'code_sms' => 'SMS code',
-        'code_transfer' => 'Transfer code',
-        '0' => 'free',
-        '1' => 'paid'
+        'label' => 'Payment',
+        Group::WITHOUT_PAYMENT => 'free',
+        Group::PAYMENT => 'paid'
     ],
-    'price_from' => 'paid from :price PLN / :days :limit',
-    'unlimited' => 'unlimited',
     'alt' => [
-        'index' => 'Alternative group',
+        'label' => 'Alternative group',
         'tooltip' => 'After the expiry date, the entry will be moved to a alternative group',
         'null' => 'None (after the expiry date, the entry will be deactivated with the status "waiting for payment")'
-    ],
-    'code_sms' => 'SMS code',
-    'code_transfer' => 'ID',
-    'token' => 'Token',
-    'number' => 'Number',
-    'codes' => 'Manual codes',
-    'sync_codes' => 'Sync codes'
+    ]
 ];

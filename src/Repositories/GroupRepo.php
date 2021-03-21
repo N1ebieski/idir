@@ -43,7 +43,8 @@ class GroupRepo
      */
     public function paginateByFilter(array $filter) : LengthAwarePaginator
     {
-        return $this->group->filterSearch($filter['search'])
+        return $this->group->withCount('prices')
+            ->filterSearch($filter['search'])
             ->filterExcept($filter['except'])
             ->filterVisible($filter['visible'])
             ->filterOrderBy($filter['orderby'] ?? 'position|asc')
@@ -84,6 +85,18 @@ class GroupRepo
         return $this->group
             ->with(['privileges', 'prices'])
             ->withCount(['dirs', 'dirsToday'])
+            ->orderBy('position', 'asc')
+            ->get();
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @return Collection
+     */
+    public function getExceptDefault() : Collection
+    {
+        return $this->group->exceptDefault()
             ->orderBy('position', 'asc')
             ->get();
     }

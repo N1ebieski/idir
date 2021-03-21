@@ -1,10 +1,7 @@
 <?php
 
-namespace N1ebieski\IDir\Http\Requests\Admin\Group\Traits;
+namespace N1ebieski\IDir\Http\Requests\Admin\Price\Traits;
 
-/**
- * [trait description]
- */
 trait CodePayable
 {
     /**

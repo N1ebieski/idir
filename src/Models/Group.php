@@ -39,6 +39,18 @@ class Group extends Model
      * [public description]
      * @var int
      */
+    public const PAYMENT = 1;
+
+    /**
+     * [public description]
+     * @var int
+     */
+    public const WITHOUT_PAYMENT = 0;
+
+    /**
+     * [public description]
+     * @var int
+     */
     public const APPLY_ACTIVE = 1;
 
     /**
@@ -281,6 +293,16 @@ class Group extends Model
     public function scopeObligatoryBacklink(Builder $query) : Builder
     {
         return $query->where('backlink', static::OBLIGATORY_BACKLINK);
+    }
+
+    /**
+     * [scopePublic description]
+     * @param  Builder $query [description]
+     * @return Builder        [description]
+     */
+    public function scopeExceptDefault(Builder $query) : Builder
+    {
+        return $query->where('id', '<>', self::DEFAULT);
     }
 
     // Checkers

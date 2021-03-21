@@ -18,11 +18,23 @@
                         {{ $group->position + 1 }}
                     </span>
                 </a>
-                <span>{{ $group->name }}</span>
+                <span>
+                    <a 
+                        href="{{ route('admin.price.index', ['filter[group]' => $group->id]) }}"
+                        title="{{ trans('idir::prices.route.index') }}"
+                        target="_blank"
+                        rel="noopener"
+                    >
+                        {{ $group->name }}
+                    </a>  
+                </span>
                 <span class="badge badge-success">ID {{ $group->id }}</span>                
             </li>
             <li>
-                {{ trans("idir::groups.visible.{$group->visible}") }}
+                {{ trans("idir::groups.visible.label") }}: {{ trans("idir::groups.visible.{$group->visible}") }}
+            </li>
+            <li>
+                {{ trans("idir::groups.payment.label") }}: {{ $group->prices_count > 0 ? trans('idir::groups.payment.' . $group::PAYMENT) : trans('idir::groups.payment.' . $group::WITHOUT_PAYMENT) }}
             </li>
             <li>
                 <small>{{ trans('icore::filter.created_at') }}: {{ $group->created_at_diff }}</small>

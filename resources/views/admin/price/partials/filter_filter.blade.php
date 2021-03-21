@@ -1,4 +1,4 @@
-@inject('field', 'N1ebieski\IDir\Models\Field\Field')
+@inject('price', 'N1ebieski\IDir\Models\Price')
 
 @component('icore::admin.partials.modal')
 @slot('modal_id', 'filterModal')
@@ -22,32 +22,30 @@
         value="{{ isset($filter['search']) ? $filter['search'] : '' }}"
     >
 </div>
+@if ($groups->isNotEmpty())
 <div class="form-group">
-    <label for="FormVisible">
-        {{ trans('icore::filter.filter') }} "{{ trans('idir::fields.visible.label') }}"
+    <label for="group">
+        {{ trans('icore::filter.filter') }} "{{ trans('idir::filter.group') }}"
     </label>
     <select 
         class="form-control custom-select" 
-        id="FormVisible" 
-        name="filter[visible]"
+        id="group" 
+        name="filter[group]"
     >
         <option value="">
             {{ trans('icore::filter.default') }}
         </option>
+        @foreach ($groups as $group)
         <option 
-            value="{{ $field::VISIBLE }}" 
-            {{ ($filter['visible'] === $field::VISIBLE) ? 'selected' : '' }}
+            value="{{ $group->id }}" 
+            {{ ($filter['group'] !== null && $filter['group']->id == $group->id) ? 'selected' : '' }}
         >
-            {{ trans('idir::fields.visible_'.$field::VISIBLE) }}
+            {{ $group->name }}
         </option>
-        <option 
-            value="{{ $field::INVISIBLE }}" 
-            {{ ($filter['visible'] === $field::INVISIBLE) ? 'selected' : '' }}
-        >
-            {{ trans('idir::fields.visible_'.$field::INVISIBLE) }}
-        </option>
+        @endforeach
     </select>
 </div>
+@endif
 <div class="form-group">
     <label for="FormType">
         {{ trans('icore::filter.filter') }} "{{ trans('icore::filter.type') }}"
@@ -60,7 +58,7 @@
         <option value="">
             {{ trans('icore::filter.default') }}
         </option>
-        @foreach ($field::AVAILABLE as $type)
+        @foreach ($price::AVAILABLE as $type)
         <option 
             value="{{ $type }}" 
             {{ ($filter['type'] == $type) ? 'selected' : '' }}
@@ -70,7 +68,6 @@
         @endforeach
     </select>
 </div>
-@yield('filter-morph')
 <div class="d-inline">
     <button type="button" class="btn btn-primary btn-send" id="filterFilter">
         <i class="fas fa-check"></i>
@@ -86,6 +83,6 @@
 
 @push('script')
 @component('icore::admin.partials.jsvalidation')
-{!! JsValidator::formRequest('N1ebieski\IDir\Http\Requests\Admin\Group\IndexRequest', '#filter'); !!}
+{!! JsValidator::formRequest('N1ebieski\IDir\Http\Requests\Admin\Price\IndexRequest', '#filter'); !!}
 @endcomponent
 @endpush

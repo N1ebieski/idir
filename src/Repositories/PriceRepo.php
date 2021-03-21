@@ -3,12 +3,10 @@
 namespace N1ebieski\IDir\Repositories;
 
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
 use N1ebieski\IDir\Models\Price;
 use N1ebieski\IDir\Models\Code;
 
-/**
- * [PriceRepo description]
- */
 class PriceRepo
 {
     /**
@@ -24,6 +22,22 @@ class PriceRepo
     public function __construct(Price $price)
     {
         $this->price = $price;
+    }
+
+    /**
+     * [paginate description]
+     * @param  array        $filter [description]
+     * @return LengthAwarePaginator [description]
+     */
+    public function paginateByFilter(array $filter) : LengthAwarePaginator
+    {
+        return $this->price->with('group')
+            ->filterSearch($filter['search'])
+            ->filterExcept($filter['except'])
+            ->filterGroup($filter['group'])
+            ->filterType($filter['type'])
+            ->filterOrderBy($filter['orderby'] ?? 'price|asc')
+            ->filterPaginate($filter['paginate']);
     }
 
     /**
