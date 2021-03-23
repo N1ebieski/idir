@@ -106,6 +106,7 @@
                 <textarea 
                     class="form-control {{ $isValid("prices.code_transfer.{$loop->index}.codes") }}"
                     name="prices[code_transfer][{{ $loop->index }}][codes][codes]" 
+                    data-autogrow="false"
                     readonly
                 >{{ $price->codes_as_string }}</textarea>
             </div>
