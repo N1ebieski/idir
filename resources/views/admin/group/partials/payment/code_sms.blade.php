@@ -134,7 +134,8 @@
                 </div>
                 <textarea 
                     class="form-control {{ $isValid("prices.code_sms.{$loop->index}.codes") }}"
-                    name="prices[code_sms][{{ $loop->index }}][codes][codes]" 
+                    name="prices[code_sms][{{ $loop->index }}][codes][codes]"
+                    data-autogrow="false" 
                     readonly
                 >{{ $price->codes_as_string }}</textarea>
             </div>
