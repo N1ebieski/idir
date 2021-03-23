@@ -56,7 +56,7 @@ class PaymentService implements Creatable, StatusUpdatable
      */
     protected function makeStatus(string $payment_type = null) : int
     {
-        if ($payment_type === 'transfer') {
+        if (in_array($payment_type, ['transfer', 'paypal_express'])) {
             return Payment::PENDING;
         }
 

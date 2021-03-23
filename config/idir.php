@@ -98,11 +98,20 @@ return [
             'driver' => 'cashbill'
         ],
 
+        'paypal_express' => [
+            'driver' => 'paypal'
+        ],
+
         'cashbill' => [
             'name' => 'CashBill',
             'url' => 'https://www.cashbill.pl',
             'rules_url' => 'https://www.cashbill.pl/download/regulaminy/Regulamin_Platnosci.pdf',
             'docs_url' => 'https://www.cashbill.pl/pobierz/dokumenty/'
+        ],
+
+        'paypal' => [
+            'name' => 'PayPal',
+            'url' => 'https://www.paypal.com'
         ]
     ]
 ];

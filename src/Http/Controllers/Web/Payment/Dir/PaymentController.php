@@ -16,21 +16,20 @@ use N1ebieski\IDir\Http\Requests\Web\Payment\Interfaces\CompleteRequestStrategy;
 use N1ebieski\IDir\Loads\Web\Payment\ShowLoad;
 use N1ebieski\IDir\Utils\Payment\Interfaces\TransferUtilStrategy;
 
-/**
- * [PaymentController description]
- */
 class PaymentController extends Controller implements Polymorphic
 {
     /**
      * Undocumented function
      *
      * @param Payment $payment
+     * @param string $driver
      * @param ShowLoad $load
      * @param TransferUtilStrategy $transferUtil
      * @return RedirectResponse
      */
     public function show(
         Payment $payment,
+        string $driver = null,
         ShowLoad $load,
         TransferUtilStrategy $transferUtil
     ) : RedirectResponse {
@@ -42,15 +41,18 @@ class PaymentController extends Controller implements Polymorphic
                     'group' => $payment->order->group->name,
                     'days' => $days = $payment->order->days,
                     'limit' => $days !== null ?
-                        strtolower(Lang::get('idir::groups.days'))
-                        : strtolower(Lang::get('idir::groups.unlimited'))
+                        strtolower(Lang::get('idir::prices.days'))
+                        : strtolower(Lang::get('idir::prices.unlimited'))
                 ]),
                 'userdata' => json_encode([
                     'uuid' => $payment->uuid,
                     'redirect' => Auth::check() ?
                         URL::route('web.profile.edit_dir')
-                        : URL::route('web.dir.create_1')
-                ])
+                        : URL::route('web.dir.create_1'),
+                ]),
+                'verify' => URL::route('api.payment.dir.verify', ['driver' => $driver]),
+                'redirect' => URL::route('web.payment.dir.complete', ['driver' => $driver]),
+                'cancel' => URL::route('web.payment.dir.complete', ['driver' => $driver])
             ])
             ->makeResponse();
         } catch (\N1ebieski\IDir\Exceptions\Payment\Exception $e) {
@@ -63,11 +65,13 @@ class PaymentController extends Controller implements Polymorphic
     /**
      * Undocumented function
      *
+     * @param string $driver
      * @param CompleteRequestStrategy $request
      * @param TransferUtilStrategy $transferUtil
      * @return RedirectResponse
      */
     public function complete(
+        string $driver = null,
         CompleteRequestStrategy $request,
         TransferUtilStrategy $transferUtil
     ) : RedirectResponse {

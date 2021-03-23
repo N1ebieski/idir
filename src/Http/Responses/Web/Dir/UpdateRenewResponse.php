@@ -95,9 +95,10 @@ class UpdateRenewResponse implements RedirectResponseFactory
      */
     public function makeResponse() : RedirectResponse
     {
-        if ($this->request->input('payment_type') === 'transfer') {
+        if (in_array($this->request->input('payment_type'), ['transfer', 'paypal_express'])) {
             return $this->response->redirectToRoute('web.payment.dir.show', [
-                $this->dir->payment->uuid
+                $this->dir->payment->uuid,
+                $this->dir->payment->driver
             ]);
         }
 

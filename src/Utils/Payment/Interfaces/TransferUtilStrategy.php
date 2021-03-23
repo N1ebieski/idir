@@ -29,10 +29,8 @@ interface TransferUtilStrategy
     
     /**
      * Undocumented function
-     *
-     * @return GuzzleResponse
      */
-    public function makeResponse() : GuzzleResponse;
+    public function makeResponse();
 
     /**
      * Undocumented function

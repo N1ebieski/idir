@@ -2,12 +2,10 @@
 
 namespace N1ebieski\IDir\Http\Requests\Web\Dir;
 
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use N1ebieski\IDir\Models\Price;
+use Illuminate\Foundation\Http\FormRequest;
 
-/**
- * [UpdateRenewRequest description]
- */
 class UpdateRenewRequest extends FormRequest
 {
     /**
@@ -28,7 +26,13 @@ class UpdateRenewRequest extends FormRequest
     public function rules()
     {
         return [
-            'payment_type' => 'bail|required|string|in:transfer,code_sms,code_transfer|no_js_validation',
+            'payment_type' => [
+                'bail',
+                'required',
+                'string',
+                Rule::in(Price::AVAILABLE),
+                'no_js_validation'
+            ],
             'payment_transfer' => $this->input('payment_type') === 'transfer' ?
             [
                 'bail',
@@ -61,6 +65,18 @@ class UpdateRenewRequest extends FormRequest
                 Rule::exists('prices', 'id')->where(function ($query) {
                     $query->where([
                         ['type', 'code_transfer'],
+                        ['group_id', $this->dir->group->id]
+                    ]);
+                })
+            ] : ['no_js_validation'],
+            'payment_paypal_express' => $this->input('payment_type') === 'paypal_express' ?
+            [
+                'bail',
+                'required_if:payment_type,paypal_express',
+                'integer',
+                Rule::exists('prices', 'id')->where(function ($query) {
+                    $query->where([
+                        ['type', 'paypal_express'],
                         ['group_id', $this->dir->group->id]
                     ]);
                 })
