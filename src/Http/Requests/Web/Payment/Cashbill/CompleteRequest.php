@@ -2,8 +2,10 @@
 
 namespace N1ebieski\IDir\Http\Requests\Web\Payment\Cashbill;
 
-use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Foundation\Http\FormRequest;
 use N1ebieski\IDir\Http\Requests\Web\Payment\Interfaces\CompleteRequestStrategy;
 
 /**
@@ -34,6 +36,10 @@ class CompleteRequest extends FormRequest implements CompleteRequestStrategy
             $this->merge([
                 'uuid' => $userdata->uuid,
                 'redirect' => $userdata->redirect
+            ]);
+
+            App::make(Request::class)->merge([
+                'uuid' => $this->input('uuid')
             ]);
         }
     }

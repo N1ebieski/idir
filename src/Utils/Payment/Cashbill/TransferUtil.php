@@ -2,14 +2,11 @@
 
 namespace N1ebieski\IDir\Utils\Payment\Cashbill;
 
-use Illuminate\Contracts\Config\Repository as Config;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Psr7\Response as GuzzleResponse;
+use Illuminate\Contracts\Config\Repository as Config;
 use N1ebieski\IDir\Utils\Payment\Interfaces\TransferUtilStrategy;
 
-/**
- * [Cashbill description]
- */
 class TransferUtil implements TransferUtilStrategy
 {
     /**
@@ -68,6 +65,18 @@ class TransferUtil implements TransferUtilStrategy
 
     /**
      * [protected description]
+     * @var string
+     */
+    protected $uuid = null;
+
+    /**
+     * [protected description]
+     * @var string
+     */
+    protected $redirect = null;
+
+    /**
+     * [protected description]
      * @var int
      */
     protected $userdata;
@@ -98,6 +107,107 @@ class TransferUtil implements TransferUtilStrategy
     /**
      * Undocumented function
      *
+     * @param string $amount
+     * @return self
+     */
+    public function setAmount(string $amount)
+    {
+        $this->amount = $amount;
+
+        return $this;
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param string $desc
+     * @return self
+     */
+    public function setDesc(string $desc)
+    {
+        $this->desc = $desc;
+
+        return $this;
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param string $desc
+     * @return self
+     */
+    public function setUuid(string $uuid)
+    {
+        $this->uuid = $uuid;
+
+        $this->userdata = json_encode([
+            'uuid' => $this->uuid,
+            'redirect' => $this->redirect
+        ]);
+
+        return $this;
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param string $desc
+     * @return self
+     */
+    public function setRedirect(string $redirect)
+    {
+        $this->redirect = $redirect;
+
+        $this->userdata = json_encode([
+            'uuid' => $this->uuid,
+            'redirect' => $this->redirect
+        ]);
+
+        return $this;
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param string $desc
+     * @return self
+     */
+    public function setCancelUrl(string $cancelUrl)
+    {
+        //
+
+        return $this;
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param string $desc
+     * @return self
+     */
+    public function setReturnUrl(string $returnUrl)
+    {
+        //
+
+        return $this;
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param string $desc
+     * @return self
+     */
+    public function setNotifyUrl(string $notifyUrl)
+    {
+        //
+
+        return $this;
+    }
+
+    /**
+     * Undocumented function
+     *
      * @return string
      */
     public function getUrlToPayment() : string
@@ -108,26 +218,11 @@ class TransferUtil implements TransferUtilStrategy
     }
 
     /**
-     * [setup description]
-     * @param  array $attributes [description]
-     * @return static              [description]
+     * Undocumented function
+     *
+     * @return string
      */
-    public function setup(array $attributes)
-    {
-        foreach ($attributes as $key => $value) {
-            if (property_exists($this, $key)) {
-                $this->{$key} = $value;
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * [makeSign description]
-     * @return string [description]
-     */
-    public function makeSign() : string
+    protected function sign() : string
     {
         return md5($this->service.'|'.$this->amount.'|'.$this->currency.'|'
             .$this->desc.'|'.$this->lang.'|'.$this->userdata.'||||||||||||'.$this->key);
@@ -175,6 +270,36 @@ class TransferUtil implements TransferUtilStrategy
     }
 
     /**
+     * Undocumented function
+     *
+     * @return void
+     */
+    public function purchase() : void
+    {
+        $this->makeResponse();
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param array $attributes
+     * @return void
+     */
+    public function complete(array $attributes) : void
+    {
+        if (!$this->isStatus($attributes['status'])) {
+            return;
+        }
+
+        if (!$this->isSign($attributes)) {
+            throw new \N1ebieski\IDir\Exceptions\Payment\Cashbill\Transfer\InvalidSignException(
+                'Invalid signature of payment.',
+                403
+            );
+        }
+    }
+
+    /**
      * [authorize description]
      * @param  array  $attributes [description]
      * @return void               [description]
@@ -215,7 +340,7 @@ class TransferUtil implements TransferUtilStrategy
      *
      * @return GuzzleResponse
      */
-    public function makeResponse() : GuzzleResponse
+    protected function makeResponse() : GuzzleResponse
     {
         try {
             $this->response = $this->guzzle->request('POST', $this->transfer_url, [
@@ -246,7 +371,7 @@ class TransferUtil implements TransferUtilStrategy
             'lang' => $this->lang,
             'desc' => $this->desc,
             'userdata' => $this->userdata,
-            'sign' => $this->makeSign()
+            'sign' => $this->sign()
         ];
     }
 }

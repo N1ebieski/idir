@@ -48,20 +48,11 @@ class GroupService implements Creatable, Updatable, PositionUpdatable, Deletable
     public function create(array $attributes) : Model
     {
         $this->group->fill(
-            $this->collect->make($attributes)->except(['priv', 'prices'])->toArray()
+            $this->collect->make($attributes)->except(['priv'])->toArray()
         );
         $this->group->save();
 
         $this->group->privileges()->attach(array_filter($attributes['priv'] ?? []));
-
-        $this->group->prices()->make()
-            ->setRelations(['group' => $this->group])
-            ->makeService()
-            ->createOrUpdateGlobal(array_filter(
-                (int)$attributes['payment'] === 1 ?
-                    $this->collect->make($attributes['prices'])->flatten(1)->toArray()
-                    : []
-            ));
 
         return $this->group;
     }
@@ -74,22 +65,12 @@ class GroupService implements Creatable, Updatable, PositionUpdatable, Deletable
     public function update(array $attributes) : bool
     {
         $this->group->fill(
-            $this->collect->make($attributes)->except(['priv', 'prices'])->toArray()
+            $this->collect->make($attributes)->except(['priv'])->toArray()
         );
-        $result = $this->group->save();
 
         $this->group->privileges()->sync(array_filter($attributes['priv'] ?? []));
 
-        $this->group->prices()->make()
-            ->setRelations(['group' => $this->group])
-            ->makeService()
-            ->organizeGlobal(array_filter(
-                (int)$attributes['payment'] === 1 ?
-                    $this->collect->make($attributes['prices'])->flatten(1)->toArray()
-                    : []
-            ));
-
-        return $result;
+        return $this->group->save();
     }
 
     /**

@@ -2,23 +2,22 @@
 
 namespace N1ebieski\IDir\Utils\Payment\Interfaces;
 
-use GuzzleHttp\Psr7\Response as GuzzleResponse;
-
 interface TransferUtilStrategy
 {
     /**
-     * [setup description]
-     * @param  array $attributes [description]
-     * @return static              [description]
+     * Undocumented function
+     *
+     * @return void
      */
-    public function setup(array $attributes);
+    public function purchase() : void;
 
     /**
-     * [isSign description]
-     * @param  array $attributes [description]
-     * @return bool              [description]
+     * Undocumented function
+     *
+     * @param array $attributes
+     * @return void
      */
-    public function isSign(array $attributes) : bool;
+    public function complete(array $attributes) : void;
 
     /**
      * [authorize description]
@@ -27,11 +26,6 @@ interface TransferUtilStrategy
      */
     public function authorize(array $attributes) : void;
     
-    /**
-     * Undocumented function
-     */
-    public function makeResponse();
-
     /**
      * Undocumented function
      *

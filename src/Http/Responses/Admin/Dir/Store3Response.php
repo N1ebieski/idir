@@ -91,6 +91,7 @@ class Store3Response implements RedirectResponseFactory
             case DIR::PAYMENT_INACTIVE:
                 return $this->response->redirectToRoute('admin.payment.dir.show', [
                     $this->dir->payment->uuid,
+                    $this->dir->payment->driver
                 ]);
         }
     }

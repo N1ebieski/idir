@@ -4,16 +4,13 @@ namespace N1ebieski\IDir\Providers;
 
 use N1ebieski\ICore\Support\ServiceProvider;
 
-/**
- * [IDirServiceProvider description]
- */
 class IDirServiceProvider extends ServiceProvider
 {
     /**
      * [public description]
      * @var string
      */
-    public const VERSION = "3.2.8";
+    public const VERSION = "4.0.0";
 
     /**
      * Register services.

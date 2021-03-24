@@ -63,6 +63,6 @@ return [
     'alt' => [
         'label' => 'Alternatywna grupa',
         'tooltip' => 'Grupa do której spadnie wpis w przypadku braku przedłużenia okresu czasowego.',
-        'null' => 'Brak (po upływie czasu nastąpi deaktywacja ze statusem "oczekujący na płatność")'
+        'null' => 'Brak (po upływie czasu nastąpi dezaktywacja ze statusem "oczekujący na płatność")'
     ]
 ];

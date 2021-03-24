@@ -6,6 +6,7 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use N1ebieski\ICore\Models\Link;
 use N1ebieski\IDir\Models\Group;
+use N1ebieski\IDir\Models\Price;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Lang;
 use N1ebieski\IDir\Http\Requests\Admin\Dir\Store2Request;
@@ -98,7 +99,13 @@ class Store3Request extends Store2Request
             ],
             $this->group->prices->isNotEmpty() ?
             [
-                'payment_type' => 'bail|required|string|in:transfer,code_sms,code_transfer|no_js_validation',
+                'payment_type' => [
+                    'bail',
+                    'required',
+                    'string',
+                    Rule::in(Price::AVAILABLE),
+                    'no_js_validation'
+                ],
                 'payment_transfer' => $this->input('payment_type') === 'transfer' ?
                 [
                     'bail',
@@ -131,6 +138,18 @@ class Store3Request extends Store2Request
                     Rule::exists('prices', 'id')->where(function ($query) {
                         $query->where([
                             ['type', 'code_transfer'],
+                            ['group_id', $this->group->id]
+                        ]);
+                    })
+                ] : ['no_js_validation'],
+                'payment_paypal_express' => $this->input('payment_type') === 'paypal_express' ?
+                [
+                    'bail',
+                    'required_if:payment_type,paypal_express',
+                    'integer',
+                    Rule::exists('prices', 'id')->where(function ($query) {
+                        $query->where([
+                            ['type', 'paypal_express'],
                             ['group_id', $this->group->id]
                         ]);
                     })

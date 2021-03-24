@@ -31,6 +31,19 @@ class PaymentRepo
      * @param  string    $uuid [description]
      * @return Payment|null     [description]
      */
+    public function firstByUuid(string $uuid) : ?Payment
+    {
+        return $this->payment->where('uuid', $uuid)
+            ->poliType()
+            ->with(['morph', 'orderMorph'])
+            ->first();
+    }
+
+    /**
+     * [firstPendingById description]
+     * @param  string    $uuid [description]
+     * @return Payment|null     [description]
+     */
     public function firstPendingByUuid(string $uuid) : ?Payment
     {
         return $this->payment->where('uuid', $uuid)

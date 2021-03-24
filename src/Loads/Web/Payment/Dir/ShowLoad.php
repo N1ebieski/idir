@@ -1,10 +1,10 @@
 <?php
 
-namespace N1ebieski\IDir\Loads\Admin\Group;
+namespace N1ebieski\IDir\Loads\Web\Payment\Dir;
 
 use Illuminate\Http\Request;
 
-class EditLoad
+class ShowLoad
 {
     /**
      * [__construct description]
@@ -12,6 +12,6 @@ class EditLoad
      */
     public function __construct(Request $request)
     {
-        $request->route('group')->load(['prices', 'prices.codes']);
+        $request->route('payment_dir_pending')->load(['morph', 'orderMorph']);
     }
 }

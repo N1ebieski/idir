@@ -2,15 +2,12 @@
 
 namespace N1ebieski\IDir\Http\Requests\Api\Payment\Cashbill;
 
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Foundation\Http\FormRequest;
 use N1ebieski\IDir\Http\Requests\Api\Payment\Interfaces\VerifyRequestStrategy;
 
-/**
- * [VerifyRequest description]
- */
 class VerifyRequest extends FormRequest implements VerifyRequestStrategy
 {
     /**
@@ -39,6 +36,7 @@ class VerifyRequest extends FormRequest implements VerifyRequestStrategy
         }
 
         App::make(Request::class)->merge([
+            'uuid' => $this->input('uuid'),
             'logs' => $this->all()
         ]);
     }

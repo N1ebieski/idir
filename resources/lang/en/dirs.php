@@ -63,6 +63,10 @@ return [
         'code_transfer' => [
             'label' => 'Automatic transfer code',
             'info' => 'To receive the access code, please buy the code on the website <a id="code_transfer" href=":code_transfer_url" target="blank" title=":provider_name"><b>:provider_name</b></a>. The cost is <b><span id="price">:price</span></b> PLN. Documents relating to the payment system are available on the website <a href=":provider_docs_url" target="_blank" rel="noopener" title=":provider_name documents">:provider_name documents</a>. Terms of service of the payment system is available on the website <a href=":provider_rules_url" target="_blank" rel="noopener" title=":provider_name terms of service">:provider_name terms of service</a>. Submitting a entry to directory is tantamount to acceptance of <a href=":rules_url" target="_blank" rel="noopener" title="Rerms of service">terms of service</a>.'
+        ],
+        'paypal_express' => [
+            'label' => 'PayPal',
+            'info' => 'Payments online realizes <a href=":provider_url" target="_blank" rel="noopener" title=":provider_name">:provider_name</a>. Documents relating to the payment system are available on the website <a href=":provider_docs_url" target="_blank" rel="noopener" title=":provider_name documents">:provider_name documents</a>. Terms of service of the payment system is available on the website <a href=":provider_rules_url" target="_blank" rel="noopener" title=":provider_name terms of service">:provider_name terms of service</a>. Submitting a entry to directory is tantamount to acceptance of <a href=":rules_url" target="_blank" rel="noopener" title="Terms of service">terms of service</a>.',
         ]
     ],
     'price' => ':price :currency / :days :limit',

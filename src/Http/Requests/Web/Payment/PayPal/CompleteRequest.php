@@ -3,7 +3,6 @@
 namespace N1ebieski\IDir\Http\Requests\Web\Payment\PayPal;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Config;
 use N1ebieski\IDir\Http\Requests\Web\Payment\Interfaces\CompleteRequestStrategy;
 
 class CompleteRequest extends FormRequest implements CompleteRequestStrategy
@@ -19,22 +18,6 @@ class CompleteRequest extends FormRequest implements CompleteRequestStrategy
     }
 
     /**
-     * Prepare the data for validation.
-     *
-     * @return void
-     */
-    public function prepareForValidation() : void
-    {
-        dd($this->all());
-
-        if ($this->has('PayerID') && is_string($this->input('PayerID'))) {
-            $this->merge(['status' => 'ok']);
-        } else {
-            $this->merge(['status' => 'err']);
-        }
-    }
-
-    /**
      * Get the validation rules that apply to the request.
      *
      * @return array
@@ -42,13 +25,10 @@ class CompleteRequest extends FormRequest implements CompleteRequestStrategy
     public function rules() : array
     {
         return [
-            'service' => 'bail|required|string|in:' . Config::get("services.cashbill.transfer.service"),
             'token' => 'bail|required|string',
-            'PayerID' => 'bail|required|numeric|between:0,99999.99',
-            'userdata' => 'bail|required|json',
-            'uuid' => 'bail|required|uuid',
+            'PayerID' => 'bail|nullable|string',
             'status' => 'bail|required|in:ok,err',
-            'sign' => 'bail|required|string',
+            'uuid' => 'bail|required|uuid',
             'redirect' => [
                 'bail',
                 'nullable',

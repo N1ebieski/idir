@@ -30,6 +30,7 @@
             class="form-control"
             id="{{ $name }}.codes.codes"
             name="{{ $name }}[codes][codes]" 
+            data-autogrow="false"
             readonly
         >{{ $value ?? null }}</textarea>
     </div>

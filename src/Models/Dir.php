@@ -535,7 +535,7 @@ class Dir extends Model
         if ($this->url !== null) {
             $link = '<a rel="noopener';
 
-            if ($this->getRelation('group')->hasNoFollowPrivilege()) {
+            if ($this->group->hasNoFollowPrivilege()) {
                 $link .= ' nofollow';
             }
 

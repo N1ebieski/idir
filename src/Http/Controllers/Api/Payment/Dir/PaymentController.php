@@ -2,49 +2,44 @@
 
 namespace N1ebieski\IDir\Http\Controllers\Api\Payment\Dir;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Support\Facades\App;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Event;
-use N1ebieski\IDir\Models\Payment\Dir\Payment;
+use N1ebieski\IDir\Loads\Api\Payment\Dir\VerifyLoad;
 use N1ebieski\IDir\Events\Api\Payment\Dir\VerifyAttemptEvent;
 use N1ebieski\IDir\Events\Api\Payment\Dir\VerifySuccessfulEvent;
 use N1ebieski\IDir\Http\Controllers\Api\Payment\Dir\Polymorphic;
-use N1ebieski\IDir\Http\Requests\Api\Payment\Interfaces\VerifyRequestStrategy;
 use N1ebieski\IDir\Utils\Payment\Interfaces\TransferUtilStrategy;
+use N1ebieski\IDir\Http\Requests\Api\Payment\Interfaces\VerifyRequestStrategy;
 
 class PaymentController extends Controller implements Polymorphic
 {
     /**
      * Undocumented function
      *
-     * @param Payment $payment
+     * @param string $driver
      * @param VerifyRequestStrategy $request
+     * @param VerifyLoad $load
      * @param TransferUtilStrategy $transferUtil
      * @return string
      */
     public function verify(
-        Payment $payment,
+        string $driver = null,
         VerifyRequestStrategy $request,
+        VerifyLoad $load,
         TransferUtilStrategy $transferUtil
     ) : string {
-        // I can't' use the route binding, because cashbill returns id payment as part of $_POST['userdata'] variable
-        $payment = $payment->makeRepo()->firstPendingByUuid($request->input('uuid'));
-
-        if ($payment === null) {
-            App::abort(HttpResponse::HTTP_NOT_FOUND);
-        }
-
         try {
-            Event::dispatch(App::make(VerifyAttemptEvent::class, ['payment' => $payment]));
+            Event::dispatch(App::make(VerifyAttemptEvent::class, ['payment' => $load->getPayment()]));
 
-            $transferUtil->setup(['amount' => $payment->order->price])->authorize($request->validated());
+            $transferUtil->setAmount($load->getPayment()->order->price)
+                ->authorize($request->all());
 
-            $payment->makeRepo()->paid();
+            $load->getPayment()->makeRepo()->paid();
         
-            Event::dispatch(App::make(VerifySuccessfulEvent::class, ['payment' => $payment]));
+            Event::dispatch(App::make(VerifySuccessfulEvent::class, ['payment' => $load->getPayment()]));
         } catch (\N1ebieski\IDir\Exceptions\Payment\Exception $e) {
-            $e->setPayment($payment)->report();
+            $e->setPayment($load->getPayment())->report();
         }
 
         return 'OK';

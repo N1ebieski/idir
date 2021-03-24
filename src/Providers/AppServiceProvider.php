@@ -18,7 +18,7 @@ class AppServiceProvider extends ServiceProvider
                 case 'paypal':
                     return $this->app->make(\N1ebieski\IDir\Utils\Payment\PayPal\PayPalExpressAdapter::class);
             }
-
+            
             switch ($this->app['config']['idir.payment.transfer.driver']) {
                 case 'cashbill':
                     return $this->app->make(\N1ebieski\IDir\Utils\Payment\Cashbill\TransferUtil::class);
@@ -38,6 +38,11 @@ class AppServiceProvider extends ServiceProvider
         });
 
         $this->app->bind(\N1ebieski\IDir\Http\Requests\Api\Payment\Interfaces\VerifyRequestStrategy::class, function ($app) {
+            switch ($this->app['request']->route('driver')) {
+                case 'paypal':
+                    return new \N1ebieski\IDir\Http\Requests\Api\Payment\PayPal\VerifyRequest;
+            }
+
             switch ($this->app['config']['idir.payment.transfer.driver']) {
                 case 'cashbill':
                     return new \N1ebieski\IDir\Http\Requests\Api\Payment\Cashbill\VerifyRequest;

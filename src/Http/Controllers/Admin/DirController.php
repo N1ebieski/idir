@@ -175,8 +175,8 @@ class DirController
             ->makeService()
             ->create($request->validated());
 
-        if (($payment = $dir->getRelation('payment')) instanceof Payment) {
-            Event::dispatch(App::make(PaymentStoreEvent::class, ['payment' => $payment]));
+        if ($dir->payment instanceof Payment) {
+            Event::dispatch(App::make(PaymentStoreEvent::class, ['payment' => $dir->payment]));
         }
 
         Event::dispatch(App::make(DirStoreEvent::class, ['dir' => $dir]));
@@ -286,8 +286,8 @@ class DirController
             ->makeService()
             ->updateFull($request->validated());
 
-        if (($payment = $dir->getRelation('payment')) instanceof Payment) {
-            Event::dispatch(App::make(PaymentStoreEvent::class, ['payment' => $payment]));
+        if ($dir->payment instanceof Payment) {
+            Event::dispatch(App::make(PaymentStoreEvent::class, ['payment' => $dir->payment]));
         }
 
         Event::dispatch(App::make(DirUpdateFullEvent::class, ['dir' => $dir]));

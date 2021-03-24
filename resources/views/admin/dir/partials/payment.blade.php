@@ -1,3 +1,5 @@
+@inject('price', 'N1ebieski\IDir\Models\Price')
+
 <div class="form-group">
     <label for="payment">
         {{ trans('idir::dirs.choose_payment_type') }}:
@@ -10,7 +12,7 @@
                 id="nav-tab" 
                 role="tablist"
             >
-                @foreach (['transfer', 'code_transfer', 'code_sms'] as $type)
+                @foreach ($price::AVAILABLE as $type)
                 @if ($pricesByType($type)->isNotEmpty())
                 <a 
                     class="nav-item btn btn-info {{ old('payment_type', $paymentType) === $type ? 'active' : null }}"
@@ -202,6 +204,51 @@
                 </p>
             </div>
             @endif
+            @if ($pricesByType('paypal_express')->isNotEmpty())
+            <div 
+                class="tab-pane fade {{ old('payment_type', $paymentType) === "paypal_express" ? 'show active' : null }}"
+                id="nav-paypal_express" 
+                role="tabpanel" 
+                aria-labelledby="nav-paypal_express-tab"
+            >
+                <div class="form-group">
+                    <label for="payment_paypal_express" class="sr-only"> 
+                        {{ trans('idir::dirs.payment_paypal_express') }}
+                    </label>
+                    <select 
+                        class="form-control {{ $isValid('payment_paypal_express') }}" 
+                        id="payment_paypal_express" 
+                        name="payment_paypal_express"
+                    >
+                        @foreach ($pricesByType('paypal_express')->sortBy('price') as $price)
+                        <option 
+                            value="{{ $price->id }}" 
+                            {{ old('payment_paypal_express') == $price->id ? 'selected' : null }}
+                        >
+                            {{ trans('idir::dirs.price', [
+                                'price' => $price->price,
+                                'currency' => config("services.{$driverByType('paypal_express')}.paypal_express.currency"),
+                                'days' => $days = $price->days,
+                                'limit' => $days !== null ? 
+                                    mb_strtolower(trans('idir::prices.days')) 
+                                    : mb_strtolower(trans('idir::prices.unlimited'))
+                            ]) }}
+                        </option>
+                        @endforeach
+                    </select>
+                    @includeWhen($errors->has('payment_paypal_express'), 'icore::web.partials.errors', ['name' => 'payment_paypal_express'])
+                </div>
+                <p>
+                    {!! trans('idir::dirs.payment.paypal_express.info', [
+                        'provider_url' => config("idir.payment.{$driverByType('paypal_express')}.url"),
+                        'provider_name' => config("idir.payment.{$driverByType('paypal_express')}.name"),
+                        'provider_docs_url' => config("idir.payment.{$driverByType('paypal_express')}.docs_url"),
+                        'provider_rules_url' => config("idir.payment.{$driverByType('paypal_express')}.rules_url"),
+                        'rules_url' => route('web.page.show', [str_slug(trans('idir::dirs.rules'))])
+                    ]) !!}
+                </p>
+            </div>
+            @endif            
         </div>
     </div>
 </div>

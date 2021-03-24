@@ -50,11 +50,12 @@ class PaymentService implements Creatable, StatusUpdatable
     }
 
     /**
-     * [makeStatus description]
-     * @param  string|null  $payment_type  [description]
-     * @return int [description]
+     * Undocumented function
+     *
+     * @param string $payment_type
+     * @return integer
      */
-    protected function makeStatus(string $payment_type = null) : int
+    protected function status(string $payment_type = null) : int
     {
         if (in_array($payment_type, ['transfer', 'paypal_express'])) {
             return Payment::PENDING;
@@ -70,7 +71,7 @@ class PaymentService implements Creatable, StatusUpdatable
      */
     public function create(array $attributes) : Model
     {
-        $this->payment->status = $this->makeStatus($attributes['payment_type'] ?? null);
+        $this->payment->status = $this->status($attributes['payment_type'] ?? null);
         $this->payment->driver = $this->config->get("idir.payment.{$attributes['payment_type']}.driver");
         $this->payment->morph()->associate($this->payment->morph);
         $this->payment->orderMorph()->associate($this->payment->order);

@@ -111,7 +111,9 @@ return [
 
         'paypal' => [
             'name' => 'PayPal',
-            'url' => 'https://www.paypal.com'
+            'url' => 'https://www.paypal.com',
+            'rules_url' => 'https://www.paypal.com/pl/webapps/mpp/ua/useragreement-full?locale.x=pl_PL',
+            'docs_url' => 'https://www.paypal.com/pl/webapps/mpp/ua/legalhub-full?locale.x=pl_PL'
         ]
     ]
 ];

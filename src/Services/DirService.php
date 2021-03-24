@@ -148,7 +148,7 @@ class DirService implements
      */
     protected function status(string $payment_type = null) : int
     {
-        if ($payment_type === 'transfer') {
+        if (in_array($payment_type, ['transfer', 'paypal_express'])) {
             return $this->dir::PAYMENT_INACTIVE;
         }
 

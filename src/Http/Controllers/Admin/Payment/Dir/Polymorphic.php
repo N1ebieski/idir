@@ -15,12 +15,14 @@ interface Polymorphic
      * Undocumented function
      *
      * @param Payment $payment
+     * @param string $driver
      * @param ShowLoad $load
      * @param TransferUtilStrategy $transferUtil
      * @return RedirectResponse
      */
     public function show(
         Payment $payment,
+        string $driver = null,
         ShowLoad $load,
         TransferUtilStrategy $transferUtil
     ) : RedirectResponse;

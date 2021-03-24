@@ -2,31 +2,25 @@
 
 namespace N1ebieski\IDir\Http\Controllers\Admin;
 
-use Illuminate\Support\Facades\View;
 use N1ebieski\IDir\Models\Group;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Lang;
-use N1ebieski\IDir\Models\Privilege;
+use Illuminate\Support\Facades\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Http\Response as HttpResponse;
-use Illuminate\Support\Facades\App;
 use N1ebieski\IDir\Filters\Admin\Group\IndexFilter;
 use N1ebieski\IDir\Http\Requests\Admin\Group\EditRequest;
 use N1ebieski\IDir\Http\Requests\Admin\Group\IndexRequest;
 use N1ebieski\IDir\Http\Requests\Admin\Group\StoreRequest;
-use N1ebieski\IDir\Http\Requests\Admin\Group\CreateRequest;
 use N1ebieski\IDir\Http\Requests\Admin\Group\UpdateRequest;
 use N1ebieski\IDir\Http\Requests\Admin\Group\DestroyRequest;
-use N1ebieski\IDir\Http\Requests\Admin\Group\UpdatePositionRequest;
-use N1ebieski\IDir\Loads\Admin\Group\EditLoad;
-use N1ebieski\IDir\View\ViewModels\Admin\Group\CreateViewModel;
 use N1ebieski\IDir\View\ViewModels\Admin\Group\EditViewModel;
+use N1ebieski\IDir\View\ViewModels\Admin\Group\CreateViewModel;
+use N1ebieski\IDir\Http\Requests\Admin\Group\UpdatePositionRequest;
 
-/**
- * Base Group Controller
- */
 class GroupController
 {
     /**
@@ -77,11 +71,10 @@ class GroupController
      * Show the form for editing the specified Group.
      *
      * @param  Group       $group
-     * @param  EditLoad    $load
      * @param  EditRequest $request    [description]
      * @return HttpResponse
      */
-    public function edit(Group $group, EditLoad $load, EditRequest $request) : HttpResponse
+    public function edit(Group $group, EditRequest $request) : HttpResponse
     {
         return Response::view(
             'idir::admin.group.edit',

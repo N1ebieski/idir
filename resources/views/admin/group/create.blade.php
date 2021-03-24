@@ -253,77 +253,36 @@
                     @includeWhen($errors->has('backlink'), 'icore::admin.partials.errors', ['name' => 'backlink'])
                 </div>
                 <div class="form-group">
-                    <label for="payment">
-                        {{ trans('idir::groups.payment.index') }}:
+                    <label for="alt">
+                        <span>{{ trans('idir::groups.alt.label') }}: </span>
+                        <i 
+                            data-toggle="tooltip" 
+                            data-placement="top" 
+                            title="{{ trans('idir::groups.alt.tooltip') }}"
+                            class="far fa-question-circle"
+                        ></i>
                     </label>
                     <select 
-                        class="form-control" 
-                        id="payment" 
-                        name="payment"
-                        data-toggle="collapse" 
-                        aria-expanded="false" 
-                        aria-controls="collapsePayments"
+                        class="form-control {{ $isValid('alt_id') }}" 
+                        id="alt" 
+                        name="alt_id"
                     >
                         <option 
-                            value="0" 
-                            {{ (!old('payment') || old('payment') === "0") ? 'selected' : null }}
+                            value="" 
+                            {{ (old('alt_id') == null) ? 'selected' : null }}
                         >
-                            {{ trans('idir::groups.payment.0') }}
+                            {{ trans('idir::groups.alt.null') }}
                         </option>
+                        @foreach ($groups as $group)
                         <option 
-                            value="1" 
-                            {{ old('payment') === "1" ? 'selected' : null }}
+                            value="{{ $group->id }}" 
+                            {{ (old('alt_id') == $group->id) ? 'selected' : null }}
                         >
-                            {{ trans('idir::groups.payment.1') }}
+                            {{ $group->name }}
                         </option>
+                        @endforeach
                     </select>
-                    @includeWhen($errors->has('payment'), 'icore::admin.partials.errors', ['name' => 'payment'])
-                </div>
-                <div 
-                    class="form-group collapse {{ (old('payment') && old('payment') !== "0") ? 'show' : '' }}"
-                    id="collapsePayments"
-                >
-                    <div class="form-group">
-                        <label for="alt">
-                            <span>{{ trans('idir::groups.alt.label') }}: </span>
-                            <i 
-                                data-toggle="tooltip" 
-                                data-placement="top" 
-                                title="{{ trans('idir::groups.alt.tooltip') }}"
-                                class="far fa-question-circle"
-                            ></i>
-                        </label>
-                        <select 
-                            class="form-control {{ $isValid('alt_id') }}" 
-                            id="alt" 
-                            name="alt_id"
-                        >
-                            <option 
-                                value="" 
-                                {{ (old('alt_id') == null) ? 'selected' : null }}
-                            >
-                                {{ trans('idir::groups.alt.null') }}
-                            </option>
-                            @foreach ($groups as $group)
-                            <option 
-                                value="{{ $group->id }}" 
-                                {{ (old('alt_id') == $group->id) ? 'selected' : null }}
-                            >
-                                {{ $group->name }}
-                            </option>
-                            @endforeach
-                        </select>
-                        @includeWhen($errors->has('alt_id'), 'icore::admin.partials.errors', ['name' => 'alt_id'])
-                    </div>
-                    @include('idir::admin.group.partials.payment.transfer', [
-                        'prices' => $pricesSelectionByType('transfer')
-                    ])
-                    @include('idir::admin.group.partials.payment.code_sms', [
-                        'prices' => $pricesSelectionByType('code_sms')
-                    ])
-                    @include('idir::admin.group.partials.payment.code_transfer', [
-                        'prices' => $pricesSelectionByType('code_transfer')
-                    ])
+                    @includeWhen($errors->has('alt_id'), 'icore::admin.partials.errors', ['name' => 'alt_id'])
                 </div>
                 <hr>
                 <button type="submit" class="btn btn-primary">

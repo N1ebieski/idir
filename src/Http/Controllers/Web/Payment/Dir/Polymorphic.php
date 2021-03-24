@@ -3,14 +3,12 @@
 namespace N1ebieski\IDir\Http\Controllers\Web\Payment\Dir;
 
 use Illuminate\Http\RedirectResponse;
-use N1ebieski\IDir\Loads\Web\Payment\ShowLoad;
 use N1ebieski\IDir\Models\Payment\Dir\Payment;
-use N1ebieski\IDir\Http\Requests\Web\Payment\Interfaces\CompleteRequestStrategy;
+use N1ebieski\IDir\Loads\Web\Payment\Dir\ShowLoad;
+use N1ebieski\IDir\Loads\Web\Payment\Dir\CompleteLoad;
 use N1ebieski\IDir\Utils\Payment\Interfaces\TransferUtilStrategy;
+use N1ebieski\IDir\Http\Requests\Web\Payment\Interfaces\CompleteRequestStrategy;
 
-/**
- * [interface description]
- */
 interface Polymorphic
 {
     /**
@@ -34,12 +32,14 @@ interface Polymorphic
      *
      * @param string $driver
      * @param CompleteRequestStrategy $request
+     * @param CompleteLoad $load
      * @param TransferUtilStrategy $transferUtil
      * @return RedirectResponse
      */
     public function complete(
         string $driver = null,
         CompleteRequestStrategy $request,
+        CompleteLoad $load,        
         TransferUtilStrategy $transferUtil
     ) : RedirectResponse;
 }

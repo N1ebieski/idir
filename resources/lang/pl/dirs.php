@@ -63,6 +63,10 @@ return [
         'code_transfer' => [
             'label' => 'Kod automatyczny przelewem',
             'info' => 'Aby otrzymać kod dostępu - dokonaj płatności przelewem na stronie zakupu kodów <a id="code_transfer" href=":code_transfer_url" target="blank" title=":provider_name"><b>:provider_name</b></a>. Koszt to <b><span id="price">:price</span></b> PLN. Dokumenty dotyczące systemu płatności dostępne są na stronie <a href=":provider_docs_url" target="_blank" rel="noopener" title=":provider_name dokumenty">:provider_name dokumenty</a>. Regulamin usługi dostępny jest na stronie <a href=":provider_rules_url" target="_blank" rel="noopener" title=":provider_name regulamin">:provider_name regulamin</a>. Zgłoszenie strony do katalogu równoznaczne jest z akceptacją <a href=":rules_url" target="_blank" rel="noopener" title="Regulamin">regulaminu</a>.'
+        ],
+        'paypal_express' => [
+            'label' => 'PayPal',
+            'info' => 'Płatności internetowe realizuje <a href=":provider_url" target="_blank" rel="noopener" title=":provider_name">:provider_name</a>. Dokumenty dotyczące systemu płatności dostępne są na stronie <a href=":provider_docs_url" target="_blank" rel="noopener" title=":provider_name dokumenty">:provider_name dokumenty</a>. Regulamin usługi dostępny jest na stronie <a href=":provider_rules_url" target="_blank" rel="noopener" title=":provider_name regulamin">:provider_name regulamin</a>. Zgłoszenie strony do katalogu równoznaczne jest z akceptacją <a href=":rules_url" target="_blank" rel="noopener" title="Regulamin">regulaminu</a>.',
         ]
     ],
     'price' => ':price :currency / :days :limit',
