@@ -7,6 +7,62 @@ interface TransferUtilStrategy
     /**
      * Undocumented function
      *
+     * @param string $amount
+     * @return self
+     */
+    public function setAmount(string $amount);
+
+    /**
+     * Undocumented function
+     *
+     * @param string $desc
+     * @return self
+     */
+    public function setDesc(string $desc);
+    
+    /**
+     * Undocumented function
+     *
+     * @param string $desc
+     * @return self
+     */
+    public function setUuid(string $uuid);
+    
+    /**
+     * Undocumented function
+     *
+     * @param string $desc
+     * @return self
+     */
+    public function setRedirect(string $redirect);
+    
+    /**
+     * Undocumented function
+     *
+     * @param string $desc
+     * @return self
+     */
+    public function setCancelUrl(string $cancelUrl);
+    
+    /**
+     * Undocumented function
+     *
+     * @param string $desc
+     * @return self
+     */
+    public function setReturnUrl(string $returnUrl);
+    
+    /**
+     * Undocumented function
+     *
+     * @param string $desc
+     * @return self
+     */
+    public function setNotifyUrl(string $notifyUrl);
+
+    /**
+     * Undocumented function
+     *
      * @return void
      */
     public function purchase() : void;

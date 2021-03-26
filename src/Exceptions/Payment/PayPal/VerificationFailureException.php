@@ -2,6 +2,7 @@
 
 namespace N1ebieski\IDir\Exceptions\Payment\PayPal;
 
-class VerificationFailureException
+use N1ebieski\IDir\Exceptions\CustomException;
+class VerificationFailureException extends CustomException
 {
 }

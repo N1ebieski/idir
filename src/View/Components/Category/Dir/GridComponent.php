@@ -27,6 +27,13 @@ class GridComponent implements Htmlable
      *
      * @var int
      */
+    protected $parent;
+
+    /**
+     * Undocumented variable
+     *
+     * @var int
+     */
     protected $cols;
 
     /**
@@ -73,6 +80,7 @@ class GridComponent implements Htmlable
     public function __construct(
         Category $category,
         ViewFactory $view,
+        int $parent = null,
         int $cols = 3,
         bool $category_count = true,
         bool $category_icon = true,
@@ -84,6 +92,7 @@ class GridComponent implements Htmlable
 
         $this->view = $view;
 
+        $this->parent = $parent;
         $this->cols = $cols;
         $this->category_count = $category_count;
         $this->category_icon = $category_icon;
@@ -100,7 +109,8 @@ class GridComponent implements Htmlable
     {
         return $this->view->make('idir::web.components.category.dir.grid', [
             'categories' => $this->category->makeCache()
-                ->rememberRootsWithChildrensByComponent([
+                ->rememberWithChildrensByComponent([
+                    'parent' => $this->parent,
                     'category_count' => $this->category_count,
                     'children_count' => $this->children_count,
                     'children_limit' => $this->children_limit,

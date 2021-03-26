@@ -22,6 +22,7 @@ use GuzzleHttp\Psr7\Response as GuzzleResponse;
 use N1ebieski\IDir\Models\Category\Dir\Category;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Storage;
 use N1ebieski\IDir\Crons\Dir\ModeratorNotificationCron;
 
@@ -500,7 +501,10 @@ class DirTest extends TestCase
         $payment = Payment::orderBy('created_at', 'desc')->first();
 
         $response->assertSessionDoesntHaveErrors('payment_transfer');
-        $response->assertRedirect(route('web.payment.dir.show', [$payment->uuid]));
+        $response->assertRedirect(route('web.payment.dir.show', [
+            $payment->uuid,
+            Config::get('idir.payment.transfer.driver')
+        ]));
     }
 
     public function test_dir_store_3_as_guest()
@@ -804,6 +808,8 @@ class DirTest extends TestCase
         Config::set('idir.dir.notification.hours', 0);
         Config::set('idir.dir.notification.dirs', 1);
 
+        Artisan::call('cache:clear system');
+
         Mail::fake();
 
         $response = $this->post(route('web.dir.store_3', [$group->id]), $this->dirSetup());
@@ -838,6 +844,8 @@ class DirTest extends TestCase
 
         Config::set('idir.dir.notification.dirs', 0);
         Config::set('idir.dir.notification.hours', 1);
+
+        Artisan::call('cache:clear system');
 
         Mail::fake();
 

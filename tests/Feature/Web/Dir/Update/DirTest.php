@@ -16,6 +16,7 @@ use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Psr7\Response as GuzzleResponse;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Support\Facades\Config;
 
 /**
  * [DirTest description]
@@ -850,7 +851,10 @@ class DirTest extends TestCase
         $payment = Payment::orderBy('created_at', 'desc')->first();
 
         $response->assertSessionDoesntHaveErrors('payment_transfer');
-        $response->assertRedirect(route('web.payment.dir.show', [$payment->uuid]));
+        $response->assertRedirect(route('web.payment.dir.show', [
+            $payment->uuid,
+            Config::get('idir.payment.transfer.driver')
+        ]));
     }
 
     public function test_dir_update_3_old_group_without_payment()

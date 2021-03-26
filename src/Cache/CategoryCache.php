@@ -72,15 +72,15 @@ class CategoryCache extends BaseCategoryCache
      * @param array $component
      * @return Collection
      */
-    public function rememberRootsWithChildrensByComponent(array $component) : Collection
+    public function rememberWithChildrensByComponent(array $component) : Collection
     {
         $json = json_encode($component);
 
         return $this->cache->tags(['categories'])->remember(
-            "category.{$this->category->poli}.getRootsWithChildrensByComponent.{$json}",
+            "category.{$this->category->poli}.getWithChildrensByComponent.{$json}",
             $this->carbon->now()->addMinutes($this->minutes),
             function () use ($component) {
-                return $this->category->makeRepo()->getRootsWithChildrensByComponent($component);
+                return $this->category->makeRepo()->getWithChildrensByComponent($component);
             }
         );
     }

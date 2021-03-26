@@ -50,7 +50,7 @@
             value="{{ $dir::PAYMENT_INACTIVE }}" 
             {{ ($filter['status'] === $dir::PAYMENT_INACTIVE) ? 'selected' : '' }}
         >
-            {{ trans('idir::dirs.status'.$dir::PAYMENT_INACTIVE) }}
+            {{ trans('idir::dirs.status.'.$dir::PAYMENT_INACTIVE) }}
         </option>
         <option 
             value="{{ $dir::BACKLINK_INACTIVE }}" 

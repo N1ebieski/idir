@@ -8,13 +8,18 @@
         <div class="card h-100">
             <div class="card-header">
                 <div class="d-flex justify-content-between">
-                    <a 
-                        href="{{ route('web.category.dir.show', $category->slug) }}" 
-                        title="{{ $category->name }}"
-                        class="{{ $isUrl(route('web.category.dir.show', $category->slug), 'font-weight-bold') }}"
-                    >
-                        <span>{{ $category->name }}</span>
-                    </a>
+                    <span>
+                        @if ($category_icon === true && !empty($category->icon) && $category->childrens->isEmpty())
+                        <i class="{{ $category->icon }}" style="width:1.5rem"></i>
+                        @endif
+                        <a 
+                            href="{{ route('web.category.dir.show', $category->slug) }}" 
+                            title="{{ $category->name }}"
+                            class="{{ $isUrl(route('web.category.dir.show', $category->slug), 'font-weight-bold') }}"
+                        >
+                            <span>{{ $category->name }}</span>
+                        </a>
+                    </span>
                     @if (isset($category->nested_morphs_count))
                     <span class="badge badge-primary badge-pill align-self-center">
                         {{ $category->nested_morphs_count }}

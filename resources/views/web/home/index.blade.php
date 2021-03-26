@@ -66,6 +66,7 @@
         </div>
         @endif
     </div>
+    @render('idir::category.dir.gridComponent')
 </div>
 @include('icore::web.partials.toasts')
 @endsection

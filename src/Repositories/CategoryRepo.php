@@ -47,7 +47,7 @@ class CategoryRepo extends BaseCategoryRepo
                     ->leftJoin($morph->getTable(), function ($query) use ($morph) {
                         $query->on('categories_models.model_id', '=', "{$morph->getTable()}.id")
                             ->where('categories_models.model_type', $morph->getMorphClass())
-                            ->where("{$morph->getTable()}.status", 1);
+                            ->where("{$morph->getTable()}.status", $morph::ACTIVE);
                     })
                     ->groupBy("{$morph->getTable()}.id", 'categories.id');
 
@@ -70,10 +70,41 @@ class CategoryRepo extends BaseCategoryRepo
      * @param array $component
      * @return Collection
      */
-    public function getRootsWithChildrensByComponent(array $component) : Collection
+    public function getWithChildrensByComponent(array $component) : Collection
     {
-        return $this->getRootsByComponent(['count' => $component['category_count']])
-            ->load(['childrens' => function ($query) use ($component) {
+        return $this->category->when($component['category_count'] === true, function ($query) {
+                $morph = $this->category->morphs()->make();
+
+                $morphs = $this->category
+                    ->selectRaw("`categories`.`id`, `{$morph->getTable()}`.`id` as `morph_id`")
+                    ->leftJoin('categories_closure', function ($query) {
+                        $query->on('categories.id', '=', 'categories_closure.ancestor');
+                    })
+                    ->leftJoin('categories_models', function ($query) {
+                        $query->on('categories_closure.descendant', '=', 'categories_models.category_id');
+                    })
+                    ->leftJoin($morph->getTable(), function ($query) use ($morph) {
+                        $query->on('categories_models.model_id', '=', "{$morph->getTable()}.id")
+                            ->where('categories_models.model_type', $morph->getMorphClass())
+                            ->where("{$morph->getTable()}.status", $morph::ACTIVE);
+                    })
+                    ->groupBy("{$morph->getTable()}.id", 'categories.id');
+
+                $query->selectRaw('`categories`.*, COUNT(`morphs`.`morph_id`) as `nested_morphs_count`')
+                    ->joinSub($morphs, 'morphs', function ($query) {
+                        $query->on('categories.id', '=', 'morphs.id');
+                    })
+                    ->groupBy('categories.id');
+            })
+            ->when($component['parent'] !== null, function ($query) use ($component) {
+                $query->where('parent_id', $component['parent']);
+            }, function ($query) {
+                $query->root();
+            })
+            ->poliType()
+            ->active()
+            ->orderBy('position', 'asc')
+            ->with(['childrens' => function ($query) use ($component) {
                 $query->orderBy('position', 'asc')
                     ->when($component['children_count'] === true, function ($query) {
                         $query->withCount([
@@ -83,6 +114,7 @@ class CategoryRepo extends BaseCategoryRepo
                         ]);
                     });
             }])
+            ->get()
             ->map(function ($item) use ($component) {
                 if ($component['children_shuffle'] === true) {
                     $item->childrens = $item->childrens->shuffle();
