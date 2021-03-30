@@ -7,7 +7,7 @@
         <ul class="list-unstyled mb-0 pb-0">
             <li>
                 <span>{{ trans('idir::prices.price') }}: {{ $price->price }}</span>
-                <span>{{ trans('idir::prices.days') }}: {{ $price->isUnlimited() ? trans('idir::prices.unlimitd') : $price->days }}</span>
+                <span>{{ trans('idir::prices.days') }}: {{ $price->isUnlimited() ? trans('idir::prices.unlimited') : $price->days }}</span>
                 <span class="badge badge-primary">{{ strtolower(trans("idir::prices.payment.{$price->type}")) }}</span>
             </li>
             <li>
