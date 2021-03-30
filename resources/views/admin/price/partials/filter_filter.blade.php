@@ -63,7 +63,7 @@
             value="{{ $type }}" 
             {{ ($filter['type'] == $type) ? 'selected' : '' }}
         >
-            {{ $type }}
+            {{ trans('idir::prices.payment.' . $type) }}
         </option>
         @endforeach
     </select>
