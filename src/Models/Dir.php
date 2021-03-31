@@ -559,7 +559,7 @@ class Dir extends Model
                 $link .= 'class="clickStat" data-route="' . URL::route('web.stat.dir.click', [Stat::CLICK, $this->slug]) . '" ';
             }
 
-            $link .= 'href="' . e($this->url) . '" target="_blank">' . e($this->title) . '</a>';
+            $link .= 'href="' . e($this->url) . '">' . e($this->title) . '</a>';
         }
 
         return $link ?? e($this->title);
