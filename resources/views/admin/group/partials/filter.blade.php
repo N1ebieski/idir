@@ -40,7 +40,7 @@
             @endif
         </div>
         <div class="ml-sm-auto">
-            <div class="form-inline">
+            <div class="form-inline d-flex flex-nowrap">
                 <div class="form-group col-xs-4">
                     <button 
                         class="btn border mr-2" 
