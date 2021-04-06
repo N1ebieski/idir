@@ -16,7 +16,7 @@ return [
     'price' => 'Cena',
     'price_from' => 'od :price PLN <small class="text-muted">/ :days :limit</small>',
     'unlimited' => 'nielimitowany',
-    'group' => 'Groupa',
+    'group' => 'Grupa',
     'code_sms' => 'Kod SMS',
     'code_transfer' => 'Kod ID',
     'token' => 'Token',
