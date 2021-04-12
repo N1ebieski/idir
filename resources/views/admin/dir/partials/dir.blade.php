@@ -1,6 +1,6 @@
 @section('thumbnail')
-<div class="d-flex flex-column">
-    <div class="thumbnail d-inline position-relative" style="width:90px;height:68px">
+<div class="mt-2 d-flex flex-column" style="width:90px;height:68px">
+    <div class="thumbnail d-inline position-relative">
         <img 
             src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="
             data-src="{{ $dir->thumbnail_url }}" 
@@ -57,7 +57,7 @@
                     @endif
                 </li>
                 <li class="text-break" style="word-break:break-word">
-                    <span contenteditable="true" spellcheck="true" id="content.{{ $dir->id }}">
+                    <span id="content.{{ $dir->id }}">
                         {!! $dir->short_content !!}...
                     </span>
                     <a href="#" class="badge badge-primary checkContent">
@@ -109,7 +109,7 @@
             @can('admin.dirs.delete')
             </label>
             @endcan            
-            <div class="d-flex align-items-end">
+            <div class="d-flex flex-column">
                 <ul class="list-unstyled mb-0 pb-0 flex-grow-1">
                     @if ($dir->tagList)
                     <li class="text-break" style="word-break:break-word">
@@ -210,7 +210,7 @@
                     </li>
                 </ul>
                 @if ($dir->isUrl() && !$dir->isNotOk())
-                <div class="pt-2 pl-2 d-xl-none">
+                <div class="mb-3 d-sm-none">
                     @yield('thumbnail')
                 </div>
                 @endif
@@ -386,7 +386,7 @@
                 </div>
             </div>
             @if ($dir->isUrl() && !$dir->isNotOk())
-            <div class="d-none d-xl-block mt-auto ml-auto pt-2">
+            <div class="d-none d-sm-block mt-auto ml-auto mb-3">
                 @yield('thumbnail')
             </div>
             @endif 
