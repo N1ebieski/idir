@@ -1,0 +1,9 @@
+.popover.thumbnail {
+    max-width: 98%;
+
+    @media (max-width: 575.98px) {
+        .popover-body img {
+            width: 400px;
+        }
+    }
+}
