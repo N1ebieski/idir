@@ -1,7 +1,6 @@
 <div class="sidebar position scroll {{ $isCookie('sidebarToggle', 'toggled') }}">
     <ul 
-        class="sidebar bg-light navbar-light position-fixed scroll navbar-nav border-right pb-5 p-md-0
-        {{ $isCookie('sidebarToggle', 'toggled') }}"
+        class="sidebar bg-light navbar-light position-fixed scroll navbar-nav border-right {{ $isCookie('sidebarToggle', 'toggled') }}"
     >
         <li class="nav-item navbar-light fake-toggler">
             <a 
