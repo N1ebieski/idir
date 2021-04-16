@@ -3,9 +3,10 @@
 namespace N1ebieski\IDir\Services;
 
 use Carbon\Carbon;
-use N1ebieski\ICore\Services\Interfaces\Creatable;
-use Illuminate\Database\Eloquent\Model;
 use N1ebieski\IDir\Models\DirStatus;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\DatabaseManager as DB;
+use N1ebieski\ICore\Services\Interfaces\Creatable;
 
 class DirStatusService implements Creatable
 {
@@ -23,28 +24,25 @@ class DirStatusService implements Creatable
     protected $carbon;
 
     /**
-     * Undocumented function
+     * Undocumented variable
      *
-     * @param DirStatus $dirStatus
-     * @param Carbon $carbon
+     * @var DB
      */
-    public function __construct(DirStatus $dirStatus, Carbon $carbon)
-    {
-        $this->dirStatus = $dirStatus;
-
-        $this->carbon = $carbon;
-    }
+    protected $db;
 
     /**
      * Undocumented function
      *
-     * @param array $attributes
-     * @return boolean
+     * @param DirStatus $dirStatus
+     * @param Carbon $carbon
+     * @param DB $db
      */
-    protected function isSync(array $attributes) : bool
+    public function __construct(DirStatus $dirStatus, Carbon $carbon, DB $db)
     {
-        return isset($attributes['url'])
-            && $this->dirStatus->dir->url !== $attributes['url'];
+        $this->dirStatus = $dirStatus;
+
+        $this->carbon = $carbon;
+        $this->db = $db;
     }
 
     /**
@@ -54,10 +52,12 @@ class DirStatusService implements Creatable
      */
     public function create(array $attributes) : Model
     {
-        $this->dirStatus->dir()->associate($this->dirStatus->dir);
-        $this->dirStatus->save();
+        return $this->db->transaction(function () use ($attributes) {
+            $this->dirStatus->dir()->associate($this->dirStatus->dir);
+            $this->dirStatus->save();
 
-        return $this->dirStatus;
+            return $this->dirStatus;
+        });
     }
 
     /**
@@ -71,9 +71,11 @@ class DirStatusService implements Creatable
             return null;
         }
 
-        $this->clear();
+        return $this->db->transaction(function () use ($attributes) {
+            $this->clear();
 
-        return $this->create($attributes);
+            return $this->create($attributes);
+        });
     }
 
     /**
@@ -82,7 +84,9 @@ class DirStatusService implements Creatable
      */
     public function clear() : int
     {
-        return $this->dirStatus->where('dir_id', $this->dirStatus->dir->id)->delete();
+        return $this->db->transaction(function () {
+            return $this->dirStatus->where('dir_id', $this->dirStatus->dir->id)->delete();
+        });
     }
 
     /**
@@ -93,10 +97,24 @@ class DirStatusService implements Creatable
      */
     public function delay(array $attributes) : bool
     {
-        return $this->dirStatus->update([
-            'attempts' => 0,
-            'attempted_at' => $this->carbon->parse($this->dirStatus->attempted_at)
-                ->addDays($attributes['delay'])
-        ]);
+        return $this->db->transaction(function () use ($attributes) {
+            return $this->dirStatus->update([
+                'attempts' => 0,
+                'attempted_at' => $this->carbon->parse($this->dirStatus->attempted_at)
+                    ->addDays($attributes['delay'])
+            ]);
+        });
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param array $attributes
+     * @return boolean
+     */
+    protected function isSync(array $attributes) : bool
+    {
+        return isset($attributes['url'])
+            && $this->dirStatus->dir->url !== $attributes['url'];
     }
 }
