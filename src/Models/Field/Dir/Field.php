@@ -4,11 +4,17 @@ namespace N1ebieski\IDir\Models\Field\Dir;
 
 use N1ebieski\IDir\Models\Field\Field as BaseFieldModel;
 
-/**
- * [Field description]
- */
 class Field extends BaseFieldModel
 {
+    // Configurations
+
+    /**
+     * Undocumented variable
+     *
+     * @var string
+     */
+    public $path = 'vendor/idir/dirs/fields';
+
     // Accessors
 
     /**
