@@ -31,15 +31,15 @@ class PriceRepo
      */
     public function paginateByFilter(array $filter) : LengthAwarePaginator
     {
-        return $this->price->with('group')
-            ->filterSearch($filter['search'])
+        return $this->price->select('prices.*', 'groups.position')
+            ->leftJoin('groups', 'prices.group_id', '=', 'groups.id')
             ->filterExcept($filter['except'])
             ->filterGroup($filter['group'])
             ->filterType($filter['type'])
-            ->when($filter['orderby'] === null, function ($query) use ($filter) {
-                $query->filterOrderBySearch($filter['search']);
-            })
-            ->filterOrderBy($filter['orderby'] ?? 'price|asc')
+            ->filterOrderBy($filter['orderby'] ?? 'groups.position|asc')
+            ->orderBy('prices.type', 'asc')
+            ->orderBy('prices.price', 'asc')
+            ->with('group')
             ->filterPaginate($filter['paginate']);
     }
 

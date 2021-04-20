@@ -7,18 +7,6 @@
             <span class="badge badge-primary">
                 {{ trans('icore::filter.items') }}: {{ $prices->total() }}
             </span>
-            @if ($filter['search'] !== null)
-            <span>
-                <a 
-                    href="#" 
-                    class="badge badge-primary filterOption" 
-                    data-name="filter[search]"
-                >
-                    <span>{{ trans('icore::filter.search.label') }}: {{ $filter['search'] }}</span>
-                    <span aria-hidden="true">&times;</span>
-                </a>
-            </span>
-            @endif
             @if ($filter['group'] !== null)
             <span>
                 <a 
