@@ -37,9 +37,9 @@
                         class="nav-item btn btn-info {{ $loop->first ? 'active' : null }}" 
                         id="nav-{{ $type }}-tab"
                         data-toggle="tab" 
-                        href="#nav-{{ $type }}" 
+                        href="#nav-create-{{ $type }}" 
                         role="tab"
-                        aria-controls="nav-{{ $type }}" 
+                        aria-controls="nav-create-{{ $type }}" 
                         aria-selected="true"
                     >
                         <input 
@@ -58,7 +58,7 @@
             <div class="tab-content mt-3" id="nav-tabContent">
                 <div 
                     class="tab-pane fade show active" 
-                    id="nav-input" 
+                    id="nav-create-input" 
                     role="tabpanel" 
                     aria-labelledby="nav-input-tab"
                 >
@@ -73,7 +73,7 @@
                 </div>
                 <div 
                     class="tab-pane fade" 
-                    id="nav-textarea" 
+                    id="nav-create-textarea" 
                     role="tabpanel" 
                     aria-labelledby="nav-textarea-tab"
                 >
@@ -88,7 +88,7 @@
                 </div>
                 <div 
                     class="tab-pane fade" 
-                    id="nav-select" 
+                    id="nav-create-select" 
                     role="tabpanel" 
                     aria-labelledby="nav-select-tab"
                 >
@@ -98,7 +98,7 @@
                 </div>
                 <div 
                     class="tab-pane fade" 
-                    id="nav-multiselect" 
+                    id="nav-create-multiselect" 
                     role="tabpanel" 
                     aria-labelledby="nav-multiselect-tab"
                 >
@@ -108,7 +108,7 @@
                 </div>
                 <div 
                     class="tab-pane fade" 
-                    id="nav-checkbox" 
+                    id="nav-create-checkbox" 
                     role="tabpanel" 
                     aria-labelledby="nav-checkbox-tab"
                 >
@@ -118,7 +118,7 @@
                 </div>
                 <div 
                     class="tab-pane fade" 
-                    id="nav-image" 
+                    id="nav-create-image" 
                     role="tabpanel" 
                     aria-labelledby="nav-image-tab"
                 >

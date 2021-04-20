@@ -44,9 +44,9 @@
                         class="nav-item btn btn-info {{ $field->type == $type ? 'active' : null }}" 
                         id="nav-{{ $type }}-tab"
                         data-toggle="tab" 
-                        href="#nav-{{ $type }}" 
+                        href="#nav-edit-{{ $type }}" 
                         role="tab"
-                        aria-controls="nav-{{ $type }}" 
+                        aria-controls="nav-edit-{{ $type }}" 
                         aria-selected="true"
                     >
                         <input 
@@ -65,7 +65,7 @@
             <div class="tab-content mt-3" id="nav-tabContent">
                 <div 
                     class="tab-pane fade {{ $field->type == 'input' ? 'show active' : null }}"
-                    id="nav-input" 
+                    id="nav-edit-input" 
                     role="tabpanel" 
                     aria-labelledby="nav-input-tab"
                 >
@@ -80,7 +80,7 @@
                 </div>
                 <div 
                     class="tab-pane fade {{ $field->type == 'textarea' ? 'show active' : null }}"
-                    id="nav-textarea" 
+                    id="nav-edit-textarea" 
                     role="tabpanel" 
                     aria-labelledby="nav-textarea-tab"
                 >
@@ -95,7 +95,7 @@
                 </div>
                 <div 
                     class="tab-pane fade {{ $field->type == 'select' ? 'show active' : null }}"
-                    id="nav-select" 
+                    id="nav-edit-select" 
                     role="tabpanel" 
                     aria-labelledby="nav-select-tab"
                 >
@@ -106,7 +106,7 @@
                 </div>
                 <div 
                     class="tab-pane fade {{ $field->type == 'multiselect' ? 'show active' : null }}"
-                    id="nav-multiselect" 
+                    id="nav-edit-multiselect" 
                     role="tabpanel" 
                     aria-labelledby="nav-multiselect-tab"
                 >
@@ -117,7 +117,7 @@
                 </div>
                 <div 
                     class="tab-pane fade {{ $field->type == 'checkbox' ? 'show active' : null }}"
-                    id="nav-checkbox" 
+                    id="nav-edit-checkbox" 
                     role="tabpanel" 
                     aria-labelledby="nav-checkbox-tab"
                 >
@@ -128,7 +128,7 @@
                 </div>
                 <div 
                     class="tab-pane fade {{ $field->type == 'image' ? 'show active' : null }}"
-                    id="nav-image" 
+                    id="nav-edit-image" 
                     role="tabpanel" 
                     aria-labelledby="nav-image-tab"
                 >

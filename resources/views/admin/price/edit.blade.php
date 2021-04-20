@@ -44,9 +44,9 @@
                         class="nav-item btn btn-info {{ $price->type === $type ? 'active' : null }}" 
                         id="nav-{{ $type }}-tab"
                         data-toggle="tab" 
-                        href="#nav-{{ $type }}" 
+                        href="#nav-edit-{{ $type }}" 
                         role="tab"
-                        aria-controls="nav-{{ $type }}" 
+                        aria-controls="nav-edit-{{ $type }}" 
                         aria-selected="true"
                     >
                         <input 
@@ -65,13 +65,13 @@
             <div class="tab-content mt-3" id="nav-tabContent">
                 <div 
                     class="tab-pane fade {{ $price->type === 'transfer' ? 'show active' : null }}" 
-                    id="nav-transfer" 
+                    id="nav-edit-transfer" 
                     role="tabpanel" 
                     aria-labelledby="nav-input-tab"
                 ></div>
                 <div 
                     class="tab-pane fade {{ $price->type === 'code_sms' ? 'show active' : null }}" 
-                    id="nav-code_sms" 
+                    id="nav-edit-code_sms" 
                     role="tabpanel" 
                     aria-labelledby="nav-input-tab"
                 >
@@ -111,7 +111,7 @@
                 </div>
                 <div 
                     class="tab-pane fade {{ $price->type === 'code_transfer' ? 'show active' : null }}" 
-                    id="nav-code_transfer" 
+                    id="nav-edit-code_transfer" 
                     role="tabpanel" 
                     aria-labelledby="nav-input-tab"
                 >
@@ -127,7 +127,7 @@
                 </div>                
                 <div 
                     class="tab-pane fade {{ $price->type === 'paypal_express' ? 'show active' : null }}" 
-                    id="nav-paypal_express" 
+                    id="nav-edit-paypal_express" 
                     role="tabpanel" 
                     aria-labelledby="nav-input-tab"
                 ></div>                

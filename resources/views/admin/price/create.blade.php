@@ -43,9 +43,9 @@
                         class="nav-item btn btn-info {{ $loop->first ? 'active' : null }}" 
                         id="nav-{{ $type }}-tab"
                         data-toggle="tab" 
-                        href="#nav-{{ $type }}" 
+                        href="#nav-create-{{ $type }}" 
                         role="tab"
-                        aria-controls="nav-{{ $type }}" 
+                        aria-controls="nav-create-{{ $type }}" 
                         aria-selected="true"
                     >
                         <input 
@@ -64,13 +64,13 @@
             <div class="tab-content mt-3" id="nav-tabContent">
                 <div 
                     class="tab-pane fade show active" 
-                    id="nav-transfer" 
+                    id="nav-create-transfer" 
                     role="tabpanel" 
                     aria-labelledby="nav-input-tab"
                 ></div>
                 <div 
                     class="tab-pane fade hide" 
-                    id="nav-code_sms" 
+                    id="nav-create-code_sms" 
                     role="tabpanel" 
                     aria-labelledby="nav-input-tab"
                 >
@@ -107,7 +107,7 @@
                 </div>
                 <div 
                     class="tab-pane fade hide" 
-                    id="nav-code_transfer" 
+                    id="nav-create-code_transfer" 
                     role="tabpanel" 
                     aria-labelledby="nav-input-tab"
                 >
@@ -120,7 +120,7 @@
                 </div>                
                 <div 
                     class="tab-pane fade show active" 
-                    id="nav-paypal_express" 
+                    id="nav-create-paypal_express" 
                     role="tabpanel" 
                     aria-labelledby="nav-input-tab"
                 ></div>                
