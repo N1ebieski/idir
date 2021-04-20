@@ -83,7 +83,7 @@ class CodeService
                 ];
             }
 
-            $this->code->insert($codes);
+            $this->code->insertOrIgnore($codes);
         });
     }
 
