@@ -2,17 +2,14 @@
 
 namespace N1ebieski\IDir\Repositories;
 
-use Illuminate\Database\Eloquent\Collection;
+use Closure;
+use Carbon\Carbon;
 use N1ebieski\IDir\Models\Dir;
+use Illuminate\Database\Eloquent\Collection;
+use N1ebieski\IDir\Models\Rating\Dir\Rating;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\Config\Repository as Config;
-use Carbon\Carbon;
-use Closure;
-use N1ebieski\IDir\Models\Rating\Dir\Rating;
 
-/**
- * [DirRepo description]
- */
 class DirRepo
 {
     /**
@@ -106,6 +103,9 @@ class DirRepo
             ->filterGroup($filter['group'])
             ->filterCategory($filter['category'])
             ->filterReport($filter['report'])
+            ->when($filter['orderby'] === null, function ($query) use ($filter) {
+                $query->filterOrderBySearch($filter['search']);
+            })
             ->filterOrderBy($filter['orderby'])
             ->filterPaginate($filter['paginate']);
     }
@@ -222,7 +222,7 @@ class DirRepo
                 $this->dir->search($name)
                     ->when($tag = $this->dir->tags()->make()->findByName($name), function ($query) use ($tag) {
                         $query->unionAll(
-                            $this->dir->selectRaw('`dirs`.*')
+                            $this->dir->selectRaw('`dirs`.*, 0 as `url_relevance`, 0 as `title_relevance`, 0 as `content_relevance`')
                                 ->join('tags_models', function ($query) use ($tag) {
                                     $query->on('dirs.id', '=', 'tags_models.model_id')
                                         ->where('tags_models.model_type', $this->dir->getMorphClass())
@@ -235,11 +235,14 @@ class DirRepo
             )
             ->groupBy('dirs.id')
             ->active()
-            ->when($filter['orderby'] === null, function ($query) {
-                $query->orderBy('privileges.name', 'desc')->latest();
+            ->when($filter['orderby'] === null, function ($query) use ($name) {
+                $query->orderBy('privileges.name', 'desc')
+                    ->orderBySearch($name)
+                    ->latest();
             })
-            ->when($filter['orderby'] !== null, function ($query) use ($filter) {
-                $query->filterOrderBy($filter['orderby']);
+            ->when($filter['orderby'] !== null, function ($query) use ($filter, $name) {
+                $query->filterOrderBy($filter['orderby'])
+                    ->orderBySearch($name);
             })
             ->filterPaginate($this->paginate);
     }
@@ -416,11 +419,11 @@ class DirRepo
     /**
      * Undocumented function
      *
-     * @param Closure $callback
+     * @param Closure $closure
      * @param string $timestamp
      * @return boolean
      */
-    public function chunkAvailableHasPaidRequirementByPrivilegedTo(Closure $callback, string $timestamp) : bool
+    public function chunkAvailableHasPaidRequirementByPrivilegedTo(Closure $closure, string $timestamp) : bool
     {
         return $this->dir->active()
             ->whereHas('group', function ($query) {
@@ -438,7 +441,7 @@ class DirRepo
                 });
             })
             ->with('user')
-            ->chunk(1000, $callback);
+            ->chunk(1000, $closure);
     }
 
     /**
@@ -468,16 +471,16 @@ class DirRepo
     /**
      * Undocumented function
      *
-     * @param Closure $callback
+     * @param Closure $closure
      * @return boolean
      */
-    public function chunkActiveWithModelsCount(Closure $callback) : bool
+    public function chunkActiveWithModelsCount(Closure $closure) : bool
     {
         return $this->dir->active()
             ->withCount(['comments AS models_count' => function ($query) {
                 $query->root()->active();
             }])
-            ->chunk(1000, $callback);
+            ->chunk(1000, $closure);
     }
 
     /**

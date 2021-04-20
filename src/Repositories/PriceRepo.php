@@ -36,6 +36,9 @@ class PriceRepo
             ->filterExcept($filter['except'])
             ->filterGroup($filter['group'])
             ->filterType($filter['type'])
+            ->when($filter['orderby'] === null, function ($query) use ($filter) {
+                $query->filterOrderBySearch($filter['search']);
+            })
             ->filterOrderBy($filter['orderby'] ?? 'price|asc')
             ->filterPaginate($filter['paginate']);
     }

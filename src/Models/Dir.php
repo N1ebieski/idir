@@ -99,9 +99,9 @@ class Dir extends Model
      * @var array
      */
     public $searchable = [
+        'url',
         'title',
         'content',
-        'url'
     ];
 
     /**

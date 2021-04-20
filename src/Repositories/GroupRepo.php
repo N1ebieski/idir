@@ -47,6 +47,9 @@ class GroupRepo
             ->filterSearch($filter['search'])
             ->filterExcept($filter['except'])
             ->filterVisible($filter['visible'])
+            ->when($filter['orderby'] === null, function ($query) use ($filter) {
+                $query->filterOrderBySearch($filter['search']);
+            })            
             ->filterOrderBy($filter['orderby'] ?? 'position|asc')
             ->filterPaginate($filter['paginate']);
     }

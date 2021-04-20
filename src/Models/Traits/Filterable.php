@@ -62,5 +62,5 @@ trait Filterable
         return $query->when($type !== null, function ($query) use ($type) {
             return $query->where('type', $type);
         });
-    }    
+    }
 }

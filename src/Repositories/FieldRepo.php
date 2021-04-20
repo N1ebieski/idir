@@ -38,6 +38,9 @@ class FieldRepo
             ->filterVisible($filter['visible'])
             ->filterType($filter['type'])
             ->filterMorph($filter['morph'])
+            ->when($filter['orderby'] === null, function ($query) use ($filter) {
+                $query->filterOrderBySearch($filter['search']);
+            })
             ->filterOrderBy($filter['orderby'] ?? 'position|asc')
             ->filterPaginate($filter['paginate']);
     }

@@ -40,6 +40,9 @@ class UserRepo extends BaseUserRepo
             ->filterSearch($filter['search'])
             ->filterStatus($filter['status'])
             ->filterGroup($filter['group'])
+            ->when($filter['orderby'] === null, function ($query) use ($filter) {
+                $query->filterOrderBySearch($filter['search']);
+            })
             ->filterOrderBy($filter['orderby'])
             ->filterPaginate($filter['paginate']);
     }
