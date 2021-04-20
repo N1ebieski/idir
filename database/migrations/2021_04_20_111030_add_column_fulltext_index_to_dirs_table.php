@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Migrations\Migration;
 
-class AddColumnFulltextIndexToAllTables extends Migration
+class AddColumnFulltextIndexToDirsTable extends Migration
 {
     /**
      * Run the migrations.
