@@ -4,6 +4,7 @@ namespace N1ebieski\IDir\Services;
 
 use N1ebieski\IDir\Models\Price;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\DatabaseManager as DB;
 use N1ebieski\ICore\Services\Interfaces\Creatable;
 use N1ebieski\ICore\Services\Interfaces\Deletable;
 use N1ebieski\ICore\Services\Interfaces\Updatable;
@@ -17,12 +18,23 @@ class PriceService implements Creatable, Updatable, Deletable
     protected $price;
 
     /**
-     * [__construct description]
-     * @param Price       $price   [description]
+     * Undocumented variable
+     *
+     * @var DB
      */
-    public function __construct(Price $price)
+    protected $db;
+
+    /**
+     * Undocumented function
+     *
+     * @param Price $price
+     * @param DB $db
+     */
+    public function __construct(Price $price, DB $db)
     {
         $this->price = $price;
+
+        $this->db = $db;
     }
 
     /**
@@ -32,24 +44,26 @@ class PriceService implements Creatable, Updatable, Deletable
      */
     public function create(array $attributes) : Model
     {
-        $price = $this->price->make();
+        return $this->db->transaction(function () use ($attributes) {
+            $price = $this->price->make();
 
-        $price->price = $attributes['price'];
-        $price->days = $attributes['days'];
-        $price->type = $attributes['type'];
-        $price->code = $attributes[$attributes['type']]['code'] ?? null;
-        $price->token = $attributes[$attributes['type']]['token'] ?? null;
-        $price->number = $attributes[$attributes['type']]['number'] ?? null;
+            $price->price = $attributes['price'];
+            $price->days = $attributes['days'];
+            $price->type = $attributes['type'];
+            $price->code = $attributes[$attributes['type']]['code'] ?? null;
+            $price->token = $attributes[$attributes['type']]['token'] ?? null;
+            $price->number = $attributes[$attributes['type']]['number'] ?? null;
 
-        $price->group()->associate($attributes['group']);
-        $price->save();
+            $price->group()->associate($attributes['group']);
+            $price->save();
 
-        $this->price->codes()->make()
-            ->setRelations(['price' => $price])
-            ->makeService()
-            ->sync($attributes[$attributes['type']]['codes'] ?? []);
+            $this->price->codes()->make()
+                ->setRelations(['price' => $price])
+                ->makeService()
+                ->sync($attributes[$attributes['type']]['codes'] ?? []);
 
-        return $price;
+            return $price;
+        });
     }
 
     /**
@@ -59,21 +73,23 @@ class PriceService implements Creatable, Updatable, Deletable
      */
     public function update(array $attributes) : bool
     {
-        $this->price->price = $attributes['price'];
-        $this->price->days = $attributes['days'];
-        $this->price->type = $attributes['type'];
-        $this->price->code = $attributes[$attributes['type']]['code'] ?? null;
-        $this->price->token = $attributes[$attributes['type']]['token'] ?? null;
-        $this->price->number = $attributes[$attributes['type']]['number'] ?? null;
+        return $this->db->transaction(function () use ($attributes) {
+            $this->price->price = $attributes['price'];
+            $this->price->days = $attributes['days'];
+            $this->price->type = $attributes['type'];
+            $this->price->code = $attributes[$attributes['type']]['code'] ?? null;
+            $this->price->token = $attributes[$attributes['type']]['token'] ?? null;
+            $this->price->number = $attributes[$attributes['type']]['number'] ?? null;
 
-        $this->price->group()->associate($attributes['group']);
+            $this->price->group()->associate($attributes['group']);
 
-        $this->price->codes()->make()
-            ->setRelations(['price' => $this->price])
-            ->makeService()
-            ->sync($attributes[$attributes['type']]['codes'] ?? []);
+            $this->price->codes()->make()
+                ->setRelations(['price' => $this->price])
+                ->makeService()
+                ->sync($attributes[$attributes['type']]['codes'] ?? []);
 
-        return $this->price->save();
+            return $this->price->save();
+        });
     }
 
     /**
@@ -83,6 +99,8 @@ class PriceService implements Creatable, Updatable, Deletable
      */
     public function delete() : bool
     {
-        return $this->price->delete();
+        return $this->db->transaction(function () {
+            return $this->price->delete();
+        });
     }
 }

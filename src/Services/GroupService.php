@@ -6,14 +6,12 @@ use N1ebieski\IDir\Models\Dir;
 use N1ebieski\IDir\Models\Group;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection as Collect;
+use Illuminate\Database\DatabaseManager as DB;
 use N1ebieski\ICore\Services\Interfaces\Creatable;
 use N1ebieski\ICore\Services\Interfaces\Deletable;
 use N1ebieski\ICore\Services\Interfaces\Updatable;
 use N1ebieski\ICore\Services\Interfaces\PositionUpdatable;
 
-/**
- * [GroupService description]
- */
 class GroupService implements Creatable, Updatable, PositionUpdatable, Deletable
 {
     /**
@@ -23,21 +21,31 @@ class GroupService implements Creatable, Updatable, PositionUpdatable, Deletable
     protected $group;
 
     /**
+     * Undocumented variable
+     *
+     * @var DB
+     */
+    protected $db;
+
+    /**
      * [private description]
      * @var Collect
      */
     protected $collect;
 
     /**
-     * [__construct description]
-     * @param Group     $group     [description]
-     * @param Collect   $collect   [description]
+     * Undocumented function
+     *
+     * @param Group $group
+     * @param Collect $collect
+     * @param DB $db
      */
-    public function __construct(Group $group, Collect $collect)
+    public function __construct(Group $group, Collect $collect, DB $db)
     {
         $this->group = $group;
 
         $this->collect = $collect;
+        $this->db = $db;
     }
 
     /**
@@ -47,14 +55,16 @@ class GroupService implements Creatable, Updatable, PositionUpdatable, Deletable
      */
     public function create(array $attributes) : Model
     {
-        $this->group->fill(
-            $this->collect->make($attributes)->except(['priv'])->toArray()
-        );
-        $this->group->save();
+        return $this->db->transaction(function () use ($attributes) {
+            $this->group->fill(
+                $this->collect->make($attributes)->except(['priv'])->toArray()
+            );
+            $this->group->save();
 
-        $this->group->privileges()->attach(array_filter($attributes['priv'] ?? []));
+            $this->group->privileges()->attach(array_filter($attributes['priv'] ?? []));
 
-        return $this->group;
+            return $this->group;
+        });
     }
 
     /**
@@ -64,13 +74,15 @@ class GroupService implements Creatable, Updatable, PositionUpdatable, Deletable
      */
     public function update(array $attributes) : bool
     {
-        $this->group->fill(
-            $this->collect->make($attributes)->except(['priv'])->toArray()
-        );
+        return $this->db->transaction(function () use ($attributes) {
+            $this->group->fill(
+                $this->collect->make($attributes)->except(['priv'])->toArray()
+            );
 
-        $this->group->privileges()->sync(array_filter($attributes['priv'] ?? []));
+            $this->group->privileges()->sync(array_filter($attributes['priv'] ?? []));
 
-        return $this->group->save();
+            return $this->group->save();
+        });
     }
 
     /**
@@ -80,7 +92,9 @@ class GroupService implements Creatable, Updatable, PositionUpdatable, Deletable
      */
     public function updatePosition(array $attributes) : bool
     {
-        return $this->group->update(['position' => (int)$attributes['position']]);
+        return $this->db->transaction(function () use ($attributes) {
+            return $this->group->update(['position' => (int)$attributes['position']]);
+        });
     }
 
     /**
@@ -89,20 +103,22 @@ class GroupService implements Creatable, Updatable, PositionUpdatable, Deletable
      */
     public function delete() : bool
     {
-        // W przypadku usuwania grupy trzeba zmienić alternative innych grup na Default
-        $this->group->where('alt_id', $this->group->id)->update(['alt_id' => Group::DEFAULT]);
+        return $this->db->transaction(function () {
+            // If you delete a group, you have to change the alternative of other groups to Default
+            $this->group->where('alt_id', $this->group->id)->update(['alt_id' => Group::DEFAULT]);
 
-        $this->group->dirs()->update([
-            'group_id' => Group::DEFAULT,
-            'privileged_at' => null,
-            'privileged_to' => null
-        ]);
-        $this->group->dirs()->pending()->update(['status' => Dir::INACTIVE]);
-        $this->group->dirs()->backlinkInactive()->update(['status' => Dir::INACTIVE]);
+            $this->group->dirs()->update([
+                'group_id' => Group::DEFAULT,
+                'privileged_at' => null,
+                'privileged_to' => null
+            ]);
+            $this->group->dirs()->pending()->update(['status' => Dir::INACTIVE]);
+            $this->group->dirs()->backlinkInactive()->update(['status' => Dir::INACTIVE]);
 
-        // Manually remove relations, because the field model is polymorfic and foreign key doesn't work
-        $this->group->fields()->detach();
+            // Manually remove relations, because the field model is polymorfic and foreign key doesn't work
+            $this->group->fields()->detach();
 
-        return $this->group->delete();
+            return $this->group->delete();
+        });
     }
 }
