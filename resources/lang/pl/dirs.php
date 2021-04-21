@@ -47,7 +47,7 @@ return [
     'categories' => 'Kategorie',
     'tags' => [
         'label' => 'Tagi',
-        'tooltip' => 'Min 3 znaki, max 30 znaków, max :max_tags tagów',
+        'tooltip' => 'Min 3 znaki, max :max_chars znaków, max :max_tags tagów',
         'placeholder' => 'Dodaj tag'
     ],
     'choose_payment_type' => 'Wybierz typ płatności',

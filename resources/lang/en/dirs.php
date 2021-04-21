@@ -47,7 +47,7 @@ return [
     'categories' => 'Categories',
     'tags' => [
         'label' => 'Tags',
-        'tooltip' => 'Min 3 chars, max 30 chars, max :max_tags chars',
+        'tooltip' => 'Min 3 chars, max :max_chars chars, max :max_tags chars',
         'placeholder' => 'Add tags'
     ],
     'choose_payment_type' => 'Choose your payment type',

@@ -105,7 +105,7 @@
                         <i 
                             data-toggle="tooltip" 
                             data-placement="top"
-                            title="{{ trans('idir::dirs.tags.tooltip', ['max_tags' => $max_tags = config('idir.dir.max_tags')]) }}"
+                            title="{{ trans('idir::dirs.tags.tooltip', ['max_tags' => config('idir.dir.max_tags'), 'max_chars' => config('icore.tag.max_chars')]) }}"
                             class="far fa-question-circle"
                         ></i>
                     </label>
@@ -115,7 +115,8 @@
                         class="form-control tagsinput {{ $isValid('tags') }}"
                         value="{{ old('tags', session('dir.tags') !== null ? implode(',', session('dir.tags')) : null) }}"
                         placeholder="{{ trans('idir::dirs.tags.placeholder') }}" 
-                        data-max="{{ $max_tags }}"
+                        data-max="{{ config('idir.dir.max_tags') }}"
+                        data-max-chars="{{ config('icore.tag.max_chars') }}"
                     >
                     @includeWhen($errors->has('tags'), 'icore::admin.partials.errors', ['name' => 'tags'])
                 </div>

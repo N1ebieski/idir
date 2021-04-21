@@ -66,7 +66,7 @@
             <i 
                 data-toggle="tooltip" 
                 data-placement="top"
-                title="{{ trans('idir::dirs.tags.tooltip', ['max_tags' => $max_tags = config('idir.dir.max_tags')]) }}"
+                title="{{ trans('idir::dirs.tags.tooltip', ['max_tags' => config('idir.dir.max_tags'), 'max_chars' => config('icore.tag.max_chars')]) }}"
                 class="far fa-question-circle"
             ></i>
         </label>
@@ -76,7 +76,8 @@
             class="form-control tagsinput"
             value="{{ $dir->tagList }}"
             placeholder="{{ trans('idir::dirs.tags.placeholder') }}" 
-            data-max="{{ $max_tags }}"
+            data-max="{{ config('idir.dir.max_tags') }}"
+            data-max-chars="{{ config('icore.tag.max_chars') }}"
         >
     </div>
     @if ($dir->group->url > 0)
