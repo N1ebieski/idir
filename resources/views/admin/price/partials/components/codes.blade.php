@@ -32,6 +32,6 @@
             name="{{ $name }}[codes][codes]" 
             data-autogrow="false"
             readonly
-        >{{ $value ?? null }}</textarea>
+        >{{ $value ?? '' }}</textarea>
     </div>
 </div>
