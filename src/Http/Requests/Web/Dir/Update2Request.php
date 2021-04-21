@@ -168,7 +168,12 @@ class Update2Request extends FormRequest
                 'between:0,' . config('idir.dir.max_tags'),
                 'no_js_validation'
             ],
-            'tags.*' => 'bail|min:3|max:30|alpha_num_spaces',
+            'tags.*' => [
+                'bail',
+                'min:3',
+                'max:' . Config::get('icore.tag.max_chars'),
+                'alpha_num_spaces'
+            ],
             'categories' => [
                 'bail',
                 'required',
