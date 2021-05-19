@@ -75,7 +75,7 @@ class FieldsSeeder extends SEOKatalogSeeder
         }
         
         if ($item->size !== 0) {
-            $options['width'] = $item->size;
+            $options['size'] = $item->size;
         }
 
         return $options;
