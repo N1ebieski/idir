@@ -2,11 +2,13 @@
 
 namespace N1ebieski\IDir\Console\Commands;
 
+use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Composer;
-use Illuminate\Contracts\Translation\Translator as Lang;
 use Illuminate\Database\DatabaseManager as DB;
+use Illuminate\Contracts\Cache\Factory as Cache;
 use Illuminate\Contracts\Config\Repository as Config;
+use Illuminate\Contracts\Translation\Translator as Lang;
 
 class SEOKatalogCommand extends Command
 {
@@ -38,11 +40,18 @@ class SEOKatalogCommand extends Command
     protected $db;
 
     /**
+     * Undocumented variable
+     *
+     * @var Cache
+     */
+    protected $cache;
+
+    /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'idir:seokatalog';
+    protected $signature = 'idir:seokatalog {--workers=1}';
 
     /**
      * The console command description.
@@ -58,14 +67,20 @@ class SEOKatalogCommand extends Command
      * @param Lang $lang
      * @param DB $db
      */
-    public function __construct(Composer $composer, Lang $lang, DB $db, Config $config)
-    {
+    public function __construct(
+        Composer $composer,
+        Lang $lang,
+        DB $db,
+        Config $config,
+        Cache $cache
+    ) {
         parent::__construct();
 
         $this->composer = $composer;
         $this->config = $config;
         $this->lang = $lang;
         $this->db = $db;
+        $this->cache = $cache;
     }
 
     /**
@@ -108,6 +123,12 @@ class SEOKatalogCommand extends Command
      */
     public function handle()
     {
+        $this->cache->store('system')->put(
+            'workers',
+            $this->option('workers'),
+            Carbon::now()->addMinutes(5)
+        );
+
         $bar = $this->output->createProgressBar(9);
         
         $this->line("iDir SEOKatalog importer");

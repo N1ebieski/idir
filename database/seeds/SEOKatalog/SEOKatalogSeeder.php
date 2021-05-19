@@ -3,52 +3,74 @@
 namespace N1ebieski\IDir\Seeds\SEOKatalog;
 
 use Illuminate\Database\Seeder;
-use N1ebieski\IDir\Models\Group;
-use N1ebieski\IDir\Models\Field\Field;
 use N1ebieski\IDir\Models\User;
+use N1ebieski\IDir\Models\Group;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Contracts\Queue\Queue;
+use N1ebieski\IDir\Models\Field\Field;
+use N1ebieski\IDir\Seeds\Traits\Importable;
+use Illuminate\Contracts\Cache\Factory as Cache;
 
 class SEOKatalogSeeder extends Seeder
 {
+    use Importable;
+
     /**
      * Undocumented variable
      *
-     * @var int
+     * @var Cache
      */
-    public $group_last_id;
+    protected $cache;
+
+    /**
+     * Undocumented variable
+     *
+     * @var Queue
+     */
+    protected $queue;
 
     /**
      * Undocumented variable
      *
      * @var int
      */
-    public $field_last_id;
+    public $groupLastId;
 
     /**
      * Undocumented variable
      *
      * @var int
      */
-    public $sub_last_id;
+    public $fieldLastId;
 
     /**
      * Undocumented variable
      *
      * @var int
      */
-    public $user_last_id;
+    public $subLastId;
+
+    /**
+     * Undocumented variable
+     *
+     * @var int
+     */
+    public $userLastId;
 
     /**
      * Undocumented function
+     *
+     * @param Cache $cache
      */
-    public function __construct()
+    public function __construct(Cache $cache, Queue $queue)
     {
-        $this->group_last_id = $this->makeGroupLastId();
-        $this->field_last_id = $this->makeFieldLastId();
-        $this->sub_last_id = $this->makeSubLastId();
-        $this->user_last_id = $this->makeUserLastId();
+        $this->cache = $cache;
+        $this->queue = $queue;
 
-        // ini_set('memory_limit', '512M');
+        $this->groupLastId = static::groupLastId();
+        $this->fieldLastId = static::fieldLastId();
+        $this->subLastId = static::subLastId();
+        $this->userLastId = static::userLastId();
 
         DB::disableQueryLog();
     }
@@ -58,7 +80,7 @@ class SEOKatalogSeeder extends Seeder
      *
      * @return integer
      */
-    protected static function makeUserLastId() : int
+    protected static function userLastId() : int
     {
         return (
             User::orderBy('id', 'desc')->first()->id
@@ -72,7 +94,7 @@ class SEOKatalogSeeder extends Seeder
      *
      * @return integer
      */
-    protected static function makeSubLastId() : int
+    protected static function subLastId() : int
     {
         return DB::connection('import')->table('subcategories')->orderBy('id', 'desc')->first('id')->id;
     }
@@ -82,7 +104,7 @@ class SEOKatalogSeeder extends Seeder
      *
      * @return integer
      */
-    protected static function makeFieldLastId() : int
+    protected static function fieldLastId() : int
     {
         return (
             (Field::orderBy('id', 'desc')->first()->id ?? 0)
@@ -96,7 +118,7 @@ class SEOKatalogSeeder extends Seeder
      *
      * @return integer
      */
-    protected static function makeGroupLastId() : int
+    protected static function groupLastId() : int
     {
         return (
             Group::orderBy('id', 'desc')->first()->id
@@ -112,13 +134,20 @@ class SEOKatalogSeeder extends Seeder
      */
     public function run()
     {
+        $this->setWorkers(
+            (int)$this->cache->store('system')->get('workers', 1)
+        );
+
         $this->call(CategoriesSeeder::class);
         $this->call(GroupsAndPrivilegesSeeder::class);
         $this->call(FieldsSeeder::class);
         $this->call(LinksSeeder::class);
         $this->call(UsersSeeder::class);
+        $this->import();
         $this->call(DirsSeeder::class);
+        $this->import();
         $this->call(BansSeeder::class);
         $this->call(CommentsSeeder::class);
+        $this->import();
     }
 }

@@ -1,10 +1,11 @@
 <?php
 
-namespace N1ebieski\IDir\Seeds\PHPLD\Jobs;
+namespace N1ebieski\IDir\Seeds\SEOKatalog\Jobs;
 
 use Exception;
-use Illuminate\Support\Str;
+use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
+use N1ebieski\IDir\Models\Dir;
 use N1ebieski\IDir\Models\User;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -12,8 +13,9 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use N1ebieski\IDir\Models\Comment\Dir\Comment;
 
-class UsersJob implements ShouldQueue
+class CommentsJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -41,7 +43,8 @@ class UsersJob implements ShouldQueue
     /**
      * Undocumented function
      *
-     * @param Collection $item
+     * @param Collection $items
+     * @param integer $userLastId
      */
     public function __construct(Collection $items, int $userLastId)
     {
@@ -63,23 +66,22 @@ class UsersJob implements ShouldQueue
             }
 
             DB::transaction(function () use ($item) {
-                $user = User::make();
+                $comment = Comment::make();
 
-                $user->id = $this->userLastId + $item->ID;
-                $user->email = $item->EMAIL;
-                $user->name = $user->firstWhere('name', '=', $item->LOGIN) === null ?
-                    $item->LOGIN
-                    : 'user-' . Str::uuid();
-                $user->password = Str::random(12);
-                $user->status = $item->ACTIVE === 0 ?
-                    User::INACTIVE
-                    : User::ACTIVE;
-                $user->created_at = $item->REGISTRATION_DATE;
-                $user->updated_at = $item->REGISTRATION_DATE;
+                $comment->content_html = $this->contentHtml($item->content);
+                $comment->content = $this->contentHtml($item->content);
+                $comment->status = $item->active;
+                $comment->created_at = Carbon::createFromTimestamp($item->date);
+                $comment->updated_at = Carbon::createFromTimestamp($item->date);
 
-                $user->save();
+                $comment->user()->associate(
+                    !empty($item->user) && User::find($this->userLastId + $item->user) !== null ?
+                        $this->userLastId + $item->user
+                        : null
+                );
+                $comment->morph()->associate(Dir::find($item->id_site));
 
-                $user->assignRole('user');
+                $comment->save();
             });
         });
     }
@@ -103,7 +105,19 @@ class UsersJob implements ShouldQueue
      */
     protected function verify(object $item) : bool
     {
-        return User::where('id', $this->userLastId + $item->ID)
-            ->orWhere('email', $item->EMAIL)->first() === null;
+        return Comment::where('id', $item->id)->first() === null
+            && !empty($item->id_site)
+            && Dir::find($item->id_site) !== null;
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param string $content
+     * @return string
+     */
+    protected static function contentHtml(string $content) : string
+    {
+        return strip_tags(htmlspecialchars_decode($content));
     }
 }

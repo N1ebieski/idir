@@ -9,6 +9,52 @@ use Illuminate\Support\Facades\DB;
 class FieldsSeeder extends PHPLDSeeder
 {
     /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        $groups = DB::connection('import')->table('submit_item_status')
+            ->get();
+
+        DB::connection('import')->table('submit_item')
+            ->leftJoin('submit_item_value', 'submit_item.ID', '=', 'submit_item_value.ITEM_ID')
+            ->orderBy('ORDER_ID', 'asc')
+            ->orderBy('ID', 'asc')
+            ->get()
+            ->each(function ($item) use ($groups) {
+                DB::transaction(function () use ($item, $groups) {
+                    if ($item->IS_DEFAULT === 1) {
+                        return;
+                    }
+
+                    $field = Field::make();
+
+                    $field->id = $this->fieldLastId + $item->ID;
+                    $field->title = $item->NAME;
+                    $field->desc = strlen($item->DESCRIPTION) > 0 ?
+                        strip_tags($item->DESCRIPTION)
+                        : null;
+                    $field->type = $this->type($item->TYPE);
+                    $field->visible = $item->STATUS === 0 ?
+                        Field::INVISIBLE
+                        : FIELD::VISIBLE;
+                    $field->options = $this->options($item);
+
+                    $field->save();
+
+                    $field->morphs()->attach(
+                        collect($groups->where('ITEM_ID', $item->ID))
+                            ->map(function ($item) {
+                                return $this->groupLastId + $item->LINK_TYPE_ID;
+                            })
+                    );
+                });
+            });
+    }
+
+    /**
      * Undocumented function
      *
      * @return integer
@@ -75,51 +121,5 @@ class FieldsSeeder extends PHPLDSeeder
         }
 
         return $options;
-    }
-
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
-    public function run()
-    {
-        $groups = DB::connection('import')->table('submit_item_status')
-            ->get();
-
-        DB::connection('import')->table('submit_item')
-            ->leftJoin('submit_item_value', 'submit_item.ID', '=', 'submit_item_value.ITEM_ID')
-            ->orderBy('ORDER_ID', 'asc')
-            ->orderBy('ID', 'asc')
-            ->get()
-            ->each(function ($item) use ($groups) {
-                DB::transaction(function () use ($item, $groups) {
-                    if ($item->IS_DEFAULT === 1) {
-                        return;
-                    }
-
-                    $field = Field::make();
-
-                    $field->id = $this->fieldLastId + $item->ID;
-                    $field->title = $item->NAME;
-                    $field->desc = strlen($item->DESCRIPTION) > 0 ?
-                        strip_tags($item->DESCRIPTION)
-                        : null;
-                    $field->type = $this->type($item->TYPE);
-                    $field->visible = $item->STATUS === 0 ?
-                        Field::INVISIBLE
-                        : FIELD::VISIBLE;
-                    $field->options = $this->options($item);
-
-                    $field->save();
-
-                    $field->morphs()->attach(
-                        collect($groups->where('ITEM_ID', $item->ID))
-                            ->map(function ($item) {
-                                return $this->groupLastId + $item->LINK_TYPE_ID;
-                            })
-                    );
-                });
-            });
     }
 }

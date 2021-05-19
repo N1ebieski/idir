@@ -9,11 +9,55 @@ use Illuminate\Support\Facades\DB;
 class FieldsSeeder extends SEOKatalogSeeder
 {
     /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        DB::connection('import')->table('forms')
+            ->orderBy('position', 'asc')
+            ->orderBy('title', 'asc')
+            ->get()
+            ->each(function ($item) {
+                DB::transaction(function () use ($item) {
+                    if ($item->mod !== 0) {
+                        return;
+                    }
+
+                    $field = Field::make();
+
+                    $field->id = $this->fieldLastId + $item->id;
+                    $field->title = $item->title;
+                    $field->desc = strlen($item->description) > 0 ?
+                        $item->description
+                        : null;
+                    $field->type = $this->type($item->type);
+                    $field->visible = $item->type_f === 0 ?
+                        Field::VISIBLE
+                        : Field::INVISIBLE;
+                    $field->options = $this->options($item);
+
+                    $field->save();
+
+                    $field->morphs()->attach(
+                        $item->groups === 'all' ?
+                        $field->morphs()->make()->get('id')->pluck('id')->toArray()
+                        : collect(array_filter(explode(',', $item->groups)))
+                            ->map(function ($item) {
+                                return $this->groupLastId + $item;
+                            })
+                    );
+                });
+            });
+    }
+
+    /**
      * Undocumented function
      *
      * @return integer
      */
-    protected static function makeFieldLastId() : int
+    protected static function fieldLastId() : int
     {
         return Field::orderBy('id', 'desc')->first()->id ?? 0;
     }
@@ -24,7 +68,7 @@ class FieldsSeeder extends SEOKatalogSeeder
      * @param integer $type
      * @return string
      */
-    protected static function makeType(int $type) : string
+    protected static function type(int $type) : string
     {
         switch ($type) {
             case 1:
@@ -50,7 +94,7 @@ class FieldsSeeder extends SEOKatalogSeeder
      * @param object $item
      * @return array
      */
-    protected static function makeOptions(object $item) : array
+    protected static function options(object $item) : array
     {
         if ($item->min !== 0) {
             $options['min'] = $item->min;
@@ -79,40 +123,5 @@ class FieldsSeeder extends SEOKatalogSeeder
         }
 
         return $options;
-    }
-
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
-    public function run()
-    {
-        $fields = DB::connection('import')->table('forms')
-            ->orderBy('position', 'asc')->orderBy('title', 'asc')->get();
-
-        $fields->each(function ($item) {
-            if ($item->mod !== 0) {
-                return;
-            }
-
-            $field = Field::create([
-                'id' => $this->field_last_id + $item->id,
-                'title' => $item->title,
-                'desc' => strlen($item->description) > 0 ? $item->description : null,
-                'type' => $this->makeType($item->type),
-                'visible' => $item->type_f === 0 ? 1 : 0,
-                'options' => $this->makeOptions($item),
-            ]);
-
-            $field->morphs()->attach(
-                $item->groups === 'all' ?
-                $field->morphs()->make()->get('id')->pluck('id')->toArray() :
-                collect(array_filter(explode(',', $item->groups)))
-                    ->map(function ($item) {
-                        return $this->group_last_id + $item;
-                    })
-            );
-        });
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace N1ebieski\IDir\Seeders\PHPLD\Jobs;
+namespace N1ebieski\IDir\Seeds\PHPLD\Jobs;
 
 use Exception;
 use Illuminate\Bus\Queueable;

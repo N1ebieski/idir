@@ -5,7 +5,7 @@ namespace N1ebieski\IDir\Seeds\PHPLD;
 use N1ebieski\IDir\Models\User;
 use Illuminate\Support\Facades\DB;
 use N1ebieski\IDir\Seeds\PHPLD\PHPLDSeeder;
-use N1ebieski\IDir\Seeders\PHPLD\Jobs\UsersJob;
+use N1ebieski\IDir\Seeds\PHPLD\Jobs\UsersJob;
 
 class UsersSeeder extends PHPLDSeeder
 {

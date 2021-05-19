@@ -3,8 +3,8 @@
 namespace N1ebieski\IDir\Seeds\PHPLD;
 
 use Illuminate\Support\Facades\DB;
-use N1ebieski\IDir\Seeders\PHPLD\Jobs\DirsJob;
 use N1ebieski\IDir\Seeds\PHPLD\PHPLDSeeder;
+use N1ebieski\IDir\Seeds\PHPLD\Jobs\DirsJob;
 
 class DirsSeeder extends PHPLDSeeder
 {

@@ -2,23 +2,13 @@
 
 namespace N1ebieski\IDir\Seeds\SEOKatalog;
 
-use Illuminate\Support\Str;
 use N1ebieski\IDir\Models\User;
 use Illuminate\Support\Facades\DB;
+use N1ebieski\IDir\Seeds\SEOKatalog\Jobs\UsersJob;
 use N1ebieski\IDir\Seeds\SEOKatalog\SEOKatalogSeeder;
 
 class UsersSeeder extends SEOKatalogSeeder
 {
-    /**
-     * Undocumented function
-     *
-     * @return integer
-     */
-    protected static function makeUserLastId() : int
-    {
-        return User::orderBy('id', 'desc')->first()->id;
-    }
-
     /**
      * Run the database seeds.
      *
@@ -30,24 +20,17 @@ class UsersSeeder extends SEOKatalogSeeder
             ->table('users')
             ->orderBy('id', 'asc')
             ->chunk(1000, function ($items) {
-                $items->each(function ($item) {
-                    $name = User::firstWhere('name', '=', $item->nick) === null ?
-                        $item->nick : 'user-' . Str::uuid();
-
-                    $user = User::firstOrCreate(
-                        [
-                            'email' => $item->email
-                        ],
-                        [
-                            'id' => $this->user_last_id + $item->id,
-                            'name' => $name,
-                            'password' => Str::random(12),
-                            'status' => $item->active
-                        ]
-                    );
-        
-                    $user->assignRole('user');
-                });
+                UsersJob::dispatch($items, $this->userLastId)->onQueue('import');
             });
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @return integer
+     */
+    protected static function userLastId() : int
+    {
+        return User::orderBy('id', 'desc')->first()->id;
     }
 }

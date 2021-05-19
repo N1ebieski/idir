@@ -1,6 +1,6 @@
 <?php
 
-namespace N1ebieski\IDir\Seeders\PHPLD\Jobs;
+namespace N1ebieski\IDir\Seeds\PHPLD\Jobs;
 
 use Exception;
 use Carbon\Carbon;
@@ -17,7 +17,6 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Support\Facades\Log;
 use N1ebieski\IDir\Models\Category\Dir\Category;
 
 class DirsJob implements ShouldQueue
@@ -137,7 +136,6 @@ class DirsJob implements ShouldQueue
                         : Group::DEFAULT
                 );
 
-                Log::info([!empty($item->OWNER_ID), User::find($this->userLastId + $item->OWNER_ID), $this->userLastId, $item->OWNER_ID, $this->userLastId + $item->OWNER_ID]);
                 $dir->user()->associate(
                     !empty($item->OWNER_ID) && User::find($this->userLastId + $item->OWNER_ID) !== null ?
                         $this->userLastId + $item->OWNER_ID

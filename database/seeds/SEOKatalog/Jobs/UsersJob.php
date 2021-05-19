@@ -1,6 +1,6 @@
 <?php
 
-namespace N1ebieski\IDir\Seeds\PHPLD\Jobs;
+namespace N1ebieski\IDir\Seeds\SEOKatalog\Jobs;
 
 use Exception;
 use Illuminate\Support\Str;
@@ -65,17 +65,13 @@ class UsersJob implements ShouldQueue
             DB::transaction(function () use ($item) {
                 $user = User::make();
 
-                $user->id = $this->userLastId + $item->ID;
-                $user->email = $item->EMAIL;
-                $user->name = $user->firstWhere('name', '=', $item->LOGIN) === null ?
-                    $item->LOGIN
+                $user->id = $this->userLastId + $item->id;
+                $user->email = $item->email;
+                $user->name = $user->firstWhere('name', $item->nick) === null ?
+                    $item->nick
                     : 'user-' . Str::uuid();
                 $user->password = Str::random(12);
-                $user->status = $item->ACTIVE === 0 ?
-                    User::INACTIVE
-                    : User::ACTIVE;
-                $user->created_at = $item->REGISTRATION_DATE;
-                $user->updated_at = $item->REGISTRATION_DATE;
+                $user->status = $item->active;
 
                 $user->save();
 
@@ -103,7 +99,7 @@ class UsersJob implements ShouldQueue
      */
     protected function verify(object $item) : bool
     {
-        return User::where('id', $this->userLastId + $item->ID)
-            ->orWhere('email', $item->EMAIL)->first() === null;
+        return User::where('id', $this->userLastId + $item->id)
+            ->orWhere('email', $item->email)->first() === null;
     }
 }

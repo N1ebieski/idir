@@ -10,16 +10,6 @@ use N1ebieski\IDir\Models\Privilege;
 class GroupsAndPrivilegesSeeder extends PHPLDSeeder
 {
     /**
-     * Undocumented function
-     *
-     * @return integer
-     */
-    protected static function groupLastId() : int
-    {
-        return Group::orderBy('id', 'desc')->first()->id;
-    }
-
-    /**
      * Run the database seeds.
      *
      * @return void
@@ -82,4 +72,14 @@ class GroupsAndPrivilegesSeeder extends PHPLDSeeder
                 });
             });
     }
+
+    /**
+     * Undocumented function
+     *
+     * @return integer
+     */
+    protected static function groupLastId() : int
+    {
+        return Group::orderBy('id', 'desc')->first()->id;
+    }    
 }
