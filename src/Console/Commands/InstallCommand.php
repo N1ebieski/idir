@@ -171,7 +171,7 @@ class InstallCommand extends BaseInstallCommand
         $this->call('vendor:publish', ['--tag' => 'fm-js', '--force' => true], $this->getOutput());
         $this->line("\n");
         $this->call('vendor:publish', ['--tag' => 'fm-views', '--force' => true], $this->getOutput());
-        $this->line("\n");        
+        $this->line("\n");
         $bar->advance();
         $this->line("\n");
         $this->line($this->lang->get('icore::install.dump'));
