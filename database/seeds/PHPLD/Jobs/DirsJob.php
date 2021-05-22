@@ -120,7 +120,7 @@ class DirsJob implements ShouldQueue
                 $dir->status = $item->STATUS === 2 ?
                     Dir::ACTIVE
                     : Dir::INACTIVE;
-                $dir->url = strtolower($item->URL);
+                $dir->url = mb_strtolower($item->URL);
                 $dir->privileged_at = $item->EXPIRY_DATE !== null && $item->EXPIRY_DATE !== '0000-00-00 00:00:00' ?
                     Carbon::parse($item->EXPIRY_DATE)->subYear()
                     : null;
@@ -223,6 +223,6 @@ class DirsJob implements ShouldQueue
     protected function verify(object $item) : bool
     {
         return Dir::where('id', $item->ID)
-            ->orWhere('url', strtolower($item->URL))->first() === null;
+            ->orWhere('url', mb_strtolower($item->URL))->first() === null;
     }
 }
