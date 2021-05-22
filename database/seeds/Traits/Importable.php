@@ -40,12 +40,18 @@ trait Importable
         $importBar->start();
 
         for ($i = 0; $i < $this->workers; $i++) {
-            $process[$i] = new Process('php artisan queue:work --daemon --stop-when-empty --queue=import');
+            $process[$i] = new Process('php artisan queue:work --daemon --stop-when-empty --queue=import --once');
             $process[$i]->setTimeout(null);
             $process[$i]->start();
         }
 
         while (true) {
+            for ($i = 0; $i < $this->workers; $i++) {
+                if (!$process[$i]->isRunning()) {
+                    $process[$i]->start();
+                }
+            }
+
             sleep(10);
 
             $currentSize = $this->queue->size('import');
