@@ -32,6 +32,12 @@ class UpdateRequest extends FormRequest
                 'nullable',
                 'integer',
                 Rule::exists('groups', 'id')->whereNot('id', $this->group->id)
+                    ->where(function ($query) {
+                        $query->whereNotExists(function ($query) {
+                            $query->from('prices')
+                                ->whereRaw('`groups`.`id` = `prices`.`group_id`');
+                        });
+                    })
             ],
             'visible' => 'bail|required|in:0,1',
             'border' => 'bail|nullable|string|max:255',

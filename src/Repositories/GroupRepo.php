@@ -169,4 +169,17 @@ class GroupRepo
             ->orderBy('position', 'asc')
             ->get();
     }
+
+    /**
+     * Undocumented function
+     *
+     * @return Collection
+     */
+    public function getDoesntHavePricesExceptSelf() : Collection
+    {
+        return $this->group->whereDoesntHave('prices')
+            ->where('id', '!=', $this->group->id)
+            ->orderBy('position', 'asc')
+            ->get();
+    }
 }

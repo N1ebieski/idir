@@ -88,7 +88,7 @@ class EditViewModel extends ViewModel
      */
     public function groups() : Collection
     {
-        return $this->group->makeRepo()->getExceptSelf();
+        return $this->group->makeRepo()->getDoesntHavePricesExceptSelf();
     }
 
     /**
