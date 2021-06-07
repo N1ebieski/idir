@@ -39,6 +39,9 @@ trait Importable
         $importBar = $this->command->getOutput()->createProgressBar($startSize);
         $importBar->start();
 
+        $process = [];
+        $running = [];
+
         for ($i = 0; $i < $this->workers; $i++) {
             $process[$i] = new Process('php artisan queue:work --daemon --stop-when-empty --queue=import --once');
             $process[$i]->setTimeout(null);
@@ -49,6 +52,9 @@ trait Importable
             for ($i = 0; $i < $this->workers; $i++) {
                 if (!$process[$i]->isRunning()) {
                     $process[$i]->start();
+                    $running[$i] = false;
+                } else {
+                    $running[$i] = true;
                 }
             }
 
@@ -58,7 +64,7 @@ trait Importable
             $j = 0;
 
             for ($i = 0; $i < $this->workers; $i++) {
-                if (!$process[$i]->isRunning()) {
+                if (!$process[$i]->isRunning() && !$running[$i]) {
                     $j++;
                 }
             }

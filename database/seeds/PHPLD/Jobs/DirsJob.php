@@ -106,7 +106,7 @@ class DirsJob implements ShouldQueue
         $countTags = Tag::count();
 
         $this->items->each(function ($item) use ($fields, $defaultStats, $countTags) {
-            if (!$this->verify($item)) {
+            if (!static::verify($item)) {
                 return;
             }
 
@@ -121,12 +121,8 @@ class DirsJob implements ShouldQueue
                     Dir::ACTIVE
                     : Dir::INACTIVE;
                 $dir->url = mb_strtolower($item->URL);
-                $dir->privileged_at = $item->EXPIRY_DATE !== null && $item->EXPIRY_DATE !== '0000-00-00 00:00:00' ?
-                    Carbon::parse($item->EXPIRY_DATE)->subYear()
-                    : null;
-                $dir->privileged_to = $item->EXPIRY_DATE !== null && $item->EXPIRY_DATE !== '0000-00-00 00:00:00' ?
-                    $item->EXPIRY_DATE
-                    : null;
+                $dir->privileged_at = static::privilegedAt($item);
+                $dir->privileged_to = static::privilegedTo($item);
                 $dir->created_at = $item->DATE_ADDED;
                 $dir->updated_at = $item->DATE_MODIFIED;
 
@@ -220,9 +216,43 @@ class DirsJob implements ShouldQueue
      * @param object $item
      * @return boolean
      */
-    protected function verify(object $item) : bool
+    protected static function verify(object $item) : bool
     {
         return Dir::where('id', $item->ID)
             ->orWhere('url', mb_strtolower($item->URL))->first() === null;
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param object $item
+     * @return string|null
+     */
+    protected static function privilegedAt(object $item) : ?string
+    {
+        if ($item->FEATURED === 1) {
+            if ($item->EXPIRY_DATE !== null && $item->EXPIRY_DATE !== '0000-00-00 00:00:00') {
+                return Carbon::parse($item->EXPIRY_DATE)->subYear();
+            }
+
+            return Carbon::now()->subYears(rand(1, 5));
+        }
+
+        return null;
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param object $item
+     * @return string|null
+     */
+    protected static function privilegedTo(object $item) : ?string
+    {
+        if ($item->FEATURED === 1 && $item->EXPIRY_DATE !== null && $item->EXPIRY_DATE !== '0000-00-00 00:00:00') {
+            return $item->EXPIRY_DATE;
+        }
+
+        return null;
     }
 }

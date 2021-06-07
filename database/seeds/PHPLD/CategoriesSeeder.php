@@ -18,7 +18,7 @@ class CategoriesSeeder extends PHPLDSeeder
         DB::connection('import')
             ->table('category')
             ->orderBy('PARENT_ID', 'asc')
-            ->orderBy('ID', 'asc')
+            ->orderBy('TITLE', 'asc')
             ->get()
             ->each(function ($item) {
                 DB::transaction(function () use ($item) {
