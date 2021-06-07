@@ -35,47 +35,37 @@ trait Importable
     {
         $this->command->getOutput()->writeln("\n");
 
-        $startSize = $this->queue->size('import');
+        $startSize = $prevSize = $this->queue->size('import');
         $importBar = $this->command->getOutput()->createProgressBar($startSize);
         $importBar->start();
 
         $process = [];
-        $running = [];
+        $cycle = 1;
 
         for ($i = 0; $i < $this->workers; $i++) {
             $process[$i] = new Process('php artisan queue:work --daemon --stop-when-empty --queue=import --once');
             $process[$i]->setTimeout(null);
-            $process[$i]->start();
         }
 
         while (true) {
             for ($i = 0; $i < $this->workers; $i++) {
                 if (!$process[$i]->isRunning()) {
                     $process[$i]->start();
-                    $running[$i] = false;
-                } else {
-                    $running[$i] = true;
                 }
             }
 
             sleep(10);
 
             $currentSize = $this->queue->size('import');
-            $j = 0;
 
-            for ($i = 0; $i < $this->workers; $i++) {
-                if (!$process[$i]->isRunning() && !$running[$i]) {
-                    $j++;
-                }
-            }
-
-            if ($j === $this->workers) {
+            if ($currentSize === 0 || ($currentSize === $prevSize && $cycle > 30)) {
                 $importBar->finish();
                 break;
             }
 
             $importBar->advance($startSize - $currentSize);
-            $startSize = $currentSize;
+            $startSize = $prevSize = $currentSize;
+            $cycle++;
         }
 
         $this->command->getOutput()->writeln("\n");
