@@ -48,7 +48,7 @@ return [
         Group::OBLIGATORY_URL => 'obowiązkowy'
     ],
     'apply_status' => [
-        'label' => 'Status po dodaniu wpisu',
+        'label' => 'Status po dodaniu/edycji wpisu',
         Group::APPLY_INACTIVE => 'oczekujący na moderację',
         Group::APPLY_ACTIVE => 'natychmiast aktywny'
     ],
