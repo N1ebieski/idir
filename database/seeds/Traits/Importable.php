@@ -58,11 +58,7 @@ trait Importable
 
             $currentSize = $this->queue->size('import');
 
-            if ($currentSize !== $prevSize) {
-                $cycle = 1;
-            }
-
-            if ($currentSize === 0 || $cycle > 30) {
+            if ($currentSize === 0 || ($currentSize === $prevSize && $cycle > 30)) {
                 $importBar->finish();
                 break;
             }
