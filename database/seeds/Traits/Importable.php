@@ -43,7 +43,7 @@ trait Importable
         $cycle = 1;
 
         for ($i = 0; $i < $this->workers; $i++) {
-            $process[$i] = new Process('php artisan queue:work --daemon --stop-when-empty --queue=import --once');
+            $process[$i] = new Process('php artisan queue:work --daemon --stop-when-empty --queue=import --force --once');
             $process[$i]->setTimeout(null);
         }
 
@@ -58,7 +58,11 @@ trait Importable
 
             $currentSize = $this->queue->size('import');
 
-            if ($currentSize === 0 || ($currentSize === $prevSize && $cycle > 30)) {
+            if ($currentSize !== $prevSize) {
+                $cycle = 1;
+            }
+
+            if ($currentSize === 0 || $cycle > 30) {
                 $importBar->finish();
                 break;
             }
