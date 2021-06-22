@@ -199,10 +199,12 @@ class DirsJob implements ShouldQueue
                     ])->first();
 
                     if (is_int(optional($backlink)->id)) {
-                        $dir->backlink()->create([
-                            'link_id' => $backlink->id,
-                            'url' => static::url($item->backlink_link)
-                        ]);
+                        $dirBacklink = $dir->backlink()->make();
+
+                        $dirBacklink->link()->associate($backlink->id);
+                        $dirBacklink->dir()->associate($dir->id);
+                        $dirBacklink->url = static::url($item->backlink_link);
+                        $dirBacklink->save();
                     }
                 }
 
