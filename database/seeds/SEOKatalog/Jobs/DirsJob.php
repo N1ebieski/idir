@@ -22,6 +22,7 @@ use N1ebieski\IDir\Models\Field\Dir\Field;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use N1ebieski\IDir\Models\Category\Dir\Category;
+use N1ebieski\IDir\Models\DirBacklink;
 
 class DirsJob implements ShouldQueue
 {
@@ -199,7 +200,7 @@ class DirsJob implements ShouldQueue
                     ])->first();
 
                     if (is_int(optional($backlink)->id)) {
-                        $dirBacklink = $dir->backlink()->make();
+                        $dirBacklink = DirBacklink::make();
 
                         $dirBacklink->link()->associate($backlink->id);
                         $dirBacklink->dir()->associate($dir->id);
