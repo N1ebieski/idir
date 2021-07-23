@@ -3,6 +3,7 @@
 namespace N1ebieski\IDir\Models\Stat\Dir;
 
 use N1ebieski\ICore\Models\Stat\Stat as BaseStatModel;
+
 class Stat extends BaseStatModel
 {
     // Accessors
