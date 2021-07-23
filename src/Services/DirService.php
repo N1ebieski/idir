@@ -96,6 +96,19 @@ class DirService implements
     }
 
     /**
+     * Undocumented function
+     *
+     * @param Dir $dir
+     * @return self
+     */
+    public function setDir(Dir $dir)
+    {
+        $this->dir = $dir;
+
+        return $this;
+    }
+
+    /**
      * [createOrUpdateSession description]
      * @param  array $attributes [description]
      * @return void              [description]
