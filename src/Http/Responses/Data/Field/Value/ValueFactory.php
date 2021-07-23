@@ -12,38 +12,18 @@ class ValueFactory
     /**
      * Undocumented variable
      *
-     * @var string
-     */
-    protected $type;
-
-    /**
-     * Undocumented variable
-     *
      * @var App
      */
     protected $app;
 
     /**
-     * Undocumented variable
-     *
-     * @var GusReport
-     */
-    protected $gusReport;
-
-    /**
      * Undocumented function
      *
-     * @param string $type
      * @param App $app
-     * @param GusReport $gusReport
      */
-    public function __construct(string $type, App $app, GusReport $gusReport)
+    public function __construct(App $app)
     {
         $this->app = $app;
-
-        $this->gusReport = $gusReport;
-
-        $this->type = $type;
     }
 
     /**
@@ -51,9 +31,9 @@ class ValueFactory
      *
      * @return boolean
      */
-    protected function isClassExists() : bool
+    protected function isClassExists(string $type) : bool
     {
-        return class_exists($this->className());
+        return class_exists($this->className($type));
     }
 
     /**
@@ -61,25 +41,27 @@ class ValueFactory
      *
      * @return string
      */
-    protected function className() : string
+    protected function className(string $type) : string
     {
-        return "\\N1ebieski\\IDir\\Http\\Responses\\Data\\Field\\Value\\Types\\" . ucfirst($this->type);
+        return "\\N1ebieski\\IDir\\Http\\Responses\\Data\\Field\\Value\\Types\\" . ucfirst($type);
     }
 
     /**
      * Undocumented function
      *
+     * @param string $type
+     * @param GusReport $gusReport
      * @return Value
      */
-    public function makeValue() : Value
+    public function makeValue(string $type, GusReport $gusReport) : Value
     {
-        if ($this->isClassExists()) {
-            return $this->app->make($this->className(), ['gusReport' => $this->gusReport]);
+        if ($this->isClassExists($type)) {
+            return $this->app->make($this->className($type), ['gusReport' => $gusReport]);
         }
 
         return $this->app->make(Gus::class, [
-            'type' => $this->type,
-            'gusReport' => $this->gusReport
+            'type' => $type,
+            'gusReport' => $gusReport
         ]);
     }
 }

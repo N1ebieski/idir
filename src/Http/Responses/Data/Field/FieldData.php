@@ -3,21 +3,12 @@
 namespace N1ebieski\IDir\Http\Responses\Data\Field;
 
 use GusApi\SearchReport as GusReport;
-use N1ebieski\IDir\Http\Responses\Data\DataInterface;
-use Illuminate\Contracts\Container\Container as App;
 use Illuminate\Contracts\Config\Repository as Config;
-use N1ebieski\IDir\Http\Responses\Data\Field\Value\Types\Value;
+use N1ebieski\IDir\Http\Responses\Data\DataInterface;
 use N1ebieski\IDir\Http\Responses\Data\Field\Value\ValueFactory;
 
 class FieldData implements DataInterface
 {
-    /**
-     * Undocumented variable
-     *
-     * @var App
-     */
-    protected $app;
-
     /**
      * Undocumented variable
      *
@@ -33,16 +24,27 @@ class FieldData implements DataInterface
     protected $gusReport;
 
     /**
+     * Undocumented variable
+     *
+     * @var ValueFactory
+     */
+    protected $valueFactory;
+
+    /**
      * Undocumented function
      *
      * @param GusReport $gusReport
      * @param Config $config
+     * @param ValueFactory $valueFactory
      */
-    public function __construct(GusReport $gusReport, Config $config, App $app)
-    {
+    public function __construct(
+        GusReport $gusReport,
+        Config $config,
+        ValueFactory $valueFactory
+    ) {
         $this->gusReport = $gusReport;
 
-        $this->app = $app;
+        $this->valueFactory = $valueFactory;
 
         $this->fields = $config->get('idir.field.gus');
     }
@@ -63,7 +65,7 @@ class FieldData implements DataInterface
                 continue;
             }
 
-            $gusValue = $this->makeValue($key)();
+            $gusValue = $this->makeValue($key);
 
             if (empty($gusValue)) {
                 continue;
@@ -83,15 +85,11 @@ class FieldData implements DataInterface
      * Undocumented function
      *
      * @param string $type
-     * @return Value
+     * @return string|null
      */
-    protected function makeValue(string $type) : Value
+    protected function makeValue(string $type) : ?string
     {
-        return $this->app->make(ValueFactory::class, [
-            'type' => $type,
-            'gusReport' => $this->gusReport
-        ])
-        ->makeValue();
+        return $this->valueFactory->makeValue($type, $this->gusReport)();
     }
 
     /**
