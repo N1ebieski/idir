@@ -62,7 +62,7 @@ trait Importable
                 $cycle = 1;
             }
 
-            if ($currentSize === 0 || $cycle > 30) {
+            if ($currentSize === 0 || $cycle > 100) {
                 $importBar->finish();
                 break;
             }
