@@ -5,7 +5,6 @@ namespace N1ebieski\IDir\Http\Responses\Admin\Field;
 use Illuminate\Http\JsonResponse;
 use GusApi\SearchReport as GusReport;
 use Illuminate\Contracts\Translation\Translator;
-use Illuminate\Contracts\Config\Repository as Config;
 use N1ebieski\ICore\Http\Responses\JsonResponseFactory;
 use N1ebieski\IDir\Http\Responses\Data\Field\FieldData;
 use Illuminate\Contracts\Routing\ResponseFactory as Response;
@@ -27,13 +26,6 @@ class GusResponse implements JsonResponseFactory
     /**
      * Undocumented variable
      *
-     * @var Config
-     */
-    protected $config;
-
-    /**
-     * Undocumented variable
-     *
      * @var FieldData
      */
     protected $fieldData;
@@ -43,18 +35,15 @@ class GusResponse implements JsonResponseFactory
      *
      * @param Response $response
      * @param Translator $lang
-     * @param Config $config
      * @param FieldData $fieldData
      */
     public function __construct(
         Response $response,
         Translator $lang,
-        Config $config,
         FieldData $fieldData
     ) {
         $this->response = $response;
         $this->lang = $lang;
-        $this->config = $config;
 
         $this->fieldData = $fieldData;
     }
@@ -77,18 +66,7 @@ class GusResponse implements JsonResponseFactory
 
         return $this->response->json([
             'success' => '',
-            'data' => $this->makeFieldDataToArray($gusReport)
+            'data' => $this->fieldData->setGusReport($gusReport)->toArray()
         ]);
-    }
-
-    /**
-     * Undocumented function
-     *
-     * @param GusReport $gusReport
-     * @return array
-     */
-    protected function makeFieldDataToArray(GusReport $gusReport) : array
-    {
-        return $this->fieldData->setGusReport($gusReport)->toArray();
     }
 }
