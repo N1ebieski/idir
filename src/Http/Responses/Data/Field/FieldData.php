@@ -12,14 +12,14 @@ class FieldData implements DataInterface
     /**
      * Undocumented variable
      *
-     * @var array|null
+     * @var Config
      */
-    protected $fields;
+    protected $config;
 
     /**
      * Undocumented variable
      *
-     * @var GusReport
+     * @var GusReport|null
      */
     protected $gusReport;
 
@@ -33,20 +33,33 @@ class FieldData implements DataInterface
     /**
      * Undocumented function
      *
-     * @param GusReport $gusReport
      * @param Config $config
      * @param ValueFactory $valueFactory
+     * @param GusReport $gusReport
      */
     public function __construct(
-        GusReport $gusReport,
         Config $config,
-        ValueFactory $valueFactory
+        ValueFactory $valueFactory,
+        GusReport $gusReport = null
     ) {
         $this->gusReport = $gusReport;
 
         $this->valueFactory = $valueFactory;
 
-        $this->fields = $config->get('idir.field.gus');
+        $this->config = $config;
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param GusReport $gusReport
+     * @return self
+     */
+    public function setGusReport(GusReport $gusReport)
+    {
+        $this->gusReport = $gusReport;
+
+        return $this;
     }
 
     /**
@@ -58,7 +71,7 @@ class FieldData implements DataInterface
     {
         $data = [];
 
-        foreach ($this->fields as $key => $value) {
+        foreach ($this->config->get('idir.field.gus') as $key => $value) {
             $id = $this->id($value);
 
             if ($id === null) {

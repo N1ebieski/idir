@@ -5,20 +5,13 @@ namespace N1ebieski\IDir\Http\Responses\Admin\Field;
 use Illuminate\Http\JsonResponse;
 use GusApi\SearchReport as GusReport;
 use Illuminate\Contracts\Translation\Translator;
-use Illuminate\Contracts\Container\Container as App;
 use Illuminate\Contracts\Config\Repository as Config;
 use N1ebieski\ICore\Http\Responses\JsonResponseFactory;
-use Illuminate\Contracts\Routing\ResponseFactory as Response;
 use N1ebieski\IDir\Http\Responses\Data\Field\FieldData;
+use Illuminate\Contracts\Routing\ResponseFactory as Response;
 
 class GusResponse implements JsonResponseFactory
 {
-    /**
-     * [private description]
-     * @var GusReport
-     */
-    protected $gusReport;
-
     /**
      * [private description]
      * @var Response
@@ -34,16 +27,16 @@ class GusResponse implements JsonResponseFactory
     /**
      * Undocumented variable
      *
-     * @var App
+     * @var Config
      */
-    protected $app;
+    protected $config;
 
     /**
      * Undocumented variable
      *
-     * @var array|null
+     * @var FieldData
      */
-    protected $fields;
+    protected $fieldData;
 
     /**
      * Undocumented function
@@ -51,41 +44,30 @@ class GusResponse implements JsonResponseFactory
      * @param Response $response
      * @param Translator $lang
      * @param Config $config
-     * @param App $app
-     * @param GusReport $gusReport
+     * @param FieldData $fieldData
      */
     public function __construct(
         Response $response,
         Translator $lang,
         Config $config,
-        App $app,
-        GusReport $gusReport = null
+        FieldData $fieldData
     ) {
         $this->response = $response;
         $this->lang = $lang;
         $this->config = $config;
-        $this->app = $app;
 
-        $this->gusReport = $gusReport;
+        $this->fieldData = $fieldData;
     }
 
     /**
      * Undocumented function
      *
-     * @return boolean
+     * @param GusReport $gusReport
+     * @return JsonResponse
      */
-    protected function isGusReport() : bool
+    public function makeResponse(GusReport $gusReport = null) : JsonResponse
     {
-        return $this->gusReport !== null;
-    }
-
-    /**
-     * [response description]
-     * @return JsonResponse [description]
-     */
-    public function makeResponse() : JsonResponse
-    {
-        if (!$this->isGusReport()) {
+        if ($gusReport === null) {
             return $this->response->json([
                 'errors' => [
                     'gus' => [$this->lang->get('idir::fields.error.gus')]
@@ -95,17 +77,18 @@ class GusResponse implements JsonResponseFactory
 
         return $this->response->json([
             'success' => '',
-            'data' => $this->makeFieldData()->toArray()
+            'data' => $this->makeFieldDataToArray($gusReport)
         ]);
     }
 
     /**
      * Undocumented function
      *
-     * @return FieldData
+     * @param GusReport $gusReport
+     * @return array
      */
-    protected function makeFieldData() : FieldData
+    protected function makeFieldDataToArray(GusReport $gusReport) : array
     {
-        return $this->app->make(FieldData::class, ['gusReport' => $this->gusReport]);
+        return $this->fieldData->setGusReport($gusReport)->toArray();
     }
 }

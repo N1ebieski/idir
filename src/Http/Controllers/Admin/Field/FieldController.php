@@ -4,7 +4,6 @@ namespace N1ebieski\IDir\Http\Controllers\Admin\Field;
 
 use GusApi\GusApi;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\View;
 use N1ebieski\IDir\Models\Field\Field;
 use GusApi\Exception\NotFoundException;
@@ -73,7 +72,7 @@ class FieldController implements Polymorphic
      * @param GusApi $gusApi
      * @return JsonResponse
      */
-    public function gus(GusRequest $request, GusApi $gusApi) : JsonResponse
+    public function gus(GusRequest $request, GusResponse $response, GusApi $gusApi) : JsonResponse
     {
         try {
             $method = 'getBy' . ucfirst($request->input('type'));
@@ -84,6 +83,6 @@ class FieldController implements Polymorphic
             $gusReport = null;
         }
 
-        return App::make(GusResponse::class, ['gusReport' => $gusReport])->makeResponse();
+        return $response->makeResponse($gusReport);
     }
 }

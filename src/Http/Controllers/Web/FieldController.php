@@ -5,7 +5,6 @@ namespace N1ebieski\IDir\Http\Controllers\Web;
 use GusApi\GusApi;
 use Illuminate\Http\JsonResponse;
 use GusApi\Exception\NotFoundException;
-use Illuminate\Support\Facades\App;
 use N1ebieski\IDir\Http\Requests\Web\Field\GusRequest;
 use N1ebieski\IDir\Http\Responses\Web\Field\GusResponse;
 
@@ -18,7 +17,7 @@ class FieldController
      * @param GusApi $gusApi
      * @return JsonResponse
      */
-    public function gus(GusRequest $request, GusApi $gusApi) : JsonResponse
+    public function gus(GusRequest $request, GusResponse $response, GusApi $gusApi) : JsonResponse
     {
         try {
             $method = 'getBy' . ucfirst($request->input('type'));
@@ -29,6 +28,6 @@ class FieldController
             $gusReport = null;
         }
 
-        return App::make(GusResponse::class, ['gusReport' => $gusReport])->makeResponse();
+        return $response->makeResponse($gusReport);
     }
 }
