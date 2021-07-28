@@ -84,11 +84,11 @@ class FieldData implements DataInterface
                 continue;
             }
 
-            if (!isset($data["field.{$id}"])) {
-                $data["field.{$id}"] = '';
+            if (!isset($data[$id])) {
+                $data[$id] = '';
             }
 
-            $data["field.{$id}"] .= $this->separator($value) . $gusValue;
+            $data[$id] .= $this->separator($value) . $gusValue;
         }
 
         return $data;
@@ -109,15 +109,17 @@ class FieldData implements DataInterface
      * Undocumented function
      *
      * @param mixed $value
-     * @return integer|null
+     * @return string|null
      */
-    protected function id($value) : ?int
+    protected function id($value) : ?string
     {
-        if (is_int($value)) {
-            return $value;
+        $id = $value['id'] ?? $value;
+
+        if (is_int($id)) {
+            return "field.{$id}";
         }
 
-        return $value['id'] ?? null;
+        return $id;
     }
 
     /**
