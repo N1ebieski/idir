@@ -76,9 +76,7 @@ class DirController
         IndexFilter $filter
     ) : HttpResponse {
         return Response::view('idir::admin.dir.index', [
-            'dirs' => $dir->makeRepo()->paginateForAdminByFilter($filter->all() + [
-                'except' => $request->input('except')
-            ]),
+            'dirs' => $dir->makeRepo()->paginateForAdminByFilter($filter->all()),
             'groups' => $group->orderBy('position', 'asc')->get(),
             'categories' => $category->makeService()->getAsFlatTree(),
             'filter' => $filter->all()

@@ -36,9 +36,7 @@ class CommentController extends BaseCommentController implements Polymorphic
     {
         return Response::view('icore::admin.comment.index', [
             'model' => $comment,
-            'comments' => $comment->makeRepo()->paginateByFilter($filter->all() + [
-                'except' => $request->input('except')
-            ]),
+            'comments' => $comment->makeRepo()->paginateByFilter($filter->all()),
             'filter' => $filter->all(),
             'paginate' => Config::get('database.paginate')
         ]);

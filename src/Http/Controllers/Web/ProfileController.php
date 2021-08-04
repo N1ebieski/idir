@@ -27,9 +27,7 @@ class ProfileController
         return Response::view('idir::web.profile.edit_dir', [
             'filter' => $filter->all(),
             'groups' => $group->makeRepo()->getPublic(),
-            'dirs' => Auth::user()->makeRepo()->paginateDirsByFilter($filter->all() + [
-                'except' => $request->input('except')
-            ]),
+            'dirs' => Auth::user()->makeRepo()->paginateDirsByFilter($filter->all()),
             'paginate' => Config::get('database.paginate')
         ]);
     }

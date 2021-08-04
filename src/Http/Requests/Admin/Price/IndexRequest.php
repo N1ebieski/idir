@@ -29,8 +29,8 @@ class IndexRequest extends FormRequest
 
         return [
             'page' => 'integer',
-            'except' => 'filled|array',
-            'except.*' => 'integer',
+            'filter.except' => 'bail|filled|array',
+            'filter.except.*' => 'bail|integer',
             'filter.group' => 'bail|nullable|integer|exists:groups,id|no_js_validation',
             'filter.type' => 'bail|nullable|string|in:transfer,code_sms,code_transfer,paypal_express|no_js_validation',
             'filter.orderby' => [

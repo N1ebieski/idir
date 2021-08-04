@@ -92,6 +92,8 @@ class EventServiceProvider extends ServiceProvider
     {
         parent::boot();
 
+        \N1ebieski\IDir\Models\User::observe(\N1ebieski\ICore\Observers\UserObserver::class);
+
         \N1ebieski\IDir\Models\Dir::observe(\N1ebieski\IDir\Observers\DirObserver::class);
 
         \N1ebieski\IDir\Models\Category\Dir\Category::observe(\N1ebieski\ICore\Observers\CategoryObserver::class);

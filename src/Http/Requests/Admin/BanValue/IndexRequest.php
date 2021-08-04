@@ -17,7 +17,7 @@ class IndexRequest extends BaseIndexRequest
     public function rules()
     {
         return array_merge(parent::rules(), [
-            'type' => 'required|string|in:ip,word,url',
+            'filter.type' => 'required|string|in:ip,word,url',
         ]);
     }
 }

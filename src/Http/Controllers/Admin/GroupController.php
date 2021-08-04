@@ -34,9 +34,7 @@ class GroupController
     public function index(Group $group, IndexRequest $request, IndexFilter $filter) : HttpResponse
     {
         return Response::view('idir::admin.group.index', [
-            'groups' => $group->makeRepo()->paginateByFilter($filter->all() + [
-                'except' => $request->input('except')
-            ]),
+            'groups' => $group->makeRepo()->paginateByFilter($filter->all()),
             'filter' => $filter->all(),
             'paginate' => Config::get('database.paginate')
         ]);

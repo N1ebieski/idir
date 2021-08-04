@@ -4,9 +4,6 @@ namespace N1ebieski\IDir\Http\Requests\Admin\Field\Group;
 
 use N1ebieski\IDir\Http\Requests\Admin\Field\IndexRequest as BaseIndexRequest;
 
-/**
- * [StoreRequest description]
- */
 class IndexRequest extends BaseIndexRequest
 {
     /**

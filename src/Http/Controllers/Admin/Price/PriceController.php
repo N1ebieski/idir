@@ -30,9 +30,7 @@ class PriceController
     public function index(Price $price, Group $group, IndexRequest $request, IndexFilter $filter) : HttpResponse
     {
         return Response::view('idir::admin.price.index', [
-            'prices' => $price->makeRepo()->paginateByFilter($filter->all() + [
-                'except' => $request->input('except')
-            ]),
+            'prices' => $price->makeRepo()->paginateByFilter($filter->all()),
             'groups' => $group->makeRepo()->getExceptDefault(),
             'filter' => $filter->all(),
             'paginate' => Config::get('database.paginate')

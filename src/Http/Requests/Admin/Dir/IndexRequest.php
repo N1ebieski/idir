@@ -32,8 +32,8 @@ class IndexRequest extends FormRequest
 
         return [
             'page' => 'integer',
-            'except' => 'filled|array',
-            'except.*' => 'integer',
+            'filter.except' => 'bail|filled|array',
+            'filter.except.*' => 'bail|integer',
             'filter.search' => 'bail|nullable|string|min:3|max:255',
             'filter.status' => 'bail|nullable|integer|between:0,5|no_js_validation',
             'filter.group' => 'bail|nullable|integer|exists:groups,id|no_js_validation',

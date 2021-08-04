@@ -2,9 +2,9 @@
 
 namespace N1ebieski\IDir\Http\Requests\Admin\Category\Dir;
 
-use N1ebieski\ICore\Http\Requests\Admin\Category\IndexRequest as BaseIndexRequest;
-use N1ebieski\IDir\Models\Category\Dir\Category;
 use Illuminate\Validation\Rule;
+use N1ebieski\IDir\Models\Category\Dir\Category;
+use N1ebieski\ICore\Http\Requests\Admin\Category\IndexRequest as BaseIndexRequest;
 
 class IndexRequest extends BaseIndexRequest
 {

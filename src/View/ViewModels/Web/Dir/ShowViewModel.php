@@ -93,7 +93,7 @@ class ShowViewModel extends ViewModel
         return $this->comment->setRelations(['morph' => $this->dir])
             ->makeCache()
             ->rememberRootsByFilter(
-                $this->filter->all() + ['except' => $this->request->input('except')],
+                $this->filter->all(),
                 $this->request->input('page') ?? 1
             );
     }
