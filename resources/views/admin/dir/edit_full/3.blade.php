@@ -49,6 +49,33 @@
                 @csrf
                 @method('put')
 
+                <div class="form-group">
+                    <label for="user">
+                        {{ trans('idir::dirs.author') }}:
+                    </label>
+                    <select 
+                        class="selectpicker" 
+                        data-live-search="true"
+                        data-abs="true"
+                        data-abs-max-options-length="10"
+                        data-abs-text-attr="name"
+                        data-abs-ajax-url="{{ route('api.user.index') }}"
+                        data-style="border"
+                        data-width="100%"
+                        name="user"
+                        id="user"
+                    >
+                        @if ($userSelection !== null)
+                        <optgroup label="{{ trans('icore::default.current_option') }}">
+                            <option value="{{ $userSelection->id }}" selected>
+                                {{ $userSelection->name }}
+                            </option>
+                        </optgroup>
+                        @endif
+                    </select>
+                    @includeWhen($errors->has('user'), 'icore::admin.partials.errors', ['name' => 'user'])
+                </div>
+
                 @includeWhen(
                     $group->backlink > 0 && optional($backlinks)->isNotEmpty(),
                     'idir::admin.dir.partials.backlink'

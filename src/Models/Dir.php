@@ -199,7 +199,7 @@ class Dir extends Model
      */
     public function user()
     {
-        return $this->belongsTo('N1ebieski\ICore\Models\User');
+        return $this->belongsTo(\N1ebieski\IDir\Models\User::class);
     }
 
     /**

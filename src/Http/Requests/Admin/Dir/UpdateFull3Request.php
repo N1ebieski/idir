@@ -57,6 +57,7 @@ class UpdateFull3Request extends UpdateFull2Request
         return array_merge(
             parent::rules(),
             [
+                'user' => 'bail|required|integer|exists:users,id',
                 'backlink' => [
                     'bail',
                     'integer',

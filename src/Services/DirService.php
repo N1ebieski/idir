@@ -274,6 +274,8 @@ class DirService implements
             $this->dir->content = $attributes['content_html'];
             $this->dir->status = $this->status($attributes['payment_type'] ?? null);
 
+            $this->dir->user()->associate($attributes['user']);
+
             $this->dir->categories()->sync($attributes['categories']);
 
             $this->dir->retag($attributes['tags'] ?? []);

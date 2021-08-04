@@ -5,6 +5,7 @@ namespace N1ebieski\IDir\View\ViewModels\Admin\Dir;
 use Illuminate\Http\Request;
 use N1ebieski\IDir\Models\Dir;
 use N1ebieski\IDir\Models\Link;
+use N1ebieski\IDir\Models\User;
 use N1ebieski\IDir\Models\Group;
 use N1ebieski\IDir\Models\Price;
 use Spatie\ViewModels\ViewModel;
@@ -43,6 +44,13 @@ class EditFull3ViewModel extends ViewModel
     protected $link;
 
     /**
+     * Undocumented variable
+     *
+     * @var User
+     */
+    protected $user;
+
+    /**
      * [$config description]
      *
      * @var Config
@@ -70,6 +78,7 @@ class EditFull3ViewModel extends ViewModel
      * @param Group $group
      * @param Category $category
      * @param Link $link
+     * @param User $user
      * @param Config $config
      * @param Request $request
      */
@@ -78,6 +87,7 @@ class EditFull3ViewModel extends ViewModel
         Group $group,
         Category $category,
         Link $link,
+        User $user,
         Config $config,
         Request $request
     ) {
@@ -85,6 +95,7 @@ class EditFull3ViewModel extends ViewModel
         $this->group = $group;
         $this->category = $category;
         $this->link = $link;
+        $this->user = $user;
 
         $this->config = $config;
         $this->request = $request;
@@ -200,5 +211,21 @@ class EditFull3ViewModel extends ViewModel
     public function pricesByType(string $type) : Collection
     {
         return $this->group->prices->where('type', $type)->sortBy('price');
+    }
+
+    /**
+     * [userSelection description]
+     *
+     * @return  User|null  [return description]
+     */
+    public function userSelection() : ?User
+    {
+        $userId = $this->request->old('user');
+
+        if ($userId !== null) {
+            return $this->user->find($userId);
+        }
+
+        return $this->dir->user;
     }
 }
