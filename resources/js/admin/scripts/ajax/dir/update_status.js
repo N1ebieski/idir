@@ -1,27 +1,24 @@
-jQuery(document).on('click', '.statusDir', function (e) {
+jQuery(document).on('click', '.statusDir, .status-dir', function (e) {
     e.preventDefault();
 
     let $element = $(this);
-    let $row = $('#row'+$element.attr('data-id'));
+
+    let $row = $('#row' + $element.data('id'));
 
     jQuery.ajax({
-        url: $element.attr('data-route'),
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
+        url: $element.data('route'),
         method: 'patch',
         data: {
-            status: $element.attr('data-status'),
+            status: $element.data('status'),
             reason: $element.closest('.popover-body').find('#reason').val()
         },
         beforeSend: function () {
             $row.find('.responsive-btn-group').addClass('disabled');
-            $row.append($.getLoader('spinner-border'));
-        },
-        complete: function () {
-            $row.find('div.loader-absolute').remove();
+            $row.find('[data-status="' + $element.data('status') + '"]').getLoader('show');
         },
         success: function (response) {
+            $row.find('[data-status="' + $element.data('status') + '"]').getLoader('hide');
+            
             $row.html($.sanitize($(response.view).html()));
 
             if (response.status == 1) {

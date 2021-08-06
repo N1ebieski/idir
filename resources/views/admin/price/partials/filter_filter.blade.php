@@ -1,7 +1,7 @@
 @inject('price', 'N1ebieski\IDir\Models\Price')
 
 @component('icore::admin.partials.modal')
-@slot('modal_id', 'filterModal')
+@slot('modal_id', 'filter-modal')
 
 @slot('modal_title')
 <i class="fas fa-sort-amount-up"></i>
@@ -11,12 +11,12 @@
 @slot('modal_body')
 @if ($groups->isNotEmpty())
 <div class="form-group">
-    <label for="group">
+    <label for="filter-group">
         {{ trans('icore::filter.filter') }} "{{ trans('idir::filter.group') }}"
     </label>
     <select 
         class="form-control custom-select" 
-        id="group" 
+        id="filter-group" 
         name="filter[group]"
     >
         <option value="">
@@ -34,12 +34,12 @@
 </div>
 @endif
 <div class="form-group">
-    <label for="FormType">
+    <label for="filter-type">
         {{ trans('icore::filter.filter') }} "{{ trans('icore::filter.type') }}"
     </label>
     <select 
         class="form-control custom-select" 
-        id="FormType" 
+        id="filter-type" 
         name="filter[type]"
     >
         <option value="">
@@ -56,7 +56,7 @@
     </select>
 </div>
 <div class="d-inline">
-    <button type="button" class="btn btn-primary btn-send" id="filterFilter">
+    <button type="button" class="btn btn-primary btn-send" id="filter-filter">
         <i class="fas fa-check"></i>
         {{ trans('icore::default.apply') }}
     </button>

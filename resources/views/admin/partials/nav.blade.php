@@ -22,7 +22,7 @@
                 class="nav-link text-nowrap" 
                 href="#" 
                 role="button" 
-                id="navbarDropdownMenuLink"
+                id="navbar-dropdown-menu-link"
                 data-toggle="dropdown" 
                 aria-haspopup="true" 
                 aria-expanded="false"
@@ -32,7 +32,7 @@
             </a>
             <div 
                 class="dropdown-menu dropdown-menu-right" 
-                aria-labelledby="navbarDropdownMenuLink"
+                aria-labelledby="navbar-dropdown-menu-link"
             >
                 <h6 class="dropdown-header">
                     {{ trans('icore::auth.hello')}}, {{ auth()->user()->name }}

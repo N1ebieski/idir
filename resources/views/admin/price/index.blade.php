@@ -30,7 +30,7 @@
                     class="btn btn-primary text-nowrap create" 
                     data-toggle="modal"
                     data-route="{{ route('admin.price.create', ['group_id' => $filter['group']]) }}" 
-                    data-target="#createModal"
+                    data-target="#create-modal"
                 >
                     <i class="far fa-plus-square"></i>
                     <span class="d-none d-sm-inline">
@@ -61,7 +61,7 @@
 </div>
 
 @component('icore::admin.partials.modal')
-@slot('modal_id', 'editModal')
+@slot('modal_id', 'edit-modal')
 @slot('modal_title')
 <i class="far fa-edit"></i>
 <span> {{ trans('idir::prices.route.edit') }}</span>
@@ -69,7 +69,7 @@
 @endcomponent
 
 @component('icore::admin.partials.modal')
-@slot('modal_id', 'createModal')
+@slot('modal_id', 'create-modal')
 @slot('modal_title')
 <i class="far fa-plus-square"></i>
 <span> {{ trans('idir::prices.route.create') }}</span>

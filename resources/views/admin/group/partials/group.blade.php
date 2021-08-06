@@ -11,7 +11,7 @@
                     class="edit" 
                     data-route="{{ route('admin.group.edit_position', [$group->id]) }}"
                     data-toggle="modal" 
-                    data-target="#editPositionModal" 
+                    data-target="#edit-position-modal" 
                     role="button"
                 >
                     <span id="position" class="badge badge-pill badge-primary">

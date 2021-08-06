@@ -1,4 +1,4 @@
-jQuery(document).on('readyAndAjax', function() {
+jQuery(document).on('readyAndAjax', function () {
     $('.thumbnail').popover({
         trigger: 'hover',
         boundary: 'window',
@@ -7,7 +7,7 @@ jQuery(document).on('readyAndAjax', function() {
             return $.sanitize($(this).html());
         },
         placement: 'auto'
-    }).on('inserted.bs.popover', function() {
+    }).on('inserted.bs.popover', function () {
         $('[id^="popover"]').addClass('thumbnail');
     });
 });

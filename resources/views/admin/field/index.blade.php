@@ -34,7 +34,7 @@
                 class="btn btn-primary text-nowrap create" 
                 data-toggle="modal"
                 data-route="{{ route("admin.field.{$field->poli}.create") }}" 
-                data-target="#createModal"
+                data-target="#create-modal"
             >
                 <i class="far fa-plus-square"></i>
                 <span class="d-none d-sm-inline">{{ trans('icore::default.create') }}</span>
@@ -43,7 +43,7 @@
     </div>
     @endcan
 </h1>
-<div id="filterContent">
+<div id="filter-content">
     @include('idir::admin.field.partials.filter')
     @if ($fields->isNotEmpty())
     <div id="infinite-scroll">
@@ -62,7 +62,7 @@
 </div>
 
 @component('icore::admin.partials.modal')
-@slot('modal_id', 'editModal')
+@slot('modal_id', 'edit-modal')
 @slot('modal_size', 'modal-lg')
 @slot('modal_title')
 <i class="far fa-edit"></i>
@@ -71,7 +71,7 @@
 @endcomponent
 
 @component('icore::admin.partials.modal')
-@slot('modal_id', 'editPositionModal')
+@slot('modal_id', 'edit-position-modal')
 @slot('modal_title')
 <i class="fas fa-sort-amount-up"></i>
 <span> {{ trans('idir::fields.route.edit_position') }}</span>
@@ -79,7 +79,7 @@
 @endcomponent
 
 @component('icore::admin.partials.modal')
-@slot('modal_id', 'createModal')
+@slot('modal_id', 'create-modal')
 @slot('modal_size', 'modal-lg')
 @slot('modal_title')
 <i class="far fa-plus-square"></i>

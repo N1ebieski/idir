@@ -61,7 +61,7 @@
                 @endif
                 <span>{{ trans('icore::categories.route.show', ['category' => $category->name]) }}</span>
             </h1>
-            <div id="filterContent">
+            <div id="filter-content">
                 @include('idir::web.dir.partials.filter')            
                 @if ($dirs->isNotEmpty())
                 <div id="infinite-scroll">

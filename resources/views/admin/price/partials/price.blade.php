@@ -38,7 +38,7 @@
                 <div class="btn-group-vertical">
                     <button 
                         data-toggle="modal" 
-                        data-target="#editModal"
+                        data-target="#edit-modal"
                         data-route="{{ route("admin.price.edit", ['price' => $price->id]) }}"
                         type="button" 
                         class="btn btn-primary edit"
@@ -60,7 +60,7 @@
                     data-id="{{ $price->id }}"
                     data-btn-ok-label="{{ trans('icore::default.yes') }}" 
                     data-btn-ok-icon-class="fas fa-check mr-1"
-                    data-btn-ok-class="btn h-100 d-flex justify-content-center btn-primary btn-popover destroyCategory" 
+                    data-btn-ok-class="btn h-100 d-flex justify-content-center btn-primary btn-popover destroy" 
                     data-btn-cancel-label=" {{ trans('icore::default.cancel') }}"
                     data-btn-cancel-class="btn h-100 d-flex justify-content-center btn-secondary btn-popover"
                     data-btn-cancel-icon-class="fas fa-ban mr-1"

@@ -1,5 +1,5 @@
 <div>
-    <form data-route="{{ url()->current() }}" id="showContact">
+    <form data-route="{{ url()->current() }}" id="show-contact">
         <div class="form-group">
             <label for="email">
                 {{ trans('icore::contact.address.label') }}
@@ -53,7 +53,7 @@
         @render('icore::captchaComponent', [
             'id' => 1000
         ])
-        <button type="button" class="btn btn-primary sendContact">
+        <button type="button" class="btn btn-primary send-contact">
             <i class="fas fa-check"></i>
             <span>{{ trans('icore::default.submit') }}</span>
         </button>        

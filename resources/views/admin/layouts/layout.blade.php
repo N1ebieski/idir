@@ -13,13 +13,13 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <link rel="icon" href="{{ asset('svg/vendor/idir/logo.svg') }}" type="image/svg+xml">
-    <link href="{{ mix('css/vendor/idir/vendor/vendor.css') }}" rel="stylesheet">
+    <link href="{{ asset(mix('css/vendor/idir/vendor/vendor.css')) }}" rel="stylesheet">
     @stack('style')
-    <link href="{{ mix($getStylesheet('css/vendor/idir')) }}" rel="stylesheet">
+    <link href="{{ asset(mix($getStylesheet('css/vendor/idir'))) }}" rel="stylesheet">
     <link href="{{ asset($getStylesheet('css/custom')) }}" rel="stylesheet">
 
-    <script src="{{ mix('js/vendor/idir/vendor/vendor.js') }}" defer></script>
-    <script src="{{ mix('js/vendor/idir/admin/admin.js') }}" defer></script>
+    <script src="{{ asset(mix('js/vendor/idir/vendor/vendor.js')) }}" defer></script>
+    <script src="{{ asset(mix('js/vendor/idir/admin/admin.js')) }}" defer></script>
     <script src="{{ asset('js/custom/admin/admin.js') }}" defer></script>
 </head>
 <body>
@@ -51,7 +51,7 @@
     </a>
 
     @stack('script')
-    <script src="{{ mix('js/vendor/idir/admin/scripts.js') }}" defer></script>
+    <script src="{{ asset(mix('js/vendor/idir/admin/scripts.js')) }}" defer></script>
     <script src="{{ asset('js/custom/admin/scripts.js') }}" defer></script>
 </body>
 </html>

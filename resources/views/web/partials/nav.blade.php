@@ -1,5 +1,5 @@
 @section('logo')
-<div id="navbarLogo" class="flex-grow-1 mr-2">
+<div id="navbar-logo" class="flex-grow-1 mr-2">
     <a href="/" class="navbar-brand" title="{{ config('app.name') }}">
         <img 
             src="{{ asset('svg/vendor/idir/logo.svg') }}" 
@@ -15,7 +15,7 @@
 @endsection
 
 @section('navbar-toggler')
-<a href="#" id="navbarToggle" class="my-auto navbar-toggler" role="button">
+<a href="#" id="navbar-toggle" class="my-auto navbar-toggler" role="button">
     <span class="navbar-toggler-icon"></span>
 </a>
 @endsection
@@ -32,7 +32,7 @@
         <div class="d-flex flex-grow-1 navbar-search pr-3 pr-md-0">
             @yield('logo')
             <form 
-                id="searchForm" 
+                id="search-form" 
                 method="GET" 
                 action="{{ route('web.search.index') }}" 
                 class="my-auto w-100 hide search"
@@ -108,7 +108,7 @@
                         class="nav-link text-nowrap" 
                         href="#" 
                         role="button" 
-                        id="navbarDropdownMenuProfile"
+                        id="navbar-dropdown-men-profile"
                         data-toggle="dropdown" 
                         aria-haspopup="true" 
                         aria-expanded="false"
@@ -118,7 +118,7 @@
                     </a>
                     <div 
                         class="dropdown-menu dropdown-menu-right" 
-                        aria-labelledby="navbarDropdownMenuProfile"
+                        aria-labelledby="navbar-dropdown-men-profile"
                     >
                         <h6 class="dropdown-header">
                             {{ trans('icore::auth.hello')}}, {{ auth()->user()->name }}

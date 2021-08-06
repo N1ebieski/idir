@@ -1,4 +1,4 @@
-jQuery(document).on('click', 'a.reloadThumbnail', function(e) {
+jQuery(document).on('click', 'a.reloadThumbnail, a.reload-thumbnail', function (e) {
     e.preventDefault();
 
     let $element = $(this);
@@ -6,17 +6,17 @@ jQuery(document).on('click', 'a.reloadThumbnail', function(e) {
     $element.thumbnail.img = $element.thumbnail.children('img');
 
     jQuery.ajax({
-        url: $element.attr('data-route'),
+        url: $element.data('route'),
         method: 'patch',
-        beforeSend: function() {
+        beforeSend: function () {
             $element.prop('disabled', true);
             $element.thumbnail.append($.getLoader('spinner-border'));
         },
-        complete: function() {
+        complete: function () {
             $element.prop('disabled', false);
-            $element.thumbnail.find('div.loader-absolute').remove();
+            $element.thumbnail.find('.loader-absolute').remove();
         },
-        success: function(response) {
+        success: function (response) {
             $element.thumbnail.img.attr('src', response.thumbnail_url + '&reload=' + Math.random());
         }
     });

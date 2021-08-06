@@ -12,7 +12,7 @@
     <a 
         href="#" 
         data-route="{{ route('admin.thumbnail.dir.reload', [$dir->id]) }}" 
-        class="badge badge-primary reloadThumbnail"
+        class="badge badge-primary reload-thumbnail"
     >
         {{ trans('idir::dirs.reload_thumbnail') }}
     </a>
@@ -49,7 +49,7 @@
                             class="badge badge-danger show" 
                             data-toggle="modal"
                             data-route="{{ route('admin.report.dir.show', [$dir->id]) }}"
-                            data-target="#showReportDirModal"
+                            data-target="#show-report-dir-modal"
                         >
                             {{ trans('icore::reports.route.show') }}: {{ $dir->reports_count }}
                         </a>
@@ -60,7 +60,7 @@
                     <span id="content.{{ $dir->id }}">
                         {!! $dir->short_content !!}...
                     </span>
-                    <a href="#" class="badge badge-primary checkContent">
+                    <a href="#" class="badge badge-primary check-content">
                         {{ trans('idir::dirs.check_content') }}
                     </a>
                 </li>
@@ -156,7 +156,7 @@
                                 class="badge badge-warning show" 
                                 data-toggle="modal"
                                 data-route="{{ route('admin.payment.dir.show_logs', [$dir->id]) }}"
-                                data-target="#showPaymentLogsDirModal"
+                                data-target="#show-payment-logs-dir-modal"
                             >
                                 {{ trans('idir::payments.route.show_logs') }}
                             </a>
@@ -222,7 +222,7 @@
                 <div class="btn-group-vertical">
                     <button 
                         data-toggle="modal" 
-                        data-target="#editModal"
+                        data-target="#edit-modal"
                         data-route="{{ route('admin.dir.edit', [$dir->id]) }}"
                         type="button" class="btn btn-primary edit"
                     >
@@ -246,7 +246,7 @@
                 <button 
                     data-status="{{ $dir::ACTIVE }}" 
                     type="button" 
-                    class="btn btn-success statusDir"
+                    class="btn btn-success status-dir"
                     data-route="{{ route('admin.dir.update_status', [$dir->id]) }}" 
                     data-id="{{ $dir->id }}"
                     {{ $dir->status == $dir::ACTIVE ? 'disabled' : '' }}
@@ -260,7 +260,7 @@
                     <button 
                         data-status="{{ $dir::INACTIVE }}" 
                         type="button" 
-                        class="btn btn-warning statusDir"
+                        class="btn btn-warning status-dir"
                         data-route="{{ route('admin.dir.update_status', [$dir->id]) }}" 
                         data-id="{{ $dir->id }}"
                         {{ $dir->status == $dir::INACTIVE ? 'disabled' : '' }}
@@ -279,7 +279,7 @@
                         data-id="{{ $dir->id }}" 
                         data-btn-ok-label=" {{ trans('icore::default.yes') }}" 
                         data-btn-ok-icon-class="fas fa-check mr-1"
-                        data-btn-ok-class="btn h-100 d-flex justify-content-center btn-primary btn-popover statusDir" 
+                        data-btn-ok-class="btn h-100 d-flex justify-content-center btn-primary btn-popover status-dir" 
                         data-btn-cancel-label=" {{ trans('icore::default.cancel') }}"
                         data-btn-cancel-class="btn h-100 d-flex justify-content-center btn-secondary btn-popover" 
                         data-btn-cancel-icon-class="fas fa-ban mr-1"
@@ -304,7 +304,7 @@
                     data-toggle="dir-confirmation-delay" 
                     data-btn-ok-label="{{ trans('icore::default.yes') }}" 
                     data-btn-ok-icon-class="fas fa-check mr-1"
-                    data-btn-ok-class="btn h-100 d-flex justify-content-center btn-primary btn-popover delayDir" 
+                    data-btn-ok-class="btn h-100 d-flex justify-content-center btn-primary btn-popover delay-dir" 
                     data-btn-cancel-label="{{ trans('icore::default.cancel') }}"
                     data-btn-cancel-class="btn h-100 d-flex justify-content-center btn-secondary btn-popover" 
                     data-btn-cancel-icon-class="fas fa-ban mr-1"
@@ -327,7 +327,7 @@
                     data-toggle="dir-confirmation-delay" 
                     data-btn-ok-label="{{ trans('icore::default.yes') }}" 
                     data-btn-ok-icon-class="fas fa-check mr-1"
-                    data-btn-ok-class="btn h-100 d-flex justify-content-center btn-primary btn-popover delayDir" 
+                    data-btn-ok-class="btn h-100 d-flex justify-content-center btn-primary btn-popover delay-dir" 
                     data-btn-cancel-label="{{ trans('icore::default.cancel') }}"
                     data-btn-cancel-class="btn h-100 d-flex justify-content-center btn-secondary btn-popover" 
                     data-btn-cancel-icon-class="fas fa-ban mr-1"
@@ -354,7 +354,7 @@
                         type="button" 
                         data-btn-ok-label=" {{ trans('icore::default.yes') }}" 
                         data-btn-ok-icon-class="fas fa-check mr-1"
-                        data-btn-ok-class="btn h-100 d-flex justify-content-center btn-primary btn-popover destroyDir" 
+                        data-btn-ok-class="btn h-100 d-flex justify-content-center btn-primary btn-popover destroy-dir" 
                         data-btn-cancel-label=" {{ trans('icore::default.cancel') }}"
                         data-btn-cancel-class="btn h-100 d-flex justify-content-center btn-secondary btn-popover" 
                         data-btn-cancel-icon-class="fas fa-ban mr-1"
@@ -375,7 +375,7 @@
                         class="btn btn-dark create"
                         data-route="{{ route('admin.banmodel.dir.create', [$dir->id]) }}"
                         data-toggle="modal" 
-                        data-target="#createBanDirModal"
+                        data-target="#create-ban-dir-modal"
                     >
                         <i class="fas fa-user-slash"></i>
                         <span class="d-none d-sm-inline">

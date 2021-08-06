@@ -7,7 +7,7 @@
     </div>
     <div 
         class="btn-group my-auto" 
-        id="themeToggle" 
+        id="theme-toggle" 
         role="group" 
         aria-label="{{ trans('icore::default.theme_toggle') }}"
     >

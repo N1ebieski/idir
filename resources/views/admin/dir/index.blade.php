@@ -29,19 +29,21 @@
             class="btn btn-primary text-nowrap"
         >
             <i class="far fa-plus-square"></i>
-            <span class="d-none d-sm-inline">{{ trans('icore::default.create') }}</span>
+            <span class="d-none d-sm-inline">
+                {{ trans('icore::default.create') }}
+            </span>
         </a>
     </div>
     @endcan
 </h1>
-<div id="filterContent">
+<div id="filter-content">
     @include('idir::admin.dir.partials.filter')
 
     @if ($dirs->isNotEmpty())
     <form 
         action="{{ route('admin.dir.destroy_global') }}" 
         method="post" 
-        id="selectForm"
+        id="select-form"
     >
         @csrf
         @method('delete')
@@ -50,8 +52,8 @@
         <div class="row my-2">
             <div class="col my-auto">
                 <div class="custom-checkbox custom-control">
-                    <input type="checkbox" class="custom-control-input" id="selectAll">
-                    <label class="custom-control-label" for="selectAll">
+                    <input type="checkbox" class="custom-control-input" id="select-all">
+                    <label class="custom-control-label" for="select-all">
                         {{ trans('icore::default.select_all') }}
                     </label>
                 </div>
@@ -81,7 +83,9 @@
                 data-title="{{ trans('icore::default.confirm') }}"
             >
                 <i class="far fa-trash-alt"></i>
-                <span>{{ trans('icore::default.delete_global') }}</span>
+                <span class="d-none d-sm-inline">
+                    {{ trans('icore::default.delete_global') }}
+                </span>
             </button>
         </div>
         @endcan
@@ -92,7 +96,7 @@
 </div>
 
 @component('icore::admin.partials.modal')
-@slot('modal_id', 'editModal')
+@slot('modal_id', 'edit-modal')
 @slot('modal_size', 'modal-lg')
 @slot('modal_title')
 <i class="far fa-edit"></i>
@@ -101,7 +105,7 @@
 @endcomponent
 
 @component('icore::admin.partials.modal')
-@slot('modal_id', 'createBanDirModal')
+@slot('modal_id', 'create-ban-dir-modal')
 @slot('modal_title')
 <i class="fas fa-user-slash"></i>
 <span> {{ trans('icore::bans.route.create') }}</span>
@@ -109,14 +113,14 @@
 @endcomponent
 
 @component('icore::admin.partials.modal')
-@slot('modal_id', 'showReportDirModal')
+@slot('modal_id', 'show-report-dir-modal')
 @slot('modal_title')
 <span>{{ trans('icore::reports.route.show') }}</span>
 @endslot
 @endcomponent
 
 @component('icore::admin.partials.modal')
-@slot('modal_id', 'showPaymentLogsDirModal')
+@slot('modal_id', 'show-payment-logs-dir-modal')
 @slot('modal_title')
 <span>{{ trans('idir::payments.route.show_logs') }}</span>
 @endslot

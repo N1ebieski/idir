@@ -22,7 +22,7 @@
     ])
     <div class="row mt-3">
         <div class="col-md-8 order-sm-1 order-md-2">
-            <div id="filterContent">
+            <div id="filter-content">
                 @include('idir::web.dir.partials.filter')
                 @if ($dirs->isNotEmpty())
                 <div id="infinite-scroll">

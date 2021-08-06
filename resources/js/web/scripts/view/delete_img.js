@@ -1,4 +1,4 @@
-jQuery(document).on('change', 'form input[id^=delete_img]', function() {
+jQuery(document).on('change', 'form input[id^=delete_img]', function () {
     let $input = $(this).closest('.form-group').find('[type="file"]');
     let $hidden = $(this).closest('.form-group').find('[type="hidden"]');
 

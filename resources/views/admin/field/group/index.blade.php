@@ -3,12 +3,12 @@
 @section('filter-morph')
 @if ($groups->isNotEmpty())
 <div class="form-group">
-    <label for="morph">
+    <label for="filter-morph">
         {{ trans('icore::filter.filter') }} "{{ trans('idir::filter.group') }}"
     </label>
     <select 
         class="form-control custom-select" 
-        id="morph" 
+        id="filter-morph" 
         name="filter[morph]"
     >
         <option value="">{{ trans('icore::filter.default') }}</option>
@@ -30,7 +30,7 @@
 <span>
     <a 
         href="#" 
-        class="badge badge-primary filterOption" 
+        class="badge badge-primary filter-option" 
         data-name="filter[morph]"
     >
         <span>{{ trans('idir::filter.group') }}: {{ $filter['morph']->name }}</span>

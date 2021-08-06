@@ -23,7 +23,7 @@
     <i class="far fa-fw fa-folder-open"></i>
     <span>{{ trans('idir::profile.route.edit_dir') }}</span>
 </h1>
-<div id="filterContent">
+<div id="filter-content">
     @include('idir::web.profile.partials.dir.filter')
     @if ($dirs->isNotEmpty())
     <div id="infinite-scroll">

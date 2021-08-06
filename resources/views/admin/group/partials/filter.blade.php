@@ -8,7 +8,7 @@
             <span>
                 <a 
                     href="#" 
-                    class="badge badge-primary filterOption" 
+                    class="badge badge-primary filter-option" 
                     data-name="filter[search]"
                 >
                     <span>{{ trans('icore::filter.search.label') }}: {{ $filter['search'] }}</span>
@@ -20,7 +20,7 @@
             <span>
                 <a 
                     href="#" 
-                    class="badge badge-primary filterOption" 
+                    class="badge badge-primary filter-option" 
                     data-name="filter[visible]"
                 >
                     <span>{{ trans('idir::groups.visible.label') }}: {{ trans('idir::groups.visible.'.$filter['visible']) }}</span>
@@ -47,19 +47,19 @@
                         href="#" 
                         type="button" 
                         data-toggle="modal"
-                        data-target="#filterModal"
+                        data-target="#filter-modal"
                     >
                         <i class="fas fa-sort-amount-up"></i>
                     </button>
                 </div>
                 <div class="form-group col-xs-4 mr-2">
-                    <label class="sr-only" for="filterOrderBy">
+                    <label class="sr-only" for="filter-orderby">
                         {{ trans('icore::filter.order') }}
                     </label>
                     <select 
                         class="form-control custom-select filter" 
                         name="filter[orderby]" 
-                        id="filterOrderBy"
+                        id="filter-orderby"
                     >
                         <option value="">
                             {{ trans('icore::filter.order') }} {{ trans('icore::filter.default') }}
@@ -115,13 +115,13 @@
                     </select>
                 </div>
                 <div class="form-group col-xs-4">
-                    <label class="sr-only" for="filterPaginate">
+                    <label class="sr-only" for="filter-paginate">
                         {{ trans('icore::filter.paginate') }}
                     </label>
                     <select 
                         class="form-control custom-select filter" 
                         name="filter[paginate]" 
-                        id="filterPaginate"
+                        id="filter-paginate"
                     >
                         <option 
                             value="{{ $paginate }}" 

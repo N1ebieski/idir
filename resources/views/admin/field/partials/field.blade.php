@@ -11,7 +11,7 @@
                     class="edit" 
                     data-route="{{ route('admin.field.edit_position', [$field->id]) }}"
                     data-toggle="modal" 
-                    data-target="#editPositionModal" 
+                    data-target="#edit-position-modal" 
                     role="button"
                 >
                     <span id="position" class="badge badge-pill badge-primary">{{ $field->position + 1 }}</span>
@@ -33,7 +33,7 @@
                 <div class="btn-group-vertical">
                     <button 
                         data-toggle="modal" 
-                        data-target="#editModal"
+                        data-target="#edit-modal"
                         data-route="{{ route("admin.field.{$field->poli}.edit", ['field' => $field->id]) }}"
                         type="button" 
                         class="btn btn-primary edit"
@@ -54,7 +54,7 @@
                     data-id="{{ $field->id }}"
                     data-btn-ok-label="{{ trans('icore::default.yes') }}" 
                     data-btn-ok-icon-class="fas fa-check mr-1"
-                    data-btn-ok-class="btn h-100 d-flex justify-content-center btn-primary btn-popover destroyCategory" 
+                    data-btn-ok-class="btn h-100 d-flex justify-content-center btn-primary btn-popover destroy" 
                     data-btn-cancel-label=" {{ trans('icore::default.cancel') }}"
                     data-btn-cancel-class="btn h-100 d-flex justify-content-center btn-secondary btn-popover"
                     data-btn-cancel-icon-class="fas fa-ban mr-1"

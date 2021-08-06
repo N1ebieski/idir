@@ -34,7 +34,7 @@
     </div>
     @endcan
 </h1>
-<div id="filterContent">
+<div id="filter-content">
     @include('idir::admin.group.partials.filter')
     @if ($groups->isNotEmpty())
     <div id="infinite-scroll">
@@ -53,7 +53,7 @@
 </div>
 
 @component('icore::admin.partials.modal')
-@slot('modal_id', 'editPositionModal')
+@slot('modal_id', 'edit-position-modal')
 @slot('modal_title')
 <i class="fas fa-sort-amount-up"></i>
 <span> {{ trans('idir::groups.route.edit_position') }}</span>

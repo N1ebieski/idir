@@ -97,7 +97,7 @@
                 <h3 class="h5 border-bottom pb-2" id="comments">
                     {{ trans('icore::comments.comments') }}
                 </h3>
-                <div id="filterContent">
+                <div id="filter-content">
                     @if ($comments->isNotEmpty())
                         @include('icore::web.comment.partials.filter')
                     @endif
@@ -237,7 +237,7 @@
                     <a 
                         href="#" 
                         data-toggle="modal" 
-                        data-target="#linkModal"
+                        data-target="#link-modal"
                         title="{{ trans('idir::dirs.link_dir_page') }}"
                     >
                         <i class="fas fa-link"></i>
@@ -252,8 +252,8 @@
                         data-route="{{ route('web.contact.dir.show', [$dir->id]) }}"
                         title="{{ trans('idir::contact.dir.route.show') }}"
                         data-toggle="modal" 
-                        data-target="#contactModal" 
-                        class="showContact"
+                        data-target="#contact-modal" 
+                        class="show-contact"
                     >
                         <i class="fas fa-paper-plane"></i>
                         <span>{{ trans('idir::contact.dir.route.show') }}</span>
@@ -289,7 +289,7 @@
                         data-route="{{ route('web.report.dir.create', [$dir->id]) }}"
                         title="{{ trans('icore::reports.route.create') }}"
                         data-toggle="modal" 
-                        data-target="#createReportModal" 
+                        data-target="#create-report-modal" 
                         class="createReport"
                     >
                         <i class="fas fa-exclamation-triangle"></i>
@@ -311,7 +311,7 @@
 </div>
 
 @component('icore::web.partials.modal')
-@slot('modal_id', 'linkModal')
+@slot('modal_id', 'link-modal')
 @slot('modal_title')
 <i class="fas fa-link"></i>
 <span> {{ trans('idir::dirs.link_dir_page') }}</span>
@@ -325,7 +325,7 @@
 
 @auth
 @component('icore::web.partials.modal')
-@slot('modal_id', 'createReportModal')
+@slot('modal_id', 'create-report-modal')
 @slot('modal_title')
 <i class="fas fa-exclamation-triangle"></i>
 <span> {{ trans('icore::reports.route.create') }}</span>
@@ -333,7 +333,7 @@
 @endcomponent
 
 @component('icore::web.partials.modal')
-@slot('modal_id', 'contactModal')
+@slot('modal_id', 'contact-modal')
 @slot('modal_size', 'modal-lg')
 @slot('modal_title')
 <i class="fas fa-paper-plane"></i>

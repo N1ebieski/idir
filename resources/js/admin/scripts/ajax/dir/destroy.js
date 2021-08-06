@@ -1,24 +1,22 @@
-jQuery(document).on('click', 'a.destroyDir', function (e) {
+jQuery(document).on('click', 'a.destroyDir, a.destroy-dir', function (e) {
     e.preventDefault();
 
     let $element = $(this);
-    let $row = $('#row'+$element.attr('data-id'));
+
+    let $row = $('#row' + $element.data('id'));
 
     jQuery.ajax({
-        url: $element.attr('data-route'),
+        url: $element.data('route'),
         data: {
             reason: $element.closest('.popover-body').find('#reason').val(),
-        },
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
         method: 'delete',
         beforeSend: function () {
             $row.find('.responsive-btn-group').addClass('disabled');
-            $row.append($.getLoader('spinner-border'));
+            $row.find('[data-btn-ok-class*="destroyDir"], [data-btn-ok-class*="destroy-dir"]').getLoader('show');
         },
         complete: function () {
-            $row.find('div.loader-absolute').remove();
+            $row.find('[data-btn-ok-class*="destroyDir"], [data-btn-ok-class*="destroy-dir"]').getLoader('hide');
         },
         success: function () {
             $row.fadeOut('slow');

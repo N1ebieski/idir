@@ -15,7 +15,7 @@
     <div 
         data-route="{{ route('web.field.gus') }}"
         class="search position-relative"
-        id="searchGus" 
+        id="search-gus" 
     >
         <div class="input-group">
             <select class="custom-select w-20" id="type" name="type">

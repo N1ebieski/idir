@@ -1,4 +1,4 @@
-jQuery(document).on('click', '.checkContent', function(e) {
+jQuery(document).on('click', '.checkContent, .check-content', function (e) {
     e.preventDefault();
 
     let sentence = $(this).parent().find('[id^="content"]').text().split(".").filter(n => n);

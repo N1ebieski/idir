@@ -542,7 +542,7 @@ class Dir extends Model
             $link .= '" target="_blank" title="' . e($this->title) . '" ';
 
             if (App::make(MigrationUtil::class)->contains('create_stats_table')) {
-                $link .= 'class="clickStat" data-route="' . URL::route('web.stat.dir.click', [Stat::CLICK, $this->slug]) . '" ';
+                $link .= 'class="click-stat" data-route="' . URL::route('web.stat.dir.click', [Stat::CLICK, $this->slug]) . '" ';
             }
 
             $link .= 'href="' . e($this->url) . '">' . e($this->title) . '</a>';

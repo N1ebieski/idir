@@ -1,4 +1,4 @@
-jQuery(document).on('readyAndAjax', function() {
+jQuery(document).on('readyAndAjax', function () {
     $('[data-toggle=dir-confirmation-reason]').on('inserted.bs.confirmation', function () {
         let $element = $('[id^="confirmation"] .popover-body').last();
         $element.p = $element.find('p.confirmation-content');

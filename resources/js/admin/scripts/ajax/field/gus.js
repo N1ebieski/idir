@@ -1,9 +1,9 @@
-jQuery(document).on('click', '#searchGus .btn', function(e) {
+jQuery(document).on('click', '#searchGus .btn, #search-gus .btn', function (e) {
     e.preventDefault();
 
-    let $searchGus = $('#searchGus');
+    let $searchGus = $('#searchGus, #search-gus');
     $searchGus.form = $searchGus.closest('form');
-    $searchGus.url = $searchGus.attr('data-route');
+    $searchGus.url = $searchGus.data('route');
     $searchGus.btn = $searchGus.find('.btn');
     $searchGus.input = $searchGus.find('input');
 
@@ -13,24 +13,19 @@ jQuery(document).on('click', '#searchGus .btn', function(e) {
             type: $searchGus.find('select#type').val(),
             number: $searchGus.find('input#number').val()
         },
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
         method: 'post',
         dataType: 'json',        
-        beforeSend: function() {
-            $searchGus.btn.prop('disabled', true);
-            $searchGus.append($.getLoader('spinner-border'));
+        beforeSend: function () {
+            $searchGus.btn.getLoader('show');
             $searchGus.find('.invalid-feedback').remove();
             $searchGus.input.removeClass('is-valid');
             $searchGus.input.removeClass('is-invalid');
         },
-        complete: function() {
-            $searchGus.btn.prop('disabled', false);
-            $searchGus.find('div.loader-absolute').remove();
+        complete: function () {
+            $searchGus.btn.getLoader('hide');
         },
-        success: function(response) {
-            $.each(response.data, function( key, value ) {
+        success: function (response) {
+            $.each(response.data, function (key, value) {
                 let $element = $searchGus.form.find('#' + $.escapeSelector(key));
 
                 if (typeof $element !== 'undefined') {
@@ -43,10 +38,10 @@ jQuery(document).on('click', '#searchGus .btn', function(e) {
                 }
             });
         },
-        error: function(response) {
+        error: function (response) {
             var errors = response.responseJSON;
 
-            $.each(errors.errors, function( key, value ) {
+            $.each(errors.errors, function (key, value) {
                 $searchGus.input.addClass('is-invalid');
                 $searchGus.input.parent().after($.getError(key, value));
             });
@@ -54,10 +49,11 @@ jQuery(document).on('click', '#searchGus .btn', function(e) {
     });
 });
 
-jQuery(document).on('readyAndAjax', function() {
-    $('#searchGus input').keypress(function(e) {
+jQuery(document).on('readyAndAjax', function () {
+    $('#searchGus input, #search-gus input').keypress(function (e) {
         if (e.which == 13) {
-            $('#searchGus .btn').trigger('click');
+            $('#searchGus .btn, #search-gus .btn').trigger('click');
+
             return false;
         }
     });

@@ -11,7 +11,7 @@
                 {{ config('app.desc') }}
             </p>
             <form 
-                id="searchForm" 
+                id="search-form" 
                 method="get" 
                 action="{{ route('web.search.index') }}" 
                 class="justify-content-center search"
