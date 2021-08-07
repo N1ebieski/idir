@@ -6,7 +6,7 @@
     <label for="morphs">
         {{ trans('idir::fields.groups') }}:
     </label>
-    <select multiple class="form-control" id="morphs" name="morphs[]">
+    <select multiple class="form-control custom-select" id="morphs" name="morphs[]">
         @foreach ($groups as $group)
         <option 
             value="{{ $group->id }}"

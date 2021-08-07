@@ -8,7 +8,7 @@
         <label for="position">
             {{ trans('icore::default.position') }}
         </label>
-        <select class="form-control" id="position" name="position">
+        <select class="form-control custom-select" id="position" name="position">
         @for ($i = 0; $i < $siblings_count; $i++)
             <option 
                 value="{{ $i }}" 

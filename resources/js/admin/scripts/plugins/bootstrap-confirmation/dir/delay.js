@@ -4,7 +4,7 @@ jQuery(document).on('readyAndAjax', function () {
         $element.p = $element.find('p.confirmation-content');
         $element.btn = $element.find('a.btn.btn-primary');
 
-        let $select = $($.parseHTML('<div><div class="form-group"><label for="delay">' + $element.btn.data('delays-label') + ':</label><select id="delay" class="form-control"></select></div></div>'));
+        let $select = $($.parseHTML('<div><div class="form-group"><label for="delay">' + $element.btn.data('delays-label') + ':</label><select id="delay" class="form-control custom-select"></select></div></div>'));
         $select.delay = $select.find('select#delay');
 
         $.each($element.btn.data('delays'), function (key, value) {

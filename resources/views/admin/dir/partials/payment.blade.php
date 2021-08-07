@@ -50,7 +50,7 @@
                         {{ trans('idir::dirs.payment_transfer') }}
                     </label>
                     <select 
-                        class="form-control {{ $isValid('payment_transfer') }}" 
+                        class="form-control custom-select {{ $isValid('payment_transfer') }}" 
                         id="payment_transfer" 
                         name="payment_transfer"
                     >
@@ -95,7 +95,7 @@
                         {{ trans('idir::dirs.payment_code_transfer') }}
                     </label>
                     <select 
-                        class="form-control {{ $isValid('payment_code_transfer') }}" 
+                        class="form-control custom-select {{ $isValid('payment_code_transfer') }}" 
                         id="payment_code_transfer" 
                         name="payment_code_transfer"
                     >
@@ -155,7 +155,7 @@
                         {{ trans('idir::dirs.payment_code_sms') }}
                     </label>
                     <select 
-                        class="form-control {{ $isValid('payment_code_sms') }}" 
+                        class="form-control custom-select {{ $isValid('payment_code_sms') }}" 
                         id="payment_code_sms" 
                         name="payment_code_sms"
                     >
@@ -216,7 +216,7 @@
                         {{ trans('idir::dirs.payment_paypal_express') }}
                     </label>
                     <select 
-                        class="form-control {{ $isValid('payment_paypal_express') }}" 
+                        class="form-control custom-select {{ $isValid('payment_paypal_express') }}" 
                         id="payment_paypal_express" 
                         name="payment_paypal_express"
                     >

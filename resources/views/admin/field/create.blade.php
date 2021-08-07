@@ -148,7 +148,7 @@
                 class="far fa-question-circle"
             ></i>
         </label>
-        <select class="form-control" id="visible" name="visible">
+        <select class="form-control custom-select" id="visible" name="visible">
             <option value="{{ $field::VISIBLE }}">
                 {{ trans('idir::fields.visible.'.$field::VISIBLE) }}
             </option>
@@ -161,7 +161,7 @@
         <label for="required">
             {{ trans('idir::fields.required.label') }}:
         </label>
-        <select class="form-control" id="required" name="required">
+        <select class="form-control custom-select" id="required" name="required">
             <option value="{{ $field::OPTIONAL }}">
                 {{ trans('idir::fields.required.'.$field::OPTIONAL) }}
             </option>

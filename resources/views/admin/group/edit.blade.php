@@ -76,7 +76,7 @@
                         {{ trans('idir::groups.url.label') }}:
                     </label>
                     <select 
-                        class="form-control {{ $isValid('url') }}" 
+                        class="form-control custom-select {{ $isValid('url') }}" 
                         id="url" 
                         name="url"
                     >
@@ -106,7 +106,7 @@
                         {{ trans('idir::groups.apply_status.label') }}:
                     </label>
                     <select 
-                        class="form-control {{ $isValid('apply_status') }}" 
+                        class="form-control custom-select {{ $isValid('apply_status') }}" 
                         id="apply_status" 
                         name="apply_status"
                     >
@@ -145,7 +145,7 @@
                         {{ trans('idir::groups.visible.label') }}:
                     </label>
                     <select 
-                        class="form-control {{ $isValid('visible') }}" 
+                        class="form-control custom-select {{ $isValid('visible') }}" 
                         id="visible" 
                         name="visible"
                     >
@@ -227,7 +227,7 @@
                         {{ trans('idir::groups.backlink.label') }}:
                     </label>
                     <select 
-                        class="form-control {{ $isValid('backlink') }}" 
+                        class="form-control custom-select {{ $isValid('backlink') }}" 
                         id="backlink" 
                         name="backlink"
                     >
@@ -263,7 +263,7 @@
                         ></i>
                     </label>
                     <select 
-                        class="form-control {{ $isValid('alt_id') }}" 
+                        class="form-control custom-select {{ $isValid('alt_id') }}" 
                         id="alt" 
                         name="alt_id"
                     >

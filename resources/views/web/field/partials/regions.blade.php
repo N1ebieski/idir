@@ -14,7 +14,7 @@
         @endif
     </label>
     <select 
-        class="form-control {{ $isValid("field.{$field->id}") }}" 
+        class="form-control custom-select {{ $isValid("field.{$field->id}") }}" 
         id="field.{{ $field->id }}"
         name="field[{{ $field->id }}][]"
         multiple

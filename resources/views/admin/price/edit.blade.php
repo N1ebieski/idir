@@ -139,7 +139,7 @@
         <label for="group">
             {{ trans('idir::prices.group') }}:
         </label>
-        <select class="form-control" id="group" name="group">
+        <select class="form-control custom-select" id="group" name="group">
             @foreach ($groups as $group)
             <option 
                 value="{{ $group->id }}"

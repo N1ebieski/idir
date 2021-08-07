@@ -3,7 +3,7 @@
         {{ trans('idir::dirs.choose_backlink') }}:
     </label>
     <select 
-        class="form-control {{ $isValid('backlink') }}" 
+        class="form-control custom-select {{ $isValid('backlink') }}" 
         id="backlink" 
         name="backlink"
     >
