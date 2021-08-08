@@ -2,35 +2,20 @@
 
 namespace N1ebieski\IDir\Repositories;
 
-use N1ebieski\IDir\Models\Category\Category;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Contracts\Config\Repository as Config;
-use N1ebieski\ICore\Repositories\CategoryRepo as BaseCategoryRepo;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
+use N1ebieski\ICore\Repositories\CategoryRepo as BaseCategoryRepo;
 
-/**
- * [CommentRepo description]
- */
 class CategoryRepo extends BaseCategoryRepo
 {
-    /**
-     * [__construct description]
-     * @param Category   $category   [description]
-     * @param Config     $config     [description]
-     */
-    public function __construct(Category $category, Config $config)
-    {
-        parent::__construct($category, $config);
-    }
-
     /**
      * Undocumented function
      *
      * @param array $component
      * @return Collection
      */
-    public function getRootsByComponent(array $component) : Collection
+    public function getRootsByComponent(array $component): Collection
     {
         return $this->category
             ->when($component['count'] === true, function ($query) {
@@ -70,7 +55,7 @@ class CategoryRepo extends BaseCategoryRepo
      * @param array $component
      * @return Collection
      */
-    public function getWithChildrensByComponent(array $component) : Collection
+    public function getWithChildrensByComponent(array $component): Collection
     {
         return $this->category->when($component['category_count'] === true, function ($query) {
                 $morph = $this->category->morphs()->make();
@@ -95,7 +80,7 @@ class CategoryRepo extends BaseCategoryRepo
                         $query->on('categories.id', '=', 'morphs.id');
                     })
                     ->groupBy('categories.id');
-            })
+        })
             ->when($component['parent'] !== null, function ($query) use ($component) {
                 $query->where('parent_id', $component['parent']);
             }, function ($query) {
@@ -133,7 +118,7 @@ class CategoryRepo extends BaseCategoryRepo
      * @param  array                $filter [description]
      * @return LengthAwarePaginator         [description]
      */
-    public function paginateDirsByFilter(array $filter) : LengthAwarePaginator
+    public function paginateDirsByFilter(array $filter): LengthAwarePaginator
     {
         $dir = $this->category->morphs()->make();
 

@@ -47,7 +47,7 @@ class IDirServiceProvider extends ServiceProvider
 
         $this->app['router']->middlewareGroup('idir.api', [
             'throttle:60,1',
-            'bindings',
+            \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \N1ebieski\ICore\Http\Middleware\XSSProtection::class,
             \N1ebieski\ICore\Http\Middleware\ClearWhitespacesInStrings::class,
             \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class

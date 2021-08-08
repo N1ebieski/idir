@@ -186,8 +186,7 @@ class Store2Request extends FormRequest
                 'bail',
                 'required',
                 'array',
-                'between:1,' . $this->group->max_cats,
-                'no_js_validation'
+                'between:1,' . $this->group->max_cats
             ],
             'categories.*' => [
                 'bail',
@@ -198,7 +197,8 @@ class Store2Request extends FormRequest
                         ['status', Category::ACTIVE],
                         ['model_type', 'N1ebieski\\IDir\\Models\\Dir']
                     ]);
-                })
+                }),
+                'no_js_validation'
             ],
             'content_html' => [
                 'bail',

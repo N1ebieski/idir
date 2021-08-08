@@ -2,28 +2,12 @@
 
 namespace N1ebieski\IDir\Repositories;
 
-use N1ebieski\ICore\Models\Link;
-use N1ebieski\ICore\Repositories\LinkRepo as BaseLinkRepo;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Contracts\Config\Repository as Config;
-use N1ebieski\ICore\Utils\MigrationUtil;
+use N1ebieski\ICore\Repositories\LinkRepo as BaseLinkRepo;
 
-/**
- * [LinkRepo description]
- */
 class LinkRepo extends BaseLinkRepo
 {
-    /**
-     * [__construct description]
-     * @param Link   $link   [description]
-     * @param Config $config [description]
-     */
-    public function __construct(Link $link, Config $config, MigrationUtil $migrationUtil)
-    {
-        parent::__construct($link, $config, $migrationUtil);
-    }
-
     /**
      * [getLinksUnionDirsByComponent description]
      * @param  Builder|null    $dirs      [description]

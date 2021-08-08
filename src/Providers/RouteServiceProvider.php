@@ -102,10 +102,14 @@ class RouteServiceProvider extends ServiceProvider
      */
     protected function mapApiRoutes()
     {
-        $this->app['router']->middleware('idir.api')
+        $this->app['router']->middleware([
+                \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
+                'idir.api',
+                'icore.force.verified'
+            ])
             ->prefix('api')
             ->as('api.')
-            ->namespace($this->namespace.'\Api')
+            ->namespace($this->namespace . '\Api')
             ->group(function ($router) {
                 foreach (glob(__DIR__ . '/../../routes/api/*.php') as $filename) {
                     if (file_exists($override = base_path('routes') . '/vendor/idir/api/' . basename($filename))) {

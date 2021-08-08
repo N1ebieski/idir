@@ -731,8 +731,10 @@ class DirTest extends TestCase
 
         $this->get(route('web.dir.edit_1', [$dir->id]));
 
-        $response = $this->put(route('web.dir.update_3', [$dir->id, $group->id]),
-            ($dirSetup = $this->dirSetup()) + $this->fieldsSetup($group));
+        $response = $this->put(
+            route('web.dir.update_3', [$dir->id, $group->id]),
+            ($dirSetup = $this->dirSetup()) + $this->fieldsSetup($group)
+        );
 
         $dir = Dir::orderBy('id', 'desc')->first();
 
