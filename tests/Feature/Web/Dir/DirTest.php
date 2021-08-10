@@ -263,7 +263,7 @@ class DirTest extends TestCase
         Config::set('idir.dir.backlink.max_attempts', 1);
 
         $this->mock(GuzzleClient::class, function ($mock) use ($link) {
-            $mock->shouldReceive('request')->with('GET', 'http://dadadad.pl')->andReturn(
+            $mock->shouldReceive('request')->with('GET', 'http://dadadad.pl', ['verify' => false])->andReturn(
                 new GuzzleResponse(200, [], 'dadasdasd sdsajdhjashdj')
             );
         });
@@ -319,7 +319,7 @@ class DirTest extends TestCase
         Config::set('idir.dir.backlink.max_attempts', 1);
 
         $this->mock(GuzzleClient::class, function ($mock) use ($link) {
-            $mock->shouldReceive('request')->with('GET', 'http://dadadad.pl')->andReturn(
+            $mock->shouldReceive('request')->with('GET', 'http://dadadad.pl', ['verify' => false])->andReturn(
                 new GuzzleResponse(200, [], '<a href="' . $link->url . '">dadasdasd</a>')
             );
         });

@@ -192,12 +192,6 @@ class UpdateRequest extends FormRequest
                     ]);
                 })
             ],
-            'content_html' => [
-                'bail',
-                'required',
-                'string',
-                'no_js_validation',
-            ],
             'content' => [
                 'bail',
                 'required',
@@ -205,6 +199,12 @@ class UpdateRequest extends FormRequest
                 'between:' . Config::get('idir.dir.min_content') . ',' . Config::get('idir.dir.max_content'),
                 !empty($this->bans) ? 'not_regex:/(.*)(\s|^)('.$this->bans.')(\s|\.|,|\?|$)(.*)/i' : null
             ],
+            'content_html' => [
+                'bail',
+                'required',
+                'string',
+                'no_js_validation',
+            ],            
             'notes' => 'bail|nullable|string|between:3,255',
             'url' => [
                 'bail',

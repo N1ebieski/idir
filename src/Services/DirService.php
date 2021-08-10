@@ -180,9 +180,7 @@ class DirService implements
                 $this->dir->fields()->make()
                     ->setRelations(['morph' => $this->dir])
                     ->makeService()
-                    ->createValues([
-                        'field' => $attributes['field']
-                    ]);
+                    ->createValues($attributes['field']);
             }
 
             if (array_key_exists('backlink', $attributes) && array_key_exists('backlink_url', $attributes)) {
@@ -228,14 +226,16 @@ class DirService implements
     public function update(array $attributes): bool
     {
         return $this->db->transaction(function () use ($attributes) {
-            if (isset($attributes['url'])) {
+            if (array_key_exists('url', $attributes)) {
                 $this->dir->status()->make()
                     ->setRelations(['dir' => $this->dir])
                     ->makeService()
-                    ->sync($attributes);
+                    ->sync([
+                        'url' => $attributes['url']
+                    ]);
             }
 
-            if (isset($attributes['field'])) {
+            if (array_key_exists('field', $attributes)) {
                 $this->dir->fields()->make()
                     ->setRelations(['morph' => $this->dir])
                     ->makeService()
@@ -246,11 +246,11 @@ class DirService implements
 
             $this->dir->content = $attributes['content_html'];
 
-            if (isset($attributes['categories'])) {
+            if (array_key_exists('categories', $attributes)) {
                 $this->dir->categories()->sync($attributes['categories']);
             }
 
-            if (isset($attributes['tags'])) {
+            if (array_key_exists('tags', $attributes)) {
                 $this->dir->retag($attributes['tags']);
             }
 
@@ -266,25 +266,30 @@ class DirService implements
     public function updateFull(array $attributes): bool
     {
         return $this->db->transaction(function () use ($attributes) {
-            if (isset($attributes['field'])) {
+            if (array_key_exists('field', $attributes)) {
                 $this->dir->fields()->make()
                     ->setRelations(['morph' => $this->dir])
                     ->makeService()
                     ->updateValues($attributes['field']);
             }
 
-            if (isset($attributes['backlink'])) {
+            if (array_key_exists('backlink', $attributes) && array_key_exists('backlink_url', $attributes)) {
                 $this->dir->backlink()->make()
                     ->setRelations(['dir' => $this->dir])
                     ->makeService()
-                    ->sync($attributes);
+                    ->sync([
+                        'backlink' => $attributes['backlink'],
+                        'backlink_url' => $attributes['backlink_url']
+                    ]);
             }
 
-            if (isset($attributes['url'])) {
+            if (array_key_exists('url', $attributes)) {
                 $this->dir->status()->make()
                     ->setRelations(['dir' => $this->dir])
                     ->makeService()
-                    ->sync($attributes);
+                    ->sync([
+                        'url' => $attributes['url']
+                    ]);
             }
 
             $this->dir->fill($attributes);
@@ -297,19 +302,19 @@ class DirService implements
                 $this->dir->makeRepo()->nullablePrivileged();
             }
 
-            if (isset($attributes['user'])) {
+            if (array_key_exists('user', $attributes)) {
                 $this->dir->user()->associate($attributes['user']);
             }
 
-            if (isset($attributes['categories'])) {
+            if (array_key_exists('categories', $attributes)) {
                 $this->dir->categories()->sync($attributes['categories']);
             }
 
-            if (isset($attributes['tags'])) {
+            if (array_key_exists('tags', $attributes)) {
                 $this->dir->retag($attributes['tags']);
             }
 
-            if (isset($attributes['payment_type'])) {
+            if (array_key_exists('payment_type', $attributes)) {
                 $this->dir->setRelations(['payment' => $this->makePayment($attributes)]);
             }
 

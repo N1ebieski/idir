@@ -380,7 +380,7 @@ class DirTest extends TestCase
         $link = factory(Link::class)->states('backlink')->create();
 
         $this->mock(GuzzleClient::class, function ($mock) use ($link) {
-            $mock->shouldReceive('request')->with('GET', 'http://dadadad.pl')->andReturn(
+            $mock->shouldReceive('request')->with('GET', 'http://dadadad.pl', ['verify' => false])->andReturn(
                 new GuzzleResponse(200, [], '<a href="' . $link->url . '">dadasdasd</a>')
             );
         });

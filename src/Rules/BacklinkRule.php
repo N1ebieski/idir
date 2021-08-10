@@ -69,7 +69,7 @@ class BacklinkRule implements Rule
     public function passes($attribute, $value)
     {
         try {
-            $response = $this->guzzle->request('GET', $value);
+            $response = $this->guzzle->request('GET', $value, ['verify' => false]);
         } catch (\GuzzleHttp\Exception\GuzzleException $e) {
             return false;
         }

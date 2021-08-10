@@ -50,7 +50,7 @@ class DirStatusService implements Creatable
      * @param  array $attributes [description]
      * @return Model             [description]
      */
-    public function create(array $attributes) : Model
+    public function create(array $attributes): Model
     {
         return $this->db->transaction(function () use ($attributes) {
             $this->dirStatus->dir()->associate($this->dirStatus->dir);
@@ -65,8 +65,14 @@ class DirStatusService implements Creatable
      * @param  array  $attributes [description]
      * @return Model|null             [description]
      */
-    public function sync(array $attributes) : ?Model
+    public function sync(array $attributes): ?Model
     {
+        if (!$this->isUrl($attributes)) {
+            $this->clear();
+
+            return null;
+        }
+
         if (!$this->isSync($attributes)) {
             return null;
         }
@@ -82,7 +88,7 @@ class DirStatusService implements Creatable
      * [clear description]
      * @return int [description]
      */
-    public function clear() : int
+    public function clear(): int
     {
         return $this->db->transaction(function () {
             return $this->dirStatus->where('dir_id', $this->dirStatus->dir->id)->delete();
@@ -95,7 +101,7 @@ class DirStatusService implements Creatable
      * @param array $attributes
      * @return boolean
      */
-    public function delay(array $attributes) : bool
+    public function delay(array $attributes): bool
     {
         return $this->db->transaction(function () use ($attributes) {
             return $this->dirStatus->update([
@@ -112,9 +118,19 @@ class DirStatusService implements Creatable
      * @param array $attributes
      * @return boolean
      */
-    protected function isSync(array $attributes) : bool
+    protected function isUrl(array $attributes): bool
     {
-        return isset($attributes['url'])
-            && $this->dirStatus->dir->url !== $attributes['url'];
+        return isset($attributes['url']);
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param array $attributes
+     * @return boolean
+     */
+    protected function isSync(array $attributes): bool
+    {
+        return $this->dirStatus->dir->url !== $attributes['url'];
     }
 }

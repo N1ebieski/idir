@@ -1,12 +1,5 @@
 <?php
 
-Route::get('categories/dir/search', 'Category\Dir\CategoryController@search')
-    ->middleware(['permission:admin.dirs.create|admin.dirs.edit'])
-    ->name('category.dir.search');
-Route::get('categories/backlink/search', 'Category\Dir\CategoryController@search')
-    ->middleware('permission:admin.categories.view')
-    ->name('category.backlink.search');
-
 Route::match(['get', 'post'], 'categories/dir/index', 'Category\Dir\CategoryController@index')
     ->name('category.dir.index')
     ->middleware('permission:admin.categories.view');
