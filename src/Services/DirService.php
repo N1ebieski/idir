@@ -113,7 +113,7 @@ class DirService implements
      * @param  array $attributes [description]
      * @return void              [description]
      */
-    public function createOrUpdateSession(array $attributes) : void
+    public function createOrUpdateSession(array $attributes): void
     {
         if ($this->session->has($this->sessionName())) {
             $this->updateSession($attributes);
@@ -127,7 +127,7 @@ class DirService implements
      * @param  array $attributes [description]
      * @return void              [description]
      */
-    public function createSession(array $attributes) : void
+    public function createSession(array $attributes): void
     {
         $this->session->put(
             $this->sessionName(),
@@ -143,7 +143,7 @@ class DirService implements
      * @param  array $attributes [description]
      * @return void              [description]
      */
-    public function updateSession(array $attributes) : void
+    public function updateSession(array $attributes): void
     {
         $this->session->put(
             $this->sessionName(),
@@ -160,46 +160,59 @@ class DirService implements
      * @param  array $attributes [description]
      * @return Model             [description]
      */
-    public function create(array $attributes) : Model
+    public function create(array $attributes): Model
     {
         return $this->db->transaction(function () use ($attributes) {
             $this->dir->fill($attributes);
+
+            $this->dir->content = $attributes['content_html'];
+            $this->dir->status = $this->status($attributes['payment_type'] ?? null);
 
             $this->dir->user()->associate(
                 $this->auth->user() ?? $this->makeUser($attributes)
             );
 
             $this->dir->group()->associate($this->dir->group);
-            $this->dir->content = $attributes['content_html'];
-            $this->dir->status = $this->status($attributes['payment_type'] ?? null);
+
             $this->dir->save();
 
-            if (isset($attributes['field'])) {
+            if (array_key_exists('field', $attributes)) {
                 $this->dir->fields()->make()
                     ->setRelations(['morph' => $this->dir])
                     ->makeService()
-                    ->createValues($attributes['field']);
+                    ->createValues([
+                        'field' => $attributes['field']
+                    ]);
             }
 
-            if (isset($attributes['backlink']) && isset($attributes['backlink_url'])) {
+            if (array_key_exists('backlink', $attributes) && array_key_exists('backlink_url', $attributes)) {
                 $this->dir->backlink()->make()
                     ->setRelations(['dir' => $this->dir])
                     ->makeService()
-                    ->create($attributes);
+                    ->create([
+                        'backlink' => $attributes['backlink'],
+                        'backlink_url' => $attributes['backlink_url']
+                    ]);
             }
 
-            if (isset($attributes['url'])) {
+            if (array_key_exists('url', $attributes)) {
                 $this->dir->status()->make()
                     ->setRelations(['dir' => $this->dir])
                     ->makeService()
-                    ->create($attributes);
+                    ->create([
+                        'url' => $attributes['url']
+                    ]);
             }
 
-            $this->dir->categories()->attach($attributes['categories']);
+            if (array_key_exists('categories', $attributes)) {
+                $this->dir->categories()->attach($attributes['categories']);
+            }
 
-            $this->dir->tag($attributes['tags'] ?? []);
+            if (array_key_exists('tags', $attributes)) {
+                $this->dir->tag($attributes['tags']);
+            }
 
-            if (isset($attributes['payment_type'])) {
+            if (array_key_exists('payment_type', $attributes)) {
                 $this->dir->setRelations(['payment' => $this->makePayment($attributes)]);
             }
 
@@ -212,13 +225,15 @@ class DirService implements
      * @param  array $attributes [description]
      * @return bool              [description]
      */
-    public function update(array $attributes) : bool
+    public function update(array $attributes): bool
     {
         return $this->db->transaction(function () use ($attributes) {
-            $this->dir->status()->make()
-                ->setRelations(['dir' => $this->dir])
-                ->makeService()
-                ->sync($attributes);
+            if (isset($attributes['url'])) {
+                $this->dir->status()->make()
+                    ->setRelations(['dir' => $this->dir])
+                    ->makeService()
+                    ->sync($attributes);
+            }
 
             if (isset($attributes['field'])) {
                 $this->dir->fields()->make()
@@ -228,11 +243,16 @@ class DirService implements
             }
 
             $this->dir->fill($attributes);
+
             $this->dir->content = $attributes['content_html'];
 
-            $this->dir->categories()->sync($attributes['categories']);
+            if (isset($attributes['categories'])) {
+                $this->dir->categories()->sync($attributes['categories']);
+            }
 
-            $this->dir->retag($attributes['tags'] ?? []);
+            if (isset($attributes['tags'])) {
+                $this->dir->retag($attributes['tags']);
+            }
 
             return $this->dir->save();
         });
@@ -243,7 +263,7 @@ class DirService implements
      * @param  array $attributes [description]
      * @return bool              [description]
      */
-    public function updateFull(array $attributes) : bool
+    public function updateFull(array $attributes): bool
     {
         return $this->db->transaction(function () use ($attributes) {
             if (isset($attributes['field'])) {
@@ -260,27 +280,34 @@ class DirService implements
                     ->sync($attributes);
             }
 
-            $this->dir->status()->make()
-                ->setRelations(['dir' => $this->dir])
-                ->makeService()
-                ->sync($attributes);
+            if (isset($attributes['url'])) {
+                $this->dir->status()->make()
+                    ->setRelations(['dir' => $this->dir])
+                    ->makeService()
+                    ->sync($attributes);
+            }
 
             $this->dir->fill($attributes);
+
+            $this->dir->content = $attributes['content_html'];
+            $this->dir->status = $this->status($attributes['payment_type'] ?? null);
 
             if (!$this->dir->isGroup($this->dir->group->id)) {
                 $this->dir->group()->associate($this->dir->group);
                 $this->dir->makeRepo()->nullablePrivileged();
             }
-            $this->dir->content = $attributes['content_html'];
-            $this->dir->status = $this->status($attributes['payment_type'] ?? null);
 
             if (isset($attributes['user'])) {
                 $this->dir->user()->associate($attributes['user']);
             }
 
-            $this->dir->categories()->sync($attributes['categories']);
+            if (isset($attributes['categories'])) {
+                $this->dir->categories()->sync($attributes['categories']);
+            }
 
-            $this->dir->retag($attributes['tags'] ?? []);
+            if (isset($attributes['tags'])) {
+                $this->dir->retag($attributes['tags']);
+            }
 
             if (isset($attributes['payment_type'])) {
                 $this->dir->setRelations(['payment' => $this->makePayment($attributes)]);
@@ -296,7 +323,7 @@ class DirService implements
      * @param  array $attributes [description]
      * @return bool              [description]
      */
-    public function updateStatus(array $attributes) : bool
+    public function updateStatus(array $attributes): bool
     {
         return $this->db->transaction(function () use ($attributes) {
             return $this->dir->update(['status' => (int)$attributes['status']]);
@@ -308,7 +335,7 @@ class DirService implements
      *
      * @return boolean
      */
-    public function moveToAltGroup() : bool
+    public function moveToAltGroup(): bool
     {
         return $this->db->transaction(function () {
             $this->dir->categories()->sync(
@@ -328,7 +355,7 @@ class DirService implements
      * @param  array $attributes [description]
      * @return bool              [description]
      */
-    public function updatePrivileged(array $attributes) : bool
+    public function updatePrivileged(array $attributes): bool
     {
         return $this->db->transaction(function () use ($attributes) {
             return $this->dir->update([
@@ -348,7 +375,7 @@ class DirService implements
      * [delete description]
      * @return bool [description]
      */
-    public function delete() : bool
+    public function delete(): bool
     {
         return $this->db->transaction(function () {
             $this->dir->categories()->detach();
@@ -380,7 +407,7 @@ class DirService implements
      * @param  array $ids [description]
      * @return int        [description]
      */
-    public function deleteGlobal(array $ids) : int
+    public function deleteGlobal(array $ids): int
     {
         return $this->db->transaction(function () use ($ids) {
             $this->dir->categories()->newPivotStatement()
@@ -428,7 +455,7 @@ class DirService implements
      * @param array $attributes
      * @return Payment
      */
-    public function makePayment(array $attributes) : Payment
+    public function makePayment(array $attributes): Payment
     {
         return $this->app->make(PaymentFactory::class, [
             'dir' => $this->dir,
@@ -444,7 +471,7 @@ class DirService implements
      * @param array $attributes
      * @return User
      */
-    protected function makeUser(array $attributes) : User
+    protected function makeUser(array $attributes): User
     {
         return $this->app->make(AutoUserFactory::class, [
             'email' => $attributes['email']
@@ -457,7 +484,7 @@ class DirService implements
      * @param  string|null  $payment_type  [description]
      * @return int [description]
      */
-    protected function status(string $payment_type = null) : int
+    protected function status(string $payment_type = null): int
     {
         if (in_array($payment_type, ['transfer', 'paypal_express'])) {
             return $this->dir::PAYMENT_INACTIVE;
@@ -473,7 +500,7 @@ class DirService implements
      *
      * @return string
      */
-    protected function sessionName() : string
+    protected function sessionName(): string
     {
         return is_int($this->dir->id) ? 'dirId.' . $this->dir->id : 'dir';
     }

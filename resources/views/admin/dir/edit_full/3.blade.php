@@ -54,7 +54,7 @@
                         {{ trans('idir::dirs.author') }}:
                     </label>
                     <select 
-                        class="selectpicker" 
+                        class="selectpicker select-picker" 
                         data-live-search="true"
                         data-abs="true"
                         data-abs-max-options-length="10"

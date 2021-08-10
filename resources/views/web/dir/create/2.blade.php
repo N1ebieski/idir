@@ -146,7 +146,7 @@
                         ></i>
                     </label>
                     <select 
-                        class="selectpicker selectpicker-category" 
+                        class="selectpicker select-picker-category" 
                         data-live-search="true"
                         data-abs="true"
                         data-abs-max-options-length="10"

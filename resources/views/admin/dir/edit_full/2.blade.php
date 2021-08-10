@@ -147,37 +147,36 @@
                             class="far fa-question-circle"
                         ></i>
                     </label>
-                    <div id="category">
-                        <div id="categoryOptions">
-                            @include('icore::admin.category.partials.search', [
-                                'categories' => collect($categoriesSelection), 'checked' => true
-                            ])
-                        </div>
-                        <div 
-                            id="searchCategory"
-                            {{ collect($categoriesSelection)->count() >= $group->max_cats ? 'style=display:none' : '' }}
-                            data-route="{{ route('admin.category.dir.search') }}" 
-                            data-max="{{ $group->max_cats }}"
-                            class="position-relative"
-                        >
-                            <div class="input-group">
-                                <input 
-                                    type="text" 
-                                    class="form-control {{ $isValid('category') }}"
-                                    placeholder="{{ trans('icore::categories.search_categories') }}"
-                                >
-                                <span class="input-group-append">
-                                    <button 
-                                        class="btn btn-outline-secondary border border-left-0"
-                                        type="button"
-                                    >
-                                        <i class="fa fa-search"></i>
-                                    </button>
-                                </span>
-                            </div>
-                            <div id="searchCategoryOptions" class="my-3"></div>
-                        </div>
-                    </div>
+                    <select 
+                        class="selectpicker select-picker-category" 
+                        data-live-search="true"
+                        data-abs="true"
+                        data-abs-max-options-length="10"
+                        data-abs-text-attr="name"
+                        data-abs-ajax-url="{{ route('api.category.dir.index') }}"
+                        data-style="border"
+                        data-width="100%"
+                        data-max-options="{{ $group->max_cats }}"
+                        multiple
+                        name="categories[]"
+                        id="categories"
+                    >
+                        @if (collect($categoriesSelection)->isNotEmpty())
+                        <optgroup label="{{ trans('icore::default.current_option') }}">
+                            @foreach ($categoriesSelection as $category)
+                            <option
+                                @if ($category->ancestors->isNotEmpty())
+                                data-content='<small class="p-0 m-0">{{ implode(' &raquo; ', $category->ancestors->pluck('name')->toArray()) }} &raquo; </small>{{ $category->name }}'
+                                @endif
+                                value="{{ $category->id }}"
+                                selected
+                            >
+                                {{ $category->name }}
+                            </option>
+                            @endforeach
+                        </optgroup>
+                        @endif
+                    </select>
                     @includeWhen($errors->has('categories'), 'icore::admin.partials.errors', ['name' => 'categories'])
                 </div>
 

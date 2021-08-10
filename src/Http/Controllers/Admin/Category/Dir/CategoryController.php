@@ -57,7 +57,6 @@ class CategoryController implements Polymorphic
         return Response::view('icore::admin.category.index', [
             'model' => $category,
             'categories' => $categoryService->paginateByFilter($filter->all()),
-            'parents' => $categoryService->getAsFlatTree(),
             'filter' => $filter->all(),
             'paginate' => Config::get('database.paginate')
         ]);
@@ -75,9 +74,7 @@ class CategoryController implements Polymorphic
         return Response::json([
             'success' => '',
             'view' => View::make('icore::admin.category.create', [
-                'model' => $category,
-                'parent_id' => (int)$request->input('parent_id'),
-                'categories' => $category->makeService()->getAsFlatTree()
+                'model' => $category
             ])->render()
         ]);
     }
