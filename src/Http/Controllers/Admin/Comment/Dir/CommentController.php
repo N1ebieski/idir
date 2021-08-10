@@ -2,44 +2,52 @@
 
 namespace N1ebieski\IDir\Http\Controllers\Admin\Comment\Dir;
 
-use Illuminate\Support\Facades\View;
 use N1ebieski\IDir\Models\Dir;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Http\Response as HttpResponse;
 use N1ebieski\IDir\Models\Comment\Dir\Comment;
 use N1ebieski\ICore\Filters\Admin\Comment\IndexFilter;
 use N1ebieski\ICore\Http\Requests\Admin\Comment\IndexRequest;
-use N1ebieski\ICore\Events\Admin\Comment\StoreEvent as CommentStoreEvent;
 use N1ebieski\IDir\Http\Requests\Admin\Comment\Dir\StoreRequest;
 use N1ebieski\IDir\Http\Requests\Admin\Comment\Dir\CreateRequest;
 use N1ebieski\IDir\Http\Controllers\Admin\Comment\Dir\Polymorphic;
+use N1ebieski\ICore\Events\Admin\Comment\StoreEvent as CommentStoreEvent;
 use N1ebieski\ICore\Http\Controllers\Admin\Comment\CommentController as BaseCommentController;
 
-/**
- * [CommentController description]
- */
-class CommentController extends BaseCommentController implements Polymorphic
+class CommentController implements Polymorphic
 {
+    /**
+     * Undocumented variable
+     *
+     * @var BaseCommentController
+     */
+    protected $decorated;
+
+    /**
+     * Undocumented function
+     *
+     * @param BaseCommentController $decorated
+     */
+    public function __construct(BaseCommentController $decorated)
+    {
+        $this->decorated = $decorated;
+    }
+
     /**
      * Display a listing of Comments.
      *
      * @param  Comment       $comment       [description]
      * @param  IndexRequest  $request       [description]
      * @param  IndexFilter   $filter        [description]
-     * @return HttpResponse                 [description]
+     * @return HttpResponse                         [description]
      */
     public function index(Comment $comment, IndexRequest $request, IndexFilter $filter) : HttpResponse
     {
-        return Response::view('icore::admin.comment.index', [
-            'model' => $comment,
-            'comments' => $comment->makeRepo()->paginateByFilter($filter->all()),
-            'filter' => $filter->all(),
-            'paginate' => Config::get('database.paginate')
-        ]);
+        return $this->decorated->index($comment, $request, $filter);
     }
 
     /**

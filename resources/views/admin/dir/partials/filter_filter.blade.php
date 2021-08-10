@@ -97,33 +97,41 @@
     </select>
 </div>
 @endif
-@if ($categories->isNotEmpty())
 <div class="form-group">
     <label for="filter-category">
         {{ trans('icore::filter.filter') }} "{{ trans('icore::filter.category') }}"
     </label>
     <select 
-        class="form-control custom-select" 
-        id="filter-category" 
+        class="selectpicker select-picker-category" 
+        data-live-search="true"
+        data-abs="true"
+        data-abs-max-options-length="10"
+        data-abs-text-attr="name"
+        data-abs-ajax-url="{{ route("api.category.dir.index") }}"
+        data-abs-default-options="{{ json_encode([['value' => '', 'text' => trans('icore::filter.default')]]) }}"
+        data-style="border"
+        data-width="100%"
         name="filter[category]"
+        id="filter-category"
     >
-        <option value="">
-            {{ trans('icore::filter.default') }}
-        </option>
-        @foreach ($categories as $cats)
-            @if ($cats->real_depth == 0)
-                <optgroup label="----------"></optgroup>
+        <optgroup label="{{ trans('icore::default.current_option') }}">
+            <option value="">
+                {{ trans('icore::filter.default') }}
+            </option>
+            @if ($filter['category'] !== null)
+            <option 
+                @if ($filter['category']->ancestors->isNotEmpty())
+                data-content='<small class="p-0 m-0">{{ implode(' &raquo; ', $filter['category']->ancestors->pluck('name')->toArray()) }} &raquo; </small>{{ $filter['category']->name }}'
+                @endif
+                value="{{ $filter['category']->id }}" 
+                selected
+            >
+                {{ $filter['category']->name }}
+            </option>
             @endif
-        <option 
-            value="{{ $cats->id }}" 
-            {{ ($filter['category'] !== null && $filter['category']->id == $cats->id) ? 'selected' : '' }}
-        >
-            {{ str_repeat('-', $cats->real_depth) }} {{ $cats->name }}
-        </option>
-        @endforeach
+        </optgroup>
     </select>
 </div>
-@endif
 <div class="form-group">
     <label for="filter-report">
         {{ trans('icore::filter.filter') }} "{{ trans('icore::filter.report.label') }}"

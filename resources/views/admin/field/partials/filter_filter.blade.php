@@ -38,13 +38,13 @@
             value="{{ $field::VISIBLE }}" 
             {{ ($filter['visible'] === $field::VISIBLE) ? 'selected' : '' }}
         >
-            {{ trans('idir::fields.visible_'.$field::VISIBLE) }}
+            {{ trans('idir::fields.visible.' . $field::VISIBLE) }}
         </option>
         <option 
             value="{{ $field::INVISIBLE }}" 
             {{ ($filter['visible'] === $field::INVISIBLE) ? 'selected' : '' }}
         >
-            {{ trans('idir::fields.visible_'.$field::INVISIBLE) }}
+            {{ trans('idir::fields.visible.' . $field::INVISIBLE) }}
         </option>
     </select>
 </div>

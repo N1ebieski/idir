@@ -20,7 +20,6 @@ use N1ebieski\IDir\Models\Payment\Dir\Payment;
 use N1ebieski\IDir\Loads\Admin\Dir\Create2Load;
 use N1ebieski\IDir\Loads\Admin\Dir\Create3Load;
 use N1ebieski\IDir\Loads\Admin\Dir\DestroyLoad;
-use N1ebieski\IDir\Models\Category\Dir\Category;
 use N1ebieski\IDir\Filters\Admin\Dir\IndexFilter;
 use N1ebieski\IDir\Loads\Admin\Dir\EditFull1Load;
 use N1ebieski\IDir\Loads\Admin\Dir\EditFull2Load;
@@ -54,16 +53,12 @@ use N1ebieski\IDir\Events\Admin\Dir\UpdateFullEvent as DirUpdateFullEvent;
 use N1ebieski\IDir\Events\Admin\Payment\Dir\StoreEvent as PaymentStoreEvent;
 use N1ebieski\IDir\Events\Admin\Dir\UpdateStatusEvent as DirUpdateStatusEvent;
 
-/**
- * [DirController description]
- */
 class DirController
 {
     /**
      * [index description]
      * @param  Dir          $dir      [description]
      * @param  Group        $group    [description]
-     * @param  Category     $category [description]
      * @param  IndexRequest $request  [description]
      * @param  IndexFilter  $filter   [description]
      * @return HttpResponse           [description]
@@ -71,14 +66,12 @@ class DirController
     public function index(
         Dir $dir,
         Group $group,
-        Category $category,
         IndexRequest $request,
         IndexFilter $filter
-    ) : HttpResponse {
+    ): HttpResponse {
         return Response::view('idir::admin.dir.index', [
             'dirs' => $dir->makeRepo()->paginateForAdminByFilter($filter->all()),
             'groups' => $group->orderBy('position', 'asc')->get(),
-            'categories' => $category->makeService()->getAsFlatTree(),
             'filter' => $filter->all()
         ]);
     }
@@ -88,7 +81,7 @@ class DirController
      * @param Group     $group     [description]
      * @return HttpResponse
      */
-    public function create1(Group $group) : HttpResponse
+    public function create1(Group $group): HttpResponse
     {
         return Response::view('idir::admin.dir.create.1', [
             'groups' => $group->makeRepo()->getWithRels()
@@ -102,7 +95,7 @@ class DirController
      * @param  Create2Request $request [description]
      * @return HttpResponse                    [description]
      */
-    public function create2(Group $group, Create2Load $load, Create2Request $request) : HttpResponse
+    public function create2(Group $group, Create2Load $load, Create2Request $request): HttpResponse
     {
         return Response::view(
             'idir::admin.dir.create.2',
@@ -120,7 +113,7 @@ class DirController
      * @param  Store2Request    $request [description]
      * @return RedirectResponse          [description]
      */
-    public function store2(Group $group, Dir $dir, Store2Load $load, Store2Request $request) : RedirectResponse
+    public function store2(Group $group, Dir $dir, Store2Load $load, Store2Request $request): RedirectResponse
     {
         $dir->makeService()->createOrUpdateSession($request->validated());
 
@@ -140,7 +133,7 @@ class DirController
         Dir $dir,
         Create3Load $load,
         Create3Request $request
-    ) : HttpResponse {
+    ): HttpResponse {
         $dir->makeService()->createOrUpdateSession($request->validated());
 
         return Response::view(
@@ -168,7 +161,7 @@ class DirController
         Store3Request $request,
         Store3CodeRequest $requestPayment,
         Store3Response $response
-    ) : RedirectResponse {
+    ): RedirectResponse {
         $dir->setRelations(['group' => $group])
             ->makeService()
             ->create($request->validated());
@@ -189,7 +182,7 @@ class DirController
      * @param  Group     $group         [description]
      * @return HttpResponse             [description]
      */
-    public function editFull1(Dir $dir, EditFull1Load $load, Group $group) : HttpResponse
+    public function editFull1(Dir $dir, EditFull1Load $load, Group $group): HttpResponse
     {
         $dir->makeService()->createOrUpdateSession($dir->attributes_as_array);
 
@@ -207,7 +200,7 @@ class DirController
      * @param  EditFull2Request $request [description]
      * @return HttpResponse              [description]
      */
-    public function editFull2(Dir $dir, Group $group, EditFull2Load $load, EditFull2Request $request) : HttpResponse
+    public function editFull2(Dir $dir, Group $group, EditFull2Load $load, EditFull2Request $request): HttpResponse
     {
         return Response::view(
             'idir::admin.dir.edit_full.2',
@@ -231,7 +224,7 @@ class DirController
         Group $group,
         UpdateFull2Load $load,
         UpdateFull2Request $request
-    ) : RedirectResponse {
+    ): RedirectResponse {
         $dir->makeService()->createOrUpdateSession($request->validated());
 
         return Response::redirectToRoute('admin.dir.edit_full_3', [$dir->id, $group->id]);
@@ -250,7 +243,7 @@ class DirController
         Group $group,
         EditFull3Load $load,
         EditFull3Request $request
-    ) : HttpResponse {
+    ): HttpResponse {
         $dir->makeService()->createOrUpdateSession($request->validated());
 
         return Response::view(
@@ -279,7 +272,7 @@ class DirController
         UpdateFull3Request $request,
         UpdateFull3CodeRequest $requestPayment,
         UpdateFull3Response $response
-    ) : RedirectResponse {
+    ): RedirectResponse {
         $dir->setRelations(['group' => $group])
             ->makeService()
             ->updateFull($request->validated());
@@ -299,7 +292,7 @@ class DirController
      * @param  EditLoad     $load [description]
      * @return JsonResponse       [description]
      */
-    public function edit(Dir $dir, EditLoad $load) : JsonResponse
+    public function edit(Dir $dir, EditLoad $load): JsonResponse
     {
         return Response::json([
             'success' => '',
@@ -315,7 +308,7 @@ class DirController
      * @param  UpdateRequest   $request [description]
      * @return JsonResponse             [description]
      */
-    public function update(Dir $dir, UpdateRequest $request) : JsonResponse
+    public function update(Dir $dir, UpdateRequest $request): JsonResponse
     {
         $dir->setRelations(['group' => $dir->group])
             ->makeService()
@@ -334,7 +327,7 @@ class DirController
      * @param  Dir                 $dir     [description]
      * @return JsonResponse                 [description]
      */
-    public function updateStatus(Dir $dir, UpdateStatusRequest $request) : JsonResponse
+    public function updateStatus(Dir $dir, UpdateStatusRequest $request): JsonResponse
     {
         $dir->makeService()->updateStatus($request->only('status'));
 
@@ -365,7 +358,7 @@ class DirController
      * @param DestroyRequest $request
      * @return JsonResponse
      */
-    public function destroy(Dir $dir, DestroyLoad $load, DestroyRequest $request) : JsonResponse
+    public function destroy(Dir $dir, DestroyLoad $load, DestroyRequest $request): JsonResponse
     {
         $dir->makeService()->delete();
 
@@ -386,7 +379,7 @@ class DirController
      * @param  DestroyGlobalRequest $request [description]
      * @return RedirectResponse              [description]
      */
-    public function destroyGlobal(Dir $dir, DestroyGlobalRequest $request) : RedirectResponse
+    public function destroyGlobal(Dir $dir, DestroyGlobalRequest $request): RedirectResponse
     {
         $deleted = $dir->makeService()->deleteGlobal($request->input('select'));
 

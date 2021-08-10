@@ -180,7 +180,7 @@ class DirService implements
                 $this->dir->fields()->make()
                     ->setRelations(['morph' => $this->dir])
                     ->makeService()
-                    ->createValues($attributes['field']);
+                    ->createValues($attributes['field'] ?? []);
             }
 
             if (array_key_exists('backlink', $attributes) && array_key_exists('backlink_url', $attributes)) {
@@ -203,11 +203,11 @@ class DirService implements
             }
 
             if (array_key_exists('categories', $attributes)) {
-                $this->dir->categories()->attach($attributes['categories']);
+                $this->dir->categories()->attach($attributes['categories'] ?? []);
             }
 
             if (array_key_exists('tags', $attributes)) {
-                $this->dir->tag($attributes['tags']);
+                $this->dir->tag($attributes['tags'] ?? []);
             }
 
             if (array_key_exists('payment_type', $attributes)) {
@@ -239,7 +239,7 @@ class DirService implements
                 $this->dir->fields()->make()
                     ->setRelations(['morph' => $this->dir])
                     ->makeService()
-                    ->updateValues($attributes['field']);
+                    ->updateValues($attributes['field'] ?? []);
             }
 
             $this->dir->fill($attributes);
@@ -247,11 +247,11 @@ class DirService implements
             $this->dir->content = $attributes['content_html'];
 
             if (array_key_exists('categories', $attributes)) {
-                $this->dir->categories()->sync($attributes['categories']);
+                $this->dir->categories()->sync($attributes['categories'] ?? []);
             }
 
             if (array_key_exists('tags', $attributes)) {
-                $this->dir->retag($attributes['tags']);
+                $this->dir->retag($attributes['tags'] ?? []);
             }
 
             return $this->dir->save();
@@ -270,7 +270,7 @@ class DirService implements
                 $this->dir->fields()->make()
                     ->setRelations(['morph' => $this->dir])
                     ->makeService()
-                    ->updateValues($attributes['field']);
+                    ->updateValues($attributes['field'] ?? []);
             }
 
             if (array_key_exists('backlink', $attributes) && array_key_exists('backlink_url', $attributes)) {
@@ -307,11 +307,11 @@ class DirService implements
             }
 
             if (array_key_exists('categories', $attributes)) {
-                $this->dir->categories()->sync($attributes['categories']);
+                $this->dir->categories()->sync($attributes['categories'] ?? []);
             }
 
             if (array_key_exists('tags', $attributes)) {
-                $this->dir->retag($attributes['tags']);
+                $this->dir->retag($attributes['tags'] ?? []);
             }
 
             if (array_key_exists('payment_type', $attributes)) {
