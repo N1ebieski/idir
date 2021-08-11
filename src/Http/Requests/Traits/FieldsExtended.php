@@ -65,7 +65,15 @@ trait FieldsExtended
             return;
         }
 
-        if (!$this->has("field.{$field->id}") || !is_string($this->input("field.{$field->id}"))) {
+        if ($this->missing("field.{$field->id}") && $this->has("delete_img.{$field->id}")) {
+            $this->merge([
+                'field' => [
+                    $field->id => null
+                ] + $this->input('field')
+            ]);
+        }
+
+        if ($this->missing("field.{$field->id}") || !is_string($this->input("field.{$field->id}"))) {
             return;
         }
 

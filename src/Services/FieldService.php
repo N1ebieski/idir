@@ -6,6 +6,7 @@ use Illuminate\Http\UploadedFile;
 use N1ebieski\IDir\Utils\FileUtil;
 use N1ebieski\IDir\Models\Field\Field;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection as Collect;
 use Illuminate\Database\DatabaseManager as DB;
 use N1ebieski\ICore\Services\Interfaces\Creatable;
 use N1ebieski\ICore\Services\Interfaces\Updatable;
@@ -41,20 +42,34 @@ class FieldService implements Creatable, Updatable, PositionUpdatable
     protected $app;
 
     /**
+     * Undocumented variable
+     *
+     * @var Collect
+     */
+    protected $collect;
+
+    /**
      * Undocumented function
      *
      * @param Field $field
      * @param Storage $storage
      * @param App $app
      * @param DB $db
+     * @param Collect $collect
      */
-    public function __construct(Field $field, Storage $storage, App $app, DB $db)
-    {
+    public function __construct(
+        Field $field,
+        Storage $storage,
+        App $app,
+        DB $db,
+        Collect $collect
+    ) {
         $this->field = $field;
 
         $this->storage = $storage;
         $this->app = $app;
         $this->db = $db;
+        $this->collect = $collect;
     }
 
     /**
@@ -91,31 +106,34 @@ class FieldService implements Creatable, Updatable, PositionUpdatable
             $i = 0;
 
             foreach ($this->field->morph->group->fields()->get() as $field) {
-                if (isset($attributes[$field->id])) {
-                    if ($field->type === 'regions') {
-                        $this->createRegionsValue($attributes[$field->id]);
+
+                if (array_key_exists($field->id, $attributes)) {
+                    if (!empty($attributes[$field->id])) {
+                        if ($field->type === 'regions') {
+                            $this->createRegionsValue($attributes[$field->id]);
+                        }
+            
+                        if ($field->type === 'map') {
+                            $this->updateOrCreateMapValue($attributes[$field->id]);
+                        }
+
+                        $value = $attributes[$field->id];
+
+                        if ($value instanceof UploadedFile) {
+                            $file = $this->app->make(FileUtil::class, [
+                                'file' => $value,
+                                'path' => $this->path($field->id)
+                            ]);
+
+                            $file->prepare();
+                            $file->moveFromTemp();
+
+                            $value = $file->getFilePath();
+                        }
+
+                        $ids[$field->id] = ['value' => json_encode($value)];
+                        $i++;
                     }
-        
-                    if ($field->type === 'map') {
-                        $this->updateOrCreateMapValue($attributes[$field->id]);
-                    }
-
-                    $value = $attributes[$field->id];
-
-                    if ($value instanceof UploadedFile) {
-                        $file = $this->app->make(FileUtil::class, [
-                            'file' => $value,
-                            'path' => $this->path($field->id)
-                        ]);
-
-                        $file->prepare();
-                        $file->moveFromTemp();
-
-                        $value = $file->getFilePath();
-                    }
-
-                    $ids[$field->id] = ['value' => json_encode($value)];
-                    $i++;
                 }
             }
 
@@ -141,47 +159,58 @@ class FieldService implements Creatable, Updatable, PositionUpdatable
                         ->first())->decode_value;
                 }
 
-                if (isset($attributes[$field->id]) && !empty($attributes[$field->id])) {
-                    if ($field->type === 'regions') {
-                        $this->updateRegionsValue($attributes[$field->id]);
-                    }
-        
-                    if ($field->type === 'map') {
-                        $this->updateOrCreateMapValue($attributes[$field->id]);
-                    }
-
-                    $value = $attributes[$field->id];
-
-                    if ($value instanceof UploadedFile) {
-                        $file = $this->app->make(FileUtil::class, [
-                            'file' => $value,
-                            'path' => $this->path($field->id)
-                        ]);
-
-                        if ($path !== $file->getFilePath()) {
-                            $file->prepare();
-                            $file->moveFromTemp();
-
-                            $this->storage->disk('public')->delete($path);
+                if (array_key_exists($field->id, $attributes)) {
+                    if (!empty($attributes[$field->id])) {
+                        if ($field->type === 'regions') {
+                            $this->updateRegionsValue($attributes[$field->id]);
+                        }
+            
+                        if ($field->type === 'map') {
+                            $this->updateOrCreateMapValue($attributes[$field->id]);
                         }
 
-                        $value = $file->getFilePath();
-                    }
+                        $value = $attributes[$field->id];
 
-                    $ids[$field->id] = ['value' => json_encode($value)];
-                    $i++;
-                } else {
-                    if ($field->type === 'map') {
-                        $this->deleteMapValue($attributes[$field->id]);
-                    }
+                        if ($value instanceof UploadedFile) {
+                            $file = $this->app->make(FileUtil::class, [
+                                'file' => $value,
+                                'path' => $this->path($field->id)
+                            ]);
 
-                    if ($field->type === 'image') {
-                        $this->storage->disk('public')->delete($path);
+                            if ($path !== $file->getFilePath()) {
+                                $file->prepare();
+                                $file->moveFromTemp();
+
+                                $this->storage->disk('public')->delete($path);
+                            }
+
+                            $value = $file->getFilePath();
+                        }
+
+                        $ids[$field->id] = ['value' => json_encode($value)];
+                        $i++;                        
+                    } else {
+                        if ($field->type === 'map') {
+                            $this->deleteMapValue($attributes[$field->id]);
+                        }
+
+                        if ($field->type === 'image') {
+                            $this->storage->disk('public')->delete($path);
+                        }
                     }
                 }
             }
 
-            $this->field->morph->fields()->sync($ids ?? []);
+            $this->field->morph->fields()->syncWithoutDetaching($ids ?? []);
+
+            $this->field->morph->fields()->detach(
+                $this->collect->make($attributes)
+                    ->filter(function ($value) {
+                        return empty($value);
+                    })
+                    ->keys()
+                    ->toArray()
+            );
 
             return $i;
         });
