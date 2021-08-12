@@ -42,7 +42,7 @@ class PriceService implements Creatable, Updatable, Deletable
      * @param  array $attributes [description]
      * @return Model             [description]
      */
-    public function create(array $attributes) : Model
+    public function create(array $attributes): Model
     {
         return $this->db->transaction(function () use ($attributes) {
             $price = $this->price->make();
@@ -57,10 +57,12 @@ class PriceService implements Creatable, Updatable, Deletable
             $price->group()->associate($attributes['group']);
             $price->save();
 
-            $this->price->codes()->make()
-                ->setRelations(['price' => $price])
-                ->makeService()
-                ->sync($attributes[$attributes['type']]['codes'] ?? []);
+            if (array_key_exists('codes', $attributes[$attributes['type']])) {
+                $this->price->codes()->make()
+                    ->setRelations(['price' => $price])
+                    ->makeService()
+                    ->sync($attributes[$attributes['type']]['codes'] ?? []);
+            }
 
             return $price;
         });
@@ -71,7 +73,7 @@ class PriceService implements Creatable, Updatable, Deletable
      * @param  array $attributes [description]
      * @return bool              [description]
      */
-    public function update(array $attributes) : bool
+    public function update(array $attributes): bool
     {
         return $this->db->transaction(function () use ($attributes) {
             $this->price->price = $attributes['price'];
@@ -83,10 +85,12 @@ class PriceService implements Creatable, Updatable, Deletable
 
             $this->price->group()->associate($attributes['group']);
 
-            $this->price->codes()->make()
-                ->setRelations(['price' => $this->price])
-                ->makeService()
-                ->sync($attributes[$attributes['type']]['codes'] ?? []);
+            if (array_key_exists('codes', $attributes[$attributes['type']])) {
+                $this->price->codes()->make()
+                    ->setRelations(['price' => $this->price])
+                    ->makeService()
+                    ->sync($attributes[$attributes['type']]['codes'] ?? []);
+            }
 
             return $this->price->save();
         });
@@ -97,7 +101,7 @@ class PriceService implements Creatable, Updatable, Deletable
      *
      * @return boolean
      */
-    public function delete() : bool
+    public function delete(): bool
     {
         return $this->db->transaction(function () {
             return $this->price->delete();

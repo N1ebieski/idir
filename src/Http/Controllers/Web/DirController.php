@@ -166,7 +166,9 @@ class DirController
      */
     public function store2(Group $group, Dir $dir, Store2Load $load, Store2Request $request) : RedirectResponse
     {
-        $dir->makeService()->createOrUpdateSession($request->validated());
+        $dir->setRelations(['group' => $group])
+            ->makeService()
+            ->createOrUpdateSession($request->validated());
 
         return Response::redirectToRoute('web.dir.create_3', [$group->id]);
     }
@@ -185,7 +187,9 @@ class DirController
         Create3Load $load,
         Create3Request $request
     ) : HttpResponse {
-        $dir->makeService()->createOrUpdateSession($request->validated());
+        $dir->setRelations(['group' => $group])
+            ->makeService()
+            ->createOrUpdateSession($request->validated());
 
         return Response::view(
             'idir::web.dir.create.3',
@@ -272,7 +276,9 @@ class DirController
      */
     public function update2(Dir $dir, Group $group, Update2Load $load, Update2Request $request) : RedirectResponse
     {
-        $dir->makeService()->createOrUpdateSession($request->validated());
+        $dir->setRelations(['group' => $group])
+            ->makeService()
+            ->createOrUpdateSession($request->validated());
 
         return Response::redirectToRoute('web.dir.edit_3', [$dir->id, $group->id]);
     }
@@ -291,7 +297,9 @@ class DirController
         Edit3Load $load,
         Edit3Request $request
     ) : HttpResponse {
-        $dir->makeService()->createOrUpdateSession($request->validated());
+        $dir->setRelations(['group' => $group])
+            ->makeService()
+            ->createOrUpdateSession($request->validated());
 
         return Response::view(
             'idir::web.dir.edit.3',

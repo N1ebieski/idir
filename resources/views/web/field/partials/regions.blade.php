@@ -13,6 +13,7 @@
         ></i>
         @endif
     </label>
+    <input type="hidden" name="field[{{ $field->id }}]" value="">
     <select 
         class="form-control custom-select {{ $isValid("field.{$field->id}") }}" 
         id="field.{{ $field->id }}"

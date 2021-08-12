@@ -2,23 +2,24 @@
 
 namespace N1ebieski\IDir\Models\Field;
 
-use Illuminate\Database\Eloquent\Model;
-use N1ebieski\ICore\Models\Traits\Polymorphic;
-use N1ebieski\ICore\Models\Traits\Carbonable;
-use N1ebieski\ICore\Models\Traits\Positionable;
-use N1ebieski\ICore\Models\Traits\FullTextSearchable;
-use N1ebieski\IDir\Models\Traits\Filterable;
-use N1ebieski\IDir\Repositories\FieldRepo;
-use N1ebieski\IDir\Services\FieldService;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\App;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
+use N1ebieski\IDir\Repositories\FieldRepo;
+use N1ebieski\IDir\Models\Traits\Filterable;
+use N1ebieski\ICore\Models\Traits\Carbonable;
+use N1ebieski\ICore\Models\Traits\Polymorphic;
+use N1ebieski\ICore\Models\Traits\Positionable;
+use N1ebieski\IDir\Services\Field\FieldService;
+use N1ebieski\ICore\Models\Traits\FullTextSearchable;
 
-/**
- * [Field description]
- */
 class Field extends Model
 {
-    use Polymorphic, Carbonable, Positionable, FullTextSearchable, Filterable;
+    use Polymorphic;
+    use Carbonable;
+    use Positionable;
+    use FullTextSearchable;
+    use Filterable;
 
     // Configuration
 
@@ -110,7 +111,7 @@ class Field extends Model
      * @param  Builder $query [description]
      * @return Builder        [description]
      */
-    public function scopePublic(Builder $query) : Builder
+    public function scopePublic(Builder $query): Builder
     {
         return $query->where('visible', static::VISIBLE);
     }
@@ -149,7 +150,7 @@ class Field extends Model
      * [getOptionsAttribute description]
      * @return object [description]
      */
-    public function getOptionsAttribute() : object
+    public function getOptionsAttribute(): object
     {
         $options = json_decode($this->attributes['options']);
 
@@ -175,7 +176,7 @@ class Field extends Model
      * [setOptionsAttribute description]
      * @param array $value [description]
      */
-    public function setOptionsAttribute(array $value) : void
+    public function setOptionsAttribute(array $value): void
     {
         $this->attributes['options'] = json_encode($value);
     }
@@ -186,7 +187,7 @@ class Field extends Model
      * [isNotDefault description]
      * @return bool [description]
      */
-    public function isNotDefault() : bool
+    public function isNotDefault(): bool
     {
         return !in_array($this->type, static::DEFAULT);
     }
@@ -196,7 +197,7 @@ class Field extends Model
      *
      * @return boolean
      */
-    public function isRequired() : bool
+    public function isRequired(): bool
     {
         return (int)$this->options->required === static::REQUIRED;
     }

@@ -344,6 +344,8 @@
 
 @endsection
 
+@if (config('icore.captcha.driver') !== null)
 @php
 app(\N1ebieski\ICore\View\Components\CaptchaComponent::class)->toHtml()->render();
 @endphp
+@endif

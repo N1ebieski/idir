@@ -53,7 +53,7 @@ class GroupService implements Creatable, Updatable, PositionUpdatable, Deletable
      * @param  array $attributes [description]
      * @return Model             [description]
      */
-    public function create(array $attributes) : Model
+    public function create(array $attributes): Model
     {
         return $this->db->transaction(function () use ($attributes) {
             $this->group->fill(
@@ -61,7 +61,9 @@ class GroupService implements Creatable, Updatable, PositionUpdatable, Deletable
             );
             $this->group->save();
 
-            $this->group->privileges()->attach(array_filter($attributes['priv'] ?? []));
+            if (array_key_exists('priv', $attributes)) {
+                $this->group->privileges()->attach(array_filter($attributes['priv'] ?? []));
+            }
 
             return $this->group;
         });
@@ -72,14 +74,16 @@ class GroupService implements Creatable, Updatable, PositionUpdatable, Deletable
      * @param  array $attributes [description]
      * @return bool              [description]
      */
-    public function update(array $attributes) : bool
+    public function update(array $attributes): bool
     {
         return $this->db->transaction(function () use ($attributes) {
             $this->group->fill(
                 $this->collect->make($attributes)->except(['priv'])->toArray()
             );
 
-            $this->group->privileges()->sync(array_filter($attributes['priv'] ?? []));
+            if (array_key_exists('priv', $attributes)) {
+                $this->group->privileges()->sync(array_filter($attributes['priv'] ?? []));
+            }
 
             return $this->group->save();
         });
@@ -90,7 +94,7 @@ class GroupService implements Creatable, Updatable, PositionUpdatable, Deletable
      * @param  array $attributes [description]
      * @return bool              [description]
      */
-    public function updatePosition(array $attributes) : bool
+    public function updatePosition(array $attributes): bool
     {
         return $this->db->transaction(function () use ($attributes) {
             return $this->group->update(['position' => (int)$attributes['position']]);
@@ -101,7 +105,7 @@ class GroupService implements Creatable, Updatable, PositionUpdatable, Deletable
      * [delete description]
      * @return bool [description]
      */
-    public function delete() : bool
+    public function delete(): bool
     {
         return $this->db->transaction(function () {
             // If you delete a group, you have to change the alternative of other groups to Default

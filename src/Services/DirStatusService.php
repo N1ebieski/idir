@@ -53,8 +53,10 @@ class DirStatusService implements Creatable
     public function create(array $attributes): Model
     {
         return $this->db->transaction(function () use ($attributes) {
-            $this->dirStatus->dir()->associate($this->dirStatus->dir);
-            $this->dirStatus->save();
+            if ($this->isUrl($attributes)) {
+                $this->dirStatus->dir()->associate($this->dirStatus->dir);
+                $this->dirStatus->save();
+            }
 
             return $this->dirStatus;
         });

@@ -14,6 +14,7 @@
         @endif
     </label>
     <div id="field.{{ $field->id }}">
+        <input type="hidden" name="field[{{ $field->id }}]" value="">
         @foreach ($field->options->options as $option)
         <div class="custom-control custom-checkbox">
             <input 

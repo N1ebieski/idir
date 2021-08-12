@@ -39,9 +39,11 @@
             <ul class="list-unstyled mb-0 pb-0">
                 <li>
                     {!! $dir->title_as_link !!}
-                    {{-- @if ($dir->isUrl())
-                    <span> - {{ $dir->url_as_host }}</span>
-                    @endif --}}
+                    @if (!isset($filter['status']))
+                    <span class="badge badge-{{ $dir->status === $dir::ACTIVE ? 'success' : 'warning' }}">
+                        {{ trans("idir::dirs.status.{$dir->status}") }}
+                    </span>
+                    @endif
                     @if ($dir->reports_count > 0)
                     <span>
                         <a 

@@ -49,7 +49,7 @@ class CodeService
      * @param array $attributes
      * @return void
      */
-    public function sync(array $attributes) : void
+    public function sync(array $attributes): void
     {
         $this->db->transaction(function () use ($attributes) {
             if (!$this->isSync($attributes)) {
@@ -68,7 +68,7 @@ class CodeService
      * [createGlobal description]
      * @param array $attributes [description]
      */
-    public function createGlobal(array $attributes) : void
+    public function createGlobal(array $attributes): void
     {
         $this->db->transaction(function () use ($attributes) {
             foreach ($attributes as $attribute) {
@@ -91,7 +91,7 @@ class CodeService
      * [clear description]
      * @return int [description]
      */
-    public function clear() : int
+    public function clear(): int
     {
         return $this->db->transaction(function () {
             return $this->code->where('price_id', $this->code->price->id)->delete();
@@ -104,7 +104,7 @@ class CodeService
      * @param array $attributes
      * @return boolean
      */
-    protected function isSync(array $attributes) : bool
+    protected function isSync(array $attributes): bool
     {
         return isset($attributes['sync']) || empty($attributes);
     }

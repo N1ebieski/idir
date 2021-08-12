@@ -14,9 +14,11 @@
                 >
                     {{ $dir->title }}
                 </a>
+                @if ($filter['status'] === null)
                 <span class="badge badge-{{ $dir->status === $dir::ACTIVE ? 'success' : 'warning' }}">
                     {{ trans("idir::dirs.status.{$dir->status}") }}
                 </span>
+                @endif
             </li>
             <li class="text-break" style="word-break:break-word">
                 {!! $dir->short_content !!}...

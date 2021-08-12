@@ -53,10 +53,12 @@ class DirBacklinkService implements Creatable
     public function create(array $attributes): Model
     {
         return $this->db->transaction(function () use ($attributes) {
-            $this->dirBacklink->dir()->associate($this->dirBacklink->dir);
-            $this->dirBacklink->link()->associate($attributes['backlink']);
-            $this->dirBacklink->url = $attributes['backlink_url'];
-            $this->dirBacklink->save();
+            if ($this->isBacklink($attributes)) {
+                $this->dirBacklink->dir()->associate($this->dirBacklink->dir);
+                $this->dirBacklink->link()->associate($attributes['backlink']);
+                $this->dirBacklink->url = $attributes['backlink_url'];
+                $this->dirBacklink->save();
+            }
 
             return $this->dirBacklink;
         });
