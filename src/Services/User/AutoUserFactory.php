@@ -30,43 +30,30 @@ class AutoUserFactory
     protected $request;
 
     /**
-     * Undocumented variable
-     *
-     * @var string
-     */
-    protected $email;
-
-    /**
      * Undocumented function
      *
      * @param User $user
      * @param Str $str
-     * @param string $email
      */
-    public function __construct(
-        User $user,
-        Str $str,
-        Request $request,
-        string $email
-    ) {
+    public function __construct(User $user, Str $str, Request $request)
+    {
         $this->user = $user;
 
         $this->str = $str;
         $this->request = $request;
-
-        $this->email = $email;
     }
 
     /**
      * Undocumented function
      *
+     * @param string $email
      * @return User
      */
-    public function makeUser() : User
+    public function makeUser(string $email): User
     {
         $user = $this->user->makeService()
             ->create([
-                'email' => $this->email,
+                'email' => $email,
                 'name' => 'user-' . $this->str->uuid(),
                 'password' => $this->str->random(12)
             ]);

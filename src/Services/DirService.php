@@ -35,6 +35,20 @@ class DirService implements
     protected $dir;
 
     /**
+     * Undocumented variable
+     *
+     * @var PaymentFactory
+     */
+    protected $paymentFactory;
+
+    /**
+     * Undocumented variable
+     *
+     * @var AutoUserFactory
+     */
+    protected $userFactory;
+
+    /**
      * [private description]
      * @var Session
      */
@@ -72,27 +86,31 @@ class DirService implements
      * Undocumented function
      *
      * @param Dir $dir
+     * @param PaymentFactory $paymentFactory
+     * @param AutoUserFactory $userFactory
      * @param Session $session
      * @param Carbon $carbon
      * @param Auth $auth
      * @param DB $db
-     * @param App $app
      */
     public function __construct(
         Dir $dir,
+        PaymentFactory $paymentFactory,
+        AutoUserFactory $userFactory,
         Session $session,
         Carbon $carbon,
         Auth $auth,
-        DB $db,
-        App $app
+        DB $db
     ) {
         $this->dir = $dir;
+
+        $this->paymentFactory = $paymentFactory;
+        $this->userFactory = $userFactory;
 
         $this->session = $session;
         $this->carbon = $carbon;
         $this->auth = $auth;
         $this->db = $db;
-        $this->app = $app;
     }
 
     /**
@@ -462,12 +480,11 @@ class DirService implements
      */
     public function makePayment(array $attributes): Payment
     {
-        return $this->app->make(PaymentFactory::class, [
-            'dir' => $this->dir,
-            'priceId' => (int)$attributes["payment_{$attributes['payment_type']}"],
-            'paymentType' => $attributes['payment_type']
-        ])
-        ->makePayment();
+        return $this->paymentFactory->makePayment(
+            $this->dir,
+            $attributes["payment_{$attributes['payment_type']}"],
+            $attributes['payment_type']
+        );
     }
 
     /**
@@ -478,10 +495,7 @@ class DirService implements
      */
     protected function makeUser(array $attributes): User
     {
-        return $this->app->make(AutoUserFactory::class, [
-            'email' => $attributes['email']
-        ])
-        ->makeUser();
+        return $this->userFactory->makeUser($attributes['email']);
     }
 
     /**

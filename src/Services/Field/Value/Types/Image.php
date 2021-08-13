@@ -48,11 +48,9 @@ class Image extends Value
     public function prepare($value): string
     {
         if ($value instanceof UploadedFile) {
-            return $this->fileUtil->make([
-                    'file' => $value,
-                    'path' => is_int($this->field->morph->id) ? $this->path() : null
-                ])
-                ->prepare();
+            $path = is_int($this->field->morph->id) ? $this->path() : null;
+
+            return $this->fileUtil->make($value, $path)->prepare();
         }
 
         return $value;
@@ -66,7 +64,7 @@ class Image extends Value
      */
     public function create(UploadedFile $value): string
     {
-        $file = $this->fileUtil->make(['file' => $value, 'path' => $this->path()]);
+        $file = $this->fileUtil->make($value, $this->path());
 
         $file->prepare();
         $file->moveFromTemp();
@@ -82,7 +80,7 @@ class Image extends Value
      */
     public function update(UploadedFile $value): string
     {
-        $file = $this->fileUtil->make(['file' => $value, 'path' => $this->path()]);
+        $file = $this->fileUtil->make($value, $this->path());
 
         if ($this->getFieldValue() !== $file->getFilePath()) {
             $file->prepare();
@@ -101,7 +99,7 @@ class Image extends Value
      */
     public function delete(): bool
     {
-        return $this->fileUtil->make(['path' => $this->getFieldValue()])->delete();
+        return $this->fileUtil->make(null, $this->getFieldValue())->delete();
     }
 
     /**

@@ -23,56 +23,34 @@ class PaymentFactory
     protected $price;
 
     /**
-     * Undocumented variable
-     *
-     * @var Dir
-     */
-    protected $dir;
-
-    /**
-     * Undocumented variable
-     *
-     * @var string
-     */
-    protected $paymentType;
-
-    /**
      * Undocumented function
      *
      * @param Payment $payment
      * @param Price $price
-     * @param Dir $dir
-     * @param integer $priceId
-     * @param string $paymentType
      */
-    public function __construct(
-        Payment $payment,
-        Price $price,
-        Dir $dir,
-        int $priceId,
-        string $paymentType
-    ) {
+    public function __construct(Payment $payment, Price $price)
+    {
         $this->payment = $payment;
-        $this->price = $price->find($priceId);
-        $this->dir = $dir;
-
-        $this->paymentType = $paymentType;
+        $this->price = $price;
     }
 
     /**
      * Undocumented function
      *
+     * @param Dir $dir
+     * @param integer $priceId
+     * @param string $paymentType
      * @return Payment
      */
-    public function makePayment() : Payment
+    public function makePayment(Dir $dir, int $priceId, string $paymentType): Payment
     {
         return $this->payment->setRelations([
-                'morph' => $this->dir,
-                'order' => $this->price
+                'morph' => $dir,
+                'order' => $this->price->find($priceId)
             ])
             ->makeService()
             ->create([
-                'payment_type' => $this->paymentType
+                'payment_type' => $paymentType
             ]);
     }
 }

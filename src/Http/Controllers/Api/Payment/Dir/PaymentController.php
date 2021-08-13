@@ -28,7 +28,7 @@ class PaymentController extends Controller implements Polymorphic
         VerifyRequestStrategy $request,
         VerifyLoad $load,
         TransferUtilStrategy $transferUtil
-    ) : string {
+    ): string {
         try {
             Event::dispatch(App::make(VerifyAttemptEvent::class, ['payment' => $load->getPayment()]));
 
@@ -36,7 +36,7 @@ class PaymentController extends Controller implements Polymorphic
                 ->authorize($request->all());
 
             $load->getPayment()->makeRepo()->paid();
-        
+
             Event::dispatch(App::make(VerifySuccessfulEvent::class, ['payment' => $load->getPayment()]));
         } catch (\N1ebieski\IDir\Exceptions\Payment\Exception $e) {
             $e->setPayment($load->getPayment())->report();
