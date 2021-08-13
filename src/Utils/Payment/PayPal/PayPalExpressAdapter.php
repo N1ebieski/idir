@@ -6,9 +6,9 @@ use Mdb\PayPal\Ipn\Event\MessageInvalidEvent;
 use Omnipay\PayPal\ExpressGateway as PayPalGateway;
 use Omnipay\PayPal\Message\ExpressAuthorizeResponse;
 use Illuminate\Contracts\Config\Repository as Config;
+use N1ebieski\IDir\Utils\Payment\PayPal\PayPalListener;
 use Mdb\PayPal\Ipn\Event\MessageVerificationFailureEvent;
 use N1ebieski\IDir\Utils\Payment\Interfaces\TransferUtilStrategy;
-use Mdb\PayPal\Ipn\ListenerBuilder\Guzzle\ArrayListenerBuilder as PayPalListener;
 
 class PayPalExpressAdapter implements TransferUtilStrategy
 {
@@ -200,23 +200,23 @@ class PayPalExpressAdapter implements TransferUtilStrategy
 
         return $this;
     }
-   
+
     /**
      * [isStatus description]
      * @param  string $status [description]
      * @return bool           [description]
      */
-    public function isStatus(string $status) : bool
+    public function isStatus(string $status): bool
     {
         return $status === 'ok';
     }
-    
+
     /**
      * Undocumented function
      *
      * @return void
      */
-    public function purchase() : void
+    public function purchase(): void
     {
         $this->response = $this->gateway->purchase($this->all())
             ->setLocaleCode($this->config->get('services.paypal.paypal_express.lang'))
@@ -229,7 +229,7 @@ class PayPalExpressAdapter implements TransferUtilStrategy
      * @param array $attributes
      * @return void
      */
-    public function complete(array $attributes) : void
+    public function complete(array $attributes): void
     {
         if (!$this->isStatus($attributes['status'])) {
             return;
@@ -249,7 +249,7 @@ class PayPalExpressAdapter implements TransferUtilStrategy
      * @param  array  $attributes [description]
      * @return void               [description]
      */
-    public function authorize(array $attributes) : void
+    public function authorize(array $attributes): void
     {
         $this->listener->setData($attributes);
 
@@ -265,14 +265,14 @@ class PayPalExpressAdapter implements TransferUtilStrategy
                 403
             );
         });
-         
+
         $listener->onVerificationFailure(function (MessageVerificationFailureEvent $event) {
             throw new \N1ebieski\IDir\Exceptions\Payment\PayPal\VerificationFailureException(
                 $event->getError(),
                 403
             );
         });
-         
+
         $listener->listen();
     }
 
@@ -281,7 +281,7 @@ class PayPalExpressAdapter implements TransferUtilStrategy
      *
      * @return string
      */
-    public function getUrlToPayment() : string
+    public function getUrlToPayment(): string
     {
         return $this->response->getRedirectUrl();
     }
@@ -290,7 +290,7 @@ class PayPalExpressAdapter implements TransferUtilStrategy
      * [all description]
      * @return array [description]
      */
-    public function all() : array
+    public function all(): array
     {
         return [
             'amount' => $this->amount,
