@@ -57,7 +57,7 @@ class PriceService implements Creatable, Updatable, Deletable
             $price->group()->associate($attributes['group']);
             $price->save();
 
-            if (array_key_exists('codes', $attributes[$attributes['type']])) {
+            if (array_key_exists('codes', $attributes[$attributes['type']] ?? [])) {
                 $this->price->codes()->make()
                     ->setRelations(['price' => $price])
                     ->makeService()
@@ -85,7 +85,7 @@ class PriceService implements Creatable, Updatable, Deletable
 
             $this->price->group()->associate($attributes['group']);
 
-            if (array_key_exists('codes', $attributes[$attributes['type']])) {
+            if (array_key_exists('codes', $attributes[$attributes['type']] ?? [])) {
                 $this->price->codes()->make()
                     ->setRelations(['price' => $this->price])
                     ->makeService()
