@@ -32,7 +32,7 @@
     <div class="row mb-4">
         <div class="col-md-8">
             @include('idir::web.dir.partials.summary', [
-                'value' => $dir->getAttributes(),
+                'value' => $getAttributesAsValues,
                 'categories' => $dir->categories,
                 'group' => $dir->group
             ])

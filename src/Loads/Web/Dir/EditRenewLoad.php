@@ -15,6 +15,11 @@ class EditRenewLoad
      */
     public function __construct(Request $request)
     {
-        $request->route('dir')->load(['group', 'group.prices']);
+        $request->route('dir')->load([
+            'group',
+            'group.prices',
+            'group.fields',
+            'fields'
+        ]);
     }
 }

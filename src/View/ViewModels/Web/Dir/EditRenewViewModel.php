@@ -57,7 +57,7 @@ class EditRenewViewModel extends ViewModel
      * @param string $type
      * @return string
      */
-    public function driverByType(string $type) : string
+    public function driverByType(string $type): string
     {
         return $this->config->get("idir.payment.{$type}.driver");
     }
@@ -67,7 +67,7 @@ class EditRenewViewModel extends ViewModel
      *
      * @return string|null
      */
-    public function paymentType() : ?string
+    public function paymentType(): ?string
     {
         if (!$this->request->old('payment_type') && $this->dir->group->prices->isNotEmpty()) {
             return $this->dir->group->prices
@@ -86,7 +86,7 @@ class EditRenewViewModel extends ViewModel
      *
      * @return  Price|null  [return description]
      */
-    public function paymentCodeSmsSelection() : ?Price
+    public function paymentCodeSmsSelection(): ?Price
     {
         if ($this->request->old('payment_code_sms') && $this->dir->group->prices->isNotEmpty()) {
             return $this->dir->group->prices->where('id', $this->request->old('payment_code_sms'))->first();
@@ -100,7 +100,7 @@ class EditRenewViewModel extends ViewModel
      *
      * @return  Price|null  [return description]
      */
-    public function paymentCodeTransferSelection() : ?Price
+    public function paymentCodeTransferSelection(): ?Price
     {
         if ($this->request->old('payment_code_transfer') && $this->dir->group->prices->isNotEmpty()) {
             return $this->dir->group->prices->where('id', $this->request->old('payment_code_transfer'))->first();
@@ -116,8 +116,27 @@ class EditRenewViewModel extends ViewModel
      *
      * @return  Collection         [return description]
      */
-    public function pricesByType(string $type) : Collection
+    public function pricesByType(string $type): Collection
     {
         return $this->dir->group->prices->where('type', $type)->sortBy('price');
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @return array
+     */
+    public function getAttributesAsValues(): array
+    {
+        return $this->dir->setAttribute(
+            'field',
+            $this->dir->fields
+                ->keyBy('id')
+                ->map(function ($item) {
+                    return $item->decode_value;
+                })
+                ->toArray()
+        )
+        ->getAttributes();
     }
 }
