@@ -5,7 +5,7 @@ namespace N1ebieski\IDir\Http\Responses\Web\Field;
 use Illuminate\Http\JsonResponse;
 use GusApi\SearchReport as GusReport;
 use Illuminate\Contracts\Translation\Translator;
-use N1ebieski\ICore\Http\Responses\JsonResponseFactory;
+use N1ebieski\IDir\Http\Responses\JsonResponseFactory;
 use N1ebieski\IDir\Http\Responses\Data\Field\FieldData;
 use Illuminate\Contracts\Routing\ResponseFactory as Response;
 
