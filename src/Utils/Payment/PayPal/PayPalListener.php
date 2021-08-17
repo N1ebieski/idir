@@ -47,7 +47,12 @@ class PayPalListener extends ArrayListenerBuilder
     protected function getServiceEndpoint(): string
     {
         return ($this->useSandbox) ?
-            ($this->config->get('services.paypal.paypal_express.sandbox_check_url') ?? 'https://www.sandbox.paypal.com/cgi-bin/webscr')
-            : ($this->config->get('services.paypal.paypal_express.check_url') ?? 'https://www.paypal.com/cgi-bin/webscr');
+            $this->config->get(
+                'services.paypal.paypal_express.sandbox_check_url',
+                'https://www.sandbox.paypal.com/cgi-bin/webscr'
+            ) : $this->config->get(
+                'services.paypal.paypal_express.check_url',
+                'https://www.paypal.com/cgi-bin/webscr'
+            );
     }
 }

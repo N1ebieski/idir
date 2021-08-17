@@ -74,7 +74,7 @@ class DirCache
      * @param  int                  $page [description]
      * @return LengthAwarePaginator|null       [description]
      */
-    public function getForWebByFilter(int $page) : ?LengthAwarePaginator
+    public function getForWebByFilter(int $page): ?LengthAwarePaginator
     {
         return $this->cache->tags(['dirs'])->get("dir.paginateByFilter.{$page}");
     }
@@ -85,7 +85,7 @@ class DirCache
      * @param  int                  $page     [description]
      * @return bool                           [description]
      */
-    public function putForWebByFilter(LengthAwarePaginator $dirs, int $page) : bool
+    public function putForWebByFilter(LengthAwarePaginator $dirs, int $page): bool
     {
         return $this->cache->tags(['dirs'])
             ->put(
@@ -101,7 +101,7 @@ class DirCache
      * @param  int          $page         [description]
      * @return LengthAwarePaginator       [description]
      */
-    public function rememberForWebByFilter(array $filter, int $page) : LengthAwarePaginator
+    public function rememberForWebByFilter(array $filter, int $page): LengthAwarePaginator
     {
         if ($this->collect->make($filter)->isNullItems()) {
             $dirs = $this->getForWebByFilter($page);
@@ -123,76 +123,18 @@ class DirCache
      *
      * @return string
      */
-    public function rememberThumbnailUrl() : string
+    public function rememberThumbnailUrl(): string
     {
         return $this->cache->remember(
             "dir.thumbnailUrl.{$this->dir->slug}",
             $this->carbon->now()->addDays($this->config->get('idir.dir.thumbnail.cache.days')),
             function () {
                 return $this->config->get('idir.dir.thumbnail.cache.url')
-                    .app('crypt.thumbnail')->encryptString($this->dir->url);
+                    . app('crypt.thumbnail')->encryptString($this->dir->url);
             }
         );
     }
 
-    /**
-     * I have to disable cache in tags because it takes too much memory in Redis
-     */
-
-    // /**
-    //  * Undocumented function
-    //  *
-    //  * @param Tag $tag
-    //  * @param integer $page
-    //  * @return LengthAwarePaginator|null
-    //  */
-    // public function getByTagAndFilter(Tag $tag, int $page) : ?LengthAwarePaginator
-    // {
-    //     return $this->cache->tags(['dirs'])->get("dir.paginateByTagAndFilter.{$tag->normalized}.{$page}");
-    // }
-
-    // /**
-    //  * Undocumented function
-    //  *
-    //  * @param LengthAwarePaginator $dirs
-    //  * @param Tag $tag
-    //  * @param integer $page
-    //  * @return boolean
-    //  */
-    // public function putByTagAndFilter(LengthAwarePaginator $dirs, Tag $tag, int $page) : bool
-    // {
-    //     return $this->cache->tags(['dirs'])
-    //         ->put(
-    //             "dir.paginateByTagAndFilter.{$tag->normalized}.{$page}",
-    //             $dirs,
-    //             $this->carbon->now()->addMinutes($this->minutes)
-    //         );
-    // }
-
-    // /**
-    //  * [rememberByTagAndFilter description]
-    //  * @param  Tag                  $tag  [description]
-    //  * @param  array                $filter  [description]
-    //  * @param  int                  $page [description]
-    //  * @return LengthAwarePaginator       [description]
-    //  */
-    // public function rememberByTagAndFilter(Tag $tag, array $filter, int $page) : LengthAwarePaginator
-    // {
-    //     if ($this->collect->make($filter)->isNullItems()) {
-    //         $dirs = $this->getByTagAndFilter($tag, $page);
-    //     }
-
-    //     if (!isset($dirs) || !$dirs) {
-    //         $dirs = $this->dir->makeRepo()->paginateByTagAndFilter($tag->name, $filter);
-
-    //         if ($this->collect->make($filter)->isNullItems()) {
-    //             $this->putByTagAndFilter($dirs, $tag, $page);
-    //         }
-    //     }
-
-    //     return $dirs;
-    // }
-    
     /**
      * Cache route binding of Dir
      * @param  string $slug [description]
@@ -208,12 +150,12 @@ class DirCache
             }
         );
     }
-    
+
     /**
      * [rememberLoadAllPublicRels description]
      * @return Dir [description]
      */
-    public function rememberLoadAllPublicRels() : Dir
+    public function rememberLoadAllPublicRels(): Dir
     {
         return $this->cache->tags(["dir.{$this->dir->slug}"])->remember(
             "dir.{$this->dir->slug}.loadAllPublicRels",
@@ -223,12 +165,12 @@ class DirCache
             }
         );
     }
-    
+
     /**
      * [rememberRelated description]
      * @return Collection [description]
      */
-    public function rememberRelated() : Collection
+    public function rememberRelated(): Collection
     {
         return $this->cache->tags(["dir.{$this->dir->slug}"])->remember(
             "dir.getRelated.{$this->dir->id}",
@@ -243,7 +185,7 @@ class DirCache
      * [rememberLatestForHome description]
      * @return Collection [description]
      */
-    public function rememberLatestForHome() : Collection
+    public function rememberLatestForHome(): Collection
     {
         return $this->cache->tags(["dirs"])->remember(
             "dir.getLatestForHome",
@@ -260,7 +202,7 @@ class DirCache
      * @param array $component
      * @return Collection
      */
-    public function rememberAdvertisingPrivilegedByComponent(array $component) : Collection
+    public function rememberAdvertisingPrivilegedByComponent(array $component): Collection
     {
         $json = json_encode($component);
 
@@ -279,7 +221,7 @@ class DirCache
      * @param array $component
      * @return Collection
      */
-    public function rememberByComponent(array $component) : Collection
+    public function rememberByComponent(array $component): Collection
     {
         $json = json_encode($component);
 
@@ -297,7 +239,7 @@ class DirCache
      *
      * @return Collection
      */
-    public function rememberFriendsPrivileged() : Collection
+    public function rememberFriendsPrivileged(): Collection
     {
         return $this->cache->tags(["dirs"])->remember(
             "dir.getFriendsPrivileged",
@@ -313,7 +255,7 @@ class DirCache
      *
      * @return Collection
      */
-    public function rememberCountByStatus() : Collection
+    public function rememberCountByStatus(): Collection
     {
         return $this->cache->tags(['dirs'])->remember(
             "dir.countByStatus",
@@ -329,7 +271,7 @@ class DirCache
      *
      * @return string|null
      */
-    public function rememberLastActivity() : ?string
+    public function rememberLastActivity(): ?string
     {
         return $this->cache->tags(['dirs'])->remember(
             "dir.getlastActivity",

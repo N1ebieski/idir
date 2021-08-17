@@ -2,8 +2,6 @@
 
 namespace N1ebieski\IDir\Utils\Payment\Interfaces\Codes;
 
-use GuzzleHttp\Psr7\Response as GuzzleResponse;
-
 interface TransferUtilStrategy
 {
     /**
@@ -11,20 +9,11 @@ interface TransferUtilStrategy
      *
      * @return  object
      */
-    public function getResponse();
+    public function getContents();
 
     /**
      * [authorize description]
      * @param array $attributes [description]
      */
     public function authorize(array $attributes) : void;
-    
-    /**
-     * Undocumented function
-     *
-     * @param string $code
-     * @param string $id
-     * @return GuzzleResponse
-     */
-    public function makeResponse(string $code, string $id) : GuzzleResponse;
 }

@@ -2,15 +2,12 @@
 
 namespace N1ebieski\IDir\Repositories;
 
+use Closure;
+use Carbon\Carbon;
+use N1ebieski\IDir\Models\Dir;
 use N1ebieski\IDir\Models\DirStatus;
 use Illuminate\Contracts\Config\Repository as Config;
-use Carbon\Carbon;
-use Closure;
-use N1ebieski\IDir\Models\Dir;
 
-/**
- * [DirStatusRepo description]
- */
 class DirStatusRepo
 {
     /**
@@ -35,7 +32,7 @@ class DirStatusRepo
      * [attemptNow description]
      * @return bool [description]
      */
-    public function attemptedNow() : bool
+    public function attemptedNow(): bool
     {
         return $this->dirStatus->update(['attempted_at' => Carbon::now()]);
     }
@@ -44,7 +41,7 @@ class DirStatusRepo
      * [resetAttempts description]
      * @return bool [description]
      */
-    public function resetAttempts() : bool
+    public function resetAttempts(): bool
     {
         return $this->dirStatus->update(['attempts' => 0]);
     }
@@ -53,7 +50,7 @@ class DirStatusRepo
      * [incrementAttempts description]
      * @return int [description]
      */
-    public function incrementAttempts() : int
+    public function incrementAttempts(): int
     {
         return $this->dirStatus->increment('attempts');
     }
@@ -65,7 +62,7 @@ class DirStatusRepo
      * @param string $timestamp
      * @return boolean
      */
-    public function chunkAvailableHasUrlByAttemptedAt(Closure $callback, string $timestamp) : bool
+    public function chunkAvailableHasUrlByAttemptedAt(Closure $callback, string $timestamp): bool
     {
         return $this->dirStatus
             ->whereHas('dir', function ($query) {

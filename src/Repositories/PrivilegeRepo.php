@@ -5,9 +5,6 @@ namespace N1ebieski\IDir\Repositories;
 use N1ebieski\IDir\Models\Privilege;
 use Illuminate\Database\Eloquent\Collection;
 
-/**
- * [PrivilegeRepo description]
- */
 class PrivilegeRepo
 {
     /**
@@ -30,7 +27,7 @@ class PrivilegeRepo
      * @param  int        $id [description]
      * @return Collection     [description]
      */
-    public function getWithGroup(int $id) : Collection
+    public function getWithGroup(int $id): Collection
     {
         return $this->privilege->with([
                 'groups' => function ($query) use ($id) {

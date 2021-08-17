@@ -5,9 +5,6 @@ namespace N1ebieski\IDir\Repositories;
 use N1ebieski\IDir\Models\Field\Field;
 use Illuminate\Pagination\LengthAwarePaginator;
 
-/**
- * [FieldRepo description]
- */
 class FieldRepo
 {
     /**
@@ -30,7 +27,7 @@ class FieldRepo
      * @param  array                $filter [description]
      * @return LengthAwarePaginator         [description]
      */
-    public function paginateByFilter(array $filter) : LengthAwarePaginator
+    public function paginateByFilter(array $filter): LengthAwarePaginator
     {
         return $this->field->poliType()
             ->filterExcept($filter['except'])
@@ -49,7 +46,7 @@ class FieldRepo
      * [getSiblingsAsArray description]
      * @return array [description]
      */
-    public function getSiblingsAsArray() : array
+    public function getSiblingsAsArray(): array
     {
         return $this->field->siblings()
             ->get(['id', 'position'])

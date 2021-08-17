@@ -5,9 +5,6 @@ namespace N1ebieski\IDir\Repositories;
 use N1ebieski\IDir\Models\Region\Region;
 use Illuminate\Contracts\Config\Repository as Config;
 
-/**
- * [RegionRepo description]
- */
 class RegionRepo
 {
     /**

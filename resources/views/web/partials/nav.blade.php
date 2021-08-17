@@ -40,7 +40,7 @@
                 <div class="input-group">
                     <input 
                         id="typeahead" 
-                        data-route="{{ route('web.search.autocomplete') }}" 
+                        data-route="{{ route('api.tag.index') }}" 
                         type="text" 
                         name="search"
                         class="form-control border-right-0" 

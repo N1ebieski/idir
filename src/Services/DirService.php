@@ -102,7 +102,7 @@ class DirService implements
         Auth $auth,
         DB $db
     ) {
-        $this->dir = $dir;
+        $this->setDir($dir);
 
         $this->paymentFactory = $paymentFactory;
         $this->userFactory = $userFactory;

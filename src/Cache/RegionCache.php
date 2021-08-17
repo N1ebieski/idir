@@ -62,7 +62,7 @@ class RegionCache
      *
      * @return Collection
      */
-    public function rememberAll() : Collection
+    public function rememberAll(): Collection
     {
         return $this->cache->remember(
             "region.all",
@@ -72,7 +72,7 @@ class RegionCache
             }
         );
     }
-    
+
     /**
      * Cache route binding of Region
      * @param  string $slug [description]

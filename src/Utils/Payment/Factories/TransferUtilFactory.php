@@ -30,7 +30,7 @@ class TransferUtilFactory
      * @param string $driver
      * @return TransferUtilStrategy
      */
-    public function makeTransferUtil(string $driver) : TransferUtilStrategy
+    public function makeTransferUtil(string $driver): TransferUtilStrategy
     {
         switch ($driver) {
             case 'paypal':

@@ -4,10 +4,10 @@ namespace N1ebieski\IDir\Utils\Payment\PayPal;
 
 use Mdb\PayPal\Ipn\Event\MessageInvalidEvent;
 use Omnipay\PayPal\ExpressGateway as PayPalGateway;
-use Omnipay\PayPal\Message\ExpressAuthorizeResponse;
 use Illuminate\Contracts\Config\Repository as Config;
 use N1ebieski\IDir\Utils\Payment\PayPal\PayPalListener;
 use Mdb\PayPal\Ipn\Event\MessageVerificationFailureEvent;
+use Omnipay\Common\Message\ResponseInterface as OmniPayResponse;
 use N1ebieski\IDir\Utils\Payment\Interfaces\TransferUtilStrategy;
 
 class PayPalExpressAdapter implements TransferUtilStrategy
@@ -35,7 +35,7 @@ class PayPalExpressAdapter implements TransferUtilStrategy
 
     /**
      * [protected description]
-     * @var ExpressAuthorizeResponse
+     * @var OmniPayResponse
      */
     protected $response;
 
@@ -202,6 +202,19 @@ class PayPalExpressAdapter implements TransferUtilStrategy
     }
 
     /**
+     * Undocumented function
+     *
+     * @param OmniPayResponse $response
+     * @return static
+     */
+    protected function setResponse(OmniPayResponse $response)
+    {
+        $this->response = $response;
+
+        return $this;
+    }
+
+    /**
      * [isStatus description]
      * @param  string $status [description]
      * @return bool           [description]
@@ -218,9 +231,11 @@ class PayPalExpressAdapter implements TransferUtilStrategy
      */
     public function purchase(): void
     {
-        $this->response = $this->gateway->purchase($this->all())
-            ->setLocaleCode($this->config->get('services.paypal.paypal_express.lang'))
-            ->send();
+        $this->setResponse(
+            $this->gateway->purchase($this->all())
+                ->setLocaleCode($this->config->get('services.paypal.paypal_express.lang'))
+                ->send()
+        );
     }
 
     /**
@@ -235,13 +250,15 @@ class PayPalExpressAdapter implements TransferUtilStrategy
             return;
         }
 
-        $this->response = $this->gateway->completePurchase([
+        $this->setResponse(
+            $this->gateway->completePurchase([
                 'amount' => $this->amount,
                 'notifyUrl' => $this->notifyUrl,
                 'transactionId' => $attributes['uuid'],
                 'PayerID' => $attributes['PayerID']
             ])
-            ->send();
+            ->send()
+        );
     }
 
     /**

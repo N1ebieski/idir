@@ -5,7 +5,6 @@
     "type": "package",
     "require": {
         "php": "^7.2",
-        "spatie/laravel-directory-cleanup": "^1.4",
         "n1ebieski/icore": "^2.3.0",
         "gusapi/gusapi": "^5.1",
         "league/omnipay": "^3.0",

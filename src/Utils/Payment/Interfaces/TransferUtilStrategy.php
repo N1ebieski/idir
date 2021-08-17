@@ -19,7 +19,7 @@ interface TransferUtilStrategy
      * @return self
      */
     public function setDesc(string $desc);
-    
+
     /**
      * Undocumented function
      *
@@ -27,7 +27,7 @@ interface TransferUtilStrategy
      * @return self
      */
     public function setUuid(string $uuid);
-    
+
     /**
      * Undocumented function
      *
@@ -35,7 +35,7 @@ interface TransferUtilStrategy
      * @return self
      */
     public function setRedirect(string $redirect);
-    
+
     /**
      * Undocumented function
      *
@@ -43,7 +43,7 @@ interface TransferUtilStrategy
      * @return self
      */
     public function setCancelUrl(string $cancelUrl);
-    
+
     /**
      * Undocumented function
      *
@@ -51,7 +51,7 @@ interface TransferUtilStrategy
      * @return self
      */
     public function setReturnUrl(string $returnUrl);
-    
+
     /**
      * Undocumented function
      *
@@ -65,7 +65,7 @@ interface TransferUtilStrategy
      *
      * @return void
      */
-    public function purchase() : void;
+    public function purchase(): void;
 
     /**
      * Undocumented function
@@ -73,19 +73,19 @@ interface TransferUtilStrategy
      * @param array $attributes
      * @return void
      */
-    public function complete(array $attributes) : void;
+    public function complete(array $attributes): void;
 
     /**
      * [authorize description]
      * @param  array  $attributes [description]
      * @return void               [description]
      */
-    public function authorize(array $attributes) : void;
-    
+    public function authorize(array $attributes): void;
+
     /**
      * Undocumented function
      *
      * @return string
      */
-    public function getUrlToPayment() : string;
+    public function getUrlToPayment(): string;
 }

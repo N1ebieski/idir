@@ -90,7 +90,7 @@ class TransferRule extends CodesRule
         }
 
         $this->request->merge([
-            'logs' => (array)$this->transferUtil->getResponse() + ['code' => $value]
+            'logs' => (array)$this->transferUtil->getContents() + ['code' => $value]
         ]);
 
         return true;

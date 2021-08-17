@@ -34,7 +34,7 @@ class DirRepo
         $this->dir = $dir;
 
         $this->config = $config;
-        
+
         $this->paginate = $config->get('database.paginate');
     }
 
@@ -43,7 +43,7 @@ class DirRepo
      * @param  array                $filter [description]
      * @return LengthAwarePaginator         [description]
      */
-    public function paginateForAdminByFilter(array $filter) : LengthAwarePaginator
+    public function paginateForAdminByFilter(array $filter): LengthAwarePaginator
     {
         return $this->dir->selectRaw('`dirs`.*')
             ->withCount('reports')
@@ -115,7 +115,7 @@ class DirRepo
      * @param  array                $filter [description]
      * @return LengthAwarePaginator         [description]
      */
-    public function paginateForWebByFilter(array $filter) : LengthAwarePaginator
+    public function paginateForWebByFilter(array $filter): LengthAwarePaginator
     {
         return $this->dir
             ->withAllPublicRels()
@@ -128,7 +128,7 @@ class DirRepo
      * [deactivateByBacklink description]
      * @return bool [description]
      */
-    public function deactivateByBacklink() : bool
+    public function deactivateByBacklink(): bool
     {
         return $this->dir->update(['status' => Dir::BACKLINK_INACTIVE]);
     }
@@ -137,7 +137,7 @@ class DirRepo
      * [deactivateByStatus description]
      * @return bool [description]
      */
-    public function deactivateByStatus() : bool
+    public function deactivateByStatus(): bool
     {
         return $this->dir->update(['status' => Dir::STATUS_INACTIVE]);
     }
@@ -146,7 +146,7 @@ class DirRepo
      * [deactivateByPayment description]
      * @return bool [description]
      */
-    public function deactivateByPayment() : bool
+    public function deactivateByPayment(): bool
     {
         return $this->dir->update(['status' => Dir::PAYMENT_INACTIVE]);
     }
@@ -155,7 +155,7 @@ class DirRepo
      * [activate description]
      * @return bool [description]
      */
-    public function activate() : bool
+    public function activate(): bool
     {
         return $this->dir->update(['status' => Dir::ACTIVE]);
     }
@@ -164,7 +164,7 @@ class DirRepo
      * [nullPrivileged description]
      * @return bool [description]
      */
-    public function nullablePrivileged() : bool
+    public function nullablePrivileged(): bool
     {
         return $this->dir->update([
             'privileged_at' => null,
@@ -176,7 +176,7 @@ class DirRepo
      * [countReported description]
      * @return int [description]
      */
-    public function countReported() : int
+    public function countReported(): int
     {
         return $this->dir->reports()
             ->make()
@@ -191,7 +191,7 @@ class DirRepo
      * @param  array                $filter  [description]
      * @return LengthAwarePaginator      [description]
      */
-    public function paginateByTagAndFilter(string $tag, array $filter) : LengthAwarePaginator
+    public function paginateByTagAndFilter(string $tag, array $filter): LengthAwarePaginator
     {
         return $this->dir->withAllTags($tag)
             ->withAllPublicRels()
@@ -206,7 +206,7 @@ class DirRepo
      * @param  array                $filter  [description]
      * @return LengthAwarePaginator       [description]
      */
-    public function paginateBySearchAndFilter(string $name, array $filter) : LengthAwarePaginator
+    public function paginateBySearchAndFilter(string $name, array $filter): LengthAwarePaginator
     {
         return $this->dir->selectRaw('`dirs`.*, `privileges`.`name`')
             ->withAllPublicRels()
@@ -217,7 +217,7 @@ class DirRepo
             })
             // Rozbiłem wyszukiwanie na kilka zapytań gdyż chcę wyszukać dirsy
             // po fulltext LUB po ids zawierających okreslony tag,
-            // a mysql może wykorzystać tylko 1 indeks    
+            // a mysql może wykorzystać tylko 1 indeks
             ->from(
                 $this->dir->search($name)
                     ->when($tag = $this->dir->tags()->make()->findByName($name), function ($query) use ($tag) {
@@ -253,7 +253,7 @@ class DirRepo
      * @param array $component
      * @return Collection
      */
-    public function getAdvertisingPrivilegedByComponent(array $component) : Collection
+    public function getAdvertisingPrivilegedByComponent(array $component): Collection
     {
         return $this->dir->active()
             ->join('groups_privileges', function ($query) {
@@ -291,17 +291,17 @@ class DirRepo
      * @param  int    $id [description]
      * @return Rating|null     [description]
      */
-    public function firstRatingByUser(int $id) : ?Rating
+    public function firstRatingByUser(int $id): ?Rating
     {
         return $this->dir->ratings()->where('user_id', $id)->first();
     }
-    
+
     /**
      * [getRelated description]
      * @param  int $limit [description]
-     * @return Post|null         [description]
+     * @return Collection         [description]
      */
-    public function getRelated(int $limit = 5)
+    public function getRelated(int $limit = 5): Collection
     {
         return $this->dir->selectRaw('`dirs`.*')
             ->join('categories_models', function ($query) {
@@ -319,13 +319,13 @@ class DirRepo
             ->limit($limit)
             ->get();
     }
-    
+
     /**
      * Comments belong to the Dir model
      * @param  array                $filter [description]
      * @return LengthAwarePaginator         [description]
      */
-    public function paginateCommentsByFilter(array $filter) : LengthAwarePaginator
+    public function paginateCommentsByFilter(array $filter): LengthAwarePaginator
     {
         return $this->dir->comments()->where([
                 ['comments.parent_id', null],
@@ -344,7 +344,7 @@ class DirRepo
      *
      * @return Collection
      */
-    public function getLatestForHome() : Collection
+    public function getLatestForHome(): Collection
     {
         $privileged = $this->dir->selectRaw('`dirs`.*')
             ->join('groups_privileges', function ($query) {
@@ -385,7 +385,7 @@ class DirRepo
      * @param integer $limit
      * @return Collection
      */
-    public function getLatestForModeratorsByLimit(int $limit) : Collection
+    public function getLatestForModeratorsByLimit(int $limit): Collection
     {
         return $this->dir->withAllPublicRels()
             ->whereIn('status', [Dir::INACTIVE, Dir::ACTIVE])
@@ -400,7 +400,7 @@ class DirRepo
      * @param string $timestamp
      * @return Collection
      */
-    public function getLatestForModeratorsByCreatedAt(string $timestamp) : Collection
+    public function getLatestForModeratorsByCreatedAt(string $timestamp): Collection
     {
         return $this->dir->withAllPublicRels()
             ->whereIn('status', [Dir::INACTIVE, Dir::ACTIVE])
@@ -423,7 +423,7 @@ class DirRepo
      * @param string $timestamp
      * @return boolean
      */
-    public function chunkAvailableHasPaidRequirementByPrivilegedTo(Closure $closure, string $timestamp) : bool
+    public function chunkAvailableHasPaidRequirementByPrivilegedTo(Closure $closure, string $timestamp): bool
     {
         return $this->dir->active()
             ->whereHas('group', function ($query) {
@@ -449,7 +449,7 @@ class DirRepo
      *
      * @return Collection
      */
-    public function getPayments() : Collection
+    public function getPayments(): Collection
     {
         return $this->dir->payments()
             ->orderBy('created_at', 'desc')
@@ -461,7 +461,7 @@ class DirRepo
      *
      * @return Collection
      */
-    public function getReportsWithUser() : Collection
+    public function getReportsWithUser(): Collection
     {
         return $this->dir->reports()
             ->with('user')
@@ -474,7 +474,7 @@ class DirRepo
      * @param Closure $closure
      * @return boolean
      */
-    public function chunkActiveWithModelsCount(Closure $closure) : bool
+    public function chunkActiveWithModelsCount(Closure $closure): bool
     {
         return $this->dir->active()
             ->withCount(['comments AS models_count' => function ($query) {
@@ -488,7 +488,7 @@ class DirRepo
      *
      * @return Collection
      */
-    public function getFriendsPrivileged() : Collection
+    public function getFriendsPrivileged(): Collection
     {
         return $this->dir->active()
             ->join('groups_privileges', function ($query) {
@@ -505,7 +505,7 @@ class DirRepo
      *
      * @return Collection
      */
-    public function countByStatus() : Collection
+    public function countByStatus(): Collection
     {
         return $this->dir->selectRaw("`status`, COUNT(`id`) AS `count`")
             ->groupBy('status')
@@ -517,7 +517,7 @@ class DirRepo
      *
      * @return string|null
      */
-    public function getLastActivity() : ?string
+    public function getLastActivity(): ?string
     {
         return optional(
             $this->dir->active()
@@ -533,7 +533,7 @@ class DirRepo
      * @param array $component
      * @return Collection
      */
-    public function getByComponent(array $component) : Collection
+    public function getByComponent(array $component): Collection
     {
         return $this->dir->active()
             ->withAllPublicRels()

@@ -42,10 +42,23 @@ class GroupService implements Creatable, Updatable, PositionUpdatable, Deletable
      */
     public function __construct(Group $group, Collect $collect, DB $db)
     {
-        $this->group = $group;
+        $this->setGroup($group);
 
         $this->collect = $collect;
         $this->db = $db;
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param Group $group
+     * @return static
+     */
+    public function setGroup(Group $group)
+    {
+        $this->group = $group;
+
+        return $this;
     }
 
     /**

@@ -2,8 +2,6 @@
 
 namespace N1ebieski\IDir\Utils\Payment\Interfaces\Codes;
 
-use GuzzleHttp\Psr7\Response as GuzzleResponse;
-
 interface SMSUtilStrategy
 {
     /**
@@ -11,20 +9,11 @@ interface SMSUtilStrategy
      *
      * @return  object
      */
-    public function getResponse();
+    public function getContents();
 
     /**
      * [authorize description]
      * @param array $attributes [description]
      */
-    public function authorize(array $attributes) : void;
-    
-    /**
-     * Undocumented function
-     *
-     * @param string $token
-     * @param string $code
-     * @return GuzzleResponse
-     */
-    public function makeResponse(string $token, string $code) : GuzzleResponse;
+    public function authorize(array $attributes): void;
 }

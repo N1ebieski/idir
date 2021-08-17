@@ -2,16 +2,19 @@
 
 namespace N1ebieski\IDir\Utils\Payment\Cashbill\Codes;
 
-use Illuminate\Contracts\Config\Repository as Config;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Psr7\Response as GuzzleResponse;
+use Illuminate\Contracts\Config\Repository as Config;
 use N1ebieski\IDir\Utils\Payment\Interfaces\Codes\SMSUtilStrategy;
 
-/**
- * [Cashbill description]
- */
 class SMSUtil implements SMSUtilStrategy
 {
+    /**
+     * [protected description]
+     * @var GuzzleClient
+     */
+    protected $guzzle;
+
     /**
      * [private description]
      * @var string
@@ -22,13 +25,7 @@ class SMSUtil implements SMSUtilStrategy
      * [protected description]
      * @var object
      */
-    protected $response;
-
-    /**
-     * [protected description]
-     * @var GuzzleClient
-     */
-    protected $guzzle;
+    protected $contents;
 
     /**
      * [__construct description]
@@ -43,23 +40,58 @@ class SMSUtil implements SMSUtilStrategy
     }
 
     /**
+     * Undocumented function
+     *
+     * @param GuzzleResponse $response
+     * @return static
+     */
+    protected function setContentsFromResponse(GuzzleResponse $response)
+    {
+        $this->contents = json_decode($response->getBody());
+
+        return $this;
+    }
+
+    /**
      * Get [protected description]
      *
      * @return  object
      */
-    public function getResponse()
+    public function getContents()
     {
-        return $this->response;
+        return $this->contents;
+    }
+
+    /**
+     * [isActive description]
+     * @return bool [description]
+     */
+    public function isActive(): bool
+    {
+        return isset($this->contents->active)
+            && (bool)$this->contents->active === true;
+    }
+
+    /**
+     * [isNumber description]
+     * @param  int $number [description]
+     * @return bool           [description]
+     */
+    public function isNumber(int $number): bool
+    {
+        return isset($this->contents->number)
+            && (int)$this->contents->number === $number;
     }
 
     /**
      * [authorize description]
      * @param array $attributes [description]
      */
-    public function authorize(array $attributes) : void
+    public function authorize(array $attributes): void
     {
-        $this->makeResponse($attributes['token'], $attributes['code']);
-        $this->prepareResponse();
+        $this->setContentsFromResponse(
+            $this->makeResponse($attributes['token'], $attributes['code'])
+        );
 
         if (!$this->isActive()) {
             throw new \N1ebieski\IDir\Exceptions\Payment\Cashbill\Codes\SMS\InactiveCodeException(
@@ -77,47 +109,16 @@ class SMSUtil implements SMSUtilStrategy
     }
 
     /**
-     * [isActive description]
-     * @return bool [description]
-     */
-    public function isActive() : bool
-    {
-        return isset($this->response->active)
-            && (bool)$this->response->active === true;
-    }
-
-    /**
-     * [isNumber description]
-     * @param  int $number [description]
-     * @return bool           [description]
-     */
-    public function isNumber(int $number) : bool
-    {
-        return isset($this->response->number)
-            && (int)$this->response->number === $number;
-    }
-
-    /**
-     * Undocumented function
-     *
-     * @return object
-     */
-    public function prepareResponse() : object
-    {
-        return $this->response = json_decode($this->response->getBody());
-    }
-
-    /**
      * Undocumented function
      *
      * @param string $token
      * @param string $code
      * @return GuzzleResponse
      */
-    public function makeResponse(string $token, string $code) : GuzzleResponse
+    public function makeResponse(string $token, string $code): GuzzleResponse
     {
         try {
-            $this->response = $this->guzzle->request('GET', $this->check_url . $token . '/' . $code);
+            $response = $this->guzzle->request('GET', $this->check_url . $token . '/' . $code);
         } catch (\GuzzleHttp\Exception\GuzzleException $e) {
             throw new \N1ebieski\IDir\Exceptions\Payment\Cashbill\Exception(
                 $e->getMessage(),
@@ -125,6 +126,6 @@ class SMSUtil implements SMSUtilStrategy
             );
         }
 
-        return $this->response;
+        return $response;
     }
 }

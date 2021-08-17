@@ -4,9 +4,6 @@ namespace N1ebieski\IDir\Repositories;
 
 use N1ebieski\IDir\Models\Code;
 
-/**
- * [CodeRepo description]
- */
 class CodeRepo
 {
     /**

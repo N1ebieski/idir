@@ -208,9 +208,22 @@ class TransferUtil implements TransferUtilStrategy
     /**
      * Undocumented function
      *
+     * @param GuzzleResponse $response
+     * @return static
+     */
+    protected function setResponse(GuzzleResponse $response)
+    {
+        $this->response = $response;
+
+        return $this;
+    }
+
+    /**
+     * Undocumented function
+     *
      * @return string
      */
-    public function getUrlToPayment() : string
+    public function getUrlToPayment(): string
     {
         $redirects = $this->response->getHeader(\GuzzleHttp\RedirectMiddleware::HISTORY_HEADER);
 
@@ -222,10 +235,10 @@ class TransferUtil implements TransferUtilStrategy
      *
      * @return string
      */
-    protected function sign() : string
+    protected function sign(): string
     {
-        return md5($this->service.'|'.$this->amount.'|'.$this->currency.'|'
-            .$this->desc.'|'.$this->lang.'|'.$this->userdata.'||||||||||||'.$this->key);
+        return md5($this->service . '|' . $this->amount . '|' . $this->currency . '|'
+            . $this->desc . '|' . $this->lang . '|' . $this->userdata . '||||||||||||' . $this->key);
     }
 
     /**
@@ -233,7 +246,7 @@ class TransferUtil implements TransferUtilStrategy
      * @param  string $service [description]
      * @return bool            [description]
      */
-    public function isService(string $service) : bool
+    public function isService(string $service): bool
     {
         return $this->service === $service;
     }
@@ -243,7 +256,7 @@ class TransferUtil implements TransferUtilStrategy
      * @param  float $amount [description]
      * @return bool          [description]
      */
-    public function isAmount(float $amount) : bool
+    public function isAmount(float $amount): bool
     {
         return $this->amount === number_format($amount, 2, '.', '');
     }
@@ -253,10 +266,10 @@ class TransferUtil implements TransferUtilStrategy
      * @param  array $attributes [description]
      * @return bool              [description]
      */
-    public function isSign(array $attributes) : bool
+    public function isSign(array $attributes): bool
     {
-        return md5($this->service.$attributes['orderid'].$attributes['amount']
-            .$attributes['userdata'].$attributes['status'].$this->key) === $attributes['sign'];
+        return md5($this->service . $attributes['orderid'] . $attributes['amount']
+            . $attributes['userdata'] . $attributes['status'] . $this->key) === $attributes['sign'];
     }
 
     /**
@@ -264,7 +277,7 @@ class TransferUtil implements TransferUtilStrategy
      * @param  string $status [description]
      * @return bool           [description]
      */
-    public function isStatus(string $status) : bool
+    public function isStatus(string $status): bool
     {
         return $status === 'ok';
     }
@@ -274,9 +287,9 @@ class TransferUtil implements TransferUtilStrategy
      *
      * @return void
      */
-    public function purchase() : void
+    public function purchase(): void
     {
-        $this->makeResponse();
+        $this->setResponse($this->makeResponse());
     }
 
     /**
@@ -285,7 +298,7 @@ class TransferUtil implements TransferUtilStrategy
      * @param array $attributes
      * @return void
      */
-    public function complete(array $attributes) : void
+    public function complete(array $attributes): void
     {
         if (!$this->isStatus($attributes['status'])) {
             return;
@@ -304,7 +317,7 @@ class TransferUtil implements TransferUtilStrategy
      * @param  array  $attributes [description]
      * @return void               [description]
      */
-    public function authorize(array $attributes) : void
+    public function authorize(array $attributes): void
     {
         if (!$this->isService($attributes['service'])) {
             throw new \N1ebieski\IDir\Exceptions\Payment\Cashbill\Transfer\InvalidServiceException(
@@ -340,10 +353,10 @@ class TransferUtil implements TransferUtilStrategy
      *
      * @return GuzzleResponse
      */
-    protected function makeResponse() : GuzzleResponse
+    protected function makeResponse(): GuzzleResponse
     {
         try {
-            $this->response = $this->guzzle->request('POST', $this->transfer_url, [
+            $response = $this->guzzle->request('POST', $this->transfer_url, [
                 'allow_redirects' => ['track_redirects' => true],
                 'form_params' => $this->all()
             ]);
@@ -354,14 +367,14 @@ class TransferUtil implements TransferUtilStrategy
             );
         }
 
-        return $this->response;
+        return $response;
     }
 
     /**
      * [all description]
      * @return array [description]
      */
-    public function all() : array
+    public function all(): array
     {
         return [
             'service' => $this->service,

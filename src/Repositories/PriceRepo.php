@@ -29,7 +29,7 @@ class PriceRepo
      * @param  array        $filter [description]
      * @return LengthAwarePaginator [description]
      */
-    public function paginateByFilter(array $filter) : LengthAwarePaginator
+    public function paginateByFilter(array $filter): LengthAwarePaginator
     {
         return $this->price->select('prices.*', 'groups.position')
             ->leftJoin('groups', 'prices.group_id', '=', 'groups.id')
@@ -48,7 +48,7 @@ class PriceRepo
      * @param  array      $ids [description]
      * @return Collection      [description]
      */
-    public function getByIds(array $ids) : Collection
+    public function getByIds(array $ids): Collection
     {
         return $this->price->whereIn('id', array_filter($ids))->get();
     }
@@ -58,7 +58,7 @@ class PriceRepo
      * @param  string $code [description]
      * @return Code|null       [description]
      */
-    public function firstCodeByCode(string $code) : ?Code
+    public function firstCodeByCode(string $code): ?Code
     {
         return $this->price->codes()->where('code', $code)->first();
     }

@@ -2,17 +2,12 @@
 
 namespace N1ebieski\IDir\Repositories;
 
-use Illuminate\Database\Eloquent\Collection;
-use N1ebieski\IDir\Models\DirBacklink;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Contracts\Config\Repository as Config;
-use Carbon\Carbon;
 use Closure;
+use Carbon\Carbon;
 use N1ebieski\IDir\Models\Dir;
+use N1ebieski\IDir\Models\DirBacklink;
+use Illuminate\Contracts\Config\Repository as Config;
 
-/**
- * [DirBacklinkRepo description]
- */
 class DirBacklinkRepo
 {
     /**
@@ -37,7 +32,7 @@ class DirBacklinkRepo
      * [attemptNow description]
      * @return bool [description]
      */
-    public function attemptedNow() : bool
+    public function attemptedNow(): bool
     {
         return $this->dirBacklink->update(['attempted_at' => Carbon::now()]);
     }
@@ -46,7 +41,7 @@ class DirBacklinkRepo
      * [resetAttempts description]
      * @return bool [description]
      */
-    public function resetAttempts() : bool
+    public function resetAttempts(): bool
     {
         return $this->dirBacklink->update(['attempts' => 0]);
     }
@@ -55,7 +50,7 @@ class DirBacklinkRepo
      * [incrementAttempts description]
      * @return int [description]
      */
-    public function incrementAttempts() : int
+    public function incrementAttempts(): int
     {
         return $this->dirBacklink->increment('attempts');
     }
@@ -70,7 +65,7 @@ class DirBacklinkRepo
     public function chunkAvailableHasBacklinkRequirementByAttemptedAt(
         Closure $closure,
         string $timestamp
-    ) : bool {
+    ): bool {
         return $this->dirBacklink
             ->whereHas('dir', function ($query) {
                 $query->whereIn('status', [Dir::ACTIVE, Dir::BACKLINK_INACTIVE])

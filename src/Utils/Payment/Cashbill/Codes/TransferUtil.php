@@ -2,16 +2,19 @@
 
 namespace N1ebieski\IDir\Utils\Payment\Cashbill\Codes;
 
-use Illuminate\Contracts\Config\Repository as Config;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Psr7\Response as GuzzleResponse;
+use Illuminate\Contracts\Config\Repository as Config;
 use N1ebieski\IDir\Utils\Payment\Interfaces\Codes\TransferUtilStrategy;
 
-/**
- * [Cashbill description]
- */
 class TransferUtil implements TransferUtilStrategy
 {
+    /**
+     * [protected description]
+     * @var GuzzleClient
+     */
+    protected $guzzle;
+
     /**
      * [private description]
      * @var string
@@ -22,13 +25,7 @@ class TransferUtil implements TransferUtilStrategy
      * [protected description]
      * @var object
      */
-    protected $response;
-
-    /**
-     * [protected description]
-     * @var GuzzleClient
-     */
-    protected $guzzle;
+    protected $contents;
 
     /**
      * [__construct description]
@@ -43,23 +40,52 @@ class TransferUtil implements TransferUtilStrategy
     }
 
     /**
+     * Undocumented function
+     *
+     * @param string $code
+     * @param string $id
+     * @return static
+     */
+    protected function setContentsFromResponse(GuzzleResponse $response)
+    {
+        $contents = explode("\n", trim($response->getBody()->getContents()));
+
+        $this->contents = (object)[
+            'status' => $contents[0],
+            'timeRemaining' => $contents[1] ?? null
+        ];
+
+        return $this;
+    }
+
+    /**
      * Get [protected description]
      *
      * @return  object
      */
-    public function getResponse()
+    public function getContents()
     {
-        return $this->response;
+        return $this->contents;
+    }
+
+    /**
+     * [isActive description]
+     * @return bool [description]
+     */
+    public function isActive(): bool
+    {
+        return isset($this->contents->status) && (string)$this->contents->status === "OK";
     }
 
     /**
      * [authorize description]
      * @param array $attributes [description]
      */
-    public function authorize(array $attributes) : void
+    public function authorize(array $attributes): void
     {
-        $this->makeResponse($attributes['code'], $attributes['id']);
-        $this->prepareResponse();
+        $this->setContentsFromResponse(
+            $this->makeResponse($attributes['code'], $attributes['id'])
+        );
 
         if (!$this->isActive()) {
             throw new \N1ebieski\IDir\Exceptions\Payment\Cashbill\Codes\Transfer\InactiveCodeException(
@@ -70,42 +96,16 @@ class TransferUtil implements TransferUtilStrategy
     }
 
     /**
-     * [isActive description]
-     * @return bool [description]
-     */
-    public function isActive() : bool
-    {
-        return isset($this->response->status) && (string)$this->response->status === "OK";
-    }
-
-    /**
-     * Undocumented function
-     *
-     * @param string $code
-     * @param string $id
-     * @return object
-     */
-    public function prepareResponse() : object
-    {
-        $content = explode("\n", trim($this->response->getBody()->getContents()));
-
-        return $this->response = (object)[
-            'status' => $content[0],
-            'timeRemaining' => $content[1] ?? null
-        ];
-    }
-
-    /**
      * Undocumented function
      *
      * @param string $code
      * @param string $id
      * @return GuzzleResponse
      */
-    public function makeResponse(string $code, string $id) : GuzzleResponse
+    public function makeResponse(string $code, string $id): GuzzleResponse
     {
         try {
-            $this->response = $this->guzzle->request('GET', $this->check_url . '?id=' . $id . '&check=' . $code);
+            $response = $this->guzzle->request('GET', $this->check_url . '?id=' . $id . '&check=' . $code);
         } catch (\GuzzleHttp\Exception\GuzzleException $e) {
             throw new \N1ebieski\IDir\Exceptions\Payment\Cashbill\Exception(
                 $e->getMessage(),
@@ -113,6 +113,6 @@ class TransferUtil implements TransferUtilStrategy
             );
         }
 
-        return $this->response;
+        return $response;
     }
 }

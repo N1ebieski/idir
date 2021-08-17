@@ -39,10 +39,23 @@ class DirStatusService implements Creatable
      */
     public function __construct(DirStatus $dirStatus, Carbon $carbon, DB $db)
     {
-        $this->dirStatus = $dirStatus;
+        $this->setDirStatus($dirStatus);
 
         $this->carbon = $carbon;
         $this->db = $db;
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param DirStatus $dirStatus
+     * @return static
+     */
+    public function setDirStatus(DirStatus $dirStatus)
+    {
+        $this->dirStatus = $dirStatus;
+
+        return $this;
     }
 
     /**

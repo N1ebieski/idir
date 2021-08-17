@@ -13,7 +13,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->app->bind(\N1ebieski\ICore\Utils\FileUtil::class, function ($app) {
+            return $app->make(\N1ebieski\IDir\Utils\FileUtil::class);
+        });
     }
 
     /**

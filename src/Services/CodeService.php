@@ -37,10 +37,23 @@ class CodeService
      */
     public function __construct(Code $code, Carbon $carbon, DB $db)
     {
-        $this->code = $code;
+        $this->setCode($code);
 
         $this->carbon = $carbon;
         $this->db = $db;
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param Code $code
+     * @return static
+     */
+    public function setCode(Code $code)
+    {
+        $this->code = $code;
+
+        return $this;
     }
 
     /**

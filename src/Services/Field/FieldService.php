@@ -60,12 +60,25 @@ class FieldService implements Creatable, Updatable, PositionUpdatable
         DB $db,
         Collect $collect
     ) {
-        $this->field = $field;
+        $this->setField($field);
 
         $this->valueFactory = $valueFactory;
 
         $this->db = $db;
         $this->collect = $collect;
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param Field $field
+     * @return static
+     */
+    public function setField(Field $field)
+    {
+        $this->field = $field;
+
+        return $this;
     }
 
     /**

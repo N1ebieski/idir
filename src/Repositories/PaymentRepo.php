@@ -2,13 +2,8 @@
 
 namespace N1ebieski\IDir\Repositories;
 
-use Illuminate\Database\Eloquent\Collection;
 use N1ebieski\IDir\Models\Payment\Payment;
-use Illuminate\Pagination\LengthAwarePaginator;
 
-/**
- * [PaymentRepo description]
- */
 class PaymentRepo
 {
     /**
@@ -31,7 +26,7 @@ class PaymentRepo
      * @param  string    $uuid [description]
      * @return Payment|null     [description]
      */
-    public function firstByUuid(string $uuid) : ?Payment
+    public function firstByUuid(string $uuid): ?Payment
     {
         return $this->payment->where('uuid', $uuid)
             ->poliType()
@@ -44,7 +39,7 @@ class PaymentRepo
      * @param  string    $uuid [description]
      * @return Payment|null     [description]
      */
-    public function firstPendingByUuid(string $uuid) : ?Payment
+    public function firstPendingByUuid(string $uuid): ?Payment
     {
         return $this->payment->where('uuid', $uuid)
             ->pending()
@@ -57,7 +52,7 @@ class PaymentRepo
      * [completed description]
      * @return bool [description]
      */
-    public function finished() : bool
+    public function finished(): bool
     {
         return $this->payment->update(['status' => Payment::FINISHED]);
     }
@@ -66,7 +61,7 @@ class PaymentRepo
      * [paid description]
      * @return bool [description]
      */
-    public function paid() : bool
+    public function paid(): bool
     {
         return $this->payment->update(['status' => Payment::UNFINISHED]);
     }

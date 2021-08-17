@@ -32,9 +32,22 @@ class PriceService implements Creatable, Updatable, Deletable
      */
     public function __construct(Price $price, DB $db)
     {
-        $this->price = $price;
+        $this->setPrice($price);
 
         $this->db = $db;
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param Price $price
+     * @return static
+     */
+    public function setPrice(Price $price)
+    {
+        $this->price = $price;
+
+        return $this;
     }
 
     /**

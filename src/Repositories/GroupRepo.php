@@ -2,14 +2,11 @@
 
 namespace N1ebieski\IDir\Repositories;
 
-use Illuminate\Database\Eloquent\Collection;
 use N1ebieski\IDir\Models\Group;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\Config\Repository as Config;
 
-/**
- * [CommentRepo description]
- */
 class GroupRepo
 {
     /**
@@ -41,7 +38,7 @@ class GroupRepo
      * @param  array        $filter [description]
      * @return LengthAwarePaginator [description]
      */
-    public function paginateByFilter(array $filter) : LengthAwarePaginator
+    public function paginateByFilter(array $filter): LengthAwarePaginator
     {
         return $this->group->withCount('prices')
             ->filterSearch($filter['search'])
@@ -58,7 +55,7 @@ class GroupRepo
      * [getSiblingsAsArray description]
      * @return array [description]
      */
-    public function getSiblingsAsArray() : array
+    public function getSiblingsAsArray(): array
     {
         return $this->group->siblings()
             ->get(['id', 'position'])
@@ -70,7 +67,7 @@ class GroupRepo
      * [getPublicWithRels description]
      * @return Collection [description]
      */
-    public function getPublicWithRels() : Collection
+    public function getPublicWithRels(): Collection
     {
         return $this->group->public()
             ->with(['privileges', 'prices'])
@@ -83,7 +80,7 @@ class GroupRepo
      * [getWithRels description]
      * @return Collection [description]
      */
-    public function getWithRels() : Collection
+    public function getWithRels(): Collection
     {
         return $this->group
             ->with(['privileges', 'prices'])
@@ -97,7 +94,7 @@ class GroupRepo
      *
      * @return Collection
      */
-    public function getExceptDefault() : Collection
+    public function getExceptDefault(): Collection
     {
         return $this->group->exceptDefault()
             ->orderBy('position', 'asc')
@@ -109,7 +106,7 @@ class GroupRepo
      * @param  string     $type [description]
      * @return Collection       [description]
      */
-    public function getPricesByType(string $type) : Collection
+    public function getPricesByType(string $type): Collection
     {
         return $this->group->prices()
             ->where('type', $type)
@@ -122,7 +119,7 @@ class GroupRepo
      * @param  int    $id [description]
      * @return Group|null     [description]
      */
-    public function firstWithRelsById(int $id) : ?Group
+    public function firstWithRelsById(int $id): ?Group
     {
         return $this->group->where('id', $id)
             ->with(['fields' => function ($query) {
@@ -137,7 +134,7 @@ class GroupRepo
      *
      * @return Collection
      */
-    public function getPublic() : Collection
+    public function getPublic(): Collection
     {
         return $this->group->public()
             ->orderBy('position', 'asc')->get();
@@ -148,7 +145,7 @@ class GroupRepo
      * @param  int        $id [description]
      * @return Collection     [description]
      */
-    public function getWithField(int $id) : Collection
+    public function getWithField(int $id): Collection
     {
         return $this->group->with([
             'fields' => function ($query) use ($id) {
@@ -163,7 +160,7 @@ class GroupRepo
      *
      * @return Collection
      */
-    public function getExceptSelf() : Collection
+    public function getExceptSelf(): Collection
     {
         return $this->group->where('id', '!=', $this->group->id)
             ->orderBy('position', 'asc')
@@ -175,7 +172,7 @@ class GroupRepo
      *
      * @return Collection
      */
-    public function getDoesntHavePricesExceptSelf() : Collection
+    public function getDoesntHavePricesExceptSelf(): Collection
     {
         return $this->group->whereDoesntHave('prices')
             ->where('id', '!=', $this->group->id)

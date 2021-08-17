@@ -64,11 +64,6 @@ class ScheduleServiceProvider extends ServiceProvider
             //     ->name('Dir.PopularTagsCron')
             //     ->daily()
             //     ->runInBackground();
-
-            $schedule->command('clean:directories')
-                ->name('CleanDirectories')
-                ->hourly()
-                ->runInBackground();
         });
     }
 }

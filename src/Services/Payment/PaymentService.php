@@ -9,9 +9,6 @@ use N1ebieski\ICore\Services\Interfaces\Creatable;
 use Illuminate\Contracts\Config\Repository as Config;
 use N1ebieski\ICore\Services\Interfaces\StatusUpdatable;
 
-/**
- * [PaymentService description]
- */
 class PaymentService implements Creatable, StatusUpdatable
 {
     /**
@@ -43,7 +40,7 @@ class PaymentService implements Creatable, StatusUpdatable
      */
     public function __construct(Payment $payment, Carbon $carbon, Config $config)
     {
-        $this->payment = $payment;
+        $this->setPayment($payment);
 
         $this->carbon = $carbon;
         $this->config = $config;
@@ -52,10 +49,23 @@ class PaymentService implements Creatable, StatusUpdatable
     /**
      * Undocumented function
      *
+     * @param Payment $payment
+     * @return static
+     */
+    public function setPayment(Payment $payment)
+    {
+        $this->payment = $payment;
+
+        return $this;
+    }
+
+    /**
+     * Undocumented function
+     *
      * @param string $payment_type
      * @return integer
      */
-    protected function status(string $payment_type = null) : int
+    protected function status(string $payment_type = null): int
     {
         if (in_array($payment_type, ['transfer', 'paypal_express'])) {
             return Payment::PENDING;
@@ -69,7 +79,7 @@ class PaymentService implements Creatable, StatusUpdatable
      * @param  array $attributes [description]
      * @return Model             [description]
      */
-    public function create(array $attributes) : Model
+    public function create(array $attributes): Model
     {
         $this->payment->status = $this->status($attributes['payment_type'] ?? null);
         $this->payment->driver = $this->config->get("idir.payment.{$attributes['payment_type']}.driver");
@@ -86,7 +96,7 @@ class PaymentService implements Creatable, StatusUpdatable
      * @param  array $attributes [description]
      * @return bool              [description]
      */
-    public function updateStatus(array $attributes) : bool
+    public function updateStatus(array $attributes): bool
     {
         return $this->payment->update(['status' => $attributes['status']]);
     }
@@ -97,7 +107,7 @@ class PaymentService implements Creatable, StatusUpdatable
      * @param  array $attributes [description]
      * @return bool              [description]
      */
-    public function updateLogs(array $attributes) : bool
+    public function updateLogs(array $attributes): bool
     {
         return $this->payment->update([
             'logs' => $this->payment->logs . "\r\n" . $this->carbon->now() . "\r\n" . $attributes['logs']

@@ -21,7 +21,7 @@
                         type="text" 
                         class="border border-right-0 form-control-lg" 
                         id="typeahead" 
-                        data-route="{{ route('web.search.autocomplete') }}"
+                        data-route="{{ route('api.tag.index') }}"
                         placeholder="{{ trans('icore::search.search') }}" 
                         name="search"
                         autocomplete="off"
