@@ -15,7 +15,7 @@ trait FieldsExtended
     /**
      * [prepareFieldsAttribute description]
      */
-    protected function prepareFieldsAttribute() : void
+    protected function prepareFieldsAttribute(): void
     {
         if (!$this->has('field') && !is_array($this->input('field'))) {
             return;
@@ -33,7 +33,7 @@ trait FieldsExtended
      * @param Field $field
      * @return void
      */
-    protected function prepareFieldMapAttribute(Field $field) : void
+    protected function prepareFieldMapAttribute(Field $field): void
     {
         if ($field->type !== 'map') {
             return;
@@ -59,7 +59,7 @@ trait FieldsExtended
      * [prepareFieldImageAttribute description]
      * @param Field $field [description]
      */
-    protected function prepareFieldImageAttribute(Field $field) : void
+    protected function prepareFieldImageAttribute(Field $field): void
     {
         if ($field->type !== 'image') {
             return;
@@ -98,7 +98,7 @@ trait FieldsExtended
      * [prepareFieldsRules description]
      * @return array [description]
      */
-    protected function prepareFieldsRules() : array
+    protected function prepareFieldsRules(): array
     {
         foreach ($this->getFields() as $field) {
             $rules["field.{$field->id}"][] = 'bail';
@@ -106,11 +106,9 @@ trait FieldsExtended
 
             switch ($field->type) {
                 case 'map':
-                    $rules["field.{$field->id}"] = [
-                        'array',
-                        'max:1',
-                        'no_js_validation'
-                    ];
+                    $rules["field.{$field->id}"][] = 'array';
+                    $rules["field.{$field->id}"][] = 'max:1';
+                    $rules["field.{$field->id}"][] = 'no_js_validation';
                     $rules["field.{$field->id}.*.lat"] = [
                         'bail',
                         $field->isRequired() ? 'required' : 'nullable',

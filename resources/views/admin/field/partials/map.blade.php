@@ -61,4 +61,5 @@ $value = old("field.{$field->id}", $value ?? null);
             </div>
         </div>
     </div>
+    @includeWhen($errors->has("field.{$field->id}"), 'icore::admin.partials.errors', ['name' => "field.{$field->id}"])
 </div>
