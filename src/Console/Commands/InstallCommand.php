@@ -188,6 +188,8 @@ class InstallCommand extends BaseInstallCommand
         $this->line("\n");
         $this->call('migrate', ['--path' => 'database/migrations/vendor/idir', '--force' => true], $this->getOutput());
         $this->line("\n");
+        $this->call('migrate', ['--path' => 'database/migrations/2019_12_14_000001_create_personal_access_tokens_table.php', '--force' => true], $this->getOutput());
+        $this->line("\n");        
         $bar->advance();
         $this->line("\n");
         $this->line($this->lang->get('icore::install.seed'));
