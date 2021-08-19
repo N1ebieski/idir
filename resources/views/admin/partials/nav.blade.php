@@ -3,7 +3,7 @@
         href="#" 
         class="navbar-toggler" 
         role="button" 
-        id="sidebarToggle"
+        id="sidebar-toggle"
     >
         <span class="navbar-toggler-icon"></span>
     </a>
