@@ -50,7 +50,7 @@ class Image extends Value
         if ($value instanceof UploadedFile) {
             $path = is_int($this->field->morph->id) ? $this->path() : null;
 
-            return $this->fileUtil->make($value, $path)->prepare();
+            return $this->fileUtil->make($path, $value)->prepare();
         }
 
         return $value;
@@ -64,7 +64,7 @@ class Image extends Value
      */
     public function create(UploadedFile $value): string
     {
-        $file = $this->fileUtil->make($value, $this->path());
+        $file = $this->fileUtil->make($this->path(), $value);
 
         $file->prepare();
         $file->moveFromTemp();
@@ -80,7 +80,7 @@ class Image extends Value
      */
     public function update(UploadedFile $value): string
     {
-        $file = $this->fileUtil->make($value, $this->path());
+        $file = $this->fileUtil->make($this->path(), $value);
 
         if ($this->getFieldValue() !== $file->getFilePath()) {
             $file->prepare();

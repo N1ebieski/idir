@@ -5,7 +5,7 @@ namespace N1ebieski\IDir\Http\Controllers\Api;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Response;
-use N1ebieski\IDir\Utils\Thumbnail\ThumbnailUtil;
+use N1ebieski\IDir\Utils\ThumbnailUtil;
 use N1ebieski\IDir\Http\Requests\Api\Thumbnail\ReloadRequest;
 
 class ThumbnailController extends Controller

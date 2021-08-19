@@ -1,6 +1,6 @@
 <?php
 
-namespace N1ebieski\IDir\Utils\Thumbnail;
+namespace N1ebieski\IDir\Utils;
 
 use Illuminate\Support\Carbon;
 use GuzzleHttp\Client as GuzzleClient;
@@ -89,26 +89,26 @@ class ThumbnailUtil
      * @param Storage $storage
      * @param Carbon $carbon
      * @param Config $config
-     * @param string $disk
      * @param string $url
+     * @param string $disk
      */
     public function __construct(
         GuzzleClient $guzzle,
         Storage $storage,
         Carbon $carbon,
         Config $config,
-        string $disk = 'public',
-        string $url = null
+        string $url,        
+        string $disk = 'public'
     ) {
         $this->guzzle = $guzzle;
         $this->storage = $storage;
         $this->carbon = $carbon;
         $this->config = $config;
 
-        $this->disk = $disk;
         $this->url = $url;
+        $this->disk = $disk;
 
-        if (is_string($this->url)) {
+        if (!empty($this->url)) {
             $this->setHostFromUrl($this->url);
             $this->setFilePathFromHost($this->host);
         }
