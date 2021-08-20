@@ -99,7 +99,11 @@ class Image extends Value
      */
     public function delete(): bool
     {
-        return $this->fileUtil->make($this->getFieldValue())->delete();
+        if ($this->getFieldValue() !== null) {
+            return $this->fileUtil->make($this->getFieldValue())->delete();
+        }
+
+        return false;
     }
 
     /**

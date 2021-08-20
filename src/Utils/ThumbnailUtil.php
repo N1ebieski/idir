@@ -97,7 +97,7 @@ class ThumbnailUtil
         Storage $storage,
         Carbon $carbon,
         Config $config,
-        string $url,        
+        string $url,
         string $disk = 'public'
     ) {
         $this->guzzle = $guzzle;
