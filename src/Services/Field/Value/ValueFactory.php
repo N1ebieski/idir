@@ -28,16 +28,6 @@ class ValueFactory
     /**
      * Undocumented function
      *
-     * @return boolean
-     */
-    protected function isClassExists(string $type): bool
-    {
-        return class_exists($this->className($type));
-    }
-
-    /**
-     * Undocumented function
-     *
      * @return string
      */
     protected function className(string $type): string
@@ -54,13 +44,6 @@ class ValueFactory
      */
     public function makeValue(Field $field): Value
     {
-        if ($this->isClassExists($field->type)) {
-            return $this->app->make($this->className($field->type), ['field' => $field]);
-        }
-
-        throw new \N1ebieski\IDir\Exceptions\Field\ValueNotFoundException(
-            "Value {$field->type} not found",
-            403
-        );
+        return $this->app->make($this->className($field->type), ['field' => $field]);
     }
 }
