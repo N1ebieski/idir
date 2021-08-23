@@ -32,7 +32,7 @@ class ValueFactory
      */
     protected function className(string $type): string
     {
-        return "\\N1ebieski\\IDir\\Services\\Field\\Value\\Types\\" . ucfirst($type);
+        return "N1ebieski\\IDir\\Services\\Field\\Value\\Types\\" . ucfirst($type);
     }
 
     /**
