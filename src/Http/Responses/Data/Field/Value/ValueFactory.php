@@ -31,9 +31,9 @@ class ValueFactory
      *
      * @return boolean
      */
-    protected function isClassExists(string $type) : bool
+    protected function isClassExists(string $type): bool
     {
-        return class_exists($this->className($type));
+        return class_exists($this->className($type)) || $this->app->bound($this->className($type));
     }
 
     /**
@@ -41,9 +41,9 @@ class ValueFactory
      *
      * @return string
      */
-    protected function className(string $type) : string
+    protected function className(string $type): string
     {
-        return "\\N1ebieski\\IDir\\Http\\Responses\\Data\\Field\\Value\\Types\\" . ucfirst($type);
+        return "N1ebieski\\IDir\\Http\\Responses\\Data\\Field\\Value\\Types\\" . ucfirst($type);
     }
 
     /**
@@ -53,7 +53,7 @@ class ValueFactory
      * @param GusReport $gusReport
      * @return Value
      */
-    public function makeValue(string $type, GusReport $gusReport) : Value
+    public function makeValue(string $type, GusReport $gusReport): Value
     {
         if ($this->isClassExists($type)) {
             return $this->app->make($this->className($type), ['gusReport' => $gusReport]);
