@@ -1,5 +1,5 @@
 jQuery(document).ready(function () {
-    $('#map').each(function () {
+    $('#map, .map').each(function () {
         let $map = $(this);
 
         if ($map.length) {
