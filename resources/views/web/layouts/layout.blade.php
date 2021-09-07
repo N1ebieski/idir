@@ -14,7 +14,7 @@
     <meta property="og:description" content="{{ $og['desc'] }}">
     <meta property="og:type" content="{{ $og['type'] }}">
     <meta property="og:image" content="{{ $og['image'] }}">
-    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:url" content="{{ $getUrl }}">
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
