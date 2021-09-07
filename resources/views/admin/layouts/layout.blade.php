@@ -1,17 +1,18 @@
 <!DOCTYPE html>
 <html lang="{{ config('app.locale') }}">
 <head>
-    <title>{{ $makeMeta(array_merge($title, [trans('icore::admin.route.index'), config('app.name')]), ' - ') }}</title>
+    <title>{{ $getMeta(array_merge($title, [trans('icore::admin.route.index'), config('app.name')]), ' - ') }}</title>
 
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="{{ $makeMeta(array_merge($desc, [trans('icore::admin.route.index'), config('app.desc')]), '. ') }}">
-    <meta name="keywords" content="{{ mb_strtolower($makeMeta(array_merge($keys, [trans('icore::admin.route.index'), config('app.keys')]), ', ')) }}">
+    <meta name="description" content="{{ $getMeta(array_merge($desc, [trans('icore::admin.route.index'), config('app.desc')]), '. ') }}">
+    <meta name="keywords" content="{{ mb_strtolower($getMeta(array_merge($keys, [trans('icore::admin.route.index'), config('app.keys')]), ', ')) }}">
     <meta name="robots" content="noindex, nofollow">
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
+    <link rel="canonical" href="{{ $getUrl }}">
     <link rel="icon" href="{{ asset('svg/vendor/idir/logo.svg') }}" type="image/svg+xml">
     <link href="{{ asset(mix('css/vendor/idir/vendor/vendor.css')) }}" rel="stylesheet">
     @stack('style')

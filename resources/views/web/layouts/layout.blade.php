@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="{{ config('app.locale') }}">
 <head>
-    <title>{{ $makeMeta(array_merge($title, [config('app.name')]), ' - ') }}</title>
+    <title>{{ $getMeta(array_merge($title, [config('app.name')]), ' - ') }}</title>
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="{{ $makeMeta(array_merge($desc, [config('app.desc')]), '. ') }}">
-    <meta name="keywords" content="{{ mb_strtolower($makeMeta(array_merge($keys, [config('app.keys')]), ', ')) }}">
+    <meta name="description" content="{{ $getMeta(array_merge($desc, [config('app.desc')]), '. ') }}">
+    <meta name="keywords" content="{{ mb_strtolower($getMeta(array_merge($keys, [config('app.keys')]), ', ')) }}">
     <meta name="robots" content="{{ $index }}">
     <meta name="robots" content="{{ $follow }}">
 
@@ -18,6 +18,7 @@
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
+    <link rel="canonical" href="{{ $getUrl }}">
     <link rel="icon" href="{{ asset('svg/vendor/idir/logo.svg') }}" type="image/svg+xml">
     <link href="{{ asset(mix('css/vendor/idir/vendor/vendor.css')) }}" rel="stylesheet">
     <link href="{{ asset(mix($getStylesheet('css/vendor/idir'))) }}" rel="stylesheet">
