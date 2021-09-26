@@ -34,20 +34,20 @@
         <div id="type">
             <nav>
                 <div 
-                    class="btn-group btn-group-toggle nav d-block" 
+                    class="btn-group btn-group-toggle nav nav-tabs" 
                     data-toggle="buttons" 
                     id="nav-tab" 
                     role="tablist"
                 >
                     @foreach ($field::AVAILABLE as $type)
                     <a 
-                        class="nav-item btn btn-info {{ $field->type == $type ? 'active' : null }}" 
+                        class="nav-item nav-link btn btn-link flex-grow-0 text-decoration-none shadow-none {{ $field->type == $type ? 'active' : null }}" 
                         id="nav-{{ $type }}-tab"
                         data-toggle="tab" 
                         href="#nav-{{ $type }}-edit" 
                         role="tab"
                         aria-controls="nav-{{ $type }}-edit" 
-                        aria-selected="true"
+                        aria-selected="{{ $field->type == $type ? 'true' : 'false' }}"
                     >
                         <input 
                             type="radio" 

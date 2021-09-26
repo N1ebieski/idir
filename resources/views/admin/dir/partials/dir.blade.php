@@ -128,8 +128,10 @@
                             </span> 
                             <span>
                                 @foreach ($dir->categories as $category)
-                                <a href="{{ route('admin.dir.index', ['filter[category]' => $category->id]) }}"
-                                title="{{ $category->name }}">
+                                <a 
+                                    href="{{ route('admin.dir.index', ['filter[category]' => $category->id]) }}"
+                                    title="{{ $category->name }}"
+                                >
                                     {{ $category->name }}
                                 </a>{{ (!$loop->last) ? ', ' : '' }}
                                 @endforeach

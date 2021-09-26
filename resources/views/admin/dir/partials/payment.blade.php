@@ -7,7 +7,7 @@
     <div id="payment">
         <nav>
             <div 
-                class="btn-group btn-group-toggle nav d-block" 
+                class="btn-group btn-group-toggle nav nav-tabs" 
                 data-toggle="buttons" 
                 id="nav-tab" 
                 role="tablist"
@@ -15,13 +15,13 @@
                 @foreach ($price::AVAILABLE as $type)
                 @if ($pricesByType($type)->isNotEmpty())
                 <a 
-                    class="nav-item btn btn-info {{ old('payment_type', $paymentType) === $type ? 'active' : null }}"
+                    class="nav-item nav-link btn btn-link flex-grow-0 text-decoration-none shadow-none {{ old('payment_type', $paymentType) === $type ? 'active' : null }}"
                     id="nav-{{ $type }}-tab" 
                     data-toggle="tab" 
                     href="#nav-{{ $type }}" 
                     role="tab"
                     aria-controls="nav-{{ $type }}" 
-                    aria-selected="true"
+                    aria-selected="{{ old('payment_type', $paymentType) === $type ? 'true' : 'false' }}"
                 >
                     <input 
                         type="radio" 

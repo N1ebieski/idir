@@ -25,22 +25,22 @@
             {{ trans('idir::fields.choose_type') }}:
         </label>
         <div id="type">
-            <nav>
+            <nav class="w-100">
                 <div 
-                    class="btn-group btn-group-toggle nav d-block" 
+                    class="btn-group btn-group-toggle nav nav-tabs" 
                     data-toggle="buttons" 
                     id="nav-tab" 
                     role="tablist"
                 >
                     @foreach ($field::AVAILABLE as $type)
                     <a 
-                        class="nav-item btn btn-info {{ $loop->first ? 'active' : null }}" 
+                        class="nav-item nav-link btn btn-link flex-grow-0 text-decoration-none shadow-none {{ $loop->first ? 'active' : null }}" 
                         id="nav-{{ $type }}-tab"
                         data-toggle="tab" 
                         href="#nav-{{ $type }}-create" 
                         role="tab"
                         aria-controls="nav-{{ $type }}-create" 
-                        aria-selected="true"
+                        aria-selected="{{ $loop->first ? 'true' : 'false' }}"
                     >
                         <input 
                             type="radio" 
