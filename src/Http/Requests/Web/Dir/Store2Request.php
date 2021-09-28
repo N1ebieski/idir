@@ -14,9 +14,6 @@ use Illuminate\Database\Eloquent\Collection;
 use N1ebieski\IDir\Models\Category\Dir\Category;
 use N1ebieski\IDir\Http\Requests\Traits\FieldsExtended;
 
-/**
- * [StoreFormRequest description]
- */
 class Store2Request extends FormRequest
 {
     use FieldsExtended;
@@ -50,7 +47,7 @@ class Store2Request extends FormRequest
      * [getFields description]
      * @return Collection [description]
      */
-    public function getFields() : Collection
+    public function getFields(): Collection
     {
         return $this->group->fields;
     }
@@ -70,7 +67,7 @@ class Store2Request extends FormRequest
      *
      * @return void
      */
-    protected function prepareForValidation() : void
+    protected function prepareForValidation(): void
     {
         $this->prepareTagsAttribute();
 
@@ -88,7 +85,7 @@ class Store2Request extends FormRequest
     /**
      * [prepareUrl description]
      */
-    protected function prepareUrlAttribute() : void
+    protected function prepareUrlAttribute(): void
     {
         if ($this->has('url') && $this->input('url') !== null) {
             if ($this->group->url === 0) {
@@ -102,7 +99,7 @@ class Store2Request extends FormRequest
     /**
      * [prepareContentHtml description]
      */
-    protected function prepareContentHtmlAttribute() : void
+    protected function prepareContentHtmlAttribute(): void
     {
         if ($this->has('content_html')) {
             if ($this->group->privileges->contains('name', 'additional options for editing content')) {
@@ -120,7 +117,7 @@ class Store2Request extends FormRequest
     /**
      * [prepareContent description]
      */
-    protected function prepareContentAttribute() : void
+    protected function prepareContentAttribute(): void
     {
         if ($this->has('content_html')) {
             $this->merge([
@@ -132,7 +129,7 @@ class Store2Request extends FormRequest
     /**
      * [prepareTitle description]
      */
-    protected function prepareTitleAttribute() : void
+    protected function prepareTitleAttribute(): void
     {
         if ($this->has('title')) {
             $this->merge([
@@ -146,7 +143,7 @@ class Store2Request extends FormRequest
     /**
      * [prepareTags description]
      */
-    protected function prepareTagsAttribute() : void
+    protected function prepareTagsAttribute(): void
     {
         if ($this->has('tags') && is_string($this->input('tags'))) {
             $this->merge([
@@ -211,7 +208,7 @@ class Store2Request extends FormRequest
                 'required',
                 'string',
                 'between:' . Config::get('idir.dir.min_content') . ',' . Config::get('idir.dir.max_content'),
-                !empty($this->bans_words) ? 'not_regex:/(.*)(\s|^)('.$this->bans_words.')(\s|\.|,|\?|$)(.*)/i' : null
+                !empty($this->bans_words) ? 'not_regex:/(.*)(\s|^)(' . $this->bans_words . ')(\s|\.|,|\?|$)(.*)/i' : null
             ],
             'notes' => 'bail|nullable|string|between:3,255',
             'url' => [
@@ -221,7 +218,7 @@ class Store2Request extends FormRequest
                     : 'nullable',
                 'string',
                 'regex:/^(https|http):\/\/([\da-z\.-]+)(\.[a-z]{2,6})\/?$/',
-                !empty($this->bans_urls) ? 'not_regex:/('.$this->bans_urls.')/i' : null,
+                !empty($this->bans_urls) ? 'not_regex:/(' . $this->bans_urls . ')/i' : null,
                 App::make(\N1ebieski\IDir\Rules\UniqueUrlRule::class, [
                     'table' => 'dirs',
                     'column' => 'url'
