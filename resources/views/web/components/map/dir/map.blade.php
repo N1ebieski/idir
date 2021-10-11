@@ -1,6 +1,5 @@
 <div 
     id="{{ $selector }}"
-    class="{{ $selector }}"
     data-coords="{{ $coords }}" 
     data-container-class="{{ $containerClass }}"
     data-address-marker="{{ $addressMarker ?? null }}" 

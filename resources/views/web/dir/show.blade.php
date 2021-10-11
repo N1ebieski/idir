@@ -306,11 +306,6 @@
                 @endauth
                 </div>
             </div>
-            <div>
-                @render('idir::map.dir.mapComponent', [
-                    'dir' => $dir
-                ])
-            </div>
         </div>
     </div>
 </div>

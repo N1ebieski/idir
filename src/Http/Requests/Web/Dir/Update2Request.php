@@ -7,7 +7,7 @@ use N1ebieski\IDir\Models\Group;
 use Illuminate\Support\Facades\App;
 use Mews\Purifier\Facades\Purifier;
 use Illuminate\Support\Facades\Lang;
-use N1ebieski\ICore\Models\BanValue;
+use N1ebieski\IDir\Models\BanValue;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Database\Eloquent\Collection;

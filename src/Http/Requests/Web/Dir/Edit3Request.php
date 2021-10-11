@@ -2,23 +2,10 @@
 
 namespace N1ebieski\IDir\Http\Requests\Web\Dir;
 
-use N1ebieski\ICore\Models\BanValue;
 use N1ebieski\IDir\Http\Requests\Web\Dir\Update2Request;
 
-/**
- * [Edit3Request description]
- */
 class Edit3Request extends Update2Request
 {
-    /**
-     * [__construct description]
-     * @param BanValue $banValue [description]
-     */
-    public function __construct(BanValue $banValue)
-    {
-        parent::__construct($banValue);
-    }
-
     /**
      * Determine if the user is authorized to make this request.
      *
