@@ -240,7 +240,7 @@
                         data-target="#link-modal"
                         title="{{ trans('idir::dirs.link_dir_page') }}"
                     >
-                        <i class="fas fa-link"></i>
+                        <i class="fas fa-fw fa-link"></i>
                         <span>{{ trans('idir::dirs.link_dir_page') }}</span>
                     </a>
                 </div>                
@@ -255,7 +255,7 @@
                         data-target="#contact-modal" 
                         class="show-contact"
                     >
-                        <i class="fas fa-paper-plane"></i>
+                        <i class="fas fa-fw fa-paper-plane"></i>
                         <span>{{ trans('idir::contact.dir.route.show') }}</span>
                     </a>
                 @else
@@ -263,7 +263,7 @@
                         href="{{ route('login') }}" 
                         title="{{ trans('idir::contact.dir.log_to_contact') }}"
                     >
-                        <i class="fas fa-paper-plane"></i>
+                        <i class="fas fa-fw fa-paper-plane"></i>
                         <span> {{ trans('idir::contact.dir.log_to_contact') }}</span>
                     </a>
                 @endauth
@@ -276,7 +276,7 @@
                         href="{{ route('web.dir.edit_1', [$dir->id]) }}"
                         title="{{ trans('idir::dirs.premium_dir') }}"
                     >
-                        <i class="fas fa-edit"></i>
+                        <i class="fas fa-fw fa-edit"></i>
                         <span>{{ trans('idir::dirs.premium_dir') }}</span>
                     </a>
                 </div>
@@ -292,7 +292,7 @@
                         data-target="#create-report-modal" 
                         class="createReport"
                     >
-                        <i class="fas fa-exclamation-triangle"></i>
+                        <i class="fas fa-fw fa-exclamation-triangle"></i>
                         <span>{{ trans('icore::reports.route.create') }}</span>
                     </a>
                 @else
@@ -300,7 +300,7 @@
                         href="{{ route('login') }}" 
                         title="{{ trans('icore::reports.log_to_report') }}"
                     >
-                        <i class="fas fa-exclamation-triangle"></i>
+                        <i class="fas fa-fw fa-exclamation-triangle"></i>
                         <span> {{ trans('icore::reports.log_to_report') }}</span>
                     </a>
                 @endauth
