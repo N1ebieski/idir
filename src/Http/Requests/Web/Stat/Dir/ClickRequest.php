@@ -2,8 +2,8 @@
 
 namespace N1ebieski\IDir\Http\Requests\Web\Stat\Dir;
 
-use Illuminate\Foundation\Http\FormRequest;
 use N1ebieski\ICore\Utils\MigrationUtil;
+use Illuminate\Foundation\Http\FormRequest;
 
 class ClickRequest extends FormRequest
 {

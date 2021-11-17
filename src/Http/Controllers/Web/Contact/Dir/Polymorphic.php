@@ -17,7 +17,7 @@ interface Polymorphic
      * @param ShowRequest $request
      * @return JsonResponse
      */
-    public function show(Dir $dir, ShowRequest $request) : JsonResponse;
+    public function show(Dir $dir, ShowRequest $request): JsonResponse;
 
     /**
      * Undocumented function
@@ -27,5 +27,5 @@ interface Polymorphic
      * @param Exception $exception
      * @return JsonResponse
      */
-    public function send(Dir $dir, SendRequest $request, Exception $exception) : JsonResponse;
+    public function send(Dir $dir, SendRequest $request, Exception $exception): JsonResponse;
 }

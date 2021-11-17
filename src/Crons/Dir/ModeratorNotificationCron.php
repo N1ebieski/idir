@@ -108,7 +108,7 @@ class ModeratorNotificationCron
      *
      * @return boolean
      */
-    protected function isNotificationTurnOn() : bool
+    protected function isNotificationTurnOn(): bool
     {
         return $this->hours > 0;
     }
@@ -118,7 +118,7 @@ class ModeratorNotificationCron
      *
      * @return boolean
      */
-    protected function isTimeToSend() : bool
+    protected function isTimeToSend(): bool
     {
         return $this->carbon->parse($this->getCheckpoint())
             ->addHours($this->hours)->lessThanOrEqualTo($this->carbon->now());
@@ -129,7 +129,7 @@ class ModeratorNotificationCron
      *
      * @return string
      */
-    protected function getCheckpoint() : string
+    protected function getCheckpoint(): string
     {
         return $this->cache->get(
             'dir.notification.hours',
@@ -142,7 +142,7 @@ class ModeratorNotificationCron
      *
      * @return boolean
      */
-    protected function putCheckpoint() : bool
+    protected function putCheckpoint(): bool
     {
         return $this->cache->forever('dir.notification.hours', $this->carbon->now());
     }
@@ -152,7 +152,7 @@ class ModeratorNotificationCron
      *
      * @return Collection
      */
-    protected function makeLatestDirsForModerators() : Collection
+    protected function makeLatestDirsForModerators(): Collection
     {
         return $this->dirs = $this->dir->makeRepo()->getLatestForModeratorsByCreatedAt(
             $this->getCheckpoint()
@@ -164,7 +164,7 @@ class ModeratorNotificationCron
      *
      * @return void
      */
-    public function __invoke() : void
+    public function __invoke(): void
     {
         if (!$this->isNotificationTurnOn()) {
             return;
@@ -172,13 +172,13 @@ class ModeratorNotificationCron
 
         if ($this->isTimeToSend()) {
             $this->makeLatestDirsForModerators();
-    
+
             if ($this->dirs->isNotEmpty()) {
                 $this->user->makeRepo()->getModeratorsByNotificationDirsPermission()
                     ->each(function ($user) {
                         $this->sendMailToModerator($user);
                     });
-    
+
                 $this->putCheckpoint();
             }
         }
@@ -190,7 +190,7 @@ class ModeratorNotificationCron
      * @param User $user
      * @return void
      */
-    protected function sendMailToModerator(User $user) : void
+    protected function sendMailToModerator(User $user): void
     {
         $this->mailer->send(
             $this->app->make(ModeratorMail::class, [

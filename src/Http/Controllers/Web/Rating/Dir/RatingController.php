@@ -9,9 +9,6 @@ use N1ebieski\IDir\Models\Rating\Dir\Rating;
 use N1ebieski\IDir\Http\Requests\Web\Rating\Dir\RateRequest;
 use N1ebieski\IDir\Http\Controllers\Web\Rating\Dir\Polymorphic;
 
-/**
- * [RatingController description]
- */
 class RatingController implements Polymorphic
 {
     /**
@@ -22,7 +19,7 @@ class RatingController implements Polymorphic
      * @param RateRequest $request
      * @return JsonResponse
      */
-    public function rate(Rating $rating, Dir $dir, RateRequest $request) : JsonResponse
+    public function rate(Rating $rating, Dir $dir, RateRequest $request): JsonResponse
     {
         $rating->setRelations(['morph' => $dir])
             ->makeService()

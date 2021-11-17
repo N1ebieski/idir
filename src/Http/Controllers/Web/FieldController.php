@@ -17,7 +17,7 @@ class FieldController
      * @param GusApi $gusApi
      * @return JsonResponse
      */
-    public function gus(GusRequest $request, GusResponse $response, GusApi $gusApi) : JsonResponse
+    public function gus(GusRequest $request, GusResponse $response, GusApi $gusApi): JsonResponse
     {
         try {
             $method = 'getBy' . ucfirst($request->input('type'));

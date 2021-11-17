@@ -2,18 +2,17 @@
 
 namespace N1ebieski\IDir\Events\Api\Payment\Dir;
 
+use N1ebieski\IDir\Models\Dir;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Foundation\Events\Dispatchable;
-use Illuminate\Broadcasting\InteractsWithSockets;
 use N1ebieski\IDir\Models\Payment\Dir\Payment;
-use N1ebieski\IDir\Models\Dir;
+use Illuminate\Broadcasting\InteractsWithSockets;
 
-/**
- * [PaymentVerify description]
- */
 class VerifySuccessfulEvent
 {
-    use Dispatchable, InteractsWithSockets, SerializesModels;
+    use Dispatchable;
+    use InteractsWithSockets;
+    use SerializesModels;
 
     /**
      * [public description]

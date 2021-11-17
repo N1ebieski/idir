@@ -6,13 +6,20 @@
         @if (!empty($group->desc))
         <p class="card-text">{{ $group->desc }}</p>
         @endif
+        @if (($price = $group->prices->sortBy('price')->first()) && $price->discount_price)
+        <p class="mb-0">
+            <span class="badge bg-success text-white">-{{ $price->discount }}%</span>
+            <span><s>{{ $price->regular_price }} {{ config("services.{$driverByType($price->type)}.{$price->type}.currency", 'PLN') }}</s></span>
+        </p>
+        @endif     
         <p class="card-text h4">
-            {!! $group->prices->isNotEmpty() ? trans('idir::prices.price_from', [
-                'price' => $group->prices->sortBy('price')->first()->price,
-                'days' => $days = $group->prices->sortBy('price')->first()->days,
-                'limit' => $days !== null ? 
+            {!! !is_null($price) ? trans('idir::prices.price_from', [
+                'price' => $price->price,
+                'days' => $days = $price->days,
+                'limit' => !is_null($days) ? 
                     mb_strtolower(trans('idir::prices.days')) 
-                    : mb_strtolower(trans('idir::prices.unlimited'))
+                    : mb_strtolower(trans('idir::prices.unlimited')),
+                'currency' => config("services.{$driverByType($price->type)}.{$price->type}.currency", 'PLN')
             ]) : trans('idir::groups.payment.0') !!}
         </p>
     </div>

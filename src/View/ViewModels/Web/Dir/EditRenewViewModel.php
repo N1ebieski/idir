@@ -8,7 +8,6 @@ use N1ebieski\IDir\Models\Price;
 use Spatie\ViewModels\ViewModel;
 use Illuminate\Database\Eloquent\Collection;
 use N1ebieski\IDir\Models\Category\Dir\Category;
-use Illuminate\Contracts\Config\Repository as Config;
 
 class EditRenewViewModel extends ViewModel
 {
@@ -27,39 +26,18 @@ class EditRenewViewModel extends ViewModel
     protected $category;
 
     /**
-     * [$config description]
-     *
-     * @var Config
-     */
-    protected $config;
-
-    /**
      * Undocumented function
      *
      * @param Dir $dir
-     * @param Config $config
      * @param Request $request
      */
     public function __construct(
         Dir $dir,
-        Config $config,
         Request $request
     ) {
         $this->dir = $dir;
 
-        $this->config = $config;
         $this->request = $request;
-    }
-
-    /**
-     * Undocumented function
-     *
-     * @param string $type
-     * @return string
-     */
-    public function driverByType(string $type): string
-    {
-        return $this->config->get("idir.payment.{$type}.driver");
     }
 
     /**
@@ -133,6 +111,14 @@ class EditRenewViewModel extends ViewModel
             $this->dir->fields
                 ->keyBy('id')
                 ->map(function ($item) {
+                    if ($item->type === 'map') {
+                        return collect($item->decode_value)->map(function ($item) {
+                            $item = (array)$item;
+
+                            return $item;
+                        })->toArray();
+                    }
+
                     return $item->decode_value;
                 })
                 ->toArray()

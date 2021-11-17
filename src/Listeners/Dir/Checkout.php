@@ -2,9 +2,6 @@
 
 namespace N1ebieski\IDir\Listeners\Dir;
 
-/**
- * [Checkout description]
- */
 class Checkout
 {
     /**
@@ -18,7 +15,7 @@ class Checkout
      *
      * @return bool
      */
-    public function verify() : bool
+    public function verify(): bool
     {
         return $this->event->dir->isActive();
     }
@@ -29,7 +26,7 @@ class Checkout
      * @param  object  $event
      * @return void
      */
-    public function handle($event) : void
+    public function handle($event): void
     {
         $this->event = $event;
 

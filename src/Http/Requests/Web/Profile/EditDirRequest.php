@@ -2,10 +2,10 @@
 
 namespace N1ebieski\IDir\Http\Requests\Web\Profile;
 
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Validation\Rule;
 use N1ebieski\IDir\Models\Group;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Foundation\Http\FormRequest;
 
 class EditDirRequest extends FormRequest
 {
@@ -47,7 +47,7 @@ class EditDirRequest extends FormRequest
                 'in:created_at|asc,created_at|desc,updated_at|asc,updated_at|desc,title|asc,title|desc,sum_rating|desc,sum_rating|asc,click|asc,click|desc,view|asc,view|desc',
                 'no_js_validation'
             ],
-            'filter.paginate' => Rule::in([$paginate, ($paginate*2), ($paginate*4)]) . '|integer|no_js_validation'
+            'filter.paginate' => Rule::in([$paginate, ($paginate * 2), ($paginate * 4)]) . '|integer|no_js_validation'
         ];
     }
 }

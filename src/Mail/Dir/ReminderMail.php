@@ -10,7 +10,8 @@ use Illuminate\Contracts\Translation\Translator as Lang;
 
 class ReminderMail extends Mailable
 {
-    use Queueable, SerializesModels;
+    use Queueable;
+    use SerializesModels;
 
     /**
      * Undocumented variable
@@ -59,7 +60,7 @@ class ReminderMail extends Mailable
      *
      * @return string
      */
-    protected function result() : string
+    protected function result(): string
     {
         if ($this->dir->group->alt_id === null) {
             return $this->lang->get('idir::dirs.mail.reminder.deactivation', [

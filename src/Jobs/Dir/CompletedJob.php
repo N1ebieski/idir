@@ -11,13 +11,16 @@ use Illuminate\Queue\InteractsWithQueue;
 use N1ebieski\IDir\Repositories\DirRepo;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use N1ebieski\IDir\Events\Job\Dir\CompletedEvent;
 use Illuminate\Contracts\Events\Dispatcher as Event;
 use Illuminate\Contracts\Foundation\Application as App;
-use N1ebieski\IDir\Events\Job\Dir\CompletedEvent;
 
 class CompletedJob implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     /**
      * Delete the job if its models no longer exist.
@@ -74,7 +77,7 @@ class CompletedJob implements ShouldQueue
      *
      * @return bool
      */
-    protected function verify() : bool
+    protected function verify(): bool
     {
         return $this->dir->isActive() && (
             (
@@ -98,7 +101,7 @@ class CompletedJob implements ShouldQueue
         App $app,
         Carbon $carbon,
         Event $event
-    ) : void {
+    ): void {
         $this->dirRepo = $this->dir->makeRepo();
 
         $this->app = $app;
@@ -120,7 +123,7 @@ class CompletedJob implements ShouldQueue
      *
      * @return void
      */
-    protected function executeResult() : void
+    protected function executeResult(): void
     {
         $this->dirRepo->nullablePrivileged();
 
@@ -138,7 +141,7 @@ class CompletedJob implements ShouldQueue
      *
      * @return void
      */
-    protected function executeDeactivation() : void
+    protected function executeDeactivation(): void
     {
         $this->dirRepo->deactivateByPayment();
     }
@@ -148,7 +151,7 @@ class CompletedJob implements ShouldQueue
      *
      * @return void
      */
-    protected function executeAltGroup() : void
+    protected function executeAltGroup(): void
     {
         $this->dir->setRelations([
                 'group' => $this->dir->group()->make()->find($this->dir->group->alt_id)

@@ -7,9 +7,6 @@ use N1ebieski\IDir\Models\Field\Field;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Collection as Collect;
 
-/**
- * [trait description]
- */
 trait FieldsExtended
 {
     /**

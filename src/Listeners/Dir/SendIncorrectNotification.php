@@ -55,7 +55,7 @@ class SendIncorrectNotification
      *
      * @return bool
      */
-    public function verify() : bool
+    public function verify(): bool
     {
         return $this->event->dir->isIncorrect()
             && optional($this->event->dir->user)->email
@@ -93,7 +93,7 @@ class SendIncorrectNotification
      *
      * @return boolean
      */
-    protected function updateNotes() : bool
+    protected function updateNotes(): bool
     {
         return $this->event->dir->update(['notes' => $this->event->reason]);
     }

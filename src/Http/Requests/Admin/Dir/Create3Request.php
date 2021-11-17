@@ -2,12 +2,9 @@
 
 namespace N1ebieski\IDir\Http\Requests\Admin\Dir;
 
-use N1ebieski\IDir\Http\Requests\Admin\Dir\Store2Request;
 use N1ebieski\IDir\Models\BanValue;
+use N1ebieski\IDir\Http\Requests\Admin\Dir\Store2Request;
 
-/**
- * [Create3Request description]
- */
 class Create3Request extends Store2Request
 {
     /**
@@ -46,7 +43,7 @@ class Create3Request extends Store2Request
      *
      * @return void
      */
-    protected function prepareForValidation() : void
+    protected function prepareForValidation(): void
     {
         if ($this->session()->has('dir')) {
             $this->merge($this->session()->get('dir'));

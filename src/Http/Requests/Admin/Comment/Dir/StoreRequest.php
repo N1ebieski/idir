@@ -2,8 +2,8 @@
 
 namespace N1ebieski\IDir\Http\Requests\Admin\Comment\Dir;
 
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Illuminate\Foundation\Http\FormRequest;
 use N1ebieski\IDir\Models\Comment\Dir\Comment;
 
 class StoreRequest extends FormRequest

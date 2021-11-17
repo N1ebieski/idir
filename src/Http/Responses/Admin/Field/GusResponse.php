@@ -54,7 +54,7 @@ class GusResponse implements JsonResponseFactory
      * @param GusReport $gusReport
      * @return JsonResponse
      */
-    public function makeResponse(GusReport $gusReport = null) : JsonResponse
+    public function makeResponse(GusReport $gusReport = null): JsonResponse
     {
         if ($gusReport === null) {
             return $this->response->json([

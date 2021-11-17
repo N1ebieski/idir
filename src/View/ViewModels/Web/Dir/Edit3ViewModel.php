@@ -10,7 +10,6 @@ use N1ebieski\IDir\Models\Price;
 use Spatie\ViewModels\ViewModel;
 use Illuminate\Database\Eloquent\Collection;
 use N1ebieski\IDir\Models\Category\Dir\Category;
-use Illuminate\Contracts\Config\Repository as Config;
 
 class Edit3ViewModel extends ViewModel
 {
@@ -43,13 +42,6 @@ class Edit3ViewModel extends ViewModel
     protected $link;
 
     /**
-     * [$config description]
-     *
-     * @var Config
-     */
-    protected $config;
-
-    /**
      * [$categoriesSelection description]
      *
      * @var Collection
@@ -70,7 +62,6 @@ class Edit3ViewModel extends ViewModel
      * @param Group $group
      * @param Category $category
      * @param Link $link
-     * @param Config $config
      * @param Request $request
      */
     public function __construct(
@@ -78,7 +69,6 @@ class Edit3ViewModel extends ViewModel
         Group $group,
         Category $category,
         Link $link,
-        Config $config,
         Request $request
     ) {
         $this->dir = $dir;
@@ -86,7 +76,6 @@ class Edit3ViewModel extends ViewModel
         $this->category = $category;
         $this->link = $link;
 
-        $this->config = $config;
         $this->request = $request;
     }
 
@@ -114,17 +103,6 @@ class Edit3ViewModel extends ViewModel
                 $this->categoriesSelection->pluck('ancestors')->flatten()->pluck('id')->toArray(),
                 $this->categoriesSelection->pluck('id')->toArray()
             )) : null;
-    }
-
-    /**
-     * Undocumented function
-     *
-     * @param string $type
-     * @return string
-     */
-    public function driverByType(string $type) : string
-    {
-        return $this->config->get("idir.payment.{$type}.driver");
     }
 
     /**

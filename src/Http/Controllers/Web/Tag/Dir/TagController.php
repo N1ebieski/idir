@@ -2,17 +2,14 @@
 
 namespace N1ebieski\IDir\Http\Controllers\Web\Tag\Dir;
 
-use Illuminate\Http\Response as HttpResponse;
-use Illuminate\Support\Facades\Response;
-use N1ebieski\IDir\Http\Requests\Web\Tag\ShowRequest;
-use N1ebieski\IDir\Filters\Web\Tag\ShowFilter;
-use N1ebieski\ICore\Models\Tag\Tag;
 use N1ebieski\IDir\Models\Dir;
+use N1ebieski\ICore\Models\Tag\Tag;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Http\Response as HttpResponse;
+use N1ebieski\IDir\Filters\Web\Tag\ShowFilter;
+use N1ebieski\IDir\Http\Requests\Web\Tag\ShowRequest;
 use N1ebieski\IDir\Http\Controllers\Web\Tag\Dir\Polymorphic;
 
-/**
- * [TagController description]
- */
 class TagController implements Polymorphic
 {
     /**
@@ -24,7 +21,7 @@ class TagController implements Polymorphic
      * @param  ShowFilter  $filter [description]
      * @return HttpResponse       [description]
      */
-    public function show(Tag $tag, Dir $dir, ShowRequest $request, ShowFilter $filter) : HttpResponse
+    public function show(Tag $tag, Dir $dir, ShowRequest $request, ShowFilter $filter): HttpResponse
     {
         return Response::view('idir::web.tag.dir.show', [
             'tag' => $tag,

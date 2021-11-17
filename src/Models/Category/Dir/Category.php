@@ -4,9 +4,6 @@ namespace N1ebieski\IDir\Models\Category\Dir;
 
 use N1ebieski\IDir\Models\Category\Category as BaseCategory;
 
-/**
- * [Category description]
- */
 class Category extends BaseCategory
 {
     // Configuration
@@ -48,7 +45,7 @@ class Category extends BaseCategory
      * [getPoliAttribute description]
      * @return string [description]
      */
-    public function getPoliAttribute() : string
+    public function getPoliAttribute(): string
     {
         return 'dir';
     }
@@ -60,7 +57,7 @@ class Category extends BaseCategory
      * @param  array    $filter    [description]
      * @return self [description]
      */
-    public function loadNestedWithMorphsCountByFilter(array $filter) : self
+    public function loadNestedWithMorphsCountByFilter(array $filter): self
     {
         return $this
             ->loadCount([

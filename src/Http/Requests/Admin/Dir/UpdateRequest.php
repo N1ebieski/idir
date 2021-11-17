@@ -2,21 +2,18 @@
 
 namespace N1ebieski\IDir\Http\Requests\Admin\Dir;
 
-use Illuminate\Foundation\Http\FormRequest;
-use N1ebieski\IDir\Http\Requests\Traits\FieldsExtended;
-use N1ebieski\ICore\Models\BanValue;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Lang;
-use Mews\Purifier\Facades\Purifier;
 use Illuminate\Validation\Rule;
-use N1ebieski\IDir\Models\Category\Dir\Category;
 use N1ebieski\IDir\Models\Group;
+use Illuminate\Support\Facades\App;
+use Mews\Purifier\Facades\Purifier;
+use Illuminate\Support\Facades\Lang;
+use N1ebieski\ICore\Models\BanValue;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Database\Eloquent\Collection;
+use N1ebieski\IDir\Models\Category\Dir\Category;
+use N1ebieski\IDir\Http\Requests\Traits\FieldsExtended;
 
-/**
- * [Update2Request description]
- */
 class UpdateRequest extends FormRequest
 {
     use FieldsExtended;
@@ -42,7 +39,7 @@ class UpdateRequest extends FormRequest
      * [getFields description]
      * @return Collection [description]
      */
-    public function getFields() : Collection
+    public function getFields(): Collection
     {
         return $this->dir->group->fields;
     }
@@ -62,7 +59,7 @@ class UpdateRequest extends FormRequest
      *
      * @return void
      */
-    protected function prepareForValidation() : void
+    protected function prepareForValidation(): void
     {
         $this->prepareTagsAttribute();
 
@@ -80,7 +77,7 @@ class UpdateRequest extends FormRequest
     /**
      * [prepareUrl description]
      */
-    protected function prepareUrlAttribute() : void
+    protected function prepareUrlAttribute(): void
     {
         if ($this->has('url') && $this->input('url') !== null) {
             if ($this->dir->group->url === 0) {
@@ -94,7 +91,7 @@ class UpdateRequest extends FormRequest
     /**
      * [prepareContentHtml description]
      */
-    protected function prepareContentHtmlAttribute() : void
+    protected function prepareContentHtmlAttribute(): void
     {
         if ($this->has('content_html')) {
             if ($this->dir->group->privileges->contains('name', 'additional options for editing content')) {
@@ -112,7 +109,7 @@ class UpdateRequest extends FormRequest
     /**
      * [prepareTitle description]
      */
-    protected function prepareTitleAttribute() : void
+    protected function prepareTitleAttribute(): void
     {
         if ($this->has('title')) {
             $this->merge([
@@ -126,7 +123,7 @@ class UpdateRequest extends FormRequest
     /**
      * [prepareContent description]
      */
-    protected function prepareContentAttribute() : void
+    protected function prepareContentAttribute(): void
     {
         if ($this->has('content_html')) {
             $this->merge([
@@ -138,7 +135,7 @@ class UpdateRequest extends FormRequest
     /**
      * [prepareTags description]
      */
-    protected function prepareTagsAttribute() : void
+    protected function prepareTagsAttribute(): void
     {
         if ($this->has('tags') && is_string($this->input('tags'))) {
             $this->merge([
@@ -197,14 +194,14 @@ class UpdateRequest extends FormRequest
                 'required',
                 'string',
                 'between:' . Config::get('idir.dir.min_content') . ',' . Config::get('idir.dir.max_content'),
-                !empty($this->bans) ? 'not_regex:/(.*)(\s|^)('.$this->bans.')(\s|\.|,|\?|$)(.*)/i' : null
+                !empty($this->bans) ? 'not_regex:/(.*)(\s|^)(' . $this->bans . ')(\s|\.|,|\?|$)(.*)/i' : null
             ],
             'content_html' => [
                 'bail',
                 'required',
                 'string',
                 'no_js_validation',
-            ],            
+            ],
             'notes' => 'bail|nullable|string|between:3,255',
             'url' => [
                 'bail',

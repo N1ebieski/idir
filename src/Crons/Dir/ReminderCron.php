@@ -81,7 +81,7 @@ class ReminderCron
     /**
      * [__invoke description]
      */
-    public function __invoke() : void
+    public function __invoke(): void
     {
         $this->dir->makeRepo()->chunkAvailableHasPaidRequirementByPrivilegedTo(
             function ($dirs) {
@@ -98,7 +98,7 @@ class ReminderCron
      *
      * @return string
      */
-    protected function makeReminderTimestamp() : string
+    protected function makeReminderTimestamp(): string
     {
         return $this->carbon->now()->addDays($this->left_days);
     }
@@ -109,7 +109,7 @@ class ReminderCron
      * @param Dir $dir
      * @return void
      */
-    protected function addToQueue(Dir $dir) : void
+    protected function addToQueue(Dir $dir): void
     {
         $this->reminderJob->dispatch($dir);
     }

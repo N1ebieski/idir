@@ -44,7 +44,7 @@ class IncrementView
      *
      * @return bool
      */
-    public function verify() : bool
+    public function verify(): bool
     {
         return $this->event->dir->isActive()
             && $this->migrationUtil->contains('create_stats_table');
@@ -56,7 +56,7 @@ class IncrementView
      * @param  object  $event
      * @return void
      */
-    public function handle($event) : void
+    public function handle($event): void
     {
         $this->event = $event;
 

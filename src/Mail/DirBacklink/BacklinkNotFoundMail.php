@@ -8,12 +8,10 @@ use Illuminate\Queue\SerializesModels;
 use N1ebieski\IDir\Models\DirBacklink;
 use Illuminate\Contracts\Translation\Translator as Lang;
 
-/**
- * [BacklinkNotFound description]
- */
 class BacklinkNotFoundMail extends Mailable
 {
-    use Queueable, SerializesModels;
+    use Queueable;
+    use SerializesModels;
 
     /**
      * [public description]
@@ -53,7 +51,7 @@ class BacklinkNotFoundMail extends Mailable
      *
      * @return self
      */
-    public function build() : self
+    public function build(): self
     {
         $this->dirBacklink->load(['link', 'dir', 'dir.user']);
 

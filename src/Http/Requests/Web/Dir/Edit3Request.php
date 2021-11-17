@@ -37,7 +37,7 @@ class Edit3Request extends Update2Request
      *
      * @return void
      */
-    protected function prepareForValidation() : void
+    protected function prepareForValidation(): void
     {
         if ($this->session()->has("dirId.{$this->dir->id}")) {
             $this->merge($this->session()->get("dirId.{$this->dir->id}"));

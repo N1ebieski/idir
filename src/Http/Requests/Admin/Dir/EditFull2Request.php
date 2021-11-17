@@ -4,9 +4,6 @@ namespace N1ebieski\IDir\Http\Requests\Admin\Dir;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-/**
- * [EditFull2Request description]
- */
 class EditFull2Request extends FormRequest
 {
     /**

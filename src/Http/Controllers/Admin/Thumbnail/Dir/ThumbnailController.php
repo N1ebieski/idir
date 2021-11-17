@@ -19,7 +19,7 @@ class ThumbnailController implements Polymorphic
      * @param GuzzleClient $guzzle
      * @return JsonResponse
      */
-    public function reload(Dir $dir, GuzzleClient $guzzle) : JsonResponse
+    public function reload(Dir $dir, GuzzleClient $guzzle): JsonResponse
     {
         try {
             $guzzle->request(

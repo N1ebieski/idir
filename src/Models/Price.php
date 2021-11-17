@@ -9,11 +9,13 @@ use N1ebieski\IDir\Repositories\PriceRepo;
 use Illuminate\Database\Eloquent\Collection;
 use N1ebieski\IDir\Models\Traits\Filterable;
 use Illuminate\Support\Collection as Collect;
+use Illuminate\Support\Facades\Config;
 use N1ebieski\ICore\Models\Traits\Carbonable;
 
 class Price extends Model
 {
-    use Filterable, Carbonable;
+    use Filterable;
+    use Carbonable;
 
     // Configuration
 
@@ -31,6 +33,7 @@ class Price extends Model
     protected $fillable = [
         'type',
         'price',
+        'discount_price',
         'days',
         'code',
         'token',
@@ -53,6 +56,7 @@ class Price extends Model
         'id' => 'integer',
         'group_id' => 'integer',
         'price' => 'decimal:2',
+        'discount_price' => 'decimal:2',
         'days' => 'integer',
         'number' => 'integer',
         'created_at' => 'datetime',
@@ -82,10 +86,60 @@ class Price extends Model
     // Accessors
 
     /**
+     * Undocumented function
+     *
+     * @return string
+     */
+    public function getPriceAttribute(): string
+    {
+        return is_null($this->discount_price) ? $this->regular_price : $this->discount_price;
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @return string
+     */
+    public function getRegularPriceAttribute(): string
+    {
+        return $this->attributes['price'];
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @return string|null
+     */
+    public function getDiscountPriceAttribute(): ?string
+    {
+        return Config::get('idir.payment.discount') === true ?
+            $this->attributes['discount_price']
+            : null;
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @return integer|null
+     */
+    public function getDiscountAttribute(): ?int
+    {
+        if (is_numeric($this->discount_price) && $this->discount_price < $this->regular_price) {
+            return (int)round(
+                ($this->regular_price - $this->discount_price) / $this->regular_price * 100,
+                0,
+                PHP_ROUND_HALF_DOWN
+            );
+        }
+
+        return null;
+    }
+
+    /**
      * [getCodesAsStringAttribute description]
      * @return string|null [description]
      */
-    public function getCodesAsStringAttribute() : ?string
+    public function getCodesAsStringAttribute(): ?string
     {
         if ($this->codes instanceof Collection && $this->codes->isNotEmpty()) {
             foreach ($this->codes as $code) {
@@ -102,7 +156,7 @@ class Price extends Model
      * [getCodesAttribute description]
      * @return Collect|null [description]
      */
-    public function getCodesAttribute() : Collect
+    public function getCodesAttribute(): Collect
     {
         if ($this->relationLoaded('codes') && $this->getRelation('codes') instanceof Collection) {
             return $this->getRelation('codes');
@@ -120,7 +174,7 @@ class Price extends Model
      *
      * @return boolean
      */
-    public function isUnlimited() : bool
+    public function isUnlimited(): bool
     {
         return $this->days === null;
     }

@@ -4,9 +4,6 @@ namespace N1ebieski\IDir\Loads\Web\Rating\Dir;
 
 use Illuminate\Http\Request;
 
-/**
- * [RateLoad description]
- */
 class RateLoad
 {
     /**

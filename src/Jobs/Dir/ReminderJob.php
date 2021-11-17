@@ -15,7 +15,10 @@ use Illuminate\Contracts\Container\Container as App;
 
 class ReminderJob implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     /**
      * Delete the job if its models no longer exist.
@@ -80,7 +83,7 @@ class ReminderJob implements ShouldQueue
      *
      * @return boolean
      */
-    protected function verify() : bool
+    protected function verify(): bool
     {
         return optional($this->dir->user)->email
             && optional($this->dir->user)->hasPermissionTo('web.dirs.notification');

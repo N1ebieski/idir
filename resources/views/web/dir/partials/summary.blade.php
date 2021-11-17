@@ -90,7 +90,7 @@
                         ])
                         @break;                        
 
-                    @case('image')                    
+                    @case('image')
                         <img 
                             class="img-fluid" 
                             src="{{ app('filesystem')->url($value['field'][$field->id]) }}"

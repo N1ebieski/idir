@@ -3,9 +3,9 @@
 namespace N1ebieski\IDir\Listeners\Dir;
 
 use Illuminate\Contracts\Mail\Mailer;
+use N1ebieski\IDir\Mail\Dir\CompletedMail;
 use Illuminate\Contracts\Foundation\Application as App;
 use Illuminate\Contracts\Debug\ExceptionHandler as Exception;
-use N1ebieski\IDir\Mail\Dir\CompletedMail;
 
 class CompletedNotification
 {
@@ -55,7 +55,7 @@ class CompletedNotification
      *
      * @return bool
      */
-    public function verify() : bool
+    public function verify(): bool
     {
         return optional($this->event->dir->user)->email
             && optional($this->event->dir->user)->hasPermissionTo('web.dirs.notification');

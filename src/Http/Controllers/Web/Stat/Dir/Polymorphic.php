@@ -17,5 +17,5 @@ interface Polymorphic
      * @param ClickRequest $request
      * @return JsonResponse
      */
-    public function click(Stat $stat, Dir $dir, ClickRequest $request) : JsonResponse;
+    public function click(Stat $stat, Dir $dir, ClickRequest $request): JsonResponse;
 }

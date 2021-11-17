@@ -48,14 +48,14 @@ $value = old("field.{$field->id}", $value ?? null);
                     type="hidden" 
                     id="field.{{ $field->id }}.0.lat" 
                     name="field[{{ $field->id }}][0][lat]" 
-                    value="{{ $value[0]->lat ?? ($value[0]['lat'] ?? null) }}"
+                    value="{{ $value[0]['lat'] ?? null }}"
                 >
                 @includeWhen($errors->has("field.{$field->id}.0.lat"), 'icore::web.partials.errors', ['name' => "field.{$field->id}.0.lat"])
                 <input 
                     type="hidden" 
                     id="field.{{ $field->id }}.0.long" 
                     name="field[{{ $field->id }}][0][long]" 
-                    value="{{ $value[0]->long ?? ($value[0]['long'] ?? null) }}"
+                    value="{{ $value[0]['long'] ?? null }}"
                 >   
                 @includeWhen($errors->has("field.{$field->id}.0.long"), 'icore::web.partials.errors', ['name' => "field.{$field->id}.0.long"]) 
             </div>

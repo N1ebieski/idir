@@ -16,9 +16,6 @@ use N1ebieski\IDir\Http\Requests\Web\Contact\Dir\SendRequest;
 use N1ebieski\IDir\Http\Requests\Web\Contact\Dir\ShowRequest;
 use N1ebieski\IDir\Http\Controllers\Web\Contact\Dir\Polymorphic;
 
-/**
- * [ContactController description]
- */
 class ContactController implements Polymorphic
 {
     /**
@@ -28,7 +25,7 @@ class ContactController implements Polymorphic
      * @param ShowRequest $request
      * @return JsonResponse
      */
-    public function show(Dir $dir, ShowRequest $request) : JsonResponse
+    public function show(Dir $dir, ShowRequest $request): JsonResponse
     {
         return Response::json([
             'view' => View::make('idir::web.contact.dir.show')->render()
@@ -43,7 +40,7 @@ class ContactController implements Polymorphic
      * @param Exception $exception
      * @return JsonResponse
      */
-    public function send(Dir $dir, SendRequest $request, Exception $exception) : JsonResponse
+    public function send(Dir $dir, SendRequest $request, Exception $exception): JsonResponse
     {
         try {
             Mail::send(App::make(ContactMail::class, ['dir' => $dir]));

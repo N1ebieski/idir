@@ -11,6 +11,7 @@ use N1ebieski\ICore\Models\Traits\Carbonable;
 use N1ebieski\ICore\Models\Traits\Polymorphic;
 use N1ebieski\ICore\Models\Traits\Positionable;
 use N1ebieski\IDir\Services\Field\FieldService;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use N1ebieski\ICore\Models\Traits\FullTextSearchable;
 
 class Field extends Model
@@ -96,12 +97,13 @@ class Field extends Model
     // Relations
 
     /**
-     * [siblings description]
-     * @return [type] [description]
+     * Undocumented function
+     *
+     * @return HasMany
      */
-    public function siblings()
+    public function siblings(): HasMany
     {
-        return $this->hasMany('N1ebieski\IDir\Models\Field\Field', 'model_type', 'model_type');
+        return $this->hasMany(\N1ebieski\IDir\Models\Field\Field::class, 'model_type', 'model_type');
     }
 
     // Scopes
@@ -114,34 +116,6 @@ class Field extends Model
     public function scopePublic(Builder $query): Builder
     {
         return $query->where('visible', static::VISIBLE);
-    }
-
-    // Overrides
-
-    /**
-     * The "booting" method of the model.
-     *
-     * @return void
-     */
-    public static function boot()
-    {
-        parent::boot();
-
-        static::saving(function (Field $field) {
-            $field->position = $field->position ?? $field->getNextAfterLastPosition();
-        });
-
-        // Everytime the model is removed, we have to decrement siblings position by 1
-        static::deleted(function (Field $field) {
-            $field->decrementSiblings($field->position, null);
-        });
-
-        // Everytime the model's position
-        // is changed, all siblings reordering will happen,
-        // so they will always keep the proper order.
-        static::saved(function (Field $field) {
-            $field->reorderSiblings();
-        });
     }
 
     // Accessors

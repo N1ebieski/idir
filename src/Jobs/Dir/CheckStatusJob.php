@@ -3,6 +3,7 @@
 namespace N1ebieski\IDir\Jobs\Dir;
 
 use Exception;
+use Illuminate\Support\Str;
 use Illuminate\Bus\Queueable;
 use Illuminate\Support\Carbon;
 use N1ebieski\IDir\Models\DirStatus;
@@ -15,14 +16,13 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use N1ebieski\IDir\Repositories\DirStatusRepo;
 use GuzzleHttp\Psr7\Response as GuzzleResponse;
 use Illuminate\Contracts\Config\Repository as Config;
-use Illuminate\Support\Str;
 
-/**
- * [CheckStatus description]
- */
 class CheckStatusJob implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     /**
      * [protected description]
@@ -116,7 +116,7 @@ class CheckStatusJob implements ShouldQueue
      *
      * @return string
      */
-    public function getLastUrlFromRedirect() : string
+    public function getLastUrlFromRedirect(): string
     {
         $redirects = $this->response->getHeader(\GuzzleHttp\RedirectMiddleware::HISTORY_HEADER);
 
@@ -127,7 +127,7 @@ class CheckStatusJob implements ShouldQueue
      * [isAttempt description]
      * @return bool [description]
      */
-    protected function isAttempt() : bool
+    protected function isAttempt(): bool
     {
         return $this->dirStatus->attempted_at === null ||
             $this->carbon->parse($this->dirStatus->attempted_at)->lessThanOrEqualTo(
@@ -140,7 +140,7 @@ class CheckStatusJob implements ShouldQueue
      *
      * @return boolean
      */
-    protected function isMaxAttempt() : bool
+    protected function isMaxAttempt(): bool
     {
         return $this->dirStatus->attempts >= $this->max_attempts;
     }
@@ -150,7 +150,7 @@ class CheckStatusJob implements ShouldQueue
      *
      * @return GuzzleResponse
      */
-    public function makeResponse() : GuzzleResponse
+    public function makeResponse(): GuzzleResponse
     {
         return $this->response = $this->guzzle->request(
             'GET',
@@ -168,7 +168,7 @@ class CheckStatusJob implements ShouldQueue
      * [validate description]
      * @return bool [description]
      */
-    protected function validateStatus() : bool
+    protected function validateStatus(): bool
     {
         try {
             $this->makeResponse();
@@ -192,7 +192,7 @@ class CheckStatusJob implements ShouldQueue
      *
      * @return string
      */
-    protected function prepareParkedDomains() : string
+    protected function prepareParkedDomains(): string
     {
         return $this->parked_domains = $this->str->escaped(implode('|', $this->parked_domains));
     }
@@ -202,7 +202,7 @@ class CheckStatusJob implements ShouldQueue
      *
      * @return boolean
      */
-    protected function isParked() : bool
+    protected function isParked(): bool
     {
         if (count($this->parked_domains) > 0 && $redirect = $this->getLastUrlFromRedirect()) {
             return preg_match('/(' . $this->prepareParkedDomains() . ')/', $redirect);
@@ -216,7 +216,7 @@ class CheckStatusJob implements ShouldQueue
      *
      * @return boolean
      */
-    protected function isStatus() : bool
+    protected function isStatus(): bool
     {
         return $this->response->getStatusCode() === 200;
     }
@@ -226,7 +226,7 @@ class CheckStatusJob implements ShouldQueue
      *
      * @return void
      */
-    protected function executeValidStatus() : void
+    protected function executeValidStatus(): void
     {
         $this->dirStatusRepo->resetAttempts();
 
@@ -238,7 +238,7 @@ class CheckStatusJob implements ShouldQueue
      *
      * @return void
      */
-    protected function executeInvalidStatus() : void
+    protected function executeInvalidStatus(): void
     {
         $this->dirStatusRepo->incrementAttempts();
 
@@ -260,7 +260,7 @@ class CheckStatusJob implements ShouldQueue
         Carbon $carbon,
         Config $config,
         Str $str
-    ) : void {
+    ): void {
         $this->dirStatusRepo = $this->dirStatus->makeRepo();
         $this->dirRepo = $this->dirStatus->dir->makeRepo();
 

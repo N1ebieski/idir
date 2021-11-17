@@ -5,9 +5,6 @@ namespace N1ebieski\IDir\Http\Requests\Admin\BanModel\Dir;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-/**
- * [StoreRequest description]
- */
 class StoreRequest extends FormRequest
 {
     /**

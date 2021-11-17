@@ -42,5 +42,16 @@ class ViewServiceProvider extends ServiceProvider
             ],
             \N1ebieski\IDir\View\Composers\RegionsComposer::class
         );
+
+        $this->app['view']->composer(
+            [
+                $layout . '::web.dir.partials.group',
+                $layout . '::web.dir.partials.payment',
+                $layout . '::admin.dir.partials.group',
+                $layout . '::admin.dir.partials.payment',
+                $layout . '::admin.price.partials.price'
+            ],
+            \N1ebieski\IDir\View\Composers\DriverComposer::class
+        );
     }
 }

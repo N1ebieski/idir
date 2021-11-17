@@ -25,7 +25,7 @@ class UpdateRequest extends FormRequest
     /**
      * [prepareForValidation description]
      */
-    public function prepareForValidation() : void
+    public function prepareForValidation(): void
     {
         $this->prepareOptionsAttribute();
     }
@@ -33,16 +33,16 @@ class UpdateRequest extends FormRequest
     /**
      * [prepareOptionsAttribute description]
      */
-    protected function prepareOptionsAttribute() : void
+    protected function prepareOptionsAttribute(): void
     {
         foreach ($this->types as $type) {
-            if (!$this->has($type.'.options') || $this->input($type.'.options') === null) {
+            if (!$this->has($type . '.options') || $this->input($type . '.options') === null) {
                 continue;
             }
 
             $this->merge([
                 $type => [
-                    'options' => explode("\r\n", $this->input($type.'.options'))
+                    'options' => explode("\r\n", $this->input($type . '.options'))
                 ]
             ]);
         }

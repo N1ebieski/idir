@@ -3,8 +3,8 @@
 namespace N1ebieski\IDir\Http\Controllers\Admin\Thumbnail\Dir;
 
 use N1ebieski\IDir\Models\Dir;
-use GuzzleHttp\Client as GuzzleClient;
 use Illuminate\Http\JsonResponse;
+use GuzzleHttp\Client as GuzzleClient;
 
 interface Polymorphic
 {
@@ -15,5 +15,5 @@ interface Polymorphic
      * @param GuzzleClient $guzzle
      * @return JsonResponse
      */
-    public function reload(Dir $dir, GuzzleClient $guzzle) : JsonResponse;    
+    public function reload(Dir $dir, GuzzleClient $guzzle): JsonResponse;
 }

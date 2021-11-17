@@ -9,7 +9,6 @@ use N1ebieski\IDir\Models\Price;
 use Spatie\ViewModels\ViewModel;
 use Illuminate\Database\Eloquent\Collection;
 use N1ebieski\IDir\Models\Category\Dir\Category;
-use Illuminate\Contracts\Config\Repository as Config;
 
 class Create3ViewModel extends ViewModel
 {
@@ -35,13 +34,6 @@ class Create3ViewModel extends ViewModel
     public $group;
 
     /**
-     * [$config description]
-     *
-     * @var Config
-     */
-    protected $config;
-
-    /**
      * [$categoriesSelection description]
      *
      * @var Collection
@@ -61,21 +53,18 @@ class Create3ViewModel extends ViewModel
      * @param   Group     $group     [$group description]
      * @param   Category  $category  [$category description]
      * @param   Link      $link      [$link description]
-     * @param   Config    $config    [$config description]
      * @param   Request   $request   [$request description]
      */
     public function __construct(
         Group $group,
         Category $category,
         Link $link,
-        Config $config,
         Request $request
     ) {
         $this->group = $group;
         $this->category = $category;
         $this->link = $link;
 
-        $this->config = $config;
         $this->request = $request;
     }
 
@@ -103,17 +92,6 @@ class Create3ViewModel extends ViewModel
                 $this->categoriesSelection->pluck('ancestors')->flatten()->pluck('id')->toArray(),
                 $this->categoriesSelection->pluck('id')->toArray()
             )) : null;
-    }
-
-    /**
-     * Undocumented function
-     *
-     * @param string $type
-     * @return string
-     */
-    public function driverByType(string $type) : string
-    {
-        return $this->config->get("idir.payment.{$type}.driver");
     }
 
     /**

@@ -41,7 +41,7 @@ class Store3Request extends Store2Request
     /**
      * [prepareForValidation description]
      */
-    protected function prepareForValidation() : void
+    protected function prepareForValidation(): void
     {
         if ($this->session()->has('dir')) {
             $this->merge($this->all() + $this->session()->get('dir'));
@@ -161,7 +161,7 @@ class Store3Request extends Store2Request
                             ['group_id', $this->group->id]
                         ]);
                     })
-                ] : ['no_js_validation']                
+                ] : ['no_js_validation']
             ] :  App::make(Captcha::class)->toRules()
         );
     }

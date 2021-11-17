@@ -4,9 +4,6 @@ namespace N1ebieski\IDir\Http\Requests\Web\Dir;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-/**
- * [EditRenewRequest description]
- */
 class EditRenewRequest extends FormRequest
 {
     /**

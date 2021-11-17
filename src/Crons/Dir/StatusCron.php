@@ -7,9 +7,6 @@ use N1ebieski\IDir\Jobs\Dir\CheckStatusJob;
 use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Support\Carbon;
 
-/**
- * [StatusCron description]
- */
 class StatusCron
 {
     /**
@@ -65,12 +62,12 @@ class StatusCron
         Carbon $carbon
     ) {
         $this->dirStatus = $dirStatus;
-        
+
         $this->checkStatusJob = $checkStatusJob;
 
         $this->config = $config;
         $this->carbon = $carbon;
-        
+
         $this->checkDays = (int)$this->config->get('idir.dir.status.check_days');
         $this->maxAttempts = (int)$this->config->get('idir.dir.status.max_attempts');
     }
@@ -80,7 +77,7 @@ class StatusCron
      *
      * @return boolean
      */
-    protected function isStatusCheckerTurnOn() : bool
+    protected function isStatusCheckerTurnOn(): bool
     {
         return $this->checkDays > 0 && $this->maxAttempts > 0;
     }
@@ -90,7 +87,7 @@ class StatusCron
      *
      * @return string
      */
-    protected function makeCheckTimestamp() : string
+    protected function makeCheckTimestamp(): string
     {
         return $this->carbon->now()->subDays($this->checkDays);
     }
@@ -98,7 +95,7 @@ class StatusCron
     /**
      * [__invoke description]
      */
-    public function __invoke() : void
+    public function __invoke(): void
     {
         if (!$this->isStatusCheckerTurnOn()) {
             return;
@@ -120,7 +117,7 @@ class StatusCron
      * @param DirStatus $dirStatus
      * @return void
      */
-    protected function addToQueue(DirStatus $dirStatus) : void
+    protected function addToQueue(DirStatus $dirStatus): void
     {
         $this->checkStatusJob->dispatch($dirStatus);
     }

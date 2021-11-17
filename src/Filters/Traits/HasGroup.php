@@ -4,9 +4,6 @@ namespace N1ebieski\IDir\Filters\Traits;
 
 use N1ebieski\IDir\Models\Group;
 
-/**
- * [trait description]
- */
 trait HasGroup
 {
     /**
@@ -24,7 +21,7 @@ trait HasGroup
      * [filterGroup description]
      * @param int|null $id [description]
      */
-    public function filterGroup(int $id = null) : void
+    public function filterGroup(int $id = null): void
     {
         $this->parameters['group'] = null;
 
@@ -40,7 +37,7 @@ trait HasGroup
      * @param  int   $id [description]
      * @return Group     [description]
      */
-    protected function findGroup(int $id) : Group
+    protected function findGroup(int $id): Group
     {
         return Group::find($id, ['id', 'name']);
     }

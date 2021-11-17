@@ -15,10 +15,11 @@ class DirController
      * @param Dir $dir
      * @return RedirectResponse
      */
-    public function show(Dir $dir) : RedirectResponse
+    public function show(Dir $dir): RedirectResponse
     {
         return Response::redirectToRoute(
-            'web.dir.show', [$dir->slug],
+            'web.dir.show',
+            [$dir->slug],
             HttpResponse::HTTP_MOVED_PERMANENTLY
         );
     }

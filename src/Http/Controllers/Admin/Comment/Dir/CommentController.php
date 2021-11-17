@@ -45,7 +45,7 @@ class CommentController implements Polymorphic
      * @param  IndexFilter   $filter        [description]
      * @return HttpResponse                         [description]
      */
-    public function index(Comment $comment, IndexRequest $request, IndexFilter $filter) : HttpResponse
+    public function index(Comment $comment, IndexRequest $request, IndexFilter $filter): HttpResponse
     {
         return $this->decorated->index($comment, $request, $filter);
     }
@@ -57,7 +57,7 @@ class CommentController implements Polymorphic
      * @param CreateRequest $request
      * @return JsonResponse
      */
-    public function create(Dir $dir, CreateRequest $request) : JsonResponse
+    public function create(Dir $dir, CreateRequest $request): JsonResponse
     {
         return Response::json([
             'success' => '',
@@ -75,7 +75,7 @@ class CommentController implements Polymorphic
      * @param  StoreRequest $request [description]
      * @return JsonResponse          [description]
      */
-    public function store(Dir $dir, Comment $comment, StoreRequest $request) : JsonResponse
+    public function store(Dir $dir, Comment $comment, StoreRequest $request): JsonResponse
     {
         $comment = $comment->setRelations(['morph' => $dir])
             ->makeService()

@@ -44,7 +44,7 @@ class Regions extends Value
      *
      * @return int|null
      */
-    public function __invoke() : ?int
+    public function __invoke(): ?int
     {
         $province = $this->str->slug($this->gusReport->getProvince());
 

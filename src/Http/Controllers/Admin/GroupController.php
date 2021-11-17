@@ -31,7 +31,7 @@ class GroupController
      * @param  IndexFilter   $filter        [description]
      * @return HttpResponse                         [description]
      */
-    public function index(Group $group, IndexRequest $request, IndexFilter $filter) : HttpResponse
+    public function index(Group $group, IndexRequest $request, IndexFilter $filter): HttpResponse
     {
         return Response::view('idir::admin.group.index', [
             'groups' => $group->makeRepo()->paginateByFilter($filter->all()),
@@ -45,7 +45,7 @@ class GroupController
      *
      * @return HttpResponse
      */
-    public function create() : HttpResponse
+    public function create(): HttpResponse
     {
         return Response::view('idir::admin.group.create', App::make(CreateViewModel::class));
     }
@@ -57,7 +57,7 @@ class GroupController
      * @param  StoreRequest  $request
      * @return RedirectResponse
      */
-    public function store(Group $group, StoreRequest $request) : RedirectResponse
+    public function store(Group $group, StoreRequest $request): RedirectResponse
     {
         $group->makeService()->create($request->all());
 
@@ -72,7 +72,7 @@ class GroupController
      * @param  EditRequest $request    [description]
      * @return HttpResponse
      */
-    public function edit(Group $group, EditRequest $request) : HttpResponse
+    public function edit(Group $group, EditRequest $request): HttpResponse
     {
         return Response::view(
             'idir::admin.group.edit',
@@ -89,7 +89,7 @@ class GroupController
      * @param  UpdateRequest $request  [description]
      * @return RedirectResponse
      */
-    public function update(Group $group, UpdateRequest $request) : RedirectResponse
+    public function update(Group $group, UpdateRequest $request): RedirectResponse
     {
         $group->makeService()->update($request->all());
 
@@ -102,7 +102,7 @@ class GroupController
      * @param  Group     $group [description]
      * @return JsonResponse           [description]
      */
-    public function editPosition(Group $group) : JsonResponse
+    public function editPosition(Group $group): JsonResponse
     {
         return Response::json([
             'success' => '',
@@ -119,7 +119,7 @@ class GroupController
      * @param  UpdatePositionRequest $request  [description]
      * @return JsonResponse                    [description]
      */
-    public function updatePosition(Group $group, UpdatePositionRequest $request) : JsonResponse
+    public function updatePosition(Group $group, UpdatePositionRequest $request): JsonResponse
     {
         $group->makeService()->updatePosition($request->only('position'));
 
@@ -136,10 +136,10 @@ class GroupController
      * @param  DestroyRequest $request
      * @return RedirectResponse
      */
-    public function destroy(Group $group, DestroyRequest $request) : RedirectResponse
+    public function destroy(Group $group, DestroyRequest $request): RedirectResponse
     {
         $group->makeService()->delete();
-        
+
         return Response::redirectToRoute("admin.group.index")
             ->with('success', Lang::get('idir::groups.success.destroy'));
     }

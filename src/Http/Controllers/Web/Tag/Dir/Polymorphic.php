@@ -8,9 +8,6 @@ use Illuminate\Http\Response as HttpResponse;
 use N1ebieski\IDir\Filters\Web\Tag\ShowFilter;
 use N1ebieski\IDir\Http\Requests\Web\Tag\ShowRequest;
 
-/**
- * [interface description]
- */
 interface Polymorphic
 {
     /**
@@ -22,5 +19,5 @@ interface Polymorphic
      * @param  ShowFilter  $filter [description]
      * @return HttpResponse       [description]
      */
-    public function show(Tag $tag, Dir $dir, ShowRequest $request, ShowFilter $filter) : HttpResponse;
+    public function show(Tag $tag, Dir $dir, ShowRequest $request, ShowFilter $filter): HttpResponse;
 }

@@ -15,7 +15,7 @@ class VerifyRequest extends FormRequest implements VerifyRequestStrategy
      *
      * @return bool
      */
-    public function authorize() : bool
+    public function authorize(): bool
     {
         return true;
     }
@@ -46,7 +46,7 @@ class VerifyRequest extends FormRequest implements VerifyRequestStrategy
      *
      * @return array
      */
-    public function rules() : array
+    public function rules(): array
     {
         return [
             'service' => 'bail|required|string|in:' . Config::get("services.cashbill.transfer.service"),

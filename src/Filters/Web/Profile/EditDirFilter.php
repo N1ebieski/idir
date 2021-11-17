@@ -12,5 +12,10 @@ use N1ebieski\ICore\Filters\Traits\HasPaginate;
 
 class EditDirFilter extends Filter
 {
-    use HasExcept, HasSearch, HasStatus, HasGroup, HasOrderBy, HasPaginate;
+    use HasExcept;
+    use HasSearch;
+    use HasStatus;
+    use HasGroup;
+    use HasOrderBy;
+    use HasPaginate;
 }

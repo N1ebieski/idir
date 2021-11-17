@@ -2,13 +2,10 @@
 
 namespace N1ebieski\IDir\Http\Requests\Admin\Dir;
 
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Foundation\Http\FormRequest;
 
-/**
- * [IndexRequest description]
- */
 class IndexRequest extends FormRequest
 {
     /**
@@ -46,7 +43,7 @@ class IndexRequest extends FormRequest
                 'in:created_at|asc,created_at|desc,updated_at|asc,updated_at|desc,title|asc,title|desc,sum_rating|desc,sum_rating|asc,click|desc,click|asc,view|desc,view|asc',
                 'no_js_validation'
             ],
-            'filter.paginate' => Rule::in([$paginate, ($paginate*2), ($paginate*4)]) . '|integer|no_js_validation'
+            'filter.paginate' => Rule::in([$paginate, ($paginate * 2), ($paginate * 4)]) . '|integer|no_js_validation'
         ];
     }
 }

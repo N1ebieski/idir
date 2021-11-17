@@ -27,7 +27,7 @@ class PriceController
      * @param IndexFilter $filter
      * @return HttpResponse
      */
-    public function index(Price $price, Group $group, IndexRequest $request, IndexFilter $filter) : HttpResponse
+    public function index(Price $price, Group $group, IndexRequest $request, IndexFilter $filter): HttpResponse
     {
         return Response::view('idir::admin.price.index', [
             'prices' => $price->makeRepo()->paginateByFilter($filter->all()),
@@ -45,7 +45,7 @@ class PriceController
      * @param CreateRequest $request
      * @return JsonResponse
      */
-    public function create(Price $price, Group $group, CreateRequest $request) : JsonResponse
+    public function create(Price $price, Group $group, CreateRequest $request): JsonResponse
     {
         return Response::json([
             'success' => '',
@@ -64,7 +64,7 @@ class PriceController
      * @param StoreRequest $request
      * @return JsonResponse
      */
-    public function store(Price $price, StoreRequest $request) : JsonResponse
+    public function store(Price $price, StoreRequest $request): JsonResponse
     {
         $price->makeService()->create($request->validated());
 
@@ -81,7 +81,7 @@ class PriceController
      * @param EditLoad $load
      * @return JsonResponse
      */
-    public function edit(Price $price, Group $group, EditLoad $load) : JsonResponse
+    public function edit(Price $price, Group $group, EditLoad $load): JsonResponse
     {
         return Response::json([
             'success' => '',
@@ -99,7 +99,7 @@ class PriceController
      * @param UpdateRequest $request
      * @return JsonResponse
      */
-    public function update(Price $price, UpdateRequest $request) : JsonResponse
+    public function update(Price $price, UpdateRequest $request): JsonResponse
     {
         $price->makeService()->update($request->validated());
 
@@ -117,7 +117,7 @@ class PriceController
      * @param Price $price
      * @return JsonResponse
      */
-    public function destroy(Price $price) : JsonResponse
+    public function destroy(Price $price): JsonResponse
     {
         $price->makeService()->delete();
 

@@ -8,9 +8,6 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Foundation\Http\FormRequest;
 use N1ebieski\IDir\Http\Requests\Web\Payment\Interfaces\CompleteRequestStrategy;
 
-/**
- * [CompleteRequest description]
- */
 class CompleteRequest extends FormRequest implements CompleteRequestStrategy
 {
     /**
@@ -18,7 +15,7 @@ class CompleteRequest extends FormRequest implements CompleteRequestStrategy
      *
      * @return bool
      */
-    public function authorize() : bool
+    public function authorize(): bool
     {
         return true;
     }
@@ -28,7 +25,7 @@ class CompleteRequest extends FormRequest implements CompleteRequestStrategy
      *
      * @return void
      */
-    public function prepareForValidation() : void
+    public function prepareForValidation(): void
     {
         if ($this->has('userdata')) {
             $userdata = json_decode($this->input('userdata'));
@@ -49,7 +46,7 @@ class CompleteRequest extends FormRequest implements CompleteRequestStrategy
      *
      * @return array
      */
-    public function rules() : array
+    public function rules(): array
     {
         return [
             'service' => 'bail|required|string|in:' . Config::get("services.cashbill.transfer.service"),

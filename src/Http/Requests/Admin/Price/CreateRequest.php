@@ -2,8 +2,6 @@
 
 namespace N1ebieski\IDir\Http\Requests\Admin\Price;
 
-use Illuminate\Validation\Rule;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CreateRequest extends FormRequest

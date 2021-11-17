@@ -16,7 +16,7 @@ class CategoryController
      * @param Category $category
      * @return RedirectResponse
      */
-    public function show(Category $category, ShowRequest $request) : RedirectResponse
+    public function show(Category $category, ShowRequest $request): RedirectResponse
     {
         return Response::redirectToRoute(
             'web.category.dir.show',

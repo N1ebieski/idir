@@ -4,9 +4,6 @@ namespace N1ebieski\IDir\Listeners\Dir;
 
 use Illuminate\Contracts\Session\Session;
 
-/**
- * [ClearSession description]
- */
 class ClearSession
 {
     /**
