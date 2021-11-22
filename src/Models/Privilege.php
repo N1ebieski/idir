@@ -34,7 +34,7 @@ class Privilege extends Model
         return $this->belongsToMany(\N1ebieski\IDir\Models\Group::class, 'groups_privileges');
     }
 
-    // Makers
+    // Factories
 
     /**
      * [makeRepo description]

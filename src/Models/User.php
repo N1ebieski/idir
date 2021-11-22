@@ -38,7 +38,7 @@ class User extends BaseUser
         return $this->hasMany(\N1ebieski\IDir\Models\Dir::class);
     }
 
-    // Makers
+    // Factories
 
     /**
      * [makeRepo description]

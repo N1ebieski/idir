@@ -835,7 +835,7 @@ class Dir extends Model
         $this->attributes['content'] = !empty($value) ? strip_tags($value) : null;
     }
 
-    // Makers
+    // Factories
 
     /**
      * [makeRepo description]

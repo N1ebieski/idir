@@ -73,7 +73,7 @@ class DirBacklink extends Model
         return $this->belongsTo(\N1ebieski\ICore\Models\Link::class);
     }
 
-    // Makers
+    // Factories
 
     /**
      * [makeRepo description]

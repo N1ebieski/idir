@@ -176,7 +176,7 @@ class Field extends Model
         return (int)$this->options->required === static::REQUIRED;
     }
 
-    // Makers
+    // Factories
 
     /**
      * [makeRepo description]

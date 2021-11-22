@@ -170,7 +170,7 @@ class Payment extends Model
         return $this->status === static::UNFINISHED;
     }
 
-    // Makers
+    // Factories
 
     /**
      * [makeService description]

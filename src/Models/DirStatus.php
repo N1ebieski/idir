@@ -62,7 +62,7 @@ class DirStatus extends Model
         return $this->belongsTo(\N1ebieski\IDir\Models\Dir::class);
     }
 
-    // Makers
+    // Factories
 
     /**
      * [makeRepo description]

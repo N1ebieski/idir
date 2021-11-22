@@ -8,7 +8,7 @@ use N1ebieski\ICore\Models\BanValue as BaseBanValue;
 
 class BanValue extends BaseBanValue
 {
-    // Makers
+    // Factories
 
     /**
      * [makeCache description]

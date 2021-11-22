@@ -21,7 +21,7 @@ class Link extends BaseLink
         return BaseLink::class;
     }
 
-    // Makers
+    // Factories
 
     /**
      * [makeCache description]

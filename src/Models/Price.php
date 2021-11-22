@@ -183,7 +183,7 @@ class Price extends Model
         return $this->days === null;
     }
 
-    // Makers
+    // Factories
 
     /**
      * [makeService description]

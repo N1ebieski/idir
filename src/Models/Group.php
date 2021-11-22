@@ -378,7 +378,7 @@ class Group extends Model
         ]);
     }
 
-    // Makers
+    // Factories
 
     /**
      * [makeRepo description]

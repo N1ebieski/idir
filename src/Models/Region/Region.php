@@ -46,7 +46,7 @@ class Region extends Model
         'updated_at' => 'datetime'
     ];
 
-    // Makers
+    // Factories
 
     /**
      * [makeCache description]

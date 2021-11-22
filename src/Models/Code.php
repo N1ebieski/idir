@@ -47,7 +47,7 @@ class Code extends Model
         return $this->belongsTo(\N1ebieski\IDir\Models\Price::class);
     }
 
-    // Makers
+    // Factories
 
     /**
      * [makeService description]

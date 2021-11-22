@@ -9,7 +9,7 @@ use N1ebieski\ICore\Models\Category\Category as BaseCategory;
 
 class Category extends BaseCategory
 {
-    // Makers
+    // Factories
 
     /**
      * [makeRepo description]
