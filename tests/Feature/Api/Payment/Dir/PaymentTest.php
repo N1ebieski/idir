@@ -2,26 +2,23 @@
 
 namespace N1ebieski\IDir\Tests\Feature\Api\Payment\Dir;
 
-use Illuminate\Support\Facades\Config;
-use N1ebieski\ICore\Models\Link;
-use N1ebieski\IDir\Models\Dir;
-use N1ebieski\IDir\Models\Field\Group\Field;
 use Tests\TestCase;
-use N1ebieski\IDir\Models\User;
-use N1ebieski\IDir\Models\Group;
-use N1ebieski\IDir\Models\Category\Dir\Category;
-use N1ebieski\IDir\Models\Price;
-use N1ebieski\IDir\Models\Payment\Dir\Payment;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\UploadedFile;
-use GuzzleHttp\Client as GuzzleClient;
-use GuzzleHttp\Psr7\Response as GuzzleResponse;
 use Illuminate\Support\Str;
+use N1ebieski\IDir\Models\Dir;
+use N1ebieski\IDir\Models\User;
+use N1ebieski\ICore\Models\Link;
+use N1ebieski\IDir\Models\Group;
+use N1ebieski\IDir\Models\Price;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Auth;
+use GuzzleHttp\Client as GuzzleClient;
+use Illuminate\Support\Facades\Config;
+use N1ebieski\IDir\Models\Field\Group\Field;
+use N1ebieski\IDir\Models\Payment\Dir\Payment;
+use GuzzleHttp\Psr7\Response as GuzzleResponse;
+use N1ebieski\IDir\Models\Category\Dir\Category;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 
-/**
- * [DirTest description]
- */
 class PaymentTest extends TestCase
 {
     use DatabaseTransactions;
@@ -30,7 +27,7 @@ class PaymentTest extends TestCase
      * [PAYMENT_PROVIDER description]
      * @var string
      */
-    const PAYMENT_PROVIDER = 'cashbill';
+    private const PAYMENT_PROVIDER = 'cashbill';
 
     /**
      * [protected description]
@@ -41,7 +38,7 @@ class PaymentTest extends TestCase
     /**
      * [setUp description]
      */
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -53,20 +50,20 @@ class PaymentTest extends TestCase
      * @param  Payment $payment [description]
      * @return array            [description]
      */
-    protected function providerSetup(Payment $payment) : array
+    protected function providerSetup(Payment $payment): array
     {
         $provider['service'] = config('services.' . static::PAYMENT_PROVIDER . '.transfer.service');
         $provider['orderid'] = '2372832783';
         $provider['amount'] = $payment->order->price;
         $provider['userdata'] = json_encode(['uuid' => $payment->uuid, 'redirect' => route('web.profile.edit_dir')]);
         $provider['status'] = 'ok';
-        $provider['sign'] = md5($provider['service'].$provider['orderid'].$provider['amount']
-        .$provider['userdata'].$provider['status'].$this->key);
+        $provider['sign'] = md5($provider['service'] . $provider['orderid'] . $provider['amount']
+        . $provider['userdata'] . $provider['status'] . $this->key);
 
         return $provider;
     }
 
-    public function test_payment_verify_inactive()
+    public function testPaymentVerifyInactive()
     {
         $group = factory(Group::class)->states(['public', 'apply_inactive'])->create();
 
@@ -99,7 +96,7 @@ class PaymentTest extends TestCase
         ]);
     }
 
-    public function test_payment_verify_active()
+    public function testPaymentVerifyActive()
     {
         $group = factory(Group::class)->states(['public', 'apply_active'])->create();
 
@@ -132,7 +129,7 @@ class PaymentTest extends TestCase
         ]);
     }
 
-    public function test_payment_verify_status_error()
+    public function testPaymentVerifyStatusError()
     {
         $group = factory(Group::class)->states(['public', 'apply_active'])->create();
 
@@ -159,7 +156,7 @@ class PaymentTest extends TestCase
         $response->assertOk();
     }
 
-    public function test_payment_verify_amount_error()
+    public function testPaymentVerifyAmountError()
     {
         $group = factory(Group::class)->states(['public', 'apply_active'])->create();
 
@@ -180,13 +177,13 @@ class PaymentTest extends TestCase
         $response = $this->post(route('api.payment.dir.verify'), $providerSetup);
 
         $payment = $payment->find($payment->uuid);
-        
+
         $this->assertTrue(Str::contains($payment->logs, 'Invalid amount'));
 
         $response->assertOk();
     }
 
-    public function test_payment_verify_sign_error()
+    public function testPaymentVerifySignError()
     {
         $group = factory(Group::class)->states(['public', 'apply_active'])->create();
 
@@ -207,7 +204,7 @@ class PaymentTest extends TestCase
         $response = $this->post(route('api.payment.dir.verify'), $providerSetup);
 
         $payment = $payment->find($payment->uuid);
-        
+
         $this->assertTrue(Str::contains($payment->logs, 'Invalid sign'));
 
         $response->assertOk(403);

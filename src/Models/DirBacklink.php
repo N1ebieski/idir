@@ -2,14 +2,12 @@
 
 namespace N1ebieski\IDir\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\App;
-use N1ebieski\IDir\Repositories\DirBacklinkRepo;
+use Illuminate\Database\Eloquent\Model;
 use N1ebieski\IDir\Services\DirBacklinkService;
+use N1ebieski\IDir\Repositories\DirBacklinkRepo;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-/**
- * [DirBacklink description]
- */
 class DirBacklink extends Model
 {
     // Configuration
@@ -56,21 +54,23 @@ class DirBacklink extends Model
     // Relations
 
     /**
-     * [dir description]
-     * @return [type] [description]
+     * Undocumented function
+     *
+     * @return BelongsTo
      */
-    public function dir()
+    public function dir(): BelongsTo
     {
-        return $this->belongsTo('N1ebieski\IDir\Models\Dir');
+        return $this->belongsTo(\N1ebieski\IDir\Models\Dir::class);
     }
 
     /**
-     * [link description]
-     * @return [type] [description]
+     * Undocumented function
+     *
+     * @return BelongsTo
      */
-    public function link()
+    public function link(): BelongsTo
     {
-        return $this->belongsTo('N1ebieski\ICore\Models\Link');
+        return $this->belongsTo(\N1ebieski\ICore\Models\Link::class);
     }
 
     // Makers

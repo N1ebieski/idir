@@ -25,14 +25,11 @@ use N1ebieski\IDir\Models\Category\Dir\Category;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use N1ebieski\IDir\Mail\DirBacklink\BacklinkNotFoundMail;
 
-/**
- * [DirTest description]
- */
 class DirTest extends TestCase
 {
     use DatabaseTransactions;
 
-    public function test_reminder_queue_job()
+    public function testReminderQueueJob()
     {
         $group = factory(Group::class)->states(['apply_alt_deactivation'])->create();
 
@@ -59,7 +56,7 @@ class DirTest extends TestCase
         });
     }
 
-    public function test_completed_deactivation_queue_job()
+    public function testCompletedDeactivationQueueJob()
     {
         $group = factory(Group::class)->states(['apply_alt_deactivation'])->create();
 
@@ -100,7 +97,7 @@ class DirTest extends TestCase
         ]);
     }
 
-    public function test_completed_alt_group_queue_job()
+    public function testCompletedAltGroupQueueJob()
     {
         $group = factory(Group::class)->states(['apply_alt_group'])->create();
 
@@ -142,7 +139,7 @@ class DirTest extends TestCase
         ]);
     }
 
-    public function test_completed_alt_group_remove_cats_queue_job()
+    public function testCompletedAltGroupRemoveCatsQueueJob()
     {
         $group = factory(Group::class)->states(['apply_alt_group'])->create([
             'max_cats' => 5
@@ -196,7 +193,7 @@ class DirTest extends TestCase
         ]);
     }
 
-    public function test_completed_alt_group_infinite_privileged_to_queue_job_fail()
+    public function testCompletedAltGroupInfinitePrivilegedToQueueJobFail()
     {
         $group = factory(Group::class)->states(['apply_alt_group'])->create();
 
@@ -238,7 +235,7 @@ class DirTest extends TestCase
         ]);
     }
 
-    public function test_deactivate_by_backlink_queue_job()
+    public function testDeactivateByBacklinkQueueJob()
     {
         $group = factory(Group::class)->states(['required_backlink'])->create();
 
@@ -291,7 +288,7 @@ class DirTest extends TestCase
         ]);
     }
 
-    public function test_activate_by_backlink_queue_job()
+    public function testActivateByBacklinkQueueJob()
     {
         $group = factory(Group::class)->states(['required_backlink'])->create();
 
@@ -347,7 +344,7 @@ class DirTest extends TestCase
         ]);
     }
 
-    public function test_status_known_parked_domain_queue_job()
+    public function testStatusKnownParkedDomainQueueJob()
     {
         $group = factory(Group::class)->states(['required_url'])->create();
 
@@ -387,7 +384,7 @@ class DirTest extends TestCase
         $client = new GuzzleClient(['handler' => $stack]);
 
         $this->instance(GuzzleClient::class, $client);
-    
+
         $schedule = app()->make(StatusCron::class);
         $schedule();
 
@@ -402,7 +399,7 @@ class DirTest extends TestCase
         ]);
     }
 
-    public function test_status_unknown_parked_domain_queue_job()
+    public function testStatusUnknownParkedDomainQueueJob()
     {
         $group = factory(Group::class)->states(['required_url'])->create();
 
@@ -439,7 +436,7 @@ class DirTest extends TestCase
         $client = new GuzzleClient(['handler' => $stack]);
 
         $this->instance(GuzzleClient::class, $client);
-    
+
         $schedule = app()->make(StatusCron::class);
         $schedule();
 
@@ -454,7 +451,7 @@ class DirTest extends TestCase
         ]);
     }
 
-    public function test_status_queue_job_failed()
+    public function testStatusQueueJobFailed()
     {
         $group = factory(Group::class)->states(['required_url'])->create();
 
@@ -483,7 +480,7 @@ class DirTest extends TestCase
         $client = new GuzzleClient(['handler' => $stack]);
 
         $this->instance(GuzzleClient::class, $client);
-    
+
         $schedule = app()->make(StatusCron::class);
         $schedule();
 
@@ -498,7 +495,7 @@ class DirTest extends TestCase
         ]);
     }
 
-    public function test_status_queue_job_pass()
+    public function testStatusQueueJobPass()
     {
         $group = factory(Group::class)->states(['required_url'])->create();
 
@@ -529,7 +526,7 @@ class DirTest extends TestCase
         $client = new GuzzleClient(['handler' => $stack]);
 
         $this->instance(GuzzleClient::class, $client);
-    
+
         $schedule = app()->make(StatusCron::class);
         $schedule();
 

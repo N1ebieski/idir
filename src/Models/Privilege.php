@@ -2,13 +2,11 @@
 
 namespace N1ebieski\IDir\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\App;
+use Illuminate\Database\Eloquent\Model;
 use N1ebieski\IDir\Repositories\PrivilegeRepo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-/**
- * [Privilege description]
- */
 class Privilege extends Model
 {
     // Configuration
@@ -26,9 +24,14 @@ class Privilege extends Model
 
     // Relations
 
-    public function groups()
+    /**
+     * Undocumented function
+     *
+     * @return BelongsToMany
+     */
+    public function groups(): BelongsToMany
     {
-        return $this->belongsToMany('N1ebieski\IDir\Models\Group', 'groups_privileges');
+        return $this->belongsToMany(\N1ebieski\IDir\Models\Group::class, 'groups_privileges');
     }
 
     // Makers

@@ -82,7 +82,7 @@ class DirComponent implements Htmlable
      * [toHtml description]
      * @return View [description]
      */
-    public function toHtml() : View
+    public function toHtml(): View
     {
         return $this->view->make('idir::web.components.dir.dir', [
             'dirs' => $this->dir->makeCache()->rememberByComponent([

@@ -2,6 +2,7 @@
 
 namespace N1ebieski\IDir\Models\Category\Dir;
 
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use N1ebieski\IDir\Models\Category\Category as BaseCategory;
 
 class Category extends BaseCategory
@@ -14,7 +15,7 @@ class Category extends BaseCategory
      * @var array
      */
     protected $attributes = [
-        'model_type' => 'N1ebieski\\IDir\\Models\\Dir',
+        'model_type' => \N1ebieski\IDir\Models\Dir::class,
         'status' => self::ACTIVE,
     ];
 
@@ -25,18 +26,19 @@ class Category extends BaseCategory
      */
     public function getMorphClass()
     {
-        return 'N1ebieski\\ICore\\Models\\Category\\Category';
+        return \N1ebieski\ICore\Models\Category\Category::class;
     }
 
     // Relations
 
     /**
-     * [morphs description]
-     * @return [type] [description]
+     * Undocumented function
+     *
+     * @return MorphToMany
      */
-    public function morphs()
+    public function morphs(): MorphToMany
     {
-        return $this->morphedByMany('N1ebieski\IDir\Models\Dir', 'model', 'categories_models', 'category_id');
+        return $this->morphedByMany(\N1ebieski\IDir\Models\Dir::class, 'model', 'categories_models', 'category_id');
     }
 
     // Accessors

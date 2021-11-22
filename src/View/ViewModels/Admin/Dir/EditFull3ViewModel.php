@@ -95,7 +95,7 @@ class EditFull3ViewModel extends ViewModel
      *
      * @return  Collection  [return description]
      */
-    public function categoriesSelection() : Collection
+    public function categoriesSelection(): Collection
     {
         return $this->categoriesSelection = $this->category->makeRepo()->getByIds(
             $this->request->session()->get("dirId.{$this->dir->id}.categories")
@@ -107,7 +107,7 @@ class EditFull3ViewModel extends ViewModel
      *
      * @return  Collection|null  [return description]
      */
-    public function backlinks() : ?Collection
+    public function backlinks(): ?Collection
     {
         return $this->backlinks = $this->group->backlink > 0 ?
             $this->link->makeRepo()->getAvailableBacklinksByCats(array_merge(
@@ -121,7 +121,7 @@ class EditFull3ViewModel extends ViewModel
      *
      * @return string|null
      */
-    public function paymentType() : ?string
+    public function paymentType(): ?string
     {
         if (!$this->request->old('payment_type') && $this->group->prices->isNotEmpty()) {
             return $this->group->prices
@@ -140,7 +140,7 @@ class EditFull3ViewModel extends ViewModel
      *
      * @return  Price|null  [return description]
      */
-    public function paymentCodeSmsSelection() : ?Price
+    public function paymentCodeSmsSelection(): ?Price
     {
         if ($this->request->old('payment_code_sms') && $this->group->prices->isNotEmpty()) {
             return $this->group->prices->where('id', $this->request->old('payment_code_sms'))->first();
@@ -154,7 +154,7 @@ class EditFull3ViewModel extends ViewModel
      *
      * @return  Price|null  [return description]
      */
-    public function paymentCodeTransferSelection() : ?Price
+    public function paymentCodeTransferSelection(): ?Price
     {
         if ($this->request->old('payment_code_transfer') && $this->group->prices->isNotEmpty()) {
             return $this->group->prices->where('id', $this->request->old('payment_code_transfer'))->first();
@@ -168,7 +168,7 @@ class EditFull3ViewModel extends ViewModel
      *
      * @return  Link|null  [return description]
      */
-    public function backlinkSelection() : ?Link
+    public function backlinkSelection(): ?Link
     {
         $linkId = $this->request->old('backlink', $this->dir->backlink->link_id ?? null);
 
@@ -186,7 +186,7 @@ class EditFull3ViewModel extends ViewModel
      *
      * @return  Collection         [return description]
      */
-    public function pricesByType(string $type) : Collection
+    public function pricesByType(string $type): Collection
     {
         return $this->group->prices->where('type', $type)->sortBy('price');
     }
@@ -196,7 +196,7 @@ class EditFull3ViewModel extends ViewModel
      *
      * @return  User|null  [return description]
      */
-    public function userSelection() : ?User
+    public function userSelection(): ?User
     {
         $userId = $this->request->old('user');
 

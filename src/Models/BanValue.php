@@ -3,8 +3,8 @@
 namespace N1ebieski\IDir\Models;
 
 use Illuminate\Support\Facades\App;
-use N1ebieski\ICore\Models\BanValue as BaseBanValue;
 use N1ebieski\IDir\Cache\BanValueCache;
+use N1ebieski\ICore\Models\BanValue as BaseBanValue;
 
 class BanValue extends BaseBanValue
 {

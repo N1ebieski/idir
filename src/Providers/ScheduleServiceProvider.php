@@ -5,9 +5,6 @@ namespace N1ebieski\IDir\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Console\Scheduling\Schedule;
 
-/**
- * [ScheduleServiceProvider description]
- */
 class ScheduleServiceProvider extends ServiceProvider
 {
     /**

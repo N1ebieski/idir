@@ -2,8 +2,9 @@
 
 namespace N1ebieski\IDir\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\App;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use N1ebieski\IDir\Services\CodeService;
 use N1ebieski\IDir\Repositories\CodeRepo;
 
@@ -37,12 +38,13 @@ class Code extends Model
     // Relations
 
     /**
-     * [price description]
-     * @return [type] [description]
+     * Undocumented function
+     *
+     * @return BelongsTo
      */
-    public function price()
+    public function price(): BelongsTo
     {
-        return $this->belongsTo('N1ebieski\IDir\Models\Price');
+        return $this->belongsTo(\N1ebieski\IDir\Models\Price::class);
     }
 
     // Makers

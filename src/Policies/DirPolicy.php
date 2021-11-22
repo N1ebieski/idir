@@ -2,13 +2,10 @@
 
 namespace N1ebieski\IDir\Policies;
 
-use Illuminate\Auth\Access\HandlesAuthorization;
-use N1ebieski\IDir\Models\User;
 use N1ebieski\IDir\Models\Dir;
+use N1ebieski\IDir\Models\User;
+use Illuminate\Auth\Access\HandlesAuthorization;
 
-/**
- * [DirPolicy description]
- */
 class DirPolicy
 {
     use HandlesAuthorization;
@@ -29,7 +26,7 @@ class DirPolicy
      * @param  Dir  $dir          [description]
      * @return bool               [description]
      */
-    public function delete(User $current_user, Dir $dir) : bool
+    public function delete(User $current_user, Dir $dir): bool
     {
         return $current_user->id === $dir->user_id;
     }
@@ -40,7 +37,7 @@ class DirPolicy
      * @param  Dir  $dir          [description]
      * @return bool               [description]
      */
-    public function edit(User $current_user, Dir $dir) : bool
+    public function edit(User $current_user, Dir $dir): bool
     {
         return $current_user->id === $dir->user_id;
     }

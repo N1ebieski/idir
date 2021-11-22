@@ -8,9 +8,6 @@ use N1ebieski\IDir\Rules\Codes\CodesRule;
 use Illuminate\Contracts\Translation\Translator as Lang;
 use N1ebieski\IDir\Utils\Payment\Interfaces\Codes\SMSUtilStrategy;
 
-/**
- * [Recaptcha_v2 description]
- */
 class SMSRule extends CodesRule
 {
     /**
@@ -49,7 +46,7 @@ class SMSRule extends CodesRule
      *
      * @return Price
      */
-    protected function makePrice() : Price
+    protected function makePrice(): Price
     {
         return $this->price = $this->price->find($this->request->input('payment_code_sms'));
     }
@@ -74,7 +71,7 @@ class SMSRule extends CodesRule
      * @param  mixed  $value
      * @return bool
      */
-    public function passes($attribute, $value) : bool
+    public function passes($attribute, $value): bool
     {
         if (parent::passes($attribute, $value) === true) {
             return true;

@@ -2,12 +2,9 @@
 
 namespace N1ebieski\IDir\Models\Comment\Dir;
 
-use N1ebieski\ICore\Models\Comment\Comment as CommentBaseModel;
+use N1ebieski\ICore\Models\Comment\Comment as BaseComment;
 
-/**
- * [Comment description]
- */
-class Comment extends CommentBaseModel
+class Comment extends BaseComment
 {
     // Accessors
 
@@ -15,7 +12,7 @@ class Comment extends CommentBaseModel
      * [getPoliAttribute description]
      * @return string [description]
      */
-    public function getPoliAttribute() : string
+    public function getPoliAttribute(): string
     {
         return 'dir';
     }
@@ -26,7 +23,7 @@ class Comment extends CommentBaseModel
      */
     public function getModelTypeAttribute()
     {
-        return 'N1ebieski\\IDir\\Models\\Dir';
+        return \N1ebieski\IDir\Models\Dir::class;
     }
 
     /**
@@ -36,6 +33,6 @@ class Comment extends CommentBaseModel
      */
     public function getMorphClass()
     {
-        return 'N1ebieski\\ICore\\Models\\Comment\\Comment';
+        return \N1ebieski\ICore\Models\Comment\Comment::class;
     }
 }

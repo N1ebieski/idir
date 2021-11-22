@@ -10,9 +10,6 @@ use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\Collection as Collect;
 use Illuminate\Contracts\View\Factory as ViewFactory;
 
-/**
- * [CategoryComponent description]
- */
 class LinkComponent implements Htmlable
 {
     /**
@@ -96,7 +93,7 @@ class LinkComponent implements Htmlable
      * @param array|null $cats
      * @return array|null
      */
-    protected function makeCats(array $cats = null) : ?array
+    protected function makeCats(array $cats = null): ?array
     {
         return $this->cats = ($cats !== null ?
             $this->collect->make($cats)->flatten()->toArray()
@@ -107,7 +104,7 @@ class LinkComponent implements Htmlable
      * [toHtml description]
      * @return View [description]
      */
-    public function toHtml() : View
+    public function toHtml(): View
     {
         $dirs = $this->cats !== null ?
             $this->dir->activeHasLinkPriviligeByComponent([

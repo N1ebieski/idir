@@ -8,9 +8,6 @@ use Illuminate\Support\Collection as Collect;
 use Illuminate\Contracts\View\Factory as ViewFactory;
 use N1ebieski\ICore\View\Components\Map\MapComponent as BaseMapComponent;
 
-/**
- * [MapComponent description]
- */
 class MapComponent extends BaseMapComponent
 {
     /**
@@ -92,7 +89,7 @@ class MapComponent extends BaseMapComponent
      *
      * @return void
      */
-    protected function prepareCoordsMarker() : void
+    protected function prepareCoordsMarker(): void
     {
         if (!$this->dir->relationLoaded('fields')) {
             return;
@@ -112,7 +109,7 @@ class MapComponent extends BaseMapComponent
      *
      * @return void
      */
-    protected function prepareAddressMarker() : void
+    protected function prepareAddressMarker(): void
     {
         if (!$this->dir->relationLoaded('fields')) {
             return;
@@ -152,10 +149,10 @@ class MapComponent extends BaseMapComponent
      * [toHtml description]
      * @return View [description]
      */
-    public function toHtml() : View
+    public function toHtml(): View
     {
         $this->prepareCoordsMarker();
-        
+
         $this->prepareAddressMarker();
 
         return $this->view->make('idir::web.components.map.dir.map', [

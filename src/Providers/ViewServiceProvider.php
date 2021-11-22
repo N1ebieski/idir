@@ -4,9 +4,6 @@ namespace N1ebieski\IDir\Providers;
 
 use Illuminate\Support\ServiceProvider;
 
-/**
- * [ViewServiceProvider description]
- */
 class ViewServiceProvider extends ServiceProvider
 {
     /**

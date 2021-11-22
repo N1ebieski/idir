@@ -3,30 +3,11 @@
 namespace N1ebieski\IDir\Models\Payment\Dir;
 
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
-use N1ebieski\IDir\Models\Payment\Payment as PaymentBaseModel;
+use N1ebieski\IDir\Models\Payment\Payment as BasePayment;
 
-/**
- * [Payment description]
- */
-class Payment extends PaymentBaseModel
+class Payment extends BasePayment
 {
-    /**
-     * [getModelTypeAttribute description]
-     * @return [type] [description]
-     */
-    public function getModelTypeAttribute()
-    {
-        return 'N1ebieski\\IDir\\Models\\Dir';
-    }
-
-    /**
-     * [getModelTypeAttribute description]
-     * @return [type] [description]
-     */
-    public function getOrderModelTypeAttribute()
-    {
-        return 'N1ebieski\\IDir\\Models\\Price';
-    }
+    // Configurations
 
     /**
      * Get the class name for polymorphic relations.
@@ -35,7 +16,7 @@ class Payment extends PaymentBaseModel
      */
     public function getMorphClass()
     {
-        return 'N1ebieski\\IDir\\Models\\Payment\\Payment';
+        return \N1ebieski\IDir\Models\Payment\Payment::class;
     }
 
     // Relations
@@ -45,11 +26,11 @@ class Payment extends PaymentBaseModel
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasOneThrough
      */
-    public function group() : HasOneThrough
+    public function group(): HasOneThrough
     {
         return $this->hasOneThrough(
-            'N1ebieski\IDir\Models\Group',
-            'N1ebieski\IDir\Models\Price',
+            \N1ebieski\IDir\Models\Group::class,
+            \N1ebieski\IDir\Models\Price::class,
             'id',
             'id',
             'order_id',
@@ -60,10 +41,30 @@ class Payment extends PaymentBaseModel
     // Accessors
 
     /**
+     * Undocumented function
+     *
+     * @return string
+     */
+    public function getModelTypeAttribute(): string
+    {
+        return \N1ebieski\IDir\Models\Dir::class;
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @return string
+     */
+    public function getOrderModelTypeAttribute(): string
+    {
+        return \N1ebieski\IDir\Models\Price::class;
+    }
+
+    /**
      * [getPoliAttribute description]
      * @return string [description]
      */
-    public function getPoliAttribute() : string
+    public function getPoliAttribute(): string
     {
         return 'dir';
     }

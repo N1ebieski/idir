@@ -3,14 +3,16 @@
 namespace N1ebieski\IDir\Models;
 
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Database\Eloquent\Model;
 use N1ebieski\IDir\Services\PriceService;
 use N1ebieski\IDir\Repositories\PriceRepo;
 use Illuminate\Database\Eloquent\Collection;
 use N1ebieski\IDir\Models\Traits\Filterable;
 use Illuminate\Support\Collection as Collect;
-use Illuminate\Support\Facades\Config;
 use N1ebieski\ICore\Models\Traits\Carbonable;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Price extends Model
 {
@@ -66,21 +68,23 @@ class Price extends Model
     // Relations
 
     /**
-     * [group description]
-     * @return [type] [description]
+     * Undocumented function
+     *
+     * @return BelongsTo
      */
-    public function group()
+    public function group(): BelongsTo
     {
-        return $this->belongsTo('N1ebieski\IDir\Models\Group');
+        return $this->belongsTo(\N1ebieski\IDir\Models\Group::class);
     }
 
     /**
-     * [codes description]
-     * @return [type] [description]
+     * Undocumented function
+     *
+     * @return HasMany
      */
-    public function codes()
+    public function codes(): HasMany
     {
-        return $this->hasMany('N1ebieski\IDir\Models\Code');
+        return $this->hasMany(\N1ebieski\IDir\Models\Code::class);
     }
 
     // Accessors

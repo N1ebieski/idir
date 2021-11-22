@@ -76,7 +76,7 @@ class EditViewModel extends ViewModel
      *
      * @return Collection
      */
-    public function privileges() : Collection
+    public function privileges(): Collection
     {
         return $this->privilege->makeRepo()->getWithGroup($this->group->id);
     }
@@ -86,7 +86,7 @@ class EditViewModel extends ViewModel
      *
      * @return Collection
      */
-    public function groups() : Collection
+    public function groups(): Collection
     {
         return $this->group->makeRepo()->getDoesntHavePricesExceptSelf();
     }
@@ -97,7 +97,7 @@ class EditViewModel extends ViewModel
      * @param string $type
      * @return Collection
      */
-    public function pricesSelectionByType(string $type) : Collection
+    public function pricesSelectionByType(string $type): Collection
     {
         if (is_array($this->request->old("prices.{$type}"))) {
             return $this->price->hydrate(array_merge(
@@ -109,7 +109,7 @@ class EditViewModel extends ViewModel
                         if (!is_numeric($item['price'])) {
                             $item['price'] = null;
                         }
-    
+
                         return $item;
                     })
                     ->toArray(),

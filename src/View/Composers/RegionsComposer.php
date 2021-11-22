@@ -2,9 +2,9 @@
 
 namespace N1ebieski\IDir\View\Composers;
 
+use N1ebieski\IDir\Models\Region\Region;
 use Illuminate\Database\Eloquent\Collection;
 use N1ebieski\ICore\View\Composers\Composer;
-use N1ebieski\IDir\Models\Region\Region;
 
 class RegionsComposer extends Composer
 {

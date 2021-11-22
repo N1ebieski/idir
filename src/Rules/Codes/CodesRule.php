@@ -7,9 +7,6 @@ use N1ebieski\IDir\Models\Code;
 use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Contracts\Translation\Translator as Lang;
 
-/**
- * [Recaptcha_v2 description]
- */
 class CodesRule implements Rule
 {
     /**
@@ -57,7 +54,7 @@ class CodesRule implements Rule
      * @param  mixed  $value
      * @return bool
      */
-    public function passes($attribute, $value) : bool
+    public function passes($attribute, $value): bool
     {
         if (($check = $this->price->makeRepo()->firstCodeByCode($value)) instanceof Code) {
             if ($check->quantity === 1) {

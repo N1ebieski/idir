@@ -24,6 +24,10 @@ use N1ebieski\ICore\Models\Traits\Carbonable;
 use N1ebieski\IDir\Models\Payment\Dir\Payment;
 use N1ebieski\ICore\Models\Traits\StatFilterable;
 use Fico7489\Laravel\Pivot\Traits\PivotEventTrait;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use N1ebieski\ICore\Models\Traits\FullTextSearchable;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
@@ -75,12 +79,6 @@ class Dir extends Model
      * @var int
      */
     public const INCORRECT_INACTIVE = 5;
-
-    /**
-     * [private description]
-     * @var bool
-     */
-    private $pivotEvent = false;
 
     /**
      * The attributes that are mass assignable.
@@ -154,44 +152,14 @@ class Dir extends Model
     // Overrides
 
     /**
-     * Undocumented function
-     *
-     * @return void
-     */
-    public static function boot()
-    {
-        parent::boot();
-
-        static::pivotUpdated(function ($model, $relationName, $pivotIds, $pivotIdsAttributes) {
-            if ($model->pivotEvent === false && in_array($relationName, ['fields'])) {
-                $model->fireModelEvent('updated');
-                $model->pivotEvent = true;
-            }
-        });
-
-        static::pivotAttached(function ($model, $relationName, $pivotIds, $pivotIdsAttributes) {
-            if ($model->pivotEvent === false && in_array($relationName, ['fields', 'categories', 'tags', 'regions'])) {
-                $model->fireModelEvent('updated');
-                $model->pivotEvent = true;
-            }
-        });
-
-        static::pivotDetached(function ($model, $relationName, $pivotIds) {
-            if ($model->pivotEvent === false && in_array($relationName, ['fields', 'categories', 'tags', 'regions'])) {
-                $model->fireModelEvent('updated');
-                $model->pivotEvent = true;
-            }
-        });
-    }
-
-    /**
      * Override relacji tags, bo ma hardcodowane nazwy pól
      *
      * @return \Illuminate\Database\Eloquent\Relations\MorphToMany
      */
     public function tags(): MorphToMany
     {
-        $model = config('taggable.model');
+        $model = Config::get('taggable.model');
+
         return $this->morphToMany($model, 'model', 'tags_models', 'model_id', 'tag_id')
             ->withTimestamps();
     }
@@ -199,58 +167,64 @@ class Dir extends Model
     // Relations
 
     /**
-     * [user description]
-     * @return [type] [description]
+     * Undocumented function
+     *
+     * @return BelongsTo
      */
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(\N1ebieski\IDir\Models\User::class);
     }
 
     /**
-     * [user description]
-     * @return [type] [description]
+     * Undocumented function
+     *
+     * @return BelongsTo
      */
-    public function group()
+    public function group(): BelongsTo
     {
-        return $this->belongsTo('N1ebieski\IDir\Models\Group');
+        return $this->belongsTo(\N1ebieski\IDir\Models\Group::class);
     }
 
     /**
-     * [payments description]
-     * @return [type] [description]
+     * Undocumented function
+     *
+     * @return MorphMany
      */
-    public function payments()
+    public function payments(): MorphMany
     {
-        return $this->morphMany('N1ebieski\IDir\Models\Payment\Dir\Payment', 'model');
+        return $this->morphMany(\N1ebieski\IDir\Models\Payment\Dir\Payment::class, 'model');
     }
 
     /**
-     * [map description]
-     * @return [type] [description]
+     * Undocumented function
+     *
+     * @return MorphOne
      */
-    public function map()
+    public function map(): MorphOne
     {
-        return $this->morphOne('N1ebieski\IDir\Models\Map\Map', 'model');
+        return $this->morphOne(\N1ebieski\IDir\Models\Map\Map::class, 'model');
     }
 
     /**
-     * [ratings description]
-     * @return [type] [description]
+     * Undocumented function
+     *
+     * @return MorphMany
      */
-    public function ratings()
+    public function ratings(): MorphMany
     {
-        return $this->morphMany('N1ebieski\IDir\Models\Rating\Dir\Rating', 'model');
+        return $this->morphMany(\N1ebieski\IDir\Models\Rating\Dir\Rating::class, 'model');
     }
 
     /**
-     * [regions description]
-     * @return [type] [description]
+     * Undocumented function
+     *
+     * @return MorphToMany
      */
-    public function regions()
+    public function regions(): MorphToMany
     {
         return $this->morphToMany(
-            'N1ebieski\IDir\Models\Region\Region',
+            \N1ebieski\IDir\Models\Region\Region::class,
             'model',
             'regions_models',
             'model_id',
@@ -259,22 +233,24 @@ class Dir extends Model
     }
 
     /**
-     * [reports description]
-     * @return [type] [description]
+     * Undocumented function
+     *
+     * @return MorphMany
      */
-    public function reports()
+    public function reports(): MorphMany
     {
-        return $this->morphMany('N1ebieski\ICore\Models\Report\Report', 'model');
+        return $this->morphMany(\N1ebieski\ICore\Models\Report\Report::class, 'model');
     }
 
     /**
-     * [categories description]
-     * @return [type] [description]
+     * Undocumented function
+     *
+     * @return MorphToMany
      */
-    public function categories()
+    public function categories(): MorphToMany
     {
         return $this->morphToMany(
-            'N1ebieski\IDir\Models\Category\Dir\Category',
+            \N1ebieski\IDir\Models\Category\Dir\Category::class,
             'model',
             'categories_models',
             'model_id',
@@ -283,40 +259,44 @@ class Dir extends Model
     }
 
     /**
-     * [categories description]
-     * @return [type] [description]
+     * Undocumented function
+     *
+     * @return MorphMany
      */
-    public function comments()
+    public function comments(): MorphMany
     {
-        return $this->morphMany('N1ebieski\ICore\Models\Comment\Comment', 'model');
+        return $this->morphMany(\N1ebieski\ICore\Models\Comment\Comment::class, 'model');
     }
 
     /**
-     * [backlink description]
-     * @return [type] [description]
+     * Undocumented function
+     *
+     * @return HasOne
      */
-    public function backlink()
+    public function backlink(): HasOne
     {
-        return $this->hasOne('N1ebieski\IDir\Models\DirBacklink');
+        return $this->hasOne(\N1ebieski\IDir\Models\DirBacklink::class);
     }
 
     /**
-     * [status description]
-     * @return [type] [description]
+     * Undocumented function
+     *
+     * @return HasOne
      */
-    public function status()
+    public function status(): HasOne
     {
-        return $this->hasOne('N1ebieski\IDir\Models\DirStatus');
+        return $this->hasOne(\N1ebieski\IDir\Models\DirStatus::class);
     }
 
     /**
-     * [fields description]
-     * @return [type] [description]
+     * Undocumented function
+     *
+     * @return MorphToMany
      */
-    public function fields()
+    public function fields(): MorphToMany
     {
         return $this->morphToMany(
-            'N1ebieski\IDir\Models\Field\Dir\Field',
+            \N1ebieski\IDir\Models\Field\Dir\Field::class,
             'model',
             'fields_values',
             'model_id',
@@ -441,17 +421,6 @@ class Dir extends Model
                     ->whereIn('categories_models.category_id', $component['cats'])
                     ->where('categories_models.model_type', $this->getMorphClass());
             })
-            // Rezygnuje z whereHas bo wydajność strasznie siada przy dużej ilości rekordów
-            // ->whereIn('id', function ($query) use ($component) {
-            //     $query->select('model_id')
-            //         ->from('categories_models')
-            //         ->whereIn('category_id', $component['cats'])
-            //         ->where('model_type', get_class())
-            //         ->get();
-            // })
-            // ->whereHas('categories', function ($query) use ($component) {
-            //     $query->whereIn('categories.id', $component['cats']);
-            // })
             ->where('url', '<>', null)
             ->active();
     }

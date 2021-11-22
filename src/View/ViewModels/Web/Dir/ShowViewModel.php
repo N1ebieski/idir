@@ -78,7 +78,7 @@ class ShowViewModel extends ViewModel
      *
      * @return Collection
      */
-    public function related() : Collection
+    public function related(): Collection
     {
         return $this->dir->makeCache()->rememberRelated();
     }
@@ -88,7 +88,7 @@ class ShowViewModel extends ViewModel
      *
      * @return LengthAwarePaginator
      */
-    public function comments() : LengthAwarePaginator
+    public function comments(): LengthAwarePaginator
     {
         return $this->comment->setRelations(['morph' => $this->dir])
             ->makeCache()
@@ -103,7 +103,7 @@ class ShowViewModel extends ViewModel
      *
      * @return array
      */
-    public function filter() : array
+    public function filter(): array
     {
         return $this->filter->all();
     }
@@ -113,7 +113,7 @@ class ShowViewModel extends ViewModel
      *
      * @return array
      */
-    public function catsAsArray() : array
+    public function catsAsArray(): array
     {
         return [
             'ancestors' => $this->dir->categories->pluck('ancestors')->flatten()->pluck('id')->toArray(),
@@ -127,7 +127,7 @@ class ShowViewModel extends ViewModel
      * @param string $slug
      * @return Stat|null
      */
-    protected function statBySlug(string $slug) : ?Stat
+    protected function statBySlug(string $slug): ?Stat
     {
         return $this->dir->relationLoaded('stats') ?
             $this->dir->stats->firstWhere('slug', $slug)
@@ -139,7 +139,7 @@ class ShowViewModel extends ViewModel
      *
      * @return float
      */
-    public function statCtr() : float
+    public function statCtr(): float
     {
         $click = $this->statBySlug(Stat::CLICK);
         $view = $this->statBySlug(Stat::VIEW);
@@ -152,7 +152,7 @@ class ShowViewModel extends ViewModel
             return (float)0;
         }
 
-        return round(($click->pivot->value/$view->pivot->value)*100, 2);
+        return round(($click->pivot->value / $view->pivot->value) * 100, 2);
     }
 
     /**
@@ -160,7 +160,7 @@ class ShowViewModel extends ViewModel
      *
      * @return integer|null
      */
-    public function ratingUserValue() : ?int
+    public function ratingUserValue(): ?int
     {
         return $this->auth->check() ?
             optional($this->dir->ratings->where('user_id', $this->auth->user()->id)->first())->rating

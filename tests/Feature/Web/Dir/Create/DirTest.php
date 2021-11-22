@@ -10,25 +10,22 @@ use N1ebieski\ICore\Models\Link;
 use N1ebieski\IDir\Models\Group;
 use N1ebieski\IDir\Models\Price;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Mail;
 use GuzzleHttp\Client as GuzzleClient;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Storage;
 use N1ebieski\IDir\Mail\Dir\ModeratorMail;
 use N1ebieski\IDir\Models\Field\Group\Field;
 use N1ebieski\IDir\Models\Payment\Dir\Payment;
 use GuzzleHttp\Psr7\Response as GuzzleResponse;
 use N1ebieski\IDir\Models\Category\Dir\Category;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Storage;
 use N1ebieski\IDir\Crons\Dir\ModeratorNotificationCron;
 
-/**
- * [DirTest description]
- */
 class DirTest extends TestCase
 {
     use DatabaseTransactions;
@@ -37,13 +34,13 @@ class DirTest extends TestCase
      * [FIELD_TYPES description]
      * @var array
      */
-    const FIELD_TYPES = ['input', 'textarea', 'select', 'multiselect', 'checkbox', 'image'];
+    private const FIELD_TYPES = ['input', 'textarea', 'select', 'multiselect', 'checkbox', 'image'];
 
     /**
      * [dirSetup description]
      * @return array [description]
      */
-    protected function dirSetup() : array
+    protected function dirSetup(): array
     {
         $category = factory(Category::class)->states('active')->create();
 
@@ -64,7 +61,7 @@ class DirTest extends TestCase
      * @param  Group $group [description]
      * @return array        [description]
      */
-    protected function fieldsSetup(Group $group) : array
+    protected function fieldsSetup(Group $group): array
     {
         foreach (static::FIELD_TYPES as $type) {
             $field = factory(Field::class)->states([$type, 'public'])->create();
@@ -73,11 +70,11 @@ class DirTest extends TestCase
             $key = $field->id;
             if (in_array($field->type, ['input', 'textarea'])) {
                 $fields['field'][$key] = 'dasdasdadasds23238dfd8fdshjfdshfjsdhfjsdhfsdjf';
-            } else if ($field->type === 'select') {
+            } elseif ($field->type === 'select') {
                 $fields['field'][$key] = $field->options->options[0];
-            } else if (in_array($field->type, ['multiselect', 'checkbox'])) {
+            } elseif (in_array($field->type, ['multiselect', 'checkbox'])) {
                 $fields['field'][$key] = array_slice($field->options->options, 0, 2);
-            } else if ($field->type === 'image') {
+            } elseif ($field->type === 'image') {
                 $fields['field'][$key] = UploadedFile::fake()->image('avatar.jpg', 500, 200)->size(1000);
 
                 // $this->mock(\N1ebieski\IDir\Utils\File::class, function($mock) {
@@ -90,14 +87,7 @@ class DirTest extends TestCase
         return $fields;
     }
 
-    // public function test_dir_create_1_as_guest()
-    // {
-    //     $response = $this->get(route('web.dir.create_1'));
-
-    //     $response->assertRedirect(route('login'));
-    // }
-
-    public function test_dir_create_1()
+    public function testDirCreate1()
     {
         $user = factory(User::class)->states('user')->create();
 
@@ -114,7 +104,7 @@ class DirTest extends TestCase
         $response->assertDontSee($private_group->name);
     }
 
-    public function test_dir_create_2_noexist_group()
+    public function testDirCreate2NoexistGroup()
     {
         $user = factory(User::class)->states('user')->create();
 
@@ -125,7 +115,7 @@ class DirTest extends TestCase
         $response->assertStatus(404);
     }
 
-    public function test_dir_create_2_private_group()
+    public function testDirCreate2PrivateGroup()
     {
         $user = factory(User::class)->states('user')->create();
 
@@ -138,7 +128,7 @@ class DirTest extends TestCase
         $response->assertStatus(403);
     }
 
-    public function test_dir_create_2_max_models_group()
+    public function testDirCreate2MaxModelsGroup()
     {
         $user = factory(User::class)->states('user')->create();
 
@@ -152,7 +142,7 @@ class DirTest extends TestCase
         $response->assertStatus(403);
     }
 
-    public function test_dir_create_2_max_models_daily_group()
+    public function testDirCreate2MaxModelsDailyGroup()
     {
         $user = factory(User::class)->states('user')->create();
 
@@ -166,7 +156,7 @@ class DirTest extends TestCase
         $response->assertStatus(403);
     }
 
-    public function test_dir_create_2()
+    public function testDirCreate2()
     {
         $user = factory(User::class)->states('user')->create();
 
@@ -181,7 +171,7 @@ class DirTest extends TestCase
         $response->assertSee(route('web.dir.store_2', [$group->id]));
     }
 
-    public function test_dir_store_2_noexist_group()
+    public function testDirStore2NoexistGroup()
     {
         $user = factory(User::class)->states('user')->create();
 
@@ -192,7 +182,7 @@ class DirTest extends TestCase
         $response->assertStatus(404);
     }
 
-    public function test_dir_store_2_private_group()
+    public function testDirStore2PrivateGroup()
     {
         $user = factory(User::class)->states('user')->create();
 
@@ -205,7 +195,7 @@ class DirTest extends TestCase
         $response->assertStatus(403);
     }
 
-    public function test_dir_store_2_validation_fail()
+    public function testDirStore2ValidationFail()
     {
         $user = factory(User::class)->states('user')->create();
 
@@ -218,7 +208,7 @@ class DirTest extends TestCase
         $response->assertSessionHasErrors(['categories', 'title', 'content', 'url']);
     }
 
-    public function test_dir_store_2_validation_url_fail()
+    public function testDirStore2ValidationUrlFail()
     {
         $user = factory(User::class)->states('user')->create();
 
@@ -233,7 +223,7 @@ class DirTest extends TestCase
         $response->assertSessionHasErrors(['url']);
     }
 
-    public function test_dir_store_2()
+    public function testDirStore2()
     {
         $user = factory(User::class)->states('user')->create();
 
@@ -252,7 +242,7 @@ class DirTest extends TestCase
         $response->assertSessionHas('dir.title', 'dasdasdasd');
     }
 
-    public function test_dir_create_3_as_guest()
+    public function testDirCreate3AsGuest()
     {
         $group = factory(Group::class)
             ->states([
@@ -268,7 +258,7 @@ class DirTest extends TestCase
         $response2->assertSeeInOrder([Lang::get('idir::dirs.email.tooltip'), 'name="email"']);
     }
 
-    public function test_dir_create_3_as_logged()
+    public function testDirCreate3AsLogged()
     {
         $user = factory(User::class)->states('user')->create();
 
@@ -288,7 +278,7 @@ class DirTest extends TestCase
         $response2->assertDontSee(Lang::get('idir::dirs.email.tooltip'));
     }
 
-    public function test_dir_store_3_as_guest_validation_email_fail()
+    public function testDirStore3AsGuestValidationEmailFail()
     {
         $group = factory(Group::class)->states(['public', 'required_url'])->create();
 
@@ -298,7 +288,7 @@ class DirTest extends TestCase
         $response->assertRedirect(route('web.dir.create_3', [$group->id]));
     }
 
-    public function test_dir_store_3_validation_url_fail()
+    public function testDirStore3ValidationUrlFail()
     {
         $user = factory(User::class)->states('user')->create();
 
@@ -314,7 +304,7 @@ class DirTest extends TestCase
         $response->assertRedirect(route('web.dir.create_3', [$group->id]));
     }
 
-    public function test_dir_store_3_validation_categories_fail()
+    public function testDirStore3ValidationCategoriesFail()
     {
         $user = factory(User::class)->states('user')->create();
 
@@ -332,7 +322,7 @@ class DirTest extends TestCase
         $response->assertRedirect(route('web.dir.create_3', [$group->id]));
     }
 
-    public function test_dir_store_3_validation_fields_fail()
+    public function testDirStore3ValidationFieldsFail()
     {
         $user = factory(User::class)->states('user')->create();
 
@@ -353,7 +343,7 @@ class DirTest extends TestCase
         $response->assertRedirect(route('web.dir.create_3', [$group->id]));
     }
 
-    public function test_dir_store_3_validation_backlink_fail()
+    public function testDirStore3ValidationBacklinkFail()
     {
         $user = factory(User::class)->states('user')->create();
 
@@ -369,7 +359,7 @@ class DirTest extends TestCase
         $response->assertRedirect(route('web.dir.create_3', [$group->id]));
     }
 
-    public function test_dir_store_3_validation_backlink_pass()
+    public function testDirStore3ValidationBacklinkPass()
     {
         $user = factory(User::class)->states('user')->create();
 
@@ -394,7 +384,7 @@ class DirTest extends TestCase
         $response->assertRedirect(route('web.dir.create_3', [$group->id]));
     }
 
-    public function test_dir_store_3_fields()
+    public function testDirStore3Fields()
     {
         $user = factory(User::class)->states('user')->create();
 
@@ -404,8 +394,10 @@ class DirTest extends TestCase
 
         $group = factory(Group::class)->states(['public', 'apply_active', 'required_url'])->create();
 
-        $response = $this->post(route('web.dir.store_3', [$group->id]),
-            ($dirSetup = $this->dirSetup()) + $this->fieldsSetup($group));
+        $response = $this->post(
+            route('web.dir.store_3', [$group->id]),
+            ($dirSetup = $this->dirSetup()) + $this->fieldsSetup($group)
+        );
 
         $dir = Dir::orderBy('id', 'desc')->first();
 
@@ -431,7 +423,7 @@ class DirTest extends TestCase
         $response->assertRedirect(route('web.dir.show', [$dir->slug]));
     }
 
-    public function test_dir_store_3_validation_payment_fail()
+    public function testDirStore3ValidationPaymentFail()
     {
         $user = factory(User::class)->states('user')->create();
 
@@ -449,7 +441,7 @@ class DirTest extends TestCase
         $response->assertRedirect(route('web.dir.create_3', [$group->id]));
     }
 
-    public function test_dir_store_3_validation_noexist_payment_fail()
+    public function testDirStore3ValidationNoexistPaymentFail()
     {
         $user = factory(User::class)->states('user')->create();
 
@@ -468,7 +460,7 @@ class DirTest extends TestCase
         $response->assertRedirect(route('web.dir.create_3', [$group->id]));
     }
 
-    public function test_dir_store_3_payment()
+    public function testDirStore3Payment()
     {
         $user = factory(User::class)->states('user')->create();
 
@@ -507,7 +499,7 @@ class DirTest extends TestCase
         ]));
     }
 
-    public function test_dir_store_3_as_guest()
+    public function testDirStore3AsGuest()
     {
         $group = factory(Group::class)->states(['public', 'apply_inactive'])->create();
 
@@ -530,7 +522,7 @@ class DirTest extends TestCase
         $response->assertRedirect(route('web.dir.create_1'));
     }
 
-    public function test_dir_store_3_validation_payment_code_sms_fail()
+    public function testDirStore3ValidationPaymentCodeSmsFail()
     {
         $user = factory(User::class)->states('user')->create();
 
@@ -549,7 +541,7 @@ class DirTest extends TestCase
         $response->assertRedirect(route('web.dir.create_3', [$group->id]));
     }
 
-    public function test_dir_store_3_validation_payment_auto_code_sms_pass()
+    public function testDirStore3ValidationPaymentAutoCodeSmsPass()
     {
         $user = factory(User::class)->states('user')->create();
 
@@ -592,7 +584,7 @@ class DirTest extends TestCase
         $response->assertRedirect(route('web.dir.show', [$dir->slug]));
     }
 
-    public function test_dir_store_3_validation_payment_auto_code_sms_error()
+    public function testDirStore3ValidationPaymentAutoCodeSmsError()
     {
         $user = factory(User::class)->states('user')->create();
 
@@ -621,7 +613,7 @@ class DirTest extends TestCase
         $response->assertRedirect(route('web.dir.create_3', [$group->id]));
     }
 
-    public function test_dir_store_3_validation_payment_code_transfer_fail()
+    public function testDirStore3ValidationPaymentCodeTransferFail()
     {
         $user = factory(User::class)->states('user')->create();
 
@@ -640,7 +632,7 @@ class DirTest extends TestCase
         $response->assertRedirect(route('web.dir.create_3', [$group->id]));
     }
 
-    public function test_dir_store_3_validation_payment_auto_code_transfer_pass()
+    public function testDirStore3ValidationPaymentAutoCodeTransferPass()
     {
         $user = factory(User::class)->states('user')->create();
 
@@ -677,7 +669,7 @@ class DirTest extends TestCase
         $response->assertRedirect(route('web.dir.create_1'));
     }
 
-    public function test_dir_store_3_validation_payment_auto_code_transfer_error()
+    public function testDirStore3ValidationPaymentAutoCodeTransferError()
     {
         $user = factory(User::class)->states('user')->create();
 
@@ -704,7 +696,7 @@ class DirTest extends TestCase
         $response->assertRedirect(route('web.dir.create_3', [$group->id]));
     }
 
-    public function test_dir_store_3_validation_payment_local_code_transfer_pass()
+    public function testDirStore3ValidationPaymentLocalCodeTransferPass()
     {
         $user = factory(User::class)->states('user')->create();
 
@@ -750,7 +742,7 @@ class DirTest extends TestCase
         $response->assertRedirect(route('web.dir.create_1'));
     }
 
-    public function test_dir_store_3_validation_payment_local_code_sms_pass()
+    public function testDirStore3ValidationPaymentLocalCodeSmsPass()
     {
         $user = factory(User::class)->states('user')->create();
 
@@ -796,7 +788,7 @@ class DirTest extends TestCase
         $response->assertRedirect(route('web.dir.show', [$dir->slug]));
     }
 
-    public function test_moderator_notification_dirs()
+    public function testModeratorNotificationDirs()
     {
         $user = factory(User::class)->states('user')->create();
         $admin = factory(User::class)->states('admin')->create();
@@ -833,7 +825,7 @@ class DirTest extends TestCase
         });
     }
 
-    public function test_moderator_notification_hours()
+    public function testModeratorNotificationHours()
     {
         $user = factory(User::class)->states('user')->create();
         $admin = factory(User::class)->states('admin')->create();

@@ -2,14 +2,11 @@
 
 namespace N1ebieski\IDir\View\Components\Dir;
 
+use Illuminate\View\View;
 use N1ebieski\IDir\Models\Dir;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Contracts\View\Factory as ViewFactory;
-use Illuminate\View\View;
 
-/**
- * [CarouselComponent description]
- */
 class CarouselComponent implements Htmlable
 {
     /**
@@ -75,7 +72,7 @@ class CarouselComponent implements Htmlable
      * [toHtml description]
      * @return View [description]
      */
-    public function toHtml() : View
+    public function toHtml(): View
     {
         return $this->view->make('idir::web.components.dir.carousel', [
             'dirs' => $this->dir->makeCache()

@@ -2,6 +2,7 @@
 
 namespace N1ebieski\IDir\Models\Stat\Dir;
 
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use N1ebieski\ICore\Models\Stat\Stat as BaseStatModel;
 
 class Stat extends BaseStatModel
@@ -12,7 +13,7 @@ class Stat extends BaseStatModel
      * [getPoliAttribute description]
      * @return string [description]
      */
-    public function getPoliAttribute() : string
+    public function getPoliAttribute(): string
     {
         return 'dir';
     }
@@ -21,7 +22,7 @@ class Stat extends BaseStatModel
      * [getModelTypeAttribute description]
      * @return string [description]
      */
-    public function getModelTypeAttribute()
+    public function getModelTypeAttribute(): string
     {
         return \N1ebieski\IDir\Models\Dir::class;
     }
@@ -39,10 +40,11 @@ class Stat extends BaseStatModel
     // Relations
 
     /**
-     * [morphs description]
-     * @return [type] [description]
+     * Undocumented function
+     *
+     * @return MorphToMany
      */
-    public function morphs()
+    public function morphs(): MorphToMany
     {
         return $this->morphedByMany(\N1ebieski\IDir\Models\Dir::class, 'model', 'stats_values');
     }

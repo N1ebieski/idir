@@ -2,9 +2,9 @@
 
 namespace N1ebieski\IDir\Models\Rating\Dir;
 
-use N1ebieski\ICore\Models\Rating\Rating as RatingBaseModel;
+use N1ebieski\ICore\Models\Rating\Rating as BaseRating;
 
-class Rating extends RatingBaseModel
+class Rating extends BaseRating
 {
     // Accessors
 
@@ -12,7 +12,7 @@ class Rating extends RatingBaseModel
      * [getPoliAttribute description]
      * @return string [description]
      */
-    public function getPoliAttribute() : string
+    public function getPoliAttribute(): string
     {
         return 'dir';
     }

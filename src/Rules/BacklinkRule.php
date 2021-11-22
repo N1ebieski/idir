@@ -7,9 +7,6 @@ use GuzzleHttp\Client as GuzzleClient;
 use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Contracts\Translation\Translator as Lang;
 
-/**
- * [Backlink description]
- */
 class BacklinkRule implements Rule
 {
     /**

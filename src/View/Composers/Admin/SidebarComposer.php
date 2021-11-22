@@ -2,8 +2,8 @@
 
 namespace N1ebieski\IDir\View\Composers\Admin;
 
-use N1ebieski\ICore\View\Composers\Composer;
 use N1ebieski\IDir\Models\Dir;
+use N1ebieski\ICore\View\Composers\Composer;
 
 class SidebarComposer extends Composer
 {

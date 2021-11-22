@@ -2,16 +2,19 @@
 
 namespace N1ebieski\IDir\Observers;
 
-use Illuminate\Support\Facades\Cache;
 use N1ebieski\IDir\Models\Dir;
+use Illuminate\Support\Facades\Cache;
 
-/**
- * [DirObserver description]
- */
 class DirObserver
 {
     /**
-     * Handle the post "created" event.
+     * [private description]
+     * @var bool
+     */
+    private static $pivotEvent = false;
+
+    /**
+     * Handle the dir "created" event.
      *
      * @param  Dir  $dir
      * @return void
@@ -22,29 +25,82 @@ class DirObserver
     }
 
     /**
-     * Handle the post "updated" event.
+     * Handle the dir "updated" event.
      *
      * @param  Dir  $dir
      * @return void
      */
     public function updated(Dir $dir)
     {
-        Cache::tags(['dir.'.$dir->slug, 'dirs', 'links', 'categories'])->flush();
+        Cache::tags(['dir.' . $dir->slug, 'dirs', 'links', 'categories'])->flush();
     }
 
     /**
-     * Handle the post "deleted" event.
+     * Undocumented function
+     *
+     * @param Dir $dir
+     * @param [type] $relationName
+     * @param [type] $pivotIds
+     * @param [type] $pivotIdsAttributes
+     * @return void
+     */
+    public function pivotUpdated(Dir $dir, $relationName, $pivotIds, $pivotIdsAttributes)
+    {
+        if (static::$pivotEvent === false && in_array($relationName, ['fields'])) {
+            $this->updated($dir);
+
+            static::$pivotEvent = true;
+        }
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param Dir $dir
+     * @param [type] $relationName
+     * @param [type] $pivotIds
+     * @param [type] $pivotIdsAttributes
+     * @return void
+     */
+    public function pivotAttached(Dir $dir, $relationName, $pivotIds, $pivotIdsAttributes)
+    {
+        if (static::$pivotEvent === false && in_array($relationName, ['fields', 'categories', 'tags', 'regions'])) {
+            $this->updated($dir);
+
+            static::$pivotEvent = true;
+        }
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param Dir $dir
+     * @param [type] $relationName
+     * @param [type] $pivotIds
+     * @return void
+     */
+    public function pivotDetached(Dir $dir, $relationName, $pivotIds)
+    {
+        if (static::$pivotEvent === false && in_array($relationName, ['fields', 'categories', 'tags', 'regions'])) {
+            $this->updated($dir);
+
+            static::$pivotEvent = true;
+        }
+    }
+
+    /**
+     * Handle the dir "deleted" event.
      *
      * @param  Dir  $dir
      * @return void
      */
     public function deleted(Dir $dir)
     {
-        Cache::tags(['dir.'.$dir->slug, 'dirs', 'links', 'categories'])->flush();
+        Cache::tags(['dir.' . $dir->slug, 'dirs', 'links', 'categories'])->flush();
     }
 
     /**
-     * Handle the post "restored" event.
+     * Handle the dir "restored" event.
      *
      * @param  Dir  $dir
      * @return void
@@ -55,7 +111,7 @@ class DirObserver
     }
 
     /**
-     * Handle the post "force deleted" event.
+     * Handle the dir "force deleted" event.
      *
      * @param  Dir  $dir
      * @return void

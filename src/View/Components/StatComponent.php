@@ -94,7 +94,7 @@ class StatComponent implements Htmlable
         $this->view = $view;
     }
 
-    protected function verifySession() : bool
+    protected function verifySession(): bool
     {
         return $this->migrationUtil->contains('create_sessions_table')
             && $this->config->get('session.driver') === 'database';
@@ -105,7 +105,7 @@ class StatComponent implements Htmlable
      *
      * @return View
      */
-    public function toHtml() : View
+    public function toHtml(): View
     {
         return $this->view->make('idir::web.components.stat', [
             'countCategories' => $this->category->makeCache()->rememberCountByStatus()
@@ -117,7 +117,7 @@ class StatComponent implements Htmlable
                 ->where('status', $this->comment::ACTIVE),
 
             'lastActivity' => $this->dir->makeCache()->rememberLastActivity(),
-            
+
             'countUsers' => $this->verifySession() ?
                 $this->sessionCache->rememberCountByType()
                 : null
