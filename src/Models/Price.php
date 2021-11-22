@@ -65,6 +65,15 @@ class Price extends Model
         'updated_at' => 'datetime'
     ];
 
+    /**
+     * The model's default values for attributes.
+     *
+     * @var array
+     */
+    protected $attributes = [
+        'discount_price' => null
+    ];
+
     // Relations
 
     /**

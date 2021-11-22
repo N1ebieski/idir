@@ -8,6 +8,13 @@ jQuery(document).on('readyAndAjax', function () {
         },
         placement: 'auto'
     }).on('inserted.bs.popover', function () {
-        $('[id^="popover"]').addClass('thumbnail');
+        let $popover = $('[id^="popover"]');
+        $popover.img = $('[id^="popover"]').find('img');
+
+        $popover.addClass('thumbnail');
+
+        // Chrome doesn't see width and height of image during insert
+        $popover.img.css('width', $(this).find('img').prop('naturalWidth'));
+        $popover.img.css('height', $(this).find('img').prop('naturalHeight'));
     });
 });
