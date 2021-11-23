@@ -12,14 +12,14 @@ class VerifyRequestFactory
      * @param string $driver
      * @return VerifyRequestStrategy
      */
-    public function makeRequest(string $driver) : VerifyRequestStrategy
+    public function makeRequest(string $driver): VerifyRequestStrategy
     {
         switch ($driver) {
             case 'paypal':
-                return new \N1ebieski\IDir\Http\Requests\Api\Payment\PayPal\VerifyRequest;
+                return new \N1ebieski\IDir\Http\Requests\Api\Payment\PayPal\VerifyRequest();
 
             case 'cashbill':
-                return new \N1ebieski\IDir\Http\Requests\Api\Payment\Cashbill\VerifyRequest;
+                return new \N1ebieski\IDir\Http\Requests\Api\Payment\Cashbill\VerifyRequest();
         }
 
         throw new \N1ebieski\IDir\Exceptions\Payment\DriverNotFoundException(

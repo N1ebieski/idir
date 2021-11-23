@@ -2,25 +2,22 @@
 
 namespace N1ebieski\IDir\Tests\Feature\Web\Dir\Update;
 
-use N1ebieski\ICore\Models\Link;
-use N1ebieski\IDir\Models\Dir;
-use N1ebieski\IDir\Models\Field\Group\Field;
-use N1ebieski\IDir\Models\User;
-use N1ebieski\IDir\Models\Group;
-use N1ebieski\IDir\Models\Category\Dir\Category;
-use N1ebieski\IDir\Models\Price;
-use N1ebieski\IDir\Models\Payment\Dir\Payment;
 use Tests\TestCase;
+use N1ebieski\IDir\Models\Dir;
+use N1ebieski\IDir\Models\User;
+use N1ebieski\ICore\Models\Link;
+use N1ebieski\IDir\Models\Group;
+use N1ebieski\IDir\Models\Price;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
 use GuzzleHttp\Client as GuzzleClient;
-use GuzzleHttp\Psr7\Response as GuzzleResponse;
-use Illuminate\Http\UploadedFile;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\Config;
+use N1ebieski\IDir\Models\Field\Group\Field;
+use N1ebieski\IDir\Models\Payment\Dir\Payment;
+use GuzzleHttp\Psr7\Response as GuzzleResponse;
+use N1ebieski\IDir\Models\Category\Dir\Category;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 
-/**
- * [DirTest description]
- */
 class DirTest extends TestCase
 {
     use DatabaseTransactions;
@@ -35,7 +32,7 @@ class DirTest extends TestCase
      * [dirSetup description]
      * @return array [description]
      */
-    protected function dirSetup() : array
+    protected function dirSetup(): array
     {
         $category = factory(Category::class)->states('active')->create();
 
@@ -56,7 +53,7 @@ class DirTest extends TestCase
      * @param  Group $group [description]
      * @return array        [description]
      */
-    protected function fieldsSetup(Group $group) : array
+    protected function fieldsSetup(Group $group): array
     {
         foreach (static::FIELD_TYPES as $type) {
             $field = factory(Field::class)->states([$type, 'public'])->create();
@@ -65,11 +62,11 @@ class DirTest extends TestCase
             $key = $field->id;
             if (in_array($field->type, ['input', 'textarea'])) {
                 $fields['field'][$key] = 'dasdasdadasds23238dfd8fdshjfdshfjsdhfjsdhfsdjf';
-            } else if ($field->type === 'select') {
+            } elseif ($field->type === 'select') {
                 $fields['field'][$key] = $field->options->options[0];
-            } else if (in_array($field->type, ['multiselect', 'checkbox'])) {
+            } elseif (in_array($field->type, ['multiselect', 'checkbox'])) {
                 $fields['field'][$key] = array_slice($field->options->options, 0, 2);
-            } else if ($field->type === 'image') {
+            } elseif ($field->type === 'image') {
                 $fields['field'][$key] = UploadedFile::fake()->image('avatar.jpg', 500, 200)->size(1000);
 
                 // $this->mock(\N1ebieski\IDir\Utils\File::class, function ($mock) {
@@ -82,14 +79,14 @@ class DirTest extends TestCase
         return $fields;
     }
 
-    public function test_dir_edit_1_as_guest()
+    public function testDirEdit1AsGuest()
     {
         $response = $this->get(route('web.dir.edit_1', [232]));
 
         $response->assertRedirect(route('login'));
     }
 
-    public function test_noexist_dir_edit_1()
+    public function testNoexistDirEdit1()
     {
         $user = factory(User::class)->states('user')->create();
 
@@ -102,7 +99,7 @@ class DirTest extends TestCase
         $this->assertTrue(Auth::check());
     }
 
-    public function test_foreign_dir_edit_1()
+    public function testForeignDirEdit1()
     {
         $user = factory(User::class)->states('user')->create();
 
@@ -120,7 +117,7 @@ class DirTest extends TestCase
         $this->assertTrue(Auth::check());
     }
 
-    public function test_dir_edit_1()
+    public function testDirEdit1()
     {
         $user = factory(User::class)->states('user')->create();
 
@@ -141,14 +138,14 @@ class DirTest extends TestCase
         $response->assertDontSee($private_group->name);
     }
 
-    public function test_dir_edit_2_as_guest()
+    public function testDirEdit2AsGuest()
     {
         $response = $this->get(route('web.dir.edit_2', [34, 23]));
 
         $response->assertRedirect(route('login'));
     }
 
-    public function test_dir_edit_2_noexist_group()
+    public function testDirEdit2NoexistGroup()
     {
         $user = factory(User::class)->states('user')->create();
 
@@ -164,7 +161,7 @@ class DirTest extends TestCase
         $response->assertStatus(404);
     }
 
-    public function test_dir_edit_2_noexist_dir()
+    public function testDirEdit2NoexistDir()
     {
         $user = factory(User::class)->states('user')->create();
 
@@ -177,7 +174,7 @@ class DirTest extends TestCase
         $response->assertStatus(404);
     }
 
-    public function test_dir_edit_2_foreign()
+    public function testDirEdit2Foreign()
     {
         $user = factory(User::class)->states('user')->create();
 
@@ -195,7 +192,7 @@ class DirTest extends TestCase
         $this->assertTrue(Auth::check());
     }
 
-    public function test_dir_edit_2_private_group()
+    public function testDirEdit2PrivateGroup()
     {
         $user = factory(User::class)->states('user')->create();
 
@@ -213,7 +210,7 @@ class DirTest extends TestCase
         $response->assertStatus(403);
     }
 
-    public function test_dir_edit_2_max_models_new_group()
+    public function testDirEdit2MaxModelsNewGroup()
     {
         $user = factory(User::class)->states('user')->create();
 
@@ -232,7 +229,7 @@ class DirTest extends TestCase
         $response->assertStatus(403);
     }
 
-    public function test_dir_edit_2_max_models_old_group()
+    public function testDirEdit2MaxModelsOldGroup()
     {
         $user = factory(User::class)->states('user')->create();
 
@@ -253,7 +250,7 @@ class DirTest extends TestCase
             ->assertSee($dir->title);
     }
 
-    public function test_dir_edit_2()
+    public function testDirEdit2()
     {
         $user = factory(User::class)->states('user')->create();
 
@@ -274,14 +271,14 @@ class DirTest extends TestCase
         $response2->assertSee(route('web.dir.update_2', [$dir->id, $group->id]));
     }
 
-    public function test_dir_update_2_as_guest()
+    public function testDirUpdate2AsGuest()
     {
         $response = $this->put(route('web.dir.update_2', [34, 23]));
 
         $response->assertRedirect(route('login'));
     }
 
-    public function test_dir_update_2_noexist_group()
+    public function testDirUpdate2NoexistGroup()
     {
         $user = factory(User::class)->states('user')->create();
 
@@ -297,7 +294,7 @@ class DirTest extends TestCase
         $response->assertStatus(404);
     }
 
-    public function test_dir_update_2_noexist_dir()
+    public function testDirUpdate2NoexistDir()
     {
         $user = factory(User::class)->states('user')->create();
 
@@ -310,7 +307,7 @@ class DirTest extends TestCase
         $response->assertStatus(404);
     }
 
-    public function test_dir_update_2_foreign()
+    public function testDirUpdate2Foreign()
     {
         $user = factory(User::class)->states('user')->create();
 
@@ -328,7 +325,7 @@ class DirTest extends TestCase
         $this->assertTrue(Auth::check());
     }
 
-    public function test_dir_update_2_private_group()
+    public function testDirUpdate2PrivateGroup()
     {
         $user = factory(User::class)->states('user')->create();
 
@@ -346,7 +343,7 @@ class DirTest extends TestCase
         $response->assertStatus(403);
     }
 
-    public function test_dir_update_2_validation_fail()
+    public function testDirUpdate2ValidationFail()
     {
         $user = factory(User::class)->states('user')->create();
 
@@ -366,7 +363,7 @@ class DirTest extends TestCase
         $response2->assertSessionHasErrors(['url', 'categories']);
     }
 
-    public function test_dir_update_2_validation_url_fail()
+    public function testDirUpdate2ValidationUrlFail()
     {
         $user = factory(User::class)->states('user')->create();
 
@@ -386,7 +383,7 @@ class DirTest extends TestCase
         $response->assertSessionHasErrors(['url']);
     }
 
-    public function test_dir_update_2()
+    public function testDirUpdate2()
     {
         $user = factory(User::class)->states('user')->create();
 
@@ -410,14 +407,14 @@ class DirTest extends TestCase
         $response->assertSessionHas("dirId.{$dir->id}.title", 'dasdasdasd');
     }
 
-    public function test_dir_edit_3_as_guest()
+    public function testDirEdit3AsGuest()
     {
         $response = $this->get(route('web.dir.edit_3', [34, 23]));
 
         $response->assertRedirect(route('login'));
     }
 
-    public function test_dir_edit_3_noexist_group()
+    public function testDirEdit3NoexistGroup()
     {
         $user = factory(User::class)->states('user')->create();
 
@@ -433,7 +430,7 @@ class DirTest extends TestCase
         $response->assertStatus(404);
     }
 
-    public function test_dir_edit_3_noexist_dir()
+    public function testDirEdit3NoexistDir()
     {
         $user = factory(User::class)->states('user')->create();
 
@@ -446,7 +443,7 @@ class DirTest extends TestCase
         $response->assertStatus(404);
     }
 
-    public function test_dir_edit_3_foreign()
+    public function testDirEdit3Foreign()
     {
         $user = factory(User::class)->states('user')->create();
 
@@ -464,7 +461,7 @@ class DirTest extends TestCase
         $this->assertTrue(Auth::check());
     }
 
-    public function test_dir_edit_3_old_paid_group()
+    public function testDirEdit3OldPaidGroup()
     {
         $user = factory(User::class)->states('user')->create();
 
@@ -488,7 +485,7 @@ class DirTest extends TestCase
             ->assertDontSee('transfer');
     }
 
-    public function test_dir_edit_3_new_paid_group()
+    public function testDirEdit3NewPaidGroup()
     {
         $user = factory(User::class)->states('user')->create();
 
@@ -513,14 +510,14 @@ class DirTest extends TestCase
             ->assertSee('transfer');
     }
 
-    public function test_dir_update_3_as_guest()
+    public function testDirUpdate3AsGuest()
     {
         $response = $this->put(route('web.dir.update_3', [34, 43]));
 
         $response->assertRedirect(route('login'));
     }
 
-    public function test_dir_update_3_noexist_group()
+    public function testDirUpdate3NoexistGroup()
     {
         $user = factory(User::class)->states('user')->create();
 
@@ -536,7 +533,7 @@ class DirTest extends TestCase
         $response->assertStatus(404);
     }
 
-    public function test_dir_update_3_noexist_dir()
+    public function testDirUpdate3NoexistDir()
     {
         $user = factory(User::class)->states('user')->create();
 
@@ -549,7 +546,7 @@ class DirTest extends TestCase
         $response->assertStatus(404);
     }
 
-    public function test_dir_update_3_foreign()
+    public function testDirUpdate3Foreign()
     {
         $user = factory(User::class)->states('user')->create();
 
@@ -567,7 +564,7 @@ class DirTest extends TestCase
         $this->assertTrue(Auth::check());
     }
 
-    public function test_dir_update_3_private_group()
+    public function testDirUpdate3PrivateGroup()
     {
         $user = factory(User::class)->states('user')->create();
 
@@ -585,7 +582,7 @@ class DirTest extends TestCase
         $response->assertStatus(403);
     }
 
-    public function test_dir_update_3_validation_url_fail()
+    public function testDirUpdate3ValidationUrlFail()
     {
         $user = factory(User::class)->states('user')->create();
 
@@ -607,7 +604,7 @@ class DirTest extends TestCase
         $response->assertSessionHasErrors(['url']);
     }
 
-    public function test_dir_store_summary_validation_categories_fail()
+    public function testDirStoreSummaryValidationCategoriesFail()
     {
         $user = factory(User::class)->states('user')->create();
 
@@ -632,7 +629,7 @@ class DirTest extends TestCase
         $response->assertRedirect(route('web.dir.edit_3', [$dir->id, $group->id]));
     }
 
-    public function test_dir_store_summary_validation_fields_fail()
+    public function testDirStoreSummaryValidationFieldsFail()
     {
         $user = factory(User::class)->states('user')->create();
 
@@ -660,7 +657,7 @@ class DirTest extends TestCase
         $response->assertRedirect(route('web.dir.edit_3', [$dir->id, $group->id]));
     }
 
-    public function test_dir_store_summary_validation_backlink_fail()
+    public function testDirStoreSummaryValidationBacklinkFail()
     {
         $user = factory(User::class)->states('user')->create();
 
@@ -683,7 +680,7 @@ class DirTest extends TestCase
         $response->assertRedirect(route('web.dir.edit_3', [$dir->id, $group->id]));
     }
 
-    public function test_dir_store_summary_validation_backlink_pass()
+    public function testDirStoreSummaryValidationBacklinkPass()
     {
         $user = factory(User::class)->states('user')->create();
 
@@ -715,7 +712,7 @@ class DirTest extends TestCase
         $response->assertRedirect(route('web.dir.edit_3', [$dir->id, $group->id]));
     }
 
-    public function test_dir_update_3_fields()
+    public function testDirUpdate3Fields()
     {
         $user = factory(User::class)->states('user')->create();
 
@@ -760,7 +757,7 @@ class DirTest extends TestCase
         $response->assertRedirect(route('web.profile.edit_dir'));
     }
 
-    public function test_dir_update_3_validation_payment_fail()
+    public function testDirUpdate3ValidationPaymentFail()
     {
         $user = factory(User::class)->states('user')->create();
 
@@ -786,7 +783,7 @@ class DirTest extends TestCase
         $response->assertRedirect(route('web.dir.edit_3', [$dir->id, $group->id]));
     }
 
-    public function test_dir_update_3_validation_noexist_payment_fail()
+    public function testDirUpdate3ValidationNoexistPaymentFail()
     {
         $user = factory(User::class)->states('user')->create();
 
@@ -813,7 +810,7 @@ class DirTest extends TestCase
         $response->assertRedirect(route('web.dir.edit_3', [$dir->id, $group->id]));
     }
 
-    public function test_dir_update_3_new_group_payment()
+    public function testDirUpdate3NewGroupPayment()
     {
         $user = factory(User::class)->states('user')->create();
 
@@ -859,7 +856,7 @@ class DirTest extends TestCase
         ]));
     }
 
-    public function test_dir_update_3_old_group_without_payment()
+    public function testDirUpdate3OldGroupWithoutPayment()
     {
         $user = factory(User::class)->states('user')->create();
 
@@ -898,7 +895,7 @@ class DirTest extends TestCase
         $response->assertRedirect(route('web.profile.edit_dir'))->assertSessionHas('success');
     }
 
-    public function test_pending_dir_update_3_old_group_payment_fail()
+    public function testPendingDirUpdate3OldGroupPaymentFail()
     {
         $user = factory(User::class)->states('user')->create();
 
@@ -921,7 +918,7 @@ class DirTest extends TestCase
         $response->assertRedirect(route('web.dir.edit_3', [$dir->id, $group->id]));
     }
 
-    public function test_dir_update_3_validation_payment_auto_code_sms_pass()
+    public function testDirUpdate3ValidationPaymentAutoCodeSmsPass()
     {
         $user = factory(User::class)->states('user')->create();
 

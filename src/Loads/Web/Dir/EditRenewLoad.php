@@ -4,9 +4,6 @@ namespace N1ebieski\IDir\Loads\Web\Dir;
 
 use Illuminate\Http\Request;
 
-/**
- * [EditRenewLoad description]
- */
 class EditRenewLoad
 {
     /**

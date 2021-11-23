@@ -2,14 +2,11 @@
 
 namespace N1ebieski\IDir\Models;
 
-use N1ebieski\ICore\Models\User as BaseUser;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\App;
 use N1ebieski\IDir\Repositories\UserRepo;
+use N1ebieski\ICore\Models\User as BaseUser;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
-/**
- * [User description]
- */
 class User extends BaseUser
 {
     // Configuration
@@ -36,12 +33,12 @@ class User extends BaseUser
      * [dirs description]
      * @return HasMany [description]
      */
-    public function dirs() : HasMany
+    public function dirs(): HasMany
     {
         return $this->hasMany(\N1ebieski\IDir\Models\Dir::class);
     }
 
-    // Makers
+    // Factories
 
     /**
      * [makeRepo description]

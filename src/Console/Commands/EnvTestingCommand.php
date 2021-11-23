@@ -5,9 +5,6 @@ namespace N1ebieski\IDir\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Composer;
 
-/**
- * [EnvTestingCommand description]
- */
 class EnvTestingCommand extends Command
 {
     /**
@@ -58,13 +55,13 @@ class EnvTestingCommand extends Command
         $this->call('vendor:publish', ['--tag' => 'icore.migrations', '--force' => true], $this->getOutput());
         $this->info("\n");
         $this->call('vendor:publish', ['--tag' => 'idir.migrations', '--force' => true], $this->getOutput());
-        $this->info("\n");        
+        $this->info("\n");
         $bar->advance();
         $this->info("\n");
         $this->call('vendor:publish', ['--tag' => 'icore.factories', '--force' => true], $this->getOutput());
         $this->info("\n");
         $this->call('vendor:publish', ['--tag' => 'idir.factories', '--force' => true], $this->getOutput());
-        $this->info("\n");        
+        $this->info("\n");
         $bar->advance();
         $this->info("\n");
         $this->call('vendor:publish', ['--tag' => 'icore.seeds', '--force' => true], $this->getOutput());

@@ -3,13 +3,10 @@
 namespace N1ebieski\IDir\Models;
 
 use Illuminate\Support\Facades\App;
-use N1ebieski\ICore\Models\Link as BaseLink;
 use N1ebieski\IDir\Cache\LinkCache;
 use N1ebieski\IDir\Repositories\LinkRepo;
+use N1ebieski\ICore\Models\Link as BaseLink;
 
-/**
- * [Link description]
- */
 class Link extends BaseLink
 {
     // Configuration
@@ -24,7 +21,7 @@ class Link extends BaseLink
         return BaseLink::class;
     }
 
-    // Makers
+    // Factories
 
     /**
      * [makeCache description]

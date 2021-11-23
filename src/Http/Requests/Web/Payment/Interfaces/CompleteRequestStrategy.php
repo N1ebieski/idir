@@ -9,12 +9,12 @@ interface CompleteRequestStrategy
      *
      * @return bool
      */
-    public function authorize() : bool;
-    
+    public function authorize(): bool;
+
     /**
      * Get the validation rules that apply to the request.
      *
      * @return array
      */
-    public function rules() : array;
+    public function rules(): array;
 }

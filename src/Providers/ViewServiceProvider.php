@@ -4,9 +4,6 @@ namespace N1ebieski\IDir\Providers;
 
 use Illuminate\Support\ServiceProvider;
 
-/**
- * [ViewServiceProvider description]
- */
 class ViewServiceProvider extends ServiceProvider
 {
     /**
@@ -41,6 +38,17 @@ class ViewServiceProvider extends ServiceProvider
                 $layout . '::admin.dir.partials.summary'
             ],
             \N1ebieski\IDir\View\Composers\RegionsComposer::class
+        );
+
+        $this->app['view']->composer(
+            [
+                $layout . '::web.dir.partials.group',
+                $layout . '::web.dir.partials.payment',
+                $layout . '::admin.dir.partials.group',
+                $layout . '::admin.dir.partials.payment',
+                $layout . '::admin.price.partials.price'
+            ],
+            \N1ebieski\IDir\View\Composers\DriverComposer::class
         );
     }
 }

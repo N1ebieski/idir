@@ -4,9 +4,6 @@ namespace N1ebieski\IDir\Http\Requests\Admin\Dir;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-/**
- * [DestroyRequest description]
- */
 class DestroyRequest extends FormRequest
 {
     /**

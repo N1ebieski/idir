@@ -4,9 +4,6 @@ namespace N1ebieski\IDir\Jobs\Tag\Dir;
 
 use N1ebieski\ICore\Jobs\Tag\CachePopularTagsJob as BaseCachePopularTagsJob;
 
-/**
- * [CachePopularTags description]
- */
 class CachePopularTagsJob extends BaseCachePopularTagsJob
 {
     /**

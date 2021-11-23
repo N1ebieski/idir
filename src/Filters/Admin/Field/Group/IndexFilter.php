@@ -14,7 +14,13 @@ use N1ebieski\ICore\Filters\Traits\HasPaginate;
 
 class IndexFilter extends Filter
 {
-    use HasExcept, HasSearch, HasVisible, HasType, HasMorph, HasOrderBy, HasPaginate;
+    use HasExcept;
+    use HasSearch;
+    use HasVisible;
+    use HasType;
+    use HasMorph;
+    use HasOrderBy;
+    use HasPaginate;
 
     /**
      * [setMorph description]
@@ -31,7 +37,7 @@ class IndexFilter extends Filter
      * [filterMorph description]
      * @param int|null $id [description]
      */
-    public function filterMorph(int $id = null) : void
+    public function filterMorph(int $id = null): void
     {
         $this->parameters['morph'] = null;
 
@@ -47,7 +53,7 @@ class IndexFilter extends Filter
      * @param  int   $id [description]
      * @return Group     [description]
      */
-    protected function findMorph(int $id) : Group
+    protected function findMorph(int $id): Group
     {
         return Group::find($id, ['id', 'name']);
     }

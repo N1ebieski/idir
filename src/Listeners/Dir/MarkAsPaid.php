@@ -2,9 +2,6 @@
 
 namespace N1ebieski\IDir\Listeners\Dir;
 
-/**
- * [MarkAsPaid description]
- */
 class MarkAsPaid
 {
     /**
@@ -18,7 +15,7 @@ class MarkAsPaid
      *
      * @return bool
      */
-    public function verify() : bool
+    public function verify(): bool
     {
         return $this->event->payment->isUnfinished()
             && $this->event->payment->morph->isPending();

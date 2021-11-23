@@ -39,7 +39,7 @@ class IndexRequest extends FormRequest
                 'in:created_at|asc,created_at|desc,updated_at|asc,updated_at|desc,price|asc,price|desc,days|asc,days|desc',
                 'no_js_validation'
             ],
-            'filter.paginate' => Rule::in([$paginate, ($paginate*2), ($paginate*4)]) . '|integer|no_js_validation'
+            'filter.paginate' => Rule::in([$paginate, ($paginate * 2), ($paginate * 4)]) . '|integer|no_js_validation'
         ];
     }
 }

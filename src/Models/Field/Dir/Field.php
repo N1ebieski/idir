@@ -21,7 +21,7 @@ class Field extends BaseFieldModel
      * [getPoliAttribute description]
      * @return string [description]
      */
-    public function getPoliAttribute() : string
+    public function getPoliAttribute(): string
     {
         return 'dir';
     }
@@ -32,7 +32,7 @@ class Field extends BaseFieldModel
      */
     public function getModelTypeAttribute()
     {
-        return 'N1ebieski\\IDir\\Models\\Dir';
+        return \N1ebieski\IDir\Models\Dir::class;
     }
 
     /**
@@ -42,6 +42,6 @@ class Field extends BaseFieldModel
      */
     public function getMorphClass()
     {
-        return 'N1ebieski\\IDir\\Models\\Field\\Field';
+        return \N1ebieski\IDir\Models\Field\Field::class;
     }
 }

@@ -14,7 +14,11 @@ return [
     ],
     'days' => 'Dni',
     'price' => 'Cena',
-    'price_from' => 'od :price PLN <small class="text-muted">/ :days :limit</small>',
+    'discount_price' => [
+        'label' => 'Cena ze zniżką',
+        'tooltip' => 'W przypadku braku zniżki, pozostawić puste',
+    ],
+    'price_from' => 'od :price :currency <small class="text-muted">/ :days :limit</small>',
     'unlimited' => 'nielimitowany',
     'group' => 'Grupa',
     'code_sms' => 'Kod SMS',

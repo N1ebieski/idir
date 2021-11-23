@@ -58,11 +58,7 @@ class PriceService implements Creatable, Updatable, Deletable
     public function create(array $attributes): Model
     {
         return $this->db->transaction(function () use ($attributes) {
-            $price = $this->price->make();
-
-            $price->price = $attributes['price'];
-            $price->days = $attributes['days'];
-            $price->type = $attributes['type'];
+            $price = $this->price->make($attributes);
             $price->code = $attributes[$attributes['type']]['code'] ?? null;
             $price->token = $attributes[$attributes['type']]['token'] ?? null;
             $price->number = $attributes[$attributes['type']]['number'] ?? null;
@@ -89,9 +85,7 @@ class PriceService implements Creatable, Updatable, Deletable
     public function update(array $attributes): bool
     {
         return $this->db->transaction(function () use ($attributes) {
-            $this->price->price = $attributes['price'];
-            $this->price->days = $attributes['days'];
-            $this->price->type = $attributes['type'];
+            $this->price->fill($attributes);
             $this->price->code = $attributes[$attributes['type']]['code'] ?? null;
             $this->price->token = $attributes[$attributes['type']]['token'] ?? null;
             $this->price->number = $attributes[$attributes['type']]['number'] ?? null;

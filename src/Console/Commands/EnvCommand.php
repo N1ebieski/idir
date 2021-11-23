@@ -48,26 +48,26 @@ class EnvCommand extends Command
     public function handle()
     {
         $bar = $this->output->createProgressBar(7);
-        
+
         $this->info("\n");
         $bar->start();
         $this->info("\n");
         $this->call('vendor:publish', ['--tag' => 'icore.migrations', '--force' => true], $this->getOutput());
         $this->info("\n");
         $this->call('vendor:publish', ['--tag' => 'idir.migrations', '--force' => true], $this->getOutput());
-        $this->info("\n");   
+        $this->info("\n");
         $bar->advance();
         $this->info("\n");
         $this->call('vendor:publish', ['--tag' => 'icore.factories', '--force' => true], $this->getOutput());
-        $this->info("\n"); 
+        $this->info("\n");
         $this->call('vendor:publish', ['--tag' => 'idir.factories', '--force' => true], $this->getOutput());
-        $this->info("\n");                    
+        $this->info("\n");
         $bar->advance();
         $this->info("\n");
         $this->call('vendor:publish', ['--tag' => 'icore.seeds', '--force' => true], $this->getOutput());
         $this->info("\n");
         $this->call('vendor:publish', ['--tag' => 'idir.seeds', '--force' => true], $this->getOutput());
-        $this->info("\n");               
+        $this->info("\n");
         $bar->advance();
         $this->info("\n");
         $this->composer->dumpOptimized();

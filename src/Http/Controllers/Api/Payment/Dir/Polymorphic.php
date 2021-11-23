@@ -22,5 +22,5 @@ interface Polymorphic
         VerifyRequestStrategy $request,
         VerifyLoad $load,
         TransferUtilStrategy $transferUtil
-    ) : string;
+    ): string;
 }

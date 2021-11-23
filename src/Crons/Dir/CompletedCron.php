@@ -2,10 +2,10 @@
 
 namespace N1ebieski\IDir\Crons\Dir;
 
-use N1ebieski\IDir\Models\Dir;
-use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Support\Carbon;
+use N1ebieski\IDir\Models\Dir;
 use N1ebieski\IDir\Jobs\Dir\CompletedJob;
+use Illuminate\Contracts\Config\Repository as Config;
 
 class CompletedCron
 {
@@ -47,7 +47,7 @@ class CompletedCron
     public function __construct(Dir $dir, CompletedJob $completedJob, Config $config, Carbon $carbon)
     {
         $this->dir = $dir;
-        
+
         $this->completedJob = $completedJob;
 
         $this->config = $config;
@@ -57,7 +57,7 @@ class CompletedCron
     /**
      * [__invoke description]
      */
-    public function __invoke() : void
+    public function __invoke(): void
     {
         $this->dir->makeRepo()->chunkAvailableHasPaidRequirementByPrivilegedTo(
             function ($dirs) {
@@ -75,7 +75,7 @@ class CompletedCron
      * @param Dir $dir
      * @return void
      */
-    protected function addToQueue(Dir $dir) : void
+    protected function addToQueue(Dir $dir): void
     {
         $this->completedJob->dispatch($dir);
     }

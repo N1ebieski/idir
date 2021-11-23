@@ -9,12 +9,43 @@
         </label>
         <input 
             type="text" 
-            value="{{ $price->price }}" 
+            value="{{ $price->regular_price }}" 
             name="price" 
             class="form-control" 
             id="price"
         >
     </div>
+    @if ($price->type !== 'code_sms')
+    <div class="form-group">
+        <label for="discount_price">
+            <span>{{ trans('idir::prices.discount_price.label') }}:</span>
+            <i 
+                data-toggle="tooltip" 
+                data-placement="top"
+                title="{{ trans('idir::prices.discount_price.tooltip') }}"
+                class="far fa-question-circle"
+            ></i>
+        </label>
+        <div class="input-group">
+            <input 
+                type="text" 
+                value="{{ $price->discount_price }}" 
+                name="discount_price"
+                class="form-control" 
+                id="discount_price"
+            >
+            <input 
+                type="text"
+                class="form-control" 
+                id="discount" 
+                value="{{ $price->discount }}"
+            >
+            <div class="input-group-append">
+                <div class="input-group-text">%</div>
+            </div>
+        </div>
+    </div>
+    @endif
     <div class="form-group">
         <label for="days">
             {{ trans('idir::prices.days') }}:

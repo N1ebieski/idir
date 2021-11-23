@@ -16,7 +16,7 @@ class Edit2Request extends FormRequest
         $check = $this->group->isPublic();
 
         return $this->dir->isGroup($this->group->id) ?
-            $check 
+            $check
             : ($check && $this->group->isAvailable());
     }
 

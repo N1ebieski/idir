@@ -79,7 +79,7 @@ class DirBuilder extends Builder
      * @param Closure $closure
      * @return void
      */
-    public function chunkCollection(Closure $closure) : bool
+    public function chunkCollection(Closure $closure): bool
     {
         return $this->dir->makeRepo()->chunkActiveWithModelsCount($closure);
     }

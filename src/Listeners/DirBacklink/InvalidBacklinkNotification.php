@@ -55,7 +55,7 @@ class InvalidBacklinkNotification
      *
      * @return bool
      */
-    public function verify() : bool
+    public function verify(): bool
     {
         return optional($this->event->dirBacklink->dir->user)->email
             && optional($this->event->dirBacklink->dir->user)->hasPermissionTo('web.dirs.notification');

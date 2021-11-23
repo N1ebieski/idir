@@ -10,7 +10,7 @@ class IDirServiceProvider extends ServiceProvider
      * [public description]
      * @var string
      */
-    public const VERSION = "5.1.7";
+    public const VERSION = "6.0.0";
 
     /**
      * Register services.
@@ -19,7 +19,7 @@ class IDirServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__.  '/../../config/idir.php', 'idir');
+        $this->mergeConfigFrom(__DIR__ .  '/../../config/idir.php', 'idir');
 
         $this->app->register(LicenseServiceProvider::class);
         $this->app->register(AppServiceProvider::class);
@@ -74,15 +74,15 @@ class IDirServiceProvider extends ServiceProvider
         ], 'idir.config');
 
         $this->publishes([
-            __DIR__.'/../../routes/web' => base_path('routes') . '/vendor/idir/web'
+            __DIR__ . '/../../routes/web' => base_path('routes') . '/vendor/idir/web'
         ], 'idir.routes.web');
 
         $this->publishes([
-            __DIR__.'/../../routes/admin' => base_path('routes') . '/vendor/idir/admin'
+            __DIR__ . '/../../routes/admin' => base_path('routes') . '/vendor/idir/admin'
         ], 'idir.routes.admin');
 
         $this->publishes([
-            __DIR__.'/../../routes/api' => base_path('routes') . '/vendor/idir/api'
+            __DIR__ . '/../../routes/api' => base_path('routes') . '/vendor/idir/api'
         ], 'idir.routes.api');
 
         $this->publishes([

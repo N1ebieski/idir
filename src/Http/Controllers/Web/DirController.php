@@ -72,7 +72,7 @@ class DirController
      * @param ShowRequest $filter
      * @return HttpResponse
      */
-    public function index(Dir $dir, IndexRequest $request, IndexFilter $filter) : HttpResponse
+    public function index(Dir $dir, IndexRequest $request, IndexFilter $filter): HttpResponse
     {
         return Response::view('idir::web.dir.index', [
             'dirs' => $dir->makeCache()->rememberForWebByFilter(
@@ -89,7 +89,7 @@ class DirController
      * @param  SearchRequest $request [description]
      * @return HttpResponse                   [description]
      */
-    public function search(Dir $dir, SearchRequest $request, SearchFilter $filter) : HttpResponse
+    public function search(Dir $dir, SearchRequest $request, SearchFilter $filter): HttpResponse
     {
         return Response::view('idir::web.dir.search', [
             'dirs' => $dir->makeRepo()->paginateBySearchAndFilter(
@@ -115,7 +115,7 @@ class DirController
         ShowLoad $load,
         ShowRequest $request,
         ShowFilter $filter
-    ) : HttpResponse {
+    ): HttpResponse {
         Event::dispatch(App::make(DirShowEvent::class, ['dir' => $dir]));
 
         return Response::view(
@@ -132,7 +132,7 @@ class DirController
      * @param Group     $group     [description]
      * @return HttpResponse
      */
-    public function create1(Group $group) : HttpResponse
+    public function create1(Group $group): HttpResponse
     {
         return Response::view('idir::web.dir.create.1', [
             'groups' => $group->makeRepo()->getPublicWithRels()
@@ -146,7 +146,7 @@ class DirController
      * @param  Create2Request $request [description]
      * @return HttpResponse            [description]
      */
-    public function create2(Group $group, Create2Load $load, Create2Request $request) : HttpResponse
+    public function create2(Group $group, Create2Load $load, Create2Request $request): HttpResponse
     {
         return Response::view(
             'idir::web.dir.create.2',
@@ -164,7 +164,7 @@ class DirController
      * @param  Store2Request    $request [description]
      * @return RedirectResponse          [description]
      */
-    public function store2(Group $group, Dir $dir, Store2Load $load, Store2Request $request) : RedirectResponse
+    public function store2(Group $group, Dir $dir, Store2Load $load, Store2Request $request): RedirectResponse
     {
         $dir->setRelations(['group' => $group])
             ->makeService()
@@ -186,7 +186,7 @@ class DirController
         Dir $dir,
         Create3Load $load,
         Create3Request $request
-    ) : HttpResponse {
+    ): HttpResponse {
         $dir->setRelations(['group' => $group])
             ->makeService()
             ->createOrUpdateSession($request->validated());
@@ -216,7 +216,7 @@ class DirController
         Store3Request $request,
         Store3CodeRequest $requestPayment,
         Store3Response $response
-    ) : RedirectResponse {
+    ): RedirectResponse {
         $dir->setRelations(['group' => $group])
             ->makeService()
             ->create($request->validated());
@@ -237,7 +237,7 @@ class DirController
      * @param  Group     $group [description]
      * @return HttpResponse             [description]
      */
-    public function edit1(Dir $dir, Edit1Load $load, Group $group) : HttpResponse
+    public function edit1(Dir $dir, Edit1Load $load, Group $group): HttpResponse
     {
         $dir->makeService()->createOrUpdateSession($dir->attributes_as_array);
 
@@ -255,7 +255,7 @@ class DirController
      * @param  Edit2Request $request [description]
      * @return HttpResponse                  [description]
      */
-    public function edit2(Dir $dir, Group $group, Edit2Load $load, Edit2Request $request) : HttpResponse
+    public function edit2(Dir $dir, Group $group, Edit2Load $load, Edit2Request $request): HttpResponse
     {
         return Response::view(
             'idir::web.dir.edit.2',
@@ -274,7 +274,7 @@ class DirController
      * @param  Update2Request   $request [description]
      * @return RedirectResponse          [description]
      */
-    public function update2(Dir $dir, Group $group, Update2Load $load, Update2Request $request) : RedirectResponse
+    public function update2(Dir $dir, Group $group, Update2Load $load, Update2Request $request): RedirectResponse
     {
         $dir->setRelations(['group' => $group])
             ->makeService()
@@ -296,7 +296,7 @@ class DirController
         Group $group,
         Edit3Load $load,
         Edit3Request $request
-    ) : HttpResponse {
+    ): HttpResponse {
         $dir->setRelations(['group' => $group])
             ->makeService()
             ->createOrUpdateSession($request->validated());
@@ -327,7 +327,7 @@ class DirController
         Update3Request $request,
         Update3CodeRequest $requestPayment,
         Update3Response $response
-    ) : RedirectResponse {
+    ): RedirectResponse {
         $dir->setRelations(['group' => $group])
             ->makeService()
             ->updateFull($request->validated());
@@ -348,7 +348,7 @@ class DirController
      * @param  EditRenewRequest $request [description]
      * @return HttpResponse                      [description]
      */
-    public function editRenew(Dir $dir, EditRenewLoad $load, EditRenewRequest $request) : HttpResponse
+    public function editRenew(Dir $dir, EditRenewLoad $load, EditRenewRequest $request): HttpResponse
     {
         return Response::view(
             'idir::web.dir.edit_renew',
@@ -373,7 +373,7 @@ class DirController
         UpdateRenewRequest $request,
         UpdateRenewCodeRequest $requestPayment,
         UpdateRenewResponse $response
-    ) : RedirectResponse {
+    ): RedirectResponse {
         $dir->setRelations([
             'payment' => $payment = $dir->makeService()->makePayment($request->validated())
         ]);
@@ -391,7 +391,7 @@ class DirController
      * @param DestroyLoad $load
      * @return JsonResponse
      */
-    public function destroy(Dir $dir, DestroyLoad $load) : JsonResponse
+    public function destroy(Dir $dir, DestroyLoad $load): JsonResponse
     {
         $dir->makeService()->delete();
 

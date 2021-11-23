@@ -4,13 +4,14 @@ namespace N1ebieski\IDir\Mail\Dir;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
-use Illuminate\Queue\SerializesModels;
 use N1ebieski\IDir\Models\Dir;
+use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Translation\Translator as Lang;
 
 class CompletedMail extends Mailable
 {
-    use Queueable, SerializesModels;
+    use Queueable;
+    use SerializesModels;
 
     /**
      * Undocumented variable
@@ -66,7 +67,7 @@ class CompletedMail extends Mailable
      *
      * @return string
      */
-    protected function result() : string
+    protected function result(): string
     {
         if ($this->dir->group->alt_id === null) {
             return $this->lang->get('idir::dirs.mail.completed.deactivation');

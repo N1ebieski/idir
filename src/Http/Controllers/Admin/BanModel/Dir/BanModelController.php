@@ -11,9 +11,6 @@ use N1ebieski\IDir\Models\BanModel\Dir\BanModel;
 use N1ebieski\IDir\Http\Requests\Admin\BanModel\Dir\StoreRequest;
 use N1ebieski\IDir\Http\Controllers\Admin\BanModel\Dir\Polymorphic;
 
-/**
- * [BanModelController description]
- */
 class BanModelController implements Polymorphic
 {
     /**
@@ -22,7 +19,7 @@ class BanModelController implements Polymorphic
      * @param  Dir         $dir   [description]
      * @return JsonResponse       [description]
      */
-    public function create(Dir $dir) : JsonResponse
+    public function create(Dir $dir): JsonResponse
     {
         return Response::json([
             'success' => '',
@@ -41,7 +38,7 @@ class BanModelController implements Polymorphic
      * @param  StoreRequest $request  [description]
      * @return JsonResponse           [description]
      */
-    public function store(Dir $dir, BanModel $banModel, BanValue $banValue, StoreRequest $request) : JsonResponse
+    public function store(Dir $dir, BanModel $banModel, BanValue $banValue, StoreRequest $request): JsonResponse
     {
         if ($request->has('user')) {
             $banModel->morph()->associate($dir->user)->save();

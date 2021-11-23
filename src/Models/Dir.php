@@ -19,16 +19,25 @@ use N1ebieski\IDir\Repositories\DirRepo;
 use Illuminate\Database\Eloquent\Builder;
 use Cviebrock\EloquentSluggable\Sluggable;
 use N1ebieski\IDir\Models\Traits\Filterable;
-use N1ebieski\ICore\Models\Traits\StatFilterable;
+use Illuminate\Support\Collection as Collect;
 use N1ebieski\ICore\Models\Traits\Carbonable;
 use N1ebieski\IDir\Models\Payment\Dir\Payment;
+use N1ebieski\ICore\Models\Traits\StatFilterable;
 use Fico7489\Laravel\Pivot\Traits\PivotEventTrait;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use N1ebieski\ICore\Models\Traits\FullTextSearchable;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 class Dir extends Model
 {
-    use Sluggable, Taggable, FullTextSearchable, Carbonable, PivotEventTrait;
+    use Sluggable;
+    use Taggable;
+    use FullTextSearchable;
+    use Carbonable;
+    use PivotEventTrait;
     use Filterable, StatFilterable {
         StatFilterable::scopeFilterOrderBy insteadof Filterable;
     }
@@ -70,12 +79,6 @@ class Dir extends Model
      * @var int
      */
     public const INCORRECT_INACTIVE = 5;
-
-    /**
-     * [private description]
-     * @var bool
-     */
-    private $pivotEvent = false;
 
     /**
      * The attributes that are mass assignable.
@@ -137,7 +140,7 @@ class Dir extends Model
      *
      * @return array
      */
-    public function sluggable() : array
+    public function sluggable(): array
     {
         return [
             'slug' => [
@@ -149,44 +152,14 @@ class Dir extends Model
     // Overrides
 
     /**
-     * Undocumented function
-     *
-     * @return void
-     */
-    public static function boot()
-    {
-        parent::boot();
-
-        static::pivotUpdated(function ($model, $relationName, $pivotIds, $pivotIdsAttributes) {
-            if ($model->pivotEvent === false && in_array($relationName, ['fields'])) {
-                $model->fireModelEvent('updated');
-                $model->pivotEvent = true;
-            }
-        });
-
-        static::pivotAttached(function ($model, $relationName, $pivotIds, $pivotIdsAttributes) {
-            if ($model->pivotEvent === false && in_array($relationName, ['fields', 'categories', 'tags', 'regions'])) {
-                $model->fireModelEvent('updated');
-                $model->pivotEvent = true;
-            }
-        });
-
-        static::pivotDetached(function ($model, $relationName, $pivotIds) {
-            if ($model->pivotEvent === false && in_array($relationName, ['fields', 'categories', 'tags', 'regions'])) {
-                $model->fireModelEvent('updated');
-                $model->pivotEvent = true;
-            }
-        });
-    }
-
-    /**
      * Override relacji tags, bo ma hardcodowane nazwy pól
      *
      * @return \Illuminate\Database\Eloquent\Relations\MorphToMany
      */
     public function tags(): MorphToMany
     {
-        $model = config('taggable.model');
+        $model = Config::get('taggable.model');
+
         return $this->morphToMany($model, 'model', 'tags_models', 'model_id', 'tag_id')
             ->withTimestamps();
     }
@@ -194,58 +167,64 @@ class Dir extends Model
     // Relations
 
     /**
-     * [user description]
-     * @return [type] [description]
+     * Undocumented function
+     *
+     * @return BelongsTo
      */
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(\N1ebieski\IDir\Models\User::class);
     }
 
     /**
-     * [user description]
-     * @return [type] [description]
+     * Undocumented function
+     *
+     * @return BelongsTo
      */
-    public function group()
+    public function group(): BelongsTo
     {
-        return $this->belongsTo('N1ebieski\IDir\Models\Group');
+        return $this->belongsTo(\N1ebieski\IDir\Models\Group::class);
     }
 
     /**
-     * [payments description]
-     * @return [type] [description]
+     * Undocumented function
+     *
+     * @return MorphMany
      */
-    public function payments()
+    public function payments(): MorphMany
     {
-        return $this->morphMany('N1ebieski\IDir\Models\Payment\Dir\Payment', 'model');
+        return $this->morphMany(\N1ebieski\IDir\Models\Payment\Dir\Payment::class, 'model');
     }
 
     /**
-     * [map description]
-     * @return [type] [description]
+     * Undocumented function
+     *
+     * @return MorphOne
      */
-    public function map()
+    public function map(): MorphOne
     {
-        return $this->morphOne('N1ebieski\IDir\Models\Map\Map', 'model');
+        return $this->morphOne(\N1ebieski\IDir\Models\Map\Map::class, 'model');
     }
 
     /**
-     * [ratings description]
-     * @return [type] [description]
+     * Undocumented function
+     *
+     * @return MorphMany
      */
-    public function ratings()
+    public function ratings(): MorphMany
     {
-        return $this->morphMany('N1ebieski\IDir\Models\Rating\Dir\Rating', 'model');
+        return $this->morphMany(\N1ebieski\IDir\Models\Rating\Dir\Rating::class, 'model');
     }
 
     /**
-     * [regions description]
-     * @return [type] [description]
+     * Undocumented function
+     *
+     * @return MorphToMany
      */
-    public function regions()
+    public function regions(): MorphToMany
     {
         return $this->morphToMany(
-            'N1ebieski\IDir\Models\Region\Region',
+            \N1ebieski\IDir\Models\Region\Region::class,
             'model',
             'regions_models',
             'model_id',
@@ -254,22 +233,24 @@ class Dir extends Model
     }
 
     /**
-     * [reports description]
-     * @return [type] [description]
+     * Undocumented function
+     *
+     * @return MorphMany
      */
-    public function reports()
+    public function reports(): MorphMany
     {
-        return $this->morphMany('N1ebieski\ICore\Models\Report\Report', 'model');
+        return $this->morphMany(\N1ebieski\ICore\Models\Report\Report::class, 'model');
     }
 
     /**
-     * [categories description]
-     * @return [type] [description]
+     * Undocumented function
+     *
+     * @return MorphToMany
      */
-    public function categories()
+    public function categories(): MorphToMany
     {
         return $this->morphToMany(
-            'N1ebieski\IDir\Models\Category\Dir\Category',
+            \N1ebieski\IDir\Models\Category\Dir\Category::class,
             'model',
             'categories_models',
             'model_id',
@@ -278,40 +259,44 @@ class Dir extends Model
     }
 
     /**
-     * [categories description]
-     * @return [type] [description]
+     * Undocumented function
+     *
+     * @return MorphMany
      */
-    public function comments()
+    public function comments(): MorphMany
     {
-        return $this->morphMany('N1ebieski\ICore\Models\Comment\Comment', 'model');
+        return $this->morphMany(\N1ebieski\ICore\Models\Comment\Comment::class, 'model');
     }
 
     /**
-     * [backlink description]
-     * @return [type] [description]
+     * Undocumented function
+     *
+     * @return HasOne
      */
-    public function backlink()
+    public function backlink(): HasOne
     {
-        return $this->hasOne('N1ebieski\IDir\Models\DirBacklink');
+        return $this->hasOne(\N1ebieski\IDir\Models\DirBacklink::class);
     }
 
     /**
-     * [status description]
-     * @return [type] [description]
+     * Undocumented function
+     *
+     * @return HasOne
      */
-    public function status()
+    public function status(): HasOne
     {
-        return $this->hasOne('N1ebieski\IDir\Models\DirStatus');
+        return $this->hasOne(\N1ebieski\IDir\Models\DirStatus::class);
     }
 
     /**
-     * [fields description]
-     * @return [type] [description]
+     * Undocumented function
+     *
+     * @return MorphToMany
      */
-    public function fields()
+    public function fields(): MorphToMany
     {
         return $this->morphToMany(
-            'N1ebieski\IDir\Models\Field\Dir\Field',
+            \N1ebieski\IDir\Models\Field\Dir\Field::class,
             'model',
             'fields_values',
             'model_id',
@@ -324,7 +309,7 @@ class Dir extends Model
      *
      * @return MorphToMany
      */
-    public function stats() : MorphToMany
+    public function stats(): MorphToMany
     {
         return $this->morphToMany(
             \N1ebieski\IDir\Models\Stat\Dir\Stat::class,
@@ -343,7 +328,7 @@ class Dir extends Model
      * @param Builder $query
      * @return Builder
      */
-    public function scopeWithAllPublicRels(Builder $query) : Builder
+    public function scopeWithAllPublicRels(Builder $query): Builder
     {
         return $query->with([
             'group',
@@ -368,7 +353,7 @@ class Dir extends Model
      * @param  Builder $query [description]
      * @return Builder        [description]
      */
-    public function scopeWithSumRating(Builder $query) : Builder
+    public function scopeWithSumRating(Builder $query): Builder
     {
         return $query->withCount([
             'ratings AS sum_rating' => function ($query) {
@@ -382,7 +367,7 @@ class Dir extends Model
      * @param  Builder $query [description]
      * @return Builder        [description]
      */
-    public function scopeActive(Builder $query) : Builder
+    public function scopeActive(Builder $query): Builder
     {
         return $query->where('dirs.status', static::ACTIVE);
     }
@@ -392,7 +377,7 @@ class Dir extends Model
      * @param  Builder $query [description]
      * @return Builder        [description]
      */
-    public function scopeInactive(Builder $query) : Builder
+    public function scopeInactive(Builder $query): Builder
     {
         return $query->where('dirs.status', static::INACTIVE);
     }
@@ -402,7 +387,7 @@ class Dir extends Model
      * @param  Builder $query [description]
      * @return Builder        [description]
      */
-    public function scopePending(Builder $query) : Builder
+    public function scopePending(Builder $query): Builder
     {
         return $query->where('dirs.status', static::PAYMENT_INACTIVE);
     }
@@ -412,7 +397,7 @@ class Dir extends Model
      * @param  Builder $query [description]
      * @return Builder        [description]
      */
-    public function scopeBacklinkInactive(Builder $query) : Builder
+    public function scopeBacklinkInactive(Builder $query): Builder
     {
         return $query->where('dirs.status', static::BACKLINK_INACTIVE);
     }
@@ -423,7 +408,7 @@ class Dir extends Model
      * @param  array   $component [description]
      * @return Builder            [description]
      */
-    public function scopeActiveHasLinkPriviligeByComponent(Builder $query, array $component) : Builder
+    public function scopeActiveHasLinkPriviligeByComponent(Builder $query, array $component): Builder
     {
         return $query->selectRaw('id, url, title AS name, NULL')
             ->whereHas('group', function ($query) {
@@ -436,17 +421,6 @@ class Dir extends Model
                     ->whereIn('categories_models.category_id', $component['cats'])
                     ->where('categories_models.model_type', $this->getMorphClass());
             })
-            // Rezygnuje z whereHas bo wydajność strasznie siada przy dużej ilości rekordów
-            // ->whereIn('id', function ($query) use ($component) {
-            //     $query->select('model_id')
-            //         ->from('categories_models')
-            //         ->whereIn('category_id', $component['cats'])
-            //         ->where('model_type', get_class())
-            //         ->get();
-            // })
-            // ->whereHas('categories', function ($query) use ($component) {
-            //     $query->whereIn('categories.id', $component['cats']);
-            // })
             ->where('url', '<>', null)
             ->active();
     }
@@ -458,12 +432,12 @@ class Dir extends Model
      *
      * @return string
      */
-    public function getSumRatingAttribute() : string
+    public function getSumRatingAttribute(): string
     {
         if (!isset($this->attributes['sum_rating'])) {
             $ratings = $this->getRelation('ratings');
 
-            $sum_rating = $ratings->count() > 0 ? $ratings->sum('rating')/$ratings->count() : 0;
+            $sum_rating = $ratings->count() > 0 ? $ratings->sum('rating') / $ratings->count() : 0;
 
             return number_format($sum_rating, 2, '.', '');
         }
@@ -475,7 +449,7 @@ class Dir extends Model
      * [getPoliAttribute description]
      * @return string [description]
      */
-    public function getPoliSelfAttribute() : string
+    public function getPoliSelfAttribute(): string
     {
         return 'dir';
     }
@@ -485,21 +459,23 @@ class Dir extends Model
      *
     * @return string
      */
-    public function getThumbnailUrlAttribute() : string
+    public function getThumbnailUrlAttribute(): string
     {
-        if (($cache['url'] = Config::get('idir.dir.thumbnail.cache.url'))
-        && ($cache['key'] = Config::get('idir.dir.thumbnail.key'))) {
+        if (
+            ($cache['url'] = Config::get('idir.dir.thumbnail.cache.url'))
+            && ($cache['key'] = Config::get('idir.dir.thumbnail.key'))
+        ) {
             return $this->makeCache()->rememberThumbnailUrl();
         }
 
-        return Config::get('idir.dir.thumbnail.url').$this->url;
+        return Config::get('idir.dir.thumbnail.url') . $this->url;
     }
 
     /**
      * [getHostAttribute description]
      * @return string        [description]
      */
-    public function getUrlAsHostAttribute() : string
+    public function getUrlAsHostAttribute(): string
     {
         return parse_url($this->url, PHP_URL_HOST);
     }
@@ -508,7 +484,7 @@ class Dir extends Model
      * [getPrivilegedToDiffAttribute description]
      * @return string [description]
      */
-    public function getPrivilegedToDiffAttribute() : string
+    public function getPrivilegedToDiffAttribute(): string
     {
         return Carbon::parse($this->privileged_to)->diffForHumans(['parts' => 2]);
     }
@@ -517,7 +493,7 @@ class Dir extends Model
      * Short content used in the listing
      * @return string [description]
      */
-    public function getShortContentAttribute() : string
+    public function getShortContentAttribute(): string
     {
         return mb_substr(
             e($this->content, false),
@@ -530,7 +506,7 @@ class Dir extends Model
      * [getTitleAsLinkAttribute description]
      * @return string [description]
      */
-    public function getTitleAsLinkAttribute() : string
+    public function getTitleAsLinkAttribute(): string
     {
         if ($this->url !== null) {
             $link = '<a rel="noopener';
@@ -556,7 +532,7 @@ class Dir extends Model
      *
      * @return string
      */
-    public function getUrlAsLinkAttribute() : ?string
+    public function getUrlAsLinkAttribute(): ?string
     {
         if ($this->url !== null) {
             $link = '<a rel="noopener';
@@ -582,7 +558,7 @@ class Dir extends Model
      *
      * @return string
      */
-    public function getLinkAttribute() : string
+    public function getLinkAttribute(): string
     {
         if ($this->url !== null) {
             if ($this->getRelation('group')->hasDirectLinkPrivilege()) {
@@ -597,7 +573,7 @@ class Dir extends Model
      * [getContentHtmlAttribute description]
      * @return string [description]
      */
-    public function getContentHtmlAttribute() : string
+    public function getContentHtmlAttribute(): string
     {
         if ($this->getRelation('group')->hasEditorPrivilege()) {
             return Purifier::clean($this->attributes['content_html'], 'dir');
@@ -611,7 +587,7 @@ class Dir extends Model
      *
      * @return string
      */
-    public function getContentAsHtmlAttribute() : string
+    public function getContentAsHtmlAttribute(): string
     {
         if (!$this->getRelation('group')->hasEditorPrivilege()) {
             return nl2br(e($this->content_html, false));
@@ -624,7 +600,7 @@ class Dir extends Model
      * Content to the point of more link
      * @return string [description]
      */
-    public function getLessContentHtmlAttribute() : string
+    public function getLessContentHtmlAttribute(): string
     {
         return $this->short_content . '... <a href="' . URL::route('web.dir.show', [$this->slug])
         . '">' . Lang::get('idir::dirs.more') . '</a>';
@@ -634,11 +610,19 @@ class Dir extends Model
      * [getAttributesAttribute description]
      * @return array [description]
      */
-    public function getAttributesAsArrayAttribute() : array
+    public function getAttributesAsArrayAttribute(): array
     {
         return $this->attributesToArray()
             + ['field' => $this->fields->keyBy('id')
                 ->map(function ($item) {
+                    if ($item->type === 'map') {
+                        return Collect::make($item->decode_value)->map(function ($item) {
+                            $item = (array)$item;
+
+                            return $item;
+                        })->toArray();
+                    }
+
                     return $item->decode_value;
                 })
                 ->toArray()]
@@ -650,7 +634,7 @@ class Dir extends Model
      * [getBacklinkAsHtmlAttribute description]
      * @return string [description]
      */
-    public function getLinkAsHtmlAttribute() : string
+    public function getLinkAsHtmlAttribute(): string
     {
         $output = '<a href="' . route('web.dir.show', [$this->slug]) . '" title="' . $this->title . '">';
         $output .= e($this->title);
@@ -660,13 +644,13 @@ class Dir extends Model
     }
 
     // Checkers
-    
+
     /**
      * Undocumented function
      *
      * @return boolean
      */
-    public function isNulledPrivileges() : bool
+    public function isNulledPrivileges(): bool
     {
         return $this->privileged_at === null && $this->privileged_to === null;
     }
@@ -676,7 +660,7 @@ class Dir extends Model
      *
      * @return boolean
      */
-    public function isCommentable() : bool
+    public function isCommentable(): bool
     {
         return true;
     }
@@ -685,7 +669,7 @@ class Dir extends Model
      * [isRenew description]
      * @return bool [description]
      */
-    public function isRenew() : bool
+    public function isRenew(): bool
     {
         return ($this->privileged_to !== null || $this->isPending())
             && $this->getRelation('group')->getRelation('prices')->isNotEmpty();
@@ -696,7 +680,7 @@ class Dir extends Model
      * @param  int  $id [description]
      * @return bool     [description]
      */
-    public function isGroup(int $id) : bool
+    public function isGroup(int $id): bool
     {
         return $this->group_id === $id;
     }
@@ -705,7 +689,7 @@ class Dir extends Model
      * [isUrl description]
      * @return bool [description]
      */
-    public function isUrl() : bool
+    public function isUrl(): bool
     {
         return $this->url !== null;
     }
@@ -714,7 +698,7 @@ class Dir extends Model
      * [isPending description]
      * @return bool [description]
      */
-    public function isPending() : bool
+    public function isPending(): bool
     {
         return $this->status === static::PAYMENT_INACTIVE;
     }
@@ -724,7 +708,7 @@ class Dir extends Model
      *
      * @return boolean
      */
-    public function isNotOk() : bool
+    public function isNotOk(): bool
     {
         return $this->status === static::STATUS_INACTIVE;
     }
@@ -734,7 +718,7 @@ class Dir extends Model
      *
      * @return boolean
      */
-    public function isBacklinkNotOk() : bool
+    public function isBacklinkNotOk(): bool
     {
         return $this->status === static::BACKLINK_INACTIVE;
     }
@@ -744,7 +728,7 @@ class Dir extends Model
      *
      * @return boolean
      */
-    public function isIncorrect() : bool
+    public function isIncorrect(): bool
     {
         return $this->status === static::INCORRECT_INACTIVE;
     }
@@ -753,7 +737,7 @@ class Dir extends Model
      * [isActive description]
      * @return bool [description]
      */
-    public function isActive() : bool
+    public function isActive(): bool
     {
         return $this->status === static::ACTIVE;
     }
@@ -763,7 +747,7 @@ class Dir extends Model
      * @param  int  $id [description]
      * @return bool     [description]
      */
-    public function isPayment(int $id) : bool
+    public function isPayment(int $id): bool
     {
         return !$this->isGroup($id) || $this->isPending();
     }
@@ -772,7 +756,7 @@ class Dir extends Model
      * [isUpdateStatus description]
      * @return bool [description]
      */
-    public function isUpdateStatus() : bool
+    public function isUpdateStatus(): bool
     {
         return in_array($this->status, [
             static::ACTIVE,
@@ -787,7 +771,7 @@ class Dir extends Model
      * [loadCheckoutPayments description]
      * @return self [description]
      */
-    public function loadCheckoutPayments() : self
+    public function loadCheckoutPayments(): self
     {
         return $this->load(['payments' => function ($query) {
             $query->with('orderMorph')->where('status', Payment::UNFINISHED);
@@ -799,7 +783,7 @@ class Dir extends Model
      *
      * @return self
      */
-    public function loadAllPublicRels() : self
+    public function loadAllPublicRels(): self
     {
         return $this->load(array_filter([
                 'fields',
@@ -825,7 +809,7 @@ class Dir extends Model
      *
      * @return self
      */
-    public function loadAllRels() : self
+    public function loadAllRels(): self
     {
         return $this->load([
             'group',
@@ -846,12 +830,12 @@ class Dir extends Model
      * [setContentAttribute description]
      * @param string $value [description]
      */
-    public function setContentAttribute(string $value) : void
+    public function setContentAttribute(string $value): void
     {
         $this->attributes['content'] = !empty($value) ? strip_tags($value) : null;
     }
 
-    // Makers
+    // Factories
 
     /**
      * [makeRepo description]

@@ -14,9 +14,6 @@ use N1ebieski\IDir\Http\Controllers\Admin\Field\Polymorphic;
 use N1ebieski\IDir\Http\Requests\Admin\Field\DestroyRequest;
 use N1ebieski\IDir\Http\Requests\Admin\Field\UpdatePositionRequest;
 
-/**
- * [FieldController description]
- */
 class FieldController implements Polymorphic
 {
     /**
@@ -24,7 +21,7 @@ class FieldController implements Polymorphic
      * @param  Field     $field [description]
      * @return JsonResponse           [description]
      */
-    public function editPosition(Field $field) : JsonResponse
+    public function editPosition(Field $field): JsonResponse
     {
         return Response::json([
             'success' => '',
@@ -41,7 +38,7 @@ class FieldController implements Polymorphic
      * @param  UpdatePositionRequest $request  [description]
      * @return JsonResponse                    [description]
      */
-    public function updatePosition(Field $field, UpdatePositionRequest $request) : JsonResponse
+    public function updatePosition(Field $field, UpdatePositionRequest $request): JsonResponse
     {
         $field->makeService()->updatePosition($request->only('position'));
 
@@ -58,7 +55,7 @@ class FieldController implements Polymorphic
      * @param DestroyRequest $request
      * @return JsonResponse
      */
-    public function destroy(Field $field, DestroyRequest $request) : JsonResponse
+    public function destroy(Field $field, DestroyRequest $request): JsonResponse
     {
         $field->delete();
 
@@ -72,7 +69,7 @@ class FieldController implements Polymorphic
      * @param GusApi $gusApi
      * @return JsonResponse
      */
-    public function gus(GusRequest $request, GusResponse $response, GusApi $gusApi) : JsonResponse
+    public function gus(GusRequest $request, GusResponse $response, GusApi $gusApi): JsonResponse
     {
         try {
             $method = 'getBy' . ucfirst($request->input('type'));

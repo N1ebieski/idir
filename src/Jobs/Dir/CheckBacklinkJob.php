@@ -18,12 +18,12 @@ use Illuminate\Contracts\Foundation\Application as App;
 use Illuminate\Contracts\Validation\Factory as Validator;
 use N1ebieski\IDir\Events\Job\DirBacklink\InvalidBacklinkEvent;
 
-/**
- * [CheckBacklink description]
- */
 class CheckBacklinkJob implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     /**
      * Delete the job if its models no longer exist.
@@ -112,7 +112,7 @@ class CheckBacklinkJob implements ShouldQueue
      * [isAttempt description]
      * @return bool [description]
      */
-    protected function isAttempt() : bool
+    protected function isAttempt(): bool
     {
         return $this->dirBacklink->attempted_at === null ||
             $this->carbon->parse($this->dirBacklink->attempted_at)->lessThanOrEqualTo(
@@ -125,7 +125,7 @@ class CheckBacklinkJob implements ShouldQueue
      *
      * @return boolean
      */
-    protected function isMaxAttempt() : bool
+    protected function isMaxAttempt(): bool
     {
         return $this->dirBacklink->attempts === $this->max_attempts;
     }
@@ -134,7 +134,7 @@ class CheckBacklinkJob implements ShouldQueue
      * [validateBacklink description]
      * @return bool [description]
      */
-    protected function validateBacklink() : bool
+    protected function validateBacklink(): bool
     {
         $validator = $this->validator->make(['backlink_url' => $this->dirBacklink->url], [
             'backlink_url' => $this->app->make('N1ebieski\\IDir\\Rules\\BacklinkRule', [
@@ -150,7 +150,7 @@ class CheckBacklinkJob implements ShouldQueue
      *
      * @return void
      */
-    protected function executeValidBacklink() : void
+    protected function executeValidBacklink(): void
     {
         $this->dirBacklinkRepo->resetAttempts();
 
@@ -162,7 +162,7 @@ class CheckBacklinkJob implements ShouldQueue
      *
      * @return void
      */
-    protected function executeInvalidBacklink() : void
+    protected function executeInvalidBacklink(): void
     {
         $this->dirBacklinkRepo->incrementAttempts();
 
@@ -187,10 +187,10 @@ class CheckBacklinkJob implements ShouldQueue
         Event $event,
         App $app,
         Carbon $carbon
-    ) : void {
+    ): void {
         $this->dirBacklinkRepo = $this->dirBacklink->makeRepo();
         $this->dirRepo = $this->dirBacklink->dir->makeRepo();
-        
+
         $this->validator = $validator;
         $this->app = $app;
         $this->carbon = $carbon;

@@ -7,9 +7,6 @@ use N1ebieski\IDir\Models\Field\Field;
 use N1ebieski\IDir\Http\Requests\Admin\Field\DestroyRequest;
 use N1ebieski\IDir\Http\Requests\Admin\Field\UpdatePositionRequest;
 
-/**
- * [interface description]
- */
 interface Polymorphic
 {
     /**
@@ -17,7 +14,7 @@ interface Polymorphic
      * @param  Field     $field [description]
      * @return JsonResponse           [description]
      */
-    public function editPosition(Field $field) : JsonResponse;
+    public function editPosition(Field $field): JsonResponse;
 
     /**
      * [updatePosition description]
@@ -25,7 +22,7 @@ interface Polymorphic
      * @param  UpdatePositionRequest $request  [description]
      * @return JsonResponse                    [description]
      */
-    public function updatePosition(Field $field, UpdatePositionRequest $request) : JsonResponse;
+    public function updatePosition(Field $field, UpdatePositionRequest $request): JsonResponse;
 
     /**
      * Undocumented function
@@ -34,5 +31,5 @@ interface Polymorphic
      * @param DestroyRequest $request
      * @return JsonResponse
      */
-    public function destroy(Field $field, DestroyRequest $request) : JsonResponse;
+    public function destroy(Field $field, DestroyRequest $request): JsonResponse;
 }

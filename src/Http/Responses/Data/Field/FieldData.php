@@ -67,7 +67,7 @@ class FieldData implements DataInterface
      *
      * @return array
      */
-    public function toArray() : array
+    public function toArray(): array
     {
         $data = [];
 
@@ -100,7 +100,7 @@ class FieldData implements DataInterface
      * @param string $type
      * @return string|null
      */
-    protected function makeValue(string $type) : ?string
+    protected function makeValue(string $type): ?string
     {
         return $this->valueFactory->makeValue($type, $this->gusReport)();
     }
@@ -111,7 +111,7 @@ class FieldData implements DataInterface
      * @param mixed $value
      * @return string|null
      */
-    protected function id($value) : ?string
+    protected function id($value): ?string
     {
         $id = $value['id'] ?? $value;
 
@@ -128,7 +128,7 @@ class FieldData implements DataInterface
      * @param mixed $value
      * @return string|null
      */
-    protected function separator($value) : ?string
+    protected function separator($value): ?string
     {
         return $value['separator'] ?? null;
     }

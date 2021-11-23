@@ -4,14 +4,11 @@ namespace N1ebieski\IDir\Mail\Contact\Dir;
 
 use Illuminate\Http\Request;
 use N1ebieski\IDir\Models\Dir;
-use Illuminate\Contracts\Translation\Translator as Lang;
-use Illuminate\Contracts\Routing\UrlGenerator as URL;
-use Illuminate\Contracts\Config\Repository as Config;
 use N1ebieski\ICore\Mail\Contact\Mail as BaseMail;
+use Illuminate\Contracts\Config\Repository as Config;
+use Illuminate\Contracts\Routing\UrlGenerator as URL;
+use Illuminate\Contracts\Translation\Translator as Lang;
 
-/**
- * [Mail description]
- */
 class Mail extends BaseMail
 {
     /**
@@ -54,7 +51,7 @@ class Mail extends BaseMail
      * [subcopy description]
      * @return string [description]
      */
-    protected function subcopy() : string
+    protected function subcopy(): string
     {
         return $this->lang->get('icore::contact.subcopy.form', [
             'url' => $this->url->route('web.dir.show', [$this->dir->slug])

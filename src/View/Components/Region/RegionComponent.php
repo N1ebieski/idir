@@ -2,14 +2,11 @@
 
 namespace N1ebieski\IDir\View\Components\Region;
 
+use Illuminate\View\View;
 use N1ebieski\IDir\Models\Region\Region;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Contracts\View\Factory as ViewFactory;
-use Illuminate\View\View;
 
-/**
- * [RegionComponent description]
- */
 class RegionComponent implements Htmlable
 {
     /**
@@ -42,7 +39,7 @@ class RegionComponent implements Htmlable
      * [toHtml description]
      * @return View [description]
      */
-    public function toHtml() : View
+    public function toHtml(): View
     {
         return $this->view->make('idir::web.components.region.region', [
             'regions' => $this->region->makeCache()->rememberAll(),

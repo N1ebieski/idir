@@ -4,9 +4,6 @@ namespace N1ebieski\IDir\Http\Requests\Admin\BanValue;
 
 use N1ebieski\ICore\Http\Requests\Admin\BanValue\CreateRequest as BaseCreateRequest;
 
-/**
- * [CreateRequest description]
- */
 class CreateRequest extends BaseCreateRequest
 {
     /**

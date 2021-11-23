@@ -3,25 +3,9 @@
 namespace N1ebieski\IDir\Translation;
 
 use Illuminate\Translation\Translator as BaseTranslator;
-use Illuminate\Contracts\Translation\Loader;
 
-/**
- * [Translator description]
- */
 class Translator extends BaseTranslator
 {
-    /**
-     * Create a new translator instance.
-     *
-     * @param  \Illuminate\Contracts\Translation\Loader  $loader
-     * @param  string  $locale
-     * @return void
-     */
-    public function __construct(Loader $loader, $locale)
-    {
-        parent::__construct($loader, $locale);
-    }
-
     /**
      * Override. In the case when Laravel not find the translation of specific namespace key,
      * verify whether the translation is in this package

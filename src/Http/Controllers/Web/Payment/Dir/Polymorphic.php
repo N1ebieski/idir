@@ -25,7 +25,7 @@ interface Polymorphic
         string $driver = null,
         ShowLoad $load,
         TransferUtilStrategy $transferUtil
-    ) : RedirectResponse;
+    ): RedirectResponse;
 
     /**
      * Undocumented function
@@ -39,7 +39,7 @@ interface Polymorphic
     public function complete(
         string $driver = null,
         CompleteRequestStrategy $request,
-        CompleteLoad $load,        
+        CompleteLoad $load,
         TransferUtilStrategy $transferUtil
-    ) : RedirectResponse;
+    ): RedirectResponse;
 }

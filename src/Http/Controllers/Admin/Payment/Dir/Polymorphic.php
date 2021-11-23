@@ -25,7 +25,7 @@ interface Polymorphic
         string $driver = null,
         ShowLoad $load,
         TransferUtilStrategy $transferUtil
-    ) : RedirectResponse;
+    ): RedirectResponse;
 
     /**
      * Undocumented function
@@ -33,5 +33,5 @@ interface Polymorphic
      * @param Dir $dir
      * @return JsonResponse
      */
-    public function showLogs(Dir $dir) : JsonResponse;
+    public function showLogs(Dir $dir): JsonResponse;
 }

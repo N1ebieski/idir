@@ -2,9 +2,9 @@
 
 namespace N1ebieski\IDir\Models\Report\Dir;
 
-use N1ebieski\ICore\Models\Report\Report as BaseReportModel;
+use N1ebieski\ICore\Models\Report\Report as BaseReport;
 
-class Report extends BaseReportModel
+class Report extends BaseReport
 {
     // Accessors
 
@@ -12,7 +12,7 @@ class Report extends BaseReportModel
      * [getPoliAttribute description]
      * @return string [description]
      */
-    public function getPoliAttribute() : string
+    public function getPoliAttribute(): string
     {
         return 'dir';
     }

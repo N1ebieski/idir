@@ -32,7 +32,7 @@ class Gus extends Value
      *
      * @return boolean
      */
-    protected function isMethodExists() : bool
+    protected function isMethodExists(): bool
     {
         return method_exists($this->gusReport, $this->methodName());
     }
@@ -42,7 +42,7 @@ class Gus extends Value
      *
      * @return string
      */
-    protected function methodName() : string
+    protected function methodName(): string
     {
         return 'get' . ucfirst($this->type);
     }
@@ -52,7 +52,7 @@ class Gus extends Value
      *
      * @return string|null
      */
-    public function __invoke() : ?string
+    public function __invoke(): ?string
     {
         if ($this->isMethodExists()) {
             $method = $this->methodName();

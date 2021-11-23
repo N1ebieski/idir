@@ -4,9 +4,6 @@ namespace N1ebieski\IDir\Listeners\Payment;
 
 use Illuminate\Http\Request;
 
-/**
- * [CreateLogs description]
- */
 class CreateLogs
 {
     /**
@@ -30,7 +27,7 @@ class CreateLogs
      *
      * @return bool
      */
-    public function verify() : bool
+    public function verify(): bool
     {
         return $this->request->has('logs');
     }

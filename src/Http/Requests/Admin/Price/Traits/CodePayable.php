@@ -9,7 +9,7 @@ trait CodePayable
      * @param  string $codes [description]
      * @return array         [description]
      */
-    protected static function prepareCodes(string $codes) : array
+    protected static function prepareCodes(string $codes): array
     {
         $codes = explode("\r\n", $codes);
 

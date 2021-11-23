@@ -10,7 +10,6 @@ use N1ebieski\IDir\Models\Price;
 use Spatie\ViewModels\ViewModel;
 use Illuminate\Database\Eloquent\Collection;
 use N1ebieski\IDir\Models\Category\Dir\Category;
-use Illuminate\Contracts\Config\Repository as Config;
 
 class Edit3ViewModel extends ViewModel
 {
@@ -43,13 +42,6 @@ class Edit3ViewModel extends ViewModel
     protected $link;
 
     /**
-     * [$config description]
-     *
-     * @var Config
-     */
-    protected $config;
-
-    /**
      * [$categoriesSelection description]
      *
      * @var Collection
@@ -70,7 +62,6 @@ class Edit3ViewModel extends ViewModel
      * @param Group $group
      * @param Category $category
      * @param Link $link
-     * @param Config $config
      * @param Request $request
      */
     public function __construct(
@@ -78,7 +69,6 @@ class Edit3ViewModel extends ViewModel
         Group $group,
         Category $category,
         Link $link,
-        Config $config,
         Request $request
     ) {
         $this->dir = $dir;
@@ -86,7 +76,6 @@ class Edit3ViewModel extends ViewModel
         $this->category = $category;
         $this->link = $link;
 
-        $this->config = $config;
         $this->request = $request;
     }
 
@@ -95,7 +84,7 @@ class Edit3ViewModel extends ViewModel
      *
      * @return  Collection  [return description]
      */
-    public function categoriesSelection() : Collection
+    public function categoriesSelection(): Collection
     {
         return $this->categoriesSelection = $this->category->makeRepo()->getByIds(
             $this->request->session()->get("dirId.{$this->dir->id}.categories")
@@ -107,7 +96,7 @@ class Edit3ViewModel extends ViewModel
      *
      * @return  Collection|null  [return description]
      */
-    public function backlinks() : ?Collection
+    public function backlinks(): ?Collection
     {
         return $this->backlinks = $this->group->backlink > 0 ?
             $this->link->makeRepo()->getAvailableBacklinksByCats(array_merge(
@@ -119,20 +108,9 @@ class Edit3ViewModel extends ViewModel
     /**
      * Undocumented function
      *
-     * @param string $type
-     * @return string
-     */
-    public function driverByType(string $type) : string
-    {
-        return $this->config->get("idir.payment.{$type}.driver");
-    }
-
-    /**
-     * Undocumented function
-     *
      * @return string|null
      */
-    public function paymentType() : ?string
+    public function paymentType(): ?string
     {
         if (!$this->request->old('payment_type') && $this->group->prices->isNotEmpty()) {
             return $this->group->prices
@@ -151,7 +129,7 @@ class Edit3ViewModel extends ViewModel
      *
      * @return  Price|null  [return description]
      */
-    public function paymentCodeSmsSelection() : ?Price
+    public function paymentCodeSmsSelection(): ?Price
     {
         if ($this->request->old('payment_code_sms') && $this->group->prices->isNotEmpty()) {
             return $this->group->prices->where('id', $this->request->old('payment_code_sms'))->first();
@@ -165,7 +143,7 @@ class Edit3ViewModel extends ViewModel
      *
      * @return  Price|null  [return description]
      */
-    public function paymentCodeTransferSelection() : ?Price
+    public function paymentCodeTransferSelection(): ?Price
     {
         if ($this->request->old('payment_code_transfer') && $this->group->prices->isNotEmpty()) {
             return $this->group->prices->where('id', $this->request->old('payment_code_transfer'))->first();
@@ -179,7 +157,7 @@ class Edit3ViewModel extends ViewModel
      *
      * @return  Link|null  [return description]
      */
-    public function backlinkSelection() : ?Link
+    public function backlinkSelection(): ?Link
     {
         $linkId = $this->request->old('backlink', $this->dir->backlink->link_id ?? null);
 
@@ -197,7 +175,7 @@ class Edit3ViewModel extends ViewModel
      *
      * @return  Collection         [return description]
      */
-    public function pricesByType(string $type) : Collection
+    public function pricesByType(string $type): Collection
     {
         return $this->group->prices->where('type', $type)->sortBy('price');
     }

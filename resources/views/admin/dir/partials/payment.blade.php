@@ -50,13 +50,31 @@
                         {{ trans('idir::dirs.payment_transfer') }}
                     </label>
                     <select 
-                        class="form-control custom-select {{ $isValid('payment_transfer') }}" 
+                        class="selectpicker select-picker {{ $isValid('payment_transfer') }}" 
+                        data-style="border"
+                        data-width="100%"                        
                         id="payment_transfer" 
                         name="payment_transfer"
                     >
                         @foreach ($pricesByType('transfer') as $price)
                         <option 
                             value="{{ $price->id }}" 
+                            data-content="
+                                @if ($price->discount_price)
+                                <span class='badge bg-success text-white'>-{{ $price->discount }}%</span>
+                                <span><s>{{ $price->regular_price }} {{ config("services.{$driverByType('transfer')}.transfer.currency", 'PLN') }}</s></span>
+                                @endif
+                                <span>
+                                    {{ trans('idir::dirs.price', [
+                                        'price' => $price->price,
+                                        'currency' => config("services.{$driverByType('transfer')}.transfer.currency"),
+                                        'days' => $days = $price->days,
+                                        'limit' => $days !== null ? 
+                                            mb_strtolower(trans('idir::prices.days')) 
+                                            : mb_strtolower(trans('idir::prices.unlimited'))
+                                    ]) }}
+                                </span>
+                            "                            
                             {{ old('payment_transfer') == $price->id ? 'selected' : null }}
                         >
                             {{ trans('idir::dirs.price', [
@@ -95,14 +113,33 @@
                         {{ trans('idir::dirs.payment_code_transfer') }}
                     </label>
                     <select 
-                        class="form-control custom-select {{ $isValid('payment_code_transfer') }}" 
+                        class="selectpicker select-picker {{ $isValid('payment_code_transfer') }}"
+                        data-style="border"
+                        data-width="100%"                         
                         id="payment_code_transfer" 
                         name="payment_code_transfer"
                     >
                         @foreach ($pricesByType('code_transfer') as $price)
                         <option 
-                            value="{{ $price->id }}" {{ old('payment_code_transfer') == $price->id ? 'selected' : null }}
+                            value="{{ $price->id }}"
+                            data-content="
+                                @if ($price->discount_price)
+                                <span class='badge bg-success text-white'>-{{ $price->discount }}%</span>
+                                <span><s>{{ $price->regular_price }} {{ config("services.{$driverByType('code_transfer')}.code_transfer.currency", 'PLN') }}</s></span>
+                                @endif
+                                <span>
+                                    {{ trans('idir::dirs.price', [
+                                        'price' => $price->price,
+                                        'currency' => config("services.{$driverByType('code_transfer')}.code_transfer.currency"),
+                                        'days' => $days = $price->days,
+                                        'limit' => $days !== null ? 
+                                            mb_strtolower(trans('idir::prices.days')) 
+                                            : mb_strtolower(trans('idir::prices.unlimited'))
+                                    ]) }}
+                                </span>
+                            "                              
                             data="{{ json_encode($price->only(['code', 'price'])) }}"
+                            {{ old('payment_code_transfer') == $price->id ? 'selected' : null }}
                         >
                             {{ trans('idir::dirs.price', [
                                 'price' => $price->price,
@@ -155,14 +192,33 @@
                         {{ trans('idir::dirs.payment_code_sms') }}
                     </label>
                     <select 
-                        class="form-control custom-select {{ $isValid('payment_code_sms') }}" 
+                        class="selectpicker select-picker {{ $isValid('payment_code_sms') }}" 
+                        data-style="border"
+                        data-width="100%"                        
                         id="payment_code_sms" 
                         name="payment_code_sms"
                     >
                         @foreach ($pricesByType('code_sms') as $price)
                         <option 
-                            value="{{ $price->id }}" {{ old('payment_code_sms') == $price->id ? 'selected' : null }}
+                            value="{{ $price->id }}"
+                            data-content="
+                                @if ($price->discount_price)
+                                <span class='badge bg-success text-white'>-{{ $price->discount }}%</span>
+                                <span><s>{{ $price->regular_price }} {{ config("services.{$driverByType('code_sms')}.code_sms.currency", 'PLN') }}</s></span>
+                                @endif
+                                <span>
+                                    {{ trans('idir::dirs.price', [
+                                        'price' => $price->price,
+                                        'currency' => config("services.{$driverByType('code_sms')}.code_sms.currency"),                            
+                                        'days' => $days = $price->days,
+                                        'limit' => $days !== null ? 
+                                            mb_strtolower(trans('idir::prices.days')) 
+                                            : mb_strtolower(trans('idir::prices.unlimited'))
+                                    ]) }}
+                                </span>
+                            "                             
                             data="{{ json_encode($price->only(['code', 'price', 'number'])) }}"
+                            {{ old('payment_code_sms') == $price->id ? 'selected' : null }}
                         >
                             {{ trans('idir::dirs.price', [
                                 'price' => $price->price,
@@ -216,13 +272,31 @@
                         {{ trans('idir::dirs.payment_paypal_express') }}
                     </label>
                     <select 
-                        class="form-control custom-select {{ $isValid('payment_paypal_express') }}" 
+                        class="selectpicker select-picker {{ $isValid('payment_paypal_express') }}" 
+                        data-style="border" 
+                        data-width="100%"                         
                         id="payment_paypal_express" 
                         name="payment_paypal_express"
                     >
                         @foreach ($pricesByType('paypal_express')->sortBy('price') as $price)
                         <option 
-                            value="{{ $price->id }}" 
+                            value="{{ $price->id }}"
+                            data-content="
+                                @if ($price->discount_price)
+                                <span class='badge bg-success text-white'>-{{ $price->discount }}%</span>
+                                <span><s>{{ $price->regular_price }} {{ config("services.{$driverByType('paypal_express')}.paypal_express.currency", 'PLN') }}</s></span>
+                                @endif
+                                <span>
+                                    {{ trans('idir::dirs.price', [
+                                        'price' => $price->price,
+                                        'currency' => config("services.{$driverByType('paypal_express')}.paypal_express.currency"),
+                                        'days' => $days = $price->days,
+                                        'limit' => $days !== null ? 
+                                            mb_strtolower(trans('idir::prices.days')) 
+                                            : mb_strtolower(trans('idir::prices.unlimited'))
+                                    ]) }}
+                                </span>
+                            "                             
                             {{ old('payment_paypal_express') == $price->id ? 'selected' : null }}
                         >
                             {{ trans('idir::dirs.price', [

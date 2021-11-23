@@ -8,9 +8,6 @@ use N1ebieski\IDir\Mail\Dir\ActivationMail;
 use Illuminate\Contracts\Foundation\Application as App;
 use Illuminate\Contracts\Debug\ExceptionHandler as Exception;
 
-/**
- * [SendActivationNotification description]
- */
 class SendActivationNotification
 {
     /**
@@ -59,7 +56,7 @@ class SendActivationNotification
      *
      * @return bool
      */
-    public function verify() : bool
+    public function verify(): bool
     {
         return $this->event->dir->isActive()
             && optional($this->event->dir->user)->email

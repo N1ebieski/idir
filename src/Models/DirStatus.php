@@ -2,14 +2,12 @@
 
 namespace N1ebieski\IDir\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\App;
-use N1ebieski\IDir\Repositories\DirStatusRepo;
+use Illuminate\Database\Eloquent\Model;
 use N1ebieski\IDir\Services\DirStatusService;
+use N1ebieski\IDir\Repositories\DirStatusRepo;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-/**
- * [DirStatus description]
- */
 class DirStatus extends Model
 {
     // Configuration
@@ -55,15 +53,16 @@ class DirStatus extends Model
     // Relations
 
     /**
-     * [dir description]
-     * @return [type] [description]
+     * Undocumented function
+     *
+     * @return BelongsTo
      */
-    public function dir()
+    public function dir(): BelongsTo
     {
-        return $this->belongsTo('N1ebieski\IDir\Models\Dir');
+        return $this->belongsTo(\N1ebieski\IDir\Models\Dir::class);
     }
 
-    // Makers
+    // Factories
 
     /**
      * [makeRepo description]

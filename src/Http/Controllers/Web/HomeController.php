@@ -6,9 +6,6 @@ use N1ebieski\IDir\Models\Dir;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Http\Response as HttpResponse;
 
-/**
- * [HomeController description]
- */
 class HomeController
 {
     /**
@@ -17,7 +14,7 @@ class HomeController
      * @param Dir $dir
      * @return HttpResponse
      */
-    public function index(Dir $dir) : HttpResponse
+    public function index(Dir $dir): HttpResponse
     {
         return Response::view('idir::web.home.index', [
             'dirs' => $dir->makeCache()->rememberLatestForHome()

@@ -4,9 +4,6 @@ namespace N1ebieski\IDir\Loads\Admin\Dir;
 
 use Illuminate\Http\Request;
 
-/**
- * [Store2Load description]
- */
 class Store2Load
 {
     /**

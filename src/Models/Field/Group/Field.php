@@ -2,13 +2,11 @@
 
 namespace N1ebieski\IDir\Models\Field\Group;
 
-use N1ebieski\IDir\Models\Field\Field as BaseFieldModel;
-use Illuminate\Database\Eloquent\Builder;
 use N1ebieski\IDir\Models\Group;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use N1ebieski\IDir\Models\Field\Field as BaseFieldModel;
 
-/**
- * [Field description]
- */
 class Field extends BaseFieldModel
 {
     // Configuration
@@ -19,7 +17,7 @@ class Field extends BaseFieldModel
      * @var array
      */
     protected $attributes = [
-        'model_type' => 'N1ebieski\\IDir\\Models\\Group'
+        'model_type' => \N1ebieski\IDir\Models\Group::class
     ];
 
     /**
@@ -29,7 +27,7 @@ class Field extends BaseFieldModel
      */
     public function getMorphClass()
     {
-        return 'N1ebieski\\IDir\\Models\\Field\\Field';
+        return \N1ebieski\IDir\Models\Field\Field::class;
     }
 
     // Accessors
@@ -38,7 +36,7 @@ class Field extends BaseFieldModel
      * [getPoliAttribute description]
      * @return string [description]
      */
-    public function getPoliAttribute() : string
+    public function getPoliAttribute(): string
     {
         return 'group';
     }
@@ -49,18 +47,19 @@ class Field extends BaseFieldModel
      */
     public function getModelTypeAttribute()
     {
-        return 'N1ebieski\\IDir\\Models\\Group';
+        return \N1ebieski\IDir\Models\Group::class;
     }
 
     // Relations
 
     /**
-     * [morphs description]
-     * @return [type] [description]
+     * Undocumented function
+     *
+     * @return MorphToMany
      */
-    public function morphs()
+    public function morphs(): MorphToMany
     {
-        return $this->morphedByMany('N1ebieski\IDir\Models\Group', 'model', 'fields_models');
+        return $this->morphedByMany(\N1ebieski\IDir\Models\Group::class, 'model', 'fields_models');
     }
 
     // Scopes
@@ -71,7 +70,7 @@ class Field extends BaseFieldModel
      * @param  Group|null  $morph  [description]
      * @return Builder|null         [description]
      */
-    public function scopeFilterMorph(Builder $query, Group $morph = null) : ?Builder
+    public function scopeFilterMorph(Builder $query, Group $morph = null): ?Builder
     {
         return $query->when($morph !== null, function ($query) use ($morph) {
             $query->whereHas('morphs', function ($query) use ($morph) {

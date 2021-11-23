@@ -96,6 +96,15 @@ class EventServiceProvider extends ServiceProvider
 
         \N1ebieski\IDir\Models\Dir::observe(\N1ebieski\IDir\Observers\DirObserver::class);
 
+        \N1ebieski\IDir\Models\Payment\Payment::observe(\N1ebieski\IDir\Observers\PaymentObserver::class);
+        \N1ebieski\IDir\Models\Payment\Dir\Payment::observe(\N1ebieski\IDir\Observers\PaymentObserver::class);
+
+        \N1ebieski\IDir\Models\Group::observe(\N1ebieski\IDir\Observers\GroupObserver::class);
+
+        \N1ebieski\IDir\Models\Field\Field::observe(\N1ebieski\IDir\Observers\FieldObserver::class);
+        \N1ebieski\IDir\Models\Field\Dir\Field::observe(\N1ebieski\IDir\Observers\FieldObserver::class);
+        \N1ebieski\IDir\Models\Field\Group\Field::observe(\N1ebieski\IDir\Observers\FieldObserver::class);
+
         \N1ebieski\IDir\Models\Category\Dir\Category::observe(\N1ebieski\ICore\Observers\CategoryObserver::class);
 
         \N1ebieski\IDir\Models\Rating\Dir\Rating::observe(\N1ebieski\ICore\Observers\RatingObserver::class);

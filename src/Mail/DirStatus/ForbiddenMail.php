@@ -10,7 +10,8 @@ use Illuminate\Contracts\Translation\Translator as Lang;
 
 class ForbiddenMail extends Mailable
 {
-    use Queueable, SerializesModels;
+    use Queueable;
+    use SerializesModels;
 
     /**
      * [public description]
@@ -43,7 +44,7 @@ class ForbiddenMail extends Mailable
      *
      * @return self
      */
-    public function build() : self
+    public function build(): self
     {
         $this->dirStatus->load(['dir', 'dir.user', 'dir.group']);
 
@@ -60,7 +61,7 @@ class ForbiddenMail extends Mailable
      *
      * @return string
      */
-    protected function greeting() : string
+    protected function greeting(): string
     {
         return $this->lang->get('icore::auth.hello') . ' ' . $this->dirStatus->dir->user->name . '!';
     }

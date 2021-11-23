@@ -8,9 +8,6 @@ use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Response;
 use N1ebieski\IDir\Http\Controllers\Admin\Report\Dir\Polymorphic;
 
-/**
- * [ReportController description]
- */
 class ReportController implements Polymorphic
 {
     /**
@@ -19,7 +16,7 @@ class ReportController implements Polymorphic
      * @param  Dir  $dir [description]
      * @return JsonResponse          [description]
      */
-    public function show(Dir $dir) : JsonResponse
+    public function show(Dir $dir): JsonResponse
     {
         return Response::json([
             'success' => '',
@@ -36,7 +33,7 @@ class ReportController implements Polymorphic
      * @param  Dir $dir [description]
      * @return JsonResponse         [description]
      */
-    public function clear(Dir $dir) : JsonResponse
+    public function clear(Dir $dir): JsonResponse
     {
         $dir->reports()->delete();
 

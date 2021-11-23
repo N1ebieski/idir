@@ -4,9 +4,6 @@ namespace N1ebieski\IDir\Http\Requests\Admin\BanValue;
 
 use N1ebieski\ICore\Http\Requests\Admin\BanValue\IndexRequest as BaseIndexRequest;
 
-/**
- * [IndexRequest description]
- */
 class IndexRequest extends BaseIndexRequest
 {
     /**

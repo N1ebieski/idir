@@ -20,7 +20,7 @@ class DirBacklinkController
      * @param DelayRequest $request
      * @return JsonResponse
      */
-    public function delay(DirBacklink $dirBacklink, DelayRequest $request) : JsonResponse
+    public function delay(DirBacklink $dirBacklink, DelayRequest $request): JsonResponse
     {
         $dirBacklink->makeService()->delay($request->only('delay'));
 

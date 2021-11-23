@@ -2,7 +2,6 @@
 
 namespace N1ebieski\IDir\Crons\Sitemap;
 
-use Illuminate\Contracts\Container\Container as App;
 use N1ebieski\ICore\Crons\Sitemap\SitemapCron as BaseSitemapCron;
 
 class SitemapCron extends BaseSitemapCron
@@ -17,14 +16,4 @@ class SitemapCron extends BaseSitemapCron
         \N1ebieski\IDir\Crons\Sitemap\Builder\Category\Dir\CategoryBuilder::class,
         \N1ebieski\IDir\Crons\Sitemap\Builder\SitemapBuilder::class
     ];
-
-    /**
-     * Undocumented function
-     *
-     * @param App $app
-     */
-    public function __construct(App $app)
-    {
-        parent::__construct($app);
-    }
 }

@@ -11,9 +11,6 @@ use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Http\JsonResponse;
 use N1ebieski\IDir\Models\Group;
 
-/**
- * [interface description]
- */
 interface Polymorphic
 {
     /**
@@ -24,7 +21,7 @@ interface Polymorphic
      * @param  IndexFilter  $filter  [description]
      * @return HttpResponse          [description]
      */
-    public function index(Field $field, Group $group, IndexRequest $request, IndexFilter $filter) : HttpResponse;
+    public function index(Field $field, Group $group, IndexRequest $request, IndexFilter $filter): HttpResponse;
 
     /**
      * [create description]
@@ -32,7 +29,7 @@ interface Polymorphic
      * @param  Group        $group [description]
      * @return JsonResponse        [description]
      */
-    public function create(Field $field, Group $group) : JsonResponse;
+    public function create(Field $field, Group $group): JsonResponse;
 
     /**
      * [store description]
@@ -40,7 +37,7 @@ interface Polymorphic
      * @param  StoreRequest $request [description]
      * @return JsonResponse          [description]
      */
-    public function store(Field $field, StoreRequest $request) : JsonResponse;
+    public function store(Field $field, StoreRequest $request): JsonResponse;
 
     /**
      * [edit description]
@@ -48,7 +45,7 @@ interface Polymorphic
      * @param  Group        $group [description]
      * @return JsonResponse        [description]
      */
-    public function edit(Field $field, Group $group) : JsonResponse;
+    public function edit(Field $field, Group $group): JsonResponse;
 
     /**
      * [update description]
@@ -56,5 +53,5 @@ interface Polymorphic
      * @param  UpdateRequest $request [description]
      * @return JsonResponse           [description]
      */
-    public function update(Field $field, UpdateRequest $request) : JsonResponse;
+    public function update(Field $field, UpdateRequest $request): JsonResponse;
 }

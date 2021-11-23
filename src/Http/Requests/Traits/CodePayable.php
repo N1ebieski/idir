@@ -4,9 +4,6 @@ namespace N1ebieski\IDir\Http\Requests\Traits;
 
 use Illuminate\Support\Facades\App;
 
-/**
- * [trait description]
- */
 trait CodePayable
 {
     /**

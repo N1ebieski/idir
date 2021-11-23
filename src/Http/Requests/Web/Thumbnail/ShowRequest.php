@@ -3,7 +3,6 @@
 namespace N1ebieski\IDir\Http\Requests\Web\Thumbnail;
 
 use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Response;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Response as HttpResponse;
 
@@ -24,7 +23,7 @@ class ShowRequest extends FormRequest
      *
      * @return void
      */
-    protected function prepareForValidation() : void
+    protected function prepareForValidation(): void
     {
         $this->prepareUrlAttribute();
     }
@@ -34,7 +33,7 @@ class ShowRequest extends FormRequest
      *
      * @return void
      */
-    protected function prepareUrlAttribute() : void
+    protected function prepareUrlAttribute(): void
     {
         if ($this->has('url') && is_string($this->input('url'))) {
             try {

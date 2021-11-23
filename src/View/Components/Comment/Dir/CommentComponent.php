@@ -32,7 +32,7 @@ class CommentComponent extends BaseCommentComponent
      * [toHtml description]
      * @return View [description]
      */
-    public function toHtml() : View
+    public function toHtml(): View
     {
         return $this->view->make('idir::web.components.comment.dir.comment', [
             'comments' => $this->comment->makeCache()->rememberByComponent([

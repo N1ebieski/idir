@@ -12,7 +12,7 @@ class CompleteRequest extends FormRequest implements CompleteRequestStrategy
      *
      * @return bool
      */
-    public function authorize() : bool
+    public function authorize(): bool
     {
         return true;
     }
@@ -22,7 +22,7 @@ class CompleteRequest extends FormRequest implements CompleteRequestStrategy
      *
      * @return array
      */
-    public function rules() : array
+    public function rules(): array
     {
         return [
             'token' => 'bail|required|string',

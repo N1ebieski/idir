@@ -2,16 +2,12 @@
 
 namespace N1ebieski\IDir\Http\Controllers\Admin\BanModel\Dir;
 
-use N1ebieski\IDir\Http\Requests\Admin\BanModel\Dir\StoreRequest;
 use N1ebieski\IDir\Models\Dir;
-use N1ebieski\IDir\Models\BanModel\Dir\BanModel;
-use N1ebieski\IDir\Models\BanValue;
 use Illuminate\Http\JsonResponse;
+use N1ebieski\IDir\Models\BanValue;
+use N1ebieski\IDir\Models\BanModel\Dir\BanModel;
+use N1ebieski\IDir\Http\Requests\Admin\BanModel\Dir\StoreRequest;
 
-/**
- * [interface description]
- * @var [type]
- */
 interface Polymorphic
 {
     /**
@@ -20,7 +16,7 @@ interface Polymorphic
      * @param  Dir         $dir   [description]
      * @return JsonResponse       [description]
      */
-    public function create(Dir $dir) : JsonResponse;
+    public function create(Dir $dir): JsonResponse;
 
     /**
      * Store a newly created BanModel and BanValue.ip in storage.
@@ -31,5 +27,5 @@ interface Polymorphic
      * @param  StoreRequest $request  [description]
      * @return JsonResponse           [description]
      */
-    public function store(Dir $dir, BanModel $banModel, BanValue $banValue, StoreRequest $request) : JsonResponse;
+    public function store(Dir $dir, BanModel $banModel, BanValue $banValue, StoreRequest $request): JsonResponse;
 }

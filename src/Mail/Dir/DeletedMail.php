@@ -4,16 +4,14 @@ namespace N1ebieski\IDir\Mail\Dir;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
-use Illuminate\Queue\SerializesModels;
 use N1ebieski\IDir\Models\Dir;
+use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Translation\Translator as Lang;
 
-/**
- * [DeleteNotification description]
- */
 class DeletedMail extends Mailable
 {
-    use Queueable, SerializesModels;
+    use Queueable;
+    use SerializesModels;
 
     /**
      * [public description]
@@ -62,7 +60,7 @@ class DeletedMail extends Mailable
      *
      * @return self
      */
-    public function build() : self
+    public function build(): self
     {
         return $this->subject($this->lang->get('idir::dirs.success.destroy'))
             ->to($this->dir->user->email)

@@ -2,17 +2,16 @@
 
 namespace N1ebieski\IDir\Events\Web\Dir;
 
-use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Foundation\Events\Dispatchable;
-use Illuminate\Queue\SerializesModels;
 use N1ebieski\IDir\Models\Dir;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Foundation\Events\Dispatchable;
+use Illuminate\Broadcasting\InteractsWithSockets;
 
-/**
- * [Destroy description]
- */
 class DestroyEvent
 {
-    use Dispatchable, InteractsWithSockets, SerializesModels;
+    use Dispatchable;
+    use InteractsWithSockets;
+    use SerializesModels;
 
     /**
      * [public description]
@@ -34,7 +33,7 @@ class DestroyEvent
     public function __construct(Dir $dir, string $reason = null)
     {
         $this->dir = $dir;
-        
+
         $this->reason = $reason;
     }
 }

@@ -90,7 +90,7 @@ class PHPLDCommand extends Command
      *
      * @return void
      */
-    protected function confirmation() : void
+    protected function confirmation(): void
     {
         $this->info($this->lang->get('idir::import.import'));
 
@@ -104,7 +104,7 @@ class PHPLDCommand extends Command
      *
      * @return void
      */
-    protected function validateConnectionDatabase() : void
+    protected function validateConnectionDatabase(): void
     {
         $this->line($this->lang->get('icore::install.validate.connection_database'));
 
@@ -132,7 +132,7 @@ class PHPLDCommand extends Command
         );
 
         $bar = $this->output->createProgressBar(9);
-        
+
         $this->line("iDir PHPLD importer");
         $this->line("Author: Mariusz Wysokiński");
         $this->line("Version: {$this->config->get('idir.version')}");

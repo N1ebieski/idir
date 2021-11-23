@@ -3,8 +3,8 @@
 namespace N1ebieski\IDir\Listeners\DirBacklink;
 
 use Illuminate\Contracts\Mail\Mailer;
-use Illuminate\Contracts\Foundation\Application as App;
 use N1ebieski\IDir\Mail\DirBacklink\ForbiddenMail;
+use Illuminate\Contracts\Foundation\Application as App;
 use Illuminate\Contracts\Debug\ExceptionHandler as Exception;
 
 class ForbiddenNotification
@@ -55,7 +55,7 @@ class ForbiddenNotification
      *
      * @return bool
      */
-    public function verify() : bool
+    public function verify(): bool
     {
         return optional($this->event->dirBacklink->dir->user)->email
             && optional($this->event->dirBacklink->dir->user)->hasPermissionTo('web.dirs.notification');

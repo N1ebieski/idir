@@ -2,9 +2,9 @@
 
 namespace N1ebieski\IDir\Models\Traits;
 
+use N1ebieski\IDir\Models\Group;
 use Illuminate\Database\Eloquent\Builder;
 use N1ebieski\ICore\Models\Traits\Filterable as BaseFilterable;
-use N1ebieski\IDir\Models\Group;
 
 trait Filterable
 {
@@ -16,7 +16,7 @@ trait Filterable
      * @param  int|null  $visible [description]
      * @return Builder|null          [description]
      */
-    public function scopeFilterVisible(Builder $query, int $visible = null) : ?Builder
+    public function scopeFilterVisible(Builder $query, int $visible = null): ?Builder
     {
         return $query->when($visible !== null, function ($query) use ($visible) {
             return $query->where('visible', $visible);
@@ -29,7 +29,7 @@ trait Filterable
      * @param  string|null  $region  [description]
      * @return Builder|null          [description]
      */
-    public function scopeFilterRegion(Builder $query, string $region = null) : ?Builder
+    public function scopeFilterRegion(Builder $query, string $region = null): ?Builder
     {
         return $query->when($region !== null, function ($query) use ($region) {
             return $query->whereHas('regions', function ($query) use ($region) {
@@ -44,7 +44,7 @@ trait Filterable
      * @param  Group|null  $group  [description]
      * @return Builder|null         [description]
      */
-    public function scopeFilterGroup(Builder $query, Group $group = null) : ?Builder
+    public function scopeFilterGroup(Builder $query, Group $group = null): ?Builder
     {
         return $query->when($group !== null, function ($query) use ($group) {
             $query->where('group_id', $group->id);
@@ -57,7 +57,7 @@ trait Filterable
      * @param  string|null  $type  [description]
      * @return Builder|null         [description]
      */
-    public function scopeFilterType(Builder $query, string $type = null) : ?Builder
+    public function scopeFilterType(Builder $query, string $type = null): ?Builder
     {
         return $query->when($type !== null, function ($query) use ($type) {
             return $query->where('type', $type);

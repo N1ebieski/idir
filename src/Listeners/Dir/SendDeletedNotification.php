@@ -7,9 +7,6 @@ use N1ebieski\IDir\Mail\Dir\DeletedMail;
 use Illuminate\Contracts\Foundation\Application as App;
 use Illuminate\Contracts\Debug\ExceptionHandler as Exception;
 
-/**
- * [SendDeleteNotification description]
- */
 class SendDeletedNotification
 {
     /**
@@ -58,7 +55,7 @@ class SendDeletedNotification
      *
      * @return bool
      */
-    public function verify() : bool
+    public function verify(): bool
     {
         return optional($this->event->dir->user)->email
             && optional($this->event->dir->user)->hasPermissionTo('web.dirs.notification');

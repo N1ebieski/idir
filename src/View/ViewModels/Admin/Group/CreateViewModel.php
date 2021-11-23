@@ -76,7 +76,7 @@ class CreateViewModel extends ViewModel
      *
      * @return Collection
      */
-    public function privileges() : Collection
+    public function privileges(): Collection
     {
         return $this->privilege->orderBy('name', 'asc')->get();
     }
@@ -86,7 +86,7 @@ class CreateViewModel extends ViewModel
      *
      * @return Collection
      */
-    public function groups() : Collection
+    public function groups(): Collection
     {
         return $this->group->makeRepo()->getDoesntHavePricesExceptSelf();
     }
@@ -97,7 +97,7 @@ class CreateViewModel extends ViewModel
      * @param string $type
      * @return Collection
      */
-    public function pricesSelectionByType(string $type) : Collection
+    public function pricesSelectionByType(string $type): Collection
     {
         $prices = is_array($this->request->old("prices.{$type}")) ?
             $this->collect->make($this->request->old("prices.{$type}"))

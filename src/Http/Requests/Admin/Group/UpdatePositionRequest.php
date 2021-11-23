@@ -4,9 +4,6 @@ namespace N1ebieski\IDir\Http\Requests\Admin\Group;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-/**
- * [UpdatePositionRequest description]
- */
 class UpdatePositionRequest extends FormRequest
 {
     /**

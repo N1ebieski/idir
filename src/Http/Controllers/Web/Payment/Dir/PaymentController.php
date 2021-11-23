@@ -31,7 +31,7 @@ class PaymentController extends Controller implements Polymorphic
         string $driver = null,
         ShowLoad $load,
         TransferUtilStrategy $transferUtil
-    ) : RedirectResponse {
+    ): RedirectResponse {
         try {
             $transferUtil->setAmount($payment->order->price)
                 ->setDesc(
@@ -75,7 +75,7 @@ class PaymentController extends Controller implements Polymorphic
         CompleteRequestStrategy $request,
         CompleteLoad $load,
         TransferUtilStrategy $transferUtil
-    ) : RedirectResponse {
+    ): RedirectResponse {
         try {
             $transferUtil->setAmount($load->getPayment()->order->price)
                 ->setNotifyUrl(URL::route('api.payment.dir.verify', [$driver]))

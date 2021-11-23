@@ -2,24 +2,29 @@
 
 namespace N1ebieski\IDir\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Cviebrock\EloquentSluggable\Sluggable;
-use Illuminate\Database\Eloquent\Builder;
-use N1ebieski\ICore\Models\Traits\Carbonable;
-use N1ebieski\IDir\Models\Traits\Filterable;
-use N1ebieski\ICore\Models\Traits\FullTextSearchable;
-use N1ebieski\ICore\Models\Traits\Positionable;
-use N1ebieski\IDir\Repositories\GroupRepo;
-use N1ebieski\IDir\Services\GroupService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\App;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
+use N1ebieski\IDir\Services\GroupService;
+use Cviebrock\EloquentSluggable\Sluggable;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use N1ebieski\IDir\Repositories\GroupRepo;
+use N1ebieski\IDir\Models\Traits\Filterable;
+use N1ebieski\ICore\Models\Traits\Carbonable;
+use N1ebieski\ICore\Models\Traits\Positionable;
+use N1ebieski\ICore\Models\Traits\FullTextSearchable;
 
-/**
- * [Group description]
- */
 class Group extends Model
 {
-    use Sluggable, Carbonable, Positionable, Filterable, FullTextSearchable;
+    use Sluggable;
+    use Carbonable;
+    use Positionable;
+    use Filterable;
+    use FullTextSearchable;
 
     // Configuration
 
@@ -133,7 +138,7 @@ class Group extends Model
      *
      * @return array
      */
-    public function sluggable() : array
+    public function sluggable(): array
     {
         return [
             'slug' => [
@@ -148,7 +153,7 @@ class Group extends Model
      * @var array
      */
     protected $attributes = [
-        'alt_id' => 1
+        'alt_id' => self::DEFAULT
     ];
 
     /**
@@ -174,21 +179,23 @@ class Group extends Model
     // Relations
 
     /**
-     * [posts description]
-     * @return [type] [description]
+     * Undocumented function
+     *
+     * @return BelongsToMany
      */
-    public function privileges()
+    public function privileges(): BelongsToMany
     {
-        return $this->belongsToMany('N1ebieski\IDir\Models\Privilege', 'groups_privileges');
+        return $this->belongsToMany(\N1ebieski\IDir\Models\Privilege::class, 'groups_privileges');
     }
 
     /**
-     * [prices description]
-     * @return [type] [description]
+     * Undocumented function
+     *
+     * @return HasMany
      */
-    public function prices()
+    public function prices(): HasMany
     {
-        return $this->hasMany('N1ebieski\IDir\Models\Price');
+        return $this->hasMany(\N1ebieski\IDir\Models\Price::class);
     }
 
     /**
@@ -201,13 +208,14 @@ class Group extends Model
     }
 
     /**
-     * [fields description]
-     * @return [type] [description]
+     * Undocumented function
+     *
+     * @return MorphToMany
      */
-    public function fields()
+    public function fields(): MorphToMany
     {
         return $this->morphToMany(
-            'N1ebieski\IDir\Models\Field\Field',
+            \N1ebieski\IDir\Models\Field\Field::class,
             'model',
             'fields_models',
             'model_id',
@@ -216,61 +224,35 @@ class Group extends Model
     }
 
     /**
-     * [dirs description]
-     * @return [type] [description]
+     * Undocumented function
+     *
+     * @return HasMany
      */
-    public function dirs()
+    public function dirs(): HasMany
     {
-        return $this->hasMany('N1ebieski\IDir\Models\Dir');
+        return $this->hasMany(\N1ebieski\IDir\Models\Dir::class);
     }
 
     /**
-     * [dirs description]
-     * @return [type] [description]
+     * Undocumented function
+     *
+     * @return HasMany
      */
-    public function dirsToday()
+    public function dirsToday(): HasMany
     {
-        return $this->hasMany('N1ebieski\IDir\Models\Dir')
+        return $this->hasMany(\N1ebieski\IDir\Models\Dir::class)
             ->whereDate('created_at', '=', Carbon::now()->format('Y-m-d'))
             ->whereIn('status', [Dir::INACTIVE, Dir::ACTIVE]);
     }
 
     /**
-     * Alternative group
+     * Undocumented function
      *
-     * @return void
+     * @return HasOne
      */
-    public function alt()
+    public function alt(): HasOne
     {
         return $this->hasOne(static::class, 'id', 'alt_id');
-    }
-
-    // Overrides
-
-    /**
-     * The "booting" method of the model.
-     *
-     * @return void
-     */
-    public static function boot()
-    {
-        parent::boot();
-
-        static::saving(function (Group $model) {
-            $model->position = $model->position ?? $model->getNextAfterLastPosition();
-        });
-
-        // Everytime the model is removed, we have to decrement siblings position by 1
-        static::deleted(function (Group $model) {
-            $model->decrementSiblings($model->position, null);
-        });
-
-        // Everytime the model's position
-        // is changed, all siblings reordering will happen,
-        // so they will always keep the proper order.
-        static::saved(function (Group $model) {
-            $model->reorderSiblings();
-        });
     }
 
     // Scopes
@@ -280,7 +262,7 @@ class Group extends Model
      * @param  Builder $query [description]
      * @return Builder        [description]
      */
-    public function scopePublic(Builder $query) : Builder
+    public function scopePublic(Builder $query): Builder
     {
         return $query->where('visible', static::VISIBLE);
     }
@@ -290,7 +272,7 @@ class Group extends Model
      * @param  Builder $query [description]
      * @return Builder        [description]
      */
-    public function scopeObligatoryBacklink(Builder $query) : Builder
+    public function scopeObligatoryBacklink(Builder $query): Builder
     {
         return $query->where('backlink', static::OBLIGATORY_BACKLINK);
     }
@@ -300,7 +282,7 @@ class Group extends Model
      * @param  Builder $query [description]
      * @return Builder        [description]
      */
-    public function scopeExceptDefault(Builder $query) : Builder
+    public function scopeExceptDefault(Builder $query): Builder
     {
         return $query->where('id', '<>', self::DEFAULT);
     }
@@ -313,7 +295,7 @@ class Group extends Model
      * @param string $output
      * @return boolean
      */
-    public function hasEditorPrivilege() : bool
+    public function hasEditorPrivilege(): bool
     {
         return $this->privileges
             ->contains('name', 'additional options for editing content') ?
@@ -325,7 +307,7 @@ class Group extends Model
      *
      * @return boolean
      */
-    public function hasDirectLinkPrivilege() : bool
+    public function hasDirectLinkPrivilege(): bool
     {
         return $this->privileges
             ->contains('name', 'direct link on listings') ?
@@ -337,7 +319,7 @@ class Group extends Model
      *
      * @return boolean
      */
-    public function hasNoFollowPrivilege() : bool
+    public function hasNoFollowPrivilege(): bool
     {
         return $this->privileges
             ->contains('name', 'direct link nofollow') ?
@@ -348,7 +330,7 @@ class Group extends Model
      * [isAvailable description]
      * @return bool [description]
      */
-    public function isAvailable() : bool
+    public function isAvailable(): bool
     {
         $available = true;
 
@@ -367,7 +349,7 @@ class Group extends Model
      * [isNotDefault description]
      * @return bool [description]
      */
-    public function isNotDefault() : bool
+    public function isNotDefault(): bool
     {
         return strtolower($this->name) !== 'default';
     }
@@ -376,7 +358,7 @@ class Group extends Model
      * [isPublic description]
      * @return bool [description]
      */
-    public function isPublic() : bool
+    public function isPublic(): bool
     {
         return $this->getAttribute('visible') === static::VISIBLE;
     }
@@ -387,7 +369,7 @@ class Group extends Model
      * [loadPublicFields description]
      * @return Group [description]
      */
-    public function loadPublicFields() : Group
+    public function loadPublicFields(): Group
     {
         return $this->load([
             'fields' => function ($query) {
@@ -396,7 +378,7 @@ class Group extends Model
         ]);
     }
 
-    // Makers
+    // Factories
 
     /**
      * [makeRepo description]

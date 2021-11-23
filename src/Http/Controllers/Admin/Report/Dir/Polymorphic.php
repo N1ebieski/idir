@@ -13,7 +13,7 @@ interface Polymorphic
      * @param  Dir  $dir [description]
      * @return JsonResponse          [description]
      */
-    public function show(Dir $dir) : JsonResponse;
+    public function show(Dir $dir): JsonResponse;
 
     /**
      * Clear all Reports for specified Dir.
@@ -21,5 +21,5 @@ interface Polymorphic
      * @param  Dir $dir [description]
      * @return JsonResponse         [description]
      */
-    public function clear(Dir $dir) : JsonResponse;
+    public function clear(Dir $dir): JsonResponse;
 }

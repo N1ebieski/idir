@@ -4,9 +4,6 @@ namespace N1ebieski\IDir\Providers;
 
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
-/**
- * [AuthServiceProvider description]
- */
 class AuthServiceProvider extends ServiceProvider
 {
     /**

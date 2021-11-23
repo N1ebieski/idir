@@ -10,9 +10,6 @@ use Illuminate\Http\Response as HttpResponse;
 use N1ebieski\IDir\Filters\Web\Profile\EditDirFilter;
 use N1ebieski\IDir\Http\Requests\Web\Profile\EditDirRequest;
 
-/**
- * [ProfileController description]
- */
 class ProfileController
 {
     /**
@@ -22,7 +19,7 @@ class ProfileController
      * @param  EditDirFilter  $filter  [description]
      * @return HttpResponse            [description]
      */
-    public function editDir(Group $group, EditDirRequest $request, EditDirFilter $filter) : HttpResponse
+    public function editDir(Group $group, EditDirRequest $request, EditDirFilter $filter): HttpResponse
     {
         return Response::view('idir::web.profile.edit_dir', [
             'filter' => $filter->all(),

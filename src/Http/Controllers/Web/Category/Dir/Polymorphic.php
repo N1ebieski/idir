@@ -19,5 +19,5 @@ interface Polymorphic
      * @param  ShowFilter $filter
      * @return HttpResponse       [description]
      */
-    public function show(Category $category, Region $region, ShowRequest $request, ShowFilter $filter) : HttpResponse;
+    public function show(Category $category, Region $region, ShowRequest $request, ShowFilter $filter): HttpResponse;
 }

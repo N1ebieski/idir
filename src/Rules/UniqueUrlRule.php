@@ -2,14 +2,11 @@
 
 namespace N1ebieski\IDir\Rules;
 
-use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Database\Query\Builder;
-use Illuminate\Contracts\Translation\Translator as Lang;
+use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Database\DatabaseManager as DB;
+use Illuminate\Contracts\Translation\Translator as Lang;
 
-/**
- * [UniqueUrl description]
- */
 class UniqueUrlRule implements Rule
 {
     /**
@@ -121,7 +118,7 @@ class UniqueUrlRule implements Rule
      *
      * @return string
      */
-    public function __toString() : string
+    public function __toString(): string
     {
         return 'UniqueUrl';
     }

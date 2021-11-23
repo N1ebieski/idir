@@ -3,16 +3,13 @@
 namespace N1ebieski\IDir\Http\Responses\Web\Dir;
 
 use N1ebieski\IDir\Models\Dir;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Contracts\Config\Repository as Config;
-use Illuminate\Contracts\Translation\Translator as Lang;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Contracts\Routing\UrlGenerator as URL;
+use Illuminate\Contracts\Translation\Translator as Lang;
 use N1ebieski\IDir\Http\Responses\RedirectResponseFactory;
 
-/**
- * [Store3Response description]
- */
 class Store3Response implements RedirectResponseFactory
 {
     /**
@@ -79,15 +76,15 @@ class Store3Response implements RedirectResponseFactory
      * [response description]
      * @return RedirectResponse [description]
      */
-    public function makeResponse() : RedirectResponse
+    public function makeResponse(): RedirectResponse
     {
         switch ($this->dir->status) {
             case Dir::INACTIVE:
                 return $this->response->redirectToRoute('web.dir.create_1')
-                    ->with('success', $this->lang->get('idir::dirs.success.store.'.Dir::INACTIVE));
+                    ->with('success', $this->lang->get('idir::dirs.success.store.' . Dir::INACTIVE));
             case Dir::ACTIVE:
                 return $this->response->redirectToRoute('web.dir.show', [$this->dir->slug])
-                    ->with('success', $this->lang->get('idir::dirs.success.store.'.Dir::ACTIVE));
+                    ->with('success', $this->lang->get('idir::dirs.success.store.' . Dir::ACTIVE));
             case Dir::PAYMENT_INACTIVE:
                 return $this->response->redirectToRoute('web.payment.dir.show', [
                     $this->dir->payment->uuid,

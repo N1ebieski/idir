@@ -14,7 +14,7 @@ jQuery(document).on('readyAndAjax', function () {
         $popover.addClass('thumbnail');
 
         // Chrome doesn't see width and height of image during insert
-        $popover.img.css('width', $(this).find('img').prop('naturalWidth'));
-        $popover.img.css('height', $(this).find('img').prop('naturalHeight'));
+        $popover.img.prop('width', $(this).find('img').prop('naturalWidth'));
+        $popover.img.prop('height', $(this).find('img').prop('naturalHeight'));
     });
 });

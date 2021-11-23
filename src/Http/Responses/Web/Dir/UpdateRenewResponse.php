@@ -4,16 +4,13 @@ namespace N1ebieski\IDir\Http\Responses\Web\Dir;
 
 use Illuminate\Http\Request;
 use N1ebieski\IDir\Models\Dir;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Contracts\Config\Repository as Config;
-use Illuminate\Contracts\Translation\Translator as Lang;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Contracts\Routing\UrlGenerator as URL;
+use Illuminate\Contracts\Translation\Translator as Lang;
 use N1ebieski\IDir\Http\Responses\RedirectResponseFactory;
 
-/**
- * [UpdateRenewResponse description]
- */
 class UpdateRenewResponse implements RedirectResponseFactory
 {
     /**
@@ -93,7 +90,7 @@ class UpdateRenewResponse implements RedirectResponseFactory
      * [response description]
      * @return RedirectResponse [description]
      */
-    public function makeResponse() : RedirectResponse
+    public function makeResponse(): RedirectResponse
     {
         if (in_array($this->request->input('payment_type'), ['transfer', 'paypal_express'])) {
             return $this->response->redirectToRoute('web.payment.dir.show', [
@@ -105,10 +102,10 @@ class UpdateRenewResponse implements RedirectResponseFactory
         switch ($this->dir->status) {
             case Dir::ACTIVE:
                 return $this->response->redirectToRoute('web.profile.edit_dir')
-                    ->with('success', $this->lang->get('idir::dirs.success.update_renew.'.Dir::ACTIVE));
+                    ->with('success', $this->lang->get('idir::dirs.success.update_renew.' . Dir::ACTIVE));
             default:
                 return $this->response->redirectToRoute('web.profile.edit_dir')
-                    ->with('success', $this->lang->get('idir::dirs.success.update_renew.'.Dir::INACTIVE));
+                    ->with('success', $this->lang->get('idir::dirs.success.update_renew.' . Dir::INACTIVE));
         }
     }
 }

@@ -86,6 +86,8 @@ return [
     ],
 
     'payment' => [
+        'discount' => (bool)env('IDIR_PAYMENT_DISCOUNT', true),
+
         'transfer' => [
             'driver' => 'cashbill'
         ],

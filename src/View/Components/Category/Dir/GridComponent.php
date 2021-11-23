@@ -2,10 +2,10 @@
 
 namespace N1ebieski\IDir\View\Components\Category\Dir;
 
-use N1ebieski\IDir\Models\Category\Dir\Category;
-use Illuminate\Contracts\Support\Htmlable;
-use Illuminate\Contracts\View\Factory as ViewFactory;
 use Illuminate\View\View;
+use Illuminate\Contracts\Support\Htmlable;
+use N1ebieski\IDir\Models\Category\Dir\Category;
+use Illuminate\Contracts\View\Factory as ViewFactory;
 
 class GridComponent implements Htmlable
 {
@@ -105,7 +105,7 @@ class GridComponent implements Htmlable
      * [toHtml description]
      * @return View [description]
      */
-    public function toHtml() : View
+    public function toHtml(): View
     {
         return $this->view->make('idir::web.components.category.dir.grid', [
             'categories' => $this->category->makeCache()

@@ -2,11 +2,11 @@
 
 namespace N1ebieski\IDir\Http\Controllers\Web\Report\Dir;
 
-use N1ebieski\IDir\Http\Requests\Web\Report\Dir\CreateRequest;
 use N1ebieski\IDir\Models\Dir;
+use Illuminate\Http\JsonResponse;
 use N1ebieski\IDir\Models\Report\Dir\Report;
 use N1ebieski\IDir\Http\Requests\Web\Report\Dir\StoreRequest;
-use Illuminate\Http\JsonResponse;
+use N1ebieski\IDir\Http\Requests\Web\Report\Dir\CreateRequest;
 
 interface Polymorphic
 {
@@ -17,7 +17,7 @@ interface Polymorphic
      * @param CreateRequest $request [description]
      * @return JsonResponse          [description]
      */
-    public function create(Dir $dir, CreateRequest $request) : JsonResponse;
+    public function create(Dir $dir, CreateRequest $request): JsonResponse;
 
     /**
      * Store a newly created Report for Dir in storage.
@@ -27,5 +27,5 @@ interface Polymorphic
      * @param  StoreRequest  $request       [description]
      * @return JsonResponse                 [description]
      */
-    public function store(Dir $dir, Report $report, StoreRequest $request) : JsonResponse;
+    public function store(Dir $dir, Report $report, StoreRequest $request): JsonResponse;
 }

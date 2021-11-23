@@ -8,15 +8,12 @@ use N1ebieski\ICore\Models\Category\Category;
 use Illuminate\Contracts\View\Factory as ViewFactory;
 use N1ebieski\IDir\View\Components\Region\RegionComponent as BaseRegionComponent;
 
-/**
- * [RegionComponent description]
- */
 class RegionComponent extends BaseRegionComponent
 {
     /**
      * Undocumented variable
      *
-     * @var [type]
+     * @var Category
      */
     protected $category;
 
@@ -44,7 +41,7 @@ class RegionComponent extends BaseRegionComponent
      * [toHtml description]
      * @return View [description]
      */
-    public function toHtml() : View
+    public function toHtml(): View
     {
         return $this->view->make('idir::web.components.region.category.region', [
             'regions' => $this->region->makeCache()->rememberAll(),

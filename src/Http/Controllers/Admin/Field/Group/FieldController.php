@@ -16,9 +16,6 @@ use N1ebieski\IDir\Http\Requests\Admin\Field\Group\UpdateRequest;
 use N1ebieski\IDir\Http\Controllers\Admin\Field\Group\Polymorphic;
 use N1ebieski\IDir\Http\Controllers\Admin\Field\FieldController as BaseFieldController;
 
-/**
- * [FieldController description]
- */
 class FieldController extends BaseFieldController implements Polymorphic
 {
     /**
@@ -29,7 +26,7 @@ class FieldController extends BaseFieldController implements Polymorphic
      * @param  IndexFilter  $filter  [description]
      * @return HttpResponse                  [description]
      */
-    public function index(Field $field, Group $group, IndexRequest $request, IndexFilter $filter) : HttpResponse
+    public function index(Field $field, Group $group, IndexRequest $request, IndexFilter $filter): HttpResponse
     {
         return Response::view("idir::admin.field.group.index", [
             'field' => $field,
@@ -46,7 +43,7 @@ class FieldController extends BaseFieldController implements Polymorphic
      * @param  Group        $group [description]
      * @return JsonResponse        [description]
      */
-    public function create(Field $field, Group $group) : JsonResponse
+    public function create(Field $field, Group $group): JsonResponse
     {
         return Response::json([
             'success' => '',
@@ -63,7 +60,7 @@ class FieldController extends BaseFieldController implements Polymorphic
      * @param  StoreRequest $request [description]
      * @return JsonResponse          [description]
      */
-    public function store(Field $field, StoreRequest $request) : JsonResponse
+    public function store(Field $field, StoreRequest $request): JsonResponse
     {
         $field->makeService()->create($request->validated());
 
@@ -78,7 +75,7 @@ class FieldController extends BaseFieldController implements Polymorphic
      * @param  Group        $group [description]
      * @return JsonResponse        [description]
      */
-    public function edit(Field $field, Group $group) : JsonResponse
+    public function edit(Field $field, Group $group): JsonResponse
     {
         return Response::json([
             'success' => '',
@@ -95,7 +92,7 @@ class FieldController extends BaseFieldController implements Polymorphic
      * @param  UpdateRequest $request [description]
      * @return JsonResponse           [description]
      */
-    public function update(Field $field, UpdateRequest $request) : JsonResponse
+    public function update(Field $field, UpdateRequest $request): JsonResponse
     {
         $field->makeService()->update($request->validated());
 

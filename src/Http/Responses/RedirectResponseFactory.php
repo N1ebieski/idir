@@ -6,5 +6,5 @@ use Illuminate\Http\RedirectResponse;
 
 interface RedirectResponseFactory
 {
-    public function makeResponse() : RedirectResponse;
+    public function makeResponse(): RedirectResponse;
 }

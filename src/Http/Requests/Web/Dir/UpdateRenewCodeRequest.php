@@ -5,9 +5,6 @@ namespace N1ebieski\IDir\Http\Requests\Web\Dir;
 use Illuminate\Foundation\Http\FormRequest;
 use N1ebieski\IDir\Http\Requests\Traits\CodePayable;
 
-/**
- * [UpdateRenewCodeRequest description]
- */
 class UpdateRenewCodeRequest extends FormRequest
 {
     use CodePayable;

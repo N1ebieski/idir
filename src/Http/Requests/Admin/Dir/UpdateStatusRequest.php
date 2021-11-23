@@ -2,8 +2,8 @@
 
 namespace N1ebieski\IDir\Http\Requests\Admin\Dir;
 
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateStatusRequest extends FormRequest
 {

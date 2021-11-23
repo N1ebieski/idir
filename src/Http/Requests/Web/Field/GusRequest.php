@@ -2,8 +2,8 @@
 
 namespace N1ebieski\IDir\Http\Requests\Web\Field;
 
-use Illuminate\Foundation\Http\FormRequest;
 use N1ebieski\ICore\Utils\MigrationUtil;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Config\Repository as Config;
 
 class GusRequest extends FormRequest

@@ -5,7 +5,7 @@
     "type": "package",
     "require": {
         "php": "^7.2",
-        "n1ebieski/icore": "^3.0.0",
+        "n1ebieski/icore": "^4.0.0",
         "gusapi/gusapi": "^5.1",
         "league/omnipay": "^3.0",
         "omnipay/paypal": "^3.0",

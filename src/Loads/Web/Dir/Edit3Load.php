@@ -4,9 +4,6 @@ namespace N1ebieski\IDir\Loads\Web\Dir;
 
 use Illuminate\Http\Request;
 
-/**
- * [Edit3Load description]
- */
 class Edit3Load
 {
     /**

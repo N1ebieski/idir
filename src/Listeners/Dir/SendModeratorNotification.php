@@ -8,8 +8,8 @@ use Illuminate\Contracts\Mail\Mailer;
 use N1ebieski\IDir\Mail\Dir\ModeratorMail;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Contracts\Cache\Factory as Cache;
-use Illuminate\Contracts\Foundation\Application as App;
 use Illuminate\Contracts\Config\Repository as Config;
+use Illuminate\Contracts\Foundation\Application as App;
 use Illuminate\Contracts\Debug\ExceptionHandler as Exception;
 
 class SendModeratorNotification
@@ -119,7 +119,7 @@ class SendModeratorNotification
      *
      * @return bool
      */
-    public function verify() : bool
+    public function verify(): bool
     {
         return $this->isNotificationTurnOn() && $this->event->dir->isUpdateStatus();
     }
@@ -129,7 +129,7 @@ class SendModeratorNotification
      *
      * @return boolean
      */
-    protected function isNotificationTurnOn() : bool
+    protected function isNotificationTurnOn(): bool
     {
         return $this->counter > 0;
     }
@@ -139,7 +139,7 @@ class SendModeratorNotification
      *
      * @return boolean
      */
-    protected function isTimeToSend() : bool
+    protected function isTimeToSend(): bool
     {
         return $this->cache->get('dir.notification.dirs') >= $this->counter;
     }
@@ -149,7 +149,7 @@ class SendModeratorNotification
      *
      * @return boolean
      */
-    protected function incrementCounter() : bool
+    protected function incrementCounter(): bool
     {
         return $this->cache->has('dir.notification.dirs') ?
             $this->cache->increment('dir.notification.dirs')
@@ -161,7 +161,7 @@ class SendModeratorNotification
      *
      * @return boolean
      */
-    protected function forgetCounter() : bool
+    protected function forgetCounter(): bool
     {
         return $this->cache->forget('dir.notification.dirs');
     }
@@ -201,7 +201,7 @@ class SendModeratorNotification
      *
      * @return Collection
      */
-    protected function makeLatestDirsForModerators() : Collection
+    protected function makeLatestDirsForModerators(): Collection
     {
         return $this->dirs = $this->dir->makeRepo()
             ->getLatestForModeratorsByLimit(
@@ -215,7 +215,7 @@ class SendModeratorNotification
      * @param User $user
      * @return void
      */
-    protected function sendMailToModerator(User $user) : void
+    protected function sendMailToModerator(User $user): void
     {
         try {
             $this->mailer->send($this->app->make(ModeratorMail::class, [

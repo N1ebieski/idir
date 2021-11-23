@@ -69,7 +69,7 @@ class Edit2ViewModel extends ViewModel
      *
      * @return  Collection|null  [return description]
      */
-    public function categoriesSelection() : ?Collection
+    public function categoriesSelection(): ?Collection
     {
         $categories = $this->request->old('categories') ??
             $this->request->session()->get("dirId.{$this->dir->id}.categories");
@@ -86,7 +86,7 @@ class Edit2ViewModel extends ViewModel
      *
      * @return  string|null  [return description]
      */
-    public function oldContentHtml() : ?string
+    public function oldContentHtml(): ?string
     {
         $contentHtml = $this->request->old('content_html') ??
             $this->request->session()->get("dirId.{$this->dir->id}.content_html");

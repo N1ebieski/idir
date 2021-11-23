@@ -2,12 +2,9 @@
 
 namespace N1ebieski\IDir\Http\Requests\Admin\Dir;
 
-use N1ebieski\IDir\Http\Requests\Admin\Dir\UpdateFull2Request;
 use N1ebieski\ICore\Models\BanValue;
+use N1ebieski\IDir\Http\Requests\Admin\Dir\UpdateFull2Request;
 
-/**
- * [EditFull3Request description]
- */
 class EditFull3Request extends UpdateFull2Request
 {
     /**
@@ -46,7 +43,7 @@ class EditFull3Request extends UpdateFull2Request
      *
      * @return void
      */
-    protected function prepareForValidation() : void
+    protected function prepareForValidation(): void
     {
         if ($this->session()->has("dirId.{$this->dir->id}")) {
             $this->merge($this->session()->get("dirId.{$this->dir->id}"));

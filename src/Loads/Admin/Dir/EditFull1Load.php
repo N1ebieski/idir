@@ -4,9 +4,6 @@ namespace N1ebieski\IDir\Loads\Admin\Dir;
 
 use Illuminate\Http\Request;
 
-/**
- * [EditFull1Load description]
- */
 class EditFull1Load
 {
     /**

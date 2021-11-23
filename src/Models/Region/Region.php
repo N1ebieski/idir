@@ -2,19 +2,17 @@
 
 namespace N1ebieski\IDir\Models\Region;
 
-use Illuminate\Database\Eloquent\Model;
-use N1ebieski\ICore\Models\Traits\Polymorphic;
-use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Support\Facades\App;
 use N1ebieski\IDir\Cache\RegionCache;
+use Illuminate\Database\Eloquent\Model;
+use Cviebrock\EloquentSluggable\Sluggable;
 use N1ebieski\IDir\Repositories\RegionRepo;
+use N1ebieski\ICore\Models\Traits\Polymorphic;
 
-/**
- * [Region description]
- */
 class Region extends Model
 {
-    use Sluggable, Polymorphic;
+    use Sluggable;
+    use Polymorphic;
 
     // Configuration
 
@@ -23,7 +21,7 @@ class Region extends Model
      *
      * @return array
      */
-    public function sluggable() : array
+    public function sluggable(): array
     {
         return [
             'slug' => [
@@ -31,12 +29,12 @@ class Region extends Model
             ]
         ];
     }
-    
+
     public function getRouteKeyName()
     {
         return 'slug';
     }
-    
+
     /**
      * The attributes that should be cast to native types.
      *
@@ -48,7 +46,7 @@ class Region extends Model
         'updated_at' => 'datetime'
     ];
 
-    // Makers
+    // Factories
 
     /**
      * [makeCache description]
@@ -58,7 +56,7 @@ class Region extends Model
     {
         return App::make(RegionCache::class, ['region' => $this]);
     }
-    
+
     /**
      * [makeRepo description]
      * @return RegionRepo [description]

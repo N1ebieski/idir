@@ -6,7 +6,12 @@
     <div class="col my-auto d-flex justify-content-between">
         <ul class="list-unstyled mb-0 pb-0">
             <li>
-                <span>{{ trans('idir::prices.price') }}: {{ $price->price }}</span>
+                <span>{{ trans('idir::prices.price') }}:</span>
+                @if ($price->discount_price)
+                <span class='badge bg-success text-white'>-{{ $price->discount }}%</span>
+                <span><s>{{ $price->regular_price }} {{ config("services.{$driverByType($price->type)}.{$price->type}.currency", 'PLN') }}</s></span>
+                @endif
+                <span>{{ $price->price }} {{ config("services.{$driverByType($price->type)}.{$price->type}.currency", 'PLN') }}</span>
                 <span>{{ trans('idir::prices.days') }}: {{ $price->isUnlimited() ? trans('idir::prices.unlimited') : $price->days }}</span>
                 <span class="badge badge-primary">{{ strtolower(trans("idir::prices.payment.{$price->type}")) }}</span>
             </li>

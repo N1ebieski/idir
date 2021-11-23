@@ -12,14 +12,14 @@ class CompleteRequestFactory
      * @param string $driver
      * @return CompleteRequestStrategy
      */
-    public function makeRequest(string $driver) : CompleteRequestStrategy
+    public function makeRequest(string $driver): CompleteRequestStrategy
     {
         switch ($driver) {
             case 'paypal':
-                return new \N1ebieski\IDir\Http\Requests\Web\Payment\PayPal\CompleteRequest;
+                return new \N1ebieski\IDir\Http\Requests\Web\Payment\PayPal\CompleteRequest();
 
             case 'cashbill':
-                return new \N1ebieski\IDir\Http\Requests\Web\Payment\Cashbill\CompleteRequest;
+                return new \N1ebieski\IDir\Http\Requests\Web\Payment\Cashbill\CompleteRequest();
         }
 
         throw new \N1ebieski\IDir\Exceptions\Payment\DriverNotFoundException(

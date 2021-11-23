@@ -30,7 +30,7 @@ class PaymentController implements Polymorphic
         string $driver = null,
         ShowLoad $load,
         TransferUtilStrategy $transferUtil
-    ) : RedirectResponse {
+    ): RedirectResponse {
         try {
             $transferUtil->setAmount($payment->order->price)
                 ->setDesc(
@@ -62,7 +62,7 @@ class PaymentController implements Polymorphic
      * @param   Dir           $dir  [$dir description]
      * @return  JsonResponse        [return description]
      */
-    public function showLogs(Dir $dir) : JsonResponse
+    public function showLogs(Dir $dir): JsonResponse
     {
         return Response::json([
             'success' => '',

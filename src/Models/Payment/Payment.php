@@ -2,19 +2,22 @@
 
 namespace N1ebieski\IDir\Models\Payment;
 
-use Ramsey\Uuid\Uuid;
 use Illuminate\Support\Facades\App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use N1ebieski\IDir\Repositories\PaymentRepo;
 use N1ebieski\ICore\Models\Traits\Carbonable;
 use N1ebieski\ICore\Models\Traits\Polymorphic;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use N1ebieski\IDir\Services\Payment\PaymentService;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use N1ebieski\ICore\Models\Traits\FullTextSearchable;
 
 class Payment extends Model
 {
-    use Polymorphic, Carbonable, FullTextSearchable;
+    use Polymorphic;
+    use Carbonable;
+    use FullTextSearchable;
 
     // Configuration
 
@@ -68,7 +71,7 @@ class Payment extends Model
      * @var bool
      */
     public $incrementing = false;
-    
+
     /**
      * The "type" of the auto-incrementing ID.
      *
@@ -93,46 +96,33 @@ class Payment extends Model
     // Relations
 
     /**
-     * [user description]
-     * @return [type] [description]
+     * Undocumented function
+     *
+     * @return BelongsTo
      */
-    public function user()
+    public function user(): BelongsTo
     {
-        return $this->belongsTo('N1ebieski\ICore\Models\User');
+        return $this->belongsTo(\N1ebieski\ICore\Models\User::class);
     }
 
     /**
-     * [morph description]
-     * @return [type] [description]
+     * Undocumented function
+     *
+     * @return MorphTo
      */
-    public function morph()
+    public function morph(): MorphTo
     {
         return $this->morphTo('morph', 'model_type', 'model_id');
     }
 
     /**
-     * [orderMorph description]
-     * @return [type] [description]
-     */
-    public function orderMorph()
-    {
-        return $this->morphTo('order', 'order_type', 'order_id');
-    }
-
-    // Overrides
-
-    /**
      * Undocumented function
      *
-     * @return void
+     * @return MorphTo
      */
-    public static function boot() : void
+    public function orderMorph(): MorphTo
     {
-        parent::boot();
-
-        self::creating(function ($model) {
-            $model->uuid = (string)Uuid::uuid4();
-        });
+        return $this->morphTo('order', 'order_type', 'order_id');
     }
 
     // Accessors
@@ -142,7 +132,7 @@ class Payment extends Model
      *
      * @return string
      */
-    public function getLogsAsHtmlAttribute() : string
+    public function getLogsAsHtmlAttribute(): string
     {
         return nl2br(e($this->logs));
     }
@@ -154,7 +144,7 @@ class Payment extends Model
      * @param  Builder $query [description]
      * @return Builder        [description]
      */
-    public function scopePending(Builder $query) : Builder
+    public function scopePending(Builder $query): Builder
     {
         return $query->where('status', static::PENDING);
     }
@@ -165,7 +155,7 @@ class Payment extends Model
      * [isPending description]
      * @return bool [description]
      */
-    public function isPending() : bool
+    public function isPending(): bool
     {
         return $this->status === static::PENDING;
     }
@@ -175,12 +165,12 @@ class Payment extends Model
      *
      * @return boolean
      */
-    public function isUnfinished() : bool
+    public function isUnfinished(): bool
     {
         return $this->status === static::UNFINISHED;
     }
 
-    // Makers
+    // Factories
 
     /**
      * [makeService description]

@@ -24,7 +24,7 @@ class UpdateRequest extends FormRequest
     /**
      * [prepareForValidation description]
      */
-    public function prepareForValidation() : void
+    public function prepareForValidation(): void
     {
         $this->prepareCodesAttribute();
     }
@@ -34,12 +34,11 @@ class UpdateRequest extends FormRequest
      *
      * @return void
      */
-    protected function prepareCodesAttribute() : void
+    protected function prepareCodesAttribute(): void
     {
         $type = $this->input('type');
 
-        if (!in_array($type, ['code_sms', 'code_transfer'])
-        || empty($this->input("{$type}.codes.codes"))) {
+        if (!in_array($type, ['code_sms', 'code_transfer']) || empty($this->input("{$type}.codes.codes"))) {
             return;
         }
 
@@ -61,6 +60,7 @@ class UpdateRequest extends FormRequest
     {
         return [
             'price' => 'bail|numeric|between:0,9999.99',
+            'discount_price' => 'bail|numeric|nullable|between:0,9999.99|lt:price|exclude_if:type,code_sms',
             'days' => 'bail|nullable|integer',
             'type' => [
                 'bail',

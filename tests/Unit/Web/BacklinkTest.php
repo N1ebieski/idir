@@ -3,16 +3,13 @@
 namespace N1ebieski\IDir\Tests\Unit\Web;
 
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
-use GuzzleHttp\Client as GuzzleClient;
-use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
-use GuzzleHttp\Psr7\Response as GuzzleResponse;
+use GuzzleHttp\Handler\MockHandler;
 use Illuminate\Support\Facades\App;
+use GuzzleHttp\Client as GuzzleClient;
+use GuzzleHttp\Psr7\Response as GuzzleResponse;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 
-/**
- * [BacklinkTest description]
- */
 class BacklinkTest extends TestCase
 {
     use DatabaseTransactions;
@@ -23,7 +20,7 @@ class BacklinkTest extends TestCase
      */
     protected $url = 'http://asdasjdkasjdkas.pl';
 
-    public function test_rule_backlink_nofollow_fail()
+    public function testRuleBacklinkNofollowFail()
     {
         $mock = new MockHandler([
             new GuzzleResponse(200, [], 'dadasd <a rel="nofollow" href="' . $this->url . '">dadasdasd</a> asdasdasd')
@@ -41,7 +38,7 @@ class BacklinkTest extends TestCase
         $this->assertTrue($response === 0);
     }
 
-    public function test_rule_backlink_pass()
+    public function testRuleBacklinkPass()
     {
         $mock = new MockHandler([
             new GuzzleResponse(200, [], 'sdadas<a href="' . $this->url . '">dadasdasd</a> sdasdasd')
@@ -58,5 +55,4 @@ class BacklinkTest extends TestCase
 
         $this->assertTrue($response === 1);
     }
-
 }
