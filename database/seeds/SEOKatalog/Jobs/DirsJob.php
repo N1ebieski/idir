@@ -16,17 +16,20 @@ use N1ebieski\ICore\Models\Tag\Tag;
 use N1ebieski\ICore\Models\Stat\Stat;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Config;
+use N1ebieski\IDir\Models\DirBacklink;
 use Illuminate\Queue\InteractsWithQueue;
 use N1ebieski\IDir\Models\Region\Region;
 use N1ebieski\IDir\Models\Field\Dir\Field;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use N1ebieski\IDir\Models\Category\Dir\Category;
-use N1ebieski\IDir\Models\DirBacklink;
 
 class DirsJob implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     /**
      * Undocumented variable
@@ -103,7 +106,7 @@ class DirsJob implements ShouldQueue
      *
      * @return void
      */
-    public function handle() : void
+    public function handle(): void
     {
         $groups = DB::connection('import')->table('groups')->get();
         $fields = DB::connection('import')->table('forms')->get();
@@ -189,7 +192,7 @@ class DirsJob implements ShouldQueue
 
                 if ($item->total_votes > 0) {
                     $dir->ratings()->create([
-                        'rating' => ($item->total_value/$item->total_votes)/2
+                        'rating' => ($item->total_value / $item->total_votes) / 2
                     ]);
                 }
 
@@ -238,13 +241,16 @@ class DirsJob implements ShouldQueue
 
                                 case 2:
                                     $loc = explode(';', $value);
-                                    $value = [];
-                                    $value[0] = [
-                                        'lat' => $loc[0],
-                                        'long' => $loc[1]
-                                    ];
-                                    $id = $defaultFields['map']->id;
-                                    $dir->map()->updateOrCreate($value[0]);
+
+                                    if (count($loc) === 2) {
+                                        $value = [];
+                                        $value[0] = [
+                                            'lat' => $loc[0],
+                                            'long' => $loc[1]
+                                        ];
+                                        $id = $defaultFields['map']->id;
+                                        $dir->map()->updateOrCreate($value[0]);
+                                    }
                                     break;
 
                                 default:
@@ -285,7 +291,7 @@ class DirsJob implements ShouldQueue
      * @param object $item
      * @return boolean
      */
-    protected static function verify(object $item) : bool
+    protected static function verify(object $item): bool
     {
         return Dir::where('id', $item->id)
             ->orWhere('url', static::url($item->url))->first() === null;
@@ -297,7 +303,7 @@ class DirsJob implements ShouldQueue
      * @param string $url
      * @return string
      */
-    protected static function url(string $url) : string
+    protected static function url(string $url): string
     {
         return trim(strtolower(Str::contains($url, 'https://') ? $url : 'http://' . $url));
     }
@@ -308,12 +314,12 @@ class DirsJob implements ShouldQueue
      * @param string $desc
      * @return string
      */
-    protected static function contentHtml(string $desc) : string
+    protected static function contentHtml(string $desc): string
     {
         $desc = preg_replace('#\[([a-z0-9=]+)\]<br />(.*?)\[/([a-z]+)\]#si', '[\\1]\\2[/\\3]', $desc);
         $desc = str_replace(array('<br /><br />[list', '<br />[list'), array('[list', '[list'), $desc);
         $desc = str_replace(array('[/list]<br /><br />', '[/list]<br />'), array('[/list]', '[/list]'), $desc);
-     
+
         $desc = preg_replace('#\[url=(.*?)\](.*?)\[/url\]#si', '<a href="\\1" target="_blank" rel="noopener">\\2</a>', $desc);
         $desc = preg_replace('#\[b\](.*?)\[/b\]#si', '<strong>\\1</strong>', $desc);
         $desc = preg_replace('#\[i\](.*?)\[/i\]#si', '<i>\\1</i>', $desc);
@@ -330,7 +336,7 @@ class DirsJob implements ShouldQueue
         $desc = preg_replace('#\[\*\](.*?)<br \/>#si', '<li>\\1</li>', $desc);
 
         $desc = str_replace(["<br />", "<br>", "<br/>"], "\r\n", $desc);
-     
+
         return strip_tags(htmlspecialchars_decode($desc));
     }
 
@@ -341,7 +347,7 @@ class DirsJob implements ShouldQueue
      * @param integer $days
      * @return string|null
      */
-    protected static function privilegedTo(int $date, int $days) : ?string
+    protected static function privilegedTo(int $date, int $days): ?string
     {
         if ($date !== 0 && $days > 0) {
             return Carbon::createFromTimestamp($date)->addDays($days);
