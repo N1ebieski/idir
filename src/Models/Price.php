@@ -125,7 +125,7 @@ class Price extends Model
      */
     public function getDiscountPriceAttribute(): ?string
     {
-        return Config::get('idir.payment.discount') === true ?
+        return Config::get('idir.price.discount') === true ?
             $this->attributes['discount_price']
             : null;
     }
