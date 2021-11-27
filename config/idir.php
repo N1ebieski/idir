@@ -85,8 +85,11 @@ return [
         'max_privileged' => (int)env('IDIR_HOME_MAX_PRIVILEGED', 5)
     ],
 
+    'price' => [
+        'discount' => (bool)env('IDIR_PRICE_DISCOUNT', true)
+    ],
+
     'payment' => [
-        'discount' => (bool)env('IDIR_PAYMENT_DISCOUNT', true),
 
         'transfer' => [
             'driver' => 'cashbill'
