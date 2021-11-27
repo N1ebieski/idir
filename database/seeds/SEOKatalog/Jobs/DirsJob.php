@@ -254,7 +254,12 @@ class DirsJob implements ShouldQueue
                                     break;
 
                                 default:
-                                    $value = htmlspecialchars_decode($value);
+                                    if (in_array($field->type, [3, 4])) {
+                                        $value = explode(',', $value);
+                                    } else {
+                                        $value = htmlspecialchars_decode($value);
+                                    }
+
                                     $id = $this->fieldLastId + $field->id;
                             }
 

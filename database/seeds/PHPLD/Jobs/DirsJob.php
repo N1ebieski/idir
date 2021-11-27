@@ -21,7 +21,10 @@ use N1ebieski\IDir\Models\Category\Dir\Category;
 
 class DirsJob implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     /**
      * Undocumented variable
@@ -98,7 +101,7 @@ class DirsJob implements ShouldQueue
      *
      * @return void
      */
-    public function handle() : void
+    public function handle(): void
     {
         $fields = DB::connection('import')->table('submit_item')->where('IS_DEFAULT', 0)->get();
 
@@ -161,7 +164,7 @@ class DirsJob implements ShouldQueue
 
                 if ($item->RATE_TOTAL > 0) {
                     $dir->ratings()->create([
-                        'rating' => $item->RATE/2
+                        'rating' => $item->RATE / 2
                     ]);
                 }
 
@@ -216,7 +219,7 @@ class DirsJob implements ShouldQueue
      * @param object $item
      * @return boolean
      */
-    protected static function verify(object $item) : bool
+    protected static function verify(object $item): bool
     {
         return Dir::where('id', $item->ID)
             ->orWhere('url', mb_strtolower($item->URL))->first() === null;
@@ -228,7 +231,7 @@ class DirsJob implements ShouldQueue
      * @param object $item
      * @return string|null
      */
-    protected static function privilegedAt(object $item) : ?string
+    protected static function privilegedAt(object $item): ?string
     {
         if ($item->FEATURED === 1) {
             if ($item->EXPIRY_DATE !== null && $item->EXPIRY_DATE !== '0000-00-00 00:00:00') {
@@ -247,7 +250,7 @@ class DirsJob implements ShouldQueue
      * @param object $item
      * @return string|null
      */
-    protected static function privilegedTo(object $item) : ?string
+    protected static function privilegedTo(object $item): ?string
     {
         if ($item->FEATURED === 1 && $item->EXPIRY_DATE !== null && $item->EXPIRY_DATE !== '0000-00-00 00:00:00') {
             return $item->EXPIRY_DATE;
