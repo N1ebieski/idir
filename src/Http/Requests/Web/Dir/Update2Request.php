@@ -94,7 +94,7 @@ class Update2Request extends FormRequest
             if ($this->group->url === 0) {
                 $this->merge(['url' => null]);
             } else {
-                $this->merge(['url' => preg_replace('/(\/)$/', null, $this->input('url'))]);
+                $this->merge(['url' => preg_replace('/(\/)$/', '', $this->input('url'))]);
             }
         }
     }
@@ -252,7 +252,7 @@ class Update2Request extends FormRequest
     {
         return [
             'content.not_regex' => Lang::get('icore::validation.not_regex_contains', [
-                'words' => str_replace('|', ', ', $this->bans)
+                'words' => str_replace('|', ', ', $this->bans_words)
             ]),
             'url.not_regex' => 'This address url is banned.'
         ];
