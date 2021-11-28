@@ -21,7 +21,7 @@ class Store2Request extends FormRequest
      * [private description]
      * @var string
      */
-    protected $bans;
+    protected $bans_words;
 
     /**
      * [__construct description]
@@ -31,7 +31,7 @@ class Store2Request extends FormRequest
     {
         parent::__construct();
 
-        $this->bans = $banValue->makeCache()->rememberAllWordsAsString();
+        $this->bans_words = $banValue->makeCache()->rememberAllWordsAsString();
     }
 
     /**
@@ -199,7 +199,7 @@ class Store2Request extends FormRequest
                 'required',
                 'string',
                 'between:' . Config::get('idir.dir.min_content') . ',' . Config::get('idir.dir.max_content'),
-                !empty($this->bans) ? 'not_regex:/(.*)(\s|^)(' . $this->bans . ')(\s|\.|,|\?|$)(.*)/i' : null
+                !empty($this->bans_words) ? 'not_regex:/(.*)(\s|^)(' . $this->bans_words . ')(\s|\.|,|\?|$)(.*)/i' : null
             ],
             'notes' => 'bail|nullable|string|between:3,255',
             'url' => [

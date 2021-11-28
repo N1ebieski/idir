@@ -22,7 +22,7 @@ class UpdateRequest extends FormRequest
      * [private description]
      * @var string
      */
-    protected $bans;
+    protected $bans_words;
 
     /**
      * [__construct description]
@@ -32,7 +32,7 @@ class UpdateRequest extends FormRequest
     {
         parent::__construct();
 
-        $this->bans = $banValue->makeCache()->rememberAllWordsAsString();
+        $this->bans_words = $banValue->makeCache()->rememberAllWordsAsString();
     }
 
     /**
@@ -194,7 +194,7 @@ class UpdateRequest extends FormRequest
                 'required',
                 'string',
                 'between:' . Config::get('idir.dir.min_content') . ',' . Config::get('idir.dir.max_content'),
-                !empty($this->bans) ? 'not_regex:/(.*)(\s|^)(' . $this->bans . ')(\s|\.|,|\?|$)(.*)/i' : null
+                !empty($this->bans_words) ? 'not_regex:/(.*)(\s|^)(' . $this->bans_words . ')(\s|\.|,|\?|$)(.*)/i' : null
             ],
             'content_html' => [
                 'bail',
