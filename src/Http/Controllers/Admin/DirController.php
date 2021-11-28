@@ -97,12 +97,9 @@ class DirController
      */
     public function create2(Group $group, Create2Load $load, Create2Request $request): HttpResponse
     {
-        return Response::view(
-            'idir::admin.dir.create.2',
-            App::make(Create2ViewModel::class, [
-                'group' => $group
-            ])
-        );
+        return Response::view('idir::admin.dir.create.2', App::make(Create2ViewModel::class, [
+            'group' => $group
+        ]));
     }
 
     /**
@@ -140,12 +137,9 @@ class DirController
             ->makeService()
             ->createOrUpdateSession($request->validated());
 
-        return Response::view(
-            'idir::admin.dir.create.3',
-            App::make(Create3ViewModel::class, [
-                'group' => $group
-            ])
-        );
+        return Response::view('idir::admin.dir.create.3', App::make(Create3ViewModel::class, [
+            'group' => $group
+        ]));
     }
 
     /**
@@ -206,13 +200,10 @@ class DirController
      */
     public function editFull2(Dir $dir, Group $group, EditFull2Load $load, EditFull2Request $request): HttpResponse
     {
-        return Response::view(
-            'idir::admin.dir.edit_full.2',
-            App::make(EditFull2ViewModel::class, [
-                'dir' => $dir,
-                'group' => $group
-            ])
-        );
+        return Response::view('idir::admin.dir.edit_full.2', App::make(EditFull2ViewModel::class, [
+            'dir' => $dir,
+            'group' => $group
+        ]));
     }
 
     /**
@@ -254,13 +245,10 @@ class DirController
             ->makeService()
             ->createOrUpdateSession($request->validated());
 
-        return Response::view(
-            'idir::admin.dir.edit_full.3',
-            App::make(EditFull3ViewModel::class, [
-                'dir' => $dir,
-                'group' => $group
-            ])
-        );
+        return Response::view('idir::admin.dir.edit_full.3', App::make(EditFull3ViewModel::class, [
+            'dir' => $dir,
+            'group' => $group
+        ]));
     }
 
     /**
