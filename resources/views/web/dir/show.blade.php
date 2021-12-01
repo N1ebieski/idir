@@ -72,11 +72,13 @@
                     </small>
                     @endif
                 </div>
+                @if (!is_null($dir->group->fields->firstWhere('type', 'map')))
                 <div class="mb-3">
                     @render('idir::map.dir.mapComponent', [
                         'dir' => $dir
                     ])
                 </div>
+                @endif
                 @if ($related->isNotEmpty())
                 <h3 class="h5">
                     {{ trans('idir::dirs.related') }}
