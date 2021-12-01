@@ -52,6 +52,8 @@
     @endif
 </div>
 
+@include('idir::admin.group.partials.filter_filter')
+
 @component('icore::admin.partials.modal')
 @slot('modal_id', 'edit-position-modal')
 @slot('modal_title')

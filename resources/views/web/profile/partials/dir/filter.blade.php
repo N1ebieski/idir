@@ -182,5 +182,4 @@
             </div>
         </div>
     </div>
-    @include('idir::web.profile.partials.dir.filter_filter')
 </form>

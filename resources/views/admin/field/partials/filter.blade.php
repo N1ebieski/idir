@@ -162,5 +162,4 @@
             </div>
         </div>
     </div>
-    @include('idir::admin.field.partials.filter_filter')
 </form>
