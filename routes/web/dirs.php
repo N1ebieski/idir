@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 Route::match(['get', 'post'], 'dirs/index', 'DirController@index')
     ->name('dir.index');
 
-Route::get('dirs/search', 'DirController@search')
+Route::match(['get', 'post'], 'dirs/search', 'DirController@search')
     ->name('dir.search');
 
 Route::match(['get', 'post'], 'dirs/{dir_cache}', 'DirController@show')
