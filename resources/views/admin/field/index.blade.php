@@ -56,8 +56,6 @@
     @endif
 </div>
 
-@include('idir::admin.field.partials.filter_filter')
-
 @component('icore::admin.partials.modal')
 @slot('modal_id', 'edit-modal')
 @slot('modal_size', 'modal-lg')

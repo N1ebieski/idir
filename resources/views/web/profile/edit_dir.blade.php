@@ -39,5 +39,3 @@
     @endif
 </div>
 @endsection
-
-@include('idir::web.profile.partials.dir.filter_filter')

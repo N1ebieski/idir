@@ -149,4 +149,5 @@
             </div>
         </div>
     </div>
+    @include('idir::admin.price.partials.filter_filter')
 </form>

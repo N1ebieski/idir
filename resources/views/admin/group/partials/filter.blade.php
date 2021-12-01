@@ -146,4 +146,5 @@
             </div>
         </div>
     </div>
+    @include('idir::admin.group.partials.filter_filter')
 </form>
