@@ -35,7 +35,7 @@
                 {{ trans('icore::tags.route.show', ['tag' => $tag->name]) }}
             </h1>
             <div id="filter-content">
-                @include('idir::web.dir.partials.filter')            
+                @include('idir::web.dir.partials.filter')
                 @if ($dirs->isNotEmpty())
                 <div id="infinite-scroll">
                     @foreach ($dirs as $dir)
