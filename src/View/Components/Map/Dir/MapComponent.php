@@ -116,6 +116,8 @@ class MapComponent extends BaseMapComponent
         }
 
         if ($this->coords_marker->isNotEmpty()) {
+            $this->address_marker = $this->collect->make([]);
+            
             return;
         }
 
