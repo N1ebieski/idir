@@ -636,7 +636,7 @@ class Dir extends Model
      */
     public function getLinkAsHtmlAttribute(): string
     {
-        $output = '<a href="' . route('web.dir.show', [$this->slug]) . '" title="' . $this->title . '">';
+        $output = '<a href="' . route('web.dir.show', [$this->slug]) . '" title="' . e($this->title) . '">';
         $output .= e($this->title);
         $output .= '</a>';
 
