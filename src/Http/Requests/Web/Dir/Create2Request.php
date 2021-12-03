@@ -2,8 +2,12 @@
 
 namespace N1ebieski\IDir\Http\Requests\Web\Dir;
 
+use N1ebieski\IDir\Models\Group;
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * @property Group $group
+ */
 class Create2Request extends FormRequest
 {
     /**

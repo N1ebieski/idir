@@ -59,9 +59,6 @@ use N1ebieski\IDir\Events\Web\Dir\UpdateRenewEvent as DirUpdateRenewEvent;
 use N1ebieski\IDir\Events\Web\Payment\Dir\StoreEvent as PaymentStoreEvent;
 use N1ebieski\IDir\View\ViewModels\Web\Dir\ShowViewModel;
 
-/**
- * [DirController description]
- */
 class DirController
 {
     /**
