@@ -133,7 +133,7 @@ return [
         'tooltip' => 'Na ten adres zostanie założone konto użytkownika. Jesli masz już konto - zaloguj się.'
     ],
     'notes' => 'Uwagi moderatora',
-    'more' => 'pokaż więcej &raquo',
+    'more' => 'pokaż więcej &raquo;',
     'correct' => 'Poprawa',
     'confirm' => [
         'correct' => 'Czy na pewno chcesz zgłosić wpis do poprawy?'
