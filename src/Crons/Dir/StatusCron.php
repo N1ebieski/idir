@@ -2,10 +2,10 @@
 
 namespace N1ebieski\IDir\Crons\Dir;
 
+use Illuminate\Support\Carbon;
 use N1ebieski\IDir\Models\DirStatus;
 use N1ebieski\IDir\Jobs\Dir\CheckStatusJob;
 use Illuminate\Contracts\Config\Repository as Config;
-use Illuminate\Support\Carbon;
 
 class StatusCron
 {
