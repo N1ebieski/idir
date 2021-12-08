@@ -4,9 +4,7 @@ jQuery(document).on('change', 'select#payment_code_sms', function () {
     $('div#nav-code_sms p span#number').text($select.number);
     $('div#nav-code_sms p span#code_sms').text($select.code);
     $('div#nav-code_sms p span#price').text($select.price);
-    $('div#nav-code_sms img#qr_url').attr('src', $select.qr_url)
-        .attr('title', `QR - ${$select.number} - ${$select.code}`)
-        .attr('alt', `QR - ${$select.number} - ${$select.code}`);    
+    $('div#nav-code_sms div#qr_image').html($.sanitize($select.qr_as_image));   
 });
 
 jQuery(document).on('change', 'select#payment_code_transfer', function () {

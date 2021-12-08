@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Database\Eloquent\Model;
 use N1ebieski\IDir\Services\PriceService;
 use N1ebieski\IDir\Repositories\PriceRepo;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Database\Eloquent\Collection;
 use N1ebieski\IDir\Models\Traits\Filterable;
 use Illuminate\Support\Collection as Collect;
@@ -185,15 +186,11 @@ class Price extends Model
      *
      * @return string|null
      */
-    public function getQrUrlAttribute(): ?string
+    public function getQrAsImageAttribute(): ?string
     {
-        if ($this->type === 'code_sms') {
-            $driver = Config::get("idir.payment.{$this->type}.driver");
-
-            return Config::get("services.{$driver}.code_sms.qr_url") . $this->number . '/' . $this->code;
-        }
-
-        return null;
+        return ($this->type === 'code_sms') ?
+            QrCode::SMS($this->number, $this->code)
+            : null;
     }
 
     // Checkers

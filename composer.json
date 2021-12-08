@@ -9,7 +9,8 @@
         "gusapi/gusapi": "^5.1",
         "league/omnipay": "^3.0",
         "omnipay/paypal": "^3.0",
-        "mike182uk/paypal-ipn-listener": "^9.0"
+        "mike182uk/paypal-ipn-listener": "^9.0",
+        "simplesoftwareio/simple-qrcode": "^4.0"
     },
     "require-dev": {
         "fzaninotto/faker": "^1.4",
