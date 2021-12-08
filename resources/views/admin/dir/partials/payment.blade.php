@@ -217,7 +217,7 @@
                                     ]) }}
                                 </span>
                             "                             
-                            data="{{ json_encode($price->only(['code', 'price', 'number'])) }}"
+                            data="{{ json_encode($price->only(['code', 'price', 'number', 'qr_url'])) }}"
                             {{ old('payment_code_sms') == $price->id ? 'selected' : null }}
                         >
                             {{ trans('idir::dirs.price', [
@@ -246,6 +246,12 @@
                     >
                     @includeWhen($errors->has('code_sms'), 'icore::admin.partials.errors', ['name' => 'code_sms'])
                 </div>
+                <img 
+                    id="qr_url" 
+                    src="{{ $paymentCodeSmsSelection->qr_url }}"
+                    title="QR - {{ $paymentCodeSmsSelection->number }} - {{ $paymentCodeSmsSelection->code }}"
+                    alt="QR - {{ $paymentCodeSmsSelection->number }} - {{ $paymentCodeSmsSelection->code }}"
+                >                
                 <p>
                     {!! trans('idir::dirs.payment.code_sms.info', [
                         'number' => $paymentCodeSmsSelection->number,

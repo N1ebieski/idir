@@ -180,6 +180,22 @@ class Price extends Model
             : Collect::make([]);
     }
 
+    /**
+     * Undocumented function
+     *
+     * @return string|null
+     */
+    public function getQrUrlAttribute(): ?string
+    {
+        if ($this->type === 'code_sms') {
+            $driver = Config::get("idir.payment.{$this->type}.driver");
+
+            return Config::get("services.{$driver}.code_sms.qr_url") . $this->number . '/' . $this->code;
+        }
+
+        return null;
+    }
+
     // Checkers
 
     /**
