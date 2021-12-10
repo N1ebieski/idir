@@ -5,6 +5,7 @@ namespace N1ebieski\IDir\Repositories;
 use Closure;
 use Carbon\Carbon;
 use N1ebieski\IDir\Models\Dir;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Collection;
 use N1ebieski\IDir\Models\Rating\Dir\Rating;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -551,5 +552,46 @@ class DirRepo
 
                 return $item;
             });
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @return Collection
+     */
+    public function countByDateAndGroup(): Collection
+    {
+        /**
+         * @var \N1ebieski\IDir\Models\Payment
+         */
+        $payment = $this->dir->payments()->make();
+
+        /**
+         * @var \N1ebieski\IDir\Models\Price
+         */
+        $price = $this->dir->group()->make()->prices()->make();
+        
+        return $this->dir->selectRaw("YEAR(`d`.`created_at`) `year`, MONTH(`d`.`created_at`) `month`, IFNULL(`p2`.`group_id`, `d`.`group_id`) AS `first_group_id`, COUNT(*) AS `count`")
+            ->leftJoin("{$payment->getTable()} AS p1", function ($query) use ($payment) {
+                $query->on("p1.model_id", '=', "d.id")
+                    ->on(
+                        'p1.created_at',
+                        '=',
+                        DB::raw('(SELECT MIN(`created_at`) FROM `payments` WHERE `model_id` = `p1`.`model_id` AND `model_type` = "' . $this->dir->getMorphClass() . '" AND `status` = ' . $payment::FINISHED . ')')
+                    );
+            })
+            ->leftJoin("{$price->getTable()} AS p2", function ($query) use ($price) {
+                $query->on('p2.id', '=', 'p1.order_id')
+                    ->where('p1.order_type', $price->getMorphClass());
+            })
+            ->from("{$this->dir->getTable()} AS d")
+            ->where('d.status', $this->dir::ACTIVE)
+            ->groupBy('year')
+            ->groupBy('month')
+            ->groupBy('first_group_id')
+            ->orderBy('year')
+            ->orderBy('month')
+            ->groupBy('first_group_id')
+            ->get();
     }
 }

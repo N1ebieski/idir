@@ -137,5 +137,8 @@ return [
     'correct' => 'Poprawa',
     'confirm' => [
         'correct' => 'Czy na pewno chcesz zgłosić wpis do poprawy?'
+    ],
+    'chart' => [
+        'count_by_status' => 'Wykres ilości wpisów wg statusu'
     ]
 ];
