@@ -562,7 +562,7 @@ class DirRepo
     public function countByDateAndGroup(): Collection
     {
         /**
-         * @var \N1ebieski\IDir\Models\Payment
+         * @var \N1ebieski\IDir\Models\Payment\Payment
          */
         $payment = $this->dir->payments()->make();
 

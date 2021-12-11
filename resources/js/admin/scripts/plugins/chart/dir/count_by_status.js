@@ -12,7 +12,7 @@ $(function() {
                 datasets: [{
                     label: $chart.data('label'),
                     data: $chart.dataset.map(item => item.count),
-                    url: $chart.dataset.map(item => item.url.admin),
+                    links: $chart.dataset.map(item => item.links.admin),
                     backgroundColor: $chart.dataset.map(item => item.color),
                     borderColor: $chart.dataset.map(item => item.color),
                     borderWidth: 1
@@ -50,7 +50,7 @@ $(function() {
     
                     const element = elements[0];
     
-                    window.location.href = this.data.datasets[element.datasetIndex].url[element.index];
+                    window.location.href = this.data.datasets[element.datasetIndex].links[element.index];
     
                     return;
                 }

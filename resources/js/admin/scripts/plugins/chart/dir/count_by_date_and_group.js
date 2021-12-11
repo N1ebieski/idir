@@ -16,10 +16,10 @@ $(function() {
                     backgroundColor: 'rgb(0, 123, 255)',
                     borderColor: 'rgb(0, 123, 255)',
                     borderWidth: 1,                    
-                    data: timeline.map(item => {
+                    data: timeline.map(t => {
                         return {
-                            x: `${item.month}.${item.year}`,
-                            y: $chart.dataset.filter(i => i.month === item.month && i.year === item.year)
+                            x: `${t.month}.${t.year}`,
+                            y: $chart.dataset.filter(i => i.month === t.month && i.year === t.year)
                                 .reduce((sum, i) => { return sum + i.count }, 0)
                         };
                     })
@@ -63,32 +63,8 @@ $(function() {
                         font: {
                             size: 14
                         }                    
-                    }
-                    // legend: {
-                    //     labels: {
-                    //         generateLabels: (chart) => {
-                    //             const datasets = chart.data.datasets;
-
-                    //             return datasets[0].data.map((data, i) => ({
-                    //                 text: `${chart.data.labels[i]} (${data})`,
-                    //                 fillStyle: datasets[0].backgroundColor[i],
-                    //                 strokeStyle: datasets[0].borderColor[i],
-                    //                 hidden: !chart.getDataVisibility(i),
-                    //                 index: i
-                    //             }));
-                    //         }
-                    //     }
-                    // }                    
+                    }              
                 }
-                // onClick: function(event, elements) {
-                //     if (!elements.length) return;
-    
-                //     const element = elements[0];
-    
-                //     window.location.href = this.data.datasets[element.datasetIndex].url[element.index];
-    
-                //     return;
-                // }
             }
         });
 

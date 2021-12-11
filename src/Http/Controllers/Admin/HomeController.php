@@ -6,8 +6,8 @@ use N1ebieski\IDir\Models\Dir;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Http\Response as HttpResponse;
-use N1ebieski\IDir\Http\Responses\Data\Dir\Charts\StatusData as DirStatusData;
-use N1ebieski\IDir\Http\Responses\Data\Dir\Charts\TimelineData as DirTimelineData;
+use N1ebieski\IDir\Http\Responses\Data\Dir\Chart\StatusData as DirStatusData;
+use N1ebieski\IDir\Http\Responses\Data\Dir\Chart\TimelineData as DirTimelineData;
 
 class HomeController
 {
