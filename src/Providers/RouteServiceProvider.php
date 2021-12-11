@@ -13,7 +13,7 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @var string
      */
-    protected $namespace = 'N1ebieski\IDir\Http\Controllers';
+    // protected $namespace = 'N1ebieski\IDir\Http\Controllers';
 
     /**
      * Define your route model bindings, pattern filters, etc.
@@ -81,18 +81,27 @@ class RouteServiceProvider extends ServiceProvider
      */
     protected function mapWebRoutes()
     {
-        $this->app['router']->middleware(['idir.web', 'icore.force.verified'])
-             ->as('web.')
-             ->namespace($this->namespace . '\Web')
-             ->group(function ($router) {
-                foreach (glob(__DIR__ . '/../../routes/web/*.php') as $filename) {
-                    if (file_exists($override = base_path('routes') . '/vendor/idir/web/' . basename($filename))) {
-                        require($override);
-                    } else {
-                        require($filename);
-                    }
+        if ($this->app['config']->get('idir.routes.web.enabled') === false) {
+            return;
+        }
+
+        $router = $this->app['router']->middleware(['idir.web', 'icore.force.verified'])
+            ->as('web.');
+
+        $router->group(function ($router) {
+            foreach (glob(__DIR__ . '/../../routes/web/*.php') as $filename) {
+                if (!file_exists(base_path('routes') . '/vendor/idir/web/' . basename($filename))) {
+                    require($filename);
                 }
-             });
+            }
+        });
+
+        $router->namespace($this->app['config']->get('idir.routes.web.namespace', $this->namespace . '\Web'))
+        ->group(function ($router) {
+            foreach (glob(base_path('routes') . '/vendor/idir/web/*.php') as $filename) {
+                require($filename);
+            }
+        });
     }
 
     /**
@@ -104,21 +113,30 @@ class RouteServiceProvider extends ServiceProvider
      */
     protected function mapApiRoutes()
     {
-        $this->app['router']->middleware([
+        if ($this->app['config']->get('idir.routes.api.enabled') === false) {
+            return;
+        }
+
+        $router = $this->app['router']->middleware([
                 \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
                 'idir.api',
                 'icore.force.verified'
             ])
             ->prefix('api')
-            ->as('api.')
-            ->namespace($this->namespace . '\Api')
+            ->as('api.');
+
+        $router->group(function ($router) {
+            foreach (glob(__DIR__ . '/../../routes/api/*.php') as $filename) {
+                if (!file_exists(base_path('routes') . '/vendor/idir/api/' . basename($filename))) {
+                    require($filename);
+                }
+            }
+        });
+
+        $router->namespace($this->app['config']->get('idir.routes.api.namespace', $this->namespace . '\Api'))
             ->group(function ($router) {
-                foreach (glob(__DIR__ . '/../../routes/api/*.php') as $filename) {
-                    if (file_exists($override = base_path('routes') . '/vendor/idir/api/' . basename($filename))) {
-                        require($override);
-                    } else {
-                        require($filename);
-                    }
+                foreach (glob(base_path('routes') . '/vendor/idir/api/*.php') as $filename) {
+                    require($filename);
                 }
             });
     }
@@ -132,22 +150,31 @@ class RouteServiceProvider extends ServiceProvider
      */
     protected function mapAdminRoutes()
     {
-        $this->app['router']->middleware([
+        if ($this->app['config']->get('idir.routes.admin.enabled') === false) {
+            return;
+        }
+
+        $router = $this->app['router']->middleware([
                 'idir.web',
                 'auth',
                 'verified',
                 'permission:admin.access'
             ])
             ->prefix('admin')
-            ->as('admin.')
-            ->namespace($this->namespace . '\Admin')
+            ->as('admin.');
+
+        $router->group(function ($router) {
+            foreach (glob(__DIR__ . '/../../routes/admin/*.php') as $filename) {
+                if (!file_exists(base_path('routes') . '/vendor/idir/admin/' . basename($filename))) {
+                    require($filename);
+                }
+            }
+        });
+
+        $router->namespace($this->app['config']->get('idir.routes.admin.namespace', $this->namespace . '\Admin'))
             ->group(function ($router) {
-                foreach (glob(__DIR__ . '/../../routes/admin/*.php') as $filename) {
-                    if (file_exists($override = base_path('routes') . '/vendor/idir/admin/' . basename($filename))) {
-                        require($override);
-                    } else {
-                        require($filename);
-                    }
+                foreach (glob(base_path('routes') . '/vendor/idir/admin/*.php') as $filename) {
+                    require($filename);
                 }
             });
     }

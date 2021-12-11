@@ -1,5 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use N1ebieski\IDir\Http\Controllers\Web\HomeController;
 
-Route::get('/', 'HomeController@index')->name('home.index');
+Route::get('/', [HomeController::class, 'index'])
+    ->name('home.index');

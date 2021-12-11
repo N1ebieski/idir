@@ -8,6 +8,21 @@ return [
 
     'layout' => env('IDIR_LAYOUT', 'idir'),
 
+    'routes' => [
+        'web' => [
+            'namespace' => null,
+            'enabled' => true
+        ],
+        'admin' => [
+            'namespace' => null,
+            'enabled' => true
+        ],
+        'api' => [
+            'namespace' => null,
+            'enabled' => true
+        ]
+    ],
+
     'dir' => [
         'max_tags' => (int)env('IDIR_DIR_MAX_TAGS', 10),
         'max_title' => (int)env('IDIR_DIR_MAX_TITLE', 100),
