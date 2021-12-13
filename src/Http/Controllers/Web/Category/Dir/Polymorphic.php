@@ -5,7 +5,6 @@ namespace N1ebieski\IDir\Http\Controllers\Web\Category\Dir;
 use N1ebieski\IDir\Models\Region\Region;
 use Illuminate\Http\Response as HttpResponse;
 use N1ebieski\IDir\Models\Category\Dir\Category;
-use N1ebieski\IDir\Loads\Web\Category\Dir\ShowLoad;
 use N1ebieski\IDir\Filters\Web\Category\Dir\ShowFilter;
 use N1ebieski\IDir\Http\Requests\Web\Category\ShowRequest;
 
@@ -21,5 +20,5 @@ interface Polymorphic
      * @param ShowFilter $filter
      * @return HttpResponse
      */
-    public function show(Category $category, Region $region, ShowLoad $load, ShowRequest $request, ShowFilter $filter): HttpResponse;
+    public function show(Category $category, Region $region, ShowRequest $request, ShowFilter $filter): HttpResponse;
 }
