@@ -98,6 +98,7 @@ class TimelineData implements DataInterface
      * @param string $string
      * @return string
      */
+    // TODO: #78 Move getColor function to Str helpers @N1ebieski
     protected static function getColor(string $string): string
     {
         $hash = md5('color' . $string);
