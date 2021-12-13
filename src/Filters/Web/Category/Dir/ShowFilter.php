@@ -14,6 +14,12 @@ class ShowFilter extends Filter
     use HasOrderBy;
     use HasRegion;
 
+    /**
+     * Undocumented function
+     *
+     * @param Request $request
+     * @param Collect $collect
+     */
     public function __construct(Request $request, Collect $collect)
     {
         parent::__construct($request, $collect);
