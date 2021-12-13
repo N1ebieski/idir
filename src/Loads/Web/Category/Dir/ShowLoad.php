@@ -4,7 +4,7 @@ namespace N1ebieski\IDir\Loads\Web\Category\Dir;
 
 use Illuminate\Http\Request;
 use N1ebieski\IDir\Models\Region\Region;
-use N1ebieski\IDir\Filters\Web\Category\ShowFilter;
+use N1ebieski\IDir\Filters\Web\Category\Dir\ShowFilter;
 
 class ShowLoad
 {
