@@ -13,6 +13,13 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $this->app->singleton(\N1ebieski\IDir\Filters\Web\Category\Dir\ShowFilter::class, function () {
+            return new \N1ebieski\IDir\Filters\Web\Category\Dir\ShowFilter(
+                $this->app->make(\Illuminate\Http\Request::class),
+                $this->app->make(\Illuminate\Support\Collection::class)
+            );
+        });
+
         $this->app->bind(\N1ebieski\ICore\Utils\FileUtil::class, function ($app) {
             return $app->make(\N1ebieski\IDir\Utils\FileUtil::class, [
                 'path' => ''
@@ -27,13 +34,6 @@ class AppServiceProvider extends ServiceProvider
                 $app->make(\Illuminate\Contracts\Config\Repository::class),
                 $with['url'] ?? '',
                 $with['disk'] ?? 'public'
-            );
-        });
-
-        $this->app->singleton(\N1ebieski\IDir\Filters\Web\Category\ShowFilter::class, function () {
-            return new \N1ebieski\IDir\Filters\Web\Category\ShowFilter(
-                $this->app->make(\Illuminate\Http\Request::class),
-                $this->app->make(\Illuminate\Support\Collection::class)
             );
         });
     }

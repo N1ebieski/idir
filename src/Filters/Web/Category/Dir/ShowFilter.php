@@ -1,6 +1,6 @@
 <?php
 
-namespace N1ebieski\IDir\Filters\Web\Category;
+namespace N1ebieski\IDir\Filters\Web\Category\Dir;
 
 use N1ebieski\ICore\Filters\Filter;
 use N1ebieski\IDir\Filters\Traits\HasRegion;

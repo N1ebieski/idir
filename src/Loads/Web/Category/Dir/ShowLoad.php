@@ -1,6 +1,6 @@
 <?php
 
-namespace N1ebieski\IDir\Loads\Web\Category;
+namespace N1ebieski\IDir\Loads\Web\Category\Dir;
 
 use Illuminate\Http\Request;
 use N1ebieski\IDir\Models\Region\Region;
