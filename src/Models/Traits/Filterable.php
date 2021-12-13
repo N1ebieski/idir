@@ -3,6 +3,7 @@
 namespace N1ebieski\IDir\Models\Traits;
 
 use N1ebieski\IDir\Models\Group;
+use N1ebieski\IDir\Models\Region\Region;
 use Illuminate\Database\Eloquent\Builder;
 use N1ebieski\ICore\Models\Traits\Filterable as BaseFilterable;
 
@@ -26,14 +27,14 @@ trait Filterable
     /**
      * [scopeFilterRegion description]
      * @param  Builder       $query  [description]
-     * @param  string|null  $region  [description]
+     * @param  Region|null  $region  [description]
      * @return Builder|null          [description]
      */
-    public function scopeFilterRegion(Builder $query, string $region = null): ?Builder
+    public function scopeFilterRegion(Builder $query, Region $region = null): ?Builder
     {
         return $query->when($region !== null, function ($query) use ($region) {
             return $query->whereHas('regions', function ($query) use ($region) {
-                $query->where('slug', $region);
+                $query->where('id', $region->id);
             });
         });
     }

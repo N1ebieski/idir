@@ -29,6 +29,13 @@ class AppServiceProvider extends ServiceProvider
                 $with['disk'] ?? 'public'
             );
         });
+
+        $this->app->singleton(\N1ebieski\IDir\Filters\Web\Category\ShowFilter::class, function () {
+            return new \N1ebieski\IDir\Filters\Web\Category\ShowFilter(
+                $this->app->make(\Illuminate\Http\Request::class),
+                $this->app->make(\Illuminate\Support\Collection::class)
+            );
+        });
     }
 
     /**

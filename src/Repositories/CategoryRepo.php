@@ -122,7 +122,6 @@ class CategoryRepo extends BaseCategoryRepo
     {
         $dir = $this->category->morphs()->make();
 
-        // Rezygnuje z eloquentowych whereHas (whereExists) na rzecz joinów, bo rekordów jest dużo i siada wydajność
         return $dir->selectRaw('`dirs`.*, IF(`privileges`.`name` IS NULL, 0, 1) as `privilege`')
             ->withAllPublicRels()
             ->leftJoin('groups_privileges', function ($query) {
