@@ -7,6 +7,9 @@ use N1ebieski\IDir\Models\Category\Category;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use N1ebieski\ICore\Cache\CategoryCache as BaseCategoryCache;
 
+/**
+ * @property Category $category
+ */
 class CategoryCache extends BaseCategoryCache
 {
     /**
@@ -55,8 +58,10 @@ class CategoryCache extends BaseCategoryCache
      */
     public function getDirsByFilter(array $filter, int $page): ?LengthAwarePaginator
     {
+        $regionId = optional($filter['region'])->id;
+
         return $this->cache->tags(['dirs'])
-            ->get("category.{$this->category->id}.paginateDirsByFilter.{$filter['region']}.{$page}");
+            ->get("category.{$this->category->id}.paginateDirsByFilter.{$regionId}.{$page}");
     }
 
     /**
@@ -68,9 +73,11 @@ class CategoryCache extends BaseCategoryCache
      */
     public function putDirsByFilter(LengthAwarePaginator $dirs, array $filter, int $page): bool
     {
+        $regionId = optional($filter['region'])->id;
+
         return $this->cache->tags(['dirs'])
             ->put(
-                "category.{$this->category->id}.paginateDirsByFilter.{$filter['region']}.{$page}",
+                "category.{$this->category->id}.paginateDirsByFilter.{$regionId}.{$page}",
                 $dirs,
                 $this->carbon->now()->addMinutes($this->minutes)
             );
@@ -106,8 +113,10 @@ class CategoryCache extends BaseCategoryCache
      */
     public function rememberLoadNestedWithMorphsCountByFilter(array $filter): Category
     {
+        $regionId = optional($filter['region'])->id;
+
         return $this->cache->tags(["category.{$this->category->slug}"])->remember(
-            "category.{$this->category->slug}.loadNestedWithMorphsCountByFilter.{$filter['region']}",
+            "category.{$this->category->slug}.loadNestedWithMorphsCountByFilter.{$regionId}",
             $this->carbon->now()->addMinutes($this->minutes),
             function () use ($filter) {
                 return $this->category->loadNestedWithMorphsCountByFilter($filter);
