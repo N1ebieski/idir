@@ -56,11 +56,6 @@ class ScheduleServiceProvider extends ServiceProvider
                 ->name('SitemapCron')
                 ->daily()
                 ->runInBackground();
-
-            // $schedule->call($this->app->make(\N1ebieski\IDir\Crons\Tag\Dir\PopularTagsCron::class))
-            //     ->name('Dir.PopularTagsCron')
-            //     ->daily()
-            //     ->runInBackground();
         });
     }
 }
