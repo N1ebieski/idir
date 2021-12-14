@@ -328,6 +328,37 @@ class Dir extends Model
      * @param Builder $query
      * @return Builder
      */
+    public function scopeWithAllRels(Builder $query): Builder
+    {
+        return $query->with([
+            'group',
+            'group.prices',
+            'group.fields' => function ($query) {
+                $query->orderBy('position', 'asc');
+            },
+            'group.privileges',
+            'fields',
+            'regions',
+            'categories',
+            'tags',
+            'user',
+            'payments',
+            'payments.group',
+            'backlink',
+            'status'
+        ])
+        ->when(App::make(MigrationUtil::class)->contains('create_stats_table'), function ($query) {
+            $query->with('stats');
+        })
+        ->withSumRating();
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param Builder $query
+     * @return Builder
+     */
     public function scopeWithAllPublicRels(Builder $query): Builder
     {
         return $query->with([
