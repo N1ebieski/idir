@@ -490,6 +490,16 @@ class DirService implements
     /**
      * Undocumented function
      *
+     * @return string
+     */
+    public function sessionName(): string
+    {
+        return is_int($this->dir->id) ? 'dirId.' . $this->dir->id : 'dir';
+    }
+
+    /**
+     * Undocumented function
+     *
      * @param array $attributes
      * @return User
      */
@@ -512,15 +522,5 @@ class DirService implements
         return $this->dir->group->apply_status === $this->dir::ACTIVE ?
             $this->dir::ACTIVE
             : $this->dir::INACTIVE;
-    }
-
-    /**
-     * Undocumented function
-     *
-     * @return string
-     */
-    protected function sessionName(): string
-    {
-        return is_int($this->dir->id) ? 'dirId.' . $this->dir->id : 'dir';
     }
 }
