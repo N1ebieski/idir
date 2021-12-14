@@ -7,8 +7,8 @@ use Carbon\Carbon;
 use N1ebieski\IDir\Models\Dir;
 use Illuminate\Database\Eloquent\Collection;
 use N1ebieski\IDir\Models\Rating\Dir\Rating;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\Config\Repository as Config;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class DirRepo
 {
@@ -47,24 +47,7 @@ class DirRepo
     {
         return $this->dir->selectRaw('`dirs`.*')
             ->withCount('reports')
-            ->with([
-                'group',
-                'group.prices',
-                'group.fields' => function ($query) {
-                    $query->orderBy('position', 'asc');
-                },
-                'group.privileges',
-                'fields',
-                'regions',
-                'categories',
-                'tags',
-                'user',
-                'payments',
-                'payments.group',
-                'backlink',
-                'status'
-            ])
-            ->withSumRating()
+            ->withAllRels()
             ->filterAuthor($filter['author'])
             ->filterExcept($filter['except'])
             ->when($filter['search'] !== null, function ($query) use ($filter) {
