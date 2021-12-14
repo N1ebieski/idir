@@ -4,6 +4,8 @@ jQuery(document).on('readyAndAjax', function () {
 
         $trumbowyg.trumbowyg({
             lang: $trumbowyg.data('lang'),
+            fixedBtnPane: $trumbowyg.data('fixed-btn-pane') || true,
+            fixedFullWidth: $trumbowyg.data('fixed-full-width') || false,  
             svgPath: false,
             hideButtonTexts: true,
             tagsToRemove: ['script'],
