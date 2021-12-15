@@ -62,6 +62,8 @@ class AutoUserFactory
             'ip' => $this->request->ip()
         ]);
 
+        $user->assignRole('user');
+
         return $user;
     }
 }
