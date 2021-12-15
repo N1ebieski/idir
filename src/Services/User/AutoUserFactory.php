@@ -58,6 +58,8 @@ class AutoUserFactory
                 'password' => $this->str->random(12)
             ]);
 
+        $user->assignRole('user');
+
         $user->update([
             'ip' => $this->request->ip()
         ]);
