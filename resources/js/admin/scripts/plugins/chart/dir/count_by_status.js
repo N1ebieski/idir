@@ -1,5 +1,5 @@
 
-$(function() {
+$(document).on('ready.n1ebieski/idir/admin/scripts/plugins/bootstrap-confirmation/dir@countByStatus', function () {
     let $chart = $('#countDirsByStatus');
     
     if ($chart.length) {

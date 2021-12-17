@@ -1,4 +1,4 @@
-jQuery(document).ready(function () {
+$(document).on('ready.n1ebieski/idir/web/scripts/ajax/dir@rate', function () {
     $('[id^="star-rating"]').on('rating:change', function (event, value) {
         event.preventDefault();
 

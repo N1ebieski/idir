@@ -1,4 +1,4 @@
-jQuery(document).on('readyAndAjax', function () {
+$(document).on('readyAndAjax.n1ebieski/idir/admin/scripts/plugins/trumbowyg@init', function () {
     if (!$('.trumbowyg-box').length) {
         let $trumbowyg = $('#content_html_dir_trumbowyg');
 

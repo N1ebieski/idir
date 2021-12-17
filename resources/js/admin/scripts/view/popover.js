@@ -1,4 +1,4 @@
-jQuery(document).on('readyAndAjax', function () {
+$(document).on('readyAndAjax.n1ebieski/idir/admin/scripts/view/popover@init', function () {
     $('.thumbnail').popover({
         trigger: 'hover',
         boundary: 'window',

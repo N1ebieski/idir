@@ -1,23 +1,27 @@
-jQuery(document).on('click', 'a.reloadThumbnail, a.reload-thumbnail', function (e) {
-    e.preventDefault();
+$(document).on(
+    'click.n1ebieski/idir/admin/scripts/ajax/thumbnail@reload',
+    'a.reloadThumbnail, a.reload-thumbnail',
+    function (e) {
+        e.preventDefault();
 
-    let $element = $(this);
-    $element.thumbnail = $element.parent().children('.thumbnail');
-    $element.thumbnail.img = $element.thumbnail.children('img');
+        let $element = $(this);
+        $element.thumbnail = $element.parent().children('.thumbnail');
+        $element.thumbnail.img = $element.thumbnail.children('img');
 
-    jQuery.ajax({
-        url: $element.data('route'),
-        method: 'patch',
-        beforeSend: function () {
-            $element.prop('disabled', true);
-            $element.thumbnail.append($.getLoader('spinner-border'));
-        },
-        complete: function () {
-            $element.prop('disabled', false);
-            $element.thumbnail.find('.loader-absolute').remove();
-        },
-        success: function (response) {
-            $element.thumbnail.img.attr('src', response.thumbnail_url + '&reload=' + Math.random());
-        }
-    });
-});
+        $.ajax({
+            url: $element.data('route'),
+            method: 'patch',
+            beforeSend: function () {
+                $element.prop('disabled', true);
+                $element.thumbnail.append($.getLoader('spinner-border'));
+            },
+            complete: function () {
+                $element.prop('disabled', false);
+                $element.thumbnail.find('.loader-absolute').remove();
+            },
+            success: function (response) {
+                $element.thumbnail.img.attr('src', response.thumbnail_url + '&reload=' + Math.random());
+            }
+        });
+    }
+);

@@ -1,5 +1,5 @@
 
-$(function() {
+$(document).on('ready.n1ebieski/idir/admin/scripts/plugins/chart/dir@countByDateAndGroup', function () {
     let $chart = $('#countDirsByDateAndGroup');
 
     if ($chart.length) {

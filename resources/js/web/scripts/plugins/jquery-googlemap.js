@@ -1,4 +1,4 @@
-jQuery(document).ready(function () {
+$(document).on('ready.n1ebieski/idir/web/scripts/plugins/jquery-googlemap@init', function () {
     $('#map, .map').each(function () {
         let $map = $(this);
 
@@ -26,7 +26,7 @@ jQuery(document).ready(function () {
     });
 });
 
-jQuery(document).on('readyAndAjax', function () {
+$(document).on('readyAndAjax.n1ebieski/idir/web/scripts/plugins/jquery-googlemap@initSelect', function () {
     let $map = $("#map-select");
 
     if ($map.length) {
@@ -67,39 +67,47 @@ jQuery(document).on('readyAndAjax', function () {
     }     
 });
 
-jQuery(document).on('click', '#remove-marker', function (e) {
-    e.preventDefault();
+$(document).on(
+    'click.n1ebieski/idir/web/scripts/plugins/jquery-googlemap@remove',
+    '#remove-marker',
+    function (e) {
+        e.preventDefault();
 
-    let $map = $('#map-select');
+        let $map = $('#map-select');
 
-    $map.removeMarker('marker0');
-    $map.siblings('#marker0').find('input[id$="lat"]').val(null);
-    $map.siblings('#marker0').find('input[id$="long"]').val(null);
+        $map.removeMarker('marker0');
+        $map.siblings('#marker0').find('input[id$="lat"]').val(null);
+        $map.siblings('#marker0').find('input[id$="long"]').val(null);
 
-    $('#add-marker').show();
-    $(this).hide();
-});
-
-jQuery(document).on('click', '#add-marker', function (e, coords, address) {
-    e.preventDefault();
-
-    let $map = $('#map-select');
-
-    if (!address && !coords) {
-        coords = $map.data('coords');
+        $('#add-marker').show();
+        $(this).hide();
     }
+);
 
-    $map.addMarker({
-        coords: coords || null,
-        address: address || null,
-        draggable: true,
-        id: 'marker0',
-        success: function (e) {
-            $map.siblings('#marker0').find('input[id$="lat"]').val(e.lat);
-            $map.siblings('#marker0').find('input[id$="long"]').val(e.lon);                    
+$(document).on(
+    'click.n1ebieski/idir/web/scripts/plugins/jquery-googlemap@add',
+    '#add-marker',
+    function (e, coords, address) {
+        e.preventDefault();
+
+        let $map = $('#map-select');
+
+        if (!address && !coords) {
+            coords = $map.data('coords');
         }
-    });
 
-    $('#remove-marker').show();
-    $(this).hide();
-});
+        $map.addMarker({
+            coords: coords || null,
+            address: address || null,
+            draggable: true,
+            id: 'marker0',
+            success: function (e) {
+                $map.siblings('#marker0').find('input[id$="lat"]').val(e.lat);
+                $map.siblings('#marker0').find('input[id$="long"]').val(e.lon);                    
+            }
+        });
+
+        $('#remove-marker').show();
+        $(this).hide();
+    }
+);

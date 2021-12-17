@@ -1,49 +1,53 @@
-jQuery(document).on('click', '.sendContact, .send-contact', function (e) {
-    e.preventDefault();
+$(document).on(
+    'click.n1ebieski/idir/web/scripts/ajax/contact@send',
+    '.sendContact, .send-contact',
+    function (e) {
+        e.preventDefault();
 
-    let $element = $(this);
+        let $element = $(this);
 
-    let $form = $element.closest('form');
-    $form.btn = $form.find('.btn');
-    $form.input = $form.find('.form-control, .custom-control-input');
+        let $form = $element.closest('form');
+        $form.btn = $form.find('.btn');
+        $form.input = $form.find('.form-control, .custom-control-input');
 
-    let $modal = {
-        body: $form.closest('.modal-body')
-    };
+        let $modal = {
+            body: $form.closest('.modal-body')
+        };
 
-    $.ajax({
-        url: $form.data('route'),
-        method: 'post',
-        data: $form.serialize(),
-        dataType: 'json',
-        beforeSend: function () {
-            $element.getLoader('show');
-            $('.invalid-feedback').remove();
-            $form.input.removeClass('is-valid');
-            $form.input.removeClass('is-invalid');
-        },
-        complete: function () {
-            $element.getLoader('hide');
-            $form.find('.captcha').recaptcha();
-            $form.find('.captcha').captcha();
-            $form.input.addClass('is-valid');
-        },
-        success: function (response) {
-            $modal.body.html($.getAlert('success', response.success));
-        },
-        error: function (response) {
-            if (response.responseJSON.errors) {
-                $.each(response.responseJSON.errors, function (key, value) {
-                    $form.find('#' + $.escapeSelector(key)).addClass('is-invalid');
-                    $form.find('#' + $.escapeSelector(key)).closest('.form-group').append($.getError(key, value));
-                });
+        $.ajax({
+            url: $form.data('route'),
+            method: 'post',
+            data: $form.serialize(),
+            dataType: 'json',
+            beforeSend: function () {
+                $element.getLoader('show');
+                $('.invalid-feedback').remove();
+                $form.input.removeClass('is-valid');
+                $form.input.removeClass('is-invalid');
+            },
+            complete: function () {
+                $element.getLoader('hide');
+                $form.find('.captcha').recaptcha();
+                $form.find('.captcha').captcha();
+                $form.input.addClass('is-valid');
+            },
+            success: function (response) {
+                $modal.body.html($.getAlert('success', response.success));
+            },
+            error: function (response) {
+                if (response.responseJSON.errors) {
+                    $.each(response.responseJSON.errors, function (key, value) {
+                        $form.find('#' + $.escapeSelector(key)).addClass('is-invalid');
+                        $form.find('#' + $.escapeSelector(key)).closest('.form-group').append($.getError(key, value));
+                    });
 
-                return;
+                    return;
+                }
+
+                if (response.responseJSON.message) {
+                    $form.prepend($.getAlert('danger', response.responseJSON.message));
+                }            
             }
-
-            if (response.responseJSON.message) {
-                $form.prepend($.getAlert('danger', response.responseJSON.message));
-            }            
-        }
-    });
-});
+        });
+    }
+);

@@ -1,12 +1,18 @@
-jQuery(document).on('click', 'a.clickStat, a.click-stat', function (e) {
-    e.preventDefault();
+$(document).on(
+    'click.n1ebieski/idir/web/scripts/ajax/stat@click',
+    'a.clickStat, a.click-stat',
+    function (e) {
+        e.preventDefault();
 
-    let $element = $(this);
+        let $element = $(this);
 
-    $.ajax({
-        url: $element.data('route'),
-        method: 'get'
-    });
+        $.ajax({
+            url: $element.data('route'),
+            method: 'get'
+        });
 
-    window.open($element.attr('href'), '_blank');
-});
+        window.open($element.attr('href'), '_blank');
+
+        return;
+    }
+);

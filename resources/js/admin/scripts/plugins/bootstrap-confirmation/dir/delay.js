@@ -1,4 +1,4 @@
-jQuery(document).on('readyAndAjax', function () {
+$(document).on('readyAndAjax.n1ebieski/idir/admin/scripts/plugins/bootstrap-confirmation/dir@delay', function () {
     $('[data-toggle=dir-confirmation-delay]').on('inserted.bs.confirmation', function () {
         let $element = $('[id^="confirmation"] .popover-body').last();
         $element.p = $element.find('p.confirmation-content');
@@ -17,8 +17,12 @@ jQuery(document).on('readyAndAjax', function () {
     });
 });
 
-$(document).on('change', '[id^="confirmation"] .popover-body select#delay', function () {
-    if ($(this).val() === 'custom') {
-        $(this).replaceWith('<input type="text" id="delay" class="form-control">');
+$(document).on(
+    'change.n1ebieski/idir/admin/scripts/plugins/bootstrap-confirmation/dir@customDelay',
+    '[id^="confirmation"] .popover-body select#delay',
+    function () {
+        if ($(this).val() === 'custom') {
+            $(this).replaceWith('<input type="text" id="delay" class="form-control">');
+        }
     }
-});
+);
