@@ -1,3 +1,12 @@
+@component('icore::admin.partials.modal')
+
+@slot('modal_id', 'show-payment-logs-modal')
+
+@slot('modal_title')
+<span>{{ trans('idir::payments.route.show_logs') }}</span>
+@endslot
+
+@slot('modal_body')
 <div>
     @if ($payments->isNotEmpty())
     @foreach ($payments as $payment)
@@ -21,3 +30,6 @@
     @endforeach
     @endif
 </div>
+@endslot
+
+@endcomponent

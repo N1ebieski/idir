@@ -6,7 +6,7 @@ $(document).on(
 
         let $element = $(this);
 
-        let $form = $element.closest('form');
+        let $form = $element.closest('.modal-content').find('form');
         $form.btn = $form.find('.btn');
         $form.input = $form.find('.form-control, .custom-control-input');
 
@@ -37,8 +37,8 @@ $(document).on(
             error: function (response) {
                 if (response.responseJSON.errors) {
                     $.each(response.responseJSON.errors, function (key, value) {
-                        $form.find('#' + $.escapeSelector(key)).addClass('is-invalid');
-                        $form.find('#' + $.escapeSelector(key)).closest('.form-group').append($.getError(key, value));
+                        $form.find('[name="' + $.escapeSelector(key) + '"]').addClass('is-invalid');
+                        $form.find('[name="' + $.escapeSelector(key) + '"]').closest('.form-group').append($.getError(key, value));
                     });
 
                     return;

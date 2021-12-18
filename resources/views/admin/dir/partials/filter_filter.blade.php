@@ -2,6 +2,7 @@
 @inject('report', 'N1ebieski\IDir\Models\Report\Dir\Report')
 
 @component('icore::admin.partials.modal')
+
 @slot('modal_id', 'filter-modal')
 
 @slot('modal_title')
@@ -102,6 +103,8 @@
         {{ trans('icore::filter.filter') }} "{{ trans('icore::filter.category') }}"
     </label>
     <select 
+        id="filter-category"
+        name="filter[category]"
         class="selectpicker select-picker-category" 
         data-live-search="true"
         data-abs="true"
@@ -111,8 +114,7 @@
         data-abs-default-options="{{ json_encode([['value' => '', 'text' => trans('icore::filter.default')]]) }}"
         data-style="border"
         data-width="100%"
-        name="filter[category]"
-        id="filter-category"
+        data-container="body"
     >
         <optgroup label="{{ trans('icore::default.current_option') }}">
             <option value="">
@@ -158,17 +160,30 @@
         </option>
     </select>
 </div>
+@endslot
+
+@slot('modal_footer')
 <div class="d-inline">
-    <button type="button" class="btn btn-primary btn-send" id="filter-filter">
+    <button 
+        id="filter-filter"
+        type="button" 
+        class="btn btn-primary btn-send"
+        form="filter"
+    >
         <i class="fas fa-check"></i>
         <span>{{ trans('icore::default.apply') }}</span>
     </button>
-    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+    <button 
+        type="button" 
+        class="btn btn-secondary" 
+        data-dismiss="modal"
+    >
         <i class="fas fa-ban"></i>
         <span>{{ trans('icore::default.cancel') }}</span>
     </button>
 </div>
 @endslot
+
 @endcomponent
 
 @push('script')

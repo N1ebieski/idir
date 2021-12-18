@@ -1,5 +1,20 @@
+@component('icore::web.partials.modal')
+
+@slot('modal_id', 'contact-modal')
+
+@slot('modal_size', 'modal-lg')
+
+@slot('modal_title')
+<i class="fas fa-paper-plane"></i>
+<span> {{ trans('idir::contact.dir.route.show') }}</span>
+@endslot
+
+@slot('modal_body')
 <div>
-    <form data-route="{{ url()->current() }}" id="show-contact">
+    <form 
+        id="show-contact"
+        data-route="{{ url()->current() }}"
+    >
         <div class="form-group">
             <label for="email">
                 {{ trans('icore::contact.address.label') }}
@@ -52,14 +67,30 @@
         </div>        
         @render('icore::captchaComponent', [
             'id' => 1000
-        ])
-        <button type="button" class="btn btn-primary send-contact">
-            <i class="fas fa-check"></i>
-            <span>{{ trans('icore::default.submit') }}</span>
-        </button>        
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">
-            <i class="fas fa-ban"></i>
-            <span>{{ trans('icore::default.cancel') }}</span>
-        </button>        
+        ])     
     </form>
 </div>
+@endslot
+
+@slot('modal_footer')
+<div class="d-inline">
+    <button 
+        type="button" 
+        class="btn btn-primary send-contact"
+        form="show-contact"
+    >
+        <i class="fas fa-check"></i>
+        <span>{{ trans('icore::default.submit') }}</span>
+    </button>        
+    <button 
+        type="button" 
+        class="btn btn-secondary" 
+        data-dismiss="modal"
+    >
+        <i class="fas fa-ban"></i>
+        <span>{{ trans('icore::default.cancel') }}</span>
+    </button>
+</div>
+@endslot
+
+@endcomponent

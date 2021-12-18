@@ -1,6 +1,18 @@
+@component('icore::admin.partials.modal')
+
+@slot('modal_id', 'edit-modal')
+
+@slot('modal_size', 'modal-lg')
+
+@slot('modal_title')
+<i class="far fa-edit"></i>
+<span> {{ trans('idir::fields.route.edit') }}</span>
+@endslot
+
+@slot('modal_body')
 <form 
+    id="edit-field"
     data-route="{{ route("admin.field.{$field->poli}.update", [$field->id]) }}" 
-    id="update" 
     data-id="{{ $field->id }}"
 >
     <div class="form-group">
@@ -194,12 +206,28 @@
         </select>
     </div>
     @yield('morphs')
-    <button type="button" class="btn btn-primary update">
+</form>
+@endslot
+
+@slot('modal_footer')
+<div class="d-inline">
+    <button 
+        type="button" 
+        class="btn btn-primary update"
+        form="edit-field"
+    >
         <i class="fas fa-check"></i>
         <span>{{ trans('icore::default.save') }}</span>
     </button>
-    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+    <button 
+        type="button" 
+        class="btn btn-secondary" 
+        data-dismiss="modal"
+    >
         <i class="fas fa-ban"></i>
         <span>{{ trans('icore::default.cancel') }}</span>
     </button>
-</form>
+</div>
+@endslot
+
+@endcomponent

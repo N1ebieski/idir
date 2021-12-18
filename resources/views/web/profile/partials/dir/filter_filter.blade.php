@@ -1,6 +1,7 @@
 @inject('dir', 'N1ebieski\IDir\Models\Dir')
 
 @component('icore::web.partials.modal')
+
 @slot('modal_id', 'filter-modal')
 
 @slot('modal_title')
@@ -96,17 +97,30 @@
     </select>
 </div>
 @endif
+@endslot
+
+@slot('modal_footer')
 <div class="d-inline">
-    <button type="button" class="btn btn-primary btn-send" id="filter-filter">
+    <button 
+        id="filter-filter"
+        type="button" 
+        class="btn btn-primary btn-send"
+        form="filter"
+    >
         <i class="fas fa-check"></i>
         {{ trans('icore::default.apply') }}
     </button>
-    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+    <button 
+        type="button" 
+        class="btn btn-secondary" 
+        data-dismiss="modal"
+    >
         <i class="fas fa-ban"></i>
         {{ trans('icore::default.cancel') }}
     </button>
 </div>
 @endslot
+
 @endcomponent
 
 @push('script')
