@@ -5,7 +5,7 @@ $(document).on('ready.n1ebieski/idir/admin/scripts/plugins/bootstrap-confirmatio
     if ($chart.length) {
         $chart.dataset = JSON.parse($chart.attr('data'));
 
-        new Chart($chart, {
+        $chart.chart({
             type: 'pie',
             data: {
                 labels: $chart.dataset.map(item => item.status.label),

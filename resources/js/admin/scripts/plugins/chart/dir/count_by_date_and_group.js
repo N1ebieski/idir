@@ -8,7 +8,7 @@ $(document).on('ready.n1ebieski/idir/admin/scripts/plugins/chart/dir@countByDate
         let timeline = [...new Map($chart.dataset.map(item => [`${item.month}.${item.year}`, item])).values()];
         let groups = [...new Map($chart.dataset.map(item => [item.group.id, item])).values()];
 
-        new Chart($chart, {
+        $chart.chart({
             type: 'bar',            
             data: {
                 datasets: [{
