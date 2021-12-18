@@ -379,7 +379,7 @@
                         class="btn btn-dark create"
                         data-route="{{ route('admin.banmodel.dir.create', [$dir->id]) }}"
                         data-toggle="modal" 
-                        data-target="#create-ban-dir-modal"
+                        data-target="#create-banmodel-dir-modal"
                     >
                         <i class="fas fa-user-slash"></i>
                         <span class="d-none d-sm-inline">

@@ -1,6 +1,18 @@
+@component('icore::admin.partials.modal')
+
+@slot('modal_id', 'edit-modal')
+
+@slot('modal_size', 'modal-lg')
+
+@slot('modal_title')
+<i class="far fa-edit"></i>
+<span> {{ trans('idir::dirs.route.edit.index') }}</span>
+@endslot
+
+@slot('modal_body')
 <form 
     data-route="{{ route('admin.dir.update', [$dir->id]) }}" 
-    id="editDir" 
+    id="edit-dir" 
     data-id="{{ $dir->id }}"
 >
     <div class="form-group">
@@ -149,13 +161,28 @@
             ])
         @endforeach
     @endif
-    
-    <button type="button" class="btn btn-primary update">
+</form>
+@endslot
+
+@slot('modal_footer')
+<div class="d-inline">
+    <button 
+        type="button" 
+        class="btn btn-primary update" 
+        form="edit-dir"
+    >
         <i class="fas fa-check"></i>
         {{ trans('icore::default.save') }}
     </button>
-    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+    <button 
+        type="button" 
+        class="btn btn-secondary" 
+        data-dismiss="modal"
+    >
         <i class="fas fa-ban"></i>
         {{ trans('icore::default.cancel') }}
     </button>
-</form>
+</div>
+@endslot
+
+@endcomponent
