@@ -574,7 +574,7 @@ class DirRepo
             ->groupBy('first_group_id')
             ->orderBy('year')
             ->orderBy('month')
-            ->groupBy('first_group_id')
+            ->orderBy('first_group_id')
             ->get();
     }
 }
