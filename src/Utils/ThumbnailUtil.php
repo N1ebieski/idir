@@ -3,15 +3,50 @@
 namespace N1ebieski\IDir\Utils;
 
 use Illuminate\Support\Carbon;
-use GuzzleHttp\Client as GuzzleClient;
 use N1ebieski\ICore\Utils\Traits\Factory;
-use GuzzleHttp\Psr7\Response as GuzzleResponse;
 use Illuminate\Contracts\Config\Repository as Config;
+use N1ebieski\IDir\Http\Clients\Thumbnail\ShowClient;
 use Illuminate\Contracts\Filesystem\Factory as Storage;
+use N1ebieski\IDir\Http\Clients\Thumbnail\ReloadClient;
 
 class ThumbnailUtil
 {
     use Factory;
+
+    /**
+     * Undocumented variable
+     *
+     * @var ShowClient
+     */
+    protected $showClient;
+
+    /**
+     * Undocumented variable
+     *
+     * @var ReloadClient
+     */
+    protected $reloadClient;
+
+    /**
+     * Undocumented variable
+     *
+     * @var Storage
+     */
+    protected $storage;
+
+    /**
+     * Undocumented variable
+     *
+     * @var Carbon
+     */
+    protected $carbon;
+
+    /**
+     * Undocumented variable
+     *
+     * @var Config
+     */
+    protected $config;
 
     /**
      * Undocumented variable
@@ -43,49 +78,15 @@ class ThumbnailUtil
     /**
      * Undocumented variable
      *
-     * @var GuzzleClient
-     */
-    protected $guzzle;
-
-    /**
-     * Undocumented variable
-     *
-     * @var Storage
-     */
-    protected $storage;
-
-    /**
-     * Undocumented variable
-     *
-     * @var Carbon
-     */
-    protected $carbon;
-
-    /**
-     * Undocumented variable
-     *
-     * @var Config
-     */
-    protected $config;
-
-    /**
-     * Undocumented variable
-     *
      * @var string
      */
     protected $disk;
 
     /**
-     * Undocumented variable
-     *
-     * @var string
-     */
-    protected $contents;
-
-    /**
      * Undocumented function
      *
-     * @param GuzzleClient $guzzle
+     * @param ShowClient $showClient
+     * @param ReloadClient $reloadClient
      * @param Storage $storage
      * @param Carbon $carbon
      * @param Config $config
@@ -93,14 +94,16 @@ class ThumbnailUtil
      * @param string $disk
      */
     public function __construct(
-        GuzzleClient $guzzle,
+        ShowClient $showClient,
+        ReloadClient $reloadClient,
         Storage $storage,
         Carbon $carbon,
         Config $config,
         string $url,
         string $disk = 'public'
     ) {
-        $this->guzzle = $guzzle;
+        $this->showClient = $showClient;
+        $this->reloadClient = $reloadClient;
         $this->storage = $storage;
         $this->carbon = $carbon;
         $this->config = $config;
@@ -139,19 +142,6 @@ class ThumbnailUtil
         $path = implode('/', array_slice(str_split($hash), 0, 3));
 
         $this->file_path = $this->path . '/' . $path . '/' . $hash . '.jpg';
-
-        return $this;
-    }
-
-    /**
-     * Undocumented function
-     *
-     * @param GuzzleResponse $response
-     * @return static
-     */
-    protected function setContentsFromResponse(GuzzleResponse $response)
-    {
-        $this->contents = $response->getBody()->getContents();
 
         return $this;
     }
@@ -210,39 +200,18 @@ class ThumbnailUtil
     /**
      * Undocumented function
      *
-     * @param string $uri
-     * @return GuzzleResponse
-     */
-    public function makeResponse(string $uri): GuzzleResponse
-    {
-        try {
-            $response = $this->guzzle->request('GET', $uri);
-        } catch (\GuzzleHttp\Exception\GuzzleException $e) {
-            throw new \N1ebieski\IDir\Exceptions\Thumbnail\Exception(
-                $e->getMessage(),
-                $e->getCode()
-            );
-        }
-
-        return $response;
-    }
-
-    /**
-     * Undocumented function
-     *
      * @return string
      */
     public function generate(): string
     {
         if ($this->isReload()) {
-            $this->setContentsFromResponse(
-                $this->makeResponse($this->config->get('idir.dir.thumbnail.url') . $this->url)
+            $this->storage->disk($this->disk)->put(
+                $this->file_path,
+                $this->showClient->request(['url' => $this->url])
             );
-
-            $this->put();
         }
 
-        return $this->get();
+        return $this->storage->disk($this->disk)->get($this->file_path);
     }
 
     /**
@@ -252,46 +221,12 @@ class ThumbnailUtil
      */
     public function reload(): bool
     {
-        if ($this->config->get('idir.dir.thumbnail.reload_url') !== null) {
-            $this->setContentsFromResponse(
-                $this->makeResponse($this->config->get('idir.dir.thumbnail.reload_url') . $this->url)
-            );
-        }
+        $this->reloadClient->request(['url' => $this->url]);
 
         if ($this->isExists()) {
-            $this->delete();
+            $this->storage->disk($this->disk)->delete($this->file_path);
         }
 
         return true;
-    }
-
-    /**
-     * Undocumented function
-     *
-     * @return boolean
-     */
-    protected function delete(): bool
-    {
-        return $this->storage->disk($this->disk)->delete($this->file_path);
-    }
-
-    /**
-     * Undocumented function
-     *
-     * @return string
-     */
-    protected function put(): string
-    {
-        return $this->storage->disk($this->disk)->put($this->file_path, $this->contents);
-    }
-
-    /**
-     * Undocumented function
-     *
-     * @return string
-     */
-    protected function get(): string
-    {
-        return $this->storage->disk($this->disk)->get($this->file_path);
     }
 }

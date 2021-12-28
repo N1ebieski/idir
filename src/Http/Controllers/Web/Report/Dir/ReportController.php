@@ -21,7 +21,7 @@ class ReportController implements Polymorphic
      * @param CreateRequest $request [description]
      * @return JsonResponse          [description]
      */
-    public function create(Dir $dir, CreateRequest $request) : JsonResponse
+    public function create(Dir $dir, CreateRequest $request): JsonResponse
     {
         return Response::json([
             'success' => '',
@@ -39,7 +39,7 @@ class ReportController implements Polymorphic
      * @param  StoreRequest  $request       [description]
      * @return JsonResponse                 [description]
      */
-    public function store(Dir $dir, Report $report, StoreRequest $request) : JsonResponse
+    public function store(Dir $dir, Report $report, StoreRequest $request): JsonResponse
     {
         $report->setRelations(['morph' => $dir])
             ->makeService()

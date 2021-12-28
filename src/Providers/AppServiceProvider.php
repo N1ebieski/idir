@@ -21,7 +21,8 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->bind(\N1ebieski\IDir\Utils\ThumbnailUtil::class, function ($app, $with) {
             return new \N1ebieski\IDir\Utils\ThumbnailUtil(
-                $app->make(\GuzzleHttp\Client::class),
+                $app->make(\N1ebieski\IDir\Http\Clients\Thumbnail\ShowClient::class),
+                $app->make(\N1ebieski\IDir\Http\Clients\Thumbnail\ReloadClient::class),
                 $app->make(\Illuminate\Contracts\Filesystem\Factory::class),
                 $app->make(\Illuminate\Support\Carbon::class),
                 $app->make(\Illuminate\Contracts\Config\Repository::class),
