@@ -25,12 +25,14 @@ $(document).on('ready.n1ebieski/idir/admin/scripts/plugins/bootstrap-confirmatio
                     title: {
                         display: true,
                         text: $chart.data('label'),
+                        color: $chart.data('font-color') || "#666",
                         font: {
                             size: 14
                         }                    
                     },
                     legend: {
                         labels: {
+                            color: $chart.data('font-color') || "#666",
                             generateLabels: (chart) => {
                                 const datasets = chart.data.datasets;
 

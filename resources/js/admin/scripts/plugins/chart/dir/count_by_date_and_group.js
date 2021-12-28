@@ -12,10 +12,11 @@ $(document).on('ready.n1ebieski/idir/admin/scripts/plugins/chart/dir@countByDate
             type: 'bar',            
             data: {
                 datasets: [{
+                    label: 'Razem',
                     type: 'line',
                     backgroundColor: 'rgb(0, 123, 255)',
                     borderColor: 'rgb(0, 123, 255)',
-                    borderWidth: 1,                    
+                    borderWidth: 1,                   
                     data: timeline.map(t => {
                         return {
                             x: `${t.month}.${t.year}`,
@@ -44,22 +45,36 @@ $(document).on('ready.n1ebieski/idir/admin/scripts/plugins/chart/dir@countByDate
                     x: {
                         stacked: true,
                         title: {
+                            color: $chart.data('font-color') || "#666",
                             display: true,
                             text: 'Date'
-                        }
+                        },
+                        ticks: {
+                            color: $chart.data('font-color') || "#666"
+                        }                     
                     },
                     y: {
                         stacked: true,
                         title: {
+                            color: $chart.data('font-color') || "#666",
                             display: true,
                             text: 'value'
-                        }
+                        },
+                        ticks: {
+                            color: $chart.data('font-color') || "#666"
+                        }                    
                     }
                 },                
                 plugins: {
+                    legend: {
+                        labels: {
+                            color: $chart.data('font-color') || "#666"
+                        }
+                    },                    
                     title: {
                         display: true,
                         text: $chart.data('label'),
+                        color: $chart.data('font-color') || "#666",                        
                         font: {
                             size: 14
                         }                    
