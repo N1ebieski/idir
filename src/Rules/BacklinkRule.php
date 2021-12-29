@@ -3,9 +3,9 @@
 namespace N1ebieski\IDir\Rules;
 
 use Illuminate\Support\Str;
-use GuzzleHttp\Client as GuzzleClient;
 use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Contracts\Translation\Translator as Lang;
+use N1ebieski\IDir\Http\Clients\Dir\CheckBacklinkClient;
 
 class BacklinkRule implements Rule
 {
@@ -17,9 +17,9 @@ class BacklinkRule implements Rule
 
     /**
      * [protected description]
-     * @var GuzzleClient
+     * @var CheckBacklinkClient
      */
-    protected $guzzle;
+    protected $client;
 
     /**
      * Undocumented variable
@@ -31,15 +31,15 @@ class BacklinkRule implements Rule
     /**
      * Undocumented function
      *
-     * @param GuzzleClient $guzzle
+     * @param CheckBacklinkClient $client
      * @param Lang $lang
      * @param string $link
      */
-    public function __construct(GuzzleClient $guzzle, Lang $lang, string $link)
+    public function __construct(CheckBacklinkClient $client, Lang $lang, string $link)
     {
         $this->link = $link;
 
-        $this->guzzle = $guzzle;
+        $this->client = $client;
         $this->lang = $lang;
     }
 
@@ -66,14 +66,14 @@ class BacklinkRule implements Rule
     public function passes($attribute, $value)
     {
         try {
-            $response = $this->guzzle->request('GET', $value, ['verify' => false]);
-        } catch (\GuzzleHttp\Exception\GuzzleException $e) {
+            $this->client->setUrl($value)->request();
+        } catch (\N1ebieski\IDir\Exceptions\Dir\TransferException $e) {
             return false;
         }
 
         return preg_match(
             '/<a\s((?:(?!nofollow|>).)*)href=([\"\']??)' . Str::escaped($this->link) . '([\"\']??)((?:(?!nofollow|>).)*)>(.*)<\/a>/siU',
-            $response->getBody()->getContents()
+            $this->client->getContents()
         );
     }
 

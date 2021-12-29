@@ -1,18 +1,41 @@
 <?php
 
-namespace N1ebieski\IDir\Http\Clients\Thumbnail\Provider;
+namespace N1ebieski\IDir\Http\Clients\Dir;
 
+use N1ebieski\ICore\Http\Clients\Client;
 use Psr\Http\Message\ResponseInterface;
-use N1ebieski\ICore\Http\Clients\Client as BaseClient;
 
-class Client extends BaseClient
+class CheckBacklinkClient extends Client
 {
     /**
      * Undocumented variable
      *
      * @var string
      */
-    protected $host = 'http://free.pagepeeker.com';
+    protected $method = 'GET';
+
+    /**
+     * Undocumented variable
+     *
+     * @var string
+     */
+    protected $uri;
+
+    /**
+     * Undocumented variable
+     *
+     * @var string
+     */
+    protected $host;
+
+    /**
+     * Undocumented variable
+     *
+     * @var array
+     */
+    protected $options = [
+        'verify' => false
+    ];
 
     /**
      * Undocumented function
@@ -37,27 +60,12 @@ class Client extends BaseClient
         try {
             $response = parent::makeResponse();
         } catch (\GuzzleHttp\Exception\GuzzleException $e) {
-            throw new \N1ebieski\IDir\Exceptions\Thumbnail\Exception(
+            throw new \N1ebieski\IDir\Exceptions\Dir\TransferException(
                 $e->getMessage(),
                 $e->getCode()
             );
         }
 
         return $response;
-    }
-
-    /**
-     * Temporary fix for users who use the old pattern url
-     *
-     * @param string $url
-     * @return string
-     */
-    protected function url(string $url): string
-    {
-        if (strpos($url, '{url}') === false) {
-            $url .= '{url}';
-        }
-
-        return $url;
     }
 }

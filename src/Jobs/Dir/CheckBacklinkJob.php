@@ -137,7 +137,7 @@ class CheckBacklinkJob implements ShouldQueue
     protected function validateBacklink(): bool
     {
         $validator = $this->validator->make(['backlink_url' => $this->dirBacklink->url], [
-            'backlink_url' => $this->app->make('N1ebieski\\IDir\\Rules\\BacklinkRule', [
+            'backlink_url' => $this->app->make(\N1ebieski\IDir\Rules\BacklinkRule::class, [
                 'link' => $this->dirBacklink->link->url
             ])
         ]);

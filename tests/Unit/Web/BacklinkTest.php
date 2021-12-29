@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\App;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Psr7\Response as GuzzleResponse;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use N1ebieski\IDir\Http\Clients\Dir\CheckBacklinkClient;
 
 class BacklinkTest extends TestCase
 {
@@ -31,9 +32,9 @@ class BacklinkTest extends TestCase
 
         $rule = App::make(\N1ebieski\IDir\Rules\BacklinkRule::class, [
             'link' => $this->url,
-            'guzzle' => $client
+            'client' => new CheckBacklinkClient($client)
         ]);
-        $response = $rule->passes(null, '/');
+        $response = $rule->passes(null, 'http://wewewew.pl');
 
         $this->assertTrue($response === 0);
     }
@@ -49,9 +50,9 @@ class BacklinkTest extends TestCase
 
         $rule = App::make(\N1ebieski\IDir\Rules\BacklinkRule::class, [
             'link' => $this->url,
-            'guzzle' => $client
+            'client' => new CheckBacklinkClient($client)
         ]);
-        $response = $rule->passes(null, '/');
+        $response = $rule->passes(null, 'http://wewewew.pl');
 
         $this->assertTrue($response === 1);
     }

@@ -3,7 +3,7 @@
 namespace N1ebieski\IDir\Http\Clients\Intelekt;
 
 use Psr\Http\Message\ResponseInterface;
-use N1ebieski\IDir\Http\Clients\Client as BaseClient;
+use N1ebieski\ICore\Http\Clients\Client as BaseClient;
 
 class Client extends BaseClient
 {

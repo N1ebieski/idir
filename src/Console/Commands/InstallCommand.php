@@ -2,12 +2,6 @@
 
 namespace N1ebieski\IDir\Console\Commands;
 
-use Illuminate\Support\Composer;
-use GuzzleHttp\Client as GuzzleClient;
-use Illuminate\Database\DatabaseManager as DB;
-use Illuminate\Contracts\Config\Repository as Config;
-use Illuminate\Contracts\Translation\Translator as Lang;
-use Illuminate\Contracts\Validation\Factory as Validator;
 use N1ebieski\ICore\Console\Commands\InstallCommand as BaseInstallCommand;
 
 class InstallCommand extends BaseInstallCommand
@@ -25,35 +19,6 @@ class InstallCommand extends BaseInstallCommand
      * @var string
      */
     protected $description = 'iDir application installer.';
-
-    /**
-     * [protected description]
-     * @var GuzzleClient
-     */
-    protected $guzzle;
-
-    /**
-     * Undocumented function
-     *
-     * @param Composer $composer
-     * @param Config $config
-     * @param Lang $lang
-     * @param Validator $validator
-     * @param DB $db
-     * @param GuzzleClient $guzzle
-     */
-    public function __construct(
-        Composer $composer,
-        Config $config,
-        Lang $lang,
-        Validator $validator,
-        DB $db,
-        GuzzleClient $guzzle
-    ) {
-        parent::__construct($composer, $config, $lang, $validator, $db);
-
-        $this->guzzle = $guzzle;
-    }
 
     /**
      * Execute the console command.

@@ -2,18 +2,17 @@
 
 namespace N1ebieski\IDir\Utils\Payment\Cashbill;
 
-use GuzzleHttp\Client as GuzzleClient;
-use GuzzleHttp\Psr7\Response as GuzzleResponse;
 use Illuminate\Contracts\Config\Repository as Config;
 use N1ebieski\IDir\Utils\Payment\Interfaces\TransferUtilStrategy;
+use N1ebieski\IDir\Http\Clients\Payment\Cashbill\CheckTransferClient;
 
 class TransferUtil implements TransferUtilStrategy
 {
     /**
      * [protected description]
-     * @var GuzzleClient
+     * @var CheckTransferClient
      */
-    protected $guzzle;
+    protected $checkClient;
 
     /**
      * [protected description]
@@ -26,12 +25,6 @@ class TransferUtil implements TransferUtilStrategy
      * @var string
      */
     protected $service;
-
-    /**
-     * [protected description]
-     * @var string
-     */
-    protected $transfer_url;
 
     /**
      * [protected description]
@@ -90,15 +83,14 @@ class TransferUtil implements TransferUtilStrategy
     /**
      * Undocumented function
      *
-     * @param GuzzleClient $guzzle
+     * @param CheckTransferClient $checkClient
      * @param Config $config
      */
-    public function __construct(GuzzleClient $guzzle, Config $config)
+    public function __construct(CheckTransferClient $checkClient, Config $config)
     {
-        $this->guzzle = $guzzle;
+        $this->checkClient = $checkClient;
 
         $this->service = $config->get("services.cashbill.transfer.service");
-        $this->transfer_url = $config->get("services.cashbill.transfer.url");
         $this->key = $config->get("services.cashbill.transfer.key");
         $this->currency = $config->get("services.cashbill.transfer.currency");
         $this->lang = $config->get("services.cashbill.transfer.lang");
@@ -208,24 +200,11 @@ class TransferUtil implements TransferUtilStrategy
     /**
      * Undocumented function
      *
-     * @param GuzzleResponse $response
-     * @return static
-     */
-    protected function setResponse(GuzzleResponse $response)
-    {
-        $this->response = $response;
-
-        return $this;
-    }
-
-    /**
-     * Undocumented function
-     *
      * @return string
      */
     public function getUrlToPayment(): string
     {
-        $redirects = $this->response->getHeader(\GuzzleHttp\RedirectMiddleware::HISTORY_HEADER);
+        $redirects = $this->checkClient->getResponse()->getHeader(\GuzzleHttp\RedirectMiddleware::HISTORY_HEADER);
 
         return end($redirects);
     }
@@ -289,7 +268,7 @@ class TransferUtil implements TransferUtilStrategy
      */
     public function purchase(): void
     {
-        $this->setResponse($this->makeResponse());
+        $this->checkClient->request(null, $this->all());
     }
 
     /**
@@ -349,28 +328,6 @@ class TransferUtil implements TransferUtilStrategy
     }
 
     /**
-     * Undocumented function
-     *
-     * @return GuzzleResponse
-     */
-    protected function makeResponse(): GuzzleResponse
-    {
-        try {
-            $response = $this->guzzle->request('POST', $this->transfer_url, [
-                'allow_redirects' => ['track_redirects' => true],
-                'form_params' => $this->all()
-            ]);
-        } catch (\GuzzleHttp\Exception\GuzzleException $e) {
-            throw new \N1ebieski\IDir\Exceptions\Payment\Cashbill\Exception(
-                $e->getMessage(),
-                $e->getCode()
-            );
-        }
-
-        return $response;
-    }
-
-    /**
      * [all description]
      * @return array [description]
      */
@@ -378,7 +335,6 @@ class TransferUtil implements TransferUtilStrategy
     {
         return [
             'service' => $this->service,
-            'transfer_url' => $this->transfer_url,
             'amount' => $this->amount,
             'currency' => $this->currency,
             'lang' => $this->lang,

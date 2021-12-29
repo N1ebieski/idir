@@ -7,15 +7,14 @@ use Illuminate\Support\Str;
 use Illuminate\Bus\Queueable;
 use Illuminate\Support\Carbon;
 use N1ebieski\IDir\Models\DirStatus;
-use GuzzleHttp\Client as GuzzleClient;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use N1ebieski\IDir\Repositories\DirRepo;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use N1ebieski\IDir\Repositories\DirStatusRepo;
-use GuzzleHttp\Psr7\Response as GuzzleResponse;
 use Illuminate\Contracts\Config\Repository as Config;
+use N1ebieski\IDir\Http\Clients\Dir\CheckStatusClient;
 
 class CheckStatusJob implements ShouldQueue
 {
@@ -26,15 +25,9 @@ class CheckStatusJob implements ShouldQueue
 
     /**
      * [protected description]
-     * @var GuzzleClient
+     * @var CheckStatusClient
      */
-    protected $guzzle;
-
-    /**
-     * [protected description]
-     * @var GuzzleResponse
-     */
-    protected $response;
+    protected $client;
 
     /**
      * Delete the job if its models no longer exist.
@@ -118,7 +111,7 @@ class CheckStatusJob implements ShouldQueue
      */
     public function getLastUrlFromRedirect(): string
     {
-        $redirects = $this->response->getHeader(\GuzzleHttp\RedirectMiddleware::HISTORY_HEADER);
+        $redirects = $this->client->getResponse()->getHeader(\GuzzleHttp\RedirectMiddleware::HISTORY_HEADER);
 
         return end($redirects);
     }
@@ -146,33 +139,14 @@ class CheckStatusJob implements ShouldQueue
     }
 
     /**
-     * Undocumented function
-     *
-     * @return GuzzleResponse
-     */
-    public function makeResponse(): GuzzleResponse
-    {
-        return $this->response = $this->guzzle->request(
-            'GET',
-            $this->dirStatus->dir->url,
-            [
-                'allow_redirects' => ['track_redirects' => true],
-                'decode_content' => false,
-                'http_errors' => true,
-                'verify' => false
-            ]
-        );
-    }
-
-    /**
      * [validate description]
      * @return bool [description]
      */
     protected function validateStatus(): bool
     {
         try {
-            $this->makeResponse();
-        } catch (\GuzzleHttp\Exception\RequestException $e) {
+            $this->client->setUrl($this->dirStatus->dir->url)->request();
+        } catch (\N1ebieski\IDir\Exceptions\Dir\TransferException $e) {
             return false;
         }
 
@@ -218,7 +192,7 @@ class CheckStatusJob implements ShouldQueue
      */
     protected function isStatus(): bool
     {
-        return $this->response->getStatusCode() === 200;
+        return $this->client->getResponse()->getStatusCode() === 200;
     }
 
     /**
@@ -250,13 +224,13 @@ class CheckStatusJob implements ShouldQueue
     /**
      * Undocumented function
      *
-     * @param GuzzleClient $guzzle
+     * @param CheckStatusClient $client
      * @param Carbon $carbon
      * @param Config $config
      * @return void
      */
     public function handle(
-        GuzzleClient $guzzle,
+        CheckStatusClient $client,
         Carbon $carbon,
         Config $config,
         Str $str
@@ -264,7 +238,7 @@ class CheckStatusJob implements ShouldQueue
         $this->dirStatusRepo = $this->dirStatus->makeRepo();
         $this->dirRepo = $this->dirStatus->dir->makeRepo();
 
-        $this->guzzle = $guzzle;
+        $this->client = $client;
         $this->carbon = $carbon;
         $this->str = $str;
 
