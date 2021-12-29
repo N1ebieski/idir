@@ -2,70 +2,25 @@
 
 namespace N1ebieski\IDir\Utils\Payment\Cashbill\Codes;
 
-use GuzzleHttp\Client as GuzzleClient;
-use GuzzleHttp\Psr7\Response as GuzzleResponse;
-use Illuminate\Contracts\Config\Repository as Config;
 use N1ebieski\IDir\Utils\Payment\Interfaces\Codes\TransferUtilStrategy;
+use N1ebieski\IDir\Http\Clients\Payment\Cashbill\Codes\CheckTransferClient;
 
 class TransferUtil implements TransferUtilStrategy
 {
     /**
-     * [protected description]
-     * @var GuzzleClient
+     * [public description]
+     * @var CheckTransferClient
      */
-    protected $guzzle;
-
-    /**
-     * [private description]
-     * @var string
-     */
-    protected $check_url;
-
-    /**
-     * [protected description]
-     * @var object
-     */
-    protected $contents;
-
-    /**
-     * [__construct description]
-     * @param Config       $config [description]
-     * @param GuzzleClient $guzzle [description]
-     */
-    public function __construct(Config $config, GuzzleClient $guzzle)
-    {
-        $this->check_url = $config->get('services.cashbill.code_transfer.check_url');
-
-        $this->guzzle = $guzzle;
-    }
+    public $checkClient;
 
     /**
      * Undocumented function
      *
-     * @param string $code
-     * @param string $id
-     * @return static
+     * @param CheckTransferClient $checkClient
      */
-    protected function setContentsFromResponse(GuzzleResponse $response)
+    public function __construct(CheckTransferClient $checkClient)
     {
-        $contents = explode("\n", trim($response->getBody()->getContents()));
-
-        $this->contents = (object)[
-            'status' => $contents[0],
-            'timeRemaining' => $contents[1] ?? null
-        ];
-
-        return $this;
-    }
-
-    /**
-     * Get [protected description]
-     *
-     * @return  object
-     */
-    public function getContents()
-    {
-        return $this->contents;
+        $this->checkClient = $checkClient;
     }
 
     /**
@@ -74,7 +29,8 @@ class TransferUtil implements TransferUtilStrategy
      */
     public function isActive(): bool
     {
-        return isset($this->contents->status) && (string)$this->contents->status === "OK";
+        return isset($this->checkClient->getContents()->status)
+            && (string)$this->checkClient->getContents()->status === "OK";
     }
 
     /**
@@ -83,9 +39,10 @@ class TransferUtil implements TransferUtilStrategy
      */
     public function authorize(array $attributes): void
     {
-        $this->setContentsFromResponse(
-            $this->makeResponse($attributes['code'], $attributes['id'])
-        );
+        $this->checkClient->request([
+            'code' => $attributes['code'],
+            'id' => $attributes['id']
+        ]);
 
         if (!$this->isActive()) {
             throw new \N1ebieski\IDir\Exceptions\Payment\Cashbill\Codes\Transfer\InactiveCodeException(
@@ -93,26 +50,5 @@ class TransferUtil implements TransferUtilStrategy
                 403
             );
         }
-    }
-
-    /**
-     * Undocumented function
-     *
-     * @param string $code
-     * @param string $id
-     * @return GuzzleResponse
-     */
-    public function makeResponse(string $code, string $id): GuzzleResponse
-    {
-        try {
-            $response = $this->guzzle->request('GET', $this->check_url . '?id=' . $id . '&check=' . $code);
-        } catch (\GuzzleHttp\Exception\GuzzleException $e) {
-            throw new \N1ebieski\IDir\Exceptions\Payment\Cashbill\Exception(
-                $e->getMessage(),
-                $e->getCode()
-            );
-        }
-
-        return $response;
     }
 }

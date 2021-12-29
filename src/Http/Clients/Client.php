@@ -47,13 +47,19 @@ abstract class Client
     public function setQuery(array $query)
     {
         foreach ($query as $key => $value) {
-            if (strpos($this->uri, '{' . $key . '}') === false) {
-                continue;
+            if (is_int($key)) {
+                $this->uri = preg_replace('/({[a-z0-9]+})/', $value, $this->uri, 1);
+
+                unset($query[$key]);
+            } else {
+                if (strpos($this->uri, '{' . $key . '}') === false) {
+                    continue;
+                }
+
+                $this->uri = str_replace('{' . $key . '}', $value, $this->uri);
+
+                unset($query[$key]);
             }
-
-            $this->uri = str_replace('{' . $key . '}', $value, $this->uri);
-
-            unset($query[$key]);
         }
 
         if (!empty($query)) {
@@ -71,9 +77,33 @@ abstract class Client
      */
     public function setParams(array $params)
     {
+        if (!isset($this->options['form_params'])) {
+            $this->options['form_params'] = [];
+        }
+
         $this->options['form_params'] = array_replace_recursive(
             $this->options['form_params'],
             $params
+        );
+
+        return $this;
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param array $headers
+     * @return static
+     */
+    public function setHeaders(array $headers)
+    {
+        if (!isset($this->options['headers'])) {
+            $this->options['headers'] = [];
+        }
+
+        $this->options['headers'] = array_replace_recursive(
+            $this->options['headers'],
+            $headers
         );
 
         return $this;
@@ -132,6 +162,7 @@ abstract class Client
         $result = parse_url($url);
 
         $this->host = $result['scheme'] . '://' . $result['host'];
+        $this->host .= isset($result['port']) ? ':' . $result['port'] : '';
 
         return $this;
     }

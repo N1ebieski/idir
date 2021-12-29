@@ -1,10 +1,10 @@
 <?php
 
-namespace N1ebieski\IDir\Http\Clients\Thumbnail;
+namespace N1ebieski\IDir\Http\Clients\Thumbnail\Provider;
 
 use GuzzleHttp\ClientInterface;
-use N1ebieski\IDir\Http\Clients\Thumbnail\Client;
 use Illuminate\Contracts\Config\Repository as Config;
+use N1ebieski\IDir\Http\Clients\Thumbnail\Provider\Client;
 
 class ShowClient extends Client
 {
@@ -20,14 +20,7 @@ class ShowClient extends Client
      *
      * @var string
      */
-    protected $uri;
-
-    /**
-     * Undocumented variable
-     *
-     * @var string
-     */
-    protected $host;
+    protected $uri = '/v2/thumbs.php?size=x&url={url}';
 
     /**
      * Undocumented variable
@@ -46,12 +39,12 @@ class ShowClient extends Client
      */
     public function __construct(ClientInterface $client, Config $config)
     {
-        $this->client = $client;
+        parent::__construct($client);
 
-        $showUrl = $config->get('idir.dir.thumbnail.url') . '{url}';
+        $url = $config->get('idir.dir.thumbnail.url');
 
-        if (!empty($showUrl)) {
-            $this->setUrl($showUrl);
+        if (!empty($url)) {
+            $this->setUrl($this->url($url));
         }
     }
 }

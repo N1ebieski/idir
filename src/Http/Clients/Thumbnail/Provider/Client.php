@@ -1,12 +1,19 @@
 <?php
 
-namespace N1ebieski\IDir\Http\Clients\Thumbnail;
+namespace N1ebieski\IDir\Http\Clients\Thumbnail\Provider;
 
 use Psr\Http\Message\ResponseInterface;
 use N1ebieski\IDir\Http\Clients\Client as BaseClient;
 
 class Client extends BaseClient
 {
+    /**
+     * Undocumented variable
+     *
+     * @var string
+     */
+    protected $host = 'http://free.pagepeeker.com';
+
     /**
      * Undocumented function
      *
@@ -37,5 +44,20 @@ class Client extends BaseClient
         }
 
         return $response;
+    }
+
+    /**
+     * Temporary fix for users who use the old pattern url
+     *
+     * @param string $url
+     * @return string
+     */
+    protected function url(string $url): string
+    {
+        if (strpos($url, '{url}') === false) {
+            $url .= '{url}';
+        }
+
+        return $url;
     }
 }

@@ -1,34 +1,33 @@
 <?php
 
-namespace N1ebieski\IDir\Http\Clients\Thumbnail;
+namespace N1ebieski\IDir\Http\Clients\Payment\Cashbill\Codes;
 
 use GuzzleHttp\ClientInterface;
-use Psr\Http\Message\ResponseInterface;
 use Illuminate\Contracts\Config\Repository as Config;
-use N1ebieski\IDir\Http\Clients\Thumbnail\Provider\Client;
+use N1ebieski\IDir\Http\Clients\Payment\Cashbill\Client;
 
-class ReloadClient extends Client
+class CheckSMSClient extends Client
 {
     /**
      * Undocumented variable
      *
      * @var string
      */
-    protected $method = 'PATCH';
+    protected $method = 'GET';
 
     /**
      * Undocumented variable
      *
      * @var string
      */
-    protected $uri = '/api/thumbnails/reload?url={url}';
+    protected $uri = '/code/{token}/{code}';
 
     /**
      * Undocumented variable
      *
      * @var string
      */
-    protected $host;
+    protected $host = 'https://sms.cashbill.pl';
 
     /**
      * Undocumented variable
@@ -49,32 +48,11 @@ class ReloadClient extends Client
     {
         parent::__construct($client);
 
-        $this->setHeaders(['Authorization' => $config->get('idir.dir.thumbnail.key')]);
-
-        $url = $config->get('idir.dir.thumbnail.api.reload_url');
+        $url = $config->get('services.cashbill.code_sms.check_url');
 
         if (!empty($url)) {
             $this->setUrl($this->url($url));
         }
-    }
-
-    /**
-     * Undocumented function
-     *
-     * @return ResponseInterface
-     */
-    protected function makeResponse(): ResponseInterface
-    {
-        try {
-            $response = parent::makeResponse();
-        } catch (\GuzzleHttp\Exception\GuzzleException $e) {
-            throw new \N1ebieski\IDir\Exceptions\Thumbnail\Exception(
-                $e->getMessage(),
-                $e->getCode()
-            );
-        }
-
-        return $response;
     }
 
     /**
@@ -85,8 +63,12 @@ class ReloadClient extends Client
      */
     protected function url(string $url): string
     {
-        if (strpos($url, '{url}') === false) {
-            $url .= '{url}';
+        if (strpos($url, '{token}') === false) {
+            $url .= '{token}';
+        }
+
+        if (strpos($url, '{code}') === false) {
+            $url .= '/{code}';
         }
 
         return $url;

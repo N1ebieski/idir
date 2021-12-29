@@ -6,8 +6,8 @@ use N1ebieski\IDir\Models\Dir;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Cache;
 use GuzzleHttp\Client as GuzzleClient;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Response;
+use N1ebieski\IDir\Http\Clients\Thumbnail\ReloadClient;
 use N1ebieski\IDir\Http\Controllers\Admin\Thumbnail\Dir\Polymorphic;
 
 class ThumbnailController implements Polymorphic
@@ -19,22 +19,9 @@ class ThumbnailController implements Polymorphic
      * @param GuzzleClient $guzzle
      * @return JsonResponse
      */
-    public function reload(Dir $dir, GuzzleClient $guzzle): JsonResponse
+    public function reload(Dir $dir, ReloadClient $reloadClient): JsonResponse
     {
-        try {
-            $guzzle->request(
-                'PATCH',
-                Config::get('idir.dir.thumbnail.api.reload_url') . $dir->url,
-                [
-                    'headers' => ['Authorization' => Config::get('idir.dir.thumbnail.key')]
-                ]
-            );
-        } catch (\GuzzleHttp\Exception\GuzzleException $e) {
-            throw new \N1ebieski\IDir\Exceptions\Thumbnail\Exception(
-                $e->getMessage(),
-                $e->getCode()
-            );
-        }
+        $reloadClient->request([$dir->url]);
 
         sleep(10);
 

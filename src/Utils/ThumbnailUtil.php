@@ -5,9 +5,9 @@ namespace N1ebieski\IDir\Utils;
 use Illuminate\Support\Carbon;
 use N1ebieski\ICore\Utils\Traits\Factory;
 use Illuminate\Contracts\Config\Repository as Config;
-use N1ebieski\IDir\Http\Clients\Thumbnail\ShowClient;
 use Illuminate\Contracts\Filesystem\Factory as Storage;
-use N1ebieski\IDir\Http\Clients\Thumbnail\ReloadClient;
+use N1ebieski\IDir\Http\Clients\Thumbnail\Provider\ShowClient;
+use N1ebieski\IDir\Http\Clients\Thumbnail\Provider\ReloadClient;
 
 class ThumbnailUtil
 {
@@ -18,14 +18,14 @@ class ThumbnailUtil
      *
      * @var ShowClient
      */
-    protected $showClient;
+    public $showClient;
 
     /**
      * Undocumented variable
      *
      * @var ReloadClient
      */
-    protected $reloadClient;
+    public $reloadClient;
 
     /**
      * Undocumented variable
@@ -207,7 +207,7 @@ class ThumbnailUtil
         if ($this->isReload()) {
             $this->storage->disk($this->disk)->put(
                 $this->file_path,
-                $this->showClient->request(['url' => $this->url])
+                $this->showClient->request([$this->url])
             );
         }
 
@@ -221,7 +221,7 @@ class ThumbnailUtil
      */
     public function reload(): bool
     {
-        $this->reloadClient->request(['url' => $this->url]);
+        $this->reloadClient->request([$this->url]);
 
         if ($this->isExists()) {
             $this->storage->disk($this->disk)->delete($this->file_path);
