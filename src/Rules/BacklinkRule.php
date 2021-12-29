@@ -4,8 +4,8 @@ namespace N1ebieski\IDir\Rules;
 
 use Illuminate\Support\Str;
 use Illuminate\Contracts\Validation\Rule;
+use N1ebieski\IDir\Http\Clients\Dir\BacklinkClient;
 use Illuminate\Contracts\Translation\Translator as Lang;
-use N1ebieski\IDir\Http\Clients\Dir\CheckBacklinkClient;
 
 class BacklinkRule implements Rule
 {
@@ -17,7 +17,7 @@ class BacklinkRule implements Rule
 
     /**
      * [protected description]
-     * @var CheckBacklinkClient
+     * @var BacklinkClient
      */
     protected $client;
 
@@ -31,11 +31,11 @@ class BacklinkRule implements Rule
     /**
      * Undocumented function
      *
-     * @param CheckBacklinkClient $client
+     * @param BacklinkClient $client
      * @param Lang $lang
      * @param string $link
      */
-    public function __construct(CheckBacklinkClient $client, Lang $lang, string $link)
+    public function __construct(BacklinkClient $client, Lang $lang, string $link)
     {
         $this->link = $link;
 
@@ -66,7 +66,7 @@ class BacklinkRule implements Rule
     public function passes($attribute, $value)
     {
         try {
-            $this->client->setUrl($value)->request();
+            $this->client->get($value);
         } catch (\N1ebieski\IDir\Exceptions\Dir\TransferException $e) {
             return false;
         }

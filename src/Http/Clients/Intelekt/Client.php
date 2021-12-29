@@ -2,7 +2,6 @@
 
 namespace N1ebieski\IDir\Http\Clients\Intelekt;
 
-use Psr\Http\Message\ResponseInterface;
 use N1ebieski\ICore\Http\Clients\Client as BaseClient;
 
 class Client extends BaseClient
@@ -15,21 +14,27 @@ class Client extends BaseClient
     protected $host = 'https://intelekt.net.pl';
 
     /**
+     * Undocumented variable
+     *
+     * @var array
+     */
+    protected $options = [
+        'verify' => false,
+        'headers' => [
+            'Accept' => 'application/json',
+        ]
+    ];
+
+    /**
      * Undocumented function
      *
-     * @return ResponseInterface
+     * @param string $url
+     * @return static
      */
-    protected function makeResponse(): ResponseInterface
+    protected function setUrl(string $url)
     {
-        try {
-            $response = parent::makeResponse();
-        } catch (\GuzzleHttp\Exception\GuzzleException $e) {
-            throw new \N1ebieski\ICore\Exceptions\Intelekt\Post\TransferException(
-                $e->getMessage(),
-                $e->getCode()
-            );
-        }
+        $this->url = $this->host . $url;
 
-        return $response;
+        return $this;
     }
 }

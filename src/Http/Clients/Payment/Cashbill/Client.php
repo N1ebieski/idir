@@ -19,7 +19,8 @@ class Client extends BaseClient
         } catch (\GuzzleHttp\Exception\GuzzleException $e) {
             throw new \N1ebieski\IDir\Exceptions\Payment\Cashbill\Exception(
                 $e->getMessage(),
-                $e->getCode()
+                $e->getCode(),
+                $e
             );
         }
 

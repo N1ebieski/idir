@@ -92,7 +92,7 @@ class SMSRule extends CodesRule
         }
 
         $this->request->merge([
-            'logs' => (array)$this->smsUtil->checkClient->getContents() + ['code' => $value]
+            'logs' => (array)$this->smsUtil->client->getContents() + ['code' => $value]
         ]);
 
         return true;

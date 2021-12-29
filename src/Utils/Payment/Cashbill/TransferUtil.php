@@ -3,16 +3,22 @@
 namespace N1ebieski\IDir\Utils\Payment\Cashbill;
 
 use Illuminate\Contracts\Config\Repository as Config;
+use N1ebieski\IDir\Http\Clients\Payment\Cashbill\TransferClient;
 use N1ebieski\IDir\Utils\Payment\Interfaces\TransferUtilStrategy;
-use N1ebieski\IDir\Http\Clients\Payment\Cashbill\CheckTransferClient;
 
 class TransferUtil implements TransferUtilStrategy
 {
     /**
      * [protected description]
-     * @var CheckTransferClient
+     * @var TransferClient
      */
-    protected $checkClient;
+    public $client;
+
+    /**
+     * [protected description]
+     * @var Config
+     */
+    protected $config;
 
     /**
      * [protected description]
@@ -83,12 +89,13 @@ class TransferUtil implements TransferUtilStrategy
     /**
      * Undocumented function
      *
-     * @param CheckTransferClient $checkClient
+     * @param TransferClient $client
      * @param Config $config
      */
-    public function __construct(CheckTransferClient $checkClient, Config $config)
+    public function __construct(TransferClient $client, Config $config)
     {
-        $this->checkClient = $checkClient;
+        $this->client = $client;
+        $this->config = $config;
 
         $this->service = $config->get("services.cashbill.transfer.service");
         $this->key = $config->get("services.cashbill.transfer.key");
@@ -204,7 +211,7 @@ class TransferUtil implements TransferUtilStrategy
      */
     public function getUrlToPayment(): string
     {
-        $redirects = $this->checkClient->getResponse()->getHeader(\GuzzleHttp\RedirectMiddleware::HISTORY_HEADER);
+        $redirects = $this->client->getResponse()->getHeader(\GuzzleHttp\RedirectMiddleware::HISTORY_HEADER);
 
         return end($redirects);
     }
@@ -268,7 +275,7 @@ class TransferUtil implements TransferUtilStrategy
      */
     public function purchase(): void
     {
-        $this->checkClient->request(null, $this->all());
+        $this->client->post($this->config->get("services.cashbill.transfer.url"), $this->all());
     }
 
     /**

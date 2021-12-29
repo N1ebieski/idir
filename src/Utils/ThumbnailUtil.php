@@ -6,8 +6,7 @@ use Illuminate\Support\Carbon;
 use N1ebieski\ICore\Utils\Traits\Factory;
 use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Contracts\Filesystem\Factory as Storage;
-use N1ebieski\IDir\Http\Clients\Thumbnail\Provider\ShowClient;
-use N1ebieski\IDir\Http\Clients\Thumbnail\Provider\ReloadClient;
+use N1ebieski\IDir\Http\Clients\Thumbnail\Provider\Client;
 
 class ThumbnailUtil
 {
@@ -16,16 +15,9 @@ class ThumbnailUtil
     /**
      * Undocumented variable
      *
-     * @var ShowClient
+     * @var Client
      */
-    public $showClient;
-
-    /**
-     * Undocumented variable
-     *
-     * @var ReloadClient
-     */
-    public $reloadClient;
+    public $client;
 
     /**
      * Undocumented variable
@@ -85,8 +77,7 @@ class ThumbnailUtil
     /**
      * Undocumented function
      *
-     * @param ShowClient $showClient
-     * @param ReloadClient $reloadClient
+     * @param Client $client
      * @param Storage $storage
      * @param Carbon $carbon
      * @param Config $config
@@ -94,16 +85,14 @@ class ThumbnailUtil
      * @param string $disk
      */
     public function __construct(
-        ShowClient $showClient,
-        ReloadClient $reloadClient,
+        Client $client,
         Storage $storage,
         Carbon $carbon,
         Config $config,
         string $url,
         string $disk = 'public'
     ) {
-        $this->showClient = $showClient;
-        $this->reloadClient = $reloadClient;
+        $this->client = $client;
         $this->storage = $storage;
         $this->carbon = $carbon;
         $this->config = $config;
@@ -207,7 +196,7 @@ class ThumbnailUtil
         if ($this->isReload()) {
             $this->storage->disk($this->disk)->put(
                 $this->file_path,
-                $this->showClient->request([$this->url])
+                $this->client->get($this->config->get('idir.dir.thumbnail.url'), [$this->url])
             );
         }
 
@@ -221,7 +210,7 @@ class ThumbnailUtil
      */
     public function reload(): bool
     {
-        $this->reloadClient->request([$this->url]);
+        $this->client->get($this->config->get('idir.dir.thumbnail.reload_url'), [$this->url]);
 
         if ($this->isExists()) {
             $this->storage->disk($this->disk)->delete($this->file_path);

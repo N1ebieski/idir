@@ -8,11 +8,21 @@ use N1ebieski\ICore\Http\Clients\Client as BaseClient;
 class Client extends BaseClient
 {
     /**
-     * Undocumented variable
+     * Temporary fix for users who use the old pattern url
      *
-     * @var string
+     * @param string $url
+     * @return static
      */
-    protected $host = 'http://free.pagepeeker.com';
+    protected function setUrl(string $url)
+    {
+        $this->url = $url;
+
+        if (strpos($url, '{url}') === false) {
+            $this->url .= '{url}';
+        }
+
+        return $this;
+    }
 
     /**
      * Undocumented function
@@ -39,25 +49,11 @@ class Client extends BaseClient
         } catch (\GuzzleHttp\Exception\GuzzleException $e) {
             throw new \N1ebieski\IDir\Exceptions\Thumbnail\Exception(
                 $e->getMessage(),
-                $e->getCode()
+                $e->getCode(),
+                $e
             );
         }
 
         return $response;
-    }
-
-    /**
-     * Temporary fix for users who use the old pattern url
-     *
-     * @param string $url
-     * @return string
-     */
-    protected function url(string $url): string
-    {
-        if (strpos($url, '{url}') === false) {
-            $url .= '{url}';
-        }
-
-        return $url;
     }
 }

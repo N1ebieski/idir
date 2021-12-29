@@ -3,28 +3,34 @@
 namespace N1ebieski\IDir\Utils\Payment\Cashbill\Codes;
 
 use Illuminate\Contracts\Config\Repository as Config;
+use N1ebieski\IDir\Http\Clients\Payment\Cashbill\Codes\SMSClient;
 use N1ebieski\IDir\Utils\Payment\Interfaces\Codes\SMSUtilStrategy;
-use N1ebieski\IDir\Http\Clients\Payment\Cashbill\Codes\CheckSMSClient;
 
 class SMSUtil implements SMSUtilStrategy
 {
     /**
-     * [public description]
-     * @var CheckSMSClient
+     * Undocumented variable
+     *
+     * @var Config
      */
-    public $checkClient;
+    protected $config;
+
+    /**
+     * [public description]
+     * @var SMSClient
+     */
+    public $client;
 
     /**
      * Undocumented function
      *
      * @param Config $config
-     * @param CheckSMSClient $checkClient
+     * @param SMSClient $client
      */
-    public function __construct(Config $config, CheckSMSClient $checkClient)
+    public function __construct(Config $config, SMSClient $client)
     {
-        $this->check_url = $config->get('services.cashbill.code_sms.check_url');
-
-        $this->checkClient = $checkClient;
+        $this->config = $config;
+        $this->client = $client;
     }
 
     /**
@@ -33,8 +39,8 @@ class SMSUtil implements SMSUtilStrategy
      */
     public function isActive(): bool
     {
-        return isset($this->checkClient->getContents()->active)
-            && (bool)$this->checkClient->getContents()->active === true;
+        return isset($this->client->getContents()->active)
+            && (bool)$this->client->getContents()->active === true;
     }
 
     /**
@@ -44,8 +50,8 @@ class SMSUtil implements SMSUtilStrategy
      */
     public function isNumber(int $number): bool
     {
-        return isset($this->checkClient->getContents()->number)
-            && (int)$this->checkClient->getContents()->number === $number;
+        return isset($this->client->getContents()->number)
+            && (int)$this->client->getContents()->number === $number;
     }
 
     /**
@@ -54,7 +60,7 @@ class SMSUtil implements SMSUtilStrategy
      */
     public function authorize(array $attributes): void
     {
-        $this->checkClient->request([
+        $this->client->get($this->config->get('services.cashbill.code_sms.check_url'), [
             'token' => $attributes['token'],
             'code' => $attributes['code']
         ]);

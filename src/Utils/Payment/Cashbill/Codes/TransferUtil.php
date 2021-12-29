@@ -2,25 +2,34 @@
 
 namespace N1ebieski\IDir\Utils\Payment\Cashbill\Codes;
 
+use Illuminate\Contracts\Config\Repository as Config;
+use N1ebieski\IDir\Http\Clients\Payment\Cashbill\Codes\TransferClient;
 use N1ebieski\IDir\Utils\Payment\Interfaces\Codes\TransferUtilStrategy;
-use N1ebieski\IDir\Http\Clients\Payment\Cashbill\Codes\CheckTransferClient;
 
 class TransferUtil implements TransferUtilStrategy
 {
     /**
-     * [public description]
-     * @var CheckTransferClient
+     * Undocumented variable
+     *
+     * @var Config
      */
-    public $checkClient;
+    protected $config;
+
+    /**
+     * [public description]
+     * @var TransferClient
+     */
+    public $client;
 
     /**
      * Undocumented function
      *
-     * @param CheckTransferClient $checkClient
+     * @param TransferClient $client
      */
-    public function __construct(CheckTransferClient $checkClient)
+    public function __construct(Config $config, TransferClient $client)
     {
-        $this->checkClient = $checkClient;
+        $this->config = $config;
+        $this->client = $client;
     }
 
     /**
@@ -29,8 +38,8 @@ class TransferUtil implements TransferUtilStrategy
      */
     public function isActive(): bool
     {
-        return isset($this->checkClient->getContents()->status)
-            && (string)$this->checkClient->getContents()->status === "OK";
+        return isset($this->client->getContents()->status)
+            && (string)$this->client->getContents()->status === "OK";
     }
 
     /**
@@ -39,7 +48,7 @@ class TransferUtil implements TransferUtilStrategy
      */
     public function authorize(array $attributes): void
     {
-        $this->checkClient->request([
+        $this->client->get($this->config->get('services.cashbill.code_transfer.check_url'), [
             'code' => $attributes['code'],
             'id' => $attributes['id']
         ]);

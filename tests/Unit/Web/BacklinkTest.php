@@ -8,8 +8,8 @@ use GuzzleHttp\Handler\MockHandler;
 use Illuminate\Support\Facades\App;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Psr7\Response as GuzzleResponse;
+use N1ebieski\IDir\Http\Clients\Dir\BacklinkClient;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use N1ebieski\IDir\Http\Clients\Dir\CheckBacklinkClient;
 
 class BacklinkTest extends TestCase
 {
@@ -32,7 +32,7 @@ class BacklinkTest extends TestCase
 
         $rule = App::make(\N1ebieski\IDir\Rules\BacklinkRule::class, [
             'link' => $this->url,
-            'client' => new CheckBacklinkClient($client)
+            'client' => new BacklinkClient($client)
         ]);
         $response = $rule->passes(null, 'http://wewewew.pl');
 
@@ -50,7 +50,7 @@ class BacklinkTest extends TestCase
 
         $rule = App::make(\N1ebieski\IDir\Rules\BacklinkRule::class, [
             'link' => $this->url,
-            'client' => new CheckBacklinkClient($client)
+            'client' => new BacklinkClient($client)
         ]);
         $response = $rule->passes(null, 'http://wewewew.pl');
 

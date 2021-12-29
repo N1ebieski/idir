@@ -13,8 +13,8 @@ use N1ebieski\IDir\Repositories\DirRepo;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use N1ebieski\IDir\Repositories\DirStatusRepo;
+use N1ebieski\IDir\Http\Clients\Dir\StatusClient;
 use Illuminate\Contracts\Config\Repository as Config;
-use N1ebieski\IDir\Http\Clients\Dir\CheckStatusClient;
 
 class CheckStatusJob implements ShouldQueue
 {
@@ -25,7 +25,7 @@ class CheckStatusJob implements ShouldQueue
 
     /**
      * [protected description]
-     * @var CheckStatusClient
+     * @var StatusClient
      */
     protected $client;
 
@@ -145,7 +145,7 @@ class CheckStatusJob implements ShouldQueue
     protected function validateStatus(): bool
     {
         try {
-            $this->client->setUrl($this->dirStatus->dir->url)->request();
+            $this->client->get($this->dirStatus->dir->url);
         } catch (\N1ebieski\IDir\Exceptions\Dir\TransferException $e) {
             return false;
         }
@@ -224,13 +224,13 @@ class CheckStatusJob implements ShouldQueue
     /**
      * Undocumented function
      *
-     * @param CheckStatusClient $client
+     * @param StatusClient $client
      * @param Carbon $carbon
      * @param Config $config
      * @return void
      */
     public function handle(
-        CheckStatusClient $client,
+        StatusClient $client,
         Carbon $carbon,
         Config $config,
         Str $str
