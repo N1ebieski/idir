@@ -54,6 +54,9 @@ class DirRepo
             ->when($filter['search'] !== null, function ($query) use ($filter) {
                 $query->filterSearch($filter['search'])
                     ->when(array_key_exists('payment', $this->dir->search), function ($query) {
+                        /**
+                         * @var \N1ebieski\IDir\Models\Payment\Dir\Payment
+                         */
                         $payment = $this->dir->payments()->make();
 
                         $columns = implode(',', $payment->searchable);
@@ -499,6 +502,18 @@ class DirRepo
     /**
      * Undocumented function
      *
+     * @return Collection
+     */
+    public function countByGroup(): Collection
+    {
+        return $this->dir->selectRaw("`group_id`, COUNT(`id`) AS `count`")
+            ->groupBy('group_id')
+            ->get();
+    }
+
+    /**
+     * Undocumented function
+     *
      * @return string|null
      */
     public function getLastActivity(): ?string
@@ -545,7 +560,7 @@ class DirRepo
     public function countByDateAndGroup(): Collection
     {
         /**
-         * @var \N1ebieski\IDir\Models\Payment\Payment
+         * @var \N1ebieski\IDir\Models\Payment\Dir\Payment
          */
         $payment = $this->dir->payments()->make();
 
@@ -553,7 +568,7 @@ class DirRepo
          * @var \N1ebieski\IDir\Models\Price
          */
         $price = $this->dir->group()->make()->prices()->make();
-        
+
         return $this->dir->selectRaw("YEAR(`d`.`created_at`) `year`, MONTH(`d`.`created_at`) `month`, IFNULL(`p2`.`group_id`, `d`.`group_id`) AS `first_group_id`, COUNT(*) AS `count`")
             ->leftJoin("{$payment->getTable()} AS p1", function ($query) use ($payment) {
                 $query->on("p1.model_id", '=', "d.id")

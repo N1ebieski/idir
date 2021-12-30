@@ -5,9 +5,11 @@ namespace N1ebieski\IDir\Http\Responses\Data\Dir\Chart;
 use Illuminate\Support\Str;
 use N1ebieski\IDir\Models\Group;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Contracts\Routing\UrlGenerator as URL;
 use N1ebieski\IDir\Http\Responses\Data\DataInterface;
+use Illuminate\Contracts\Translation\Translator as Lang;
 
-class TimelineData implements DataInterface
+class GroupData implements DataInterface
 {
     /**
      * Undocumented variable
@@ -22,6 +24,20 @@ class TimelineData implements DataInterface
      * @var Group
      */
     protected $group;
+
+    /**
+     * Undocumented variable
+     *
+     * @var Lang
+     */
+    protected $lang;
+
+    /**
+     * Undocumented variable
+     *
+     * @var URL
+     */
+    protected $url;
 
     /**
      * Undocumented variable
@@ -49,13 +65,23 @@ class TimelineData implements DataInterface
      *
      * @param Collection $collection
      * @param Group $group
+     * @param Lang $lang
+     * @param URL $url
+     * @param Str $str
      */
-    public function __construct(Collection $collection, Group $group, Str $str)
-    {
+    public function __construct(
+        Collection $collection,
+        Group $group,
+        Lang $lang,
+        URL $url,
+        Str $str
+    ) {
         $this->collection = $collection;
 
         $this->group = $group;
 
+        $this->lang = $lang;
+        $this->url = $url;
         $this->str = $str;
     }
 
@@ -75,20 +101,22 @@ class TimelineData implements DataInterface
                 return $group;
             });
 
-        $this->collection->each(function ($item) use (&$data, $groups) {
-            $group = $groups->firstWhere('id', $item->first_group_id);
+        $this->collection->sortBy('group_id')
+            ->each(function ($item) use (&$data, $groups) {
+                $group = $groups->firstWhere('id', $item->group_id);
 
-            $data[] = [
-                'year' => $item->year,
-                'month' => $item->month,
-                'group' => [
-                    'id' => $item->first_group_id,
-                    'name' => optional($group)->name ?? 'Undefined',
-                ],
-                'count' => $item->count,
-                'color' => optional($group)->color ?? $this->str->randomColor('Undefined')
-            ];
-        });
+                $data[] = [
+                    'group' => [
+                        'id' => $group->id,
+                        'name' => $group->name,
+                    ],
+                    'count' => $item->count,
+                    'color' => $group->color,
+                    'links' => [
+                        'admin' => $this->url->route('admin.dir.index', ['filter[group]' => $item->group_id])
+                    ]
+                ];
+            });
 
         return $data;
     }

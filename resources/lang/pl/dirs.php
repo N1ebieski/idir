@@ -139,6 +139,14 @@ return [
         'correct' => 'Czy na pewno chcesz zgłosić wpis do poprawy?'
     ],
     'chart' => [
-        'count_by_status' => 'Wykres ilości wpisów wg statusu'
+        'x' => [
+            'label' => 'Data'
+        ],
+        'y' => [
+            'label' => 'Ilość wpisów'
+        ],
+        'count_by_status' => 'Wykres ilości wpisów wg statusu',
+        'count_by_group' => 'Wykres ilości wpisów wg grup',
+        'count_by_date_and_group' => 'Wykres ilości wpisów wg grup na osi czasu'
     ]
 ];

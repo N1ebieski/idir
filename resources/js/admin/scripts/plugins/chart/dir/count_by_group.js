@@ -1,6 +1,6 @@
 
-$(document).on('ready.n1ebieski/idir/admin/scripts/plugins/bootstrap-confirmation/dir@countByStatus', function () {
-    let $chart = $('#count-dirs-by-status');
+$(document).on('ready.n1ebieski/idir/admin/scripts/plugins/bootstrap-confirmation/dir@countByGroup', function () {
+    let $chart = $('#count-dirs-by-group');
     
     if ($chart.length) {
         $chart.dataset = JSON.parse($chart.attr('data'));
@@ -8,7 +8,7 @@ $(document).on('ready.n1ebieski/idir/admin/scripts/plugins/bootstrap-confirmatio
         $chart.chart({
             type: 'pie',
             data: {
-                labels: $chart.dataset.map(item => item.status.label),
+                labels: $chart.dataset.map(item => item.group.name),
                 datasets: [{
                     label: $chart.data('label'),
                     data: $chart.dataset.map(item => item.count),

@@ -14,7 +14,7 @@ class LinkRepo extends BaseLinkRepo
      * @param  array      $component [description]
      * @return Collection            [description]
      */
-    public function getLinksUnionDirsByComponent(Builder $dirs = null, array $component) : Collection
+    public function getLinksUnionDirsByComponent(Builder $dirs = null, array $component): Collection
     {
         return $this->link->where('type', 'link')
             ->when($component['home'] === true, function ($query) {

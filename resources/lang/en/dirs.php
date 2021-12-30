@@ -137,5 +137,16 @@ return [
     'correct' => 'Correct.',
     'confirm' => [
         'correct' => 'Are you sure you want to report entry to correction?'
+    ],
+    'chart' => [
+        'x' => [
+            'label' => 'Date'
+        ],
+        'y' => [
+            'label' => 'Number of entries'
+        ],
+        'count_by_status' => 'Chart of number of entries by status',
+        'count_by_group' => 'Chart of number of entries by group',
+        'count_by_date_and_group' => 'Chart of number of entries by group on timeline'
     ]
 ];

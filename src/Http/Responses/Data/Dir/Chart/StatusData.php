@@ -36,7 +36,7 @@ class StatusData implements DataInterface
      *
      * @var array
      */
-    protected static $colors = [
+    protected $colors = [
         Dir::INACTIVE => 'rgb(255, 193, 7)',
         Dir::ACTIVE => 'rgb(40, 167, 69)',
         Dir::PAYMENT_INACTIVE => 'rgb(23, 162, 184)',
@@ -77,7 +77,7 @@ class StatusData implements DataInterface
                         'label' => $this->lang->get("idir::dirs.status.{$item->status}")
                     ],
                     'count' => $item->count,
-                    'color' => static::$colors[$item->status],
+                    'color' => $this->colors[$item->status],
                     'links' => [
                         'admin' => $this->url->route('admin.dir.index', ['filter[status]' => $item->status])
                     ]

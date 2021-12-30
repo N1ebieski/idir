@@ -1,6 +1,6 @@
 
 $(document).on('ready.n1ebieski/idir/admin/scripts/plugins/chart/dir@countByDateAndGroup', function () {
-    let $chart = $('#countDirsByDateAndGroup');
+    let $chart = $('#count-dirs-by-date-and-group');
 
     if ($chart.length) {
         $chart.dataset = JSON.parse($chart.attr('data'));
@@ -12,7 +12,7 @@ $(document).on('ready.n1ebieski/idir/admin/scripts/plugins/chart/dir@countByDate
             type: 'bar',            
             data: {
                 datasets: [{
-                    label: 'Razem',
+                    label: $chart.data('all-label'),
                     type: 'line',
                     backgroundColor: 'rgb(0, 123, 255)',
                     borderColor: 'rgb(0, 123, 255)',
@@ -47,7 +47,7 @@ $(document).on('ready.n1ebieski/idir/admin/scripts/plugins/chart/dir@countByDate
                         title: {
                             color: $chart.data('font-color') || "#666",
                             display: true,
-                            text: 'Date'
+                            text: $chart.data('x-label')
                         },
                         ticks: {
                             color: $chart.data('font-color') || "#666"
@@ -58,7 +58,7 @@ $(document).on('ready.n1ebieski/idir/admin/scripts/plugins/chart/dir@countByDate
                         title: {
                             color: $chart.data('font-color') || "#666",
                             display: true,
-                            text: 'value'
+                            text: $chart.data('y-label')
                         },
                         ticks: {
                             color: $chart.data('font-color') || "#666"
@@ -83,9 +83,11 @@ $(document).on('ready.n1ebieski/idir/admin/scripts/plugins/chart/dir@countByDate
             }
         });
 
-        let width = timeline.length * 50;
+        if (timeline.length > 15) {
+            let width = timeline.length * 50;
 
-        $chart.parent().css('width', width);
-        $chart.parents().eq(1).scrollLeft(width);
+            $chart.parent().css('width', width);
+            $chart.parents().eq(1).scrollLeft(width);
+        }
     }
 });
