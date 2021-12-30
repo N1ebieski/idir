@@ -2,6 +2,7 @@
 
 namespace N1ebieski\IDir\Http\Responses\Data\Dir\Chart;
 
+use Illuminate\Support\Str;
 use N1ebieski\IDir\Models\Group;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Contracts\Routing\UrlGenerator as URL;
@@ -27,6 +28,13 @@ class TimelineData implements DataInterface
     /**
      * Undocumented variable
      *
+     * @var Str
+     */
+    protected $str;
+
+    /**
+     * Undocumented variable
+     *
      * @var URL
      */
     protected $url;
@@ -36,7 +44,7 @@ class TimelineData implements DataInterface
      *
      * @var array
      */
-    protected static $colors = [
+    protected $colors = [
         'rgb(255, 193, 7)',
         'rgb(40, 167, 69)',
         'rgb(23, 162, 184)',
@@ -51,11 +59,13 @@ class TimelineData implements DataInterface
      * @param Collection $collection
      * @param Group $group
      */
-    public function __construct(Collection $collection, Group $group)
+    public function __construct(Collection $collection, Group $group, Str $str)
     {
         $this->collection = $collection;
 
         $this->group = $group;
+
+        $this->str = $str;
     }
 
     /**
@@ -69,7 +79,7 @@ class TimelineData implements DataInterface
 
         $groups = $this->group->all()
             ->map(function ($group, $key) {
-                $group->color = static::$colors[$key] ?? static::getColor($group->id);
+                $group->color = $this->colors[$key] ?? $this->str->randomColor($group->id);
 
                 return $group;
             });
@@ -85,30 +95,10 @@ class TimelineData implements DataInterface
                     'name' => optional($group)->name ?? 'Undefined',
                 ],
                 'count' => $item->count,
-                'color' => optional($group)->color ?? static::getColor('Undefined')
+                'color' => optional($group)->color ?? $this->str->randomColor('Undefined')
             ];
         });
 
         return $data;
-    }
-
-    /**
-     * Undocumented function
-     *
-     * @param string $string
-     * @return string
-     */
-    // TODO: #78 Move getColor function to Str helpers @N1ebieski
-    protected static function getColor(string $string): string
-    {
-        $hash = md5('color' . $string);
-
-        $rgb = [
-            hexdec(substr($hash, 0, 2)),
-            hexdec(substr($hash, 2, 2)),
-            hexdec(substr($hash, 4, 2))
-        ];
-
-        return 'rgb(' . implode(', ', $rgb) . ')';
     }
 }
