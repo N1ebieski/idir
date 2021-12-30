@@ -16,7 +16,7 @@ class Client extends BaseClient
     {
         try {
             $response = parent::makeResponse();
-        } catch (\GuzzleHttp\Exception\GuzzleException $e) {
+        } catch (\N1ebieski\ICore\Exceptions\Client\TransferException $e) {
             throw new \N1ebieski\IDir\Exceptions\Payment\Cashbill\Exception(
                 $e->getMessage(),
                 $e->getCode(),
