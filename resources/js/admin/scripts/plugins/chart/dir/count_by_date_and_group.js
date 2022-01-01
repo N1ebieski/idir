@@ -7,6 +7,7 @@ $(document).on('ready.n1ebieski/idir/admin/scripts/plugins/chart/dir@countByDate
 
         let timeline = [...new Map($chart.dataset.map(item => [`${item.month}.${item.year}`, item])).values()];
         let groups = [...new Map($chart.dataset.map(item => [item.group.id, item])).values()];
+        let sum = 0;
 
         $chart.chart({
             type: 'bar',            
@@ -21,7 +22,7 @@ $(document).on('ready.n1ebieski/idir/admin/scripts/plugins/chart/dir@countByDate
                         return {
                             x: `${t.month}.${t.year}`,
                             y: $chart.dataset.filter(i => i.month === t.month && i.year === t.year)
-                                .reduce((sum, i) => { return sum + i.count }, 0)
+                                .reduce((prev, i) => { return sum = prev + i.count }, sum)
                         };
                     })
                 }].concat(groups.map(item => {
