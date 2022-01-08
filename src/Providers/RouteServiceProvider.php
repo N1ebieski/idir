@@ -117,11 +117,7 @@ class RouteServiceProvider extends ServiceProvider
             return;
         }
 
-        $router = $this->app['router']->middleware([
-                \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
-                'idir.api',
-                'icore.force.verified'
-            ])
+        $router = $this->app['router']->middleware(['idir.api', 'icore.force.verified'])
             ->prefix('api')
             ->as('api.');
 
