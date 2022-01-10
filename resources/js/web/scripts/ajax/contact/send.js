@@ -10,10 +10,6 @@ $(document).on(
         $form.btn = $form.find('.btn');
         $form.input = $form.find('.form-control, .custom-control-input');
 
-        let $modal = {
-            body: $form.closest('.modal-body')
-        };
-
         $.ajax({
             url: $form.data('route'),
             method: 'post',
@@ -32,7 +28,9 @@ $(document).on(
                 $form.input.addClass('is-valid');
             },
             success: function (response) {
-                $modal.body.html($.getAlert('success', response.success));
+                $('.modal').modal('hide');
+
+                $('body').addToast(response.success);
             },
             error: function (response) {
                 if (response.responseJSON.errors) {
