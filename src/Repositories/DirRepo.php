@@ -84,6 +84,9 @@ class DirRepo
                         ->whereRaw("MATCH ({$columns}) AGAINST (? IN BOOLEAN MODE)", [
                             $this->dir->search['user']
                         ]);
+                    })
+                    ->when(array_key_exists('id', $this->dir->search), function ($query) {
+                        $query->where('id', $this->dir->search['id']);
                     });
             })
             ->filterStatus($filter['status'])
