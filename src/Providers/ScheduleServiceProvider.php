@@ -37,6 +37,7 @@ class ScheduleServiceProvider extends ServiceProvider
                 ->daily()
                 ->runInBackground();
 
+            // TODO #85 launch date set by IDIR_DIR_REMINDER_LEFT_DAYS as prepareClearCacheSchedule
             $schedule->call($this->app->make(\N1ebieski\IDir\Crons\Dir\ReminderCron::class))
                 ->name('ReminderCron')
                 ->weekly()
