@@ -39,14 +39,17 @@ use N1ebieski\IDir\Http\Requests\Web\Dir\Create3Request;
 use N1ebieski\IDir\Http\Requests\Web\Dir\Update2Request;
 use N1ebieski\IDir\Http\Requests\Web\Dir\Update3Request;
 use N1ebieski\IDir\Http\Responses\Web\Dir\Store3Response;
+use N1ebieski\IDir\View\ViewModels\Web\Dir\ShowViewModel;
 use N1ebieski\IDir\Http\Requests\Web\Dir\EditRenewRequest;
 use N1ebieski\IDir\Http\Responses\Web\Dir\Update3Response;
+use N1ebieski\IDir\View\ViewModels\Web\Dir\Edit1ViewModel;
 use N1ebieski\IDir\View\ViewModels\Web\Dir\Edit2ViewModel;
 use N1ebieski\IDir\View\ViewModels\Web\Dir\Edit3ViewModel;
 use N1ebieski\IDir\Http\Requests\Web\Dir\Store3CodeRequest;
 use N1ebieski\IDir\Events\Web\Dir\ShowEvent as DirShowEvent;
 use N1ebieski\IDir\Http\Requests\Web\Dir\Update3CodeRequest;
 use N1ebieski\IDir\Http\Requests\Web\Dir\UpdateRenewRequest;
+use N1ebieski\IDir\View\ViewModels\Web\Dir\Create1ViewModel;
 use N1ebieski\IDir\View\ViewModels\Web\Dir\Create2ViewModel;
 use N1ebieski\IDir\View\ViewModels\Web\Dir\Create3ViewModel;
 use N1ebieski\IDir\Events\Web\Dir\StoreEvent as DirStoreEvent;
@@ -57,7 +60,6 @@ use N1ebieski\IDir\Http\Requests\Web\Dir\UpdateRenewCodeRequest;
 use N1ebieski\IDir\Events\Web\Dir\DestroyEvent as DirDestroyEvent;
 use N1ebieski\IDir\Events\Web\Dir\UpdateRenewEvent as DirUpdateRenewEvent;
 use N1ebieski\IDir\Events\Web\Payment\Dir\StoreEvent as PaymentStoreEvent;
-use N1ebieski\IDir\View\ViewModels\Web\Dir\ShowViewModel;
 
 class DirController
 {
@@ -126,14 +128,11 @@ class DirController
 
     /**
      * [create1 description]
-     * @param Group     $group     [description]
      * @return HttpResponse
      */
-    public function create1(Group $group): HttpResponse
+    public function create1(): HttpResponse
     {
-        return Response::view('idir::web.dir.create.1', [
-            'groups' => $group->makeRepo()->getPublicWithRels()
-        ]);
+        return Response::view('idir::web.dir.create.1', App::make(Create1ViewModel::class));
     }
 
     /**
@@ -231,17 +230,15 @@ class DirController
      * [edit1 description]
      * @param  Dir       $dir   [description]
      * @param  Edit1Load $load  [description]
-     * @param  Group     $group [description]
      * @return HttpResponse             [description]
      */
-    public function edit1(Dir $dir, Edit1Load $load, Group $group): HttpResponse
+    public function edit1(Dir $dir, Edit1Load $load): HttpResponse
     {
         $dir->makeService()->createOrUpdateSession($dir->attributes_as_array);
 
-        return Response::view('idir::web.dir.edit.1', [
-            'dir' => $dir,
-            'groups' => $group->makeRepo()->getPublicWithRels()
-        ]);
+        return Response::view('idir::web.dir.edit.1', App::make(Edit1ViewModel::class, [
+            'dir' => $dir
+        ]));
     }
 
     /**

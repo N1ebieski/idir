@@ -36,9 +36,11 @@ use N1ebieski\IDir\Http\Requests\Admin\Dir\DestroyRequest;
 use N1ebieski\IDir\Http\Responses\Admin\Dir\Store3Response;
 use N1ebieski\IDir\Http\Requests\Admin\Dir\EditFull2Request;
 use N1ebieski\IDir\Http\Requests\Admin\Dir\EditFull3Request;
+use N1ebieski\IDir\View\ViewModels\Admin\Dir\Edit1ViewModel;
 use N1ebieski\IDir\Http\Requests\Admin\Dir\Store3CodeRequest;
 use N1ebieski\IDir\Http\Requests\Admin\Dir\UpdateFull2Request;
 use N1ebieski\IDir\Http\Requests\Admin\Dir\UpdateFull3Request;
+use N1ebieski\IDir\View\ViewModels\Admin\Dir\Create1ViewModel;
 use N1ebieski\IDir\View\ViewModels\Admin\Dir\Create2ViewModel;
 use N1ebieski\IDir\View\ViewModels\Admin\Dir\Create3ViewModel;
 use N1ebieski\IDir\Http\Requests\Admin\Dir\UpdateStatusRequest;
@@ -78,14 +80,11 @@ class DirController
 
     /**
      * [create1 description]
-     * @param Group     $group     [description]
      * @return HttpResponse
      */
-    public function create1(Group $group): HttpResponse
+    public function create1(): HttpResponse
     {
-        return Response::view('idir::admin.dir.create.1', [
-            'groups' => $group->makeRepo()->getWithRels()
-        ]);
+        return Response::view('idir::admin.dir.create.1', App::make(Create1ViewModel::class));
     }
 
     /**
@@ -177,17 +176,15 @@ class DirController
      * [edit1 description]
      * @param  Dir       $dir           [description]
      * @param  EditFull1Load $load      [description]
-     * @param  Group     $group         [description]
      * @return HttpResponse             [description]
      */
-    public function editFull1(Dir $dir, EditFull1Load $load, Group $group): HttpResponse
+    public function editFull1(Dir $dir, EditFull1Load $load): HttpResponse
     {
         $dir->makeService()->createOrUpdateSession($dir->attributes_as_array);
 
-        return Response::view('idir::admin.dir.edit_full.1', [
-            'dir' => $dir,
-            'groups' => $group->makeRepo()->getWithRels()
-        ]);
+        return Response::view('idir::admin.dir.edit_full.1', App::make(Edit1ViewModel::class, [
+            'dir' => $dir
+        ]));
     }
 
     /**
