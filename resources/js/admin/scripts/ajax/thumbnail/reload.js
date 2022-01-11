@@ -13,7 +13,7 @@ $(document).on(
             method: 'patch',
             beforeSend: function () {
                 $element.prop('disabled', true);
-                $element.thumbnail.append($.getLoader('spinner-border'));
+                $element.thumbnail.addLoader();
             },
             complete: function () {
                 $element.prop('disabled', false);

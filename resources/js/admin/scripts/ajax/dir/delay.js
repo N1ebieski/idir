@@ -16,11 +16,11 @@ $(document).on(
             },
             beforeSend: function () {
                 $row.find('.responsive-btn-group').addClass('disabled');
-                $row.find('[data-btn-ok-class*="delayDir"], [data-btn-ok-class*="delay-dir"]').getLoader('show');
+                $row.find('[data-btn-ok-class*="delayDir"], [data-btn-ok-class*="delay-dir"]').loader('show');
             },
             complete: function () {
                 $row.find('.responsive-btn-group').removeClass('disabled');            
-                $row.find('[data-btn-ok-class*="delayDir"], [data-btn-ok-class*="delay-dir"]').getLoader('hide');
+                $row.find('[data-btn-ok-class*="delayDir"], [data-btn-ok-class*="delay-dir"]').loader('hide');
             },
             success: function (response) {
                 $row.html($.sanitize($(response.view).html()));

@@ -19,13 +19,13 @@ $(document).on(
             method: 'post',
             dataType: 'json',        
             beforeSend: function () {
-                $searchGus.btn.getLoader('show');
+                $searchGus.btn.loader('show');
                 $searchGus.find('.invalid-feedback').remove();
                 $searchGus.input.removeClass('is-valid');
                 $searchGus.input.removeClass('is-invalid');
             },
             complete: function () {
-                $searchGus.btn.getLoader('hide');
+                $searchGus.btn.loader('hide');
             },
             success: function (response) {
                 $.each(response.data, function (key, value) {
@@ -46,7 +46,10 @@ $(document).on(
 
                 $.each(errors.errors, function (key, value) {
                     $searchGus.input.addClass('is-invalid');
-                    $searchGus.input.parent().after($.getError(key, value));
+                    $searchGus.input.parent().addError({
+                        id: key,
+                        message: value
+                    });
                 });
             }
         });

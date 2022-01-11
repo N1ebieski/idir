@@ -17,10 +17,10 @@ $(document).on(
             },
             beforeSend: function () {
                 $row.find('.responsive-btn-group').addClass('disabled');
-                $row.find('[data-status="' + $element.data('status') + '"]').getLoader('show');
+                $row.find('[data-status="' + $element.data('status') + '"]').loader('show');
             },
             success: function (response) {
-                $row.find('[data-status="' + $element.data('status') + '"]').getLoader('hide');
+                $row.find('[data-status="' + $element.data('status') + '"]').loader('hide');
                 
                 $row.html($.sanitize($(response.view).html()));
 

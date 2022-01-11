@@ -16,13 +16,13 @@ $(document).on(
             data: $form.serialize(),
             dataType: 'json',
             beforeSend: function () {
-                $element.getLoader('show');
+                $element.loader('show');
                 $('.invalid-feedback').remove();
                 $form.input.removeClass('is-valid');
                 $form.input.removeClass('is-invalid');
             },
             complete: function () {
-                $element.getLoader('hide');
+                $element.loader('hide');
                 $form.find('.captcha').recaptcha();
                 $form.find('.captcha').captcha();
                 $form.input.addClass('is-valid');
@@ -36,14 +36,20 @@ $(document).on(
                 if (response.responseJSON.errors) {
                     $.each(response.responseJSON.errors, function (key, value) {
                         $form.find('[name="' + $.escapeSelector(key) + '"]').addClass('is-invalid');
-                        $form.find('[name="' + $.escapeSelector(key) + '"]').closest('.form-group').append($.getError(key, value));
+                        $form.find('[name="' + $.escapeSelector(key) + '"]').closest('.form-group').addError({
+                            id: key,
+                            message: value
+                        });
                     });
 
                     return;
                 }
-
+                
                 if (response.responseJSON.message) {
-                    $form.prepend($.getAlert('danger', response.responseJSON.message));
+                    $('body').addToast({
+                        title: response.responseJSON.message,
+                        type: 'danger'
+                    });   
                 }            
             }
         });

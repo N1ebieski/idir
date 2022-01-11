@@ -19,7 +19,7 @@ $(document).on(
             url: $element.data('route'),
             method: 'get',
             beforeSend: function() {
-                $modal.body.append($.getLoader('spinner-grow'));
+                $modal.body.addLoader('spinner-grow');
             },
             complete: function() {
                 $modal.content.find('.loader-absolute').remove();
