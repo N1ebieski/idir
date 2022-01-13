@@ -189,7 +189,7 @@ class Price extends Model
     public function getQrAsImageAttribute(): ?string
     {
         return ($this->type === 'code_sms') ?
-            QrCode::SMS($this->number, $this->code)
+            QrCode::encoding('UTF-8')->generate("smsto:{$this->number}:{$this->code}")
             : null;
     }
 
