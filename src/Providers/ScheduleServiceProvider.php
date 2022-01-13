@@ -79,7 +79,7 @@ class ScheduleServiceProvider extends ServiceProvider
 
         $this->schedule->call($this->app->make(\N1ebieski\IDir\Crons\Dir\ReminderCron::class))
             ->name('ReminderCron')
-            ->cron("0 0 */{$days} * *")
+            ->cron("5 0 */{$days} * *")
             ->runInBackground();
     }
 }
