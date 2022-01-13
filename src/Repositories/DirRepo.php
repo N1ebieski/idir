@@ -85,8 +85,12 @@ class DirRepo
                             $this->dir->search['user']
                         ]);
                     })
-                    ->when(array_key_exists('id', $this->dir->search), function ($query) {
-                        $query->where('id', $this->dir->search['id']);
+                    ->where(function ($query) {
+                        foreach (['id', 'url'] as $attr) {
+                            $query->when(array_key_exists($attr, $this->dir->search), function ($query) use ($attr) {
+                                $query->where($attr, $this->dir->search[$attr]);
+                            });
+                        }
                     });
             })
             ->filterStatus($filter['status'])
