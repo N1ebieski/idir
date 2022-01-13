@@ -88,7 +88,7 @@ class DirRepo
                     ->where(function ($query) {
                         foreach (['id', 'url'] as $attr) {
                             $query->when(array_key_exists($attr, $this->dir->search), function ($query) use ($attr) {
-                                $query->where($attr, $this->dir->search[$attr]);
+                                $query->where("{$this->dir->getTable()}.{$attr}", $this->dir->search[$attr]);
                             });
                         }
                     });
