@@ -122,13 +122,19 @@ class CategoryRepo extends BaseCategoryRepo
     {
         $dir = $this->category->morphs()->make();
 
-        return $dir->selectRaw('`dirs`.*, IF(`privileges`.`name` IS NULL, 0, 1) as `privilege`')
+        return $dir->selectRaw('`dirs`.*, IF(`privileges_ancestor`.`name` IS NULL, 0, 1) as `privilege_ancestor`, IF(`privileges_self`.`name` IS NULL, 0, 1) as `privilege_self`')
             ->withAllPublicRels()
-            ->leftJoin('groups_privileges', function ($query) {
-                $query->on('dirs.group_id', '=', 'groups_privileges.group_id')
-                    ->join('privileges', 'groups_privileges.privilege_id', '=', 'privileges.id')
-                    ->whereIn('privileges.name', [
+            ->leftJoin('groups_privileges AS groups_privileges_ancestor', function ($query) {
+                $query->on('dirs.group_id', '=', 'groups_privileges_ancestor.group_id')
+                    ->join('privileges AS privileges_ancestor', 'groups_privileges_ancestor.privilege_id', '=', 'privileges_ancestor.id')
+                    ->whereIn('privileges_ancestor.name', [
                         'highest position in ancestor categories',
+                    ]);
+            })
+            ->leftJoin('groups_privileges AS groups_privileges_self', function ($query) {
+                $query->on('dirs.group_id', '=', 'groups_privileges_self.group_id')
+                    ->join('privileges AS privileges_self', 'groups_privileges_self.privilege_id', '=', 'privileges_self.id')
+                    ->whereIn('privileges_self.name', [
                         'highest position in their categories'
                     ]);
             })
@@ -138,21 +144,23 @@ class CategoryRepo extends BaseCategoryRepo
                     ->whereIn('categories_models.category_id', $this->category->descendants->pluck('id')->toArray());
             })
             ->where(function ($query) {
-                $query->where(DB::raw('IF(`privileges`.`name` IS NULL, 0, 1)'), 1)
+                $query->where(DB::raw('IF(`privileges_ancestor`.`name` IS NULL, 0, 1)'), 1)
                     ->orWhere(function ($query) {
-                        $query->where(DB::raw('IF(`privileges`.`name` IS NULL, 0, 1)'), 0)
+                        $query->where(DB::raw('IF(`privileges_ancestor`.`name` IS NULL, 0, 1)'), 0)
                             ->where('categories_models.category_id', $this->category->id);
                     });
             })
             ->active()
             ->filterRegion($filter['region'])
             ->when($filter['orderby'] === null, function ($query) {
-                $query->orderBy('privilege', 'desc')->latest();
+                $query->orderBy('privilege_self', 'desc')
+                    ->orderBy('privilege_ancestor', 'desc')
+                    ->latest();
             })
             ->when($filter['orderby'] !== null, function ($query) use ($filter) {
                 $query->filterOrderBy($filter['orderby']);
             })
-            ->groupBy('dirs.id', DB::raw('IF(`privileges`.`name` IS NULL, 0, 1)'))
+            ->groupBy('dirs.id', DB::raw('IF(`privileges_ancestor`.`name` IS NULL, 0, 1)'), DB::raw('IF(`privileges_self`.`name` IS NULL, 0, 1)'))
             ->filterPaginate($this->paginate);
     }
 }
