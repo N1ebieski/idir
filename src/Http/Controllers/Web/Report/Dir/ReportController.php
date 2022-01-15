@@ -24,7 +24,6 @@ class ReportController implements Polymorphic
     public function create(Dir $dir, CreateRequest $request): JsonResponse
     {
         return Response::json([
-            'success' => '',
             'view' => View::make('icore::web.report.create', [
                 'model' => $dir
             ])->render()
