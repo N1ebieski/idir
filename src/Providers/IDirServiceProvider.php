@@ -2,6 +2,7 @@
 
 namespace N1ebieski\IDir\Providers;
 
+use Illuminate\Support\Facades\Route;
 use N1ebieski\ICore\Support\ServiceProvider;
 
 class IDirServiceProvider extends ServiceProvider
@@ -30,7 +31,7 @@ class IDirServiceProvider extends ServiceProvider
         $this->app->register(ScheduleServiceProvider::class);
         $this->app->register(CommandServiceProvider::class);
 
-        $this->app['router']->middlewareGroup('idir.web', [
+        Route::middlewareGroup('idir.web', [
             // 'throttle:60,1',
             \N1ebieski\ICore\Http\Middleware\EncryptCookies::class,
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
@@ -45,7 +46,7 @@ class IDirServiceProvider extends ServiceProvider
             \Nckg\Minify\Middleware\MinifyResponse::class
         ]);
 
-        $this->app['router']->middlewareGroup('idir.api', [
+        Route::middlewareGroup('idir.api', [
             'throttle:60,1',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \N1ebieski\ICore\Http\Middleware\XSSProtection::class,

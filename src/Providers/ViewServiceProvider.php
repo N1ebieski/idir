@@ -2,6 +2,8 @@
 
 namespace N1ebieski\IDir\Providers;
 
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\ServiceProvider;
 
 class ViewServiceProvider extends ServiceProvider
@@ -23,14 +25,14 @@ class ViewServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $layout = $this->app['config']->get('idir.layout');
+        $layout = Config::get('idir.layout');
 
-        $this->app['view']->composer(
+        View::composer(
             $layout . '::admin.partials.sidebar',
             \N1ebieski\IDir\View\Composers\Admin\SidebarComposer::class
         );
 
-        $this->app['view']->composer(
+        View::composer(
             [
                 $layout . '::web.field.partials.regions',
                 $layout . '::admin.field.partials.regions',
@@ -40,7 +42,7 @@ class ViewServiceProvider extends ServiceProvider
             \N1ebieski\IDir\View\Composers\RegionsComposer::class
         );
 
-        $this->app['view']->composer(
+        View::composer(
             [
                 $layout . '::web.dir.partials.group',
                 $layout . '::web.dir.partials.payment',

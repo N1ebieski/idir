@@ -10,15 +10,15 @@ return [
 
     'routes' => [
         'web' => [
-            'namespace' => null,
+            'prefix' => null,
             'enabled' => true
         ],
         'admin' => [
-            'namespace' => null,
+            'prefix' => 'admin',
             'enabled' => true
         ],
         'api' => [
-            'namespace' => null,
+            'prefix' => 'api',
             'enabled' => true
         ]
     ],

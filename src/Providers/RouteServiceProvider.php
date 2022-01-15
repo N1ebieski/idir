@@ -2,6 +2,8 @@
 
 namespace N1ebieski\IDir\Providers;
 
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 
 class RouteServiceProvider extends ServiceProvider
@@ -24,27 +26,27 @@ class RouteServiceProvider extends ServiceProvider
     {
         parent::boot();
 
-        $this->app['router']->bind('payment_dir_pending', function ($value) {
+        Route::bind('payment_dir_pending', function ($value) {
             return $this->app->make(\N1ebieski\IDir\Models\Payment\Dir\Payment::class)
                 ->makeRepo()->firstPendingByUuid($value) ?? abort(404);
         });
 
-        $this->app['router']->bind('category_dir_cache', function ($value) {
+        Route::bind('category_dir_cache', function ($value) {
             return $this->app->make(\N1ebieski\IDir\Models\Category\Dir\Category::class)
                 ->makeCache()->rememberBySlug($value) ?? abort(404);
         });
 
-        $this->app['router']->bind('region_cache', function ($value) {
+        Route::bind('region_cache', function ($value) {
             return $this->app->make(\N1ebieski\IDir\Models\Region\Region::class)
                 ->makeCache()->rememberBySlug($value) ?? abort(404);
         });
 
-        $this->app['router']->bind('dir_cache', function ($value) {
+        Route::bind('dir_cache', function ($value) {
             return $this->app->make(\N1ebieski\IDir\Models\Dir::class)
                 ->makeCache()->rememberBySlug($value) ?? abort(404);
         });
 
-        $this->app['router']->bind('stat_dir_cache', function ($value) {
+        Route::bind('stat_dir_cache', function ($value) {
             if (
                 $this->app->make(\N1ebieski\ICore\Utils\MigrationUtil::class)
                 ->contains('create_stats_table')
@@ -81,11 +83,12 @@ class RouteServiceProvider extends ServiceProvider
      */
     protected function mapWebRoutes()
     {
-        if ($this->app['config']->get('idir.routes.web.enabled') === false) {
+        if (Config::get('idir.routes.web.enabled') === false) {
             return;
         }
 
-        $router = $this->app['router']->middleware(['idir.web', 'icore.force.verified'])
+        $router = Route::middleware(['idir.web', 'icore.force.verified'])
+            ->prefix(Config::get('idir.routes.web.prefix'))
             ->as('web.');
 
         $router->group(function ($router) {
@@ -96,12 +99,12 @@ class RouteServiceProvider extends ServiceProvider
             }
         });
 
-        $router->namespace($this->app['config']->get('idir.routes.web.namespace', $this->namespace . '\Web'))
-        ->group(function ($router) {
-            foreach (glob(base_path('routes') . '/vendor/idir/web/*.php') as $filename) {
-                require($filename);
-            }
-        });
+        $router->namespace(Config::get('idir.routes.web.namespace', $this->namespace . '\Web'))
+            ->group(function ($router) {
+                foreach (glob(base_path('routes') . '/vendor/idir/web/*.php') as $filename) {
+                    require($filename);
+                }
+            });
     }
 
     /**
@@ -113,12 +116,12 @@ class RouteServiceProvider extends ServiceProvider
      */
     protected function mapApiRoutes()
     {
-        if ($this->app['config']->get('idir.routes.api.enabled') === false) {
+        if (Config::get('idir.routes.api.enabled') === false) {
             return;
         }
 
-        $router = $this->app['router']->middleware(['idir.api', 'icore.force.verified'])
-            ->prefix('api')
+        $router = Route::middleware(['idir.api', 'icore.force.verified'])
+            ->prefix(Config::get('idir.routes.api.prefix', 'api'))
             ->as('api.');
 
         $router->group(function ($router) {
@@ -129,7 +132,7 @@ class RouteServiceProvider extends ServiceProvider
             }
         });
 
-        $router->namespace($this->app['config']->get('idir.routes.api.namespace', $this->namespace . '\Api'))
+        $router->namespace(Config::get('idir.routes.api.namespace', $this->namespace . '\Api'))
             ->group(function ($router) {
                 foreach (glob(base_path('routes') . '/vendor/idir/api/*.php') as $filename) {
                     require($filename);
@@ -146,17 +149,17 @@ class RouteServiceProvider extends ServiceProvider
      */
     protected function mapAdminRoutes()
     {
-        if ($this->app['config']->get('idir.routes.admin.enabled') === false) {
+        if (Config::get('idir.routes.admin.enabled') === false) {
             return;
         }
 
-        $router = $this->app['router']->middleware([
+        $router = Route::middleware([
                 'idir.web',
                 'auth',
                 'verified',
                 'permission:admin.access'
             ])
-            ->prefix('admin')
+            ->prefix(Config::get('idir.routes.admin.prefix', 'admin'))
             ->as('admin.');
 
         $router->group(function ($router) {
@@ -167,7 +170,7 @@ class RouteServiceProvider extends ServiceProvider
             }
         });
 
-        $router->namespace($this->app['config']->get('idir.routes.admin.namespace', $this->namespace . '\Admin'))
+        $router->namespace(Config::get('idir.routes.admin.namespace', $this->namespace . '\Admin'))
             ->group(function ($router) {
                 foreach (glob(base_path('routes') . '/vendor/idir/admin/*.php') as $filename) {
                     require($filename);
