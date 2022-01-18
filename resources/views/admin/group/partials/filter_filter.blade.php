@@ -5,7 +5,7 @@
 @slot('modal_id', 'filter-modal')
 
 @slot('modal_title')
-<i class="fas fa-sort-amount-up"></i>
+<i class="fas fa-filter"></i>
 <span> {{ trans('icore::filter.filter_title') }}</span>
 @endslot
 

@@ -61,7 +61,7 @@
                         data-toggle="modal"
                         data-target="#filter-modal"
                     >
-                        <i class="fas fa-sort-amount-up"></i>
+                        <i class="fas fa-filter"></i>
                     </button>
                 </div>
                 <div class="form-group col-xs-4 mr-2">
