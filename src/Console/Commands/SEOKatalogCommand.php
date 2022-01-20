@@ -51,7 +51,7 @@ class SEOKatalogCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'idir:seokatalog {--workers=1}';
+    protected $signature = 'idir:seokatalog {--workers=1} {--force}';
 
     /**
      * The console command description.
@@ -145,25 +145,25 @@ class SEOKatalogCommand extends Command
         $this->line("\n");
         $this->line($this->lang->get('icore::install.publish.migrations'));
         $this->line("\n");
-        $this->call('vendor:publish', ['--tag' => 'icore.migrations', '--force' => true], $this->getOutput());
+        $this->call('vendor:publish', ['--tag' => 'icore.migrations', '--force' => $this->option('force')], $this->getOutput());
         $this->line("\n");
-        $this->call('vendor:publish', ['--tag' => 'idir.migrations', '--force' => true], $this->getOutput());
+        $this->call('vendor:publish', ['--tag' => 'idir.migrations', '--force' => $this->option('force')], $this->getOutput());
         $this->line("\n");
         $bar->advance();
         $this->line("\n");
         $this->line($this->lang->get('icore::install.publish.factories'));
         $this->line("\n");
-        $this->call('vendor:publish', ['--tag' => 'icore.factories', '--force' => true], $this->getOutput());
+        $this->call('vendor:publish', ['--tag' => 'icore.factories', '--force' => $this->option('force')], $this->getOutput());
         $this->line("\n");
-        $this->call('vendor:publish', ['--tag' => 'idir.factories', '--force' => true], $this->getOutput());
+        $this->call('vendor:publish', ['--tag' => 'idir.factories', '--force' => $this->option('force')], $this->getOutput());
         $this->line("\n");
         $bar->advance();
         $this->line("\n");
         $this->line($this->lang->get('icore::install.publish.seeds'));
         $this->line("\n");
-        $this->call('vendor:publish', ['--tag' => 'icore.seeds', '--force' => true], $this->getOutput());
+        $this->call('vendor:publish', ['--tag' => 'icore.seeds', '--force' => $this->option('force')], $this->getOutput());
         $this->line("\n");
-        $this->call('vendor:publish', ['--tag' => 'idir.seeds', '--force' => true], $this->getOutput());
+        $this->call('vendor:publish', ['--tag' => 'idir.seeds', '--force' => $this->option('force')], $this->getOutput());
         $this->line("\n");
         $bar->advance();
         $this->line("\n");
@@ -177,19 +177,19 @@ class SEOKatalogCommand extends Command
         $this->line("\n");
         $this->line($this->lang->get('icore::install.migrate'));
         $this->line("\n");
-        $this->call('migrate:fresh', ['--path' => 'database/migrations/vendor/icore', '--force' => true], $this->getOutput());
+        $this->call('migrate:fresh', ['--path' => 'database/migrations/vendor/icore'], $this->getOutput());
         $this->line("\n");
-        $this->call('migrate', ['--path' => 'database/migrations/vendor/idir', '--force' => true], $this->getOutput());
+        $this->call('migrate', ['--path' => 'database/migrations/vendor/idir'], $this->getOutput());
         $this->line("\n");
-        $this->call('migrate', ['--path' => 'database/migrations/2019_12_14_000001_create_personal_access_tokens_table.php', '--force' => true], $this->getOutput());
+        $this->call('migrate', ['--path' => 'database/migrations/2019_12_14_000001_create_personal_access_tokens_table.php'], $this->getOutput());
         $this->line("\n");
         $bar->advance();
         $this->line("\n");
         $this->line($this->lang->get('icore::install.seed'));
         $this->line("\n");
-        $this->call('db:seed', ['--class' => 'N1ebieski\ICore\Seeds\Install\InstallSeeder', '--force' => true], $this->getOutput());
+        $this->call('db:seed', ['--class' => 'N1ebieski\ICore\Seeds\Install\InstallSeeder'], $this->getOutput());
         $this->line("\n");
-        $this->call('db:seed', ['--class' => 'N1ebieski\IDir\Seeds\Install\InstallSeeder', '--force' => true], $this->getOutput());
+        $this->call('db:seed', ['--class' => 'N1ebieski\IDir\Seeds\Install\InstallSeeder'], $this->getOutput());
         $this->line("\n");
         $bar->advance();
         $this->line("\n");
@@ -201,7 +201,7 @@ class SEOKatalogCommand extends Command
         $this->line("\n");
         $this->line($this->lang->get('idir::import.seed'));
         $this->line("\n");
-        $this->call('db:seed', ['--class' => 'N1ebieski\IDir\Seeds\SEOKatalog\SEOKatalogSeeder', '--force' => true], $this->getOutput());
+        $this->call('db:seed', ['--class' => 'N1ebieski\IDir\Seeds\SEOKatalog\SEOKatalogSeeder'], $this->getOutput());
         $this->info("\n");
         $bar->finish();
     }
