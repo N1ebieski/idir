@@ -51,7 +51,7 @@ class SEOKatalogCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'idir:seokatalog {--workers=1}';
+    protected $signature = 'idir:seokatalog {--workers=1} {--force}';
 
     /**
      * The console command description.
@@ -145,25 +145,25 @@ class SEOKatalogCommand extends Command
         $this->line("\n");
         $this->line($this->lang->get('icore::install.publish.migrations'));
         $this->line("\n");
-        $this->call('vendor:publish', ['--tag' => 'icore.migrations', '--force' => true], $this->getOutput());
+        $this->call('vendor:publish', ['--tag' => 'icore.migrations', '--force' => $this->option('force')], $this->getOutput());
         $this->line("\n");
-        $this->call('vendor:publish', ['--tag' => 'idir.migrations', '--force' => true], $this->getOutput());
+        $this->call('vendor:publish', ['--tag' => 'idir.migrations', '--force' => $this->option('force')], $this->getOutput());
         $this->line("\n");
         $bar->advance();
         $this->line("\n");
         $this->line($this->lang->get('icore::install.publish.factories'));
         $this->line("\n");
-        $this->call('vendor:publish', ['--tag' => 'icore.factories', '--force' => true], $this->getOutput());
+        $this->call('vendor:publish', ['--tag' => 'icore.factories', '--force' => $this->option('force')], $this->getOutput());
         $this->line("\n");
-        $this->call('vendor:publish', ['--tag' => 'idir.factories', '--force' => true], $this->getOutput());
+        $this->call('vendor:publish', ['--tag' => 'idir.factories', '--force' => $this->option('force')], $this->getOutput());
         $this->line("\n");
         $bar->advance();
         $this->line("\n");
         $this->line($this->lang->get('icore::install.publish.seeds'));
         $this->line("\n");
-        $this->call('vendor:publish', ['--tag' => 'icore.seeds', '--force' => true], $this->getOutput());
+        $this->call('vendor:publish', ['--tag' => 'icore.seeds', '--force' => $this->option('force')], $this->getOutput());
         $this->line("\n");
-        $this->call('vendor:publish', ['--tag' => 'idir.seeds', '--force' => true], $this->getOutput());
+        $this->call('vendor:publish', ['--tag' => 'idir.seeds', '--force' => $this->option('force')], $this->getOutput());
         $this->line("\n");
         $bar->advance();
         $this->line("\n");

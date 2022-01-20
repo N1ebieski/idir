@@ -2,9 +2,9 @@
 
 namespace N1ebieski\IDir\Seeds\SEOKatalog;
 
-use N1ebieski\IDir\Seeds\SEOKatalog\SEOKatalogSeeder;
-use N1ebieski\IDir\Models\Field\Group\Field;
 use Illuminate\Support\Facades\DB;
+use N1ebieski\IDir\Models\Field\Group\Field;
+use N1ebieski\IDir\Seeds\SEOKatalog\SEOKatalogSeeder;
 
 class FieldsSeeder extends SEOKatalogSeeder
 {
@@ -57,7 +57,7 @@ class FieldsSeeder extends SEOKatalogSeeder
      *
      * @return integer
      */
-    protected static function fieldLastId() : int
+    protected static function fieldLastId(): int
     {
         return Field::orderBy('id', 'desc')->first()->id ?? 0;
     }
@@ -68,7 +68,7 @@ class FieldsSeeder extends SEOKatalogSeeder
      * @param integer $type
      * @return string
      */
-    protected static function type(int $type) : string
+    protected static function type(int $type): string
     {
         switch ($type) {
             case 1:
@@ -94,13 +94,13 @@ class FieldsSeeder extends SEOKatalogSeeder
      * @param object $item
      * @return array
      */
-    protected static function options(object $item) : array
+    protected static function options(object $item): array
     {
-        if ($item->min !== 0) {
+        if ($item->min >= 0) {
             $options['min'] = $item->min;
         }
 
-        if ($item->max !== 0) {
+        if ($item->max > 0) {
             $options['max'] = $item->max;
         }
 
@@ -110,15 +110,15 @@ class FieldsSeeder extends SEOKatalogSeeder
 
         $options['required'] = $item->must;
 
-        if ($item->width !== 0) {
+        if ($item->width > 0) {
             $options['width'] = $item->width;
         }
 
-        if ($item->height !== 0) {
+        if ($item->height > 0) {
             $options['height'] = $item->height;
         }
-        
-        if ($item->size !== 0) {
+
+        if ($item->size > 0) {
             $options['size'] = $item->size;
         }
 

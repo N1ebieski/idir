@@ -226,10 +226,10 @@ class DirsJob implements ShouldQueue
                             switch ($field->mod) {
                                 case 1:
                                     $value = $defaultRegions->whereIn(
-                                        'name',
+                                        'slug',
                                         collect(explode(',', $value))
                                             ->map(function ($item) {
-                                                return ucfirst($item);
+                                                return Str::slug($item);
                                             })
                                             ->toArray()
                                     )
