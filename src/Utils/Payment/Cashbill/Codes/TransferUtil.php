@@ -49,7 +49,7 @@ class TransferUtil implements TransferUtilStrategy
     public function authorize(array $attributes): void
     {
         $this->client->get($this->config->get('services.cashbill.code_transfer.check_url'), [
-            'code' => $attributes['code'],
+            'check' => $attributes['code'],
             'id' => $attributes['id']
         ]);
 
