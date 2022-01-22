@@ -2,8 +2,8 @@
 
 namespace N1ebieski\IDir\Seeds\Install;
 
-use Spatie\Permission\Models\Permission;
 use Illuminate\Database\Seeder;
+use Spatie\Permission\Models\Permission;
 
 /**
  * [DefaultRolesAndPermissionsSeeder description]
@@ -45,10 +45,12 @@ class DefaultRolesAndPermissionsSeeder extends Seeder
         Permission::firstOrCreate(['name' => 'admin.dirs.notification']);
 
         Permission::firstOrCreate(['name' => 'web.dirs.*']);
-        // Delete because Version 1.3 introduced adding entries by non-logged guests        
-        // Permission::firstOrCreate(['name' => 'web.dirs.create']);
+        Permission::firstOrCreate(['name' => 'web.dirs.create']);
         Permission::firstOrCreate(['name' => 'web.dirs.edit']);
         Permission::firstOrCreate(['name' => 'web.dirs.delete']);
         Permission::firstOrCreate(['name' => 'web.dirs.notification']);
+
+        Permission::firstOrCreate(['name' => 'api.dirs.*']);
+        Permission::firstOrCreate(['name' => 'api.dirs.edit']);
     }
 }
