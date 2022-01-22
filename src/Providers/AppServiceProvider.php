@@ -27,6 +27,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        \Illuminate\Database\Eloquent\Relations\Relation::morphMap([
+            \N1ebieski\ICore\Models\User::class => \N1ebieski\IDir\Models\User::class
+        ]);
     }
 }

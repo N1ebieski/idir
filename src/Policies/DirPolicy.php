@@ -22,23 +22,24 @@ class DirPolicy
 
     /**
      * [delete description]
-     * @param  User $current_user [description]
+     * @param  User $authUser [description]
      * @param  Dir  $dir          [description]
      * @return bool               [description]
      */
-    public function delete(User $current_user, Dir $dir): bool
+    public function delete(User $authUser, Dir $dir): bool
     {
-        return $current_user->id === $dir->user_id;
+        return $authUser->id === $dir->user_id;
     }
 
     /**
      * [edit description]
-     * @param  User $current_user [description]
+     * @param  User $authUser [description]
      * @param  Dir  $dir          [description]
      * @return bool               [description]
      */
-    public function edit(User $current_user, Dir $dir): bool
+    public function edit(User $authUser, Dir $dir): bool
     {
-        return $current_user->id === $dir->user_id;
+        return $authUser->can('admin.dirs.edit')
+            || $authUser->id === $dir->user_id;
     }
 }
