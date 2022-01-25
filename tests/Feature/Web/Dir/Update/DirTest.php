@@ -754,7 +754,7 @@ class DirTest extends TestCase
             'model_type' => 'N1ebieski\\IDir\\Models\\Dir'
         ]);
 
-        $response->assertRedirect(route('web.profile.edit_dir'));
+        $response->assertRedirect(route('web.profile.dirs'));
     }
 
     public function testDirUpdate3ValidationPaymentFail()
@@ -892,7 +892,7 @@ class DirTest extends TestCase
         $payment = Payment::orderBy('created_at', 'desc')->first();
 
         $response->assertSessionDoesntHaveErrors('payment_transfer');
-        $response->assertRedirect(route('web.profile.edit_dir'))->assertSessionHas('success');
+        $response->assertRedirect(route('web.profile.dirs'))->assertSessionHas('success');
     }
 
     public function testPendingDirUpdate3OldGroupPaymentFail()
@@ -966,6 +966,6 @@ class DirTest extends TestCase
 
         $response->assertSessionDoesntHaveErrors('code_sms');
         $this->assertTrue($dir->privileged_to !== null);
-        $response->assertRedirect(route('web.profile.edit_dir'));
+        $response->assertRedirect(route('web.profile.dirs'));
     }
 }

@@ -80,10 +80,10 @@ class Update3Response implements RedirectResponseFactory
     {
         switch ($this->dir->status) {
             case Dir::INACTIVE:
-                return $this->response->redirectToRoute('web.profile.edit_dir')
+                return $this->response->redirectToRoute('web.profile.dirs')
                     ->with('success', $this->lang->get('idir::dirs.success.update.' . Dir::INACTIVE));
             case Dir::ACTIVE:
-                return $this->response->redirectToRoute('web.profile.edit_dir')
+                return $this->response->redirectToRoute('web.profile.dirs')
                     ->with('success', $this->lang->get('idir::dirs.success.update.' . Dir::ACTIVE));
             case Dir::PAYMENT_INACTIVE:
                 return $this->response->redirectToRoute('web.payment.dir.show', [

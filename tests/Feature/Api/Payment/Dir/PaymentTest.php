@@ -55,7 +55,7 @@ class PaymentTest extends TestCase
         $provider['service'] = config('services.' . static::PAYMENT_PROVIDER . '.transfer.service');
         $provider['orderid'] = '2372832783';
         $provider['amount'] = $payment->order->price;
-        $provider['userdata'] = json_encode(['uuid' => $payment->uuid, 'redirect' => route('web.profile.edit_dir')]);
+        $provider['userdata'] = json_encode(['uuid' => $payment->uuid, 'redirect' => route('web.profile.dirs')]);
         $provider['status'] = 'ok';
         $provider['sign'] = md5($provider['service'] . $provider['orderid'] . $provider['amount']
         . $provider['userdata'] . $provider['status'] . $this->key);

@@ -101,10 +101,10 @@ class UpdateRenewResponse implements RedirectResponseFactory
 
         switch ($this->dir->status) {
             case Dir::ACTIVE:
-                return $this->response->redirectToRoute('web.profile.edit_dir')
+                return $this->response->redirectToRoute('web.profile.dirs')
                     ->with('success', $this->lang->get('idir::dirs.success.update_renew.' . Dir::ACTIVE));
             default:
-                return $this->response->redirectToRoute('web.profile.edit_dir')
+                return $this->response->redirectToRoute('web.profile.dirs')
                     ->with('success', $this->lang->get('idir::dirs.success.update_renew.' . Dir::INACTIVE));
         }
     }

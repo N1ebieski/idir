@@ -125,6 +125,6 @@
 
 @push('script')
 @component('icore::admin.partials.jsvalidation')
-{!! JsValidator::formRequest(N1ebieski\IDir\Http\Requests\Web\Profile\EditDirRequest::class, '#filter'); !!}
+{!! JsValidator::formRequest(N1ebieski\IDir\Http\Requests\Web\Profile\DirsRequest::class, '#filter'); !!}
 @endcomponent
 @endpush

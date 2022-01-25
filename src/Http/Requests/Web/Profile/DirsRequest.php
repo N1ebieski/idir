@@ -7,7 +7,7 @@ use N1ebieski\IDir\Models\Group;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Foundation\Http\FormRequest;
 
-class EditDirRequest extends FormRequest
+class DirsRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.

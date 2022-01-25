@@ -12,12 +12,12 @@
             <span>{{ trans('icore::profile.route.edit') }}</span>
         </a>
     </li>
-    @if (app('router')->has('web.profile.edit_socialite'))
-    <li class="nav-item {{ $isUrl(route('web.profile.edit_socialite')) }}">
+    @if (app('router')->has('web.profile.socialites'))
+    <li class="nav-item {{ $isUrl(route('web.profile.socialites')) }}">
         <a 
-            class="nav-link {{ $isUrl(route('web.profile.edit_socialite')) }}"
+            class="nav-link {{ $isUrl(route('web.profile.socialites')) }}"
             title="{{ trans('icore::profile.route.edit_socialite') }}"
-            href="{{ route('web.profile.edit_socialite') }}"
+            href="{{ route('web.profile.socialites') }}"
         >
             <i class="fab fa-fw fa-facebook-square"></i>
             <span>{{ trans('icore::profile.route.edit_socialite') }}</span>
@@ -25,11 +25,11 @@
     </li>
     @endif
     @canany(['web.dirs.edit', 'web.dirs.delete'])
-    <li class="nav-item {{ $isUrl(route('web.profile.edit_dir')) }}">
+    <li class="nav-item {{ $isUrl(route('web.profile.dirs')) }}">
         <a 
-            class="nav-link {{ $isUrl(route('web.profile.edit_dir')) }}"
+            class="nav-link {{ $isUrl(route('web.profile.dirs')) }}"
             title="{{ trans('idir::profile.route.edit_dir') }}"
-            href="{{ route('web.profile.edit_dir') }}"
+            href="{{ route('web.profile.dirs') }}"
         >
             <i class="far fa-fw fa-folder-open"></i>
             <span>{{ trans('idir::profile.route.edit_dir') }}</span>

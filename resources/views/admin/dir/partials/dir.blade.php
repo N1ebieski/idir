@@ -113,10 +113,10 @@
             @endcan            
             <div class="d-flex flex-column">
                 <ul class="list-unstyled mb-0 pb-0 flex-grow-1">
-                    @if ($dir->tagList)
+                    @if ($dir->tag_list)
                     <li class="text-break" style="word-break:break-word">
                         <small>
-                            {{ trans('idir::dirs.tags.label') }}: {{ $dir->tagList }}
+                            {{ trans('idir::dirs.tags.label') }}: {{ $dir->tag_list }}
                         </small>
                     </li>
                     @endif

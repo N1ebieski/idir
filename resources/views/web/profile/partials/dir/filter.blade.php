@@ -1,4 +1,4 @@
-<form data-route="{{ route("web.profile.edit_dir") }}" id="filter">
+<form data-route="{{ route("web.profile.dirs") }}" id="filter">
     <div class="d-flex flex-wrap position-relative">
         <div class="mb-3 mr-auto">
             <span class="badge badge-primary">
@@ -43,7 +43,7 @@
             @if (array_filter($filter))
             <span>
                 <a 
-                    href="{{ route("web.profile.edit_dir") }}" 
+                    href="{{ route("web.profile.dirs") }}" 
                     class="badge badge-dark"
                 >
                     {{ trans('icore::default.clear') }}

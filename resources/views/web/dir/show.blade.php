@@ -6,7 +6,7 @@
             : null
     ],
     'desc' => [$dir->short_content],
-    'keys' => [$dir->tagList],
+    'keys' => [$dir->tag_list],
     'og' => [
         'title' => $dir->title,
         'desc' => $dir->short_content,

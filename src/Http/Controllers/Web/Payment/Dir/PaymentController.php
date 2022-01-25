@@ -47,7 +47,7 @@ class PaymentController extends Controller implements Polymorphic
                 ->setUuid($payment->uuid)
                 ->setRedirect(
                     Auth::check() ?
-                        URL::route('web.profile.edit_dir')
+                        URL::route('web.profile.dirs')
                         : URL::route('web.dir.create_1')
                 )
                 ->setNotifyUrl(URL::route('api.payment.dir.verify', [$driver]))

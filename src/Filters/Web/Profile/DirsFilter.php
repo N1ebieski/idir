@@ -10,7 +10,7 @@ use N1ebieski\ICore\Filters\Traits\HasStatus;
 use N1ebieski\ICore\Filters\Traits\HasOrderBy;
 use N1ebieski\ICore\Filters\Traits\HasPaginate;
 
-class EditDirFilter extends Filter
+class DirsFilter extends Filter
 {
     use HasExcept;
     use HasSearch;

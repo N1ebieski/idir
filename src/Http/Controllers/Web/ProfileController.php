@@ -7,21 +7,21 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Http\Response as HttpResponse;
-use N1ebieski\IDir\Filters\Web\Profile\EditDirFilter;
-use N1ebieski\IDir\Http\Requests\Web\Profile\EditDirRequest;
+use N1ebieski\IDir\Filters\Web\Profile\DirsFilter;
+use N1ebieski\IDir\Http\Requests\Web\Profile\DirsRequest;
 
 class ProfileController
 {
     /**
-     * [editDir description]
+     * [dirs description]
      * @param  Group          $group   [description]
-     * @param  EditDirRequest $request [description]
-     * @param  EditDirFilter  $filter  [description]
+     * @param  DirsRequest $request [description]
+     * @param  DirsFilter  $filter  [description]
      * @return HttpResponse            [description]
      */
-    public function editDir(Group $group, EditDirRequest $request, EditDirFilter $filter): HttpResponse
+    public function dirs(Group $group, DirsRequest $request, DirsFilter $filter): HttpResponse
     {
-        return Response::view('idir::web.profile.edit_dir', [
+        return Response::view('idir::web.profile.dirs', [
             'filter' => $filter->all(),
             'groups' => $group->makeRepo()->getPublic(),
             'dirs' => Auth::user()->makeRepo()->paginateDirsByFilter($filter->all()),

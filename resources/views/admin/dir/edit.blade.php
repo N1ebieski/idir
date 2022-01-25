@@ -86,7 +86,7 @@
             name="tags" 
             id="tags" 
             class="form-control tagsinput"
-            value="{{ $dir->tagList }}"
+            value="{{ $dir->tag_list }}"
             placeholder="{{ trans('idir::dirs.tags.placeholder') }}" 
             data-max="{{ config('idir.dir.max_tags') }}"
             data-max-chars="{{ config('icore.tag.max_chars') }}"
