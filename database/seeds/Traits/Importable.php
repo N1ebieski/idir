@@ -31,7 +31,7 @@ trait Importable
      *
      * @return void
      */
-    protected function import() : void
+    protected function import(): void
     {
         $this->command->getOutput()->writeln("\n");
 
