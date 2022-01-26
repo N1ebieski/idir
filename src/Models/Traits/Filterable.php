@@ -20,7 +20,7 @@ trait Filterable
     public function scopeFilterVisible(Builder $query, int $visible = null): ?Builder
     {
         return $query->when($visible !== null, function ($query) use ($visible) {
-            return $query->where('visible', $visible);
+            return $query->where("{$this->getTable()}.visible", $visible);
         });
     }
 
@@ -48,7 +48,7 @@ trait Filterable
     public function scopeFilterGroup(Builder $query, Group $group = null): ?Builder
     {
         return $query->when($group !== null, function ($query) use ($group) {
-            $query->where('group_id', $group->id);
+            $query->where("{$this->getTable()}.group_id", $group->id);
         });
     }
 
@@ -61,7 +61,7 @@ trait Filterable
     public function scopeFilterType(Builder $query, string $type = null): ?Builder
     {
         return $query->when($type !== null, function ($query) use ($type) {
-            return $query->where('type', $type);
+            return $query->where("{$this->getTable()}.type", $type);
         });
     }
 }
