@@ -4,6 +4,8 @@ namespace N1ebieski\IDir\Exceptions;
 
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Config;
 
 class CustomException extends Exception
 {
@@ -14,6 +16,7 @@ class CustomException extends Exception
      */
     public function report()
     {
+        return false;
     }
 
     /**
@@ -23,6 +26,10 @@ class CustomException extends Exception
      */
     public function render(Request $request)
     {
-        return abort($this->getCode() !== 0 ? $this->getCode() : 403, $this->getMessage());
+        if (Config::get('app.debug') === true) {
+            return false;
+        }
+
+        return App::abort($this->getCode(), $this->getMessage());
     }
 }
