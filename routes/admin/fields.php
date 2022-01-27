@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use N1ebieski\IDir\Http\Controllers\Admin\Field\FieldController;
 use N1ebieski\IDir\Http\Controllers\Admin\Field\Group\FieldController as GroupFieldController;
 
-Route::match(['get', 'post'], 'fields/group/index', [GroupFieldController::class, 'index'])
+Route::match(['post', 'get'], 'fields/group/index', [GroupFieldController::class, 'index'])
     ->name('field.group.index')
     ->middleware('permission:admin.fields.view');
 

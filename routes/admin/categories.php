@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use N1ebieski\IDir\Http\Controllers\Admin\Category\Dir\CategoryController as DirCategoryController;
 
-Route::match(['get', 'post'], 'categories/dir/index', [DirCategoryController::class, 'index'])
+Route::match(['post', 'get'], 'categories/dir/index', [DirCategoryController::class, 'index'])
     ->name('category.dir.index')
     ->middleware('permission:admin.categories.view');
 

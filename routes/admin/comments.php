@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use N1ebieski\IDir\Http\Controllers\Admin\Comment\Dir\CommentController as DirCommentController;
 
-Route::match(['get', 'post'], 'comments/dir/index', [DirCommentController::class, 'index'])
+Route::match(['post', 'get'], 'comments/dir/index', [DirCommentController::class, 'index'])
     ->name('comment.dir.index')
     ->middleware('permission:admin.comments.view');
 

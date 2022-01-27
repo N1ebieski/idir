@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use N1ebieski\IDir\Http\Controllers\Admin\GroupController;
 
-Route::match(['get', 'post'], 'groups/index', [GroupController::class, 'index'])
+Route::match(['post', 'get'], 'groups/index', [GroupController::class, 'index'])
     ->name('group.index')
     ->middleware('permission:admin.groups.view');
 

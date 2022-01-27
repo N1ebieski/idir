@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use N1ebieski\IDir\Http\Controllers\Admin\Price\PriceController;
 
-Route::match(['get', 'post'], 'prices/index', [PriceController::class, 'index'])
+Route::match(['post', 'get'], 'prices/index', [PriceController::class, 'index'])
     ->name('price.index')
     ->middleware('permission:admin.prices.view');
 

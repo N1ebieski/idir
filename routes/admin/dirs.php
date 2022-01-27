@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use N1ebieski\IDir\Http\Controllers\Admin\DirController;
 
-Route::match(['get', 'post'], 'dirs/index', [DirController::class, 'index'])
+Route::match(['post', 'get'], 'dirs/index', [DirController::class, 'index'])
     ->name('dir.index')
     ->middleware('permission:admin.dirs.view');
 

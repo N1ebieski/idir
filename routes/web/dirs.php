@@ -3,13 +3,13 @@
 use Illuminate\Support\Facades\Route;
 use N1ebieski\IDir\Http\Controllers\Web\DirController;
 
-Route::match(['get', 'post'], 'dirs/index', [DirController::class, 'index'])
+Route::match(['post', 'get'], 'dirs/index', [DirController::class, 'index'])
     ->name('dir.index');
 
-Route::match(['get', 'post'], 'dirs/search', [DirController::class, 'search'])
+Route::match(['post', 'get'], 'dirs/search', [DirController::class, 'search'])
     ->name('dir.search');
 
-Route::match(['get', 'post'], 'dirs/{dir_cache}', [DirController::class, 'show'])
+Route::match(['post', 'get'], 'dirs/{dir_cache}', [DirController::class, 'show'])
     ->name('dir.show')
     ->where('dir_cache', '[0-9A-Za-z,_-]+');
 
