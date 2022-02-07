@@ -10,10 +10,12 @@ use N1ebieski\IDir\Models\Price;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Lang;
 use N1ebieski\IDir\Http\Requests\Web\Dir\Update2Request;
-use N1ebieski\ICore\View\Components\CaptchaComponent as Captcha;
+use N1ebieski\ICore\Http\Requests\Traits\CaptchaExtended;
 
 class Update3Request extends Update2Request
 {
+    use CaptchaExtended;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -158,7 +160,7 @@ class Update3Request extends Update2Request
                         ]);
                     })
                 ] : ['no_js_validation']
-            ] : App::make(Captcha::class)->toRules()
+            ] : $this->prepareCaptchaRules()
         );
     }
 
@@ -176,6 +178,6 @@ class Update3Request extends Update2Request
 
     public function attributes()
     {
-        return array_merge(parent::attributes(), App::make(Captcha::class)->toAttributes());
+        return array_merge(parent::attributes(), $this->prepareCaptchaAttributes());
     }
 }

@@ -12,10 +12,12 @@ use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Lang;
 use N1ebieski\IDir\Http\Requests\Web\Dir\Store2Request;
-use N1ebieski\ICore\View\Components\CaptchaComponent as Captcha;
+use N1ebieski\ICore\Http\Requests\Traits\CaptchaExtended;
 
 class Store3Request extends Store2Request
 {
+    use CaptchaExtended;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -162,7 +164,7 @@ class Store3Request extends Store2Request
                         ]);
                     })
                 ] : ['no_js_validation']
-            ] :  App::make(Captcha::class)->toRules()
+            ] : $this->prepareCaptchaRules()
         );
     }
 
@@ -184,6 +186,6 @@ class Store3Request extends Store2Request
 
     public function attributes()
     {
-        return array_merge(parent::attributes(), App::make(Captcha::class)->toAttributes());
+        return array_merge(parent::attributes(), $this->prepareCaptchaAttributes());
     }
 }
