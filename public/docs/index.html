@@ -1,0 +1,3418 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>API Documentation - iDir - nowoczesny katalog stron</title>
+
+    <link rel="stylesheet" href="/css/vendor/scribe/theme-icore.style.css" media="screen">
+    <link rel="stylesheet" href="../docs/css/theme-icore.print.css" media="print">
+
+    
+    <link href="/css/vendor/idir/vendor/vendor.css" rel="stylesheet">
+    <link href="/css/vendor/idir/web/web.css" rel="stylesheet">    
+
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.10/lodash.min.js"></script>
+
+    <link rel="stylesheet"
+          href="https://unpkg.com/@highlightjs/cdn-assets@10.7.2/styles/obsidian.min.css">
+    <script src="https://unpkg.com/@highlightjs/cdn-assets@10.7.2/highlight.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jets/0.14.1/jets.min.js"></script>
+
+    <style id="language-style">
+        /* starts out as display none and is replaced with js later  */
+                    body .content .bash-example code { display: none; }
+                    body .content .javascript-example code { display: none; }
+                    body .content .php-example code { display: none; }
+                    body .content .python-example code { display: none; }
+            </style>
+
+    <script>
+        var baseUrl = "https://idir.test:8443";
+        var useCsrf = Boolean(1);
+        var csrfUrl = "/sanctum/csrf-cookie";
+    </script>
+    <script src="../docs/js/tryitout-3.23.0.js"></script>
+
+    <script src="../docs/js/theme-icore-3.23.0.js"></script>
+
+</head>
+
+<body data-languages="[&quot;bash&quot;,&quot;javascript&quot;,&quot;php&quot;,&quot;python&quot;]">
+
+<a href="#" id="nav-button">
+    <span>
+        MENU
+        <img src="../docs/images/navbar.png" alt="navbar-image" />
+    </span>
+</a>
+<div class="tocify-wrapper">
+    
+            <div class="lang-selector">
+                                            <button type="button" class="lang-button" data-language-name="bash">bash</button>
+                                            <button type="button" class="lang-button" data-language-name="javascript">javascript</button>
+                                            <button type="button" class="lang-button" data-language-name="php">php</button>
+                                            <button type="button" class="lang-button" data-language-name="python">python</button>
+                    </div>
+    
+    <div class="search">
+        <input type="text" class="search" id="input-search" placeholder="Search">
+    </div>
+
+    <div id="toc">
+                                                                            <ul id="tocify-header-0" class="tocify-header">
+                    <li class="tocify-item level-1" data-unique="introduction">
+                        <a href="#introduction">Introduction</a>
+                    </li>
+                                            
+                                                                    </ul>
+                                                <ul id="tocify-header-1" class="tocify-header">
+                    <li class="tocify-item level-1" data-unique="authenticating-requests">
+                        <a href="#authenticating-requests">Authenticating requests</a>
+                    </li>
+                                            
+                                                </ul>
+                    
+                    <ul id="tocify-header-2" class="tocify-header">
+                <li class="tocify-item level-1" data-unique="authentication">
+                    <a href="#authentication">Authentication</a>
+                </li>
+                                    <ul id="tocify-subheader-authentication" class="tocify-subheader">
+                                                    <li class="tocify-item level-2" data-unique="authentication-POSTapi-token">
+                        <a href="#authentication-POSTapi-token">Token</a>
+                    </li>
+                                    <li class="tocify-item level-2" data-unique="authentication-POSTapi-refresh">
+                        <a href="#authentication-POSTapi-refresh">Refresh token</a>
+                    </li>
+                                    <li class="tocify-item level-2" data-unique="authentication-POSTapi-revoke">
+                        <a href="#authentication-POSTapi-revoke">Revoke token</a>
+                    </li>
+                                    <li class="tocify-item level-2" data-unique="authentication-GETapi-user">
+                        <a href="#authentication-GETapi-user">Show user</a>
+                    </li>
+                                                    </ul>
+                            </ul>
+                    <ul id="tocify-header-3" class="tocify-header">
+                <li class="tocify-item level-1" data-unique="categories">
+                    <a href="#categories">Categories</a>
+                </li>
+                                    <ul id="tocify-subheader-categories" class="tocify-subheader">
+                                                    <li class="tocify-item level-2" data-unique="categories-POSTapi-categories-dir-index">
+                        <a href="#categories-POSTapi-categories-dir-index">Index of dir&#039;s categories</a>
+                    </li>
+                                    <li class="tocify-item level-2" data-unique="categories-POSTapi-categories-post-index">
+                        <a href="#categories-POSTapi-categories-post-index">Index of post&#039;s categories</a>
+                    </li>
+                                    <li class="tocify-item level-2" data-unique="categories-POSTapi-categories-index">
+                        <a href="#categories-POSTapi-categories-index">Index of categories</a>
+                    </li>
+                                                    </ul>
+                            </ul>
+                    <ul id="tocify-header-4" class="tocify-header">
+                <li class="tocify-item level-1" data-unique="endpoints">
+                    <a href="#endpoints">Endpoints</a>
+                </li>
+                                    <ul id="tocify-subheader-endpoints" class="tocify-subheader">
+                                                    <li class="tocify-item level-2" data-unique="endpoints-PUTapi-dirs--dir-">
+                        <a href="#endpoints-PUTapi-dirs--dir-">PUT api/dirs/{dir}</a>
+                    </li>
+                                    <li class="tocify-item level-2" data-unique="endpoints-POSTapi-payments-dir-verify--driver--">
+                        <a href="#endpoints-POSTapi-payments-dir-verify--driver--">Undocumented function</a>
+                    </li>
+                                                    </ul>
+                            </ul>
+                    <ul id="tocify-header-5" class="tocify-header">
+                <li class="tocify-item level-1" data-unique="posts">
+                    <a href="#posts">Posts</a>
+                </li>
+                                    <ul id="tocify-subheader-posts" class="tocify-subheader">
+                                                    <li class="tocify-item level-2" data-unique="posts-POSTapi-posts-index">
+                        <a href="#posts-POSTapi-posts-index">Index of posts</a>
+                    </li>
+                                                    </ul>
+                            </ul>
+                    <ul id="tocify-header-6" class="tocify-header">
+                <li class="tocify-item level-1" data-unique="tags">
+                    <a href="#tags">Tags</a>
+                </li>
+                                    <ul id="tocify-subheader-tags" class="tocify-subheader">
+                                                    <li class="tocify-item level-2" data-unique="tags-POSTapi-tags-index">
+                        <a href="#tags-POSTapi-tags-index">Index of tags</a>
+                    </li>
+                                                    </ul>
+                            </ul>
+                    <ul id="tocify-header-7" class="tocify-header">
+                <li class="tocify-item level-1" data-unique="users">
+                    <a href="#users">Users</a>
+                </li>
+                                    <ul id="tocify-subheader-users" class="tocify-subheader">
+                                                    <li class="tocify-item level-2" data-unique="users-POSTapi-users-index">
+                        <a href="#users-POSTapi-users-index">Index of users</a>
+                    </li>
+                                                    </ul>
+                            </ul>
+        
+                        
+            </div>
+
+            <ul class="toc-footer" id="toc-footer">
+                            <li><a href="../docs/collection.json">View Postman collection</a></li>
+                            <li><a href="../docs/openapi.yaml">View OpenAPI spec</a></li>
+                            <li><a href="http://github.com/knuckleswtf/scribe">Documentation powered by Scribe ✍</a></li>
+                    </ul>
+        <ul class="toc-footer" id="last-updated">
+        <li>Last updated: February 4 2022</li>
+    </ul>
+</div>
+
+<div class="page-wrapper">
+    <div class="dark-box"></div>
+    <div class="content">
+        <h1 id="introduction">Introduction</h1>
+<p>This documentation aims to provide all the information you need to work with our API.</p>
+<aside>As you scroll, you'll see code examples for working with the API in different programming languages in the dark area to the right (or as part of the content on mobile).
+You can switch the language used with the tabs at the top right (or from the nav menu at the top left on mobile).</aside>
+<blockquote>
+<p>Base URL</p>
+</blockquote>
+<pre><code class="language-yaml">https://idir.test:8443</code></pre>
+
+        <h1 id="authenticating-requests">Authenticating requests</h1>
+<p>This API is authenticated by sending an <strong><code>Authorization</code></strong> header with the value <strong><code>"Bearer {YOUR_ACCESS_TOKEN}"</code></strong>.</p>
+<p>All authenticated endpoints are marked with a <code>requires authentication</code> badge in the documentation below.</p>
+<p>You can retrieve your token by visiting tokens tab in your profile and clicking <b>Create API token</b> or <a href="#authentication-POSTapi-token">sending authentication request via API</a>.</p>
+
+        <h1 id="authentication">Authentication</h1>
+
+    <blockquote>
+<p>Routes:</p>
+</blockquote>
+<pre><code>/routes/vendor/icore/api/auth.php</code></pre>
+<blockquote>
+<p>Controllers:</p>
+</blockquote>
+<pre><code>N1ebieski\ICore\Http\Controllers\Api\Auth\TokenController
+N1ebieski\ICore\Http\Controllers\Api\Auth\UserController</code></pre>
+
+            <h2 id="authentication-POSTapi-token">Token</h2>
+
+<p>
+</p>
+
+<p>Create access token and (optional) refresh token.</p>
+<aside class="notice">Access token expires after 2 hours. Refresh token expires after 1 year.</aside>
+
+<span id="example-requests-POSTapi-token">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request POST \
+    "https://idir.test:8443/api/token" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json" \
+    --data "{
+    \"email\": \"kontakt@demo.idir.intelekt.net.pl\",
+    \"password\": \"demo1234\",
+    \"remember\": true
+}"
+</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "https://idir.test:8443/api/token"
+);
+
+const headers = {
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+let body = {
+    "email": "kontakt@demo.idir.intelekt.net.pl",
+    "password": "demo1234",
+    "remember": true
+};
+
+fetch(url, {
+    method: "POST",
+    headers,
+    body: JSON.stringify(body),
+}).then(response =&gt; response.json());</code></pre></div>
+
+
+<div class="php-example">
+    <pre><code class="language-php">$client = new \GuzzleHttp\Client();
+$response = $client-&gt;post(
+    'https://idir.test:8443/api/token',
+    [
+        'headers' =&gt; [
+            'Content-Type' =&gt; 'application/json',
+            'Accept' =&gt; 'application/json',
+        ],
+        'json' =&gt; [
+            'email' =&gt; 'kontakt@demo.idir.intelekt.net.pl',
+            'password' =&gt; 'demo1234',
+            'remember' =&gt; true,
+        ],
+    ]
+);
+$body = $response-&gt;getBody();
+print_r(json_decode((string) $body));</code></pre></div>
+
+
+<div class="python-example">
+    <pre><code class="language-python">import requests
+import json
+
+url = 'https://idir.test:8443/api/token'
+payload = {
+    "email": "kontakt@demo.idir.intelekt.net.pl",
+    "password": "demo1234",
+    "remember": true
+}
+headers = {
+  'Content-Type': 'application/json',
+  'Accept': 'application/json'
+}
+
+response = requests.request('POST', url, headers=headers, json=payload)
+response.json()</code></pre></div>
+
+</span>
+
+<span id="example-responses-POSTapi-token">
+            <blockquote>
+            <p>Example response (201, success):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json">{
+    &quot;access_token&quot;: &quot;1|LN8Gmqe6cRHQpPr5X5GW9wFXuqHVK09L8FSb7Ju9&quot;,
+    &quot;refresh_token&quot;: &quot;2|hVHAhrgiBmSbyYjbVAC17wjwAJyKK8TQmhglBAtM&quot;
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-POSTapi-token" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-POSTapi-token"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-POSTapi-token"></code></pre>
+</span>
+<span id="execution-error-POSTapi-token" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-POSTapi-token"></code></pre>
+</span>
+<form id="form-POSTapi-token" data-method="POST"
+      data-path="api/token"
+      data-authed="0"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      data-headers='{"Content-Type":"application\/json","Accept":"application\/json"}'
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('POSTapi-token', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-POSTapi-token"
+                    onclick="tryItOut('POSTapi-token');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-POSTapi-token"
+                    onclick="cancelTryOut('POSTapi-token');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-POSTapi-token" hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-black">POST</small>
+            <b><code>api/token</code></b>
+        </p>
+                            <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <p>
+            <b><code>email</code></b>&nbsp;&nbsp;<small>string</small>     <i>optional</i> &nbsp;
+                <input type="text"
+               name="email"
+               data-endpoint="POSTapi-token"
+               value="kontakt@demo.idir.intelekt.net.pl"
+               data-component="body" hidden>
+    <br>
+
+        </p>
+                <p>
+            <b><code>password</code></b>&nbsp;&nbsp;<small>string</small>     <i>optional</i> &nbsp;
+                <input type="text"
+               name="password"
+               data-endpoint="POSTapi-token"
+               value="demo1234"
+               data-component="body" hidden>
+    <br>
+
+        </p>
+                <p>
+            <b><code>remember</code></b>&nbsp;&nbsp;<small>boolean</small>     <i>optional</i> &nbsp;
+                <label data-endpoint="POSTapi-token" hidden>
+            <input type="radio" name="remember"
+                   value="true"
+                   data-endpoint="POSTapi-token"
+                   data-component="body"
+            >
+            <code>true</code>
+        </label>
+        <label data-endpoint="POSTapi-token" hidden>
+            <input type="radio" name="remember"
+                   value="false"
+                   data-endpoint="POSTapi-token"
+                   data-component="body"
+            >
+            <code>false</code>
+        </label>
+    <br>
+
+        </p>
+        </form>
+
+    <h3>Response</h3>
+    <h4 class="fancy-heading-panel"><b>Response Fields</b></h4>
+            <p>
+            <b><code>access_token</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<br>
+
+        </p>
+            <p>
+            <b><code>refresh_token</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<br>
+<p>(only if remember param was true)</p>
+        </p>
+                <h2 id="authentication-POSTapi-refresh">Refresh token</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+<p>Create new access token and refresh token.</p>
+<aside class="success">Refresh token must be in the Authorization header with the value "Bearer {YOUR_REFRESH_TOKEN}".</aside>
+
+<span id="example-requests-POSTapi-refresh">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request POST \
+    "https://idir.test:8443/api/refresh" \
+    --header "Authorization: Bearer {YOUR_REFRESH_TOKEN}" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json"</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "https://idir.test:8443/api/refresh"
+);
+
+const headers = {
+    "Authorization": "Bearer {YOUR_REFRESH_TOKEN}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+fetch(url, {
+    method: "POST",
+    headers,
+}).then(response =&gt; response.json());</code></pre></div>
+
+
+<div class="php-example">
+    <pre><code class="language-php">$client = new \GuzzleHttp\Client();
+$response = $client-&gt;post(
+    'https://idir.test:8443/api/refresh',
+    [
+        'headers' =&gt; [
+            'Authorization' =&gt; 'Bearer {YOUR_REFRESH_TOKEN}',
+            'Content-Type' =&gt; 'application/json',
+            'Accept' =&gt; 'application/json',
+        ],
+    ]
+);
+$body = $response-&gt;getBody();
+print_r(json_decode((string) $body));</code></pre></div>
+
+
+<div class="python-example">
+    <pre><code class="language-python">import requests
+import json
+
+url = 'https://idir.test:8443/api/refresh'
+headers = {
+  'Authorization': 'Bearer {YOUR_REFRESH_TOKEN}',
+  'Content-Type': 'application/json',
+  'Accept': 'application/json'
+}
+
+response = requests.request('POST', url, headers=headers)
+response.json()</code></pre></div>
+
+</span>
+
+<span id="example-responses-POSTapi-refresh">
+            <blockquote>
+            <p>Example response (201, success):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json">{
+    &quot;access_token&quot;: &quot;3|LN8Gmqe6cRHQpPr5X5GW9wFXuqHVK09L8FSb7Ju9&quot;,
+    &quot;refresh_token&quot;: &quot;4|hVHAhrgiBmSbyYjbVAC17wjwAJyKK8TQmhglBAtM&quot;
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-POSTapi-refresh" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-POSTapi-refresh"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-POSTapi-refresh"></code></pre>
+</span>
+<span id="execution-error-POSTapi-refresh" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-POSTapi-refresh"></code></pre>
+</span>
+<form id="form-POSTapi-refresh" data-method="POST"
+      data-path="api/refresh"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      data-headers='{"Authorization":"Bearer {YOUR_REFRESH_TOKEN}","Content-Type":"application\/json","Accept":"application\/json"}'
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('POSTapi-refresh', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-POSTapi-refresh"
+                    onclick="tryItOut('POSTapi-refresh');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-POSTapi-refresh"
+                    onclick="cancelTryOut('POSTapi-refresh');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-POSTapi-refresh" hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-black">POST</small>
+            <b><code>api/refresh</code></b>
+        </p>
+                <p>
+            <label id="auth-POSTapi-refresh" hidden>Authorization header:
+                <b><code>Bearer </code></b><input type="text"
+                                                                name="Authorization"
+                                                                data-prefix="Bearer "
+                                                                data-endpoint="POSTapi-refresh"
+                                                                data-component="header"></label>
+        </p>
+                </form>
+
+    <h3>Response</h3>
+    <h4 class="fancy-heading-panel"><b>Response Fields</b></h4>
+            <p>
+            <b><code>access_token</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<br>
+
+        </p>
+            <p>
+            <b><code>refresh_token</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<br>
+
+        </p>
+                <h2 id="authentication-POSTapi-revoke">Revoke token</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+<p>Revoke access token and refresh token.</p>
+
+<span id="example-requests-POSTapi-revoke">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request POST \
+    "https://idir.test:8443/api/revoke" \
+    --header "Authorization: Bearer {YOUR_ACCESS_TOKEN}" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json"</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "https://idir.test:8443/api/revoke"
+);
+
+const headers = {
+    "Authorization": "Bearer {YOUR_ACCESS_TOKEN}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+fetch(url, {
+    method: "POST",
+    headers,
+}).then(response =&gt; response.json());</code></pre></div>
+
+
+<div class="php-example">
+    <pre><code class="language-php">$client = new \GuzzleHttp\Client();
+$response = $client-&gt;post(
+    'https://idir.test:8443/api/revoke',
+    [
+        'headers' =&gt; [
+            'Authorization' =&gt; 'Bearer {YOUR_ACCESS_TOKEN}',
+            'Content-Type' =&gt; 'application/json',
+            'Accept' =&gt; 'application/json',
+        ],
+    ]
+);
+$body = $response-&gt;getBody();
+print_r(json_decode((string) $body));</code></pre></div>
+
+
+<div class="python-example">
+    <pre><code class="language-python">import requests
+import json
+
+url = 'https://idir.test:8443/api/revoke'
+headers = {
+  'Authorization': 'Bearer {YOUR_ACCESS_TOKEN}',
+  'Content-Type': 'application/json',
+  'Accept': 'application/json'
+}
+
+response = requests.request('POST', url, headers=headers)
+response.json()</code></pre></div>
+
+</span>
+
+<span id="example-responses-POSTapi-revoke">
+            <blockquote>
+            <p>Example response (204, success):</p>
+        </blockquote>
+                <pre>
+<code>[Empty response]</code>
+ </pre>
+    </span>
+<span id="execution-results-POSTapi-revoke" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-POSTapi-revoke"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-POSTapi-revoke"></code></pre>
+</span>
+<span id="execution-error-POSTapi-revoke" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-POSTapi-revoke"></code></pre>
+</span>
+<form id="form-POSTapi-revoke" data-method="POST"
+      data-path="api/revoke"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      data-headers='{"Authorization":"Bearer {YOUR_ACCESS_TOKEN}","Content-Type":"application\/json","Accept":"application\/json"}'
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('POSTapi-revoke', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-POSTapi-revoke"
+                    onclick="tryItOut('POSTapi-revoke');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-POSTapi-revoke"
+                    onclick="cancelTryOut('POSTapi-revoke');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-POSTapi-revoke" hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-black">POST</small>
+            <b><code>api/revoke</code></b>
+        </p>
+                <p>
+            <label id="auth-POSTapi-revoke" hidden>Authorization header:
+                <b><code>Bearer </code></b><input type="text"
+                                                                name="Authorization"
+                                                                data-prefix="Bearer "
+                                                                data-endpoint="POSTapi-revoke"
+                                                                data-component="header"></label>
+        </p>
+                </form>
+
+    <h3>Response</h3>
+    <h4 class="fancy-heading-panel"><b>Response Fields</b></h4>
+            <p>
+            <b><code>access_token</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<br>
+
+        </p>
+            <p>
+            <b><code>refresh_token</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<br>
+
+        </p>
+                <h2 id="authentication-GETapi-user">Show user</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+<p>Show authenticated User resource</p>
+
+<span id="example-requests-GETapi-user">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request GET \
+    --get "https://idir.test:8443/api/user" \
+    --header "Authorization: Bearer {YOUR_ACCESS_TOKEN}" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json"</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "https://idir.test:8443/api/user"
+);
+
+const headers = {
+    "Authorization": "Bearer {YOUR_ACCESS_TOKEN}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+fetch(url, {
+    method: "GET",
+    headers,
+}).then(response =&gt; response.json());</code></pre></div>
+
+
+<div class="php-example">
+    <pre><code class="language-php">$client = new \GuzzleHttp\Client();
+$response = $client-&gt;get(
+    'https://idir.test:8443/api/user',
+    [
+        'headers' =&gt; [
+            'Authorization' =&gt; 'Bearer {YOUR_ACCESS_TOKEN}',
+            'Content-Type' =&gt; 'application/json',
+            'Accept' =&gt; 'application/json',
+        ],
+    ]
+);
+$body = $response-&gt;getBody();
+print_r(json_decode((string) $body));</code></pre></div>
+
+
+<div class="python-example">
+    <pre><code class="language-python">import requests
+import json
+
+url = 'https://idir.test:8443/api/user'
+headers = {
+  'Authorization': 'Bearer {YOUR_ACCESS_TOKEN}',
+  'Content-Type': 'application/json',
+  'Accept': 'application/json'
+}
+
+response = requests.request('GET', url, headers=headers)
+response.json()</code></pre></div>
+
+</span>
+
+<span id="example-responses-GETapi-user">
+            <blockquote>
+            <p>Example response (200):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json">{
+    &quot;data&quot;: {
+        &quot;id&quot;: 12092,
+        &quot;name&quot;: &quot;Ms. Gloria Goodwin&quot;,
+        &quot;status&quot;: {
+            &quot;value&quot;: 1,
+            &quot;label&quot;: &quot;active&quot;
+        },
+        &quot;created_at&quot;: &quot;2022-02-04T17:40:04.000000Z&quot;,
+        &quot;created_at_diff&quot;: &quot;1 second ago&quot;,
+        &quot;updated_at&quot;: &quot;2022-02-04T17:40:04.000000Z&quot;,
+        &quot;updated_at_diff&quot;: &quot;1 second ago&quot;,
+        &quot;roles&quot;: [
+            {
+                &quot;id&quot;: 3,
+                &quot;name&quot;: &quot;user&quot;,
+                &quot;created_at&quot;: &quot;2021-01-06T16:58:51.000000Z&quot;,
+                &quot;created_at_diff&quot;: &quot;1 year 4 weeks ago&quot;
+            }
+        ]
+    },
+    &quot;meta&quot;: &quot;Paging, filtering and sorting information&quot;
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-GETapi-user" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-GETapi-user"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-GETapi-user"></code></pre>
+</span>
+<span id="execution-error-GETapi-user" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-GETapi-user"></code></pre>
+</span>
+<form id="form-GETapi-user" data-method="GET"
+      data-path="api/user"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      data-headers='{"Authorization":"Bearer {YOUR_ACCESS_TOKEN}","Content-Type":"application\/json","Accept":"application\/json"}'
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('GETapi-user', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-GETapi-user"
+                    onclick="tryItOut('GETapi-user');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-GETapi-user"
+                    onclick="cancelTryOut('GETapi-user');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-GETapi-user" hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-green">GET</small>
+            <b><code>api/user</code></b>
+        </p>
+                <p>
+            <label id="auth-GETapi-user" hidden>Authorization header:
+                <b><code>Bearer </code></b><input type="text"
+                                                                name="Authorization"
+                                                                data-prefix="Bearer "
+                                                                data-endpoint="GETapi-user"
+                                                                data-component="header"></label>
+        </p>
+                </form>
+
+    <h3>Response</h3>
+    <h4 class="fancy-heading-panel"><b>Response Fields</b></h4>
+            <p>
+            <b><code>id</code></b>&nbsp;&nbsp;<small>integer</small>  &nbsp;
+<br>
+
+        </p>
+            <p>
+            <b><code>name</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<br>
+
+        </p>
+            <p>
+            <b><code>ip</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<br>
+<p>(available only for admin.users.view).</p>
+        </p>
+            <p>
+            <b><code>email</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<br>
+<p>(available only for admin.users.view or owner).</p>
+        </p>
+            <p>
+            <b><code>status</code></b>&nbsp;&nbsp;<small>object</small>  &nbsp;
+<br>
+<p>Contains int value and string label</p>
+        </p>
+            <p>
+            <b><code>marketing</code></b>&nbsp;&nbsp;<small>object</small>  &nbsp;
+<br>
+<p>Email marketing consent, contains int value and string label (available only for admin.users.view or owner).</p>
+        </p>
+            <p>
+            <b><code>created_at</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<br>
+
+        </p>
+            <p>
+            <b><code>created_at_diff</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<br>
+
+        </p>
+            <p>
+            <b><code>updated_at</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<br>
+
+        </p>
+            <p>
+            <b><code>updated_at_diff</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<br>
+
+        </p>
+            <p>
+            <b><code>roles</code></b>&nbsp;&nbsp;<small>object[]</small>  &nbsp;
+<br>
+<p>Contains relationships Roles.</p>
+        </p>
+            <p>
+            <b><code>socialites</code></b>&nbsp;&nbsp;<small>object[]</small>  &nbsp;
+<br>
+<p>Contains relationships Socialites (available only for admin.users.view or owner).</p>
+        </p>
+            <h1 id="categories">Categories</h1>
+
+    <blockquote>
+<p>Routes:</p>
+</blockquote>
+<pre><code>/routes/vendor/icore/api/categories.php
+/routes/vendor/idir/api/categories.php</code></pre>
+<blockquote>
+<p>Controllers:</p>
+</blockquote>
+<pre><code>N1ebieski\ICore\Http\Controllers\Api\Category\CategoryController
+N1ebieski\ICore\Http\Controllers\Api\Category\Post\CategoryController
+N1ebieski\IDir\Http\Controllers\Api\Category\Dir\CategoryController</code></pre>
+<blockquote>
+<p>Resource:</p>
+</blockquote>
+<pre><code>N1ebieski\ICore\Http\Resources\Category\CategoryResource</code></pre>
+<p>Permissions:</p>
+<ul>
+<li>api.* - access to all api endpoints</li>
+<li>api.categories.* - access to all categories endpoints</li>
+<li>api.categories.view - access to endpoints with collection of categories</li>
+</ul>
+
+            <h2 id="categories-POSTapi-categories-dir-index">Index of dir&#039;s categories</h2>
+
+<p>
+</p>
+
+
+
+<span id="example-requests-POSTapi-categories-dir-index">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request POST \
+    "https://idir.test:8443/api/categories/dir/index" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json" \
+    --data "{
+    \"page\": 1,
+    \"filter\": {
+        \"except\": [
+            13
+        ],
+        \"search\": \"\",
+        \"status\": 1,
+        \"parent\": 0,
+        \"orderby\": \"\",
+        \"paginate\": 50
+    }
+}"
+</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "https://idir.test:8443/api/categories/dir/index"
+);
+
+const headers = {
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+let body = {
+    "page": 1,
+    "filter": {
+        "except": [
+            13
+        ],
+        "search": "",
+        "status": 1,
+        "parent": 0,
+        "orderby": "",
+        "paginate": 50
+    }
+};
+
+fetch(url, {
+    method: "POST",
+    headers,
+    body: JSON.stringify(body),
+}).then(response =&gt; response.json());</code></pre></div>
+
+
+<div class="php-example">
+    <pre><code class="language-php">$client = new \GuzzleHttp\Client();
+$response = $client-&gt;post(
+    'https://idir.test:8443/api/categories/dir/index',
+    [
+        'headers' =&gt; [
+            'Content-Type' =&gt; 'application/json',
+            'Accept' =&gt; 'application/json',
+        ],
+        'json' =&gt; [
+            'page' =&gt; 1,
+            'filter' =&gt; [
+                'except' =&gt; [
+                    13,
+                ],
+                'search' =&gt; '',
+                'status' =&gt; 1,
+                'parent' =&gt; 0,
+                'orderby' =&gt; '',
+                'paginate' =&gt; 50,
+            ],
+        ],
+    ]
+);
+$body = $response-&gt;getBody();
+print_r(json_decode((string) $body));</code></pre></div>
+
+
+<div class="python-example">
+    <pre><code class="language-python">import requests
+import json
+
+url = 'https://idir.test:8443/api/categories/dir/index'
+payload = {
+    "page": 1,
+    "filter": {
+        "except": [
+            13
+        ],
+        "search": "",
+        "status": 1,
+        "parent": 0,
+        "orderby": "",
+        "paginate": 50
+    }
+}
+headers = {
+  'Content-Type': 'application/json',
+  'Accept': 'application/json'
+}
+
+response = requests.request('POST', url, headers=headers, json=payload)
+response.json()</code></pre></div>
+
+</span>
+
+<span id="example-responses-POSTapi-categories-dir-index">
+            <blockquote>
+            <p>Example response (200):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json">{
+    &quot;data&quot;: [
+        {
+            &quot;id&quot;: 2563,
+            &quot;name&quot;: &quot;velit nihil&quot;,
+            &quot;slug&quot;: &quot;velit-nihil&quot;,
+            &quot;icon&quot;: null,
+            &quot;status&quot;: {
+                &quot;value&quot;: 1,
+                &quot;label&quot;: &quot;active&quot;
+            },
+            &quot;real_depth&quot;: 0,
+            &quot;created_at&quot;: &quot;2022-02-04T17:40:03.000000Z&quot;,
+            &quot;created_at_diff&quot;: &quot;1 second ago&quot;,
+            &quot;updated_at&quot;: &quot;2022-02-04T17:40:03.000000Z&quot;,
+            &quot;updated_at_diff&quot;: &quot;1 second ago&quot;
+        },
+        {
+            &quot;id&quot;: 2564,
+            &quot;name&quot;: &quot;officia ad&quot;,
+            &quot;slug&quot;: &quot;officia-ad&quot;,
+            &quot;icon&quot;: null,
+            &quot;status&quot;: {
+                &quot;value&quot;: 1,
+                &quot;label&quot;: &quot;active&quot;
+            },
+            &quot;real_depth&quot;: 0,
+            &quot;created_at&quot;: &quot;2022-02-04T17:40:03.000000Z&quot;,
+            &quot;created_at_diff&quot;: &quot;1 second ago&quot;,
+            &quot;updated_at&quot;: &quot;2022-02-04T17:40:03.000000Z&quot;,
+            &quot;updated_at_diff&quot;: &quot;1 second ago&quot;
+        }
+    ],
+    &quot;meta&quot;: &quot;Paging, filtering and sorting information&quot;
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-POSTapi-categories-dir-index" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-POSTapi-categories-dir-index"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-POSTapi-categories-dir-index"></code></pre>
+</span>
+<span id="execution-error-POSTapi-categories-dir-index" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-POSTapi-categories-dir-index"></code></pre>
+</span>
+<form id="form-POSTapi-categories-dir-index" data-method="POST"
+      data-path="api/categories/dir/index"
+      data-authed="0"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      data-headers='{"Content-Type":"application\/json","Accept":"application\/json"}'
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('POSTapi-categories-dir-index', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-POSTapi-categories-dir-index"
+                    onclick="tryItOut('POSTapi-categories-dir-index');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-POSTapi-categories-dir-index"
+                    onclick="cancelTryOut('POSTapi-categories-dir-index');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-POSTapi-categories-dir-index" hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-black">POST</small>
+            <b><code>api/categories/dir/index</code></b>
+        </p>
+            <p>
+            <small class="badge badge-green">GET</small>
+            <b><code>api/categories/dir/index</code></b>
+        </p>
+                            <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <p>
+            <b><code>page</code></b>&nbsp;&nbsp;<small>integer</small>     <i>optional</i> &nbsp;
+                <input type="number"
+               name="page"
+               data-endpoint="POSTapi-categories-dir-index"
+               value="1"
+               data-component="body" hidden>
+    <br>
+
+        </p>
+                <p>
+        <details>
+            <summary style="padding-bottom: 10px;">
+                <b><code>filter</code></b>&nbsp;&nbsp;<small>object</small>     <i>optional</i> &nbsp;
+<br>
+
+            </summary>
+                                                <p>
+                        <b><code>filter.except</code></b>&nbsp;&nbsp;<small>integer[]</small>     <i>optional</i> &nbsp;
+                <input type="number"
+               name="filter.except[0]"
+               data-endpoint="POSTapi-categories-dir-index"
+               data-component="body" hidden>
+        <input type="number"
+               name="filter.except[1]"
+               data-endpoint="POSTapi-categories-dir-index"
+               data-component="body" hidden>
+    <br>
+<p>Array containing IDs, excluding records from the list.</p>
+                    </p>
+                                                                <p>
+                        <b><code>filter.search</code></b>&nbsp;&nbsp;<small>string</small>     <i>optional</i> &nbsp;
+                <input type="text"
+               name="filter.search"
+               data-endpoint="POSTapi-categories-dir-index"
+               value=""
+               data-component="body" hidden>
+    <br>
+<p>Search by keyword. Must be at least 3 characters. Must not be greater than 255 characters.</p>
+                    </p>
+                                                                <p>
+                        <b><code>filter.status</code></b>&nbsp;&nbsp;<small>integer</small>     <i>optional</i> &nbsp;
+                <input type="number"
+               name="filter.status"
+               data-endpoint="POSTapi-categories-dir-index"
+               value="1"
+               data-component="body" hidden>
+    <br>
+<p>Must be one of 1 or 0 (available only for admin.categories.view).</p>
+                    </p>
+                                                                <p>
+                        <b><code>filter.parent</code></b>&nbsp;&nbsp;<small>integer</small>     <i>optional</i> &nbsp;
+                <input type="number"
+               name="filter.parent"
+               data-endpoint="POSTapi-categories-dir-index"
+               value="0"
+               data-component="body" hidden>
+    <br>
+<p>ID of category parent. If 0, shows only roots.</p>
+                    </p>
+                                                                <p>
+                        <b><code>filter.orderby</code></b>&nbsp;&nbsp;<small>string</small>     <i>optional</i> &nbsp;
+                <input type="text"
+               name="filter.orderby"
+               data-endpoint="POSTapi-categories-dir-index"
+               value=""
+               data-component="body" hidden>
+    <br>
+<p>Sorting the result list. Must be one of <code>created_at|asc</code>, <code>created_at|desc</code>, <code>updated_at|asc</code>, <code>updated_at|desc</code>, <code>name|asc</code>, <code>name|desc</code>, <code>position|asc</code>, <code>position|desc</code>, <code>real_depth|asc</code>, or <code>real_depth|desc</code>.</p>
+                    </p>
+                                                                <p>
+                        <b><code>filter.paginate</code></b>&nbsp;&nbsp;<small>integer</small>     <i>optional</i> &nbsp;
+                <input type="number"
+               name="filter.paginate"
+               data-endpoint="POSTapi-categories-dir-index"
+               value="50"
+               data-component="body" hidden>
+    <br>
+<p>Number of records in the list. Must be one of <code>25</code>, <code>50</code>, or <code>100</code>.</p>
+                    </p>
+                                    </details>
+        </p>
+        </form>
+
+    <h3>Response</h3>
+    <h4 class="fancy-heading-panel"><b>Response Fields</b></h4>
+            <p>
+            <b><code>id</code></b>&nbsp;&nbsp;<small>integer</small>  &nbsp;
+<br>
+
+        </p>
+            <p>
+            <b><code>name</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<br>
+
+        </p>
+            <p>
+            <b><code>slug</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<br>
+
+        </p>
+            <p>
+            <b><code>icon</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<br>
+<p>Class of icon.</p>
+        </p>
+            <p>
+            <b><code>status</code></b>&nbsp;&nbsp;<small>object</small>  &nbsp;
+<br>
+<p>Contains int value and string label.</p>
+        </p>
+            <p>
+            <b><code>real_depth</code></b>&nbsp;&nbsp;<small>integer</small>  &nbsp;
+<br>
+<p>Level of hierarchy.</p>
+        </p>
+            <p>
+            <b><code>created_at</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<br>
+
+        </p>
+            <p>
+            <b><code>created_at_diff</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<br>
+
+        </p>
+            <p>
+            <b><code>updated_at</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<br>
+
+        </p>
+            <p>
+            <b><code>updated_at_diff</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<br>
+
+        </p>
+            <p>
+            <b><code>ancestors</code></b>&nbsp;&nbsp;<small>object[]</small>  &nbsp;
+<br>
+<p>Contains relationship Category ancestors (parent and higher).</p>
+        </p>
+                <h2 id="categories-POSTapi-categories-post-index">Index of post&#039;s categories</h2>
+
+<p>
+</p>
+
+
+
+<span id="example-requests-POSTapi-categories-post-index">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request POST \
+    "https://idir.test:8443/api/categories/post/index" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json" \
+    --data "{
+    \"page\": 1,
+    \"filter\": {
+        \"except\": [
+            3
+        ],
+        \"search\": \"\",
+        \"status\": 1,
+        \"parent\": 0,
+        \"orderby\": \"\",
+        \"paginate\": 100
+    }
+}"
+</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "https://idir.test:8443/api/categories/post/index"
+);
+
+const headers = {
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+let body = {
+    "page": 1,
+    "filter": {
+        "except": [
+            3
+        ],
+        "search": "",
+        "status": 1,
+        "parent": 0,
+        "orderby": "",
+        "paginate": 100
+    }
+};
+
+fetch(url, {
+    method: "POST",
+    headers,
+    body: JSON.stringify(body),
+}).then(response =&gt; response.json());</code></pre></div>
+
+
+<div class="php-example">
+    <pre><code class="language-php">$client = new \GuzzleHttp\Client();
+$response = $client-&gt;post(
+    'https://idir.test:8443/api/categories/post/index',
+    [
+        'headers' =&gt; [
+            'Content-Type' =&gt; 'application/json',
+            'Accept' =&gt; 'application/json',
+        ],
+        'json' =&gt; [
+            'page' =&gt; 1,
+            'filter' =&gt; [
+                'except' =&gt; [
+                    3,
+                ],
+                'search' =&gt; '',
+                'status' =&gt; 1,
+                'parent' =&gt; 0,
+                'orderby' =&gt; '',
+                'paginate' =&gt; 100,
+            ],
+        ],
+    ]
+);
+$body = $response-&gt;getBody();
+print_r(json_decode((string) $body));</code></pre></div>
+
+
+<div class="python-example">
+    <pre><code class="language-python">import requests
+import json
+
+url = 'https://idir.test:8443/api/categories/post/index'
+payload = {
+    "page": 1,
+    "filter": {
+        "except": [
+            3
+        ],
+        "search": "",
+        "status": 1,
+        "parent": 0,
+        "orderby": "",
+        "paginate": 100
+    }
+}
+headers = {
+  'Content-Type': 'application/json',
+  'Accept': 'application/json'
+}
+
+response = requests.request('POST', url, headers=headers, json=payload)
+response.json()</code></pre></div>
+
+</span>
+
+<span id="example-responses-POSTapi-categories-post-index">
+            <blockquote>
+            <p>Example response (200):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json">{
+    &quot;data&quot;: [
+        {
+            &quot;id&quot;: 2565,
+            &quot;name&quot;: &quot;animi id&quot;,
+            &quot;slug&quot;: &quot;animi-id&quot;,
+            &quot;icon&quot;: null,
+            &quot;status&quot;: {
+                &quot;value&quot;: 1,
+                &quot;label&quot;: &quot;active&quot;
+            },
+            &quot;real_depth&quot;: 0,
+            &quot;created_at&quot;: &quot;2022-02-04T17:40:04.000000Z&quot;,
+            &quot;created_at_diff&quot;: &quot;1 second ago&quot;,
+            &quot;updated_at&quot;: &quot;2022-02-04T17:40:04.000000Z&quot;,
+            &quot;updated_at_diff&quot;: &quot;1 second ago&quot;
+        },
+        {
+            &quot;id&quot;: 2566,
+            &quot;name&quot;: &quot;sint voluptas&quot;,
+            &quot;slug&quot;: &quot;sint-voluptas&quot;,
+            &quot;icon&quot;: null,
+            &quot;status&quot;: {
+                &quot;value&quot;: 1,
+                &quot;label&quot;: &quot;active&quot;
+            },
+            &quot;real_depth&quot;: 0,
+            &quot;created_at&quot;: &quot;2022-02-04T17:40:04.000000Z&quot;,
+            &quot;created_at_diff&quot;: &quot;1 second ago&quot;,
+            &quot;updated_at&quot;: &quot;2022-02-04T17:40:04.000000Z&quot;,
+            &quot;updated_at_diff&quot;: &quot;1 second ago&quot;
+        }
+    ],
+    &quot;meta&quot;: &quot;Paging, filtering and sorting information&quot;
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-POSTapi-categories-post-index" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-POSTapi-categories-post-index"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-POSTapi-categories-post-index"></code></pre>
+</span>
+<span id="execution-error-POSTapi-categories-post-index" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-POSTapi-categories-post-index"></code></pre>
+</span>
+<form id="form-POSTapi-categories-post-index" data-method="POST"
+      data-path="api/categories/post/index"
+      data-authed="0"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      data-headers='{"Content-Type":"application\/json","Accept":"application\/json"}'
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('POSTapi-categories-post-index', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-POSTapi-categories-post-index"
+                    onclick="tryItOut('POSTapi-categories-post-index');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-POSTapi-categories-post-index"
+                    onclick="cancelTryOut('POSTapi-categories-post-index');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-POSTapi-categories-post-index" hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-black">POST</small>
+            <b><code>api/categories/post/index</code></b>
+        </p>
+            <p>
+            <small class="badge badge-green">GET</small>
+            <b><code>api/categories/post/index</code></b>
+        </p>
+                            <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <p>
+            <b><code>page</code></b>&nbsp;&nbsp;<small>integer</small>     <i>optional</i> &nbsp;
+                <input type="number"
+               name="page"
+               data-endpoint="POSTapi-categories-post-index"
+               value="1"
+               data-component="body" hidden>
+    <br>
+
+        </p>
+                <p>
+        <details>
+            <summary style="padding-bottom: 10px;">
+                <b><code>filter</code></b>&nbsp;&nbsp;<small>object</small>     <i>optional</i> &nbsp;
+<br>
+
+            </summary>
+                                                <p>
+                        <b><code>filter.except</code></b>&nbsp;&nbsp;<small>integer[]</small>     <i>optional</i> &nbsp;
+                <input type="number"
+               name="filter.except[0]"
+               data-endpoint="POSTapi-categories-post-index"
+               data-component="body" hidden>
+        <input type="number"
+               name="filter.except[1]"
+               data-endpoint="POSTapi-categories-post-index"
+               data-component="body" hidden>
+    <br>
+<p>Array containing IDs, excluding records from the list.</p>
+                    </p>
+                                                                <p>
+                        <b><code>filter.search</code></b>&nbsp;&nbsp;<small>string</small>     <i>optional</i> &nbsp;
+                <input type="text"
+               name="filter.search"
+               data-endpoint="POSTapi-categories-post-index"
+               value=""
+               data-component="body" hidden>
+    <br>
+<p>Search by keyword. Must be at least 3 characters. Must not be greater than 255 characters.</p>
+                    </p>
+                                                                <p>
+                        <b><code>filter.status</code></b>&nbsp;&nbsp;<small>integer</small>     <i>optional</i> &nbsp;
+                <input type="number"
+               name="filter.status"
+               data-endpoint="POSTapi-categories-post-index"
+               value="1"
+               data-component="body" hidden>
+    <br>
+<p>Must be one of 1 or 0 (available only for admin.categories.view).</p>
+                    </p>
+                                                                <p>
+                        <b><code>filter.parent</code></b>&nbsp;&nbsp;<small>integer</small>     <i>optional</i> &nbsp;
+                <input type="number"
+               name="filter.parent"
+               data-endpoint="POSTapi-categories-post-index"
+               value="0"
+               data-component="body" hidden>
+    <br>
+<p>ID of category parent. If 0, shows only roots.</p>
+                    </p>
+                                                                <p>
+                        <b><code>filter.orderby</code></b>&nbsp;&nbsp;<small>string</small>     <i>optional</i> &nbsp;
+                <input type="text"
+               name="filter.orderby"
+               data-endpoint="POSTapi-categories-post-index"
+               value=""
+               data-component="body" hidden>
+    <br>
+<p>Sorting the result list. Must be one of <code>created_at|asc</code>, <code>created_at|desc</code>, <code>updated_at|asc</code>, <code>updated_at|desc</code>, <code>name|asc</code>, <code>name|desc</code>, <code>position|asc</code>, <code>position|desc</code>, <code>real_depth|asc</code>, or <code>real_depth|desc</code>.</p>
+                    </p>
+                                                                <p>
+                        <b><code>filter.paginate</code></b>&nbsp;&nbsp;<small>integer</small>     <i>optional</i> &nbsp;
+                <input type="number"
+               name="filter.paginate"
+               data-endpoint="POSTapi-categories-post-index"
+               value="100"
+               data-component="body" hidden>
+    <br>
+<p>Number of records in the list. Must be one of <code>25</code>, <code>50</code>, or <code>100</code>.</p>
+                    </p>
+                                    </details>
+        </p>
+        </form>
+
+    <h3>Response</h3>
+    <h4 class="fancy-heading-panel"><b>Response Fields</b></h4>
+            <p>
+            <b><code>id</code></b>&nbsp;&nbsp;<small>integer</small>  &nbsp;
+<br>
+
+        </p>
+            <p>
+            <b><code>name</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<br>
+
+        </p>
+            <p>
+            <b><code>slug</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<br>
+
+        </p>
+            <p>
+            <b><code>icon</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<br>
+<p>Class of icon.</p>
+        </p>
+            <p>
+            <b><code>status</code></b>&nbsp;&nbsp;<small>object</small>  &nbsp;
+<br>
+<p>Contains int value and string label.</p>
+        </p>
+            <p>
+            <b><code>real_depth</code></b>&nbsp;&nbsp;<small>integer</small>  &nbsp;
+<br>
+<p>Level of hierarchy.</p>
+        </p>
+            <p>
+            <b><code>created_at</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<br>
+
+        </p>
+            <p>
+            <b><code>created_at_diff</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<br>
+
+        </p>
+            <p>
+            <b><code>updated_at</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<br>
+
+        </p>
+            <p>
+            <b><code>updated_at_diff</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<br>
+
+        </p>
+            <p>
+            <b><code>ancestors</code></b>&nbsp;&nbsp;<small>object[]</small>  &nbsp;
+<br>
+<p>Contains relationship Category ancestors (parent and higher).</p>
+        </p>
+                <h2 id="categories-POSTapi-categories-index">Index of categories</h2>
+
+<p>
+</p>
+
+
+
+<span id="example-requests-POSTapi-categories-index">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request POST \
+    "https://idir.test:8443/api/categories/index" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json" \
+    --data "{
+    \"page\": 1,
+    \"filter\": {
+        \"except\": [
+            7
+        ],
+        \"search\": \"\",
+        \"status\": 1,
+        \"parent\": 0,
+        \"orderby\": \"\",
+        \"paginate\": 100
+    }
+}"
+</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "https://idir.test:8443/api/categories/index"
+);
+
+const headers = {
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+let body = {
+    "page": 1,
+    "filter": {
+        "except": [
+            7
+        ],
+        "search": "",
+        "status": 1,
+        "parent": 0,
+        "orderby": "",
+        "paginate": 100
+    }
+};
+
+fetch(url, {
+    method: "POST",
+    headers,
+    body: JSON.stringify(body),
+}).then(response =&gt; response.json());</code></pre></div>
+
+
+<div class="php-example">
+    <pre><code class="language-php">$client = new \GuzzleHttp\Client();
+$response = $client-&gt;post(
+    'https://idir.test:8443/api/categories/index',
+    [
+        'headers' =&gt; [
+            'Content-Type' =&gt; 'application/json',
+            'Accept' =&gt; 'application/json',
+        ],
+        'json' =&gt; [
+            'page' =&gt; 1,
+            'filter' =&gt; [
+                'except' =&gt; [
+                    7,
+                ],
+                'search' =&gt; '',
+                'status' =&gt; 1,
+                'parent' =&gt; 0,
+                'orderby' =&gt; '',
+                'paginate' =&gt; 100,
+            ],
+        ],
+    ]
+);
+$body = $response-&gt;getBody();
+print_r(json_decode((string) $body));</code></pre></div>
+
+
+<div class="python-example">
+    <pre><code class="language-python">import requests
+import json
+
+url = 'https://idir.test:8443/api/categories/index'
+payload = {
+    "page": 1,
+    "filter": {
+        "except": [
+            7
+        ],
+        "search": "",
+        "status": 1,
+        "parent": 0,
+        "orderby": "",
+        "paginate": 100
+    }
+}
+headers = {
+  'Content-Type': 'application/json',
+  'Accept': 'application/json'
+}
+
+response = requests.request('POST', url, headers=headers, json=payload)
+response.json()</code></pre></div>
+
+</span>
+
+<span id="example-responses-POSTapi-categories-index">
+            <blockquote>
+            <p>Example response (200):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json">{
+    &quot;data&quot;: [
+        {
+            &quot;id&quot;: 12,
+            &quot;name&quot;: &quot;Gabinety kosmetyczne&quot;,
+            &quot;slug&quot;: &quot;gabinety-kosmetyczne&quot;,
+            &quot;icon&quot;: null,
+            &quot;status&quot;: {
+                &quot;value&quot;: 1,
+                &quot;label&quot;: &quot;active&quot;
+            },
+            &quot;real_depth&quot;: 1,
+            &quot;created_at&quot;: &quot;2009-08-21T08:36:46.000000Z&quot;,
+            &quot;created_at_diff&quot;: &quot;12 years 5 months ago&quot;,
+            &quot;updated_at&quot;: &quot;2009-08-21T08:36:46.000000Z&quot;,
+            &quot;updated_at_diff&quot;: &quot;12 years 5 months ago&quot;
+        },
+        {
+            &quot;id&quot;: 12,
+            &quot;name&quot;: &quot;Gabinety kosmetyczne&quot;,
+            &quot;slug&quot;: &quot;gabinety-kosmetyczne&quot;,
+            &quot;icon&quot;: null,
+            &quot;status&quot;: {
+                &quot;value&quot;: 1,
+                &quot;label&quot;: &quot;active&quot;
+            },
+            &quot;real_depth&quot;: 1,
+            &quot;created_at&quot;: &quot;2009-08-21T08:36:46.000000Z&quot;,
+            &quot;created_at_diff&quot;: &quot;12 years 5 months ago&quot;,
+            &quot;updated_at&quot;: &quot;2009-08-21T08:36:46.000000Z&quot;,
+            &quot;updated_at_diff&quot;: &quot;12 years 5 months ago&quot;
+        }
+    ],
+    &quot;meta&quot;: &quot;Paging, filtering and sorting information&quot;
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-POSTapi-categories-index" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-POSTapi-categories-index"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-POSTapi-categories-index"></code></pre>
+</span>
+<span id="execution-error-POSTapi-categories-index" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-POSTapi-categories-index"></code></pre>
+</span>
+<form id="form-POSTapi-categories-index" data-method="POST"
+      data-path="api/categories/index"
+      data-authed="0"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      data-headers='{"Content-Type":"application\/json","Accept":"application\/json"}'
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('POSTapi-categories-index', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-POSTapi-categories-index"
+                    onclick="tryItOut('POSTapi-categories-index');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-POSTapi-categories-index"
+                    onclick="cancelTryOut('POSTapi-categories-index');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-POSTapi-categories-index" hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-black">POST</small>
+            <b><code>api/categories/index</code></b>
+        </p>
+            <p>
+            <small class="badge badge-green">GET</small>
+            <b><code>api/categories/index</code></b>
+        </p>
+                            <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <p>
+            <b><code>page</code></b>&nbsp;&nbsp;<small>integer</small>     <i>optional</i> &nbsp;
+                <input type="number"
+               name="page"
+               data-endpoint="POSTapi-categories-index"
+               value="1"
+               data-component="body" hidden>
+    <br>
+
+        </p>
+                <p>
+        <details>
+            <summary style="padding-bottom: 10px;">
+                <b><code>filter</code></b>&nbsp;&nbsp;<small>object</small>     <i>optional</i> &nbsp;
+<br>
+
+            </summary>
+                                                <p>
+                        <b><code>filter.except</code></b>&nbsp;&nbsp;<small>integer[]</small>     <i>optional</i> &nbsp;
+                <input type="number"
+               name="filter.except[0]"
+               data-endpoint="POSTapi-categories-index"
+               data-component="body" hidden>
+        <input type="number"
+               name="filter.except[1]"
+               data-endpoint="POSTapi-categories-index"
+               data-component="body" hidden>
+    <br>
+<p>Array containing IDs, excluding records from the list.</p>
+                    </p>
+                                                                <p>
+                        <b><code>filter.search</code></b>&nbsp;&nbsp;<small>string</small>     <i>optional</i> &nbsp;
+                <input type="text"
+               name="filter.search"
+               data-endpoint="POSTapi-categories-index"
+               value=""
+               data-component="body" hidden>
+    <br>
+<p>Search by keyword. Must be at least 3 characters. Must not be greater than 255 characters.</p>
+                    </p>
+                                                                <p>
+                        <b><code>filter.status</code></b>&nbsp;&nbsp;<small>integer</small>     <i>optional</i> &nbsp;
+                <input type="number"
+               name="filter.status"
+               data-endpoint="POSTapi-categories-index"
+               value="1"
+               data-component="body" hidden>
+    <br>
+<p>Must be one of 1 or 0 (available only for admin.categories.view).</p>
+                    </p>
+                                                                <p>
+                        <b><code>filter.parent</code></b>&nbsp;&nbsp;<small>integer</small>     <i>optional</i> &nbsp;
+                <input type="number"
+               name="filter.parent"
+               data-endpoint="POSTapi-categories-index"
+               value="0"
+               data-component="body" hidden>
+    <br>
+<p>ID of category parent. If 0, shows only roots.</p>
+                    </p>
+                                                                <p>
+                        <b><code>filter.orderby</code></b>&nbsp;&nbsp;<small>string</small>     <i>optional</i> &nbsp;
+                <input type="text"
+               name="filter.orderby"
+               data-endpoint="POSTapi-categories-index"
+               value=""
+               data-component="body" hidden>
+    <br>
+<p>Sorting the result list. Must be one of <code>created_at|asc</code>, <code>created_at|desc</code>, <code>updated_at|asc</code>, <code>updated_at|desc</code>, <code>name|asc</code>, <code>name|desc</code>, <code>position|asc</code>, <code>position|desc</code>, <code>real_depth|asc</code>, or <code>real_depth|desc</code>.</p>
+                    </p>
+                                                                <p>
+                        <b><code>filter.paginate</code></b>&nbsp;&nbsp;<small>integer</small>     <i>optional</i> &nbsp;
+                <input type="number"
+               name="filter.paginate"
+               data-endpoint="POSTapi-categories-index"
+               value="100"
+               data-component="body" hidden>
+    <br>
+<p>Number of records in the list. Must be one of <code>25</code>, <code>50</code>, or <code>100</code>.</p>
+                    </p>
+                                    </details>
+        </p>
+        </form>
+
+    <h3>Response</h3>
+    <h4 class="fancy-heading-panel"><b>Response Fields</b></h4>
+            <p>
+            <b><code>id</code></b>&nbsp;&nbsp;<small>integer</small>  &nbsp;
+<br>
+
+        </p>
+            <p>
+            <b><code>name</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<br>
+
+        </p>
+            <p>
+            <b><code>slug</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<br>
+
+        </p>
+            <p>
+            <b><code>icon</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<br>
+<p>Class of icon.</p>
+        </p>
+            <p>
+            <b><code>status</code></b>&nbsp;&nbsp;<small>object</small>  &nbsp;
+<br>
+<p>Contains int value and string label.</p>
+        </p>
+            <p>
+            <b><code>real_depth</code></b>&nbsp;&nbsp;<small>integer</small>  &nbsp;
+<br>
+<p>Level of hierarchy.</p>
+        </p>
+            <p>
+            <b><code>created_at</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<br>
+
+        </p>
+            <p>
+            <b><code>created_at_diff</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<br>
+
+        </p>
+            <p>
+            <b><code>updated_at</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<br>
+
+        </p>
+            <p>
+            <b><code>updated_at_diff</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<br>
+
+        </p>
+            <p>
+            <b><code>ancestors</code></b>&nbsp;&nbsp;<small>object[]</small>  &nbsp;
+<br>
+<p>Contains relationship Category ancestors (parent and higher).</p>
+        </p>
+            <h1 id="endpoints">Endpoints</h1>
+
+    
+
+            <h2 id="endpoints-PUTapi-dirs--dir-">PUT api/dirs/{dir}</h2>
+
+<p>
+</p>
+
+
+
+<span id="example-requests-PUTapi-dirs--dir-">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request PUT \
+    "https://idir.test:8443/api/dirs/5" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json"</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "https://idir.test:8443/api/dirs/5"
+);
+
+const headers = {
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+fetch(url, {
+    method: "PUT",
+    headers,
+}).then(response =&gt; response.json());</code></pre></div>
+
+
+<div class="php-example">
+    <pre><code class="language-php">$client = new \GuzzleHttp\Client();
+$response = $client-&gt;put(
+    'https://idir.test:8443/api/dirs/5',
+    [
+        'headers' =&gt; [
+            'Content-Type' =&gt; 'application/json',
+            'Accept' =&gt; 'application/json',
+        ],
+    ]
+);
+$body = $response-&gt;getBody();
+print_r(json_decode((string) $body));</code></pre></div>
+
+
+<div class="python-example">
+    <pre><code class="language-python">import requests
+import json
+
+url = 'https://idir.test:8443/api/dirs/5'
+headers = {
+  'Content-Type': 'application/json',
+  'Accept': 'application/json'
+}
+
+response = requests.request('PUT', url, headers=headers)
+response.json()</code></pre></div>
+
+</span>
+
+<span id="example-responses-PUTapi-dirs--dir-">
+</span>
+<span id="execution-results-PUTapi-dirs--dir-" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-PUTapi-dirs--dir-"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-PUTapi-dirs--dir-"></code></pre>
+</span>
+<span id="execution-error-PUTapi-dirs--dir-" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-PUTapi-dirs--dir-"></code></pre>
+</span>
+<form id="form-PUTapi-dirs--dir-" data-method="PUT"
+      data-path="api/dirs/{dir}"
+      data-authed="0"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      data-headers='{"Content-Type":"application\/json","Accept":"application\/json"}'
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('PUTapi-dirs--dir-', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-PUTapi-dirs--dir-"
+                    onclick="tryItOut('PUTapi-dirs--dir-');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-PUTapi-dirs--dir-"
+                    onclick="cancelTryOut('PUTapi-dirs--dir-');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-PUTapi-dirs--dir-" hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-darkblue">PUT</small>
+            <b><code>api/dirs/{dir}</code></b>
+        </p>
+                    <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+                    <p>
+                <b><code>dir</code></b>&nbsp;&nbsp;<small>integer</small>  &nbsp;
+                <input type="number"
+               name="dir"
+               data-endpoint="PUTapi-dirs--dir-"
+               value="5"
+               data-component="url" hidden>
+    <br>
+
+            </p>
+                    </form>
+
+            <h2 id="endpoints-POSTapi-payments-dir-verify--driver--">Undocumented function</h2>
+
+<p>
+</p>
+
+
+
+<span id="example-requests-POSTapi-payments-dir-verify--driver--">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request POST \
+    "https://idir.test:8443/api/payments/dir/verify/wu" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json"</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "https://idir.test:8443/api/payments/dir/verify/wu"
+);
+
+const headers = {
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+fetch(url, {
+    method: "POST",
+    headers,
+}).then(response =&gt; response.json());</code></pre></div>
+
+
+<div class="php-example">
+    <pre><code class="language-php">$client = new \GuzzleHttp\Client();
+$response = $client-&gt;post(
+    'https://idir.test:8443/api/payments/dir/verify/wu',
+    [
+        'headers' =&gt; [
+            'Content-Type' =&gt; 'application/json',
+            'Accept' =&gt; 'application/json',
+        ],
+    ]
+);
+$body = $response-&gt;getBody();
+print_r(json_decode((string) $body));</code></pre></div>
+
+
+<div class="python-example">
+    <pre><code class="language-python">import requests
+import json
+
+url = 'https://idir.test:8443/api/payments/dir/verify/wu'
+headers = {
+  'Content-Type': 'application/json',
+  'Accept': 'application/json'
+}
+
+response = requests.request('POST', url, headers=headers)
+response.json()</code></pre></div>
+
+</span>
+
+<span id="example-responses-POSTapi-payments-dir-verify--driver--">
+</span>
+<span id="execution-results-POSTapi-payments-dir-verify--driver--" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-POSTapi-payments-dir-verify--driver--"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-POSTapi-payments-dir-verify--driver--"></code></pre>
+</span>
+<span id="execution-error-POSTapi-payments-dir-verify--driver--" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-POSTapi-payments-dir-verify--driver--"></code></pre>
+</span>
+<form id="form-POSTapi-payments-dir-verify--driver--" data-method="POST"
+      data-path="api/payments/dir/verify/{driver?}"
+      data-authed="0"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      data-headers='{"Content-Type":"application\/json","Accept":"application\/json"}'
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('POSTapi-payments-dir-verify--driver--', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-POSTapi-payments-dir-verify--driver--"
+                    onclick="tryItOut('POSTapi-payments-dir-verify--driver--');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-POSTapi-payments-dir-verify--driver--"
+                    onclick="cancelTryOut('POSTapi-payments-dir-verify--driver--');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-POSTapi-payments-dir-verify--driver--" hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-black">POST</small>
+            <b><code>api/payments/dir/verify/{driver?}</code></b>
+        </p>
+                    <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+                    <p>
+                <b><code>driver</code></b>&nbsp;&nbsp;<small>string</small>     <i>optional</i> &nbsp;
+                <input type="text"
+               name="driver"
+               data-endpoint="POSTapi-payments-dir-verify--driver--"
+               value="wu"
+               data-component="url" hidden>
+    <br>
+
+            </p>
+                    </form>
+
+        <h1 id="posts">Posts</h1>
+
+    <blockquote>
+<p>Routes:</p>
+</blockquote>
+<pre><code>/routes/vendor/icore/api/posts.php</code></pre>
+<blockquote>
+<p>Controller:</p>
+</blockquote>
+<pre><code>N1ebieski\ICore\Http\Controllers\Api\Post\PostController</code></pre>
+<blockquote>
+<p>Resource:</p>
+</blockquote>
+<pre><code>N1ebieski\ICore\Http\Resources\Post\PostResource</code></pre>
+<p>Permissions:</p>
+<ul>
+<li>api.* - access to all api endpoints</li>
+<li>api.posts.* - access to all posts endpoints</li>
+<li>api.posts.view - access to endpoints with collection of posts</li>
+</ul>
+
+            <h2 id="posts-POSTapi-posts-index">Index of posts</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+<aside class="notice">Available only to users with permission: api.posts.view.</aside>
+
+<span id="example-requests-POSTapi-posts-index">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request POST \
+    "https://idir.test:8443/api/posts/index" \
+    --header "Authorization: Bearer {YOUR_ACCESS_TOKEN}" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json" \
+    --data "{
+    \"page\": 1,
+    \"filter\": {
+        \"except\": [
+            15
+        ],
+        \"search\": \"\",
+        \"status\": 1,
+        \"category\": 7,
+        \"orderby\": \"updated_at|asc\",
+        \"paginate\": 100
+    }
+}"
+</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "https://idir.test:8443/api/posts/index"
+);
+
+const headers = {
+    "Authorization": "Bearer {YOUR_ACCESS_TOKEN}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+let body = {
+    "page": 1,
+    "filter": {
+        "except": [
+            15
+        ],
+        "search": "",
+        "status": 1,
+        "category": 7,
+        "orderby": "updated_at|asc",
+        "paginate": 100
+    }
+};
+
+fetch(url, {
+    method: "POST",
+    headers,
+    body: JSON.stringify(body),
+}).then(response =&gt; response.json());</code></pre></div>
+
+
+<div class="php-example">
+    <pre><code class="language-php">$client = new \GuzzleHttp\Client();
+$response = $client-&gt;post(
+    'https://idir.test:8443/api/posts/index',
+    [
+        'headers' =&gt; [
+            'Authorization' =&gt; 'Bearer {YOUR_ACCESS_TOKEN}',
+            'Content-Type' =&gt; 'application/json',
+            'Accept' =&gt; 'application/json',
+        ],
+        'json' =&gt; [
+            'page' =&gt; 1,
+            'filter' =&gt; [
+                'except' =&gt; [
+                    15,
+                ],
+                'search' =&gt; '',
+                'status' =&gt; 1,
+                'category' =&gt; 7,
+                'orderby' =&gt; 'updated_at|asc',
+                'paginate' =&gt; 100,
+            ],
+        ],
+    ]
+);
+$body = $response-&gt;getBody();
+print_r(json_decode((string) $body));</code></pre></div>
+
+
+<div class="python-example">
+    <pre><code class="language-python">import requests
+import json
+
+url = 'https://idir.test:8443/api/posts/index'
+payload = {
+    "page": 1,
+    "filter": {
+        "except": [
+            15
+        ],
+        "search": "",
+        "status": 1,
+        "category": 7,
+        "orderby": "updated_at|asc",
+        "paginate": 100
+    }
+}
+headers = {
+  'Authorization': 'Bearer {YOUR_ACCESS_TOKEN}',
+  'Content-Type': 'application/json',
+  'Accept': 'application/json'
+}
+
+response = requests.request('POST', url, headers=headers, json=payload)
+response.json()</code></pre></div>
+
+</span>
+
+<span id="example-responses-POSTapi-posts-index">
+            <blockquote>
+            <p>Example response (200):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json">{
+    &quot;data&quot;: [
+        {
+            &quot;id&quot;: 205,
+            &quot;slug&quot;: &quot;eum-eos-velit-eaque&quot;,
+            &quot;title&quot;: &quot;Eum eos velit eaque.&quot;,
+            &quot;short_content&quot;: &quot;Minima et illum ea blanditiis rem. Ad consequuntur vel est perferendis et aliquam. Dolorum in nisi eligendi ratione vitae necessitatibus. Possimus reprehenderit sit maiores amet rerum eos commodi. Ut aut doloribus culpa. Non et est possimus pariatur. Atque dolorem distinctio sed et. Quis laudantium ut vero unde. Temporibus et tempora itaque praesentium molestiae. Magni aut et vero. Ipsa quisquam molestiae officia perspiciatis quas ratione repellat. Est sit assumenda aut sapiente veniam sint. Odi&quot;,
+            &quot;content&quot;: &quot;Minima et illum ea blanditiis rem. Ad consequuntur vel est perferendis et aliquam. Dolorum in nisi eligendi ratione vitae necessitatibus. Possimus reprehenderit sit maiores amet rerum eos commodi. Ut aut doloribus culpa. Non et est possimus pariatur. Atque dolorem distinctio sed et. Quis laudantium ut vero unde. Temporibus et tempora itaque praesentium molestiae. Magni aut et vero. Ipsa quisquam molestiae officia perspiciatis quas ratione repellat. Est sit assumenda aut sapiente veniam sint. Odit eum tenetur officiis aliquam. Doloremque asperiores ut eius ea qui eius est. Dignissimos quaerat nam atque. Ut velit facilis reprehenderit saepe. Cupiditate laudantium rerum dolor voluptas consectetur. Voluptas optio est molestiae alias odio non. Amet assumenda quia ut. Accusamus officiis dolorem repudiandae et cupiditate porro quia. Id aut harum illo sint. Omnis qui aliquam dolor laudantium magnam sunt molestiae. Sequi dolor numquam rerum asperiores. Qui voluptatibus aut esse. Labore praesentium consequatur aut et. Sunt enim totam dolorum sit sint facere omnis sapiente. Est repellendus quas et asperiores ut distinctio aspernatur ullam. Eius ea inventore beatae vitae. Voluptas alias tempore accusamus. Eum voluptatum ut nostrum et. Iure omnis excepturi beatae fuga ratione. Aut omnis dolor consequuntur et accusantium natus. Nihil odio sunt ut. Ipsam voluptates debitis et voluptate. Occaecati eum non est sunt velit quia saepe. Molestiae et ut doloremque rem sit. Facere ullam optio rem voluptates. Magni magni dolores repellendus vitae aliquam. A dolorem nihil aliquid enim necessitatibus consequuntur blanditiis et. Fugiat architecto quod voluptatum voluptas voluptate quia corporis. Culpa quia in voluptatem quisquam autem fugiat quae. Quidem dicta iste ullam consectetur distinctio. At unde quod dignissimos eum. Vero est sit ea ipsa sed qui est. Quis necessitatibus vitae provident cum error officiis assumenda.&quot;,
+            &quot;content_html&quot;: &quot;&lt;p&gt;Minima et illum ea blanditiis rem. Ad consequuntur vel est perferendis et aliquam. Dolorum in nisi eligendi ratione vitae necessitatibus. Possimus reprehenderit sit maiores amet rerum eos commodi. Ut aut doloribus culpa. Non et est possimus pariatur. Atque dolorem distinctio sed et. Quis laudantium ut vero unde. Temporibus et tempora itaque praesentium molestiae. Magni aut et vero. Ipsa quisquam molestiae officia perspiciatis quas ratione repellat. Est sit assumenda aut sapiente veniam sint. Odit eum tenetur officiis aliquam. Doloremque asperiores ut eius ea qui eius est. Dignissimos quaerat nam atque. Ut velit facilis reprehenderit saepe. Cupiditate laudantium rerum dolor voluptas consectetur. Voluptas optio est molestiae alias odio non. Amet assumenda quia ut. Accusamus officiis dolorem repudiandae et cupiditate porro quia. Id aut harum illo sint. Omnis qui aliquam dolor laudantium magnam sunt molestiae. Sequi dolor numquam rerum asperiores. Qui voluptatibus aut esse. Labore praesentium consequatur aut et. Sunt enim totam dolorum sit sint facere omnis sapiente. Est repellendus quas et asperiores ut distinctio aspernatur ullam. Eius ea inventore beatae vitae. Voluptas alias tempore accusamus. Eum voluptatum ut nostrum et. Iure omnis excepturi beatae fuga ratione. Aut omnis dolor consequuntur et accusantium natus. Nihil odio sunt ut. Ipsam voluptates debitis et voluptate. Occaecati eum non est sunt velit quia saepe. Molestiae et ut doloremque rem sit. Facere ullam optio rem voluptates. Magni magni dolores repellendus vitae aliquam. A dolorem nihil aliquid enim necessitatibus consequuntur blanditiis et. Fugiat architecto quod voluptatum voluptas voluptate quia corporis. Culpa quia in voluptatem quisquam autem fugiat quae. Quidem dicta iste ullam consectetur distinctio. At unde quod dignissimos eum. Vero est sit ea ipsa sed qui est. Quis necessitatibus vitae provident cum error officiis assumenda.&lt;/p&gt;&quot;,
+            &quot;no_more_content_html&quot;: &quot;&lt;p&gt;Minima et illum ea blanditiis rem. Ad consequuntur vel est perferendis et aliquam. Dolorum in nisi eligendi ratione vitae necessitatibus. Possimus reprehenderit sit maiores amet rerum eos commodi. Ut aut doloribus culpa. Non et est possimus pariatur. Atque dolorem distinctio sed et. Quis laudantium ut vero unde. Temporibus et tempora itaque praesentium molestiae. Magni aut et vero. Ipsa quisquam molestiae officia perspiciatis quas ratione repellat. Est sit assumenda aut sapiente veniam sint. Odit eum tenetur officiis aliquam. Doloremque asperiores ut eius ea qui eius est. Dignissimos quaerat nam atque. Ut velit facilis reprehenderit saepe. Cupiditate laudantium rerum dolor voluptas consectetur. Voluptas optio est molestiae alias odio non. Amet assumenda quia ut. Accusamus officiis dolorem repudiandae et cupiditate porro quia. Id aut harum illo sint. Omnis qui aliquam dolor laudantium magnam sunt molestiae. Sequi dolor numquam rerum asperiores. Qui voluptatibus aut esse. Labore praesentium consequatur aut et. Sunt enim totam dolorum sit sint facere omnis sapiente. Est repellendus quas et asperiores ut distinctio aspernatur ullam. Eius ea inventore beatae vitae. Voluptas alias tempore accusamus. Eum voluptatum ut nostrum et. Iure omnis excepturi beatae fuga ratione. Aut omnis dolor consequuntur et accusantium natus. Nihil odio sunt ut. Ipsam voluptates debitis et voluptate. Occaecati eum non est sunt velit quia saepe. Molestiae et ut doloremque rem sit. Facere ullam optio rem voluptates. Magni magni dolores repellendus vitae aliquam. A dolorem nihil aliquid enim necessitatibus consequuntur blanditiis et. Fugiat architecto quod voluptatum voluptas voluptate quia corporis. Culpa quia in voluptatem quisquam autem fugiat quae. Quidem dicta iste ullam consectetur distinctio. At unde quod dignissimos eum. Vero est sit ea ipsa sed qui est. Quis necessitatibus vitae provident cum error officiis assumenda.&lt;/p&gt;&quot;,
+            &quot;less_content_html&quot;: &quot;&lt;p&gt;Minima et illum ea blanditiis rem. Ad consequuntur vel est perferendis et aliquam. Dolorum in nisi eligendi ratione vitae necessitatibus. Possimus reprehenderit sit maiores amet rerum eos commodi. Ut aut doloribus culpa. Non et est possimus pariatur. Atque dolorem distinctio sed et. Quis laudantium ut vero unde. Temporibus et tempora itaque praesentium molestiae. Magni aut et vero. Ipsa quisquam molestiae officia perspiciatis quas ratione repellat. Est sit assumenda aut sapiente veniam sint. Odit eum tenetur officiis aliquam. Doloremque asperiores ut eius ea qui eius est. Dignissimos quaerat nam atque. Ut velit facilis reprehenderit saepe. Cupiditate laudantium rerum dolor voluptas consectetur. Voluptas optio est molestiae alias odio non. Amet assumenda quia ut. Accusamus officiis dolorem repudiandae et cupiditate porro quia. Id aut harum illo sint. Omnis qui aliquam dolor laudantium magnam sunt molestiae. Sequi dolor numquam rerum asperiores. Qui voluptatibus aut esse. Labore praesentium consequatur aut et. Sunt enim totam dolorum sit sint facere omnis sapiente. Est repellendus quas et asperiores ut distinctio aspernatur ullam. Eius ea inventore beatae vitae. Voluptas alias tempore accusamus. Eum voluptatum ut nostrum et. Iure omnis excepturi beatae fuga ratione. Aut omnis dolor consequuntur et accusantium natus. Nihil odio sunt ut. Ipsam voluptates debitis et voluptate. Occaecati eum non est sunt velit quia saepe. Molestiae et ut doloremque rem sit. Facere ullam optio rem voluptates. Magni magni dolores repellendus vitae aliquam. A dolorem nihil aliquid enim necessitatibus consequuntur blanditiis et. Fugiat architecto quod voluptatum voluptas voluptate quia corporis. Culpa quia in voluptatem quisquam autem fugiat quae. Quidem dicta iste ullam consectetur distinctio. At unde quod dignissimos eum. Vero est sit ea ipsa sed qui est. Quis necessitatibus vitae provident cum error officiis assumenda.&lt;/p&gt;&quot;,
+            &quot;seo_title&quot;: &quot;Ad rerum optio quis voluptas nesciunt.&quot;,
+            &quot;meta_title&quot;: &quot;Ad rerum optio quis voluptas nesciunt.&quot;,
+            &quot;seo_desc&quot;: &quot;Quisquam voluptatem aliquid voluptatem. Dolorum inventore quia voluptatem et animi voluptatem aut praesentium. Ullam sit porro quam modi nihil. Minus explicabo iure qui aperiam.&quot;,
+            &quot;meta_desc&quot;: &quot;Quisquam voluptatem aliquid voluptatem. Dolorum inventore quia voluptatem et animi voluptatem aut praesentium. Ullam sit porro quam modi nihil. Minus explicabo iure qui aperiam.&quot;,
+            &quot;seo_noindex&quot;: false,
+            &quot;seo_nofollow&quot;: false,
+            &quot;status&quot;: {
+                &quot;value&quot;: 1,
+                &quot;label&quot;: &quot;active&quot;
+            },
+            &quot;comment&quot;: false,
+            &quot;first_image&quot;: null,
+            &quot;published_at&quot;: &quot;2022-01-22T20:32:05.000000Z&quot;,
+            &quot;published_at_diff&quot;: &quot;1 week 5 days ago&quot;,
+            &quot;created_at&quot;: &quot;2022-02-04T17:40:04.000000Z&quot;,
+            &quot;created_at_diff&quot;: &quot;1 second ago&quot;,
+            &quot;updated_at&quot;: &quot;2022-02-04T17:40:04.000000Z&quot;,
+            &quot;updated_at_diff&quot;: &quot;1 second ago&quot;,
+            &quot;links&quot;: {
+                &quot;web&quot;: &quot;http://idir.test:8443/posts/eum-eos-velit-eaque&quot;,
+                &quot;admin&quot;: &quot;http://idir.test:8443/admin/posts/index?filter%5Bsearch%5D=id%3A%22205%22&quot;
+            },
+            &quot;user&quot;: {
+                &quot;id&quot;: 12090,
+                &quot;name&quot;: &quot;Joyce Macejkovic PhD&quot;,
+                &quot;status&quot;: {
+                    &quot;value&quot;: 1,
+                    &quot;label&quot;: &quot;active&quot;
+                },
+                &quot;created_at&quot;: &quot;2022-02-04T17:40:04.000000Z&quot;,
+                &quot;created_at_diff&quot;: &quot;1 second ago&quot;,
+                &quot;updated_at&quot;: &quot;2022-02-04T17:40:04.000000Z&quot;,
+                &quot;updated_at_diff&quot;: &quot;1 second ago&quot;
+            }
+        },
+        {
+            &quot;id&quot;: 206,
+            &quot;slug&quot;: &quot;quibusdam-sit-corrupti-ab&quot;,
+            &quot;title&quot;: &quot;Quibusdam sit corrupti ab.&quot;,
+            &quot;short_content&quot;: &quot;Labore veniam sit quam. Vero eaque molestiae nostrum vero aperiam tenetur nihil. Quidem explicabo vel placeat accusamus sint sit impedit. Excepturi quibusdam quod nostrum dignissimos laboriosam libero earum. Accusamus deleniti voluptatum sint aperiam qui beatae. Facere vitae laboriosam earum voluptatum eaque et explicabo commodi. Voluptas nisi perspiciatis occaecati consequatur at deserunt est. Dolorem ea quaerat earum qui rerum earum. Eveniet nihil harum velit nemo cupiditate. Sit repellat eum &quot;,
+            &quot;content&quot;: &quot;Labore veniam sit quam. Vero eaque molestiae nostrum vero aperiam tenetur nihil. Quidem explicabo vel placeat accusamus sint sit impedit. Excepturi quibusdam quod nostrum dignissimos laboriosam libero earum. Accusamus deleniti voluptatum sint aperiam qui beatae. Facere vitae laboriosam earum voluptatum eaque et explicabo commodi. Voluptas nisi perspiciatis occaecati consequatur at deserunt est. Dolorem ea quaerat earum qui rerum earum. Eveniet nihil harum velit nemo cupiditate. Sit repellat eum voluptate incidunt vel. Quia possimus et eligendi reprehenderit. Et culpa eveniet et distinctio hic. Sit necessitatibus sit enim atque vel qui. Laboriosam mollitia repellendus illum explicabo. Illum nobis maxime necessitatibus nisi sit magni. Ipsum veniam maxime qui. Enim deserunt et quidem consequatur tempora dolores. Voluptate quaerat qui quo eum fugiat et. Natus voluptates possimus non nesciunt esse pariatur et. Delectus quis eligendi laboriosam aut repudiandae nihil explicabo. Repellendus quam nulla animi. Atque corrupti dolores quae sunt vel voluptas voluptas. Ut laborum quibusdam est modi mollitia blanditiis. Dolores repudiandae ea et et. Aliquam delectus pariatur tempora ipsam eos soluta. In et nam sit non at velit quas assumenda. Voluptatem accusantium odio et et ut reiciendis sed. Qui vel dolore unde eos modi nemo. Id dolores laboriosam inventore incidunt rerum. Illo nulla in molestias et recusandae ut et. Necessitatibus ipsum id et blanditiis. Nostrum molestiae facilis eligendi fugit laboriosam explicabo minus. Nam animi et deleniti ullam sint sit. Mollitia necessitatibus dolorem mollitia rerum omnis dolorum esse. Sed est totam est delectus recusandae odit. Quasi sit officia culpa ipsum debitis et nostrum. Ut cum corporis velit odit cum sit saepe. Praesentium voluptate qui laboriosam magni tempore recusandae. Commodi quis reiciendis sit soluta necessitatibus. Distinctio rerum possimus qui molestiae et fugiat sed.&quot;,
+            &quot;content_html&quot;: &quot;&lt;p&gt;Labore veniam sit quam. Vero eaque molestiae nostrum vero aperiam tenetur nihil. Quidem explicabo vel placeat accusamus sint sit impedit. Excepturi quibusdam quod nostrum dignissimos laboriosam libero earum. Accusamus deleniti voluptatum sint aperiam qui beatae. Facere vitae laboriosam earum voluptatum eaque et explicabo commodi. Voluptas nisi perspiciatis occaecati consequatur at deserunt est. Dolorem ea quaerat earum qui rerum earum. Eveniet nihil harum velit nemo cupiditate. Sit repellat eum voluptate incidunt vel. Quia possimus et eligendi reprehenderit. Et culpa eveniet et distinctio hic. Sit necessitatibus sit enim atque vel qui. Laboriosam mollitia repellendus illum explicabo. Illum nobis maxime necessitatibus nisi sit magni. Ipsum veniam maxime qui. Enim deserunt et quidem consequatur tempora dolores. Voluptate quaerat qui quo eum fugiat et. Natus voluptates possimus non nesciunt esse pariatur et. Delectus quis eligendi laboriosam aut repudiandae nihil explicabo. Repellendus quam nulla animi. Atque corrupti dolores quae sunt vel voluptas voluptas. Ut laborum quibusdam est modi mollitia blanditiis. Dolores repudiandae ea et et. Aliquam delectus pariatur tempora ipsam eos soluta. In et nam sit non at velit quas assumenda. Voluptatem accusantium odio et et ut reiciendis sed. Qui vel dolore unde eos modi nemo. Id dolores laboriosam inventore incidunt rerum. Illo nulla in molestias et recusandae ut et. Necessitatibus ipsum id et blanditiis. Nostrum molestiae facilis eligendi fugit laboriosam explicabo minus. Nam animi et deleniti ullam sint sit. Mollitia necessitatibus dolorem mollitia rerum omnis dolorum esse. Sed est totam est delectus recusandae odit. Quasi sit officia culpa ipsum debitis et nostrum. Ut cum corporis velit odit cum sit saepe. Praesentium voluptate qui laboriosam magni tempore recusandae. Commodi quis reiciendis sit soluta necessitatibus. Distinctio rerum possimus qui molestiae et fugiat sed.&lt;/p&gt;&quot;,
+            &quot;no_more_content_html&quot;: &quot;&lt;p&gt;Labore veniam sit quam. Vero eaque molestiae nostrum vero aperiam tenetur nihil. Quidem explicabo vel placeat accusamus sint sit impedit. Excepturi quibusdam quod nostrum dignissimos laboriosam libero earum. Accusamus deleniti voluptatum sint aperiam qui beatae. Facere vitae laboriosam earum voluptatum eaque et explicabo commodi. Voluptas nisi perspiciatis occaecati consequatur at deserunt est. Dolorem ea quaerat earum qui rerum earum. Eveniet nihil harum velit nemo cupiditate. Sit repellat eum voluptate incidunt vel. Quia possimus et eligendi reprehenderit. Et culpa eveniet et distinctio hic. Sit necessitatibus sit enim atque vel qui. Laboriosam mollitia repellendus illum explicabo. Illum nobis maxime necessitatibus nisi sit magni. Ipsum veniam maxime qui. Enim deserunt et quidem consequatur tempora dolores. Voluptate quaerat qui quo eum fugiat et. Natus voluptates possimus non nesciunt esse pariatur et. Delectus quis eligendi laboriosam aut repudiandae nihil explicabo. Repellendus quam nulla animi. Atque corrupti dolores quae sunt vel voluptas voluptas. Ut laborum quibusdam est modi mollitia blanditiis. Dolores repudiandae ea et et. Aliquam delectus pariatur tempora ipsam eos soluta. In et nam sit non at velit quas assumenda. Voluptatem accusantium odio et et ut reiciendis sed. Qui vel dolore unde eos modi nemo. Id dolores laboriosam inventore incidunt rerum. Illo nulla in molestias et recusandae ut et. Necessitatibus ipsum id et blanditiis. Nostrum molestiae facilis eligendi fugit laboriosam explicabo minus. Nam animi et deleniti ullam sint sit. Mollitia necessitatibus dolorem mollitia rerum omnis dolorum esse. Sed est totam est delectus recusandae odit. Quasi sit officia culpa ipsum debitis et nostrum. Ut cum corporis velit odit cum sit saepe. Praesentium voluptate qui laboriosam magni tempore recusandae. Commodi quis reiciendis sit soluta necessitatibus. Distinctio rerum possimus qui molestiae et fugiat sed.&lt;/p&gt;&quot;,
+            &quot;less_content_html&quot;: &quot;&lt;p&gt;Labore veniam sit quam. Vero eaque molestiae nostrum vero aperiam tenetur nihil. Quidem explicabo vel placeat accusamus sint sit impedit. Excepturi quibusdam quod nostrum dignissimos laboriosam libero earum. Accusamus deleniti voluptatum sint aperiam qui beatae. Facere vitae laboriosam earum voluptatum eaque et explicabo commodi. Voluptas nisi perspiciatis occaecati consequatur at deserunt est. Dolorem ea quaerat earum qui rerum earum. Eveniet nihil harum velit nemo cupiditate. Sit repellat eum voluptate incidunt vel. Quia possimus et eligendi reprehenderit. Et culpa eveniet et distinctio hic. Sit necessitatibus sit enim atque vel qui. Laboriosam mollitia repellendus illum explicabo. Illum nobis maxime necessitatibus nisi sit magni. Ipsum veniam maxime qui. Enim deserunt et quidem consequatur tempora dolores. Voluptate quaerat qui quo eum fugiat et. Natus voluptates possimus non nesciunt esse pariatur et. Delectus quis eligendi laboriosam aut repudiandae nihil explicabo. Repellendus quam nulla animi. Atque corrupti dolores quae sunt vel voluptas voluptas. Ut laborum quibusdam est modi mollitia blanditiis. Dolores repudiandae ea et et. Aliquam delectus pariatur tempora ipsam eos soluta. In et nam sit non at velit quas assumenda. Voluptatem accusantium odio et et ut reiciendis sed. Qui vel dolore unde eos modi nemo. Id dolores laboriosam inventore incidunt rerum. Illo nulla in molestias et recusandae ut et. Necessitatibus ipsum id et blanditiis. Nostrum molestiae facilis eligendi fugit laboriosam explicabo minus. Nam animi et deleniti ullam sint sit. Mollitia necessitatibus dolorem mollitia rerum omnis dolorum esse. Sed est totam est delectus recusandae odit. Quasi sit officia culpa ipsum debitis et nostrum. Ut cum corporis velit odit cum sit saepe. Praesentium voluptate qui laboriosam magni tempore recusandae. Commodi quis reiciendis sit soluta necessitatibus. Distinctio rerum possimus qui molestiae et fugiat sed.&lt;/p&gt;&quot;,
+            &quot;seo_title&quot;: &quot;Aut eos aut eum reprehenderit odio.&quot;,
+            &quot;meta_title&quot;: &quot;Aut eos aut eum reprehenderit odio.&quot;,
+            &quot;seo_desc&quot;: &quot;Vero qui laborum illo nihil aut. Fugiat est architecto est ut. Officiis aspernatur est minus.&quot;,
+            &quot;meta_desc&quot;: &quot;Vero qui laborum illo nihil aut. Fugiat est architecto est ut. Officiis aspernatur est minus.&quot;,
+            &quot;seo_noindex&quot;: false,
+            &quot;seo_nofollow&quot;: false,
+            &quot;status&quot;: {
+                &quot;value&quot;: 1,
+                &quot;label&quot;: &quot;active&quot;
+            },
+            &quot;comment&quot;: false,
+            &quot;first_image&quot;: null,
+            &quot;published_at&quot;: &quot;2021-09-21T16:55:36.000000Z&quot;,
+            &quot;published_at_diff&quot;: &quot;4 months 2 weeks ago&quot;,
+            &quot;created_at&quot;: &quot;2022-02-04T17:40:04.000000Z&quot;,
+            &quot;created_at_diff&quot;: &quot;1 second ago&quot;,
+            &quot;updated_at&quot;: &quot;2022-02-04T17:40:04.000000Z&quot;,
+            &quot;updated_at_diff&quot;: &quot;1 second ago&quot;,
+            &quot;links&quot;: {
+                &quot;web&quot;: &quot;http://idir.test:8443/posts/quibusdam-sit-corrupti-ab&quot;,
+                &quot;admin&quot;: &quot;http://idir.test:8443/admin/posts/index?filter%5Bsearch%5D=id%3A%22206%22&quot;
+            },
+            &quot;user&quot;: {
+                &quot;id&quot;: 12091,
+                &quot;name&quot;: &quot;Myra Bashirian IV&quot;,
+                &quot;status&quot;: {
+                    &quot;value&quot;: 0,
+                    &quot;label&quot;: &quot;inactive&quot;
+                },
+                &quot;created_at&quot;: &quot;2022-02-04T17:40:04.000000Z&quot;,
+                &quot;created_at_diff&quot;: &quot;1 second ago&quot;,
+                &quot;updated_at&quot;: &quot;2022-02-04T17:40:04.000000Z&quot;,
+                &quot;updated_at_diff&quot;: &quot;1 second ago&quot;
+            }
+        }
+    ],
+    &quot;meta&quot;: &quot;Paging, filtering and sorting information&quot;
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-POSTapi-posts-index" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-POSTapi-posts-index"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-POSTapi-posts-index"></code></pre>
+</span>
+<span id="execution-error-POSTapi-posts-index" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-POSTapi-posts-index"></code></pre>
+</span>
+<form id="form-POSTapi-posts-index" data-method="POST"
+      data-path="api/posts/index"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      data-headers='{"Authorization":"Bearer {YOUR_ACCESS_TOKEN}","Content-Type":"application\/json","Accept":"application\/json"}'
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('POSTapi-posts-index', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-POSTapi-posts-index"
+                    onclick="tryItOut('POSTapi-posts-index');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-POSTapi-posts-index"
+                    onclick="cancelTryOut('POSTapi-posts-index');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-POSTapi-posts-index" hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-black">POST</small>
+            <b><code>api/posts/index</code></b>
+        </p>
+            <p>
+            <small class="badge badge-green">GET</small>
+            <b><code>api/posts/index</code></b>
+        </p>
+                <p>
+            <label id="auth-POSTapi-posts-index" hidden>Authorization header:
+                <b><code>Bearer </code></b><input type="text"
+                                                                name="Authorization"
+                                                                data-prefix="Bearer "
+                                                                data-endpoint="POSTapi-posts-index"
+                                                                data-component="header"></label>
+        </p>
+                        <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <p>
+            <b><code>page</code></b>&nbsp;&nbsp;<small>integer</small>     <i>optional</i> &nbsp;
+                <input type="number"
+               name="page"
+               data-endpoint="POSTapi-posts-index"
+               value="1"
+               data-component="body" hidden>
+    <br>
+
+        </p>
+                <p>
+        <details>
+            <summary style="padding-bottom: 10px;">
+                <b><code>filter</code></b>&nbsp;&nbsp;<small>object</small>     <i>optional</i> &nbsp;
+<br>
+
+            </summary>
+                                                <p>
+                        <b><code>filter.except</code></b>&nbsp;&nbsp;<small>integer[]</small>     <i>optional</i> &nbsp;
+                <input type="number"
+               name="filter.except[0]"
+               data-endpoint="POSTapi-posts-index"
+               data-component="body" hidden>
+        <input type="number"
+               name="filter.except[1]"
+               data-endpoint="POSTapi-posts-index"
+               data-component="body" hidden>
+    <br>
+<p>Array containing IDs, excluding records from the list.</p>
+                    </p>
+                                                                <p>
+                        <b><code>filter.search</code></b>&nbsp;&nbsp;<small>string</small>     <i>optional</i> &nbsp;
+                <input type="text"
+               name="filter.search"
+               data-endpoint="POSTapi-posts-index"
+               value=""
+               data-component="body" hidden>
+    <br>
+<p>Search by keyword. Must be at least 3 characters. Must not be greater than 255 characters.</p>
+                    </p>
+                                                                <p>
+                        <b><code>filter.status</code></b>&nbsp;&nbsp;<small>integer</small>     <i>optional</i> &nbsp;
+                <input type="number"
+               name="filter.status"
+               data-endpoint="POSTapi-posts-index"
+               value="1"
+               data-component="body" hidden>
+    <br>
+<p>Must be one of 1, 0 (available only for admin.categories.view) or 2 (available only for admin.categories.view).</p>
+                    </p>
+                                                                <p>
+                        <b><code>filter.category</code></b>&nbsp;&nbsp;<small>integer</small>     <i>optional</i> &nbsp;
+                <input type="number"
+               name="filter.category"
+               data-endpoint="POSTapi-posts-index"
+               value="7"
+               data-component="body" hidden>
+    <br>
+<p>ID of category contains posts.</p>
+                    </p>
+                                                                <p>
+                        <b><code>filter.orderby</code></b>&nbsp;&nbsp;<small>string</small>     <i>optional</i> &nbsp;
+                <input type="text"
+               name="filter.orderby"
+               data-endpoint="POSTapi-posts-index"
+               value="updated_at|asc"
+               data-component="body" hidden>
+    <br>
+<p>Sorting the result list. Must be one of <code>created_at|asc</code>, <code>created_at|desc</code>, <code>updated_at|asc</code>, <code>updated_at|desc</code>, <code>title|asc</code>, <code>title|desc</code>, <code>view|desc</code>, or <code>view|asc</code>.</p>
+                    </p>
+                                                                <p>
+                        <b><code>filter.paginate</code></b>&nbsp;&nbsp;<small>integer</small>     <i>optional</i> &nbsp;
+                <input type="number"
+               name="filter.paginate"
+               data-endpoint="POSTapi-posts-index"
+               value="100"
+               data-component="body" hidden>
+    <br>
+<p>Number of records in the list. Must be one of <code>25</code>, <code>50</code>, or <code>100</code>.</p>
+                    </p>
+                                    </details>
+        </p>
+        </form>
+
+    <h3>Response</h3>
+    <h4 class="fancy-heading-panel"><b>Response Fields</b></h4>
+            <p>
+            <b><code>id</code></b>&nbsp;&nbsp;<small>integer</small>  &nbsp;
+<br>
+
+        </p>
+            <p>
+            <b><code>title</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<br>
+
+        </p>
+            <p>
+            <b><code>slug</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<br>
+
+        </p>
+            <p>
+            <b><code>short_content</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<br>
+<p>A shortened version of the post without HTML formatting.</p>
+        </p>
+            <p>
+            <b><code>content</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<br>
+<p>Post without HTML formatting.</p>
+        </p>
+            <p>
+            <b><code>content_html</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<br>
+<p>Post with HTML formatting.</p>
+        </p>
+            <p>
+            <b><code>no_more_content_html</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<br>
+<p>Post with HTML formatting without &quot;show more&quot; button.</p>
+        </p>
+            <p>
+            <b><code>less_content_html</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<br>
+<p>Post with HTML formatting for the &quot;show more&quot; button.</p>
+        </p>
+            <p>
+            <b><code>seo_title</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<br>
+<p>Title for SEO.</p>
+        </p>
+            <p>
+            <b><code>meta_title</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<br>
+<p>Title for META.</p>
+        </p>
+            <p>
+            <b><code>seo_desc</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<br>
+<p>Description for SEO.</p>
+        </p>
+            <p>
+            <b><code>meta_desc</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<br>
+<p>Description for META.</p>
+        </p>
+            <p>
+            <b><code>seo_noindex</code></b>&nbsp;&nbsp;<small>boolean</small>  &nbsp;
+<br>
+<p>Value for META.</p>
+        </p>
+            <p>
+            <b><code>seo_nofollow</code></b>&nbsp;&nbsp;<small>boolean</small>  &nbsp;
+<br>
+<p>Value for META.</p>
+        </p>
+            <p>
+            <b><code>status</code></b>&nbsp;&nbsp;<small>object</small>  &nbsp;
+<br>
+<p>Contains int value and string label.</p>
+        </p>
+            <p>
+            <b><code>comment</code></b>&nbsp;&nbsp;<small>boolean</small>  &nbsp;
+<br>
+<p>Determines whether comments are allowed.</p>
+        </p>
+            <p>
+            <b><code>first_image</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<br>
+<p>Address of the first image in the post for META.</p>
+        </p>
+            <p>
+            <b><code>published_at</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<br>
+
+        </p>
+            <p>
+            <b><code>published_at_diff</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<br>
+
+        </p>
+            <p>
+            <b><code>created_at</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<br>
+
+        </p>
+            <p>
+            <b><code>created_at_diff</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<br>
+
+        </p>
+            <p>
+            <b><code>updated_at</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<br>
+
+        </p>
+            <p>
+            <b><code>updated_at_diff</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<br>
+
+        </p>
+            <p>
+            <b><code>links</code></b>&nbsp;&nbsp;<small>object</small>  &nbsp;
+<br>
+<p>Contains links to resources on the website and in the administration panel.</p>
+        </p>
+            <p>
+            <b><code>user</code></b>&nbsp;&nbsp;<small>object</small>  &nbsp;
+<br>
+<p>Contains relationship User author.</p>
+        </p>
+            <h1 id="tags">Tags</h1>
+
+    <blockquote>
+<p>Routes:</p>
+</blockquote>
+<pre><code>/routes/vendor/icore/api/tags.php</code></pre>
+<blockquote>
+<p>Controller:</p>
+</blockquote>
+<pre><code>N1ebieski\ICore\Http\Controllers\Api\Tag\TagController</code></pre>
+<blockquote>
+<p>Resource:</p>
+</blockquote>
+<pre><code>N1ebieski\ICore\Http\Resources\Tag\TagResource</code></pre>
+<p>Permissions:</p>
+<ul>
+<li>api.* - access to all api endpoints</li>
+<li>api.tags.* - access to all tags endpoints</li>
+<li>api.tags.view - access to endpoints with collection of tags</li>
+</ul>
+
+            <h2 id="tags-POSTapi-tags-index">Index of tags</h2>
+
+<p>
+</p>
+
+
+
+<span id="example-requests-POSTapi-tags-index">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request POST \
+    "https://idir.test:8443/api/tags/index" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json" \
+    --data "{
+    \"page\": 1,
+    \"filter\": {
+        \"except\": [
+            20
+        ],
+        \"search\": \"\",
+        \"orderby\": \"updated_at|asc\",
+        \"paginate\": 100
+    }
+}"
+</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "https://idir.test:8443/api/tags/index"
+);
+
+const headers = {
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+let body = {
+    "page": 1,
+    "filter": {
+        "except": [
+            20
+        ],
+        "search": "",
+        "orderby": "updated_at|asc",
+        "paginate": 100
+    }
+};
+
+fetch(url, {
+    method: "POST",
+    headers,
+    body: JSON.stringify(body),
+}).then(response =&gt; response.json());</code></pre></div>
+
+
+<div class="php-example">
+    <pre><code class="language-php">$client = new \GuzzleHttp\Client();
+$response = $client-&gt;post(
+    'https://idir.test:8443/api/tags/index',
+    [
+        'headers' =&gt; [
+            'Content-Type' =&gt; 'application/json',
+            'Accept' =&gt; 'application/json',
+        ],
+        'json' =&gt; [
+            'page' =&gt; 1,
+            'filter' =&gt; [
+                'except' =&gt; [
+                    20,
+                ],
+                'search' =&gt; '',
+                'orderby' =&gt; 'updated_at|asc',
+                'paginate' =&gt; 100,
+            ],
+        ],
+    ]
+);
+$body = $response-&gt;getBody();
+print_r(json_decode((string) $body));</code></pre></div>
+
+
+<div class="python-example">
+    <pre><code class="language-python">import requests
+import json
+
+url = 'https://idir.test:8443/api/tags/index'
+payload = {
+    "page": 1,
+    "filter": {
+        "except": [
+            20
+        ],
+        "search": "",
+        "orderby": "updated_at|asc",
+        "paginate": 100
+    }
+}
+headers = {
+  'Content-Type': 'application/json',
+  'Accept': 'application/json'
+}
+
+response = requests.request('POST', url, headers=headers, json=payload)
+response.json()</code></pre></div>
+
+</span>
+
+<span id="example-responses-POSTapi-tags-index">
+            <blockquote>
+            <p>Example response (200):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json">{
+    &quot;data&quot;: [
+        {
+            &quot;id&quot;: 1,
+            &quot;name&quot;: &quot;usługi galwaniczne&quot;,
+            &quot;slug&quot;: &quot;uslugi-galwaniczne&quot;,
+            &quot;created_at&quot;: &quot;2021-01-06T17:01:54.000000Z&quot;,
+            &quot;created_at_diff&quot;: &quot;1 year 4 weeks ago&quot;,
+            &quot;updated_at&quot;: &quot;2021-01-06T17:01:54.000000Z&quot;,
+            &quot;updated_at_diff&quot;: &quot;1 year 4 weeks ago&quot;
+        },
+        {
+            &quot;id&quot;: 1,
+            &quot;name&quot;: &quot;usługi galwaniczne&quot;,
+            &quot;slug&quot;: &quot;uslugi-galwaniczne&quot;,
+            &quot;created_at&quot;: &quot;2021-01-06T17:01:54.000000Z&quot;,
+            &quot;created_at_diff&quot;: &quot;1 year 4 weeks ago&quot;,
+            &quot;updated_at&quot;: &quot;2021-01-06T17:01:54.000000Z&quot;,
+            &quot;updated_at_diff&quot;: &quot;1 year 4 weeks ago&quot;
+        }
+    ],
+    &quot;meta&quot;: &quot;Paging, filtering and sorting information&quot;
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-POSTapi-tags-index" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-POSTapi-tags-index"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-POSTapi-tags-index"></code></pre>
+</span>
+<span id="execution-error-POSTapi-tags-index" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-POSTapi-tags-index"></code></pre>
+</span>
+<form id="form-POSTapi-tags-index" data-method="POST"
+      data-path="api/tags/index"
+      data-authed="0"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      data-headers='{"Content-Type":"application\/json","Accept":"application\/json"}'
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('POSTapi-tags-index', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-POSTapi-tags-index"
+                    onclick="tryItOut('POSTapi-tags-index');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-POSTapi-tags-index"
+                    onclick="cancelTryOut('POSTapi-tags-index');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-POSTapi-tags-index" hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-black">POST</small>
+            <b><code>api/tags/index</code></b>
+        </p>
+            <p>
+            <small class="badge badge-green">GET</small>
+            <b><code>api/tags/index</code></b>
+        </p>
+                            <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <p>
+            <b><code>page</code></b>&nbsp;&nbsp;<small>integer</small>     <i>optional</i> &nbsp;
+                <input type="number"
+               name="page"
+               data-endpoint="POSTapi-tags-index"
+               value="1"
+               data-component="body" hidden>
+    <br>
+
+        </p>
+                <p>
+        <details>
+            <summary style="padding-bottom: 10px;">
+                <b><code>filter</code></b>&nbsp;&nbsp;<small>object</small>     <i>optional</i> &nbsp;
+<br>
+
+            </summary>
+                                                <p>
+                        <b><code>filter.except</code></b>&nbsp;&nbsp;<small>integer[]</small>     <i>optional</i> &nbsp;
+                <input type="number"
+               name="filter.except[0]"
+               data-endpoint="POSTapi-tags-index"
+               data-component="body" hidden>
+        <input type="number"
+               name="filter.except[1]"
+               data-endpoint="POSTapi-tags-index"
+               data-component="body" hidden>
+    <br>
+<p>Array containing IDs, excluding records from the list.</p>
+                    </p>
+                                                                <p>
+                        <b><code>filter.search</code></b>&nbsp;&nbsp;<small>string</small>     <i>optional</i> &nbsp;
+                <input type="text"
+               name="filter.search"
+               data-endpoint="POSTapi-tags-index"
+               value=""
+               data-component="body" hidden>
+    <br>
+<p>Search by keyword. Must be at least 3 characters. Must not be greater than 255 characters.</p>
+                    </p>
+                                                                <p>
+                        <b><code>filter.orderby</code></b>&nbsp;&nbsp;<small>string</small>     <i>optional</i> &nbsp;
+                <input type="text"
+               name="filter.orderby"
+               data-endpoint="POSTapi-tags-index"
+               value="updated_at|asc"
+               data-component="body" hidden>
+    <br>
+<p>Sorting the result list. Must be one of <code>created_at|asc</code>, <code>created_at|desc</code>, <code>updated_at|asc</code>, <code>updated_at|desc</code>, <code>sum|asc</code>, or <code>sum|desc</code>.</p>
+                    </p>
+                                                                <p>
+                        <b><code>filter.paginate</code></b>&nbsp;&nbsp;<small>integer</small>     <i>optional</i> &nbsp;
+                <input type="number"
+               name="filter.paginate"
+               data-endpoint="POSTapi-tags-index"
+               value="100"
+               data-component="body" hidden>
+    <br>
+<p>Number of records in the list. Must be one of <code>25</code>, <code>50</code>, or <code>100</code>.</p>
+                    </p>
+                                    </details>
+        </p>
+        </form>
+
+    <h3>Response</h3>
+    <h4 class="fancy-heading-panel"><b>Response Fields</b></h4>
+            <p>
+            <b><code>id</code></b>&nbsp;&nbsp;<small>integer</small>  &nbsp;
+<br>
+
+        </p>
+            <p>
+            <b><code>name</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<br>
+
+        </p>
+            <p>
+            <b><code>slug</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<br>
+
+        </p>
+            <p>
+            <b><code>created_at</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<br>
+
+        </p>
+            <p>
+            <b><code>created_at_diff</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<br>
+
+        </p>
+            <p>
+            <b><code>updated_at</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<br>
+
+        </p>
+            <p>
+            <b><code>updated_at_diff</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<br>
+
+        </p>
+            <h1 id="users">Users</h1>
+
+    <blockquote>
+<p>Routes:</p>
+</blockquote>
+<pre><code>/routes/vendor/icore/api/users.php</code></pre>
+<blockquote>
+<p>Controller:</p>
+</blockquote>
+<pre><code>N1ebieski\ICore\Http\Controllers\Api\User\UserController</code></pre>
+<blockquote>
+<p>Resource:</p>
+</blockquote>
+<pre><code>N1ebieski\ICore\Http\Resources\User\UserResource</code></pre>
+<p>Permissions:</p>
+<ul>
+<li>api.* - access to all api endpoints</li>
+<li>api.users.* - access to all users endpoints</li>
+<li>api.users.view - access to endpoints with collection of users</li>
+</ul>
+
+            <h2 id="users-POSTapi-users-index">Index of users</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+<aside class="notice">Available only to users with permissions: api.users.view and admin.users.view.</aside>
+
+<span id="example-requests-POSTapi-users-index">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request POST \
+    "https://idir.test:8443/api/users/index" \
+    --header "Authorization: Bearer {YOUR_ACCESS_TOKEN}" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json" \
+    --data "{
+    \"page\": 1,
+    \"filter\": {
+        \"except\": [
+            20
+        ],
+        \"search\": \"\",
+        \"status\": 1,
+        \"role\": 1,
+        \"orderby\": \"updated_at|asc\",
+        \"paginate\": 100
+    }
+}"
+</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "https://idir.test:8443/api/users/index"
+);
+
+const headers = {
+    "Authorization": "Bearer {YOUR_ACCESS_TOKEN}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+let body = {
+    "page": 1,
+    "filter": {
+        "except": [
+            20
+        ],
+        "search": "",
+        "status": 1,
+        "role": 1,
+        "orderby": "updated_at|asc",
+        "paginate": 100
+    }
+};
+
+fetch(url, {
+    method: "POST",
+    headers,
+    body: JSON.stringify(body),
+}).then(response =&gt; response.json());</code></pre></div>
+
+
+<div class="php-example">
+    <pre><code class="language-php">$client = new \GuzzleHttp\Client();
+$response = $client-&gt;post(
+    'https://idir.test:8443/api/users/index',
+    [
+        'headers' =&gt; [
+            'Authorization' =&gt; 'Bearer {YOUR_ACCESS_TOKEN}',
+            'Content-Type' =&gt; 'application/json',
+            'Accept' =&gt; 'application/json',
+        ],
+        'json' =&gt; [
+            'page' =&gt; 1,
+            'filter' =&gt; [
+                'except' =&gt; [
+                    20,
+                ],
+                'search' =&gt; '',
+                'status' =&gt; 1,
+                'role' =&gt; 1,
+                'orderby' =&gt; 'updated_at|asc',
+                'paginate' =&gt; 100,
+            ],
+        ],
+    ]
+);
+$body = $response-&gt;getBody();
+print_r(json_decode((string) $body));</code></pre></div>
+
+
+<div class="python-example">
+    <pre><code class="language-python">import requests
+import json
+
+url = 'https://idir.test:8443/api/users/index'
+payload = {
+    "page": 1,
+    "filter": {
+        "except": [
+            20
+        ],
+        "search": "",
+        "status": 1,
+        "role": 1,
+        "orderby": "updated_at|asc",
+        "paginate": 100
+    }
+}
+headers = {
+  'Authorization': 'Bearer {YOUR_ACCESS_TOKEN}',
+  'Content-Type': 'application/json',
+  'Accept': 'application/json'
+}
+
+response = requests.request('POST', url, headers=headers, json=payload)
+response.json()</code></pre></div>
+
+</span>
+
+<span id="example-responses-POSTapi-users-index">
+            <blockquote>
+            <p>Example response (200):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json">{
+    &quot;data&quot;: [
+        {
+            &quot;id&quot;: 12088,
+            &quot;name&quot;: &quot;Hyman Bartoletti&quot;,
+            &quot;status&quot;: {
+                &quot;value&quot;: 1,
+                &quot;label&quot;: &quot;active&quot;
+            },
+            &quot;created_at&quot;: &quot;2022-02-04T17:40:04.000000Z&quot;,
+            &quot;created_at_diff&quot;: &quot;1 second ago&quot;,
+            &quot;updated_at&quot;: &quot;2022-02-04T17:40:04.000000Z&quot;,
+            &quot;updated_at_diff&quot;: &quot;1 second ago&quot;,
+            &quot;roles&quot;: [
+                {
+                    &quot;id&quot;: 3,
+                    &quot;name&quot;: &quot;user&quot;,
+                    &quot;created_at&quot;: &quot;2021-01-06T16:58:51.000000Z&quot;,
+                    &quot;created_at_diff&quot;: &quot;1 year 4 weeks ago&quot;
+                }
+            ]
+        },
+        {
+            &quot;id&quot;: 12089,
+            &quot;name&quot;: &quot;Mikayla Lubowitz&quot;,
+            &quot;status&quot;: {
+                &quot;value&quot;: 1,
+                &quot;label&quot;: &quot;active&quot;
+            },
+            &quot;created_at&quot;: &quot;2022-02-04T17:40:04.000000Z&quot;,
+            &quot;created_at_diff&quot;: &quot;1 second ago&quot;,
+            &quot;updated_at&quot;: &quot;2022-02-04T17:40:04.000000Z&quot;,
+            &quot;updated_at_diff&quot;: &quot;1 second ago&quot;,
+            &quot;roles&quot;: [
+                {
+                    &quot;id&quot;: 3,
+                    &quot;name&quot;: &quot;user&quot;,
+                    &quot;created_at&quot;: &quot;2021-01-06T16:58:51.000000Z&quot;,
+                    &quot;created_at_diff&quot;: &quot;1 year 4 weeks ago&quot;
+                }
+            ]
+        }
+    ],
+    &quot;meta&quot;: &quot;Paging, filtering and sorting information&quot;
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-POSTapi-users-index" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-POSTapi-users-index"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-POSTapi-users-index"></code></pre>
+</span>
+<span id="execution-error-POSTapi-users-index" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-POSTapi-users-index"></code></pre>
+</span>
+<form id="form-POSTapi-users-index" data-method="POST"
+      data-path="api/users/index"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      data-headers='{"Authorization":"Bearer {YOUR_ACCESS_TOKEN}","Content-Type":"application\/json","Accept":"application\/json"}'
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('POSTapi-users-index', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-POSTapi-users-index"
+                    onclick="tryItOut('POSTapi-users-index');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-POSTapi-users-index"
+                    onclick="cancelTryOut('POSTapi-users-index');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-POSTapi-users-index" hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-black">POST</small>
+            <b><code>api/users/index</code></b>
+        </p>
+            <p>
+            <small class="badge badge-green">GET</small>
+            <b><code>api/users/index</code></b>
+        </p>
+                <p>
+            <label id="auth-POSTapi-users-index" hidden>Authorization header:
+                <b><code>Bearer </code></b><input type="text"
+                                                                name="Authorization"
+                                                                data-prefix="Bearer "
+                                                                data-endpoint="POSTapi-users-index"
+                                                                data-component="header"></label>
+        </p>
+                        <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <p>
+            <b><code>page</code></b>&nbsp;&nbsp;<small>integer</small>     <i>optional</i> &nbsp;
+                <input type="number"
+               name="page"
+               data-endpoint="POSTapi-users-index"
+               value="1"
+               data-component="body" hidden>
+    <br>
+
+        </p>
+                <p>
+        <details>
+            <summary style="padding-bottom: 10px;">
+                <b><code>filter</code></b>&nbsp;&nbsp;<small>object</small>     <i>optional</i> &nbsp;
+<br>
+
+            </summary>
+                                                <p>
+                        <b><code>filter.except</code></b>&nbsp;&nbsp;<small>integer[]</small>     <i>optional</i> &nbsp;
+                <input type="number"
+               name="filter.except[0]"
+               data-endpoint="POSTapi-users-index"
+               data-component="body" hidden>
+        <input type="number"
+               name="filter.except[1]"
+               data-endpoint="POSTapi-users-index"
+               data-component="body" hidden>
+    <br>
+<p>Array containing IDs, excluding records from the list.</p>
+                    </p>
+                                                                <p>
+                        <b><code>filter.search</code></b>&nbsp;&nbsp;<small>string</small>     <i>optional</i> &nbsp;
+                <input type="text"
+               name="filter.search"
+               data-endpoint="POSTapi-users-index"
+               value=""
+               data-component="body" hidden>
+    <br>
+<p>Search by keyword. Must be at least 3 characters. Must not be greater than 255 characters.</p>
+                    </p>
+                                                                <p>
+                        <b><code>filter.status</code></b>&nbsp;&nbsp;<small>integer</small>     <i>optional</i> &nbsp;
+                <input type="number"
+               name="filter.status"
+               data-endpoint="POSTapi-users-index"
+               value="1"
+               data-component="body" hidden>
+    <br>
+<p>Must be one of 1 or 0 (available only for admin.users.view).</p>
+                    </p>
+                                                                <p>
+                        <b><code>filter.role</code></b>&nbsp;&nbsp;<small>integer</small>     <i>optional</i> &nbsp;
+                <input type="number"
+               name="filter.role"
+               data-endpoint="POSTapi-users-index"
+               value="1"
+               data-component="body" hidden>
+    <br>
+
+                    </p>
+                                                                <p>
+                        <b><code>filter.orderby</code></b>&nbsp;&nbsp;<small>string</small>     <i>optional</i> &nbsp;
+                <input type="text"
+               name="filter.orderby"
+               data-endpoint="POSTapi-users-index"
+               value="updated_at|asc"
+               data-component="body" hidden>
+    <br>
+<p>Sorting the result list. Must be one of <code>created_at|asc</code>, <code>created_at|desc</code>, <code>updated_at|asc</code>, or <code>updated_at|desc</code>.</p>
+                    </p>
+                                                                <p>
+                        <b><code>filter.paginate</code></b>&nbsp;&nbsp;<small>integer</small>     <i>optional</i> &nbsp;
+                <input type="number"
+               name="filter.paginate"
+               data-endpoint="POSTapi-users-index"
+               value="100"
+               data-component="body" hidden>
+    <br>
+<p>Number of records in the list. Must be one of <code>25</code>, <code>50</code>, or <code>100</code>.</p>
+                    </p>
+                                    </details>
+        </p>
+        </form>
+
+    <h3>Response</h3>
+    <h4 class="fancy-heading-panel"><b>Response Fields</b></h4>
+            <p>
+            <b><code>id</code></b>&nbsp;&nbsp;<small>integer</small>  &nbsp;
+<br>
+
+        </p>
+            <p>
+            <b><code>name</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<br>
+
+        </p>
+            <p>
+            <b><code>ip</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<br>
+<p>(available only for admin.users.view).</p>
+        </p>
+            <p>
+            <b><code>email</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<br>
+<p>(available only for admin.users.view or owner).</p>
+        </p>
+            <p>
+            <b><code>status</code></b>&nbsp;&nbsp;<small>object</small>  &nbsp;
+<br>
+<p>Contains int value and string label</p>
+        </p>
+            <p>
+            <b><code>marketing</code></b>&nbsp;&nbsp;<small>object</small>  &nbsp;
+<br>
+<p>Email marketing consent, contains int value and string label (available only for admin.users.view or owner).</p>
+        </p>
+            <p>
+            <b><code>created_at</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<br>
+
+        </p>
+            <p>
+            <b><code>created_at_diff</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<br>
+
+        </p>
+            <p>
+            <b><code>updated_at</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<br>
+
+        </p>
+            <p>
+            <b><code>updated_at_diff</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<br>
+
+        </p>
+            <p>
+            <b><code>roles</code></b>&nbsp;&nbsp;<small>object[]</small>  &nbsp;
+<br>
+<p>Contains relationship Roles.</p>
+        </p>
+            <p>
+            <b><code>socialites</code></b>&nbsp;&nbsp;<small>object[]</small>  &nbsp;
+<br>
+<p>Contains relationship Socialites (available only for admin.users.view or owner).</p>
+        </p>
+        
+
+        
+    </div>
+    <div class="dark-box">
+                    <div class="lang-selector">
+                                                        <button type="button" class="lang-button" data-language-name="bash">bash</button>
+                                                        <button type="button" class="lang-button" data-language-name="javascript">javascript</button>
+                                                        <button type="button" class="lang-button" data-language-name="php">php</button>
+                                                        <button type="button" class="lang-button" data-language-name="python">python</button>
+                            </div>
+            </div>
+</div>
+</body>
+</html>

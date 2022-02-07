@@ -111,6 +111,10 @@ class IDirServiceProvider extends ServiceProvider
         ], 'idir.views.web');
 
         $this->publishes([
+            __DIR__ . '/../../public/docs' => public_path('docs'),
+        ], 'idir.public.docs');
+
+        $this->publishes([
             __DIR__ . '/../../public/css' => public_path('css/vendor/idir'),
             __DIR__ . '/../../public/mix-manifest.json' => public_path('mix-manifest.json')
         ], 'idir.public.css');
