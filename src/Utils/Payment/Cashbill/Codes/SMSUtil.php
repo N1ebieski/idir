@@ -66,17 +66,11 @@ class SMSUtil implements SMSUtilStrategy
         ]);
 
         if (!$this->isActive()) {
-            throw new \N1ebieski\IDir\Exceptions\Payment\Cashbill\Codes\SMS\InactiveCodeException(
-                'Code is inactive.',
-                403
-            );
+            throw new \N1ebieski\IDir\Exceptions\Payment\Cashbill\Codes\SMS\InactiveCodeException();
         }
 
         if (!$this->isNumber($attributes['number'])) {
-            throw new \N1ebieski\IDir\Exceptions\Payment\Cashbill\Codes\SMS\InvalidNumberException(
-                'Number is invalid.',
-                403
-            );
+            throw new \N1ebieski\IDir\Exceptions\Payment\Cashbill\Codes\SMS\InvalidNumberException();
         }
     }
 }

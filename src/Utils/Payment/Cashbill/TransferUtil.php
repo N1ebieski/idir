@@ -291,10 +291,7 @@ class TransferUtil implements TransferUtilStrategy
         }
 
         if (!$this->isSign($attributes)) {
-            throw new \N1ebieski\IDir\Exceptions\Payment\Cashbill\Transfer\InvalidSignException(
-                'Invalid signature of payment.',
-                403
-            );
+            throw new \N1ebieski\IDir\Exceptions\Payment\Cashbill\Transfer\InvalidSignException();
         }
     }
 
@@ -306,31 +303,19 @@ class TransferUtil implements TransferUtilStrategy
     public function authorize(array $attributes): void
     {
         if (!$this->isService($attributes['service'])) {
-            throw new \N1ebieski\IDir\Exceptions\Payment\Cashbill\Transfer\InvalidServiceException(
-                'Invalid service.',
-                403
-            );
+            throw new \N1ebieski\IDir\Exceptions\Payment\Cashbill\Transfer\InvalidServiceException();
         }
 
         if (!$this->isStatus($attributes['status'])) {
-            throw new \N1ebieski\IDir\Exceptions\Payment\Cashbill\Transfer\InvalidStatusException(
-                'Invalid status of payment.',
-                403
-            );
+            throw new \N1ebieski\IDir\Exceptions\Payment\Cashbill\Transfer\InvalidStatusException();
         }
 
         if (!$this->isAmount((float)$attributes['amount'])) {
-            throw new \N1ebieski\IDir\Exceptions\Payment\Cashbill\Transfer\InvalidAmountException(
-                'Invalid amount of payment.',
-                403
-            );
+            throw new \N1ebieski\IDir\Exceptions\Payment\Cashbill\Transfer\InvalidAmountException();
         }
 
         if (!$this->isSign($attributes)) {
-            throw new \N1ebieski\IDir\Exceptions\Payment\Cashbill\Transfer\InvalidSignException(
-                'Invalid signature of payment.',
-                403
-            );
+            throw new \N1ebieski\IDir\Exceptions\Payment\Cashbill\Transfer\InvalidSignException();
         }
     }
 

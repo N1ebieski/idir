@@ -54,10 +54,7 @@ class TransferUtil implements TransferUtilStrategy
         ]);
 
         if (!$this->isActive()) {
-            throw new \N1ebieski\IDir\Exceptions\Payment\Cashbill\Codes\Transfer\InactiveCodeException(
-                'Code is inactive.',
-                403
-            );
+            throw new \N1ebieski\IDir\Exceptions\Payment\Cashbill\Codes\Transfer\InactiveCodeException();
         }
     }
 }
