@@ -2,6 +2,6 @@
 
 return [
     'route' => [
-        'edit_dir' => 'Wpisy',
+        'dirs' => 'Wpisy',
     ]
 ];

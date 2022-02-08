@@ -16,8 +16,8 @@ use N1ebieski\ICore\Http\Controllers\Api\Auth\TokenController as BaseTokenContro
  *
  * > Controllers:
  *
+ *     N1ebieski\ICore\Http\Controllers\Api\Auth\RegisterController
  *     N1ebieski\ICore\Http\Controllers\Api\Auth\TokenController
- *     N1ebieski\ICore\Http\Controllers\Api\Auth\UserController
  *
  */
 class TokenController
@@ -45,6 +45,8 @@ class TokenController
      * Create access token and (optional) refresh token.
      *
      * <aside class="notice">Access token expires after 2 hours. Refresh token expires after 1 year.</aside>
+     *
+     * @unauthenticated
      *
      * @bodyParam email string Example: kontakt@demo.idir.intelekt.net.pl
      * @bodyParam password string Example: demo1234
