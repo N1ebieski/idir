@@ -24,7 +24,7 @@ class CategoryController implements Polymorphic
     public function show(Category $category, Region $region, ShowRequest $request, ShowFilter $filter): HttpResponse
     {
         return Response::view('idir::web.category.dir.show', [
-            'dirs' => $category->makeCache()->rememberDirsByFilter($filter->all(), $request->input('page') ?? 1),
+            'dirs' => $category->makeCache()->rememberDirsByFilter($filter->all()),
             'region' => $region,
             'filter' => $filter->all(),
             'category' => $category->makeCache()->rememberLoadNestedWithMorphsCountByFilter($filter->all()),

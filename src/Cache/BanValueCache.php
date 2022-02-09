@@ -14,7 +14,7 @@ class BanValueCache extends BaseBanValueCache
     {
         return $this->cache->tags('bans.url')->remember(
             "banValue.getAllUrlsAsString",
-            $this->carbon->now()->addMinutes($this->minutes),
+            $this->carbon->now()->addMinutes($this->config->get('cache.minutes')),
             function () {
                 $urls = $this->banValue->whereType('url')->get();
 

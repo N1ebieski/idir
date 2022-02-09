@@ -74,10 +74,7 @@ class DirController
     public function index(Dir $dir, IndexRequest $request, IndexFilter $filter): HttpResponse
     {
         return Response::view('idir::web.dir.index', [
-            'dirs' => $dir->makeCache()->rememberForWebByFilter(
-                $filter->all(),
-                $request->input('page') ?? 1
-            ),
+            'dirs' => $dir->makeCache()->rememberForWebByFilter($filter->all()),
             'filter' => $filter->all()
         ]);
     }

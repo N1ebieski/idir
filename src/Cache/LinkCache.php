@@ -20,7 +20,7 @@ class LinkCache extends BaseLinkCache
 
         return $this->cache->tags(['links'])->remember(
             "link.getLinksUnionDirsByComponent.{$json}",
-            $this->carbon->now()->addMinutes($this->minutes),
+            $this->carbon->now()->addMinutes($this->config->get('cache.minutes')),
             function () use ($dirs, $component) {
                 return $this->link->makeRepo()->getLinksUnionDirsByComponent($dirs, $component);
             }

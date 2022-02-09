@@ -7,7 +7,6 @@ use N1ebieski\IDir\Models\Dir;
 use Spatie\ViewModels\ViewModel;
 use N1ebieski\ICore\Filters\Filter;
 use N1ebieski\IDir\Models\Stat\Dir\Stat;
-use Illuminate\Contracts\Auth\Guard as Auth;
 use Illuminate\Database\Eloquent\Collection;
 use N1ebieski\IDir\Models\Comment\Dir\Comment;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -43,34 +42,24 @@ class ShowViewModel extends ViewModel
     protected $request;
 
     /**
-     * Undocumented variable
-     *
-     * @var Auth
-     */
-    protected $auth;
-
-    /**
      * Undocumented function
      *
      * @param Dir $dir
      * @param Comment $comment
      * @param Filter $filter
      * @param Request $request
-     * @param Auth $auth
      */
     public function __construct(
         Dir $dir,
         Comment $comment,
         Filter $filter,
-        Request $request,
-        Auth $auth
+        Request $request
     ) {
         $this->dir = $dir;
         $this->comment = $comment;
 
         $this->filter = $filter;
         $this->request = $request;
-        $this->auth = $auth;
     }
 
     /**
@@ -92,10 +81,7 @@ class ShowViewModel extends ViewModel
     {
         return $this->comment->setRelations(['morph' => $this->dir])
             ->makeCache()
-            ->rememberRootsByFilter(
-                $this->filter->all(),
-                $this->request->input('page') ?? 1
-            );
+            ->rememberRootsByFilter($this->filter->all());
     }
 
     /**
@@ -162,8 +148,8 @@ class ShowViewModel extends ViewModel
      */
     public function ratingUserValue(): ?int
     {
-        return $this->auth->check() ?
-            optional($this->dir->ratings->where('user_id', $this->auth->user()->id)->first())->rating
+        return $this->request->user() ?
+            optional($this->dir->ratings->where('user_id', $this->request->user()->id)->first())->rating
             : null;
     }
 }

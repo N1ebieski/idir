@@ -2,15 +2,12 @@
 
 namespace N1ebieski\IDir\Cache;
 
+use Illuminate\Support\Carbon;
 use N1ebieski\IDir\Models\Region\Region;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Contracts\Cache\Repository as Cache;
 use Illuminate\Contracts\Config\Repository as Config;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Carbon;
 
-/**
- * [RegionCache description]
- */
 class RegionCache
 {
     /**
@@ -26,17 +23,17 @@ class RegionCache
     protected $cache;
 
     /**
+     * Cache driver
+     * @var Config
+     */
+    protected $config;
+
+    /**
      * Undocumented variable
      *
      * @var Carbon
      */
     protected $carbon;
-
-    /**
-     * Configuration
-     * @var int
-     */
-    protected $minutes;
 
     /**
      * Undocumented function
@@ -52,9 +49,8 @@ class RegionCache
 
         $this->cache = $cache;
         $this->config = $config;
+        $this->config = $config;
         $this->carbon = $carbon;
-
-        $this->minutes = $config->get('cache.minutes');
     }
 
     /**
@@ -66,7 +62,7 @@ class RegionCache
     {
         return $this->cache->remember(
             "region.all",
-            $this->carbon->now()->addMinutes($this->minutes),
+            $this->carbon->now()->addMinutes($this->config->get('cache.minutes')),
             function () {
                 return $this->region->all();
             }
@@ -82,7 +78,7 @@ class RegionCache
     {
         return $this->cache->remember(
             "region.firstBySlug.{$slug}",
-            $this->carbon->now()->addMinutes($this->minutes),
+            $this->carbon->now()->addMinutes($this->config->get('cache.minutes')),
             function () use ($slug) {
                 return $this->region->makeRepo()->firstBySlug($slug);
             }

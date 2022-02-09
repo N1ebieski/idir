@@ -24,7 +24,7 @@ class CategoryCache extends BaseCategoryCache
 
         return $this->cache->tags(['categories'])->remember(
             "category.{$this->category->poli}.getRootsByComponent.{$json}",
-            $this->carbon->now()->addMinutes($this->minutes),
+            $this->carbon->now()->addMinutes($this->config->get('cache.minutes')),
             function () use ($component) {
                 return $this->category->makeRepo()->getRootsByComponent($component);
             }
@@ -43,7 +43,7 @@ class CategoryCache extends BaseCategoryCache
 
         return $this->cache->tags(['categories'])->remember(
             "category.{$this->category->poli}.getWithChildrensByComponent.{$json}",
-            $this->carbon->now()->addMinutes($this->minutes),
+            $this->carbon->now()->addMinutes($this->config->get('cache.minutes')),
             function () use ($component) {
                 return $this->category->makeRepo()->getWithChildrensByComponent($component);
             }
@@ -53,53 +53,50 @@ class CategoryCache extends BaseCategoryCache
     /**
      * [getDirsByFilter description]
      * @param  array                $filter    [description]
-     * @param  int                  $page [description]
      * @return LengthAwarePaginator|null       [description]
      */
-    public function getDirsByFilter(array $filter, int $page): ?LengthAwarePaginator
+    public function getDirsByFilter(array $filter): ?LengthAwarePaginator
     {
         $regionId = optional($filter['region'])->id;
 
         return $this->cache->tags(['dirs'])
-            ->get("category.{$this->category->id}.paginateDirsByFilter.{$regionId}.{$page}");
+            ->get("category.{$this->category->id}.paginateDirsByFilter.{$regionId}.{$this->request->input('page')}");
     }
 
     /**
      * [putDirsByFilter description]
      * @param  LengthAwarePaginator $dirs [description]
      * @param  array                $filter   [description]
-     * @param  int                  $page     [description]
      * @return bool                           [description]
      */
-    public function putDirsByFilter(LengthAwarePaginator $dirs, array $filter, int $page): bool
+    public function putDirsByFilter(LengthAwarePaginator $dirs, array $filter): bool
     {
         $regionId = optional($filter['region'])->id;
 
         return $this->cache->tags(['dirs'])
             ->put(
-                "category.{$this->category->id}.paginateDirsByFilter.{$regionId}.{$page}",
+                "category.{$this->category->id}.paginateDirsByFilter.{$regionId}.{$this->request->input('page')}",
                 $dirs,
-                $this->carbon->now()->addMinutes($this->minutes)
+                $this->carbon->now()->addMinutes($this->config->get('cache.minutes'))
             );
     }
 
     /**
      * [rememberDirsByFilter description]
      * @param  array        $filter       [description]
-     * @param  int          $page         [description]
      * @return LengthAwarePaginator       [description]
      */
-    public function rememberDirsByFilter(array $filter, int $page): LengthAwarePaginator
+    public function rememberDirsByFilter(array $filter): LengthAwarePaginator
     {
         if ($this->collect->make($filter)->except(['region'])->isNullItems()) {
-            $dirs = $this->getDirsByFilter($filter, $page);
+            $dirs = $this->getDirsByFilter($filter, $this->request->input('page'));
         }
 
         if (!isset($dirs) || !$dirs) {
             $dirs = $this->category->makeRepo()->paginateDirsByFilter($filter);
 
             if ($this->collect->make($filter)->except(['region'])->isNullItems()) {
-                $this->putDirsByFilter($dirs, $filter, $page);
+                $this->putDirsByFilter($dirs, $filter, $this->request->input('page'));
             }
         }
 
@@ -117,7 +114,7 @@ class CategoryCache extends BaseCategoryCache
 
         return $this->cache->tags(["category.{$this->category->slug}"])->remember(
             "category.{$this->category->slug}.loadNestedWithMorphsCountByFilter.{$regionId}",
-            $this->carbon->now()->addMinutes($this->minutes),
+            $this->carbon->now()->addMinutes($this->config->get('cache.minutes')),
             function () use ($filter) {
                 return $this->category->loadNestedWithMorphsCountByFilter($filter);
             }

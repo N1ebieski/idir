@@ -2,6 +2,7 @@
 
 namespace N1ebieski\IDir\Cache;
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use N1ebieski\IDir\Models\Dir;
 use Illuminate\Database\Eloquent\Collection;
@@ -25,6 +26,12 @@ class DirCache
     protected $cache;
 
     /**
+     * Cache driver
+     * @var Config
+     */
+    protected $config;
+
+    /**
      * Undocumented variable
      *
      * @var Carbon
@@ -32,16 +39,16 @@ class DirCache
     protected $carbon;
 
     /**
-     * Configuration
-     * @var int
-     */
-    protected $minutes;
-
-    /**
      * [private description]
      * @var Collect
      */
     protected $collect;
+
+    /**
+     * [private description]
+     * @var Request
+     */
+    protected $request;
 
     /**
      * Undocumented function
@@ -51,13 +58,15 @@ class DirCache
      * @param Config $config
      * @param Carbon $carbon
      * @param Collect $collect
+     * @param Request $request
      */
     public function __construct(
         Dir $dir,
         Cache $cache,
         Config $config,
         Carbon $carbon,
-        Collect $collect
+        Collect $collect,
+        Request $request
     ) {
         $this->dir = $dir;
 
@@ -65,53 +74,49 @@ class DirCache
         $this->config = $config;
         $this->carbon = $carbon;
         $this->collect = $collect;
-
-        $this->minutes = $config->get('cache.minutes');
+        $this->request = $request;
     }
 
     /**
      * [getForWebByFilter description]
-     * @param  int                  $page [description]
      * @return LengthAwarePaginator|null       [description]
      */
-    public function getForWebByFilter(int $page): ?LengthAwarePaginator
+    public function getForWebByFilter(): ?LengthAwarePaginator
     {
-        return $this->cache->tags(['dirs'])->get("dir.paginateByFilter.{$page}");
+        return $this->cache->tags(['dirs'])->get("dir.paginateByFilter.{$this->request->input('page')}");
     }
 
     /**
      * [putForWebByFilter description]
      * @param  LengthAwarePaginator $dirs [description]
-     * @param  int                  $page     [description]
      * @return bool                           [description]
      */
-    public function putForWebByFilter(LengthAwarePaginator $dirs, int $page): bool
+    public function putForWebByFilter(LengthAwarePaginator $dirs): bool
     {
         return $this->cache->tags(['dirs'])
             ->put(
-                "dir.paginateByFilter.{$page}",
+                "dir.paginateByFilter.{$this->request->input('page')}",
                 $dirs,
-                $this->carbon->now()->addMinutes($this->minutes)
+                $this->carbon->now()->addMinutes($this->config->get('cache.minutes'))
             );
     }
 
     /**
      * [rememberForWebByFilter description]
      * @param  array        $filter       [description]
-     * @param  int          $page         [description]
      * @return LengthAwarePaginator       [description]
      */
-    public function rememberForWebByFilter(array $filter, int $page): LengthAwarePaginator
+    public function rememberForWebByFilter(array $filter): LengthAwarePaginator
     {
         if ($this->collect->make($filter)->isNullItems()) {
-            $dirs = $this->getForWebByFilter($page);
+            $dirs = $this->getForWebByFilter($this->request->input('page'));
         }
 
         if (!isset($dirs) || !$dirs) {
             $dirs = $this->dir->makeRepo()->paginateForWebByFilter($filter);
 
             if ($this->collect->make($filter)->isNullItems()) {
-                $this->putForWebByFilter($dirs, $page);
+                $this->putForWebByFilter($dirs, $this->request->input('page'));
             }
         }
 
@@ -144,7 +149,7 @@ class DirCache
     {
         return $this->cache->tags(["dir.{$slug}"])->remember(
             "dir.firstBySlug.{$slug}",
-            $this->carbon->now()->addMinutes($this->minutes),
+            $this->carbon->now()->addMinutes($this->config->get('cache.minutes')),
             function () use ($slug) {
                 return $this->dir->makeRepo()->firstBySlug($slug);
             }
@@ -159,7 +164,7 @@ class DirCache
     {
         return $this->cache->tags(["dir.{$this->dir->slug}"])->remember(
             "dir.{$this->dir->slug}.loadAllPublicRels",
-            $this->carbon->now()->addMinutes($this->minutes),
+            $this->carbon->now()->addMinutes($this->config->get('cache.minutes')),
             function () {
                 return $this->dir->loadAllPublicRels();
             }
@@ -174,7 +179,7 @@ class DirCache
     {
         return $this->cache->tags(["dir.{$this->dir->slug}"])->remember(
             "dir.getRelated.{$this->dir->id}",
-            $this->carbon->now()->addMinutes($this->minutes),
+            $this->carbon->now()->addMinutes($this->config->get('cache.minutes')),
             function () {
                 return $this->dir->makeRepo()->getRelated();
             }
@@ -189,7 +194,7 @@ class DirCache
     {
         return $this->cache->tags(["dirs"])->remember(
             "dir.getLatestForHome",
-            $this->carbon->now()->addMinutes($this->minutes),
+            $this->carbon->now()->addMinutes($this->config->get('cache.minutes')),
             function () {
                 return $this->dir->makeRepo()->getLatestForHome();
             }
@@ -208,7 +213,7 @@ class DirCache
 
         return $this->cache->tags(["dirs"])->remember(
             "dir.getAdvertisingPrivilegedByComponent.{$json}",
-            $this->carbon->now()->addMinutes($this->minutes),
+            $this->carbon->now()->addMinutes($this->config->get('cache.minutes')),
             function () use ($component) {
                 return $this->dir->makeRepo()->getAdvertisingPrivilegedByComponent($component);
             }
@@ -227,7 +232,7 @@ class DirCache
 
         return $this->cache->tags(["dirs"])->remember(
             "dir.getByComponent.{$json}",
-            $this->carbon->now()->addMinutes($this->minutes),
+            $this->carbon->now()->addMinutes($this->config->get('cache.minutes')),
             function () use ($component) {
                 return $this->dir->makeRepo()->getByComponent($component);
             }
@@ -243,7 +248,7 @@ class DirCache
     {
         return $this->cache->tags(["dirs"])->remember(
             "dir.getFriendsPrivileged",
-            $this->carbon->now()->addMinutes($this->minutes),
+            $this->carbon->now()->addMinutes($this->config->get('cache.minutes')),
             function () {
                 return $this->dir->makeRepo()->getFriendsPrivileged();
             }
@@ -259,7 +264,7 @@ class DirCache
     {
         return $this->cache->tags(['dirs'])->remember(
             "dir.countByStatus",
-            $this->carbon->now()->addMinutes($this->minutes),
+            $this->carbon->now()->addMinutes($this->config->get('cache.minutes')),
             function () {
                 return $this->dir->makeRepo()->countByStatus();
             }
@@ -275,7 +280,7 @@ class DirCache
     {
         return $this->cache->tags(['dirs'])->remember(
             "dir.getlastActivity",
-            $this->carbon->now()->addMinutes($this->minutes),
+            $this->carbon->now()->addMinutes($this->config->get('cache.minutes')),
             function () {
                 return $this->dir->makeRepo()->getLastActivity();
             }
