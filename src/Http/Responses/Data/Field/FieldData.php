@@ -84,6 +84,12 @@ class FieldData implements DataInterface
                 continue;
             }
 
+            if (is_object($gusValue)) {
+                $data[$id] = $gusValue;
+
+                continue;
+            }
+
             if (!isset($data[$id])) {
                 $data[$id] = '';
             }
@@ -98,9 +104,9 @@ class FieldData implements DataInterface
      * Undocumented function
      *
      * @param string $type
-     * @return string|null
+     * @return mixed|null
      */
-    protected function makeValue(string $type): ?string
+    protected function makeValue(string $type)
     {
         return $this->valueFactory->makeValue($type, $this->gusReport)();
     }
