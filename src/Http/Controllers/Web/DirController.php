@@ -114,13 +114,10 @@ class DirController
     ): HttpResponse {
         Event::dispatch(App::make(DirShowEvent::class, ['dir' => $dir]));
 
-        return Response::view(
-            'idir::web.dir.show',
-            App::make(ShowViewModel::class, [
-                'dir' => $dir,
-                'filter' => $filter
-            ])
-        );
+        return Response::view('idir::web.dir.show', App::make(ShowViewModel::class, [
+            'dir' => $dir,
+            'filter' => $filter
+        ]));
     }
 
     /**
@@ -184,12 +181,9 @@ class DirController
             ->makeService()
             ->createOrUpdateSession($request->validated());
 
-        return Response::view(
-            'idir::web.dir.create.3',
-            App::make(Create3ViewModel::class, [
-                'group' => $group
-            ])
-        );
+        return Response::view('idir::web.dir.create.3', App::make(Create3ViewModel::class, [
+            'group' => $group
+        ]));
     }
 
     /**
@@ -248,13 +242,10 @@ class DirController
      */
     public function edit2(Dir $dir, Group $group, Edit2Load $load, Edit2Request $request): HttpResponse
     {
-        return Response::view(
-            'idir::web.dir.edit.2',
-            App::make(Edit2ViewModel::class, [
-                'dir' => $dir,
-                'group' => $group
-            ])
-        );
+        return Response::view('idir::web.dir.edit.2', App::make(Edit2ViewModel::class, [
+            'dir' => $dir,
+            'group' => $group
+        ]));
     }
 
     /**
@@ -292,13 +283,10 @@ class DirController
             ->makeService()
             ->createOrUpdateSession($request->validated());
 
-        return Response::view(
-            'idir::web.dir.edit.3',
-            App::make(Edit3ViewModel::class, [
-                'dir' => $dir,
-                'group' => $group
-            ])
-        );
+        return Response::view('idir::web.dir.edit.3', App::make(Edit3ViewModel::class, [
+            'dir' => $dir,
+            'group' => $group
+        ]));
     }
 
     /**
@@ -341,12 +329,9 @@ class DirController
      */
     public function editRenew(Dir $dir, EditRenewLoad $load, EditRenewRequest $request): HttpResponse
     {
-        return Response::view(
-            'idir::web.dir.edit_renew',
-            App::make(EditRenewViewModel::class, [
-                'dir' => $dir
-            ])
-        );
+        return Response::view('idir::web.dir.edit_renew', App::make(EditRenewViewModel::class, [
+            'dir' => $dir
+        ]));
     }
 
     /**
