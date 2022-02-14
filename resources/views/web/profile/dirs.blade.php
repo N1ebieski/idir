@@ -19,7 +19,7 @@
 @endsection
 
 @section('content')
-<h1 class="h4 border-bottom pb-2">
+<h1 class="h5 border-bottom pb-2">
     <i class="far fa-fw fa-folder-open"></i>
     <span>{{ trans('idir::profile.route.dirs') }}</span>
 </h1>
@@ -30,7 +30,7 @@
         @foreach ($dirs as $dir)
             @include('idir::web.profile.partials.dir.dir')
         @endforeach
-        @include('icore::admin.partials.pagination', [
+        @include('icore::web.partials.pagination', [
             'items' => $dirs
         ])
     </div>
