@@ -319,7 +319,7 @@
 <span> {{ trans('idir::dirs.link_dir_page') }}</span>
 @endslot
 @slot('modal_body')
-<div class="form-group">
+<div class="form-group clipboard position-relative">
     <textarea class="form-control" name="dir" rows="5" readonly>{{ $dir->link_as_html }}</textarea>
 </div>
 @endslot
@@ -346,7 +346,7 @@
 
 @endsection
 
-@if (config('icore.captcha.driver') !== null)
+@if (!empty(config('icore.captcha.driver')))
 @php
 app(\N1ebieski\ICore\View\Components\CaptchaComponent::class)->toHtml()->render();
 @endphp
