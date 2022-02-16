@@ -3,7 +3,7 @@
 </h3>
 <ul class="sidebar navbar-nav h-100">
     <li class="nav-item {{ $isUrl(route('web.profile.edit')) }}">
-        <a 
+        <a
             class="nav-link {{ $isUrl(route('web.profile.edit')) }}"
             title="{{ trans('icore::profile.route.edit') }}"
             href="{{ route('web.profile.edit') }}"
@@ -14,7 +14,7 @@
     </li>
     @if (app('router')->has('web.profile.socialites'))
     <li class="nav-item {{ $isUrl(route('web.profile.socialites')) }}">
-        <a 
+        <a
             class="nav-link {{ $isUrl(route('web.profile.socialites')) }}"
             title="{{ trans('icore::profile.route.socialites') }}"
             href="{{ route('web.profile.socialites') }}"
@@ -27,7 +27,7 @@
     @canany(['web.tokens.edit', 'web.tokens.delete'])
     @can('api.access')
     <li class="nav-item {{ $isUrl(route('web.profile.tokens')) }}">
-        <a 
+        <a
             class="nav-link {{ $isUrl(route('web.profile.tokens')) }}"
             title="{{ trans('icore::profile.route.tokens') }}"
             href="{{ route('web.profile.tokens') }}"
@@ -37,10 +37,10 @@
         </a>
     </li>
     @endcan
-    @endcan    
+    @endcan
     @canany(['web.dirs.edit', 'web.dirs.delete'])
     <li class="nav-item {{ $isUrl(route('web.profile.dirs')) }}">
-        <a 
+        <a
             class="nav-link {{ $isUrl(route('web.profile.dirs')) }}"
             title="{{ trans('idir::profile.route.dirs') }}"
             href="{{ route('web.profile.dirs') }}"

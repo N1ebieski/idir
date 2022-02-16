@@ -319,7 +319,10 @@
 <span> {{ trans('idir::dirs.link_dir_page') }}</span>
 @endslot
 @slot('modal_body')
-<div class="form-group clipboard position-relative">
+<div 
+    class="form-group clipboard position-relative"
+    data-lang="{{ config('app.locale') }}"
+>
     <textarea class="form-control" name="dir" rows="5" readonly>{{ $dir->link_as_html }}</textarea>
 </div>
 @endslot

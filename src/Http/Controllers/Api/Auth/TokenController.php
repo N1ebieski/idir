@@ -5,6 +5,7 @@ namespace N1ebieski\IDir\Http\Controllers\Api\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Response;
+use N1ebieski\ICore\Models\Token\PersonalAccessToken as Token;
 use N1ebieski\ICore\Http\Controllers\Api\Auth\TokenController as BaseTokenController;
 
 /**
@@ -60,11 +61,12 @@ class TokenController
      * @responseField access_token string
      * @responseField refresh_token string (only if remember param was true)
      *
+     * @param Token $token
      * @param Request $request
      * @return JsonResponse
      */
-    public function token(Request $request): JsonResponse
+    public function token(Token $token, Request $request): JsonResponse
     {
-        return $this->decorated->token($request);
+        return $this->decorated->token($token, $request);
     }
 }
