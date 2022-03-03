@@ -256,7 +256,7 @@ class DirTest extends TestCase
 
         Auth::login($user, true);
 
-        $group = factory(Group::class)->states('public', 'additional options for editing content')->create();
+        $group = factory(Group::class)->states('public', 'additional_options_for_editing_content')->create();
         $dir = factory(Dir::class)->create([
             'group_id' => $group->id,
             'user_id' => $user->id
@@ -393,7 +393,7 @@ class DirTest extends TestCase
             ->states([
                 'public',
                 'required_url',
-                'additional options for editing content'
+                'additional_options_for_editing_content'
             ])->create();
 
         $group2 = factory(Group::class)->states('public')->create();

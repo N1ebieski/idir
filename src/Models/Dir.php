@@ -842,17 +842,22 @@ class Dir extends Model
      */
     public function loadAllRels(): self
     {
-        return $this->load([
+        return $this->load(array_filter([
             'group',
             'group.privileges',
             'group.fields',
             'fields',
             'regions',
-            'categories',
+            'ratings',
+            'categories' => function ($query) {
+                return $query->withAncestorsExceptSelf();
+            },
             'tags',
             'status',
-            'backlink'
-        ]);
+            'backlink',
+            App::make(MigrationUtil::class)->contains('create_stats_table') ?
+                'stats' : null            
+        ]));
     }
 
     // Mutators

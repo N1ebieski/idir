@@ -1,11 +1,12 @@
 <?php
 
+use Carbon\Carbon;
+use Illuminate\Support\Str;
 use Faker\Generator as Faker;
 use N1ebieski\IDir\Models\Dir;
 use N1ebieski\ICore\Models\User;
+use N1ebieski\IDir\Models\Group;
 use N1ebieski\IDir\Models\Category\Dir\Category;
-use Carbon\Carbon;
-use Illuminate\Support\Str;
 
 $factory->define(Dir::class, function (Faker $faker) {
     $url = parse_url($faker->url);
@@ -16,8 +17,8 @@ $factory->define(Dir::class, function (Faker $faker) {
         'title' => Str::random(rand(10, 30)),
         'content_html' => $content,
         'content' => $content,
-        'url' => $url['scheme']."://".$url['host'],
-        'status' => rand(0, 1),
+        'url' => $url['scheme'] . "://" . $url['host'],
+        'status' => rand(0, 1)
     ];
 });
 
@@ -39,6 +40,12 @@ $factory->state(Dir::class, 'content_text', function (Faker $faker) {
 $factory->state(Dir::class, 'with_user', function (Faker $faker) {
     return [
         'user_id' => factory(User::class)->states('user')->create()->id
+    ];
+});
+
+$factory->state(Dir::class, 'with_default_group', function (Faker $faker) {
+    return [
+        'group_id' => Group::DEFAULT
     ];
 });
 

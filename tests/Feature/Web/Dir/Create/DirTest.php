@@ -162,7 +162,7 @@ class DirTest extends TestCase
 
         Auth::login($user, true);
 
-        $group = factory(Group::class)->states('public', 'additional options for editing content')->create();
+        $group = factory(Group::class)->states('public', 'additional_options_for_editing_content')->create();
 
         $response = $this->get(route('web.dir.create_2', [$group->id]));
 
@@ -233,7 +233,7 @@ class DirTest extends TestCase
             ->states([
                 'public',
                 'required_url',
-                'additional options for editing content'
+                'additional_options_for_editing_content'
             ])->create();
 
         $response = $this->post(route('web.dir.store_2', [$group->id]), $this->dirSetup());
@@ -248,7 +248,7 @@ class DirTest extends TestCase
             ->states([
                 'public',
                 'required_url',
-                'additional options for editing content'
+                'additional_options_for_editing_content'
             ])->create();
 
         $response1 = $this->post(route('web.dir.store_2', [$group->id]), $this->dirSetup());
@@ -268,7 +268,7 @@ class DirTest extends TestCase
             ->states([
                 'public',
                 'required_url',
-                'additional options for editing content'
+                'additional_options_for_editing_content'
             ])->create();
 
         $response1 = $this->post(route('web.dir.store_2', [$group->id]), $this->dirSetup());

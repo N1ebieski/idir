@@ -21,14 +21,15 @@ class DirPolicy
     }
 
     /**
-     * [delete description]
+     * [view description]
      * @param  User $authUser [description]
      * @param  Dir  $dir          [description]
      * @return bool               [description]
      */
-    public function delete(User $authUser, Dir $dir): bool
+    public function view(User $authUser, Dir $dir): bool
     {
-        return $authUser->id === $dir->user_id;
+        return $authUser->can('admin.dirs.view')
+            || $authUser->id === $dir->user_id;
     }
 
     /**
@@ -41,5 +42,16 @@ class DirPolicy
     {
         return $authUser->can('admin.dirs.edit')
             || $authUser->id === $dir->user_id;
+    }
+
+    /**
+     * [delete description]
+     * @param  User $authUser [description]
+     * @param  Dir  $dir          [description]
+     * @return bool               [description]
+     */
+    public function delete(User $authUser, Dir $dir): bool
+    {
+        return $authUser->id === $dir->user_id;
     }
 }

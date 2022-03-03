@@ -3,6 +3,7 @@
 namespace N1ebieski\IDir\Http\Requests\Admin\Dir;
 
 use Illuminate\Validation\Rule;
+use N1ebieski\IDir\Models\Group;
 use Illuminate\Support\Facades\App;
 use Mews\Purifier\Facades\Purifier;
 use N1ebieski\IDir\Models\BanValue;
@@ -204,7 +205,7 @@ class Store2Request extends FormRequest
             'notes' => 'bail|nullable|string|between:3,255',
             'url' => [
                 'bail',
-                ($this->group->url === 2) ? 'required' : 'nullable',
+                ($this->group->url === Group::OBLIGATORY_URL) ? 'required' : 'nullable',
                 'string',
                 'regex:/^(https|http):\/\/([\da-z\.-]+)(\.[a-z]{2,6})\/?$/',
                 App::make(\N1ebieski\IDir\Rules\UniqueUrlRule::class, [

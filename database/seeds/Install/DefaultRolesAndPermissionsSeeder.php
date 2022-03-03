@@ -51,6 +51,9 @@ class DefaultRolesAndPermissionsSeeder extends Seeder
         Permission::firstOrCreate(['name' => 'web.dirs.notification']);
 
         Permission::firstOrCreate(['name' => 'api.dirs.*']);
+        Permission::firstOrCreate(['name' => 'api.dirs.view']);
+        Permission::firstOrCreate(['name' => 'api.dirs.create']);
         Permission::firstOrCreate(['name' => 'api.dirs.edit']);
+        Permission::firstOrCreate(['name' => 'api.dirs.delete']);
     }
 }

@@ -10,7 +10,7 @@
 @pushonce('script.map')
 <script 
     defer 
-    src="https://maps.googleapis.com/maps/api/js?key={{ config('services.googlemap.api_key') }}&callback=initMap" 
+    src="https://maps.googleapis.com/maps/api/js?key={{ config('services.googlemap.api_key') }}" 
     type="text/javascript"
 ></script>
 @endpushonce

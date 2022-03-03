@@ -18,7 +18,7 @@ $factory->define(Group::class, function (Faker $faker) {
     ];
 });
 
-$factory->afterCreatingState(Group::class, 'additional options for editing content', function ($group) {
+$factory->afterCreatingState(Group::class, 'additional_options_for_editing_content', function ($group) {
     $group->privileges()->sync([Privilege::where('name', 'additional options for editing content')->first()->id]);
 });
 

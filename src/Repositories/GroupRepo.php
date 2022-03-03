@@ -4,6 +4,7 @@ namespace N1ebieski\IDir\Repositories;
 
 use N1ebieski\IDir\Models\Group;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Contracts\Auth\Factory as Auth;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\Config\Repository as Config;
 
@@ -16,19 +17,30 @@ class GroupRepo
     protected $group;
 
     /**
+     * Undocumented variable
+     *
+     * @var Auth
+     */
+    protected $auth;
+
+    /**
      * Config
      * @var int
      */
     protected $paginate;
 
     /**
-     * [__construct description]
-     * @param Group $group [description]
-     * @param Config   $config   [description]
+     * Undocumented function
+     *
+     * @param Group $group
+     * @param Config $config
+     * @param Auth $auth
      */
-    public function __construct(Group $group, Config $config)
+    public function __construct(Group $group, Config $config, Auth $auth)
     {
         $this->group = $group;
+
+        $this->auth = $auth;
 
         $this->paginate = $config->get('database.paginate');
     }
@@ -40,14 +52,23 @@ class GroupRepo
      */
     public function paginateByFilter(array $filter): LengthAwarePaginator
     {
-        return $this->group->withCount('prices')
-            ->filterSearch($filter['search'])
+        return $this->group->filterSearch($filter['search'])
             ->filterExcept($filter['except'])
-            ->filterVisible($filter['visible'])
+            ->when(
+                $filter['visible'] === null && !optional($this->auth->user())->can('admin.groups.view'),
+                function ($query) {
+                    $query->public();
+                },
+                function ($query) use ($filter) {
+                    $query->filterVisible($filter['visible']);
+                }
+            )
             ->when($filter['orderby'] === null, function ($query) use ($filter) {
                 $query->filterOrderBySearch($filter['search']);
             })
             ->filterOrderBy($filter['orderby'] ?? 'position|asc')
+            ->withCount('prices')
+            ->with(['prices', 'privileges'])
             ->filterPaginate($filter['paginate']);
     }
 
