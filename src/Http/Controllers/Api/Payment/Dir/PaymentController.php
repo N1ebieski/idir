@@ -6,6 +6,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\URL;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Event;
 use N1ebieski\IDir\Models\Payment\Dir\Payment;
@@ -54,7 +55,11 @@ class PaymentController extends Controller implements Polymorphic
                     ])
                 )
                 ->setUuid($payment->uuid)
-                ->setRedirect('')
+                ->setRedirect(
+                    Auth::check() ?
+                        URL::route('web.profile.dirs')
+                        : URL::route('web.dir.create_1')
+                )
                 ->setNotifyUrl(URL::route('api.payment.dir.verify', [$driver]))
                 ->setReturnUrl(URL::route('api.payment.dir.complete', [$driver]))
                 ->setCancelUrl(URL::route('api.payment.dir.complete', [$driver]))

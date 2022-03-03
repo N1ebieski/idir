@@ -68,7 +68,7 @@ class GroupRepo
             })
             ->filterOrderBy($filter['orderby'] ?? 'position|asc')
             ->withCount('prices')
-            ->with(['prices', 'privileges'])
+            ->with(['prices', 'privileges', 'fields'])
             ->filterPaginate($filter['paginate']);
     }
 

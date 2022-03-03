@@ -21,8 +21,8 @@ class GroupController
      *
      * @responseField id int
      * @responseField slug string
-     * @responseField name string
      * @responseField position int
+     * @responseField name string
      * @responseField desc string
      * @responseField border string Class of border.
      * @responseField max_cats int Maximum number of categories to which the entry can be added.
@@ -39,6 +39,7 @@ class GroupController
      * @responseField alt object Contains relationship alternative Group. Informs to which group the entry will be dropped after expiry of the premium time. If null the entry will be deactivate.
      * @responseField privileges object[] Contains relationship Privileges.
      * @responseField prices object[] Contains relationship Prices.
+     * @responseField fields object[] Contains relationship custom Fields.
      *
      * @apiResourceCollection N1ebieski\IDir\Http\Resources\Group\GroupResource
      * @apiResourceModel N1ebieski\IDir\Models\Group states=apply_alt_group,public,additional_options_for_editing_content with=privileges

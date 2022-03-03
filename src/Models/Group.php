@@ -8,15 +8,15 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use N1ebieski\IDir\Services\GroupService;
 use Cviebrock\EloquentSluggable\Sluggable;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use N1ebieski\IDir\Repositories\GroupRepo;
 use N1ebieski\IDir\Models\Traits\Filterable;
 use N1ebieski\ICore\Models\Traits\Carbonable;
 use N1ebieski\ICore\Models\Traits\Positionable;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use N1ebieski\ICore\Models\Traits\FullTextSearchable;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Group extends Model
 {
@@ -215,7 +215,7 @@ class Group extends Model
     public function fields(): MorphToMany
     {
         return $this->morphToMany(
-            \N1ebieski\IDir\Models\Field\Field::class,
+            \N1ebieski\IDir\Models\Field\Group\Field::class,
             'model',
             'fields_models',
             'model_id',

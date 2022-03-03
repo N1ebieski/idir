@@ -14,10 +14,6 @@ interface Polymorphic
     /**
      * Show payment
      *
-     * Initialises the payment.
-     *
-     * @urlParam payment string required The payment UUID.
-     *
      * @param Payment $payment
      * @param string $driver
      * @param ShowLoad $load

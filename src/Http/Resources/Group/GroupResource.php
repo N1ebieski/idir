@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Http\Resources\Json\JsonResource;
 use N1ebieski\IDir\Http\Resources\Price\PriceResource;
+use N1ebieski\IDir\Http\Resources\Field\Group\FieldResource;
 use N1ebieski\IDir\Http\Resources\Privilege\PrivilegeResource;
 
 class GroupResource extends JsonResource
@@ -33,8 +34,8 @@ class GroupResource extends JsonResource
         return [
             'id' => $this->id,
             'slug' => $this->slug,
-            'name' => $this->name,
             'position' => $this->position,
+            'name' => $this->name,
             'desc' => $this->desc,
             'border' => $this->border,
             'max_cats' => $this->max_cats,
@@ -80,6 +81,14 @@ class GroupResource extends JsonResource
                 function () {
                     return [
                         'prices' => App::make(PriceResource::class)->collection($this->prices)
+                    ];
+                }
+            ),
+            $this->mergeWhen(
+                $this->relationLoaded('fields'),
+                function () {
+                    return [
+                        'fields' => App::make(FieldResource::class)->collection($this->fields)
                     ];
                 }
             )

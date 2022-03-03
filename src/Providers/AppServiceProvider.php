@@ -13,6 +13,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $this->app->bind(\N1ebieski\ICore\Models\Token\PersonalAccessToken::class, \N1ebieski\IDir\Models\Token\PersonalAccessToken::class);
+
         $this->app->bind(\N1ebieski\ICore\Utils\FileUtil::class, \N1ebieski\IDir\Utils\FileUtil::class);
 
         $this->app->when(\N1ebieski\IDir\Utils\ThumbnailUtil::class)
