@@ -5,9 +5,6 @@ namespace N1ebieski\IDir\Seeds\Install;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;
 
-/**
- * [DefaultRolesAndPermissionsSeeder description]
- */
 class DefaultRolesAndPermissionsSeeder extends Seeder
 {
     /**
@@ -49,6 +46,9 @@ class DefaultRolesAndPermissionsSeeder extends Seeder
         Permission::firstOrCreate(['name' => 'web.dirs.edit']);
         Permission::firstOrCreate(['name' => 'web.dirs.delete']);
         Permission::firstOrCreate(['name' => 'web.dirs.notification']);
+
+        Permission::firstOrCreate(['name' => 'api.groups.*']);
+        Permission::firstOrCreate(['name' => 'api.groups.view']);
 
         Permission::firstOrCreate(['name' => 'api.dirs.*']);
         Permission::firstOrCreate(['name' => 'api.dirs.view']);

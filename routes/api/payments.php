@@ -8,10 +8,6 @@ Route::get('payments/{payment_dir_pending}/dir/{driver?}', [DirPaymentController
     ->where('driver', '[0-9A-Za-z-]+')
     ->name('payment.dir.show');
 
-Route::get('payments/dir/complete/{driver?}', [DirPaymentController::class, 'complete'])
-    ->name('payment.dir.complete')
-    ->where('driver', '[0-9A-Za-z-]+');
-
 Route::post('payments/dir/verify/{driver?}', [DirPaymentController::class, 'verify'])
     ->name('payment.dir.verify')
     ->where('driver', '[0-9A-Za-z-]+');

@@ -83,7 +83,7 @@ class DirCache
      */
     public function getForWebByFilter(): ?LengthAwarePaginator
     {
-        return $this->cache->tags(['dirs'])->get("dir.paginateByFilter.{$this->request->input('page')}");
+        return $this->cache->tags(['dirs'])->get("dir.paginateForWebByFilter.{$this->request->input('page')}");
     }
 
     /**
@@ -95,7 +95,7 @@ class DirCache
     {
         return $this->cache->tags(['dirs'])
             ->put(
-                "dir.paginateByFilter.{$this->request->input('page')}",
+                "dir.paginateForWebByFilter.{$this->request->input('page')}",
                 $dirs,
                 $this->carbon->now()->addMinutes($this->config->get('cache.minutes'))
             );
@@ -285,5 +285,53 @@ class DirCache
                 return $this->dir->makeRepo()->getLastActivity();
             }
         );
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param array $filter
+     * @return LengthAwarePaginator
+     */
+    public function rememberByFilter(array $filter): LengthAwarePaginator
+    {
+        if ($this->collect->make($filter)->isNullItems() && !$this->request->user()) {
+            $dirs = $this->getByFilter($this->request->input('page'));
+        }
+
+        if (!isset($dirs) || !$dirs) {
+            $dirs = $this->dir->makeRepo()->paginateByFilter($filter);
+
+            if ($this->collect->make($filter)->isNullItems() && !$this->request->user()) {
+                $this->putByFilter($dirs, $this->request->input('page'));
+            }
+        }
+
+        return $dirs;
+    }
+
+    /**
+     * [getByFilter description]
+     * @return LengthAwarePaginator|null       [description]
+     */
+    public function getByFilter(): ?LengthAwarePaginator
+    {
+        return $this->cache->tags(["dirs"])
+            ->get("dir.paginateByFilter.{$this->request->input('page')}");
+    }
+
+    /**
+     * [putByFilter description]
+     * @param  LengthAwarePaginator $dirs [description]
+     * @return bool                           [description]
+     */
+    public function putByFilter(LengthAwarePaginator $dirs): bool
+    {
+        return $this->cache->tags(["dirs"])
+            ->put(
+                "dir.paginateByFilter.{$this->request->input('page')}",
+                $dirs,
+                $this->carbon->now()->addMinutes($this->config->get('cache.minutes'))
+            );
     }
 }

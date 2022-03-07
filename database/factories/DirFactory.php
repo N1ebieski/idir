@@ -18,7 +18,7 @@ $factory->define(Dir::class, function (Faker $faker) {
         'content_html' => $content,
         'content' => $content,
         'url' => $url['scheme'] . "://" . $url['host'],
-        'status' => rand(0, 1)
+        'status' => rand(Dir::INACTIVE, Dir::ACTIVE)
     ];
 });
 
@@ -43,21 +43,19 @@ $factory->state(Dir::class, 'with_user', function (Faker $faker) {
     ];
 });
 
-$factory->state(Dir::class, 'with_default_group', function (Faker $faker) {
-    return [
-        'group_id' => Group::DEFAULT
-    ];
+$factory->afterMakingState(Dir::class, 'with_default_group', function ($dir) {
+    $dir->group()->associate(Group::find(Group::DEFAULT));
 });
 
 $factory->state(Dir::class, 'active', function (Faker $faker) {
     return [
-        'status' => 1
+        'status' => Dir::ACTIVE
     ];
 });
 
 $factory->state(Dir::class, 'backlink_inactive', function (Faker $faker) {
     return [
-        'status' => 3
+        'status' => Dir::BACKLINK_INACTIVE
     ];
 });
 
@@ -69,19 +67,19 @@ $factory->state(Dir::class, 'status_inactive', function (Faker $faker) {
 
 $factory->state(Dir::class, 'inactive', function (Faker $faker) {
     return [
-        'status' => 0
+        'status' => Dir::INACTIVE
     ];
 });
 
 $factory->state(Dir::class, 'pending', function (Faker $faker) {
     return [
-        'status' => 2
+        'status' => Dir::PAYMENT_INACTIVE
     ];
 });
 
 $factory->state(Dir::class, 'paid_seasonal', function (Faker $faker) {
     return [
-        'status' => 1,
+        'status' => Dir::ACTIVE,
         'privileged_at' => Carbon::now(),
         'privileged_to' => Carbon::now()->addDays(14)
     ];

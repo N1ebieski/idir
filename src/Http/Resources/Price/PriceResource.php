@@ -37,7 +37,14 @@ class PriceResource extends JsonResource
             'discount' => $this->discount,
             'qr_as_image' => $this->qr_as_image,
             'days' => $this->days,
-            'code' => $this->code,
+            $this->mergeWhen(
+                in_array($this->type, ['code_transfer', 'code_sms']),
+                function () {
+                    return [
+                        'code' => $this->code
+                    ];
+                }
+            ),
             $this->mergeWhen(
                 optional($request->user())->can('admin.prices.view'),
                 function () {

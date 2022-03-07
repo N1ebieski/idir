@@ -856,7 +856,7 @@ class Dir extends Model
             'status',
             'backlink',
             App::make(MigrationUtil::class)->contains('create_stats_table') ?
-                'stats' : null            
+                'stats' : null
         ]));
     }
 

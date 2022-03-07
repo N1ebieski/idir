@@ -8,6 +8,7 @@ use N1ebieski\IDir\Models\Dir;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Collection;
 use N1ebieski\IDir\Models\Rating\Dir\Rating;
+use Illuminate\Contracts\Auth\Factory as Auth;
 use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
@@ -20,6 +21,20 @@ class DirRepo
     protected $dir;
 
     /**
+     * Undocumented variable
+     *
+     * @var Config
+     */
+    protected $config;
+
+    /**
+     * Undocumented variable
+     *
+     * @var Auth
+     */
+    protected $auth;
+
+    /**
      * [protected description]
      * @var int
      */
@@ -29,61 +44,63 @@ class DirRepo
      * [__construct description]
      * @param Dir $dir [description]
      * @param Config   $config   [description]
+     * @param Auth $auth
      */
-    public function __construct(Dir $dir, Config $config)
+    public function __construct(Dir $dir, Config $config, Auth $auth)
     {
         $this->dir = $dir;
 
         $this->config = $config;
+        $this->auth = $auth;
 
         $this->paginate = $config->get('database.paginate');
     }
 
     /**
-     * [paginateForAdminByFilter description]
+     * [paginateByFilter description]
      * @param  array                $filter [description]
      * @return LengthAwarePaginator         [description]
      */
-    public function paginateForAdminByFilter(array $filter): LengthAwarePaginator
+    public function paginateByFilter(array $filter): LengthAwarePaginator
     {
         return $this->dir->selectRaw('`dirs`.*')
-            ->withCount('reports')
-            ->withAllRels()
             ->filterAuthor($filter['author'])
             ->filterExcept($filter['except'])
             ->when($filter['search'] !== null, function ($query) use ($filter) {
                 $query->filterSearch($filter['search'])
-                    ->when(array_key_exists('payment', $this->dir->search), function ($query) {
-                        /**
-                         * @var \N1ebieski\IDir\Models\Payment\Dir\Payment
-                         */
-                        $payment = $this->dir->payments()->make();
+                    ->when(optional($this->auth->user())->can('admin.dirs.view'), function ($query) {
+                        $query->when(array_key_exists('payment', $this->dir->search), function ($query) {
+                            /**
+                             * @var \N1ebieski\IDir\Models\Payment\Dir\Payment
+                             */
+                            $payment = $this->dir->payments()->make();
 
-                        $columns = implode(',', $payment->searchable);
+                            $columns = implode(',', $payment->searchable);
 
-                        $query->leftJoin('payments', function ($query) use ($payment) {
-                            $query->on('payments.model_id', '=', 'dirs.id')
-                                ->where([
-                                    ['payments.model_type', $this->dir->getMorphClass()],
-                                    ['payments.status', $payment::FINISHED]
-                                ]);
+                            $query->leftJoin('payments', function ($query) use ($payment) {
+                                $query->on('payments.model_id', '=', 'dirs.id')
+                                    ->where([
+                                        ['payments.model_type', $this->dir->getMorphClass()],
+                                        ['payments.status', $payment::FINISHED]
+                                    ]);
+                            })
+                            ->whereRaw("MATCH ({$columns}) AGAINST (? IN BOOLEAN MODE)", [
+                                $this->dir->search['payment']
+                            ])
+                            ->groupBy('dirs.id');
                         })
-                        ->whereRaw("MATCH ({$columns}) AGAINST (? IN BOOLEAN MODE)", [
-                            $this->dir->search['payment']
-                        ])
-                        ->groupBy('dirs.id');
-                    })
-                    ->when(array_key_exists('user', $this->dir->search), function ($query) {
-                        $user = $this->dir->user()->make();
+                        ->when(array_key_exists('user', $this->dir->search), function ($query) {
+                            $user = $this->dir->user()->make();
 
-                        $columns = implode(',', $user->searchable);
+                            $columns = implode(',', $user->searchable);
 
-                        $query->leftJoin('users', function ($query) {
-                            $query->on('users.id', '=', 'dirs.user_id');
-                        })
-                        ->whereRaw("MATCH ({$columns}) AGAINST (? IN BOOLEAN MODE)", [
-                            $this->dir->search['user']
-                        ]);
+                            $query->leftJoin('users', function ($query) {
+                                $query->on('users.id', '=', 'dirs.user_id');
+                            })
+                            ->whereRaw("MATCH ({$columns}) AGAINST (? IN BOOLEAN MODE)", [
+                                $this->dir->search['user']
+                            ]);
+                        });
                     })
                     ->where(function ($query) {
                         foreach (['id', 'url'] as $attr) {
@@ -93,7 +110,15 @@ class DirRepo
                         }
                     });
             })
-            ->filterStatus($filter['status'])
+            ->when(
+                $filter['status'] === null && !optional($this->auth->user())->can('admin.dirs.view'),
+                function ($query) {
+                    $query->active();
+                },
+                function ($query) use ($filter) {
+                    $query->filterStatus($filter['status']);
+                }
+            )
             ->filterGroup($filter['group'])
             ->filterCategory($filter['category'])
             ->filterReport($filter['report'])
@@ -101,6 +126,8 @@ class DirRepo
                 $query->filterOrderBySearch($filter['search']);
             })
             ->filterOrderBy($filter['orderby'])
+            ->withCount('reports')
+            ->withAllRels()
             ->filterPaginate($filter['paginate']);
     }
 

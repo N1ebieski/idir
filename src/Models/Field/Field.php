@@ -158,6 +158,16 @@ class Field extends Model
     // Checkers
 
     /**
+     * Undocumented function
+     *
+     * @return boolean
+     */
+    public function isPublic(): bool
+    {
+        return $this->visible === static::VISIBLE;
+    }
+
+    /**
      * [isNotDefault description]
      * @return bool [description]
      */

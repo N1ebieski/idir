@@ -4,14 +4,14 @@ namespace N1ebieski\IDir\Http\Controllers\Api;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Response;
 use N1ebieski\IDir\Utils\ThumbnailUtil;
+use Illuminate\Support\Facades\Response;
 use N1ebieski\IDir\Http\Requests\Api\Thumbnail\ReloadRequest;
 
 class ThumbnailController extends Controller
 {
     /**
-     * Undocumented function
+     * @hideFromAPIDocumentation
      *
      * @param ReloadRequest $request
      * @return JsonResponse

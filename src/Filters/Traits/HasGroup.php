@@ -39,6 +39,6 @@ trait HasGroup
      */
     protected function findGroup(int $id): Group
     {
-        return Group::find($id, ['id', 'name']);
+        return Group::find($id);
     }
 }

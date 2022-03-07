@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Http\Resources\Json\JsonResource;
 use N1ebieski\ICore\Http\Resources\User\UserResource;
+use N1ebieski\IDir\Http\Resources\Field\Dir\FieldResource;
 use N1ebieski\IDir\Http\Resources\Payment\Dir\PaymentResource;
 
 class DirResource extends JsonResource
@@ -88,7 +89,9 @@ class DirResource extends JsonResource
                 $this->relationLoaded('user') && optional($request->user())->can('view', $this->resource),
                 function () {
                     return [
-                        'user' => App::make(UserResource::class, ['user' => $this->user])
+                        'user' => $this->user ?
+                            App::make(UserResource::class, ['user' => $this->user])
+                            : null
                     ];
                 }
             ),
@@ -96,10 +99,29 @@ class DirResource extends JsonResource
                 $this->relationLoaded('payment') && optional($request->user())->can('view', $this->resource),
                 function () {
                     return [
-                        'payment' => App::make(PaymentResource::class, [
-                            'payment' => $this->payment,
-                            'depth' => 1
-                        ])
+                        'payment' => $this->payment ?
+                            App::make(PaymentResource::class, [
+                                'payment' => $this->payment,
+                                'depth' => 1
+                            ])
+                            : null
+                    ];
+                }
+            ),
+            $this->mergeWhen(
+                $this->relationLoaded('fields'),
+                function () use ($request) {
+                    return [
+                        'fields' => App::make(FieldResource::class, ['depth' => 1])
+                            ->collection(
+                                $this->fields->filter(function ($field) use ($request) {
+                                    if (!$field->isPublic() && !optional($request->user())->can('view', $this->resource)) {
+                                        return false;
+                                    }
+
+                                    return true;
+                                })
+                            )
                     ];
                 }
             ),

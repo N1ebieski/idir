@@ -72,7 +72,7 @@ class DirController
         IndexFilter $filter
     ): HttpResponse {
         return Response::view('idir::admin.dir.index', [
-            'dirs' => $dir->makeRepo()->paginateForAdminByFilter($filter->all()),
+            'dirs' => $dir->makeRepo()->paginateByFilter($filter->all()),
             'groups' => $group->orderBy('position', 'asc')->get(),
             'filter' => $filter->all()
         ]);

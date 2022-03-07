@@ -11,6 +11,18 @@ use N1ebieski\IDir\Http\Requests\Api\Group\IndexRequest;
 
 /**
  * @group Groups
+ *
+ * > Routes:
+ *
+ *     /routes/vendor/idir/api/groups.php
+ *
+ * > Controller:
+ *
+ *     N1ebieski\IDir\Http\Controllers\Api\Group\GroupController
+ *
+ * > Resource:
+ *
+ *     N1ebieski\IDir\Http\Resources\Group\GroupResource
  */
 class GroupController
 {
@@ -53,6 +65,7 @@ class GroupController
     {
         return App::make(GroupResource::class)
             ->collection($group->makeRepo()->paginateByFilter($filter->all()))
+            ->additional(['meta' => ['filter' => $filter->all()]])
             ->response();
     }
 }

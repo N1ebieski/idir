@@ -1,6 +1,7 @@
 <?php
 
 use Faker\Generator as Faker;
+use N1ebieski\IDir\Models\Group;
 use N1ebieski\IDir\Models\Price;
 
 $factory->define(Price::class, function (Faker $faker) {
@@ -37,4 +38,10 @@ $factory->state(Price::class, 'seasonal', function (Faker $faker) {
     return [
         'days' => rand(7, 365)
     ];
+});
+
+$factory->afterMakingState(Price::class, 'with_group', function ($price) {
+    $price->group()->associate(
+        factory(Group::class)->states(['public'])->create()
+    );
 });

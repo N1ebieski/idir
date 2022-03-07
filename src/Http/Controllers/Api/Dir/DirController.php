@@ -3,16 +3,24 @@
 namespace N1ebieski\IDir\Http\Controllers\Api\Dir;
 
 use N1ebieski\IDir\Models\Dir;
+use N1ebieski\ICore\Models\User;
 use N1ebieski\IDir\Models\Group;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Event;
 use N1ebieski\IDir\Loads\Api\Dir\StoreLoad;
 use Illuminate\Http\Response as HttpResponse;
+use Illuminate\Support\Collection as Collect;
+use N1ebieski\ICore\Models\Category\Category;
 use N1ebieski\IDir\Models\Payment\Dir\Payment;
+use N1ebieski\IDir\Filters\Api\Dir\IndexFilter;
 use N1ebieski\IDir\Http\Resources\Dir\DirResource;
+use N1ebieski\ICore\Http\Resources\User\UserResource;
+use N1ebieski\IDir\Http\Requests\Api\Dir\IndexRequest;
 use N1ebieski\IDir\Http\Requests\Api\Dir\StoreRequest;
+use N1ebieski\IDir\Http\Resources\Group\GroupResource;
 use N1ebieski\IDir\Http\Requests\Api\Dir\StoreCodeRequest;
+use N1ebieski\ICore\Http\Resources\Category\CategoryResource;
 use N1ebieski\IDir\Events\Api\Dir\StoreEvent as DirStoreEvent;
 use N1ebieski\IDir\Events\Admin\Payment\Dir\StoreEvent as PaymentStoreEvent;
 
@@ -29,7 +37,7 @@ use N1ebieski\IDir\Events\Admin\Payment\Dir\StoreEvent as PaymentStoreEvent;
  *
  * > Resource:
  *
- *     N1ebieski\ICore\Http\Resources\Dir\DirResource
+ *     N1ebieski\IDir\Http\Resources\Dir\DirResource
  *
  * Permissions:
  *
@@ -42,6 +50,44 @@ use N1ebieski\IDir\Events\Admin\Payment\Dir\StoreEvent as PaymentStoreEvent;
  */
 class DirController
 {
+    /**
+     * Index of dirs
+     *
+     * @authenticated
+     *
+     * @bodyParam filter.status int Must be one of 1 or (available only for admin.dirs.view) 0, 2, 3, 4, 5. Example: 1
+     * @bodyParam filter.group int ID of Group relationship. No-example
+     * @bodyParam filter.category int ID of Category relationship. No-example
+     * @bodyParam filter.author int (available only for admin.dirs.view) ID of User relationship. No-example
+     * @bodyParam filter.report int (available only for admin.dirs.view) Must be one of 1 or 0. No-example
+     *
+     * @param Dir $dir
+     * @param IndexRequest $request
+     * @param IndexFilter $filter
+     * @return JsonResponse
+     */
+    public function index(Dir $dir, IndexRequest $request, IndexFilter $filter): JsonResponse
+    {
+        return App::make(DirResource::class)
+            ->collection($dir->makeCache()->rememberByFilter($filter->all()))
+            ->additional(['meta' => [
+                'filter' => Collect::make($filter->all())
+                    ->replace([
+                        'category' => $filter->get('category') instanceof Category ?
+                            App::make(CategoryResource::class, ['category' => $filter->get('category')])
+                            : $filter->get('category'),
+                        'group' => $filter->get('group') instanceof Group ?
+                            App::make(GroupResource::class, ['group' => $filter->get('group')])
+                            : $filter->get('group'),
+                        'author' => $filter->get('author') instanceof User ?
+                            App::make(UserResource::class, ['user' => $filter->get('author')])
+                            : $filter->get('author')
+                    ])
+                    ->toArray()
+            ]])
+            ->response();
+    }
+
     /**
      * Create dir
      *
@@ -61,6 +107,8 @@ class DirController
      * @bodyParam payment_code_transfer integer ID of the selected price if payment_type is <code>code_transfer</code>. No-example
      * @bodyParam code_transfer string Received code if payment_type is <code>code_transfer</code>. No-example
      * @bodyParam payment_paypal_express integer ID of the selected price if payment_type is <code>paypal_express</code>. No-example
+     *
+     * @responseField links object Contains links to resources on the website and in the administration panel.
      *
      * @apiResource N1ebieski\IDir\Http\Resources\Dir\DirResource
      * @apiResourceModel N1ebieski\IDir\Models\Dir states=title_sentence,content_text,with_user,pending,with_category,with_default_group with=ratings,categories,group,user
