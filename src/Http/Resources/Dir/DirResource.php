@@ -3,13 +3,19 @@
 namespace N1ebieski\IDir\Http\Resources\Dir;
 
 use N1ebieski\IDir\Models\Dir;
+use N1ebieski\ICore\Models\User;
+use N1ebieski\IDir\Models\Group;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Config;
+use N1ebieski\IDir\Models\Payment\Payment;
 use Illuminate\Http\Resources\Json\JsonResource;
+use N1ebieski\ICore\Http\Resources\Tag\TagResource;
 use N1ebieski\ICore\Http\Resources\User\UserResource;
+use N1ebieski\IDir\Http\Resources\Group\GroupResource;
 use N1ebieski\IDir\Http\Resources\Field\Dir\FieldResource;
+use N1ebieski\ICore\Http\Resources\Category\CategoryResource;
 use N1ebieski\IDir\Http\Resources\Payment\Dir\PaymentResource;
 
 class DirResource extends JsonResource
@@ -86,12 +92,38 @@ class DirResource extends JsonResource
             'updated_at' => $this->updated_at,
             'updated_at_diff' => $this->updated_at_diff,
             $this->mergeWhen(
+                $this->relationLoaded('group') && optional($request->user())->can('view', $this->resource),
+                function () {
+                    return [
+                        'group' => $this->group instanceof Group ?
+                            App::make(GroupResource::class, ['group' => $this->group])
+                            : null
+                    ];
+                }
+            ),
+            $this->mergeWhen(
                 $this->relationLoaded('user') && optional($request->user())->can('view', $this->resource),
                 function () {
                     return [
-                        'user' => $this->user ?
+                        'user' => $this->user instanceof User ?
                             App::make(UserResource::class, ['user' => $this->user])
                             : null
+                    ];
+                }
+            ),
+            $this->mergeWhen(
+                $this->relationLoaded('categories'),
+                function () {
+                    return [
+                        'categories' => App::make(CategoryResource::class)->collection($this->categories)
+                    ];
+                }
+            ),
+            $this->mergeWhen(
+                $this->relationLoaded('tags'),
+                function () {
+                    return [
+                        'tags' => App::make(TagResource::class)->collection($this->tags)
                     ];
                 }
             ),
@@ -99,7 +131,7 @@ class DirResource extends JsonResource
                 $this->relationLoaded('payment') && optional($request->user())->can('view', $this->resource),
                 function () {
                     return [
-                        'payment' => $this->payment ?
+                        'payment' => $this->payment instanceof Payment ?
                             App::make(PaymentResource::class, [
                                 'payment' => $this->payment,
                                 'depth' => 1

@@ -11,7 +11,7 @@ Route::post('dirs/group/{group}', [DirController::class, 'store'])
 Route::group(['middleware' => 'auth:sanctum', 'permission:api.access'], function () {
     Route::match(['post', 'get'], 'dirs/index', [DirController::class, 'index'])
         ->middleware(['permission:api.dirs.ciew', 'ability:api.dirs.ciew'])
-        ->name('category.dir.index');
+        ->name('dir.index');
 
     Route::put('dirs/{dir}', [DirController::class, 'update'])
         ->middleware(['permission:api.dirs.edit', 'ability:api.dirs.edit', 'can:edit,dir'])

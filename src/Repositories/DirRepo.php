@@ -64,6 +64,8 @@ class DirRepo
     public function paginateByFilter(array $filter): LengthAwarePaginator
     {
         return $this->dir->selectRaw('`dirs`.*')
+            ->withCount('reports')
+            ->withAllRels()        
             ->filterAuthor($filter['author'])
             ->filterExcept($filter['except'])
             ->when($filter['search'] !== null, function ($query) use ($filter) {
@@ -126,8 +128,6 @@ class DirRepo
                 $query->filterOrderBySearch($filter['search']);
             })
             ->filterOrderBy($filter['orderby'])
-            ->withCount('reports')
-            ->withAllRels()
             ->filterPaginate($filter['paginate']);
     }
 

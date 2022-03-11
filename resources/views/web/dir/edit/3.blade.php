@@ -43,7 +43,7 @@
             <form 
                 method="post" 
                 action="{{ route('web.dir.update_3', [$dir->id, $group->id]) }}" 
-                id="edit3"
+                id="edit-summary"
             >
                 @csrf
                 @method('put')

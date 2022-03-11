@@ -37,7 +37,7 @@
                 method="post" 
                 action="{{ route('admin.dir.store_2', [$group->id]) }}"
                 enctype="multipart/form-data" 
-                id="createForm"
+                id="create-form"
             >
                 @csrf
                 <div class="form-group">
@@ -223,6 +223,6 @@
 
 @push('script')
 @component('icore::admin.partials.jsvalidation')
-{!! str_replace('"content"', '"content_html"', JsValidator::formRequest(\N1ebieski\IDir\Http\Requests\Admin\Dir\Store2Request::class, '#createForm')); !!}
+{!! str_replace('"content"', '"content_html"', JsValidator::formRequest(\N1ebieski\IDir\Http\Requests\Admin\Dir\Store2Request::class, '#create-form')); !!}
 @endcomponent
 @endpush

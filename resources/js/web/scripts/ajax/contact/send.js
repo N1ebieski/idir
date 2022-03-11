@@ -44,13 +44,13 @@ $(document).on(
 
                     return;
                 }
-                
+
                 if (response.responseJSON.message) {
                     $('body').addToast({
                         title: response.responseJSON.message,
                         type: 'danger'
-                    });   
-                }            
+                    });
+                }
             }
         });
     }

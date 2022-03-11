@@ -61,6 +61,37 @@ class DirController
      * @bodyParam filter.author int (available only for admin.dirs.view) ID of User relationship. No-example
      * @bodyParam filter.report int (available only for admin.dirs.view) Must be one of 1 or 0. No-example
      *
+     * @responseField id int
+     * @responseField slug string
+     * @responseField title string
+     * @responseField short_content string A shortened version of the post without HTML formatting.
+     * @responseField content string Post without HTML formatting.
+     * @responseField content_html string Post with HTML formatting.
+     * @responseField less_content_html string Post with HTML formatting with "show more" button.
+     * @responseField notes string (available only for admin.dirs.view or owner) Additional infos for moderator.
+     * @responseField url string
+     * @responseField thumbnail_url string
+     * @responseField sum_rating string Average rating for an entry.
+     * @responseField status object (available only for api.dirs.view or owner)
+     * @responseField privileged_at string (available only for api.dirs.view or owner) Start date of premium time.
+     * @responseField privileged_at_diff string (available only for api.dirs.view or owner)
+     * @responseField priveleged_to string (available only for api.dirs.view or owner) End date of premium time. If null and <code>privileged_at</code> not null then premium time is unlimited.
+     * @responseField privileged_at_diff string (available only for api.dirs.view or owner)
+     * @responseField created_at string
+     * @responseField created_at_diff string
+     * @responseField updated_at string
+     * @responseField updated_at_diff string
+     * @responseField group object (available only for admin.dirs.view or owner) Contains relationship Group.
+     * @responseField user object (available only for admin.dirs.view or owner) Contains relationship User.
+     * @responseField categories object[] Contains relationship Categories.
+     * @responseField tags object[] Contains relationship Tags.
+     * @responseField fields object[] Contains relationship custom Fields.
+     * @responseField links object Contains links to resources on the website and in the administration panel.
+     * @responseField meta object Paging, filtering and sorting information.
+     *
+     * @apiResource N1ebieski\IDir\Http\Resources\Dir\DirResource
+     * @apiResourceModel N1ebieski\IDir\Models\Dir states=title_sentence,content_text,with_user,pending,with_category,with_default_group with=ratings,categories,group,user
+     *
      * @param Dir $dir
      * @param IndexRequest $request
      * @param IndexFilter $filter
@@ -101,18 +132,17 @@ class DirController
      * @bodyParam backlink_url string Url with http/https protocol to backlink. No-example
      * @bodyParam email string Email address, required if the user adds the entry as unauthenticated. Example: kontakt@intelekt.net.pl
      * @bodyParam payment_type string If the group requires a payment, the selected type must be defined. Must be one of <code>transfer</code>, <code>code_transfer</code>, <code>code_sms</code>, or <code>paypal_express</code>. No-example
-     * @bodyParam payment_transfer integer ID of the selected price if payment_type is <code>transfer</code>. No-example
-     * @bodyParam payment_code_sms integer ID of the selected price if payment_type is <code>code_sms</code>. No-example
+     * @bodyParam payment_transfer integer ID of the selected Price if payment_type is <code>transfer</code>. No-example
+     * @bodyParam payment_code_sms integer ID of the selected Price if payment_type is <code>code_sms</code>. No-example
      * @bodyParam code_sms string Received code if payment_type is <code>code_sms</code>. No-example
-     * @bodyParam payment_code_transfer integer ID of the selected price if payment_type is <code>code_transfer</code>. No-example
+     * @bodyParam payment_code_transfer integer ID of the selected Price if payment_type is <code>code_transfer</code>. No-example
      * @bodyParam code_transfer string Received code if payment_type is <code>code_transfer</code>. No-example
-     * @bodyParam payment_paypal_express integer ID of the selected price if payment_type is <code>paypal_express</code>. No-example
+     * @bodyParam payment_paypal_express integer ID of the selected Price if payment_type is <code>paypal_express</code>. No-example
      *
      * @responseField links object Contains links to resources on the website and in the administration panel.
      *
      * @apiResource N1ebieski\IDir\Http\Resources\Dir\DirResource
      * @apiResourceModel N1ebieski\IDir\Models\Dir states=title_sentence,content_text,with_user,pending,with_category,with_default_group with=ratings,categories,group,user
-     * @apiResourceAdditional payment_url="https://demo.idir.intelekt.net.pl/api/payments/1a7005ff-8db3-4e47-8f21-a4c2a333e395"
      *
      * @param Group $group
      * @param Dir $dir

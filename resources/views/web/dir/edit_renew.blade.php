@@ -40,7 +40,7 @@
             <form 
                 method="post" 
                 action="{{ route('web.dir.update_renew', [$dir->id]) }}" 
-                id="edit_renew"
+                id="edit-renew"
             >
                 @csrf
                 @method('patch')

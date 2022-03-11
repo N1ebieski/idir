@@ -38,7 +38,7 @@
                 method="post" 
                 action="{{ route('admin.dir.update_full_2', [$dir->id, $group->id]) }}"
                 enctype="multipart/form-data" 
-                id="editForm"
+                id="edit-form"
             >
                 @csrf
                 @method('put')
@@ -219,6 +219,6 @@
 
 @push('script')
 @component('icore::admin.partials.jsvalidation')
-{!! str_replace('"content"', '"content_html"', JsValidator::formRequest(\N1ebieski\IDir\Http\Requests\Admin\Dir\UpdateFull2Request::class, '#editForm')); !!}
+{!! str_replace('"content"', '"content_html"', JsValidator::formRequest(\N1ebieski\IDir\Http\Requests\Admin\Dir\UpdateFull2Request::class, '#edit-form')); !!}
 @endcomponent
 @endpush

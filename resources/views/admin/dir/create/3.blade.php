@@ -40,7 +40,7 @@
             <form 
                 method="post" 
                 action="{{ route('admin.dir.store_3', [$group->id]) }}" 
-                id="createSummary"
+                id="create-summary"
             >
                 @csrf
                 @includeWhen($group->backlink > 0 && optional($backlinks)->isNotEmpty(), 'idir::admin.dir.partials.backlink')
