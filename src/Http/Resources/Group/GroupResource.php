@@ -6,8 +6,8 @@ use N1ebieski\IDir\Models\Group;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Http\Resources\Json\JsonResource;
+use N1ebieski\IDir\Http\Resources\Field\FieldResource;
 use N1ebieski\IDir\Http\Resources\Price\PriceResource;
-use N1ebieski\IDir\Http\Resources\Field\Group\FieldResource;
 use N1ebieski\IDir\Http\Resources\Privilege\PrivilegeResource;
 
 class GroupResource extends JsonResource
@@ -33,37 +33,35 @@ class GroupResource extends JsonResource
         return [
             'id' => $this->id,
             'slug' => $this->slug,
+            'position' => $this->position,
             'name' => $this->name,
             'desc' => $this->desc,
             'border' => $this->border,
+            'max_cats' => $this->max_cats,
+            'max_models' => $this->max_models,
+            'max_models_daily' => $this->max_models_daily,
+            'visible' => [
+                'value' => $this->visible,
+                'label' => Lang::get("idir::groups.visible.{$this->visible}")
+            ],
+            'apply_status' => [
+                'value' => $this->apply_status,
+                'label' => Lang::get("idir::groups.apply_status.{$this->apply_status}")
+            ],
+            'url' => [
+                'value' => $this->url,
+                'label' => Lang::get("idir::groups.url.{$this->url}")
+            ],
+            'backlink' => [
+                'value' => $this->backlink,
+                'label' => Lang::get("idir::groups.backlink.{$this->backlink}")
+            ],
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
             $this->mergeWhen(
                 $this->depth === null,
                 function () {
                     return [
-                        'max_cats' => $this->max_cats,
-                        'max_models' => $this->max_models,
-                        'max_models_daily' => $this->max_models_daily,
-                        'visible' => [
-                            'value' => $this->visible,
-                            'label' => Lang::get("idir::groups.visible.{$this->visible}")
-                        ],
-                        'apply_status' => [
-                            'value' => $this->apply_status,
-                            'label' => Lang::get("idir::groups.apply_status.{$this->apply_status}")
-                        ],
-                        'url' => [
-                            'value' => $this->url,
-                            'label' => Lang::get("idir::groups.url.{$this->url}")
-                        ],
-                        'backlink' => [
-                            'value' => $this->backlink,
-                            'label' => Lang::get("idir::groups.backlink.{$this->backlink}")
-                        ],
-                        'created_at' => $this->created_at,
-                        'created_at_diff' => $this->created_at_diff,
-                        'updated_at' => $this->updated_at,
-                        'updated_at_diff' => $this->updated_at_diff,
-                        'position' => $this->position,
                         'alt' => $this->when(
                             $this->relationLoaded('alt'),
                             function () {
@@ -102,7 +100,7 @@ class GroupResource extends JsonResource
                         )
                     ];
                 }
-            )
+            ),
         ];
     }
 }

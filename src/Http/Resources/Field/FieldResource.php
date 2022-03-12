@@ -2,12 +2,9 @@
 
 namespace N1ebieski\IDir\Http\Resources\Field;
 
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Lang;
 use N1ebieski\IDir\Models\Field\Field;
-use N1ebieski\IDir\Models\Region\Region;
 use Illuminate\Http\Resources\Json\JsonResource;
-use N1ebieski\IDir\Http\Resources\Region\RegionResource;
 
 class FieldResource extends JsonResource
 {
@@ -31,15 +28,9 @@ class FieldResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'position' => $this->position,
             'title' => $this->title,
-            $this->mergeWhen(
-                $this->depth === null,
-                function () {
-                    return [
-                        'desc' => $this->desc
-                    ];
-                }
-            ),
+            'desc' => $this->desc,
             'type' => $this->type,
             'visible' => [
                 'value' => $this->visible,
@@ -64,19 +55,6 @@ class FieldResource extends JsonResource
                                 }
                             ),
                             $this->mergeWhen(
-                                in_array($this->type, ['regions']),
-                                function () {
-                                    /**
-                                     * @var Region
-                                     */
-                                    $region = Region::make();
-
-                                    return [
-                                        'options' => App::make(RegionResource::class)->collection($region->makeCache()->rememberAll())
-                                    ];
-                                }
-                            ),
-                            $this->mergeWhen(
                                 in_array($this->type, ['select', 'multiselect', 'checkbox']),
                                 function () {
                                     return [
@@ -94,15 +72,12 @@ class FieldResource extends JsonResource
                                     ];
                                 }
                             )
-                        ],
-                        'created_at' => $this->created_at,
-                        'created_at_diff' => $this->created_at_diff,
-                        'updated_at' => $this->updated_at,
-                        'updated_at_diff' => $this->updated_at_diff,
-                        'position' => $this->position
+                        ]
                     ];
                 }
-            )
+            ),
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at
         ];
     }
 }

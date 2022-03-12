@@ -63,9 +63,7 @@ class CategoryController implements Polymorphic
      * @responseField status object Contains int value and string label.
      * @responseField real_depth int Level of hierarchy.
      * @responseField created_at string
-     * @responseField created_at_diff string
      * @responseField updated_at string
-     * @responseField updated_at_diff string
      * @responseField ancestors object[] Contains relationship Category ancestors (parent and higher).
      *
      * @apiResourceCollection N1ebieski\ICore\Http\Resources\Category\CategoryResource

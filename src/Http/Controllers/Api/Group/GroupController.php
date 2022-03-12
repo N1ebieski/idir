@@ -45,9 +45,7 @@ class GroupController
      * @responseField url int Whether the url is require.
      * @responseField backlink int Whether the backlink is require.
      * @responseField created_at string
-     * @responseField created_at_diff string
      * @responseField updated_at string
-     * @responseField updated_at_diff string
      * @responseField alt object Contains relationship alternative Group. Informs to which group the entry will be dropped after expiry of the premium time. If null the entry will be deactivate.
      * @responseField privileges object[] Contains relationship Privileges.
      * @responseField prices object[] Contains relationship Prices.

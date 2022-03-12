@@ -2,7 +2,6 @@
 
 namespace N1ebieski\IDir\Http\Requests\Api\Dir;
 
-use Illuminate\Support\Arr;
 use N1ebieski\IDir\Models\Dir;
 use Illuminate\Validation\Rule;
 use N1ebieski\IDir\Models\Group;
@@ -142,7 +141,7 @@ class IndexRequest extends FormRequest
             ],
             'filter.paginate' => [
                 'description' => 'Number of records in the list.',
-                'example' => Arr::random([$paginate, ($paginate * 2), ($paginate * 4)])
+                'example' => $paginate
             ]
         ];
     }

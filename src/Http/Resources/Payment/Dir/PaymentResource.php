@@ -32,30 +32,21 @@ class PaymentResource extends JsonResource
     {
         return [
             'uuid' => $this->uuid,
+            'driver' => $this->driver,
             $this->mergeWhen(
-                $this->depth === null,
-                function () use ($request) {
+                optional($request->user())->can('admin.dirs.view'),
+                function () {
                     return [
-                        'driver' => $this->driver,
-                        $this->mergeWhen(
-                            optional($request->user())->can('admin.dirs.view'),
-                            function () {
-                                return [
-                                    'logs' => $this->logs
-                                ];
-                            }
-                        ),
-                        'status' => [
-                            'value' => $this->status,
-                            'label' => Lang::get("idir::payments.status.{$this->status}")
-                        ],
-                        'created_at' => $this->created_at,
-                        'created_at_diff' => $this->created_at_diff,
-                        'updated_at' => $this->updated_at,
-                        'updated_at_diff' => $this->updated_at_diff
+                        'logs' => $this->logs
                     ];
                 }
             ),
+            'status' => [
+                'value' => $this->status,
+                'label' => Lang::get("idir::payments.status.{$this->status}")
+            ],
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
             $this->mergeWhen(
                 $this->depth === null,
                 function () {
@@ -72,7 +63,7 @@ class PaymentResource extends JsonResource
                             $this->relationLoaded('order'),
                             function () {
                                 return [
-                                    'order' => App::make(PriceResource::class, ['price' => $this->order->setAttribute('depth', 1)])
+                                    'order' => App::make(PriceResource::class, ['price' => $this->order])
                                 ];
                             }
                         )

@@ -47,9 +47,7 @@ class PaymentController extends Controller implements Polymorphic
      * @responseField logs string (available only for admin.dirs.view).
      * @responseField status object
      * @responseField created_at string
-     * @responseField created_at_diff string
      * @responseField updated_at string
-     * @responseField updated_at_diff string
      * @responseField morph object Contains relationship Dir.
      * @responseField order object Contains relationship Price.
      *

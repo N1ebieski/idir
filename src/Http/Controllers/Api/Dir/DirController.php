@@ -74,13 +74,9 @@ class DirController
      * @responseField sum_rating string Average rating for an entry.
      * @responseField status object (available only for api.dirs.view or owner)
      * @responseField privileged_at string (available only for api.dirs.view or owner) Start date of premium time.
-     * @responseField privileged_at_diff string (available only for api.dirs.view or owner)
      * @responseField priveleged_to string (available only for api.dirs.view or owner) End date of premium time. If null and <code>privileged_at</code> not null then premium time is unlimited.
-     * @responseField privileged_at_diff string (available only for api.dirs.view or owner)
      * @responseField created_at string
-     * @responseField created_at_diff string
      * @responseField updated_at string
-     * @responseField updated_at_diff string
      * @responseField group object (available only for admin.dirs.view or owner) Contains relationship Group.
      * @responseField user object (available only for admin.dirs.view or owner) Contains relationship User.
      * @responseField categories object[] Contains relationship Categories.

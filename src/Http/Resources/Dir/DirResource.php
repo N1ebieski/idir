@@ -44,157 +44,146 @@ class DirResource extends JsonResource
             'slug' => $this->slug,
             'title' => $this->title,
             'url' => $this->url,
+            'short_content' => $this->short_content,
+            'content' => $this->content,
+            'content_html' => $this->content_html,
+            'less_content_html' => $this->less_content_html,
             $this->mergeWhen(
-                $this->depth === null,
-                function () use ($request) {
+                optional($request->user())->can('view', $this->resource),
+                function () {
                     return [
-                        'short_content' => $this->short_content,
-                        'content' => $this->content,
-                        'content_html' => $this->content_html,
-                        'less_content_html' => $this->less_content_html,
-                        $this->mergeWhen(
-                            optional($request->user())->can('view', $this->resource),
-                            function () {
-                                return [
-                                    'notes' => $this->notes
-                                ];
-                            }
-                        ),
-                        $this->mergeWhen(
-                            $this->url !== null,
-                            function () {
-                                return [
-                                    'thumbnail_url' => $this->thumbnail_url
-                                ];
-                            }
-                        ),
-                        'sum_rating' => $this->sum_rating,
-                        $this->mergeWhen(
-                            optional($request->user())->can('view', $this->resource) || optional($request->user())->can('api.dirs.view'),
-                            function () {
-                                return [
-                                    'status' => [
-                                        'value' => $this->status,
-                                        'label' => Lang::get("idir::dirs.status.{$this->status}")
-                                    ]
-                                ];
-                            }
-                        ),
-                        $this->mergeWhen(
-                            optional($request->user())->can('view', $this->resource) || optional($request->user())->can('api.dirs.view'),
-                            function () {
-                                return [
-                                    'privileged_at' => $this->privileged_at,
-                                    'privileged_at_diff' => $this->privileged_at_diff,
-                                    'privileged_to' => $this->privileged_to,
-                                    'privileged_to_diff' => $this->privileged_to_diff
-                                ];
-                            }
-                        ),
-                        'created_at' => $this->created_at,
-                        'created_at_diff' => $this->created_at_diff,
-                        'updated_at' => $this->updated_at,
-                        'updated_at_diff' => $this->updated_at_diff,
-                        $this->mergeWhen(
-                            $this->relationLoaded('group') && optional($request->user())->can('view', $this->resource),
-                            function () {
-                                return [
-                                    'group' => $this->group instanceof Group ?
-                                        App::make(GroupResource::class, ['group' => $this->group->setAttribute('depth', 1)])
-                                        : null
-                                ];
-                            }
-                        ),
-                        $this->mergeWhen(
-                            $this->relationLoaded('user') && optional($request->user())->can('view', $this->resource),
-                            function () {
-                                return [
-                                    'user' => $this->user instanceof User ?
-                                        App::make(UserResource::class, ['user' => $this->user->setAttribute('depth', 1)])
-                                        : null
-                                ];
-                            }
-                        ),
-                        $this->mergeWhen(
-                            $this->relationLoaded('categories'),
-                            function () {
-                                return [
-                                    'categories' => App::make(CategoryResource::class)
-                                        ->collection($this->categories->map(function ($item) {
-                                            $item->setAttribute('depth', 1);
-
-                                            return $item;
-                                        }))
-                                ];
-                            }
-                        ),
-                        $this->mergeWhen(
-                            $this->relationLoaded('tags'),
-                            function () {
-                                return [
-                                    'tags' => App::make(TagResource::class)
-                                        ->collection($this->tags->map(function ($item) {
-                                            $item->setAttribute('depth', 1);
-
-                                            return $item;
-                                        }))
-                                ];
-                            }
-                        ),
-                        $this->mergeWhen(
-                            $this->relationLoaded('payment') && optional($request->user())->can('view', $this->resource),
-                            function () {
-                                return [
-                                    'payment' => $this->payment instanceof Payment ?
-                                        App::make(PaymentResource::class, ['payment' => $this->payment->setAttribute('depth', 1)])
-                                        : null
-                                ];
-                            }
-                        ),
-                        $this->mergeWhen(
-                            $this->relationLoaded('fields'),
-                            function () use ($request) {
-                                return [
-                                    'fields' => App::make(FieldResource::class)
-                                        ->collection(
-                                            $this->fields->whereIn('id', $this->group->fields->pluck('id')->toArray())
-                                                ->filter(function ($item) use ($request) {
-                                                    if (!$item->isPublic() && !optional($request->user())->can('view', $this->resource)) {
-                                                        return false;
-                                                    }
-
-                                                    return true;
-                                                })
-                                                ->map(function ($item) {
-                                                    $item->setAttribute('depth', 1);
-
-                                                    return $item;
-                                                })
-                                        )
-                                ];
-                            }
-                        ),
-                        'links' => [
-                            $this->mergeWhen(
-                                Config::get('icore.routes.web.enabled') === true && $this->status === Dir::ACTIVE,
-                                function () {
-                                    return [
-                                        'web' => URL::route('web.dir.show', [$this->slug])
-                                    ];
-                                }
-                            ),
-                            $this->mergeWhen(
-                                Config::get('icore.routes.admin.enabled') === true && optional($request->user())->can('admin.dirs.view'),
-                                function () {
-                                    return [
-                                        'admin' => URL::route('admin.dir.index', ['filter[search]' => 'id:"' . $this->id . '"'])
-                                    ];
-                                }
-                            )
+                        'notes' => $this->notes
+                    ];
+                }
+            ),
+            $this->mergeWhen(
+                $this->url !== null,
+                function () {
+                    return [
+                        'thumbnail_url' => $this->thumbnail_url
+                    ];
+                }
+            ),
+            'sum_rating' => $this->sum_rating,
+            $this->mergeWhen(
+                optional($request->user())->can('view', $this->resource) || optional($request->user())->can('api.dirs.view'),
+                function () {
+                    return [
+                        'status' => [
+                            'value' => $this->status,
+                            'label' => Lang::get("idir::dirs.status.{$this->status}")
                         ]
                     ];
                 }
-            )
+            ),
+            $this->mergeWhen(
+                optional($request->user())->can('view', $this->resource) || optional($request->user())->can('api.dirs.view'),
+                function () {
+                    return [
+                        'privileged_at' => $this->privileged_at,
+                        'privileged_to' => $this->privileged_to
+                    ];
+                }
+            ),
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
+            $this->mergeWhen(
+                $this->relationLoaded('group') && optional($request->user())->can('view', $this->resource),
+                function () {
+                    return [
+                        'group' => $this->group instanceof Group ?
+                            App::make(GroupResource::class, ['group' => $this->group->setAttribute('depth', 1)])
+                            : null
+                    ];
+                }
+            ),
+            $this->mergeWhen(
+                $this->relationLoaded('user') && optional($request->user())->can('view', $this->resource),
+                function () {
+                    return [
+                        'user' => $this->user instanceof User ?
+                            App::make(UserResource::class, ['user' => $this->user->setAttribute('depth', 1)])
+                            : null
+                    ];
+                }
+            ),
+            $this->mergeWhen(
+                $this->relationLoaded('categories'),
+                function () {
+                    return [
+                        'categories' => App::make(CategoryResource::class)
+                            ->collection($this->categories->map(function ($item) {
+                                $item->setAttribute('depth', 1);
+
+                                return $item;
+                            }))
+                    ];
+                }
+            ),
+            $this->mergeWhen(
+                $this->relationLoaded('tags'),
+                function () {
+                    return [
+                        'tags' => App::make(TagResource::class)
+                            ->collection($this->tags->map(function ($item) {
+                                $item->setAttribute('depth', 1);
+
+                                return $item;
+                            }))
+                    ];
+                }
+            ),
+            $this->mergeWhen(
+                $this->relationLoaded('payment') && optional($request->user())->can('view', $this->resource),
+                function () {
+                    return [
+                        'payment' => $this->payment instanceof Payment ?
+                            App::make(PaymentResource::class, ['payment' => $this->payment->setAttribute('depth', 1)])
+                            : null
+                    ];
+                }
+            ),
+            $this->mergeWhen(
+                $this->relationLoaded('fields'),
+                function () use ($request) {
+                    return [
+                        'fields' => App::make(FieldResource::class)
+                            ->collection(
+                                $this->fields->whereIn('id', $this->group->fields->pluck('id')->toArray())
+                                    ->filter(function ($item) use ($request) {
+                                        if (!$item->isPublic() && !optional($request->user())->can('view', $this->resource)) {
+                                            return false;
+                                        }
+
+                                        return true;
+                                    })
+                                    ->map(function ($item) {
+                                        $item->setAttribute('depth', 1);
+
+                                        return $item;
+                                    })
+                            )
+                    ];
+                }
+            ),
+            'links' => [
+                $this->mergeWhen(
+                    Config::get('icore.routes.web.enabled') === true && $this->status === Dir::ACTIVE,
+                    function () {
+                        return [
+                            'web' => URL::route('web.dir.show', [$this->slug])
+                        ];
+                    }
+                ),
+                $this->mergeWhen(
+                    Config::get('icore.routes.admin.enabled') === true && optional($request->user())->can('admin.dirs.view'),
+                    function () {
+                        return [
+                            'admin' => URL::route('admin.dir.index', ['filter[search]' => 'id:"' . $this->id . '"'])
+                        ];
+                    }
+                )
+            ]
         ];
     }
 }
