@@ -312,7 +312,10 @@ class DirService implements
 
             $this->dir->fill($attributes);
 
-            $this->dir->content = $attributes['content_html'];
+            if (array_key_exists('content_html', $attributes)) {
+                $this->dir->content = $attributes['content_html'];
+            }
+
             $this->dir->status = $this->status($attributes['payment_type'] ?? null);
 
             if (!$this->dir->isGroup($this->dir->group->id)) {

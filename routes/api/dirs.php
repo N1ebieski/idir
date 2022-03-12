@@ -13,8 +13,9 @@ Route::group(['middleware' => 'auth:sanctum', 'permission:api.access'], function
         ->middleware(['permission:api.dirs.ciew', 'ability:api.dirs.ciew'])
         ->name('dir.index');
 
-    Route::put('dirs/{dir}', [DirController::class, 'update'])
+    Route::put('dirs/{dir}/group/{group}', [DirController::class, 'update'])
         ->middleware(['permission:api.dirs.edit', 'ability:api.dirs.edit', 'can:edit,dir'])
         ->name('dir.update')
-        ->where('dir', '[0-9]+');
+        ->where('dir', '[0-9]+')
+        ->where('group', '[0-9]+');
 });

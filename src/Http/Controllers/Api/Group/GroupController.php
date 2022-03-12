@@ -50,6 +50,7 @@ class GroupController
      * @responseField privileges object[] Contains relationship Privileges.
      * @responseField prices object[] Contains relationship Prices.
      * @responseField fields object[] Contains relationship custom Fields.
+     * @responseField meta object Paging, filtering and sorting information.
      *
      * @apiResourceCollection N1ebieski\IDir\Http\Resources\Group\GroupResource
      * @apiResourceModel N1ebieski\IDir\Models\Group states=apply_alt_group,public,additional_options_for_editing_content with=privileges

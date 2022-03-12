@@ -4,7 +4,7 @@ namespace N1ebieski\IDir\Http\Requests\Api\Dir;
 
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
-use N1ebieski\IDir\Models\Link;
+use N1ebieski\ICore\Models\Link;
 use N1ebieski\IDir\Models\Group;
 use N1ebieski\IDir\Models\Price;
 use Illuminate\Support\Facades\App;
@@ -14,12 +14,11 @@ use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Collection as Collect;
 use N1ebieski\IDir\Models\Category\Dir\Category;
 use N1ebieski\IDir\Http\Requests\Traits\FieldsExtended;
 use N1ebieski\ICore\Http\Requests\Traits\CaptchaExtended;
 
-class StoreRequest extends FormRequest
+class UpdateRequest extends FormRequest
 {
     use CaptchaExtended;
     use FieldsExtended;
@@ -67,7 +66,7 @@ class StoreRequest extends FormRequest
     {
         return $this->group
             && $this->group->isAvailable()
-            && ($this->group->isPublic() || optional($this->user())->can('admin.dirs.create'));
+            && ($this->group->isPublic() || optional($this->user())->can('admin.dirs.edit'));
     }
 
     /**
@@ -123,18 +122,6 @@ class StoreRequest extends FormRequest
     }
 
     /**
-     * [prepareContent description]
-     */
-    protected function prepareContentAttribute(): void
-    {
-        if ($this->has('content_html')) {
-            $this->merge([
-                'content' => strip_tags($this->input('content_html'))
-            ]);
-        }
-    }
-
-    /**
      * [prepareTitle description]
      */
     protected function prepareTitleAttribute(): void
@@ -149,19 +136,30 @@ class StoreRequest extends FormRequest
     }
 
     /**
+     * [prepareContent description]
+     */
+    protected function prepareContentAttribute(): void
+    {
+        if ($this->has('content_html')) {
+            $this->merge([
+                'content' => strip_tags($this->input('content_html'))
+            ]);
+        }
+    }
+
+    /**
      * [prepareTags description]
      */
     protected function prepareTagsAttribute(): void
     {
-        if ($this->has('tags') && is_array($this->input('tags'))) {
+        if ($this->has('tags') && is_string($this->input('tags'))) {
             $this->merge([
-                'tags' => Collect::make($this->input('tags'))
-                    ->map(function ($tag) {
-                        return Config::get('icore.tag.normalizer') !== null ?
-                            Config::get('icore.tag.normalizer')($tag)
-                            : $tag;
-                    })
-                    ->toArray()
+                'tags' => explode(
+                    ',',
+                    Config::get('icore.tag.normalizer') !== null ?
+                        Config::get('icore.tag.normalizer')($this->input('tags'))
+                        : $this->input('tags')
+                )
             ]);
         }
     }
@@ -173,12 +171,166 @@ class StoreRequest extends FormRequest
      */
     public function rules()
     {
+        clock(
+            array_merge(
+                [
+                    'title' => 'bail|string|between:3,' . Config::get('idir.dir.max_title'),
+                    'tags' => [
+                        'bail',
+                        'array',
+                        'between:0,' . Config::get('idir.dir.max_tags')
+                    ],
+                    'tags.*' => [
+                        'bail',
+                        'min:3',
+                        'max:' . Config::get('icore.tag.max_chars'),
+                        'alpha_num_spaces'
+                    ],
+                    'categories' => [
+                        'bail',
+                        'array',
+                        'between:1,' . $this->group->max_cats
+                    ],
+                    'categories.*' => [
+                        'bail',
+                        'integer',
+                        'distinct',
+                        Rule::exists('categories', 'id')->where(function ($query) {
+                            $query->where([
+                                ['status', Category::ACTIVE],
+                                ['model_type', \N1ebieski\IDir\Models\Dir::class]
+                            ]);
+                        })
+                    ],
+                    'content_html' => [
+                        'bail',
+                        'string',
+                        'between:' . Config::get('idir.dir.min_content') . ',' . Config::get('idir.dir.max_content'),
+                        !empty($this->bans_words) ? 'not_regex:/(.*)(\s|^)(' . $this->bans_words . ')(\s|\.|,|\?|$)(.*)/i' : null
+                    ],
+                    'notes' => 'bail|nullable|string|between:3,255',
+                    'url' => [
+                        'bail',
+                        ($this->group->url === Group::OBLIGATORY_URL) ?
+                            (empty(optional($this->dir)->url) ? 'required' : 'sometimes')
+                            : 'nullable',
+                        'string',
+                        'regex:/^(https|http):\/\/([\da-z\.-]+)(\.[a-z]{2,6})\/?$/',
+                        !empty($this->bans_urls) ? 'not_regex:/(' . $this->bans_urls . ')/i' : null,
+                        App::make(\N1ebieski\IDir\Rules\UniqueUrlRule::class, [
+                            'table' => 'dirs',
+                            'column' => 'url',
+                            'ignore' => optional($this->dir)->id
+                        ])
+                    ],
+                    'backlink' => [
+                        'bail',
+                        'integer',
+                        ($this->group->backlink === Group::OBLIGATORY_BACKLINK) ?
+                            (empty(optional(optional($this->dir)->backlink)->url) ? 'required' : 'sometimes')
+                            : 'nullable',
+                        Rule::exists('links', 'id')->where(function ($query) {
+                            $query->where('links.type', 'backlink')
+                                ->whereNotExists(function ($query) {
+                                    $query->from('categories_models')
+                                        ->whereRaw('links.id = categories_models.model_id')
+                                        ->where('categories_models.model_type', 'N1ebieski\\ICore\\Models\\Link');
+                                })->orWhereExists(function ($query) {
+                                    $query->from('categories_models')
+                                        ->whereRaw('links.id = categories_models.model_id')
+                                        ->where('categories_models.model_type', 'N1ebieski\\ICore\\Models\\Link')
+                                        ->whereIn('categories_models.category_id', function ($query) {
+                                            return $query->from('categories_closure')->select('ancestor')
+                                                ->whereIn('descendant', $this->input('categories') ?? []);
+                                        });
+                                });
+                        })
+                    ],
+                    'backlink_url' => [
+                        'bail',
+                        'string',
+                        $this->group->backlink === Group::OBLIGATORY_BACKLINK ?
+                            (empty(optional(optional($this->dir)->backlink)->url) ? 'required' : 'sometimes')
+                            : 'nullable',
+                        $this->input('url') !== null ?
+                            'regex:/^' . Str::escaped($this->input('url')) . '/'
+                            : 'regex:/^(https|http):\/\/([\da-z\.-]+)(\.[a-z]{2,6})/',
+                        $this->group->backlink === Group::OBLIGATORY_BACKLINK && $this->has('backlink') ?
+                            App::make('N1ebieski\\IDir\\Rules\\BacklinkRule', [
+                                'link' => Link::find($this->input('backlink'))->url
+                            ]) : null
+                    ]
+                ],
+                optional($this->user())->can('admin.dirs.edit') ?
+                [
+                    'user' => 'bail|nullable|integer|exists:users,id',
+                ] : [],
+                optional($this->dir)->isPayment($this->group->id) && $this->group->prices->isNotEmpty() ?
+                [
+                    'payment_type' => [
+                        'bail',
+                        'required',
+                        'string',
+                        Rule::in(Price::AVAILABLE)
+                    ],
+                    'payment_transfer' => $this->input('payment_type') === 'transfer' ?
+                    [
+                        'bail',
+                        'required_if:payment_type,transfer',
+                        'integer',
+                        Rule::exists('prices', 'id')->where(function ($query) {
+                            $query->where([
+                                ['type', 'transfer'],
+                                ['group_id', $this->group->id]
+                            ]);
+                        })
+                    ] : [],
+                    'payment_code_sms' => $this->input('payment_type') === 'code_sms' ?
+                     [
+                        'bail',
+                        'required_if:payment_type,code_sms',
+                        'integer',
+                        Rule::exists('prices', 'id')->where(function ($query) {
+                            $query->where([
+                                ['type', 'code_sms'],
+                                ['group_id', $this->group->id]
+                            ]);
+                        })
+                    ] : [],
+                    'payment_code_transfer' => $this->input('payment_type') === 'code_transfer' ?
+                    [
+                        'bail',
+                        'required_if:payment_type,code_transfer',
+                        'integer',
+                        Rule::exists('prices', 'id')->where(function ($query) {
+                            $query->where([
+                                ['type', 'code_transfer'],
+                                ['group_id', $this->group->id]
+                            ]);
+                        })
+                    ] : [],
+                    'payment_paypal_express' => $this->input('payment_type') === 'paypal_express' ?
+                    [
+                        'bail',
+                        'required_if:payment_type,paypal_express',
+                        'integer',
+                        Rule::exists('prices', 'id')->where(function ($query) {
+                            $query->where([
+                                ['type', 'paypal_express'],
+                                ['group_id', $this->group->id]
+                            ]);
+                        })
+                    ] : []
+                ] : (optional($this->user())->can('admin.dirs.edit') ? [] : $this->prepareCaptchaRules()),
+                $this->prepareFieldsRules()
+            )
+        );
+
         return array_merge(
             [
-                'title' => 'bail|required|string|between:3,' . Config::get('idir.dir.max_title'),
+                'title' => 'bail|string|between:3,' . Config::get('idir.dir.max_title'),
                 'tags' => [
                     'bail',
-                    'nullable',
                     'array',
                     'between:0,' . Config::get('idir.dir.max_tags')
                 ],
@@ -190,25 +342,22 @@ class StoreRequest extends FormRequest
                 ],
                 'categories' => [
                     'bail',
-                    'required',
                     'array',
                     'between:1,' . $this->group->max_cats
                 ],
                 'categories.*' => [
                     'bail',
-                    'required',
                     'integer',
                     'distinct',
                     Rule::exists('categories', 'id')->where(function ($query) {
                         $query->where([
                             ['status', Category::ACTIVE],
-                            ['model_type', 'N1ebieski\\IDir\\Models\\Dir']
+                            ['model_type', \N1ebieski\IDir\Models\Dir::class]
                         ]);
                     })
                 ],
                 'content_html' => [
                     'bail',
-                    'required',
                     'string',
                     'between:' . Config::get('idir.dir.min_content') . ',' . Config::get('idir.dir.max_content'),
                     !empty($this->bans_words) ? 'not_regex:/(.*)(\s|^)(' . $this->bans_words . ')(\s|\.|,|\?|$)(.*)/i' : null
@@ -217,31 +366,32 @@ class StoreRequest extends FormRequest
                 'url' => [
                     'bail',
                     ($this->group->url === Group::OBLIGATORY_URL) ?
-                        'required'
+                        (empty(optional($this->dir)->url) ? 'required' : 'sometimes')
                         : 'nullable',
                     'string',
                     'regex:/^(https|http):\/\/([\da-z\.-]+)(\.[a-z]{2,6})\/?$/',
                     !empty($this->bans_urls) ? 'not_regex:/(' . $this->bans_urls . ')/i' : null,
                     App::make(\N1ebieski\IDir\Rules\UniqueUrlRule::class, [
                         'table' => 'dirs',
-                        'column' => 'url'
+                        'column' => 'url',
+                        'ignore' => optional($this->dir)->id
                     ])
                 ],
                 'backlink' => [
                     'bail',
-                    $this->group->backlink === Group::OBLIGATORY_BACKLINK ?
-                        'required'
-                        : 'nullable',
                     'integer',
+                    ($this->group->backlink === Group::OBLIGATORY_BACKLINK) ?
+                        (empty(optional(optional($this->dir)->backlink)->url) ? 'required' : 'sometimes')
+                        : 'nullable',
                     Rule::exists('links', 'id')->where(function ($query) {
                         $query->where('links.type', 'backlink')
                             ->whereNotExists(function ($query) {
                                 $query->from('categories_models')
-                                    ->whereRaw('`links`.`id` = `categories_models`.`model_id`')
+                                    ->whereRaw('links.id = categories_models.model_id')
                                     ->where('categories_models.model_type', 'N1ebieski\\ICore\\Models\\Link');
                             })->orWhereExists(function ($query) {
                                 $query->from('categories_models')
-                                    ->whereRaw('`links`.`id` = `categories_models`.`model_id`')
+                                    ->whereRaw('links.id = categories_models.model_id')
                                     ->where('categories_models.model_type', 'N1ebieski\\ICore\\Models\\Link')
                                     ->whereIn('categories_models.category_id', function ($query) {
                                         return $query->from('categories_closure')->select('ancestor')
@@ -254,7 +404,7 @@ class StoreRequest extends FormRequest
                     'bail',
                     'string',
                     $this->group->backlink === Group::OBLIGATORY_BACKLINK ?
-                        'required'
+                        (empty(optional(optional($this->dir)->backlink)->url) ? 'required' : 'sometimes')
                         : 'nullable',
                     $this->input('url') !== null ?
                         'regex:/^' . Str::escaped($this->input('url')) . '/'
@@ -265,17 +415,17 @@ class StoreRequest extends FormRequest
                         ]) : null
                 ]
             ],
-            !$this->user() ?
+            optional($this->user())->can('admin.dirs.edit') ?
             [
-                'email' => 'bail|required|string|email|unique:users,email'
+                'user' => 'bail|nullable|integer|exists:users,id',
             ] : [],
-            $this->group->prices->isNotEmpty() ?
+            optional($this->dir)->isPayment($this->group->id) && $this->group->prices->isNotEmpty() ?
             [
                 'payment_type' => [
                     'bail',
                     'required',
                     'string',
-                    Rule::in(Price::AVAILABLE),
+                    Rule::in(Price::AVAILABLE)
                 ],
                 'payment_transfer' => $this->input('payment_type') === 'transfer' ?
                 [
@@ -290,7 +440,7 @@ class StoreRequest extends FormRequest
                     })
                 ] : [],
                 'payment_code_sms' => $this->input('payment_type') === 'code_sms' ?
-                [
+                 [
                     'bail',
                     'required_if:payment_type,code_sms',
                     'integer',
@@ -325,7 +475,7 @@ class StoreRequest extends FormRequest
                         ]);
                     })
                 ] : []
-            ] : (optional($this->user())->can('admin.dirs.create') ? [] : $this->prepareCaptchaRules()),
+            ] : (optional($this->user())->can('admin.dirs.edit') ? [] : $this->prepareCaptchaRules()),
             $this->prepareFieldsRules()
         );
     }
@@ -342,8 +492,7 @@ class StoreRequest extends FormRequest
                 'words' => str_replace('|', ', ', $this->bans_words)
             ]),
             'url.not_regex' => 'This address url is banned.',
-            'backlink_url.regex' => Lang::get('validation.regex') . ' ' . Lang::get('idir::validation.backlink_url'),
-            'email.unique' => strip_tags(Lang::get('idir::validation.email'))
+            'backlink_url.regex' => Lang::get('validation.regex') . ' ' . Lang::get('idir::validation.backlink_url')
         ];
     }
 
@@ -359,15 +508,18 @@ class StoreRequest extends FormRequest
                 'description' => 'Array containing category IDs.',
                 'example' => []
             ],
+            'tags.*' => [
+                'example' => []
+            ],
             'url' => [
                 'description' => 'Unique website url with http/https protocol.'
             ],
             'title' => [
-                'example' => 'Lorem ipsum dolor sit amet'
+                'example' => ''
             ],
             'content_html' => [
                 'description' => 'Description.',
-                'example' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
+                'example' => ''
             ],
             'notes' => [
                 'description' => 'Additional information for the moderator.',
