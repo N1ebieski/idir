@@ -22,7 +22,6 @@ class GroupResource extends JsonResource
         parent::__construct($group);
     }
 
-
     /**
      * Transform the resource into an array.
      *
@@ -34,61 +33,73 @@ class GroupResource extends JsonResource
         return [
             'id' => $this->id,
             'slug' => $this->slug,
-            'position' => $this->position,
             'name' => $this->name,
             'desc' => $this->desc,
             'border' => $this->border,
-            'max_cats' => $this->max_cats,
-            'max_models' => $this->max_models,
-            'max_models_daily' => $this->max_models_daily,
-            'visible' => [
-                'value' => $this->visible,
-                'label' => Lang::get("idir::groups.visible.{$this->visible}")
-            ],
-            'apply_status' => [
-                'value' => $this->apply_status,
-                'label' => Lang::get("idir::groups.apply_status.{$this->apply_status}")
-            ],
-            'url' => [
-                'value' => $this->url,
-                'label' => Lang::get("idir::groups.url.{$this->url}")
-            ],
-            'backlink' => [
-                'value' => $this->backlink,
-                'label' => Lang::get("idir::groups.backlink.{$this->backlink}")
-            ],
-            'created_at' => $this->created_at,
-            'created_at_diff' => $this->created_at_diff,
-            'updated_at' => $this->updated_at,
-            'updated_at_diff' => $this->updated_at_diff,
-            'alt' => $this->when(
-                $this->relationLoaded('alt'),
-                function () {
-                    return App::make(GroupResource::class, ['group' => $this->alt]);
-                },
-                null
-            ),
             $this->mergeWhen(
-                $this->relationLoaded('privileges'),
+                $this->depth === null,
                 function () {
                     return [
-                        'privileges' => App::make(PrivilegeResource::class)->collection($this->privileges)
-                    ];
-                }
-            ),
-            $this->mergeWhen(
-                $this->relationLoaded('prices'),
-                function () {
-                    return [
-                        'prices' => App::make(PriceResource::class)->collection($this->prices)
-                    ];
-                }
-            ),
-            $this->mergeWhen(
-                $this->relationLoaded('fields'),
-                function () {
-                    return [
-                        'fields' => App::make(FieldResource::class)->collection($this->fields)
+                        'max_cats' => $this->max_cats,
+                        'max_models' => $this->max_models,
+                        'max_models_daily' => $this->max_models_daily,
+                        'visible' => [
+                            'value' => $this->visible,
+                            'label' => Lang::get("idir::groups.visible.{$this->visible}")
+                        ],
+                        'apply_status' => [
+                            'value' => $this->apply_status,
+                            'label' => Lang::get("idir::groups.apply_status.{$this->apply_status}")
+                        ],
+                        'url' => [
+                            'value' => $this->url,
+                            'label' => Lang::get("idir::groups.url.{$this->url}")
+                        ],
+                        'backlink' => [
+                            'value' => $this->backlink,
+                            'label' => Lang::get("idir::groups.backlink.{$this->backlink}")
+                        ],
+                        'created_at' => $this->created_at,
+                        'created_at_diff' => $this->created_at_diff,
+                        'updated_at' => $this->updated_at,
+                        'updated_at_diff' => $this->updated_at_diff,
+                        'position' => $this->position,
+                        'alt' => $this->when(
+                            $this->relationLoaded('alt'),
+                            function () {
+                                return App::make(GroupResource::class, ['group' => $this->alt]);
+                            },
+                            null
+                        ),
+                        $this->mergeWhen(
+                            $this->relationLoaded('privileges'),
+                            function () {
+                                return [
+                                    'privileges' => App::make(PrivilegeResource::class)->collection($this->privileges)
+                                ];
+                            }
+                        ),
+                        $this->mergeWhen(
+                            $this->relationLoaded('prices'),
+                            function () {
+                                return [
+                                    'prices' => App::make(PriceResource::class)->collection($this->prices)
+                                ];
+                            }
+                        ),
+                        $this->mergeWhen(
+                            $this->relationLoaded('fields'),
+                            function () {
+                                return [
+                                    'fields' => App::make(FieldResource::class)
+                                        ->collection($this->fields->map(function ($item) {
+                                            $item->setAttribute('depth', $item->depth);
+
+                                            return $item;
+                                        }))
+                                ];
+                            }
+                        )
                     ];
                 }
             )

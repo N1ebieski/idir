@@ -8,7 +8,6 @@ use N1ebieski\IDir\Models\Link;
 use N1ebieski\IDir\Models\Group;
 use N1ebieski\IDir\Models\Price;
 use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\URL;
 use Mews\Purifier\Facades\Purifier;
 use N1ebieski\IDir\Models\BanValue;
 use Illuminate\Support\Facades\Lang;

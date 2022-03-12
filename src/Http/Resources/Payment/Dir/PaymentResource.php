@@ -12,22 +12,13 @@ use N1ebieski\IDir\Http\Resources\Price\PriceResource;
 class PaymentResource extends JsonResource
 {
     /**
-     * Undocumented variable
-     *
-     * @var int
-     */
-    protected $depth;
-
-    /**
      * Undocumented function
      *
      * @param Payment $payment
      */
-    public function __construct(Payment $payment, int $depth = 0)
+    public function __construct(Payment $payment)
     {
         parent::__construct($payment);
-
-        $this->depth = $depth;
     }
 
 
@@ -41,39 +32,53 @@ class PaymentResource extends JsonResource
     {
         return [
             'uuid' => $this->uuid,
-            'driver' => $this->driver,
             $this->mergeWhen(
-                optional($request->user())->can('admin.dirs.view'),
-                function () {
+                $this->depth === null,
+                function () use ($request) {
                     return [
-                        'logs' => $this->logs
+                        'driver' => $this->driver,
+                        $this->mergeWhen(
+                            optional($request->user())->can('admin.dirs.view'),
+                            function () {
+                                return [
+                                    'logs' => $this->logs
+                                ];
+                            }
+                        ),
+                        'status' => [
+                            'value' => $this->status,
+                            'label' => Lang::get("idir::payments.status.{$this->status}")
+                        ],
+                        'created_at' => $this->created_at,
+                        'created_at_diff' => $this->created_at_diff,
+                        'updated_at' => $this->updated_at,
+                        'updated_at_diff' => $this->updated_at_diff
                     ];
                 }
             ),
-            'status' => [
-                'value' => $this->status,
-                'label' => Lang::get("idir::payments.status.{$this->status}")
-            ],
-            'created_at' => $this->created_at,
-            'created_at_diff' => $this->created_at_diff,
-            'updated_at' => $this->updated_at,
-            'updated_at_diff' => $this->updated_at_diff,
             $this->mergeWhen(
-                $this->relationLoaded('morph') && $this->depth === 0,
+                $this->depth === null,
                 function () {
                     return [
-                        'morph' => App::make(DirResource::class, ['dir' => $this->morph])
+                        $this->mergeWhen(
+                            $this->relationLoaded('morph'),
+                            function () {
+                                return [
+                                    'morph' => App::make(DirResource::class, ['dir' => $this->morph->setAttribute('depth', 1)])
+                                ];
+                            }
+                        ),
+                        $this->mergeWhen(
+                            $this->relationLoaded('order'),
+                            function () {
+                                return [
+                                    'order' => App::make(PriceResource::class, ['price' => $this->order->setAttribute('depth', 1)])
+                                ];
+                            }
+                        )
                     ];
                 }
             ),
-            $this->mergeWhen(
-                $this->relationLoaded('order'),
-                function () {
-                    return [
-                        'order' => App::make(PriceResource::class, ['price' => $this->order])
-                    ];
-                }
-            )
         ];
     }
 }

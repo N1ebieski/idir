@@ -35,41 +35,48 @@ class PriceResource extends JsonResource
             'regular_price' => $this->regular_price,
             'discount_price' => $this->discount_price,
             'discount' => $this->discount,
-            'qr_as_image' => $this->qr_as_image,
-            'days' => $this->days,
             $this->mergeWhen(
-                in_array($this->type, ['code_transfer', 'code_sms']),
-                function () {
+                $this->depth === null,
+                function () use ($request) {
                     return [
-                        'code' => $this->code
-                    ];
-                }
-            ),
-            $this->mergeWhen(
-                optional($request->user())->can('admin.prices.view'),
-                function () {
-                    return [
-                        'token' => $this->token
-                    ];
-                }
-            ),
-            $this->mergeWhen(
-                $this->type === 'code_sms',
-                function () {
-                    return [
-                        'number' => $this->number
-                    ];
-                }
-            ),
-            'created_at' => $this->created_at,
-            'created_at_diff' => $this->created_at_diff,
-            'updated_at' => $this->updated_at,
-            'updated_at_diff' => $this->updated_at_diff,
-            $this->mergeWhen(
-                $this->relationLoaded('group'),
-                function () {
-                    return [
-                        'group' => App::make(GroupResource::class, ['group' => $this->group])
+                        'qr_as_image' => $this->qr_as_image,
+                        'days' => $this->days,
+                        $this->mergeWhen(
+                            in_array($this->type, ['code_transfer', 'code_sms']),
+                            function () {
+                                return [
+                                    'code' => $this->code
+                                ];
+                            }
+                        ),
+                        $this->mergeWhen(
+                            optional($request->user())->can('admin.prices.view'),
+                            function () {
+                                return [
+                                    'token' => $this->token
+                                ];
+                            }
+                        ),
+                        $this->mergeWhen(
+                            $this->type === 'code_sms',
+                            function () {
+                                return [
+                                    'number' => $this->number
+                                ];
+                            }
+                        ),
+                        'created_at' => $this->created_at,
+                        'created_at_diff' => $this->created_at_diff,
+                        'updated_at' => $this->updated_at,
+                        'updated_at_diff' => $this->updated_at_diff,
+                        $this->mergeWhen(
+                            $this->relationLoaded('group'),
+                            function () {
+                                return [
+                                    'group' => App::make(GroupResource::class, ['group' => $this->group->setAttribute('depth', 1)])
+                                ];
+                            }
+                        )
                     ];
                 }
             )

@@ -10,23 +10,13 @@ use N1ebieski\IDir\Http\Resources\Field\FieldResource as BaseFieldResource;
 class FieldResource extends BaseFieldResource
 {
     /**
-     * Undocumented variable
-     *
-     * @var int
-     */
-    protected $depth;
-
-    /**
      * Undocumented function
      *
      * @param Field $field
-     * @param integer $depth
      */
-    public function __construct(Field $field, int $depth = 0)
+    public function __construct(Field $field)
     {
         parent::__construct($field);
-
-        $this->depth = $depth;
     }
 
 
@@ -40,7 +30,7 @@ class FieldResource extends BaseFieldResource
     {
         return array_merge(parent::toArray($request), [
             $this->mergeWhen(
-                $this->relationLoaded('morphs') && $this->depth === 0,
+                $this->relationLoaded('morphs') && $this->depth === null,
                 function () {
                     return [
                         'morphs' => App::make(GroupResource::class)->collection($this->morphs)
