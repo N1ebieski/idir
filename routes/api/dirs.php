@@ -18,4 +18,14 @@ Route::group(['middleware' => 'auth:sanctum', 'permission:api.access'], function
         ->name('dir.update')
         ->where('dir', '[0-9]+')
         ->where('group', '[0-9]+');
+
+    Route::patch('dirs/{dir}', [DirController::class, 'updateStatus'])
+        ->name('dir.update_status')
+        ->middleware(['permission:admin.dirs.status', 'permission:api.dirs.status', 'ability:api.dirs.status'])
+        ->where('dir', '[0-9]+');
+
+    Route::delete('dirs/{dir}', [DirController::class, 'destroy'])
+        ->middleware(['permission:api.dirs.delete', 'ability:api.dirs.delete', 'can:delete,dir'])
+        ->name('dir.destroy')
+        ->where('dir', '[0-9]+');
 });

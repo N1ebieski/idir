@@ -8,11 +8,13 @@ use N1ebieski\IDir\Models\Group;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Response;
 use N1ebieski\IDir\Loads\Api\Dir\StoreLoad;
 use N1ebieski\IDir\Loads\Api\Dir\UpdateLoad;
 use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Support\Collection as Collect;
 use N1ebieski\ICore\Models\Category\Category;
+use N1ebieski\IDir\Loads\Api\Dir\DestroyLoad;
 use N1ebieski\IDir\Models\Payment\Dir\Payment;
 use N1ebieski\IDir\Filters\Api\Dir\IndexFilter;
 use N1ebieski\IDir\Http\Resources\Dir\DirResource;
@@ -21,12 +23,16 @@ use N1ebieski\IDir\Http\Requests\Api\Dir\IndexRequest;
 use N1ebieski\IDir\Http\Requests\Api\Dir\StoreRequest;
 use N1ebieski\IDir\Http\Resources\Group\GroupResource;
 use N1ebieski\IDir\Http\Requests\Api\Dir\UpdateRequest;
+use N1ebieski\IDir\Http\Requests\Api\Dir\DestroyRequest;
 use N1ebieski\IDir\Http\Requests\Api\Dir\StoreCodeRequest;
 use N1ebieski\IDir\Http\Requests\Api\Dir\UpdateCodeRequest;
 use N1ebieski\ICore\Http\Resources\Category\CategoryResource;
+use N1ebieski\IDir\Http\Requests\Api\Dir\UpdateStatusRequest;
 use N1ebieski\IDir\Events\Api\Dir\StoreEvent as DirStoreEvent;
 use N1ebieski\IDir\Events\Api\Dir\UpdateEvent as DirUpdateEvent;
+use N1ebieski\IDir\Events\Api\Dir\DestroyEvent as DirDestroyEvent;
 use N1ebieski\IDir\Events\Admin\Payment\Dir\StoreEvent as PaymentStoreEvent;
+use N1ebieski\IDir\Events\Api\Dir\UpdateStatusEvent as DirUpdateStatusEvent;
 
 /**
  * @group Dirs
@@ -165,7 +171,7 @@ class DirController
      * @responseField fields object[] Contains relationship custom Fields.
      * @responseField links object Contains links to resources on the website and in the administration panel.
      *
-     * @apiResource N1ebieski\IDir\Http\Resources\Dir\DirResource
+     * @apiResource 201 N1ebieski\IDir\Http\Resources\Dir\DirResource
      * @apiResourceModel N1ebieski\IDir\Models\Dir states=title_sentence,content_text,with_user,pending,with_category,with_default_group with=ratings,categories,group,user
      *
      * @param Group $group
@@ -272,5 +278,92 @@ class DirController
         Event::dispatch(App::make(DirUpdateEvent::class, ['dir' => $dir]));
 
         return App::make(DirResource::class, ['dir' => $dir->loadAllRels()])->response();
+    }
+
+    /**
+     * Edit status dir
+     *
+     * <aside class="notice">Available only to users with permissions: api.access, api.dirs.status and admin.dirs.status.</aside>
+     *
+     * @authenticated
+     *
+     * @urlParam dir integer required The dir ID. No-example
+     *
+     * @responseField id int
+     * @responseField slug string
+     * @responseField title string
+     * @responseField short_content string A shortened version of the post without HTML formatting.
+     * @responseField content string Post without HTML formatting.
+     * @responseField content_html string Post with HTML formatting.
+     * @responseField less_content_html string Post with HTML formatting with "show more" button.
+     * @responseField notes string (available only for admin.dirs.view or owner) Additional infos for moderator.
+     * @responseField url string
+     * @responseField thumbnail_url string
+     * @responseField sum_rating string Average rating for an entry.
+     * @responseField status object (available only for api.dirs.view or owner)
+     * @responseField privileged_at string (available only for api.dirs.view or owner) Start date of premium time.
+     * @responseField priveleged_to string (available only for api.dirs.view or owner) End date of premium time. If null and <code>privileged_at</code> not null then premium time is unlimited.
+     * @responseField created_at string
+     * @responseField updated_at string
+     * @responseField group object (available only for admin.dirs.view or owner) Contains relationship Group.
+     * @responseField user object (available only for admin.dirs.view or owner) Contains relationship User.
+     * @responseField categories object[] Contains relationship Categories.
+     * @responseField tags object[] Contains relationship Tags.
+     * @responseField payment object (available only for owner) Contains relationship Payment.
+     * @responseField fields object[] Contains relationship custom Fields.
+     * @responseField links object Contains links to resources on the website and in the administration panel.
+     *
+     * @apiResource N1ebieski\IDir\Http\Resources\Dir\DirResource
+     * @apiResourceModel N1ebieski\IDir\Models\Dir states=title_sentence,content_text,with_user,pending,with_category,with_default_group with=ratings,categories,group,user
+     *
+     * @param  Dir                 $dir     [description]
+     * @return JsonResponse                 [description]
+     */
+    public function updateStatus(Dir $dir, UpdateStatusRequest $request): JsonResponse
+    {
+        $dir->makeService()->updateStatus($request->validated());
+
+        $dir->loadAllRels();
+
+        Event::dispatch(
+            App::make(DirUpdateStatusEvent::class, [
+                'dir' => $dir,
+                'reason' => $request->validated()['reason'] ?? null
+            ])
+        );
+
+        return App::make(DirResource::class, ['dir' => $dir])->response();
+    }
+
+    /**
+     * Delete dir
+     *
+     * <aside class="notice">Available only to users with permissions: api.access and api.dirs.delete.</aside>
+     *
+     * @authenticated
+     *
+     * @urlParam dir integer required The dir ID. No-example
+     *
+     * @bodyParam reason string (available only for admin.dirs.delete). No-example
+     *
+     * @response 204
+     *
+     * @param Dir $dir
+     * @param DestroyLoad $load
+     * @param DestroyRequest $request
+     * @return JsonResponse
+     */
+    public function destroy(Dir $dir, DestroyLoad $load, DestroyRequest $request): JsonResponse
+    {
+        $dir->makeService()->delete();
+
+        Event::dispatch(
+            App::make(DirDestroyEvent::class, [
+                'dir' => $dir,
+                'reason' => $request->validated()['reason'] ?? null
+            ])
+        );
+
+        return Response::json([], HttpResponse::HTTP_NO_CONTENT);
     }
 }

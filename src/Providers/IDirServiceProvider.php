@@ -52,7 +52,8 @@ class IDirServiceProvider extends ServiceProvider
             \N1ebieski\ICore\Http\Middleware\XSSProtection::class,
             \N1ebieski\ICore\Http\Middleware\ClearWhitespacesInStrings::class,
             \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
-            \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class
+            \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
+            \N1ebieski\ICore\Http\Middleware\OptionalAuthSanctum::class
         ]);
     }
 

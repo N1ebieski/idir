@@ -227,7 +227,7 @@ class UpdateRequest extends FormRequest
                         'bail',
                         'integer',
                         ($this->group->backlink === Group::OBLIGATORY_BACKLINK) ?
-                            (empty(optional(optional($this->dir)->backlink)->url) ? 'required' : 'sometimes')
+                            (empty($this->dir->backlink->url) ? 'required' : 'sometimes')
                             : 'nullable',
                         Rule::exists('links', 'id')->where(function ($query) {
                             $query->where('links.type', 'backlink')
@@ -250,7 +250,7 @@ class UpdateRequest extends FormRequest
                         'bail',
                         'string',
                         $this->group->backlink === Group::OBLIGATORY_BACKLINK ?
-                            (empty(optional(optional($this->dir)->backlink)->url) ? 'required' : 'sometimes')
+                            (empty($this->dir->backlink->url) ? 'required' : 'sometimes')
                             : 'nullable',
                         $this->input('url') !== null ?
                             'regex:/^' . Str::escaped($this->input('url')) . '/'

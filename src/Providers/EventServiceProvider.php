@@ -91,10 +91,13 @@ class EventServiceProvider extends ServiceProvider
             \N1ebieski\IDir\Listeners\Dir\SendActivationNotification::class,
             \N1ebieski\IDir\Listeners\Dir\SendModeratorNotification::class
         ],
+        \N1ebieski\IDir\Events\Api\Dir\DestroyEvent::class => [
+            \N1ebieski\IDir\Listeners\Dir\SendDeletedNotification::class
+        ],
         \N1ebieski\IDir\Events\Api\Payment\Dir\StoreEvent::class => [
             \N1ebieski\IDir\Listeners\Dir\MarkAsPaid::class,
             \N1ebieski\IDir\Listeners\Payment\CreateLogs::class
-        ],
+        ]
     ];
 
     /**

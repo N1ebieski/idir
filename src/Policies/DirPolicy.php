@@ -52,6 +52,7 @@ class DirPolicy
      */
     public function delete(User $authUser, Dir $dir): bool
     {
-        return $authUser->id === $dir->user_id;
+        return $authUser->can('admin.dirs.delete')
+            || $authUser->id === $dir->user_id;
     }
 }

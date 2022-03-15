@@ -21,7 +21,9 @@ use N1ebieski\ICore\Http\Requests\Traits\CaptchaExtended;
 
 class StoreRequest extends FormRequest
 {
-    use CaptchaExtended;
+    use CaptchaExtended {
+        CaptchaExtended::bodyParameters as captchaBodyParameters;
+    }
     use FieldsExtended;
 
     /**
@@ -380,7 +382,16 @@ class StoreRequest extends FormRequest
             'backlink_url' => [
                 'description' => 'Url with http/https protocol to backlink.',
                 'example' => ''
-            ]
+            ],
+            'g-recaptcha-response' => [
+                'description' => $this->captchaBodyParameters()['g-recaptcha-response']['description'] . ' Only required for free groups.'
+            ],
+            'key' => [
+                'description' => $this->captchaBodyParameters()['key']['description'] . ' Only required for free groups.'
+            ],
+            'captcha' => [
+                'description' => $this->captchaBodyParameters()['captcha']['description'] . ' Only required for free groups.'
+            ],
         ];
     }
 }

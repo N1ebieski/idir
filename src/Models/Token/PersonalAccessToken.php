@@ -17,6 +17,7 @@ class PersonalAccessToken extends BasePersonalAccessToken
         'api.dirs.*',
         'api.dirs.view',
         'api.dirs.create',
+        'api.dirs.status',
         'api.dirs.edit',
         'api.dirs.delete'
     ];
