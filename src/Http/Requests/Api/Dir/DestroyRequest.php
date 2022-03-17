@@ -13,7 +13,7 @@ class DestroyRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return optional($this->user())->can('admin.dirs.delete');
     }
 
     /**

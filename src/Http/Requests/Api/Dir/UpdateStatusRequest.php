@@ -6,6 +6,9 @@ use N1ebieski\IDir\Models\Dir;
 use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * @property Dir $dir
+ */
 class UpdateStatusRequest extends FormRequest
 {
     /**

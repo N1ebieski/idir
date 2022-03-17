@@ -93,7 +93,7 @@ class Store2Request extends FormRequest
      */
     protected function prepareContentHtmlAttribute(): void
     {
-        if ($this->has('content_html')) {
+        if ($this->has('content_html') && is_string($this->input('content_html'))) {
             if ($this->group->privileges->contains('name', 'additional options for editing content')) {
                 $this->merge([
                     'content_html' => Purifier::clean($this->input('content_html'), 'dir')
@@ -111,7 +111,7 @@ class Store2Request extends FormRequest
      */
     protected function prepareTitleAttribute(): void
     {
-        if ($this->has('title')) {
+        if ($this->has('title') && is_string($this->input('title'))) {
             $this->merge([
                 'title' => Config::get('idir.dir.title_normalizer') !== null ?
                     Config::get('idir.dir.title_normalizer')($this->input('title'))
@@ -125,7 +125,7 @@ class Store2Request extends FormRequest
      */
     protected function prepareContentAttribute(): void
     {
-        if ($this->has('content_html')) {
+        if ($this->has('content_html') && is_string($this->input('content_html'))) {
             $this->merge([
                 'content' => strip_tags($this->input('content_html'))
             ]);

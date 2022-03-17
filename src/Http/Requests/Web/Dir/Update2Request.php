@@ -6,8 +6,8 @@ use Illuminate\Validation\Rule;
 use N1ebieski\IDir\Models\Group;
 use Illuminate\Support\Facades\App;
 use Mews\Purifier\Facades\Purifier;
-use Illuminate\Support\Facades\Lang;
 use N1ebieski\IDir\Models\BanValue;
+use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Database\Eloquent\Collection;
@@ -104,7 +104,7 @@ class Update2Request extends FormRequest
      */
     protected function prepareContentHtmlAttribute(): void
     {
-        if ($this->has('content_html')) {
+        if ($this->has('content_html') && is_string($this->input('content_html'))) {
             if ($this->group->privileges->contains('name', 'additional options for editing content')) {
                 $this->merge([
                     'content_html' => Purifier::clean($this->input('content_html'), 'dir')
@@ -122,7 +122,7 @@ class Update2Request extends FormRequest
      */
     protected function prepareTitleAttribute(): void
     {
-        if ($this->has('title')) {
+        if ($this->has('title') && is_string($this->input('title'))) {
             $this->merge([
                 'title' => Config::get('idir.dir.title_normalizer') !== null ?
                     Config::get('idir.dir.title_normalizer')($this->input('title'))
@@ -136,7 +136,7 @@ class Update2Request extends FormRequest
      */
     protected function prepareContentAttribute(): void
     {
-        if ($this->has('content_html')) {
+        if ($this->has('content_html') && is_string($this->input('content_html'))) {
             $this->merge([
                 'content' => strip_tags($this->input('content_html'))
             ]);

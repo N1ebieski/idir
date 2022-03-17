@@ -43,7 +43,7 @@ Route::put('dirs/{dir}/group/{group}/3', [DirController::class, 'updateFull3'])
     ->where('group', '[0-9]+')
     ->where('dir', '[0-9]+');
 
-Route::patch('dirs/{dir}', [DirController::class, 'updateStatus'])
+Route::patch('dirs/{dir}/status', [DirController::class, 'updateStatus'])
     ->name('dir.update_status')
     ->middleware('permission:admin.dirs.status')
     ->where('dir', '[0-9]+');

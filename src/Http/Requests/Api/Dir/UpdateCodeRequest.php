@@ -16,8 +16,11 @@ class UpdateCodeRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->group->isAvailable()
+        $check = $this->group
             && ($this->group->isPublic() || optional($this->user())->can('admin.dirs.edit'));
+
+        return $this->dir->isGroup($this->group->id) ?
+            $check : $check && $this->group->isAvailable();
     }
 
     /**

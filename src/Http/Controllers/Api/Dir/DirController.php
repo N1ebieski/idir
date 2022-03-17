@@ -67,9 +67,7 @@ class DirController
      *
      * @authenticated
      *
-     * @bodyParam filter.status int Must be one of 1 or (available only for admin.dirs.view) 0, 2, 3, 4, 5. Example: 1
-     * @bodyParam filter.group int ID of Group relationship. No-example
-     * @bodyParam filter.category int ID of Category relationship. No-example
+     * @bodyParam filter.status int Must be one of 1 or (available only for admin.dirs.view): 0, 2, 3, 4, 5. Example: 1
      * @bodyParam filter.author int (available only for admin.dirs.view) ID of User relationship. No-example
      * @bodyParam filter.report int (available only for admin.dirs.view) Must be one of 1 or 0. No-example
      *
@@ -89,7 +87,7 @@ class DirController
      * @responseField priveleged_to string (available only for api.dirs.view or owner) End date of premium time. If null and <code>privileged_at</code> not null then premium time is unlimited.
      * @responseField created_at string
      * @responseField updated_at string
-     * @responseField group object (available only for admin.dirs.view or owner) Contains relationship Group.
+     * @responseField group object (available only for api.dirs.view or owner) Contains relationship Group.
      * @responseField user object (available only for admin.dirs.view or owner) Contains relationship User.
      * @responseField categories object[] Contains relationship Categories.
      * @responseField tags object[] Contains relationship Tags.
@@ -163,7 +161,7 @@ class DirController
      * @responseField priveleged_to string (available only for api.dirs.view or owner) End date of premium time. If null and <code>privileged_at</code> not null then premium time is unlimited.
      * @responseField created_at string
      * @responseField updated_at string
-     * @responseField group object (available only for admin.dirs.view or owner) Contains relationship Group.
+     * @responseField group object (available only for api.dirs.view or owner) Contains relationship Group.
      * @responseField user object (available only for admin.dirs.view or owner) Contains relationship User.
      * @responseField categories object[] Contains relationship Categories.
      * @responseField tags object[] Contains relationship Tags.
@@ -214,7 +212,7 @@ class DirController
      * @urlParam group integer required The group ID. If same as current and has active premium time then no new payment is required. Example: 1
      *
      * @bodyParam field object[] Array containing additional form fields if the group allows it. No-example
-     * @bodyParam url string Unique website url with http/https protocol. No-example
+     * @bodyParam url string Unique website url with http/https protocol. Example: https://demo.idir.intelekt.net.pl
      * @bodyParam backlink integer ID of the selected backlink. No-example
      * @bodyParam backlink_url string Url with http/https protocol to backlink. No-example
      * @bodyParam user integer (available only for admin.dirs.edit) ID of User author. If null is no author. No-example
@@ -242,7 +240,7 @@ class DirController
      * @responseField priveleged_to string (available only for api.dirs.view or owner) End date of premium time. If null and <code>privileged_at</code> not null then premium time is unlimited.
      * @responseField created_at string
      * @responseField updated_at string
-     * @responseField group object (available only for admin.dirs.view or owner) Contains relationship Group.
+     * @responseField group object (available only for api.dirs.view or owner) Contains relationship Group.
      * @responseField user object (available only for admin.dirs.view or owner) Contains relationship User.
      * @responseField categories object[] Contains relationship Categories.
      * @responseField tags object[] Contains relationship Tags.
@@ -305,7 +303,7 @@ class DirController
      * @responseField priveleged_to string (available only for api.dirs.view or owner) End date of premium time. If null and <code>privileged_at</code> not null then premium time is unlimited.
      * @responseField created_at string
      * @responseField updated_at string
-     * @responseField group object (available only for admin.dirs.view or owner) Contains relationship Group.
+     * @responseField group object (available only for api.dirs.view or owner) Contains relationship Group.
      * @responseField user object (available only for admin.dirs.view or owner) Contains relationship User.
      * @responseField categories object[] Contains relationship Categories.
      * @responseField tags object[] Contains relationship Tags.

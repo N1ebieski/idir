@@ -10,7 +10,7 @@ Route::post('dirs/group/{group}', [DirController::class, 'store'])
 
 Route::group(['middleware' => 'auth:sanctum', 'permission:api.access'], function () {
     Route::match(['post', 'get'], 'dirs/index', [DirController::class, 'index'])
-        ->middleware(['permission:api.dirs.ciew', 'ability:api.dirs.ciew'])
+        ->middleware(['permission:api.dirs.view', 'ability:api.dirs.view'])
         ->name('dir.index');
 
     Route::put('dirs/{dir}/group/{group}', [DirController::class, 'update'])
@@ -19,7 +19,7 @@ Route::group(['middleware' => 'auth:sanctum', 'permission:api.access'], function
         ->where('dir', '[0-9]+')
         ->where('group', '[0-9]+');
 
-    Route::patch('dirs/{dir}', [DirController::class, 'updateStatus'])
+    Route::patch('dirs/{dir}/status', [DirController::class, 'updateStatus'])
         ->name('dir.update_status')
         ->middleware(['permission:admin.dirs.status', 'permission:api.dirs.status', 'ability:api.dirs.status'])
         ->where('dir', '[0-9]+');

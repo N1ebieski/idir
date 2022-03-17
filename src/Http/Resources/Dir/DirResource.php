@@ -88,7 +88,8 @@ class DirResource extends JsonResource
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
             $this->mergeWhen(
-                $this->relationLoaded('group') && optional($request->user())->can('view', $this->resource),
+                $this->relationLoaded('group')
+                && (optional($request->user())->can('view', $this->resource) || optional($request->user())->can('api.dirs.view')),
                 function () {
                     return [
                         'group' => $this->group instanceof Group ?

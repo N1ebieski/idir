@@ -1,8 +1,8 @@
 <?php
 
+use Illuminate\Support\Str;
 use Faker\Generator as Faker;
 use N1ebieski\IDir\Models\User;
-use Illuminate\Support\Str;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,6 +43,10 @@ $factory->afterCreatingState(User::class, 'admin', function ($user) {
 
 $factory->afterCreatingState(User::class, 'super-admin', function ($user) {
     $user->assignRole('super-admin');
+});
+
+$factory->afterCreatingState(User::class, 'api', function ($user) {
+    $user->assignRole('api');
 });
 
 $factory->afterCreatingState(User::class, 'ban_user', function ($user) {

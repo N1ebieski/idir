@@ -138,12 +138,9 @@ class DirController
      */
     public function create2(Group $group, Create2Load $load, Create2Request $request): HttpResponse
     {
-        return Response::view(
-            'idir::web.dir.create.2',
-            App::make(Create2ViewModel::class, [
-                'group' => $group
-            ])
-        );
+        return Response::view('idir::web.dir.create.2', App::make(Create2ViewModel::class, [
+            'group' => $group
+        ]));
     }
 
     /**

@@ -16,6 +16,6 @@ class UpdateLoad
             ->loadCount(['dirs', 'dirsToday'])
             ->load(['privileges', 'fields']);
 
-        $request->route('dir')->load(['backlink', 'fields']);
+        $request->route('dir')->load(['backlink', 'fields', 'categories']);
     }
 }

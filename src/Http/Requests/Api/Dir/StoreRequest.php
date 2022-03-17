@@ -21,9 +21,7 @@ use N1ebieski\ICore\Http\Requests\Traits\CaptchaExtended;
 
 class StoreRequest extends FormRequest
 {
-    use CaptchaExtended {
-        CaptchaExtended::bodyParameters as captchaBodyParameters;
-    }
+    use CaptchaExtended;
     use FieldsExtended;
 
     /**
@@ -85,8 +83,6 @@ class StoreRequest extends FormRequest
 
         $this->prepareContentHtmlAttribute();
 
-        $this->prepareContentAttribute();
-
         $this->prepareUrlAttribute();
 
         $this->prepareFieldsAttribute();
@@ -111,7 +107,7 @@ class StoreRequest extends FormRequest
      */
     protected function prepareContentHtmlAttribute(): void
     {
-        if ($this->has('content_html')) {
+        if ($this->has('content_html') && is_string($this->input('content_html'))) {
             if ($this->group->privileges->contains('name', 'additional options for editing content')) {
                 $this->merge([
                     'content_html' => Purifier::clean($this->input('content_html'), 'dir')
@@ -125,23 +121,11 @@ class StoreRequest extends FormRequest
     }
 
     /**
-     * [prepareContent description]
-     */
-    protected function prepareContentAttribute(): void
-    {
-        if ($this->has('content_html')) {
-            $this->merge([
-                'content' => strip_tags($this->input('content_html'))
-            ]);
-        }
-    }
-
-    /**
      * [prepareTitle description]
      */
     protected function prepareTitleAttribute(): void
     {
-        if ($this->has('title')) {
+        if ($this->has('title') && is_string($this->input('title'))) {
             $this->merge([
                 'title' => Config::get('idir.dir.title_normalizer') !== null ?
                     Config::get('idir.dir.title_normalizer')($this->input('title'))
@@ -359,7 +343,6 @@ class StoreRequest extends FormRequest
         return [
             'categories.*' => [
                 'description' => 'Array containing category IDs.',
-                'example' => []
             ],
             'url' => [
                 'description' => 'Unique website url with http/https protocol.'
@@ -377,20 +360,20 @@ class StoreRequest extends FormRequest
             ],
             'backlink' => [
                 'description' => 'ID of the selected backlink.',
-                'example' => ''
+                'example' => 'No-example'
             ],
             'backlink_url' => [
                 'description' => 'Url with http/https protocol to backlink.',
-                'example' => ''
+                'example' => 'No-example'
             ],
             'g-recaptcha-response' => [
-                'description' => $this->captchaBodyParameters()['g-recaptcha-response']['description'] . ' Only required for free groups.'
+                'description' => $this->prepareCaptchaBodyParameters()['g-recaptcha-response']['description'] . ' Only required for free groups.'
             ],
             'key' => [
-                'description' => $this->captchaBodyParameters()['key']['description'] . ' Only required for free groups.'
+                'description' => $this->prepareCaptchaBodyParameters()['key']['description'] . ' Only required for free groups.'
             ],
             'captcha' => [
-                'description' => $this->captchaBodyParameters()['captcha']['description'] . ' Only required for free groups.'
+                'description' => $this->prepareCaptchaBodyParameters()['captcha']['description'] . ' Only required for free groups.'
             ],
         ];
     }

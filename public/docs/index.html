@@ -34,9 +34,9 @@
         var useCsrf = Boolean(1);
         var csrfUrl = "/sanctum/csrf-cookie";
     </script>
-    <script src="../docs/js/tryitout-3.24.0.js"></script>
+    <script src="../docs/js/tryitout-3.24.1.js"></script>
 
-    <script src="../docs/js/theme-icore-3.24.0.js"></script>
+    <script src="../docs/js/theme-icore-3.24.1.js"></script>
 
 </head>
 
@@ -82,6 +82,9 @@
                                     <ul id="tocify-subheader-authenticated-user" class="tocify-subheader">
                                                     <li class="tocify-item level-2" data-unique="authenticated-user-GETapi-user">
                         <a href="#authenticated-user-GETapi-user">Show user</a>
+                    </li>
+                                    <li class="tocify-item level-2" data-unique="authenticated-user-POSTapi-user-dirs">
+                        <a href="#authenticated-user-POSTapi-user-dirs">Index of user&#039;s dirs</a>
                     </li>
                                                     </ul>
                             </ul>
@@ -137,8 +140,8 @@
                                     <li class="tocify-item level-2" data-unique="dirs-DELETEapi-dirs--dir-">
                         <a href="#dirs-DELETEapi-dirs--dir-">Delete dir</a>
                     </li>
-                                    <li class="tocify-item level-2" data-unique="dirs-PATCHapi-dirs--dir-">
-                        <a href="#dirs-PATCHapi-dirs--dir-">Edit status dir</a>
+                                    <li class="tocify-item level-2" data-unique="dirs-PATCHapi-dirs--dir--status">
+                        <a href="#dirs-PATCHapi-dirs--dir--status">Edit status dir</a>
                     </li>
                                                     </ul>
                             </ul>
@@ -158,7 +161,7 @@
                 </li>
                                     <ul id="tocify-subheader-payments" class="tocify-subheader">
                                                     <li class="tocify-item level-2" data-unique="payments-GETapi-payments--payment_dir_pending--dir--driver--">
-                        <a href="#payments-GETapi-payments--payment_dir_pending--dir--driver--">Initialise dir&#039;s payment</a>
+                        <a href="#payments-GETapi-payments--payment_dir_pending--dir--driver--">Show dir&#039;s payment</a>
                     </li>
                                                     </ul>
                             </ul>
@@ -215,7 +218,7 @@
                             <li><a href="http://github.com/knuckleswtf/scribe">Documentation powered by Scribe ✍</a></li>
                     </ul>
         <ul class="toc-footer" id="last-updated">
-        <li>Last updated: March 15 2022</li>
+        <li>Last updated: March 17 2022</li>
     </ul>
 </div>
 
@@ -241,11 +244,13 @@ You can switch the language used with the tabs at the top right (or from the nav
     <blockquote>
 <p>Routes:</p>
 </blockquote>
-<pre><code>/routes/vendor/icore/api/user.php</code></pre>
+<pre><code>/routes/vendor/icore/api/user.php
+/routes/vendor/idir/api/user.php</code></pre>
 <blockquote>
 <p>Controller:</p>
 </blockquote>
-<pre><code>N1ebieski\ICore\Http\Controllers\Api\Auth\UserController</code></pre>
+<pre><code>N1ebieski\ICore\Http\Controllers\Api\Auth\UserController
+N1ebieski\IDir\Http\Controllers\Api\Auth\UserController</code></pre>
 
             <h2 id="authenticated-user-GETapi-user">Show user</h2>
 
@@ -325,14 +330,14 @@ response.json()</code></pre></div>
 
 <code class="language-json">{
     &quot;data&quot;: {
-        &quot;id&quot;: 12265,
-        &quot;name&quot;: &quot;Cathrine Tremblay&quot;,
+        &quot;id&quot;: 12464,
+        &quot;name&quot;: &quot;Elise Mayert&quot;,
         &quot;status&quot;: {
             &quot;value&quot;: 1,
             &quot;label&quot;: &quot;active&quot;
         },
-        &quot;created_at&quot;: &quot;2022-03-15T10:32:00.000000Z&quot;,
-        &quot;updated_at&quot;: &quot;2022-03-15T10:32:00.000000Z&quot;,
+        &quot;created_at&quot;: &quot;2022-03-17T19:40:56.000000Z&quot;,
+        &quot;updated_at&quot;: &quot;2022-03-17T19:40:56.000000Z&quot;,
         &quot;roles&quot;: [
             {
                 &quot;id&quot;: 3,
@@ -445,6 +450,449 @@ response.json()</code></pre></div>
             <b><code>socialites</code></b>&nbsp;&nbsp;<small>object[]</small>  &nbsp;
 <br>
 <p>Contains relationships Socialites (available only for admin.users.view or owner).</p>
+        </p>
+                <h2 id="authenticated-user-POSTapi-user-dirs">Index of user&#039;s dirs</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+
+
+<span id="example-requests-POSTapi-user-dirs">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request POST \
+    "https://idir.test:8443/api/user/dirs" \
+    --header "Authorization: Bearer {YOUR_ACCESS_TOKEN}" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json" \
+    --data "{
+    \"page\": 1,
+    \"filter\": {
+        \"except\": [],
+        \"search\": \"\",
+        \"status\": \"\",
+        \"group\": \"\",
+        \"orderby\": \"\",
+        \"paginate\": \"\"
+    }
+}"
+</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "https://idir.test:8443/api/user/dirs"
+);
+
+const headers = {
+    "Authorization": "Bearer {YOUR_ACCESS_TOKEN}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+let body = {
+    "page": 1,
+    "filter": {
+        "except": [],
+        "search": "",
+        "status": "",
+        "group": "",
+        "orderby": "",
+        "paginate": ""
+    }
+};
+
+fetch(url, {
+    method: "POST",
+    headers,
+    body: JSON.stringify(body),
+}).then(response =&gt; response.json());</code></pre></div>
+
+
+<div class="php-example">
+    <pre><code class="language-php">$client = new \GuzzleHttp\Client();
+$response = $client-&gt;post(
+    'https://idir.test:8443/api/user/dirs',
+    [
+        'headers' =&gt; [
+            'Authorization' =&gt; 'Bearer {YOUR_ACCESS_TOKEN}',
+            'Content-Type' =&gt; 'application/json',
+            'Accept' =&gt; 'application/json',
+        ],
+        'json' =&gt; [
+            'page' =&gt; 1,
+            'filter' =&gt; [
+                'except' =&gt; [],
+                'search' =&gt; '',
+                'status' =&gt; '',
+                'group' =&gt; '',
+                'orderby' =&gt; '',
+                'paginate' =&gt; '',
+            ],
+        ],
+    ]
+);
+$body = $response-&gt;getBody();
+print_r(json_decode((string) $body));</code></pre></div>
+
+
+<div class="python-example">
+    <pre><code class="language-python">import requests
+import json
+
+url = 'https://idir.test:8443/api/user/dirs'
+payload = {
+    "page": 1,
+    "filter": {
+        "except": [],
+        "search": "",
+        "status": "",
+        "group": "",
+        "orderby": "",
+        "paginate": ""
+    }
+}
+headers = {
+  'Authorization': 'Bearer {YOUR_ACCESS_TOKEN}',
+  'Content-Type': 'application/json',
+  'Accept': 'application/json'
+}
+
+response = requests.request('POST', url, headers=headers, json=payload)
+response.json()</code></pre></div>
+
+</span>
+
+<span id="example-responses-POSTapi-user-dirs">
+            <blockquote>
+            <p>Example response (200):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json">{
+    &quot;data&quot;: [
+        {
+            &quot;id&quot;: 13509,
+            &quot;slug&quot;: &quot;quia-labore-assumenda&quot;,
+            &quot;title&quot;: &quot;Quia labore assumenda.&quot;,
+            &quot;url&quot;: &quot;http://www.zieme.com&quot;,
+            &quot;short_content&quot;: &quot;Quia occaecati illum sunt earum explicabo consectetur soluta. Voluptatum dolore unde et optio sed magni porro. Saepe nostrum et ab est. Sunt culpa sunt ut magnam suscipit amet. Cumque explicabo dolores ut. Nesciunt nostrum molestiae non ea.&quot;,
+            &quot;content&quot;: &quot;Quia occaecati illum sunt earum explicabo consectetur soluta. Voluptatum dolore unde et optio sed magni porro. Saepe nostrum et ab est. Sunt culpa sunt ut magnam suscipit amet. Cumque explicabo dolores ut. Nesciunt nostrum molestiae non ea.&quot;,
+            &quot;content_html&quot;: &quot;Quia occaecati illum sunt earum explicabo consectetur soluta. Voluptatum dolore unde et optio sed magni porro. Saepe nostrum et ab est. Sunt culpa sunt ut magnam suscipit amet. Cumque explicabo dolores ut. Nesciunt nostrum molestiae non ea.&quot;,
+            &quot;less_content_html&quot;: &quot;Quia occaecati illum sunt earum explicabo consectetur soluta. Voluptatum dolore unde et optio sed magni porro. Saepe nostrum et ab est. Sunt culpa sunt ut magnam suscipit amet. Cumque explicabo dolores ut. Nesciunt nostrum molestiae non ea.... &lt;a href=\&quot;https://idir.test:8443/dirs/quia-labore-assumenda\&quot;&gt;show more &amp;raquo&lt;/a&gt;&quot;,
+            &quot;thumbnail_url&quot;: &quot;https://idir.test:8443/thumbnails?url=eyJpdiI6Ilc0SGZRek5vTzluVVBxRWFlTG11b0E9PSIsInZhbHVlIjoidG4wamRVXC9PSHpJc2RqQmx5RjZkbDcybGd2UWdLK0FpNkZiYTdhM0F6TFE9IiwibWFjIjoiNDYzYmE4MmNjYTUzZjI1Y2Q3YTQ1MmFhYTZiMGE4ODFiZDk4MTdhYjk3ZDNjOTdlNmViMGEzNjcxMTEyNDcyMSJ9&quot;,
+            &quot;sum_rating&quot;: &quot;0.00&quot;,
+            &quot;created_at&quot;: &quot;2022-03-17T19:40:52.000000Z&quot;,
+            &quot;updated_at&quot;: &quot;2022-03-17T19:40:52.000000Z&quot;,
+            &quot;categories&quot;: [
+                {
+                    &quot;id&quot;: 2852,
+                    &quot;name&quot;: &quot;Recusandae&quot;,
+                    &quot;slug&quot;: &quot;recusandae-3&quot;,
+                    &quot;icon&quot;: null,
+                    &quot;status&quot;: {
+                        &quot;value&quot;: 1,
+                        &quot;label&quot;: &quot;active&quot;
+                    },
+                    &quot;real_depth&quot;: 0,
+                    &quot;created_at&quot;: &quot;2022-03-17T19:40:52.000000Z&quot;,
+                    &quot;updated_at&quot;: &quot;2022-03-17T19:40:52.000000Z&quot;
+                }
+            ],
+            &quot;links&quot;: []
+        },
+        {
+            &quot;id&quot;: 13510,
+            &quot;slug&quot;: &quot;quis&quot;,
+            &quot;title&quot;: &quot;Quis.&quot;,
+            &quot;url&quot;: &quot;https://pacocha.com&quot;,
+            &quot;short_content&quot;: &quot;Est reiciendis qui aut fugit eveniet. Facilis ut quasi architecto. Voluptas aut deserunt dignissimos ex illum doloribus quis. Exercitationem dolorum minima quidem minus qui labore. Omnis ratione qui repellat.&quot;,
+            &quot;content&quot;: &quot;Est reiciendis qui aut fugit eveniet. Facilis ut quasi architecto. Voluptas aut deserunt dignissimos ex illum doloribus quis. Exercitationem dolorum minima quidem minus qui labore. Omnis ratione qui repellat.&quot;,
+            &quot;content_html&quot;: &quot;Est reiciendis qui aut fugit eveniet. Facilis ut quasi architecto. Voluptas aut deserunt dignissimos ex illum doloribus quis. Exercitationem dolorum minima quidem minus qui labore. Omnis ratione qui repellat.&quot;,
+            &quot;less_content_html&quot;: &quot;Est reiciendis qui aut fugit eveniet. Facilis ut quasi architecto. Voluptas aut deserunt dignissimos ex illum doloribus quis. Exercitationem dolorum minima quidem minus qui labore. Omnis ratione qui repellat.... &lt;a href=\&quot;https://idir.test:8443/dirs/quis\&quot;&gt;show more &amp;raquo&lt;/a&gt;&quot;,
+            &quot;thumbnail_url&quot;: &quot;https://idir.test:8443/thumbnails?url=eyJpdiI6ImlmcnMzbVM2bjB3UzY2SHd0MUw4amc9PSIsInZhbHVlIjoiVlpQN0pEbklJNzlkREQ0U1NSTlJ5MUh0SzByT1RQTU4wbTc2VEg2aE93Zz0iLCJtYWMiOiI0ZmRiNDljZDYyYmYyMTY4YjEzNTBlMTQwNGQxZjA3MGMzYzYxNWIzMGIwOTZhMWQ5OWYzZTBhY2U1YzdhZDhhIn0=&quot;,
+            &quot;sum_rating&quot;: &quot;0.00&quot;,
+            &quot;created_at&quot;: &quot;2022-03-17T19:40:53.000000Z&quot;,
+            &quot;updated_at&quot;: &quot;2022-03-17T19:40:53.000000Z&quot;,
+            &quot;categories&quot;: [
+                {
+                    &quot;id&quot;: 2854,
+                    &quot;name&quot;: &quot;Non&quot;,
+                    &quot;slug&quot;: &quot;non-12&quot;,
+                    &quot;icon&quot;: null,
+                    &quot;status&quot;: {
+                        &quot;value&quot;: 1,
+                        &quot;label&quot;: &quot;active&quot;
+                    },
+                    &quot;real_depth&quot;: 0,
+                    &quot;created_at&quot;: &quot;2022-03-17T19:40:53.000000Z&quot;,
+                    &quot;updated_at&quot;: &quot;2022-03-17T19:40:53.000000Z&quot;
+                }
+            ],
+            &quot;links&quot;: []
+        }
+    ]
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-POSTapi-user-dirs" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-POSTapi-user-dirs"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-POSTapi-user-dirs"></code></pre>
+</span>
+<span id="execution-error-POSTapi-user-dirs" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-POSTapi-user-dirs"></code></pre>
+</span>
+<form id="form-POSTapi-user-dirs" data-method="POST"
+      data-path="api/user/dirs"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      data-headers='{"Authorization":"Bearer {YOUR_ACCESS_TOKEN}","Content-Type":"application\/json","Accept":"application\/json"}'
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('POSTapi-user-dirs', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-POSTapi-user-dirs"
+                    onclick="tryItOut('POSTapi-user-dirs');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-POSTapi-user-dirs"
+                    onclick="cancelTryOut('POSTapi-user-dirs');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-POSTapi-user-dirs" hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-black">POST</small>
+            <b><code>api/user/dirs</code></b>
+        </p>
+            <p>
+            <small class="badge badge-green">GET</small>
+            <b><code>api/user/dirs</code></b>
+        </p>
+                <p>
+            <label id="auth-POSTapi-user-dirs" hidden>Authorization header:
+                <b><code>Bearer </code></b><input type="text"
+                                                                name="Authorization"
+                                                                data-prefix="Bearer "
+                                                                data-endpoint="POSTapi-user-dirs"
+                                                                data-component="header"></label>
+        </p>
+                        <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <p>
+            <b><code>page</code></b>&nbsp;&nbsp;<small>integer</small>     <i>optional</i> &nbsp;
+                <input type="number"
+               name="page"
+               data-endpoint="POSTapi-user-dirs"
+               value="1"
+               data-component="body" hidden>
+    <br>
+
+        </p>
+                <p>
+        <details>
+            <summary style="padding-bottom: 10px;">
+                <b><code>filter</code></b>&nbsp;&nbsp;<small>object</small>     <i>optional</i> &nbsp;
+<br>
+
+            </summary>
+                                                <p>
+                        <b><code>filter.except</code></b>&nbsp;&nbsp;<small>integer[]</small>     <i>optional</i> &nbsp;
+                <input type="number"
+               name="filter.except[0]"
+               value=""
+               data-endpoint="POSTapi-user-dirs"
+               data-component="body" hidden>
+        <input type="number"
+               name="filter.except[1]"
+               value=""
+               data-endpoint="POSTapi-user-dirs"
+               data-component="body" hidden>
+    <br>
+<p>Array containing IDs, excluding records from the list.</p>
+                    </p>
+                                                                <p>
+                        <b><code>filter.search</code></b>&nbsp;&nbsp;<small>string</small>     <i>optional</i> &nbsp;
+                <input type="text"
+               name="filter.search"
+               data-endpoint="POSTapi-user-dirs"
+               value=""
+               data-component="body" hidden>
+    <br>
+<p>Search by keyword. Must be at least 3 characters. Must not be greater than 255 characters.</p>
+                    </p>
+                                                                <p>
+                        <b><code>filter.status</code></b>&nbsp;&nbsp;<small>integer</small>     <i>optional</i> &nbsp;
+                <input type="number"
+               name="filter.status"
+               data-endpoint="POSTapi-user-dirs"
+               value=""
+               data-component="body" hidden>
+    <br>
+<p>Must be between 0 and 5.</p>
+                    </p>
+                                                                <p>
+                        <b><code>filter.group</code></b>&nbsp;&nbsp;<small>integer</small>     <i>optional</i> &nbsp;
+                <input type="number"
+               name="filter.group"
+               data-endpoint="POSTapi-user-dirs"
+               value=""
+               data-component="body" hidden>
+    <br>
+<p>ID of Group relationship.</p>
+                    </p>
+                                                                <p>
+                        <b><code>filter.orderby</code></b>&nbsp;&nbsp;<small>string</small>     <i>optional</i> &nbsp;
+                <input type="text"
+               name="filter.orderby"
+               data-endpoint="POSTapi-user-dirs"
+               value=""
+               data-component="body" hidden>
+    <br>
+<p>Sorting the result list. Must be one of <code>created_at|asc</code>, <code>created_at|desc</code>, <code>updated_at|asc</code>, <code>updated_at|desc</code>, <code>title|asc</code>, <code>title|desc</code>, <code>sum_rating|desc</code>, <code>sum_rating|asc</code>, <code>click|asc</code>, <code>click|desc</code>, <code>view|asc</code>, or <code>view|desc</code>.</p>
+                    </p>
+                                                                <p>
+                        <b><code>filter.paginate</code></b>&nbsp;&nbsp;<small>integer</small>     <i>optional</i> &nbsp;
+                <input type="number"
+               name="filter.paginate"
+               data-endpoint="POSTapi-user-dirs"
+               value=""
+               data-component="body" hidden>
+    <br>
+<p>Number of records in the list. Must be one of <code>25</code>, <code>50</code>, or <code>100</code>.</p>
+                    </p>
+                                    </details>
+        </p>
+        </form>
+
+    <h3>Response</h3>
+    <h4 class="fancy-heading-panel"><b>Response Fields</b></h4>
+            <p>
+            <b><code>id</code></b>&nbsp;&nbsp;<small>integer</small>  &nbsp;
+<br>
+
+        </p>
+            <p>
+            <b><code>slug</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<br>
+
+        </p>
+            <p>
+            <b><code>title</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<br>
+
+        </p>
+            <p>
+            <b><code>short_content</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<br>
+<p>A shortened version of the post without HTML formatting.</p>
+        </p>
+            <p>
+            <b><code>content</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<br>
+<p>Post without HTML formatting.</p>
+        </p>
+            <p>
+            <b><code>content_html</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<br>
+<p>Post with HTML formatting.</p>
+        </p>
+            <p>
+            <b><code>less_content_html</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<br>
+<p>Post with HTML formatting with &quot;show more&quot; button.</p>
+        </p>
+            <p>
+            <b><code>notes</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<br>
+<p>(available only for admin.dirs.view or owner) Additional infos for moderator.</p>
+        </p>
+            <p>
+            <b><code>url</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<br>
+
+        </p>
+            <p>
+            <b><code>thumbnail_url</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<br>
+
+        </p>
+            <p>
+            <b><code>sum_rating</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<br>
+<p>Average rating for an entry.</p>
+        </p>
+            <p>
+            <b><code>status</code></b>&nbsp;&nbsp;<small>object</small>  &nbsp;
+<br>
+<p>(available only for api.dirs.view or owner)</p>
+        </p>
+            <p>
+            <b><code>privileged_at</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<br>
+<p>(available only for api.dirs.view or owner) Start date of premium time.</p>
+        </p>
+            <p>
+            <b><code>priveleged_to</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<br>
+<p>(available only for api.dirs.view or owner) End date of premium time. If null and <code>privileged_at</code> not null then premium time is unlimited.</p>
+        </p>
+            <p>
+            <b><code>created_at</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<br>
+
+        </p>
+            <p>
+            <b><code>updated_at</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+<br>
+
+        </p>
+            <p>
+            <b><code>group</code></b>&nbsp;&nbsp;<small>object</small>  &nbsp;
+<br>
+<p>(available only for api.dirs.view or owner) Contains relationship Group.</p>
+        </p>
+            <p>
+            <b><code>user</code></b>&nbsp;&nbsp;<small>object</small>  &nbsp;
+<br>
+<p>(available only for admin.dirs.view or owner) Contains relationship User.</p>
+        </p>
+            <p>
+            <b><code>categories</code></b>&nbsp;&nbsp;<small>object[]</small>  &nbsp;
+<br>
+<p>Contains relationship Categories.</p>
+        </p>
+            <p>
+            <b><code>tags</code></b>&nbsp;&nbsp;<small>object[]</small>  &nbsp;
+<br>
+<p>Contains relationship Tags.</p>
+        </p>
+            <p>
+            <b><code>fields</code></b>&nbsp;&nbsp;<small>object[]</small>  &nbsp;
+<br>
+<p>Contains relationship custom Fields.</p>
+        </p>
+            <p>
+            <b><code>links</code></b>&nbsp;&nbsp;<small>object</small>  &nbsp;
+<br>
+<p>Contains links to resources on the website and in the administration panel.</p>
+        </p>
+            <p>
+            <b><code>meta</code></b>&nbsp;&nbsp;<small>object</small>  &nbsp;
+<br>
+<p>Paging, filtering and sorting information.</p>
         </p>
             <h1 id="authentication">Authentication</h1>
 
@@ -764,14 +1212,14 @@ response.json()</code></pre></div>
 
 <code class="language-json">{
     &quot;data&quot;: {
-        &quot;id&quot;: 12268,
-        &quot;name&quot;: &quot;Orlando Adams&quot;,
+        &quot;id&quot;: 12467,
+        &quot;name&quot;: &quot;Alda Dietrich II&quot;,
         &quot;status&quot;: {
             &quot;value&quot;: 1,
             &quot;label&quot;: &quot;active&quot;
         },
-        &quot;created_at&quot;: &quot;2022-03-15T10:32:00.000000Z&quot;,
-        &quot;updated_at&quot;: &quot;2022-03-15T10:32:00.000000Z&quot;,
+        &quot;created_at&quot;: &quot;2022-03-17T19:40:57.000000Z&quot;,
+        &quot;updated_at&quot;: &quot;2022-03-17T19:40:57.000000Z&quot;,
         &quot;roles&quot;: [
             {
                 &quot;id&quot;: 3,
@@ -1298,7 +1746,7 @@ N1ebieski\IDir\Http\Controllers\Api\Category\Dir\CategoryController</code></pre>
         \"status\": 1,
         \"parent\": \"\",
         \"orderby\": \"\",
-        \"paginate\": 25
+        \"paginate\": \"\"
     }
 }"
 </code></pre></div>
@@ -1322,7 +1770,7 @@ let body = {
         "status": 1,
         "parent": "",
         "orderby": "",
-        "paginate": 25
+        "paginate": ""
     }
 };
 
@@ -1350,7 +1798,7 @@ $response = $client-&gt;post(
                 'status' =&gt; 1,
                 'parent' =&gt; '',
                 'orderby' =&gt; '',
-                'paginate' =&gt; 25,
+                'paginate' =&gt; '',
             ],
         ],
     ]
@@ -1372,7 +1820,7 @@ payload = {
         "status": 1,
         "parent": "",
         "orderby": "",
-        "paginate": 25
+        "paginate": ""
     }
 }
 headers = {
@@ -1394,30 +1842,30 @@ response.json()</code></pre></div>
 <code class="language-json">{
     &quot;data&quot;: [
         {
-            &quot;id&quot;: 2563,
-            &quot;name&quot;: &quot;possimus iusto&quot;,
-            &quot;slug&quot;: &quot;possimus-iusto&quot;,
+            &quot;id&quot;: 2869,
+            &quot;name&quot;: &quot;Est in&quot;,
+            &quot;slug&quot;: &quot;est-in&quot;,
             &quot;icon&quot;: null,
             &quot;status&quot;: {
                 &quot;value&quot;: 1,
                 &quot;label&quot;: &quot;active&quot;
             },
             &quot;real_depth&quot;: 0,
-            &quot;created_at&quot;: &quot;2022-03-15T10:31:59.000000Z&quot;,
-            &quot;updated_at&quot;: &quot;2022-03-15T10:31:59.000000Z&quot;
+            &quot;created_at&quot;: &quot;2022-03-17T19:40:56.000000Z&quot;,
+            &quot;updated_at&quot;: &quot;2022-03-17T19:40:56.000000Z&quot;
         },
         {
-            &quot;id&quot;: 2564,
-            &quot;name&quot;: &quot;quae culpa&quot;,
-            &quot;slug&quot;: &quot;quae-culpa&quot;,
+            &quot;id&quot;: 2870,
+            &quot;name&quot;: &quot;Consequatur at&quot;,
+            &quot;slug&quot;: &quot;consequatur-at&quot;,
             &quot;icon&quot;: null,
             &quot;status&quot;: {
                 &quot;value&quot;: 1,
                 &quot;label&quot;: &quot;active&quot;
             },
             &quot;real_depth&quot;: 0,
-            &quot;created_at&quot;: &quot;2022-03-15T10:31:59.000000Z&quot;,
-            &quot;updated_at&quot;: &quot;2022-03-15T10:31:59.000000Z&quot;
+            &quot;created_at&quot;: &quot;2022-03-17T19:40:56.000000Z&quot;,
+            &quot;updated_at&quot;: &quot;2022-03-17T19:40:56.000000Z&quot;
         }
     ]
 }</code>
@@ -1544,7 +1992,7 @@ response.json()</code></pre></div>
                 <input type="number"
                name="filter.paginate"
                data-endpoint="POSTapi-categories-dir-index"
-               value="25"
+               value=""
                data-component="body" hidden>
     <br>
 <p>Number of records in the list. Must be one of <code>25</code>, <code>50</code>, or <code>100</code>.</p>
@@ -1629,7 +2077,7 @@ response.json()</code></pre></div>
         \"status\": 1,
         \"parent\": \"\",
         \"orderby\": \"\",
-        \"paginate\": 25
+        \"paginate\": \"\"
     }
 }"
 </code></pre></div>
@@ -1653,7 +2101,7 @@ let body = {
         "status": 1,
         "parent": "",
         "orderby": "",
-        "paginate": 25
+        "paginate": ""
     }
 };
 
@@ -1681,7 +2129,7 @@ $response = $client-&gt;post(
                 'status' =&gt; 1,
                 'parent' =&gt; '',
                 'orderby' =&gt; '',
-                'paginate' =&gt; 25,
+                'paginate' =&gt; '',
             ],
         ],
     ]
@@ -1703,7 +2151,7 @@ payload = {
         "status": 1,
         "parent": "",
         "orderby": "",
-        "paginate": 25
+        "paginate": ""
     }
 }
 headers = {
@@ -1725,30 +2173,30 @@ response.json()</code></pre></div>
 <code class="language-json">{
     &quot;data&quot;: [
         {
-            &quot;id&quot;: 2565,
-            &quot;name&quot;: &quot;nobis molestiae&quot;,
-            &quot;slug&quot;: &quot;nobis-molestiae&quot;,
+            &quot;id&quot;: 2871,
+            &quot;name&quot;: &quot;Nihil vel&quot;,
+            &quot;slug&quot;: &quot;nihil-vel&quot;,
             &quot;icon&quot;: null,
             &quot;status&quot;: {
                 &quot;value&quot;: 1,
                 &quot;label&quot;: &quot;active&quot;
             },
             &quot;real_depth&quot;: 0,
-            &quot;created_at&quot;: &quot;2022-03-15T10:32:00.000000Z&quot;,
-            &quot;updated_at&quot;: &quot;2022-03-15T10:32:00.000000Z&quot;
+            &quot;created_at&quot;: &quot;2022-03-17T19:40:57.000000Z&quot;,
+            &quot;updated_at&quot;: &quot;2022-03-17T19:40:57.000000Z&quot;
         },
         {
-            &quot;id&quot;: 2566,
-            &quot;name&quot;: &quot;alias aperiam&quot;,
-            &quot;slug&quot;: &quot;alias-aperiam&quot;,
+            &quot;id&quot;: 2872,
+            &quot;name&quot;: &quot;Aspernatur consequatur&quot;,
+            &quot;slug&quot;: &quot;aspernatur-consequatur&quot;,
             &quot;icon&quot;: null,
             &quot;status&quot;: {
                 &quot;value&quot;: 1,
                 &quot;label&quot;: &quot;active&quot;
             },
             &quot;real_depth&quot;: 0,
-            &quot;created_at&quot;: &quot;2022-03-15T10:32:00.000000Z&quot;,
-            &quot;updated_at&quot;: &quot;2022-03-15T10:32:00.000000Z&quot;
+            &quot;created_at&quot;: &quot;2022-03-17T19:40:57.000000Z&quot;,
+            &quot;updated_at&quot;: &quot;2022-03-17T19:40:57.000000Z&quot;
         }
     ]
 }</code>
@@ -1875,7 +2323,7 @@ response.json()</code></pre></div>
                 <input type="number"
                name="filter.paginate"
                data-endpoint="POSTapi-categories-post-index"
-               value="25"
+               value=""
                data-component="body" hidden>
     <br>
 <p>Number of records in the list. Must be one of <code>25</code>, <code>50</code>, or <code>100</code>.</p>
@@ -1960,7 +2408,7 @@ response.json()</code></pre></div>
         \"status\": 1,
         \"parent\": \"\",
         \"orderby\": \"\",
-        \"paginate\": 25
+        \"paginate\": \"\"
     }
 }"
 </code></pre></div>
@@ -1984,7 +2432,7 @@ let body = {
         "status": 1,
         "parent": "",
         "orderby": "",
-        "paginate": 25
+        "paginate": ""
     }
 };
 
@@ -2012,7 +2460,7 @@ $response = $client-&gt;post(
                 'status' =&gt; 1,
                 'parent' =&gt; '',
                 'orderby' =&gt; '',
-                'paginate' =&gt; 25,
+                'paginate' =&gt; '',
             ],
         ],
     ]
@@ -2034,7 +2482,7 @@ payload = {
         "status": 1,
         "parent": "",
         "orderby": "",
-        "paginate": 25
+        "paginate": ""
     }
 }
 headers = {
@@ -2056,30 +2504,30 @@ response.json()</code></pre></div>
 <code class="language-json">{
     &quot;data&quot;: [
         {
-            &quot;id&quot;: 12,
-            &quot;name&quot;: &quot;Gabinety kosmetyczne&quot;,
-            &quot;slug&quot;: &quot;gabinety-kosmetyczne&quot;,
+            &quot;id&quot;: 2873,
+            &quot;name&quot;: &quot;Nobis accusantium&quot;,
+            &quot;slug&quot;: &quot;nobis-accusantium&quot;,
             &quot;icon&quot;: null,
             &quot;status&quot;: {
                 &quot;value&quot;: 1,
                 &quot;label&quot;: &quot;active&quot;
             },
-            &quot;real_depth&quot;: 1,
-            &quot;created_at&quot;: &quot;2009-08-21T08:36:46.000000Z&quot;,
-            &quot;updated_at&quot;: &quot;2009-08-21T08:36:46.000000Z&quot;
+            &quot;real_depth&quot;: 0,
+            &quot;created_at&quot;: &quot;2022-03-17T19:40:57.000000Z&quot;,
+            &quot;updated_at&quot;: &quot;2022-03-17T19:40:57.000000Z&quot;
         },
         {
-            &quot;id&quot;: 12,
-            &quot;name&quot;: &quot;Gabinety kosmetyczne&quot;,
-            &quot;slug&quot;: &quot;gabinety-kosmetyczne&quot;,
+            &quot;id&quot;: 2874,
+            &quot;name&quot;: &quot;Dignissimos quo&quot;,
+            &quot;slug&quot;: &quot;dignissimos-quo&quot;,
             &quot;icon&quot;: null,
             &quot;status&quot;: {
                 &quot;value&quot;: 1,
                 &quot;label&quot;: &quot;active&quot;
             },
-            &quot;real_depth&quot;: 1,
-            &quot;created_at&quot;: &quot;2009-08-21T08:36:46.000000Z&quot;,
-            &quot;updated_at&quot;: &quot;2009-08-21T08:36:46.000000Z&quot;
+            &quot;real_depth&quot;: 0,
+            &quot;created_at&quot;: &quot;2022-03-17T19:40:57.000000Z&quot;,
+            &quot;updated_at&quot;: &quot;2022-03-17T19:40:57.000000Z&quot;
         }
     ]
 }</code>
@@ -2206,7 +2654,7 @@ response.json()</code></pre></div>
                 <input type="number"
                name="filter.paginate"
                data-endpoint="POSTapi-categories-index"
-               value="25"
+               value=""
                data-component="body" hidden>
     <br>
 <p>Number of records in the list. Must be one of <code>25</code>, <code>50</code>, or <code>100</code>.</p>
@@ -2310,14 +2758,16 @@ response.json()</code></pre></div>
     --data "{
     \"title\": \"Lorem ipsum dolor sit amet\",
     \"tags\": [
-        \"cydq\"
+        \"wcnqzbbvrjdycamdbitbjbpebzuml\"
     ],
-    \"categories\": [],
+    \"categories\": [
+        10
+    ],
     \"content_html\": \"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.\",
     \"notes\": \"\",
     \"url\": \"https:\\/\\/demo.idir.intelekt.net.pl\",
     \"email\": \"kontakt@intelekt.net.pl\",
-    \"captcha\": \"sint\"
+    \"g-recaptcha-response\": \"qui\"
 }"
 </code></pre></div>
 
@@ -2335,14 +2785,16 @@ const headers = {
 let body = {
     "title": "Lorem ipsum dolor sit amet",
     "tags": [
-        "cydq"
+        "wcnqzbbvrjdycamdbitbjbpebzuml"
     ],
-    "categories": [],
+    "categories": [
+        10
+    ],
     "content_html": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
     "notes": "",
     "url": "https:\/\/demo.idir.intelekt.net.pl",
     "email": "kontakt@intelekt.net.pl",
-    "captcha": "sint"
+    "g-recaptcha-response": "qui"
 };
 
 fetch(url, {
@@ -2364,14 +2816,16 @@ $response = $client-&gt;post(
         'json' =&gt; [
             'title' =&gt; 'Lorem ipsum dolor sit amet',
             'tags' =&gt; [
-                'cydq',
+                'wcnqzbbvrjdycamdbitbjbpebzuml',
             ],
-            'categories' =&gt; [],
+            'categories' =&gt; [
+                10,
+            ],
             'content_html' =&gt; 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
             'notes' =&gt; '',
             'url' =&gt; 'https://demo.idir.intelekt.net.pl',
             'email' =&gt; 'kontakt@intelekt.net.pl',
-            'captcha' =&gt; 'sint',
+            'g-recaptcha-response' =&gt; 'qui',
         ],
     ]
 );
@@ -2387,14 +2841,16 @@ url = 'https://idir.test:8443/api/dirs/group/1'
 payload = {
     "title": "Lorem ipsum dolor sit amet",
     "tags": [
-        "cydq"
+        "wcnqzbbvrjdycamdbitbjbpebzuml"
     ],
-    "categories": [],
+    "categories": [
+        10
+    ],
     "content_html": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
     "notes": "",
     "url": "https:\/\/demo.idir.intelekt.net.pl",
     "email": "kontakt@intelekt.net.pl",
-    "captcha": "sint"
+    "g-recaptcha-response": "qui"
 }
 headers = {
   'Content-Type': 'application/json',
@@ -2414,31 +2870,31 @@ response.json()</code></pre></div>
 
 <code class="language-json">{
     &quot;data&quot;: {
-        &quot;id&quot;: 13389,
-        &quot;slug&quot;: &quot;ad-in&quot;,
-        &quot;title&quot;: &quot;Ad in.&quot;,
-        &quot;url&quot;: &quot;http://langosh.com&quot;,
-        &quot;short_content&quot;: &quot;Tempore velit et est et iste sit consectetur. Fugit et ut magnam ut non est maiores. Delectus adipisci laboriosam dolor a reprehenderit in. Provident fugiat aut nostrum necessitatibus et voluptas voluptas.&quot;,
-        &quot;content&quot;: &quot;Tempore velit et est et iste sit consectetur. Fugit et ut magnam ut non est maiores. Delectus adipisci laboriosam dolor a reprehenderit in. Provident fugiat aut nostrum necessitatibus et voluptas voluptas.&quot;,
-        &quot;content_html&quot;: &quot;Tempore velit et est et iste sit consectetur. Fugit et ut magnam ut non est maiores. Delectus adipisci laboriosam dolor a reprehenderit in. Provident fugiat aut nostrum necessitatibus et voluptas voluptas.&quot;,
-        &quot;less_content_html&quot;: &quot;Tempore velit et est et iste sit consectetur. Fugit et ut magnam ut non est maiores. Delectus adipisci laboriosam dolor a reprehenderit in. Provident fugiat aut nostrum necessitatibus et voluptas voluptas.... &lt;a href=\&quot;http://idir.test:8443/dirs/ad-in\&quot;&gt;show more &amp;raquo&lt;/a&gt;&quot;,
-        &quot;thumbnail_url&quot;: &quot;https://idir.test:8443/thumbnails?url=eyJpdiI6IjVRV1dXYTEralo2dnBsamlDaUNHeEE9PSIsInZhbHVlIjoiMFBCYlpzbFBKRTdKV1JVaTM1VTJLSmJmRkg2ZGZrQUw3WEw1TEd1ZmMwZz0iLCJtYWMiOiI5MzNmZWIxYTE0Mjg4YTY3MDJiMjhjZDBlYjlmNjIzZTVhYTYxOTMzZWVmM2FlMTkxNzQ3NGU1MDkzNTczMTFiIn0=&quot;,
+        &quot;id&quot;: 13517,
+        &quot;slug&quot;: &quot;quibusdam-debitis-consequatur-fugiat&quot;,
+        &quot;title&quot;: &quot;Quibusdam debitis consequatur fugiat.&quot;,
+        &quot;url&quot;: &quot;http://tromp.com&quot;,
+        &quot;short_content&quot;: &quot;Nam debitis assumenda sapiente quia tempore est porro. Amet quia beatae porro qui sunt assumenda. Recusandae at et pariatur aperiam veritatis omnis. Quibusdam voluptate adipisci eligendi delectus laboriosam sint.&quot;,
+        &quot;content&quot;: &quot;Nam debitis assumenda sapiente quia tempore est porro. Amet quia beatae porro qui sunt assumenda. Recusandae at et pariatur aperiam veritatis omnis. Quibusdam voluptate adipisci eligendi delectus laboriosam sint.&quot;,
+        &quot;content_html&quot;: &quot;Nam debitis assumenda sapiente quia tempore est porro. Amet quia beatae porro qui sunt assumenda. Recusandae at et pariatur aperiam veritatis omnis. Quibusdam voluptate adipisci eligendi delectus laboriosam sint.&quot;,
+        &quot;less_content_html&quot;: &quot;Nam debitis assumenda sapiente quia tempore est porro. Amet quia beatae porro qui sunt assumenda. Recusandae at et pariatur aperiam veritatis omnis. Quibusdam voluptate adipisci eligendi delectus laboriosam sint.... &lt;a href=\&quot;http://idir.test:8443/dirs/quibusdam-debitis-consequatur-fugiat\&quot;&gt;show more &amp;raquo&lt;/a&gt;&quot;,
+        &quot;thumbnail_url&quot;: &quot;https://idir.test:8443/thumbnails?url=eyJpdiI6IitUdG1WUVRaTExVdDB2V0xcLzNhOTVnPT0iLCJ2YWx1ZSI6IkJ2Vk1sOUFneWlTc3d6V3JZM0cySFwvdW1MUjRJOVZsc1lONk55MFNEaFMwPSIsIm1hYyI6ImUzMzIxNTg5OWM5N2U5YTVjMTRhOTQ0M2IzYjBhOGI2ZTQwMjBkZjUzMGFlMWY2ZWNlNGY3YjVlYWJkNzA4NmMifQ==&quot;,
         &quot;sum_rating&quot;: &quot;0.00&quot;,
-        &quot;created_at&quot;: &quot;2022-03-15T10:31:59.000000Z&quot;,
-        &quot;updated_at&quot;: &quot;2022-03-15T10:31:59.000000Z&quot;,
+        &quot;created_at&quot;: &quot;2022-03-17T19:40:55.000000Z&quot;,
+        &quot;updated_at&quot;: &quot;2022-03-17T19:40:55.000000Z&quot;,
         &quot;categories&quot;: [
             {
-                &quot;id&quot;: 2562,
-                &quot;name&quot;: &quot;Dolore&quot;,
-                &quot;slug&quot;: &quot;dolore-12&quot;,
+                &quot;id&quot;: 2868,
+                &quot;name&quot;: &quot;Accusantium&quot;,
+                &quot;slug&quot;: &quot;accusantium-3&quot;,
                 &quot;icon&quot;: null,
                 &quot;status&quot;: {
                     &quot;value&quot;: 1,
                     &quot;label&quot;: &quot;active&quot;
                 },
                 &quot;real_depth&quot;: 0,
-                &quot;created_at&quot;: &quot;2022-03-15T10:31:59.000000Z&quot;,
-                &quot;updated_at&quot;: &quot;2022-03-15T10:31:59.000000Z&quot;
+                &quot;created_at&quot;: &quot;2022-03-17T19:40:55.000000Z&quot;,
+                &quot;updated_at&quot;: &quot;2022-03-17T19:40:55.000000Z&quot;
             }
         ],
         &quot;links&quot;: []
@@ -2511,7 +2967,7 @@ response.json()</code></pre></div>
             <b><code>tags</code></b>&nbsp;&nbsp;<small>string[]</small>     <i>optional</i> &nbsp;
                 <input type="text"
                name="tags[0]"
-               value="cydq"
+               value="wcnqzbbvrjdycamdbitbjbpebzuml"
                data-endpoint="POSTapi-dirs-group--group-"
                data-component="body" hidden>
         <input type="text"
@@ -2526,7 +2982,7 @@ response.json()</code></pre></div>
             <b><code>categories</code></b>&nbsp;&nbsp;<small>integer[]</small>  &nbsp;
                 <input type="number"
                name="categories[0]"
-               value=""
+               value="10"
                data-endpoint="POSTapi-dirs-group--group-"
                data-component="body" hidden>
         <input type="number"
@@ -2598,14 +3054,14 @@ response.json()</code></pre></div>
 <p>Email address, required if the user adds the entry as unauthenticated.</p>
         </p>
                 <p>
-            <b><code>captcha</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+            <b><code>g-recaptcha-response</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
                 <input type="text"
-               name="captcha"
+               name="g-recaptcha-response"
                data-endpoint="POSTapi-dirs-group--group-"
-               value="sint"
+               value="qui"
                data-component="body" hidden>
     <br>
-<p>Logic captcha response.Only required for free groups.</p>
+<p>Recaptcha response. Only required for free groups.</p>
         </p>
                 <p>
             <b><code>field</code></b>&nbsp;&nbsp;<small>object[]</small>     <i>optional</i> &nbsp;
@@ -2779,7 +3235,7 @@ response.json()</code></pre></div>
             <p>
             <b><code>group</code></b>&nbsp;&nbsp;<small>object</small>  &nbsp;
 <br>
-<p>(available only for admin.dirs.view or owner) Contains relationship Group.</p>
+<p>(available only for api.dirs.view or owner) Contains relationship Group.</p>
         </p>
             <p>
             <b><code>user</code></b>&nbsp;&nbsp;<small>object</small>  &nbsp;
@@ -2835,8 +3291,10 @@ response.json()</code></pre></div>
         \"except\": [],
         \"search\": \"\",
         \"status\": 1,
+        \"group\": \"\",
+        \"category\": \"\",
         \"orderby\": \"\",
-        \"paginate\": 25
+        \"paginate\": \"\"
     }
 }"
 </code></pre></div>
@@ -2859,8 +3317,10 @@ let body = {
         "except": [],
         "search": "",
         "status": 1,
+        "group": "",
+        "category": "",
         "orderby": "",
-        "paginate": 25
+        "paginate": ""
     }
 };
 
@@ -2887,8 +3347,10 @@ $response = $client-&gt;post(
                 'except' =&gt; [],
                 'search' =&gt; '',
                 'status' =&gt; 1,
+                'group' =&gt; '',
+                'category' =&gt; '',
                 'orderby' =&gt; '',
-                'paginate' =&gt; 25,
+                'paginate' =&gt; '',
             ],
         ],
     ]
@@ -2908,8 +3370,10 @@ payload = {
         "except": [],
         "search": "",
         "status": 1,
+        "group": "",
+        "category": "",
         "orderby": "",
-        "paginate": 25
+        "paginate": ""
     }
 }
 headers = {
@@ -2932,61 +3396,61 @@ response.json()</code></pre></div>
 <code class="language-json">{
     &quot;data&quot;: [
         {
-            &quot;id&quot;: 13387,
-            &quot;slug&quot;: &quot;asperiores-provident-ipsum-consequatur&quot;,
-            &quot;title&quot;: &quot;Asperiores provident ipsum consequatur.&quot;,
-            &quot;url&quot;: &quot;http://www.carroll.info&quot;,
-            &quot;short_content&quot;: &quot;Neque possimus harum debitis mollitia officia ut aperiam. Et eius consectetur aut maiores. Dolor ad molestiae porro ut. Totam voluptas fuga a ea non eos. Ut molestiae et vel excepturi. Consequatur voluptatibus cum aspernatur rerum atque ducimus. Culp&quot;,
-            &quot;content&quot;: &quot;Neque possimus harum debitis mollitia officia ut aperiam. Et eius consectetur aut maiores. Dolor ad molestiae porro ut. Totam voluptas fuga a ea non eos. Ut molestiae et vel excepturi. Consequatur voluptatibus cum aspernatur rerum atque ducimus. Culpa animi commodi error. Quaerat qui sequi et dolor. Nostrum ipsam sint ea occaecati sed magnam.&quot;,
-            &quot;content_html&quot;: &quot;Neque possimus harum debitis mollitia officia ut aperiam. Et eius consectetur aut maiores. Dolor ad molestiae porro ut. Totam voluptas fuga a ea non eos. Ut molestiae et vel excepturi. Consequatur voluptatibus cum aspernatur rerum atque ducimus. Culpa animi commodi error. Quaerat qui sequi et dolor. Nostrum ipsam sint ea occaecati sed magnam.&quot;,
-            &quot;less_content_html&quot;: &quot;Neque possimus harum debitis mollitia officia ut aperiam. Et eius consectetur aut maiores. Dolor ad molestiae porro ut. Totam voluptas fuga a ea non eos. Ut molestiae et vel excepturi. Consequatur voluptatibus cum aspernatur rerum atque ducimus. Culp... &lt;a href=\&quot;http://idir.test:8443/dirs/asperiores-provident-ipsum-consequatur\&quot;&gt;show more &amp;raquo&lt;/a&gt;&quot;,
-            &quot;thumbnail_url&quot;: &quot;https://idir.test:8443/thumbnails?url=eyJpdiI6IjFlaDVqNlwvM0RjSmh3TFlmdDZUZWRRPT0iLCJ2YWx1ZSI6InBkemZjV1c3Sm9VU0xKdEg5cWlNOXhqUmtnamhGR2JMUVNValdJWEF3M3M9IiwibWFjIjoiYWM5OGFhYWUwY2MyZTVlYzUzNTc4NDdhY2NkNTVmNDg5ZDFlMmMzMmY3MDFlOTMxMjY5NTQ0ZDg1OGE1M2Q3NyJ9&quot;,
+            &quot;id&quot;: 13515,
+            &quot;slug&quot;: &quot;mollitia&quot;,
+            &quot;title&quot;: &quot;Mollitia.&quot;,
+            &quot;url&quot;: &quot;http://gerhold.com&quot;,
+            &quot;short_content&quot;: &quot;Eos animi nemo dolorem soluta tempore consequatur totam. Debitis blanditiis ab nihil voluptate error quisquam voluptas. Sapiente deleniti quis voluptatem illo. Tenetur et vero porro ut. Voluptatum et corrupti est. Sit quidem et deserunt et qui porro.&quot;,
+            &quot;content&quot;: &quot;Eos animi nemo dolorem soluta tempore consequatur totam. Debitis blanditiis ab nihil voluptate error quisquam voluptas. Sapiente deleniti quis voluptatem illo. Tenetur et vero porro ut. Voluptatum et corrupti est. Sit quidem et deserunt et qui porro. Beatae asperiores enim eos.&quot;,
+            &quot;content_html&quot;: &quot;Eos animi nemo dolorem soluta tempore consequatur totam. Debitis blanditiis ab nihil voluptate error quisquam voluptas. Sapiente deleniti quis voluptatem illo. Tenetur et vero porro ut. Voluptatum et corrupti est. Sit quidem et deserunt et qui porro. Beatae asperiores enim eos.&quot;,
+            &quot;less_content_html&quot;: &quot;Eos animi nemo dolorem soluta tempore consequatur totam. Debitis blanditiis ab nihil voluptate error quisquam voluptas. Sapiente deleniti quis voluptatem illo. Tenetur et vero porro ut. Voluptatum et corrupti est. Sit quidem et deserunt et qui porro.... &lt;a href=\&quot;http://idir.test:8443/dirs/mollitia\&quot;&gt;show more &amp;raquo&lt;/a&gt;&quot;,
+            &quot;thumbnail_url&quot;: &quot;https://idir.test:8443/thumbnails?url=eyJpdiI6IlNPSzRFVmtjcnFKVGdlSUZYMWwxVUE9PSIsInZhbHVlIjoibkdHcUt3anY4bmZzUXJHVXY0WVlxUnJmd25CaUcrU3JjWnRhVnJjSmVLYz0iLCJtYWMiOiIwNDM0Njc2NWY1NmJjNWJmZjY0ZDQ3MWQwZDQxNzc0NGExZmYzZTAyYmY4OGUxM2FhNjVlZWFmM2Q4NWZhNmFjIn0=&quot;,
             &quot;sum_rating&quot;: &quot;0.00&quot;,
-            &quot;created_at&quot;: &quot;2022-03-15T10:31:59.000000Z&quot;,
-            &quot;updated_at&quot;: &quot;2022-03-15T10:31:59.000000Z&quot;,
+            &quot;created_at&quot;: &quot;2022-03-17T19:40:55.000000Z&quot;,
+            &quot;updated_at&quot;: &quot;2022-03-17T19:40:55.000000Z&quot;,
             &quot;categories&quot;: [
                 {
-                    &quot;id&quot;: 2558,
-                    &quot;name&quot;: &quot;Quaerat&quot;,
-                    &quot;slug&quot;: &quot;quaerat-5&quot;,
+                    &quot;id&quot;: 2864,
+                    &quot;name&quot;: &quot;Sapiente&quot;,
+                    &quot;slug&quot;: &quot;sapiente-6&quot;,
                     &quot;icon&quot;: null,
                     &quot;status&quot;: {
                         &quot;value&quot;: 1,
                         &quot;label&quot;: &quot;active&quot;
                     },
                     &quot;real_depth&quot;: 0,
-                    &quot;created_at&quot;: &quot;2022-03-15T10:31:59.000000Z&quot;,
-                    &quot;updated_at&quot;: &quot;2022-03-15T10:31:59.000000Z&quot;
+                    &quot;created_at&quot;: &quot;2022-03-17T19:40:55.000000Z&quot;,
+                    &quot;updated_at&quot;: &quot;2022-03-17T19:40:55.000000Z&quot;
                 }
             ],
             &quot;links&quot;: []
         },
         {
-            &quot;id&quot;: 13388,
-            &quot;slug&quot;: &quot;officia-itaque&quot;,
-            &quot;title&quot;: &quot;Officia itaque.&quot;,
-            &quot;url&quot;: &quot;http://www.bode.com&quot;,
-            &quot;short_content&quot;: &quot;Est vitae et vel aperiam ullam voluptate quia. Velit officiis fugiat debitis molestiae sequi. Id quibusdam accusamus rerum nam cupiditate nihil. Iure assumenda molestias quos veritatis. Incidunt et aut veniam accusantium hic quis. Non animi error ear&quot;,
-            &quot;content&quot;: &quot;Est vitae et vel aperiam ullam voluptate quia. Velit officiis fugiat debitis molestiae sequi. Id quibusdam accusamus rerum nam cupiditate nihil. Iure assumenda molestias quos veritatis. Incidunt et aut veniam accusantium hic quis. Non animi error earum. Labore sapiente consequatur a neque fuga corrupti asperiores.&quot;,
-            &quot;content_html&quot;: &quot;Est vitae et vel aperiam ullam voluptate quia. Velit officiis fugiat debitis molestiae sequi. Id quibusdam accusamus rerum nam cupiditate nihil. Iure assumenda molestias quos veritatis. Incidunt et aut veniam accusantium hic quis. Non animi error earum. Labore sapiente consequatur a neque fuga corrupti asperiores.&quot;,
-            &quot;less_content_html&quot;: &quot;Est vitae et vel aperiam ullam voluptate quia. Velit officiis fugiat debitis molestiae sequi. Id quibusdam accusamus rerum nam cupiditate nihil. Iure assumenda molestias quos veritatis. Incidunt et aut veniam accusantium hic quis. Non animi error ear... &lt;a href=\&quot;http://idir.test:8443/dirs/officia-itaque\&quot;&gt;show more &amp;raquo&lt;/a&gt;&quot;,
-            &quot;thumbnail_url&quot;: &quot;https://idir.test:8443/thumbnails?url=eyJpdiI6IkVka2VqdEFWVjRtbWh1VmlmYWNueFE9PSIsInZhbHVlIjoiWFd4VHRXcmViOHNTZU9qZmpadUpBYVVnd3EyT2hkMWFaNHVRRWs2c3czZz0iLCJtYWMiOiJiZGIzYTJhY2MxYjgwYjRiOGE4NzUyNjBlNmMwZWU0NGEzY2JkZGM0NzJlODg2N2Q4YjZkN2Q1Mjk4NTk0NTM4In0=&quot;,
+            &quot;id&quot;: 13516,
+            &quot;slug&quot;: &quot;ut-temporibus-consequatur&quot;,
+            &quot;title&quot;: &quot;Ut temporibus consequatur.&quot;,
+            &quot;url&quot;: &quot;http://wehner.com&quot;,
+            &quot;short_content&quot;: &quot;Aliquam tempore adipisci voluptatibus laudantium iste dicta. Magnam dolor sit voluptatem placeat. Voluptatem cumque quibusdam qui veritatis atque sed. Molestias voluptatem quia ex quas blanditiis dolorem ipsum. Pariatur voluptatem quae quia sequi. Is&quot;,
+            &quot;content&quot;: &quot;Aliquam tempore adipisci voluptatibus laudantium iste dicta. Magnam dolor sit voluptatem placeat. Voluptatem cumque quibusdam qui veritatis atque sed. Molestias voluptatem quia ex quas blanditiis dolorem ipsum. Pariatur voluptatem quae quia sequi. Iste minima sunt excepturi debitis. Deleniti eum laboriosam quas ad.&quot;,
+            &quot;content_html&quot;: &quot;Aliquam tempore adipisci voluptatibus laudantium iste dicta. Magnam dolor sit voluptatem placeat. Voluptatem cumque quibusdam qui veritatis atque sed. Molestias voluptatem quia ex quas blanditiis dolorem ipsum. Pariatur voluptatem quae quia sequi. Iste minima sunt excepturi debitis. Deleniti eum laboriosam quas ad.&quot;,
+            &quot;less_content_html&quot;: &quot;Aliquam tempore adipisci voluptatibus laudantium iste dicta. Magnam dolor sit voluptatem placeat. Voluptatem cumque quibusdam qui veritatis atque sed. Molestias voluptatem quia ex quas blanditiis dolorem ipsum. Pariatur voluptatem quae quia sequi. Is... &lt;a href=\&quot;http://idir.test:8443/dirs/ut-temporibus-consequatur\&quot;&gt;show more &amp;raquo&lt;/a&gt;&quot;,
+            &quot;thumbnail_url&quot;: &quot;https://idir.test:8443/thumbnails?url=eyJpdiI6IjZMWGtMek9DYXZadWt1Y3kyYzdHQlE9PSIsInZhbHVlIjoiNnVLVkxnckZIaFZDaU40T2hpYmFYRm5YQTFLTldoamc1cXZzaWk4SmRWbz0iLCJtYWMiOiI1ZGM2ZmMzYmE4MTc3OTdhYTVhNWFiZDMyNDQ5OTk1YTBmMDRhMzJiZjQyYmJlMTA4ZDI4Mjg4OTdlZWQ4YTMwIn0=&quot;,
             &quot;sum_rating&quot;: &quot;0.00&quot;,
-            &quot;created_at&quot;: &quot;2022-03-15T10:31:59.000000Z&quot;,
-            &quot;updated_at&quot;: &quot;2022-03-15T10:31:59.000000Z&quot;,
+            &quot;created_at&quot;: &quot;2022-03-17T19:40:55.000000Z&quot;,
+            &quot;updated_at&quot;: &quot;2022-03-17T19:40:55.000000Z&quot;,
             &quot;categories&quot;: [
                 {
-                    &quot;id&quot;: 2560,
-                    &quot;name&quot;: &quot;Voluptas&quot;,
-                    &quot;slug&quot;: &quot;voluptas-17&quot;,
+                    &quot;id&quot;: 2866,
+                    &quot;name&quot;: &quot;Eum&quot;,
+                    &quot;slug&quot;: &quot;eum-9&quot;,
                     &quot;icon&quot;: null,
                     &quot;status&quot;: {
                         &quot;value&quot;: 1,
                         &quot;label&quot;: &quot;active&quot;
                     },
                     &quot;real_depth&quot;: 0,
-                    &quot;created_at&quot;: &quot;2022-03-15T10:31:59.000000Z&quot;,
-                    &quot;updated_at&quot;: &quot;2022-03-15T10:31:59.000000Z&quot;
+                    &quot;created_at&quot;: &quot;2022-03-17T19:40:55.000000Z&quot;,
+                    &quot;updated_at&quot;: &quot;2022-03-17T19:40:55.000000Z&quot;
                 }
             ],
             &quot;links&quot;: []
@@ -3097,7 +3561,7 @@ response.json()</code></pre></div>
                value="1"
                data-component="body" hidden>
     <br>
-<p>Must be one of 1 or (available only for admin.dirs.view) 0, 2, 3, 4, 5.</p>
+<p>Must be one of 1 or (available only for admin.dirs.view): 0, 2, 3, 4, 5.</p>
                     </p>
                                                                 <p>
                         <b><code>filter.group</code></b>&nbsp;&nbsp;<small>integer</small>     <i>optional</i> &nbsp;
@@ -3134,7 +3598,7 @@ response.json()</code></pre></div>
                 <input type="number"
                name="filter.paginate"
                data-endpoint="POSTapi-dirs-index"
-               value="25"
+               value=""
                data-component="body" hidden>
     <br>
 <p>Number of records in the list. Must be one of <code>25</code>, <code>50</code>, or <code>100</code>.</p>
@@ -3248,7 +3712,7 @@ response.json()</code></pre></div>
             <p>
             <b><code>group</code></b>&nbsp;&nbsp;<small>object</small>  &nbsp;
 <br>
-<p>(available only for admin.dirs.view or owner) Contains relationship Group.</p>
+<p>(available only for api.dirs.view or owner) Contains relationship Group.</p>
         </p>
             <p>
             <b><code>user</code></b>&nbsp;&nbsp;<small>object</small>  &nbsp;
@@ -3299,12 +3763,17 @@ response.json()</code></pre></div>
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
-    \"title\": \"\",
-    \"tags\": [],
-    \"categories\": [],
-    \"content_html\": \"\",
+    \"title\": \"Lorem ipsum dolor sit amet\",
+    \"tags\": [
+        \"rvhjiln\"
+    ],
+    \"categories\": [
+        10
+    ],
+    \"content_html\": \"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.\",
     \"notes\": \"\",
-    \"captcha\": \"blanditiis\"
+    \"url\": \"https:\\/\\/demo.idir.intelekt.net.pl\",
+    \"g-recaptcha-response\": \"aut\"
 }"
 </code></pre></div>
 
@@ -3321,12 +3790,17 @@ const headers = {
 };
 
 let body = {
-    "title": "",
-    "tags": [],
-    "categories": [],
-    "content_html": "",
+    "title": "Lorem ipsum dolor sit amet",
+    "tags": [
+        "rvhjiln"
+    ],
+    "categories": [
+        10
+    ],
+    "content_html": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
     "notes": "",
-    "captcha": "blanditiis"
+    "url": "https:\/\/demo.idir.intelekt.net.pl",
+    "g-recaptcha-response": "aut"
 };
 
 fetch(url, {
@@ -3347,12 +3821,17 @@ $response = $client-&gt;put(
             'Accept' =&gt; 'application/json',
         ],
         'json' =&gt; [
-            'title' =&gt; '',
-            'tags' =&gt; [],
-            'categories' =&gt; [],
-            'content_html' =&gt; '',
+            'title' =&gt; 'Lorem ipsum dolor sit amet',
+            'tags' =&gt; [
+                'rvhjiln',
+            ],
+            'categories' =&gt; [
+                10,
+            ],
+            'content_html' =&gt; 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
             'notes' =&gt; '',
-            'captcha' =&gt; 'blanditiis',
+            'url' =&gt; 'https://demo.idir.intelekt.net.pl',
+            'g-recaptcha-response' =&gt; 'aut',
         ],
     ]
 );
@@ -3366,12 +3845,17 @@ import json
 
 url = 'https://idir.test:8443/api/dirs//group/1'
 payload = {
-    "title": "",
-    "tags": [],
-    "categories": [],
-    "content_html": "",
+    "title": "Lorem ipsum dolor sit amet",
+    "tags": [
+        "rvhjiln"
+    ],
+    "categories": [
+        10
+    ],
+    "content_html": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
     "notes": "",
-    "captcha": "blanditiis"
+    "url": "https:\/\/demo.idir.intelekt.net.pl",
+    "g-recaptcha-response": "aut"
 }
 headers = {
   'Authorization': 'Bearer {YOUR_ACCESS_TOKEN}',
@@ -3392,31 +3876,31 @@ response.json()</code></pre></div>
 
 <code class="language-json">{
     &quot;data&quot;: {
-        &quot;id&quot;: 13386,
-        &quot;slug&quot;: &quot;sit-sed&quot;,
-        &quot;title&quot;: &quot;Sit sed.&quot;,
-        &quot;url&quot;: &quot;http://www.kassulke.com&quot;,
-        &quot;short_content&quot;: &quot;Nisi quae quaerat corporis voluptas incidunt. Laboriosam praesentium ipsam maxime pariatur maiores beatae dolor. Vel pariatur autem omnis sed. Rerum veniam quis error ducimus totam nesciunt ipsum. Reiciendis eius illo cupiditate cupiditate vel. Ut ab&quot;,
-        &quot;content&quot;: &quot;Nisi quae quaerat corporis voluptas incidunt. Laboriosam praesentium ipsam maxime pariatur maiores beatae dolor. Vel pariatur autem omnis sed. Rerum veniam quis error ducimus totam nesciunt ipsum. Reiciendis eius illo cupiditate cupiditate vel. Ut ab et accusamus porro maiores. Et provident provident aspernatur aliquid reprehenderit libero nobis.&quot;,
-        &quot;content_html&quot;: &quot;Nisi quae quaerat corporis voluptas incidunt. Laboriosam praesentium ipsam maxime pariatur maiores beatae dolor. Vel pariatur autem omnis sed. Rerum veniam quis error ducimus totam nesciunt ipsum. Reiciendis eius illo cupiditate cupiditate vel. Ut ab et accusamus porro maiores. Et provident provident aspernatur aliquid reprehenderit libero nobis.&quot;,
-        &quot;less_content_html&quot;: &quot;Nisi quae quaerat corporis voluptas incidunt. Laboriosam praesentium ipsam maxime pariatur maiores beatae dolor. Vel pariatur autem omnis sed. Rerum veniam quis error ducimus totam nesciunt ipsum. Reiciendis eius illo cupiditate cupiditate vel. Ut ab... &lt;a href=\&quot;http://idir.test:8443/dirs/sit-sed\&quot;&gt;show more &amp;raquo&lt;/a&gt;&quot;,
-        &quot;thumbnail_url&quot;: &quot;https://idir.test:8443/thumbnails?url=eyJpdiI6IjNndXdaWCtNaUZLZ0ZyOHd2T0JoU2c9PSIsInZhbHVlIjoiQXVIa1FERitPR3pGM2h2anBBK0RHT3NNQUhGYW94YkoxQ2sydFVJV3Y2WT0iLCJtYWMiOiJkODBkODFlN2Y2NmM0YzBjMzNkZGRmZjNhNmVlNWYyODc0Mzg5MTE1NjIyYTBkMzFjYTZiNGRjZmYxNjBmNmY0In0=&quot;,
+        &quot;id&quot;: 13514,
+        &quot;slug&quot;: &quot;natus-consequatur&quot;,
+        &quot;title&quot;: &quot;Natus consequatur.&quot;,
+        &quot;url&quot;: &quot;http://kris.com&quot;,
+        &quot;short_content&quot;: &quot;Nulla iure nulla quia qui et vitae veniam et. Quo sit voluptatem et error nam dolores aliquam sed. Vel illum officiis commodi. Quae officia repellendus laudantium deleniti. Laudantium eligendi dicta quia laudantium fugit id veritatis. Aut officiis et&quot;,
+        &quot;content&quot;: &quot;Nulla iure nulla quia qui et vitae veniam et. Quo sit voluptatem et error nam dolores aliquam sed. Vel illum officiis commodi. Quae officia repellendus laudantium deleniti. Laudantium eligendi dicta quia laudantium fugit id veritatis. Aut officiis et et sunt ab deleniti. Sint et ullam nulla. Animi provident aliquam non nihil doloribus tempora.&quot;,
+        &quot;content_html&quot;: &quot;Nulla iure nulla quia qui et vitae veniam et. Quo sit voluptatem et error nam dolores aliquam sed. Vel illum officiis commodi. Quae officia repellendus laudantium deleniti. Laudantium eligendi dicta quia laudantium fugit id veritatis. Aut officiis et et sunt ab deleniti. Sint et ullam nulla. Animi provident aliquam non nihil doloribus tempora.&quot;,
+        &quot;less_content_html&quot;: &quot;Nulla iure nulla quia qui et vitae veniam et. Quo sit voluptatem et error nam dolores aliquam sed. Vel illum officiis commodi. Quae officia repellendus laudantium deleniti. Laudantium eligendi dicta quia laudantium fugit id veritatis. Aut officiis et... &lt;a href=\&quot;http://idir.test:8443/dirs/natus-consequatur\&quot;&gt;show more &amp;raquo&lt;/a&gt;&quot;,
+        &quot;thumbnail_url&quot;: &quot;https://idir.test:8443/thumbnails?url=eyJpdiI6InRxb0d0bHdnbWNGbDFTaDZoV1wvVkNnPT0iLCJ2YWx1ZSI6IllDTXJDdjhDNFwvQ2VDUzRKY1FwZE1RVEs4bUVVWEhKOHVqbGNMcXNibFpzPSIsIm1hYyI6ImI5ZGVkNTg0ZGRhMTM4YWY2ZmE3NDI2Yzc1N2Y5OWViZWNiOWE1NDFmMmIyNmNkYWJkMGRkZDczNmFhZTMwYzEifQ==&quot;,
         &quot;sum_rating&quot;: &quot;0.00&quot;,
-        &quot;created_at&quot;: &quot;2022-03-15T10:31:59.000000Z&quot;,
-        &quot;updated_at&quot;: &quot;2022-03-15T10:31:59.000000Z&quot;,
+        &quot;created_at&quot;: &quot;2022-03-17T19:40:54.000000Z&quot;,
+        &quot;updated_at&quot;: &quot;2022-03-17T19:40:54.000000Z&quot;,
         &quot;categories&quot;: [
             {
-                &quot;id&quot;: 2556,
-                &quot;name&quot;: &quot;Et&quot;,
-                &quot;slug&quot;: &quot;et-45&quot;,
+                &quot;id&quot;: 2862,
+                &quot;name&quot;: &quot;Debitis&quot;,
+                &quot;slug&quot;: &quot;debitis-9&quot;,
                 &quot;icon&quot;: null,
                 &quot;status&quot;: {
                     &quot;value&quot;: 1,
                     &quot;label&quot;: &quot;active&quot;
                 },
                 &quot;real_depth&quot;: 0,
-                &quot;created_at&quot;: &quot;2022-03-15T10:31:59.000000Z&quot;,
-                &quot;updated_at&quot;: &quot;2022-03-15T10:31:59.000000Z&quot;
+                &quot;created_at&quot;: &quot;2022-03-17T19:40:54.000000Z&quot;,
+                &quot;updated_at&quot;: &quot;2022-03-17T19:40:54.000000Z&quot;
             }
         ],
         &quot;links&quot;: []
@@ -3498,7 +3982,7 @@ response.json()</code></pre></div>
                 <input type="text"
                name="title"
                data-endpoint="PUTapi-dirs--dir--group--group-"
-               value=""
+               value="Lorem ipsum dolor sit amet"
                data-component="body" hidden>
     <br>
 <p>Must be between 3 and 100 characters.</p>
@@ -3507,7 +3991,7 @@ response.json()</code></pre></div>
             <b><code>tags</code></b>&nbsp;&nbsp;<small>string[]</small>     <i>optional</i> &nbsp;
                 <input type="text"
                name="tags[0]"
-               value=""
+               value="rvhjiln"
                data-endpoint="PUTapi-dirs--dir--group--group-"
                data-component="body" hidden>
         <input type="text"
@@ -3522,7 +4006,7 @@ response.json()</code></pre></div>
             <b><code>categories</code></b>&nbsp;&nbsp;<small>integer[]</small>     <i>optional</i> &nbsp;
                 <input type="number"
                name="categories[0]"
-               value=""
+               value="10"
                data-endpoint="PUTapi-dirs--dir--group--group-"
                data-component="body" hidden>
         <input type="number"
@@ -3538,7 +4022,7 @@ response.json()</code></pre></div>
                 <input type="text"
                name="content_html"
                data-endpoint="PUTapi-dirs--dir--group--group-"
-               value=""
+               value="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
                data-component="body" hidden>
     <br>
 <p>Description. Must be between 255 and 1000 characters.</p>
@@ -3558,7 +4042,7 @@ response.json()</code></pre></div>
                 <input type="text"
                name="url"
                data-endpoint="PUTapi-dirs--dir--group--group-"
-               value=""
+               value="https://demo.idir.intelekt.net.pl"
                data-component="body" hidden>
     <br>
 <p>Unique website url with http/https protocol.</p>
@@ -3584,14 +4068,14 @@ response.json()</code></pre></div>
 <p>Url with http/https protocol to backlink.</p>
         </p>
                 <p>
-            <b><code>captcha</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
+            <b><code>g-recaptcha-response</code></b>&nbsp;&nbsp;<small>string</small>  &nbsp;
                 <input type="text"
-               name="captcha"
+               name="g-recaptcha-response"
                data-endpoint="PUTapi-dirs--dir--group--group-"
-               value="blanditiis"
+               value="aut"
                data-component="body" hidden>
     <br>
-
+<p>Recaptcha response. Only required for free groups.</p>
         </p>
                 <p>
             <b><code>field</code></b>&nbsp;&nbsp;<small>object[]</small>     <i>optional</i> &nbsp;
@@ -3775,7 +4259,7 @@ response.json()</code></pre></div>
             <p>
             <b><code>group</code></b>&nbsp;&nbsp;<small>object</small>  &nbsp;
 <br>
-<p>(available only for admin.dirs.view or owner) Contains relationship Group.</p>
+<p>(available only for api.dirs.view or owner) Contains relationship Group.</p>
         </p>
             <p>
             <b><code>user</code></b>&nbsp;&nbsp;<small>object</small>  &nbsp;
@@ -3956,7 +4440,7 @@ response.json()</code></pre></div>
         </p>
         </form>
 
-            <h2 id="dirs-PATCHapi-dirs--dir-">Edit status dir</h2>
+            <h2 id="dirs-PATCHapi-dirs--dir--status">Edit status dir</h2>
 
 <p>
 <small class="badge badge-darkred">requires authentication</small>
@@ -3964,26 +4448,26 @@ response.json()</code></pre></div>
 
 <aside class="notice">Available only to users with permissions: api.access, api.dirs.status and admin.dirs.status.</aside>
 
-<span id="example-requests-PATCHapi-dirs--dir-">
+<span id="example-requests-PATCHapi-dirs--dir--status">
 <blockquote>Example request:</blockquote>
 
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request PATCH \
-    "https://idir.test:8443/api/dirs/" \
+    "https://idir.test:8443/api/dirs//status" \
     --header "Authorization: Bearer {YOUR_ACCESS_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
     \"status\": 1,
-    \"reason\": \"fugit\"
+    \"reason\": \"enim\"
 }"
 </code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "https://idir.test:8443/api/dirs/"
+    "https://idir.test:8443/api/dirs//status"
 );
 
 const headers = {
@@ -3994,7 +4478,7 @@ const headers = {
 
 let body = {
     "status": 1,
-    "reason": "fugit"
+    "reason": "enim"
 };
 
 fetch(url, {
@@ -4007,7 +4491,7 @@ fetch(url, {
 <div class="php-example">
     <pre><code class="language-php">$client = new \GuzzleHttp\Client();
 $response = $client-&gt;patch(
-    'https://idir.test:8443/api/dirs/',
+    'https://idir.test:8443/api/dirs//status',
     [
         'headers' =&gt; [
             'Authorization' =&gt; 'Bearer {YOUR_ACCESS_TOKEN}',
@@ -4016,7 +4500,7 @@ $response = $client-&gt;patch(
         ],
         'json' =&gt; [
             'status' =&gt; 1,
-            'reason' =&gt; 'fugit',
+            'reason' =&gt; 'enim',
         ],
     ]
 );
@@ -4028,10 +4512,10 @@ print_r(json_decode((string) $body));</code></pre></div>
     <pre><code class="language-python">import requests
 import json
 
-url = 'https://idir.test:8443/api/dirs/'
+url = 'https://idir.test:8443/api/dirs//status'
 payload = {
     "status": 1,
-    "reason": "fugit"
+    "reason": "enim"
 }
 headers = {
   'Authorization': 'Bearer {YOUR_ACCESS_TOKEN}',
@@ -4044,7 +4528,7 @@ response.json()</code></pre></div>
 
 </span>
 
-<span id="example-responses-PATCHapi-dirs--dir-">
+<span id="example-responses-PATCHapi-dirs--dir--status">
             <blockquote>
             <p>Example response (200):</p>
         </blockquote>
@@ -4052,31 +4536,31 @@ response.json()</code></pre></div>
 
 <code class="language-json">{
     &quot;data&quot;: {
-        &quot;id&quot;: 13385,
-        &quot;slug&quot;: &quot;natus-dicta&quot;,
-        &quot;title&quot;: &quot;Natus dicta.&quot;,
-        &quot;url&quot;: &quot;http://www.paucek.com&quot;,
-        &quot;short_content&quot;: &quot;Est incidunt aut ab quia. Sequi voluptatem vero sint asperiores quaerat rerum est. Qui quidem exercitationem qui impedit blanditiis. Aut fugit dolor eveniet est minus corporis. Sit totam ut aut. Temporibus qui iure quia nisi neque. Eaque optio soluta&quot;,
-        &quot;content&quot;: &quot;Est incidunt aut ab quia. Sequi voluptatem vero sint asperiores quaerat rerum est. Qui quidem exercitationem qui impedit blanditiis. Aut fugit dolor eveniet est minus corporis. Sit totam ut aut. Temporibus qui iure quia nisi neque. Eaque optio soluta corrupti sapiente cum.&quot;,
-        &quot;content_html&quot;: &quot;Est incidunt aut ab quia. Sequi voluptatem vero sint asperiores quaerat rerum est. Qui quidem exercitationem qui impedit blanditiis. Aut fugit dolor eveniet est minus corporis. Sit totam ut aut. Temporibus qui iure quia nisi neque. Eaque optio soluta corrupti sapiente cum.&quot;,
-        &quot;less_content_html&quot;: &quot;Est incidunt aut ab quia. Sequi voluptatem vero sint asperiores quaerat rerum est. Qui quidem exercitationem qui impedit blanditiis. Aut fugit dolor eveniet est minus corporis. Sit totam ut aut. Temporibus qui iure quia nisi neque. Eaque optio soluta... &lt;a href=\&quot;http://idir.test:8443/dirs/natus-dicta\&quot;&gt;show more &amp;raquo&lt;/a&gt;&quot;,
-        &quot;thumbnail_url&quot;: &quot;https://idir.test:8443/thumbnails?url=eyJpdiI6IjIzY0RFbVdnSW5iSjlEK2VjTnZjQUE9PSIsInZhbHVlIjoiMFwvcTZ1QnVYSEpYOHVRVE9tT2dnT3BhZUJmWGYySTFTdlU3QVVzZlI5Kzg9IiwibWFjIjoiMTIxZGQzYzlhNzMyNmNmMWVlMTg4Y2JhMjk5OGMzODhhNmNjMzRiMTM4Y2NkMDAxNWM0YjljMzIwN2ViMDUzMSJ9&quot;,
+        &quot;id&quot;: 13513,
+        &quot;slug&quot;: &quot;dolores-qui&quot;,
+        &quot;title&quot;: &quot;Dolores qui.&quot;,
+        &quot;url&quot;: &quot;http://www.kunde.org&quot;,
+        &quot;short_content&quot;: &quot;Et molestiae ut reiciendis omnis a. Dolore quam et possimus corporis ea. Ratione eligendi fugit est et eos. Voluptas quo qui molestias ut provident et. Libero provident ipsa sit maxime unde maxime sit. Molestias quis mollitia at perspiciatis culpa. C&quot;,
+        &quot;content&quot;: &quot;Et molestiae ut reiciendis omnis a. Dolore quam et possimus corporis ea. Ratione eligendi fugit est et eos. Voluptas quo qui molestias ut provident et. Libero provident ipsa sit maxime unde maxime sit. Molestias quis mollitia at perspiciatis culpa. Corporis amet fugit quaerat ipsum corporis. Ad aut corrupti doloribus labore dolores suscipit.&quot;,
+        &quot;content_html&quot;: &quot;Et molestiae ut reiciendis omnis a. Dolore quam et possimus corporis ea. Ratione eligendi fugit est et eos. Voluptas quo qui molestias ut provident et. Libero provident ipsa sit maxime unde maxime sit. Molestias quis mollitia at perspiciatis culpa. Corporis amet fugit quaerat ipsum corporis. Ad aut corrupti doloribus labore dolores suscipit.&quot;,
+        &quot;less_content_html&quot;: &quot;Et molestiae ut reiciendis omnis a. Dolore quam et possimus corporis ea. Ratione eligendi fugit est et eos. Voluptas quo qui molestias ut provident et. Libero provident ipsa sit maxime unde maxime sit. Molestias quis mollitia at perspiciatis culpa. C... &lt;a href=\&quot;http://idir.test:8443/dirs/dolores-qui\&quot;&gt;show more &amp;raquo&lt;/a&gt;&quot;,
+        &quot;thumbnail_url&quot;: &quot;https://idir.test:8443/thumbnails?url=eyJpdiI6ImdsaW0zMXE3YU1NQjVhZXhZSXNkR0E9PSIsInZhbHVlIjoiOUZlT2NuZ2kwQUYyd1Zvc1hiZW5Zb29HZmJ3clFuYUp6RmdJRFhaS1l6ND0iLCJtYWMiOiJmMTczZWU1NmI3ZGExY2YxOTVhMmNlN2MwZGNkYjRjMmU3ZTNjMGIyYzVjYzE3NDkwY2JiYjJjNGRjYWRlMzM1In0=&quot;,
         &quot;sum_rating&quot;: &quot;0.00&quot;,
-        &quot;created_at&quot;: &quot;2022-03-15T10:31:59.000000Z&quot;,
-        &quot;updated_at&quot;: &quot;2022-03-15T10:31:59.000000Z&quot;,
+        &quot;created_at&quot;: &quot;2022-03-17T19:40:54.000000Z&quot;,
+        &quot;updated_at&quot;: &quot;2022-03-17T19:40:54.000000Z&quot;,
         &quot;categories&quot;: [
             {
-                &quot;id&quot;: 2554,
-                &quot;name&quot;: &quot;Cum&quot;,
-                &quot;slug&quot;: &quot;cum-7&quot;,
+                &quot;id&quot;: 2860,
+                &quot;name&quot;: &quot;Amet&quot;,
+                &quot;slug&quot;: &quot;amet-3&quot;,
                 &quot;icon&quot;: null,
                 &quot;status&quot;: {
                     &quot;value&quot;: 1,
                     &quot;label&quot;: &quot;active&quot;
                 },
                 &quot;real_depth&quot;: 0,
-                &quot;created_at&quot;: &quot;2022-03-15T10:31:59.000000Z&quot;,
-                &quot;updated_at&quot;: &quot;2022-03-15T10:31:59.000000Z&quot;
+                &quot;created_at&quot;: &quot;2022-03-17T19:40:54.000000Z&quot;,
+                &quot;updated_at&quot;: &quot;2022-03-17T19:40:54.000000Z&quot;
             }
         ],
         &quot;links&quot;: []
@@ -4084,51 +4568,51 @@ response.json()</code></pre></div>
 }</code>
  </pre>
     </span>
-<span id="execution-results-PATCHapi-dirs--dir-" hidden>
+<span id="execution-results-PATCHapi-dirs--dir--status" hidden>
     <blockquote>Received response<span
-                id="execution-response-status-PATCHapi-dirs--dir-"></span>:
+                id="execution-response-status-PATCHapi-dirs--dir--status"></span>:
     </blockquote>
-    <pre class="json"><code id="execution-response-content-PATCHapi-dirs--dir-"></code></pre>
+    <pre class="json"><code id="execution-response-content-PATCHapi-dirs--dir--status"></code></pre>
 </span>
-<span id="execution-error-PATCHapi-dirs--dir-" hidden>
+<span id="execution-error-PATCHapi-dirs--dir--status" hidden>
     <blockquote>Request failed with error:</blockquote>
-    <pre><code id="execution-error-message-PATCHapi-dirs--dir-"></code></pre>
+    <pre><code id="execution-error-message-PATCHapi-dirs--dir--status"></code></pre>
 </span>
-<form id="form-PATCHapi-dirs--dir-" data-method="PATCH"
-      data-path="api/dirs/{dir}"
+<form id="form-PATCHapi-dirs--dir--status" data-method="PATCH"
+      data-path="api/dirs/{dir}/status"
       data-authed="1"
       data-hasfiles="0"
       data-isarraybody="0"
       data-headers='{"Authorization":"Bearer {YOUR_ACCESS_TOKEN}","Content-Type":"application\/json","Accept":"application\/json"}'
       autocomplete="off"
-      onsubmit="event.preventDefault(); executeTryOut('PATCHapi-dirs--dir-', this);">
+      onsubmit="event.preventDefault(); executeTryOut('PATCHapi-dirs--dir--status', this);">
     <h3>
         Request&nbsp;&nbsp;&nbsp;
                     <button type="button"
                     style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                    id="btn-tryout-PATCHapi-dirs--dir-"
-                    onclick="tryItOut('PATCHapi-dirs--dir-');">Try it out ⚡
+                    id="btn-tryout-PATCHapi-dirs--dir--status"
+                    onclick="tryItOut('PATCHapi-dirs--dir--status');">Try it out ⚡
             </button>
             <button type="button"
                     style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                    id="btn-canceltryout-PATCHapi-dirs--dir-"
-                    onclick="cancelTryOut('PATCHapi-dirs--dir-');" hidden>Cancel 🛑
+                    id="btn-canceltryout-PATCHapi-dirs--dir--status"
+                    onclick="cancelTryOut('PATCHapi-dirs--dir--status');" hidden>Cancel 🛑
             </button>&nbsp;&nbsp;
             <button type="submit"
                     style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                    id="btn-executetryout-PATCHapi-dirs--dir-" hidden>Send Request 💥
+                    id="btn-executetryout-PATCHapi-dirs--dir--status" hidden>Send Request 💥
             </button>
             </h3>
             <p>
             <small class="badge badge-purple">PATCH</small>
-            <b><code>api/dirs/{dir}</code></b>
+            <b><code>api/dirs/{dir}/status</code></b>
         </p>
                 <p>
-            <label id="auth-PATCHapi-dirs--dir-" hidden>Authorization header:
+            <label id="auth-PATCHapi-dirs--dir--status" hidden>Authorization header:
                 <b><code>Bearer </code></b><input type="text"
                                                                 name="Authorization"
                                                                 data-prefix="Bearer "
-                                                                data-endpoint="PATCHapi-dirs--dir-"
+                                                                data-endpoint="PATCHapi-dirs--dir--status"
                                                                 data-component="header"></label>
         </p>
                 <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
@@ -4136,7 +4620,7 @@ response.json()</code></pre></div>
                 <b><code>dir</code></b>&nbsp;&nbsp;<small>integer</small>  &nbsp;
                 <input type="number"
                name="dir"
-               data-endpoint="PATCHapi-dirs--dir-"
+               data-endpoint="PATCHapi-dirs--dir--status"
                value=""
                data-component="url" hidden>
     <br>
@@ -4147,7 +4631,7 @@ response.json()</code></pre></div>
             <b><code>status</code></b>&nbsp;&nbsp;<small>integer</small>  &nbsp;
                 <input type="number"
                name="status"
-               data-endpoint="PATCHapi-dirs--dir-"
+               data-endpoint="PATCHapi-dirs--dir--status"
                value="1"
                data-component="body" hidden>
     <br>
@@ -4157,8 +4641,8 @@ response.json()</code></pre></div>
             <b><code>reason</code></b>&nbsp;&nbsp;<small>string</small>     <i>optional</i> &nbsp;
                 <input type="text"
                name="reason"
-               data-endpoint="PATCHapi-dirs--dir-"
-               value="fugit"
+               data-endpoint="PATCHapi-dirs--dir--status"
+               value="enim"
                data-component="body" hidden>
     <br>
 
@@ -4250,7 +4734,7 @@ response.json()</code></pre></div>
             <p>
             <b><code>group</code></b>&nbsp;&nbsp;<small>object</small>  &nbsp;
 <br>
-<p>(available only for admin.dirs.view or owner) Contains relationship Group.</p>
+<p>(available only for api.dirs.view or owner) Contains relationship Group.</p>
         </p>
             <p>
             <b><code>user</code></b>&nbsp;&nbsp;<small>object</small>  &nbsp;
@@ -4320,7 +4804,7 @@ response.json()</code></pre></div>
         \"search\": \"\",
         \"visible\": 1,
         \"orderby\": \"\",
-        \"paginate\": 25
+        \"paginate\": \"\"
     }
 }"
 </code></pre></div>
@@ -4343,7 +4827,7 @@ let body = {
         "search": "",
         "visible": 1,
         "orderby": "",
-        "paginate": 25
+        "paginate": ""
     }
 };
 
@@ -4370,7 +4854,7 @@ $response = $client-&gt;post(
                 'search' =&gt; '',
                 'visible' =&gt; 1,
                 'orderby' =&gt; '',
-                'paginate' =&gt; 25,
+                'paginate' =&gt; '',
             ],
         ],
     ]
@@ -4391,7 +4875,7 @@ payload = {
         "search": "",
         "visible": 1,
         "orderby": "",
-        "paginate": 25
+        "paginate": ""
     }
 }
 headers = {
@@ -4413,11 +4897,49 @@ response.json()</code></pre></div>
 <code class="language-json">{
     &quot;data&quot;: [
         {
-            &quot;id&quot;: 31,
-            &quot;slug&quot;: &quot;quis&quot;,
+            &quot;id&quot;: 115,
+            &quot;slug&quot;: &quot;quidem&quot;,
             &quot;position&quot;: 10,
-            &quot;name&quot;: &quot;Quis&quot;,
-            &quot;desc&quot;: &quot;Delectus in et distinctio quis. Est recusandae porro omnis itaque quod. Dolorem autem laboriosam officia voluptatibus earum assumenda laudantium. Sequi fuga quo et veniam.&quot;,
+            &quot;name&quot;: &quot;Quidem&quot;,
+            &quot;desc&quot;: &quot;Enim consequatur eligendi numquam delectus et. Dicta at dolor ab quaerat voluptas ducimus pariatur. Laborum quis cumque consectetur vel. Libero nemo saepe consectetur occaecati omnis a voluptatibus.&quot;,
+            &quot;border&quot;: null,
+            &quot;max_cats&quot;: 2,
+            &quot;max_models&quot;: null,
+            &quot;max_models_daily&quot;: null,
+            &quot;visible&quot;: {
+                &quot;value&quot;: 1,
+                &quot;label&quot;: &quot;public&quot;
+            },
+            &quot;apply_status&quot;: {
+                &quot;value&quot;: 0,
+                &quot;label&quot;: &quot;pending acceptance&quot;
+            },
+            &quot;url&quot;: {
+                &quot;value&quot;: 2,
+                &quot;label&quot;: &quot;required&quot;
+            },
+            &quot;backlink&quot;: {
+                &quot;value&quot;: 1,
+                &quot;label&quot;: &quot;optional&quot;
+            },
+            &quot;created_at&quot;: &quot;2022-03-17T19:40:54.000000Z&quot;,
+            &quot;updated_at&quot;: &quot;2022-03-17T19:40:54.000000Z&quot;,
+            &quot;alt&quot;: null,
+            &quot;privileges&quot;: [
+                {
+                    &quot;id&quot;: 9,
+                    &quot;name&quot;: &quot;additional options for editing content&quot;,
+                    &quot;created_at&quot;: &quot;2021-01-06T16:58:51.000000Z&quot;,
+                    &quot;updated_at&quot;: &quot;2021-01-06T16:58:51.000000Z&quot;
+                }
+            ]
+        },
+        {
+            &quot;id&quot;: 116,
+            &quot;slug&quot;: &quot;et&quot;,
+            &quot;position&quot;: 11,
+            &quot;name&quot;: &quot;Et&quot;,
+            &quot;desc&quot;: &quot;Adipisci vitae facilis aperiam non non qui. Velit voluptatum quia eveniet ut. Quia voluptatum dolore quo qui consequuntur laborum. Maiores atque necessitatibus laborum non quis inventore.&quot;,
             &quot;border&quot;: null,
             &quot;max_cats&quot;: 3,
             &quot;max_models&quot;: null,
@@ -4431,53 +4953,15 @@ response.json()</code></pre></div>
                 &quot;label&quot;: &quot;active immediately&quot;
             },
             &quot;url&quot;: {
-                &quot;value&quot;: 0,
-                &quot;label&quot;: &quot;none&quot;
-            },
-            &quot;backlink&quot;: {
-                &quot;value&quot;: 0,
-                &quot;label&quot;: &quot;none&quot;
-            },
-            &quot;created_at&quot;: &quot;2022-03-15T10:31:59.000000Z&quot;,
-            &quot;updated_at&quot;: &quot;2022-03-15T10:31:59.000000Z&quot;,
-            &quot;alt&quot;: null,
-            &quot;privileges&quot;: [
-                {
-                    &quot;id&quot;: 9,
-                    &quot;name&quot;: &quot;additional options for editing content&quot;,
-                    &quot;created_at&quot;: &quot;2021-01-06T16:58:51.000000Z&quot;,
-                    &quot;updated_at&quot;: &quot;2021-01-06T16:58:51.000000Z&quot;
-                }
-            ]
-        },
-        {
-            &quot;id&quot;: 32,
-            &quot;slug&quot;: &quot;ullam&quot;,
-            &quot;position&quot;: 11,
-            &quot;name&quot;: &quot;Ullam&quot;,
-            &quot;desc&quot;: &quot;Autem eius est fuga ratione voluptatibus et labore. Laboriosam sint nesciunt ab non provident. Et autem excepturi beatae aperiam corporis iste. Accusamus voluptas dicta odio qui error ut. Voluptatem provident sed nisi unde. Ut molestiae recusandae nostrum recusandae.&quot;,
-            &quot;border&quot;: null,
-            &quot;max_cats&quot;: 4,
-            &quot;max_models&quot;: 34,
-            &quot;max_models_daily&quot;: 9,
-            &quot;visible&quot;: {
                 &quot;value&quot;: 1,
-                &quot;label&quot;: &quot;public&quot;
-            },
-            &quot;apply_status&quot;: {
-                &quot;value&quot;: 0,
-                &quot;label&quot;: &quot;pending acceptance&quot;
-            },
-            &quot;url&quot;: {
-                &quot;value&quot;: 0,
-                &quot;label&quot;: &quot;none&quot;
+                &quot;label&quot;: &quot;optional&quot;
             },
             &quot;backlink&quot;: {
                 &quot;value&quot;: 1,
                 &quot;label&quot;: &quot;optional&quot;
             },
-            &quot;created_at&quot;: &quot;2022-03-15T10:31:59.000000Z&quot;,
-            &quot;updated_at&quot;: &quot;2022-03-15T10:31:59.000000Z&quot;,
+            &quot;created_at&quot;: &quot;2022-03-17T19:40:54.000000Z&quot;,
+            &quot;updated_at&quot;: &quot;2022-03-17T19:40:54.000000Z&quot;,
             &quot;alt&quot;: null,
             &quot;privileges&quot;: [
                 {
@@ -4603,7 +5087,7 @@ response.json()</code></pre></div>
                 <input type="number"
                name="filter.paginate"
                data-endpoint="POSTapi-groups-index"
-               value="25"
+               value=""
                data-component="body" hidden>
     <br>
 <p>Number of records in the list. Must be one of <code>25</code>, <code>50</code>, or <code>100</code>.</p>
@@ -4729,7 +5213,7 @@ response.json()</code></pre></div>
 </blockquote>
 <pre><code>N1ebieski\IDir\Http\Resources\Payment\PaymentResource</code></pre>
 
-            <h2 id="payments-GETapi-payments--payment_dir_pending--dir--driver--">Initialise dir&#039;s payment</h2>
+            <h2 id="payments-GETapi-payments--payment_dir_pending--dir--driver--">Show dir&#039;s payment</h2>
 
 <p>
 </p>
@@ -4801,40 +5285,40 @@ response.json()</code></pre></div>
 
 <code class="language-json">{
     &quot;data&quot;: {
-        &quot;uuid&quot;: &quot;45242482-6668-4aad-8183-7751b79402cb&quot;,
+        &quot;uuid&quot;: &quot;6e0ee088-151c-4dac-b0d1-960caa02e61d&quot;,
         &quot;driver&quot;: null,
         &quot;status&quot;: {
             &quot;value&quot;: 2,
             &quot;label&quot;: &quot;pending&quot;
         },
-        &quot;created_at&quot;: &quot;2022-03-15T10:31:59.000000Z&quot;,
-        &quot;updated_at&quot;: &quot;2022-03-15T10:31:59.000000Z&quot;,
+        &quot;created_at&quot;: &quot;2022-03-17T19:40:53.000000Z&quot;,
+        &quot;updated_at&quot;: &quot;2022-03-17T19:40:53.000000Z&quot;,
         &quot;morph&quot;: {
-            &quot;id&quot;: 13384,
-            &quot;slug&quot;: &quot;ipsam-tempora-rerum&quot;,
-            &quot;title&quot;: &quot;Ipsam tempora rerum.&quot;,
-            &quot;url&quot;: &quot;https://www.lakin.com&quot;,
-            &quot;short_content&quot;: &quot;Voluptatem id qui ex ducimus similique. Temporibus quasi in veniam iure. Qui id doloribus voluptatem corporis cum. Impedit pariatur consequatur aspernatur eos. Aut placeat autem ut adipisci molestiae perspiciatis.&quot;,
-            &quot;content&quot;: &quot;Voluptatem id qui ex ducimus similique. Temporibus quasi in veniam iure. Qui id doloribus voluptatem corporis cum. Impedit pariatur consequatur aspernatur eos. Aut placeat autem ut adipisci molestiae perspiciatis.&quot;,
-            &quot;content_html&quot;: &quot;Voluptatem id qui ex ducimus similique. Temporibus quasi in veniam iure. Qui id doloribus voluptatem corporis cum. Impedit pariatur consequatur aspernatur eos. Aut placeat autem ut adipisci molestiae perspiciatis.&quot;,
-            &quot;less_content_html&quot;: &quot;Voluptatem id qui ex ducimus similique. Temporibus quasi in veniam iure. Qui id doloribus voluptatem corporis cum. Impedit pariatur consequatur aspernatur eos. Aut placeat autem ut adipisci molestiae perspiciatis.... &lt;a href=\&quot;https://idir.test:8443/dirs/ipsam-tempora-rerum\&quot;&gt;show more &amp;raquo&lt;/a&gt;&quot;,
-            &quot;thumbnail_url&quot;: &quot;https://idir.test:8443/thumbnails?url=eyJpdiI6Im9ObzR2U0ZtOG1oTVYybzBmUVhmOUE9PSIsInZhbHVlIjoiOFpPQTlRNmhkQ0xqdmdmOHNKUU1CNyttZUFqZUFtSzFyTkpSNnJWc1RBMD0iLCJtYWMiOiIxNDRmMGIzMDBlYzY3YzI1MzZkYTYzZTQxYzliYzBlYjIzM2Y3MmM5NmU3OTRhMDkxMGZiYThhNjdjMGEzZTlmIn0=&quot;,
+            &quot;id&quot;: 13512,
+            &quot;slug&quot;: &quot;est&quot;,
+            &quot;title&quot;: &quot;Est.&quot;,
+            &quot;url&quot;: &quot;http://runte.com&quot;,
+            &quot;short_content&quot;: &quot;Laudantium est ad at. Dolor eius perspiciatis reprehenderit dolore esse. Occaecati adipisci enim doloremque dolores. Veritatis illum a consequatur ratione placeat consequatur facere quam. Numquam qui sint laboriosam eaque ea quo.&quot;,
+            &quot;content&quot;: &quot;Laudantium est ad at. Dolor eius perspiciatis reprehenderit dolore esse. Occaecati adipisci enim doloremque dolores. Veritatis illum a consequatur ratione placeat consequatur facere quam. Numquam qui sint laboriosam eaque ea quo.&quot;,
+            &quot;content_html&quot;: &quot;Laudantium est ad at. Dolor eius perspiciatis reprehenderit dolore esse. Occaecati adipisci enim doloremque dolores. Veritatis illum a consequatur ratione placeat consequatur facere quam. Numquam qui sint laboriosam eaque ea quo.&quot;,
+            &quot;less_content_html&quot;: &quot;Laudantium est ad at. Dolor eius perspiciatis reprehenderit dolore esse. Occaecati adipisci enim doloremque dolores. Veritatis illum a consequatur ratione placeat consequatur facere quam. Numquam qui sint laboriosam eaque ea quo.... &lt;a href=\&quot;http://idir.test:8443/dirs/est\&quot;&gt;show more &amp;raquo&lt;/a&gt;&quot;,
+            &quot;thumbnail_url&quot;: &quot;https://idir.test:8443/thumbnails?url=eyJpdiI6ImN5Sno0cFFlYkhWcnlsN3p1Mk9FQUE9PSIsInZhbHVlIjoiN3ZCWENMdThybFpNeTRTWDYxcFdFZURYNUN4K2dJbWFtYXlBSDF3UmY3Zz0iLCJtYWMiOiIzZjE0ZTUzMjQ4MjhlNjcxODUzNzUxNjU1MjAyYjFlYjFiNmFjNjAxY2NkNTc5ODMzM2VmNzVkOGMxNDM2MGFhIn0=&quot;,
             &quot;sum_rating&quot;: &quot;0.00&quot;,
-            &quot;created_at&quot;: &quot;2022-03-15T10:31:58.000000Z&quot;,
-            &quot;updated_at&quot;: &quot;2022-03-15T10:31:58.000000Z&quot;,
+            &quot;created_at&quot;: &quot;2022-03-17T19:40:53.000000Z&quot;,
+            &quot;updated_at&quot;: &quot;2022-03-17T19:40:53.000000Z&quot;,
             &quot;links&quot;: []
         },
         &quot;order&quot;: {
-            &quot;id&quot;: 24,
+            &quot;id&quot;: 52,
             &quot;type&quot;: &quot;transfer&quot;,
-            &quot;price&quot;: &quot;3.50&quot;,
-            &quot;regular_price&quot;: &quot;3.50&quot;,
+            &quot;price&quot;: &quot;5.10&quot;,
+            &quot;regular_price&quot;: &quot;5.10&quot;,
             &quot;discount_price&quot;: null,
             &quot;discount&quot;: null,
             &quot;qr_as_image&quot;: null,
-            &quot;days&quot;: 77,
-            &quot;created_at&quot;: &quot;2022-03-15T10:31:59.000000Z&quot;,
-            &quot;updated_at&quot;: &quot;2022-03-15T10:31:59.000000Z&quot;
+            &quot;days&quot;: 348,
+            &quot;created_at&quot;: &quot;2022-03-17T19:40:53.000000Z&quot;,
+            &quot;updated_at&quot;: &quot;2022-03-17T19:40:53.000000Z&quot;
         }
     },
     &quot;url&quot;: &quot;https://paytest.cashbill.pl/pl/payment/eydJpZCI6IlRFU1RfNmV6OWZ6dXpvIiwicGMiOiIiLCJ0b2tlbiI6ImJiNjQ3ZGFhOTQ3NDU1NzM0OGRhMzhkYjEyMTE0YTI5MTA0NDhkMGUifQ--&quot;
@@ -4997,7 +5481,7 @@ response.json()</code></pre></div>
         \"status\": 1,
         \"category\": \"\",
         \"orderby\": \"\",
-        \"paginate\": 25
+        \"paginate\": \"\"
     }
 }"
 </code></pre></div>
@@ -5022,7 +5506,7 @@ let body = {
         "status": 1,
         "category": "",
         "orderby": "",
-        "paginate": 25
+        "paginate": ""
     }
 };
 
@@ -5051,7 +5535,7 @@ $response = $client-&gt;post(
                 'status' =&gt; 1,
                 'category' =&gt; '',
                 'orderby' =&gt; '',
-                'paginate' =&gt; 25,
+                'paginate' =&gt; '',
             ],
         ],
     ]
@@ -5073,7 +5557,7 @@ payload = {
         "status": 1,
         "category": "",
         "orderby": "",
-        "paginate": 25
+        "paginate": ""
     }
 }
 headers = {
@@ -5096,18 +5580,18 @@ response.json()</code></pre></div>
 <code class="language-json">{
     &quot;data&quot;: [
         {
-            &quot;id&quot;: 187,
-            &quot;slug&quot;: &quot;quae-nisi-ut-reiciendis&quot;,
-            &quot;title&quot;: &quot;Quae nisi ut reiciendis.&quot;,
-            &quot;short_content&quot;: &quot;Mollitia quia fugit omnis consequuntur omnis et et. Non ad velit impedit sapiente sunt. Sapiente voluptate officiis reprehenderit. Sint cumque ullam ex modi minima quidem. In non sit magni et minima molestias. Qui odit in nihil praesentium est vel. Quam neque consectetur nostrum est vitae qui. Architecto aut aliquid quia magnam et possimus libero cupiditate. Nam laudantium ut sapiente odit et quasi deserunt. Aliquid provident autem placeat harum excepturi et ut. Officia ullam quae qui doloribus &quot;,
-            &quot;content&quot;: &quot;Mollitia quia fugit omnis consequuntur omnis et et. Non ad velit impedit sapiente sunt. Sapiente voluptate officiis reprehenderit. Sint cumque ullam ex modi minima quidem. In non sit magni et minima molestias. Qui odit in nihil praesentium est vel. Quam neque consectetur nostrum est vitae qui. Architecto aut aliquid quia magnam et possimus libero cupiditate. Nam laudantium ut sapiente odit et quasi deserunt. Aliquid provident autem placeat harum excepturi et ut. Officia ullam quae qui doloribus et tempore facilis. Nemo quam ut nesciunt fuga. Laudantium voluptates qui rem saepe eligendi nemo facilis. Dolor vero et voluptas eos reprehenderit expedita soluta. Commodi corporis deserunt sint dolorem. Voluptas occaecati sapiente occaecati sed vero. Sapiente magnam ab hic dolorem quia. Accusamus sint qui praesentium eveniet alias sint optio quia. Placeat repudiandae consectetur corporis omnis odit aut. Quasi ratione qui non dolores fugiat fugiat ut quisquam. Deserunt aut voluptas nam a. Voluptates est eligendi saepe veniam. Ipsam neque velit corporis corporis. Aut voluptas autem voluptatem repellendus enim velit asperiores. Rem voluptates tempore eligendi. Sit quia ad vero quo veritatis nostrum. Velit qui dolorum nobis voluptas. Voluptate excepturi laboriosam rem ut vel consequatur. Asperiores velit quia mollitia ipsam vel eius. Minus magni at quo autem. Delectus est aliquid omnis quo maxime. Nobis ullam et iste itaque. Harum ea consectetur quod voluptatum. Nihil officia magnam autem ab quasi. Provident non autem cumque omnis nostrum illo illo repudiandae. Explicabo quo et nesciunt natus occaecati provident. Ex aut officia dicta id. Ut cupiditate suscipit provident modi minus aut minima. Hic dolorum animi animi magni ducimus quo. Aperiam minima qui ipsum recusandae est. Libero consequuntur cupiditate ut nihil quis aliquid.&quot;,
-            &quot;content_html&quot;: &quot;&lt;p&gt;Mollitia quia fugit omnis consequuntur omnis et et. Non ad velit impedit sapiente sunt. Sapiente voluptate officiis reprehenderit. Sint cumque ullam ex modi minima quidem. In non sit magni et minima molestias. Qui odit in nihil praesentium est vel. Quam neque consectetur nostrum est vitae qui. Architecto aut aliquid quia magnam et possimus libero cupiditate. Nam laudantium ut sapiente odit et quasi deserunt. Aliquid provident autem placeat harum excepturi et ut. Officia ullam quae qui doloribus et tempore facilis. Nemo quam ut nesciunt fuga. Laudantium voluptates qui rem saepe eligendi nemo facilis. Dolor vero et voluptas eos reprehenderit expedita soluta. Commodi corporis deserunt sint dolorem. Voluptas occaecati sapiente occaecati sed vero. Sapiente magnam ab hic dolorem quia. Accusamus sint qui praesentium eveniet alias sint optio quia. Placeat repudiandae consectetur corporis omnis odit aut. Quasi ratione qui non dolores fugiat fugiat ut quisquam. Deserunt aut voluptas nam a. Voluptates est eligendi saepe veniam. Ipsam neque velit corporis corporis. Aut voluptas autem voluptatem repellendus enim velit asperiores. Rem voluptates tempore eligendi. Sit quia ad vero quo veritatis nostrum. Velit qui dolorum nobis voluptas. Voluptate excepturi laboriosam rem ut vel consequatur. Asperiores velit quia mollitia ipsam vel eius. Minus magni at quo autem. Delectus est aliquid omnis quo maxime. Nobis ullam et iste itaque. Harum ea consectetur quod voluptatum. Nihil officia magnam autem ab quasi. Provident non autem cumque omnis nostrum illo illo repudiandae. Explicabo quo et nesciunt natus occaecati provident. Ex aut officia dicta id. Ut cupiditate suscipit provident modi minus aut minima. Hic dolorum animi animi magni ducimus quo. Aperiam minima qui ipsum recusandae est. Libero consequuntur cupiditate ut nihil quis aliquid.&lt;/p&gt;&quot;,
-            &quot;no_more_content_html&quot;: &quot;&lt;p&gt;Mollitia quia fugit omnis consequuntur omnis et et. Non ad velit impedit sapiente sunt. Sapiente voluptate officiis reprehenderit. Sint cumque ullam ex modi minima quidem. In non sit magni et minima molestias. Qui odit in nihil praesentium est vel. Quam neque consectetur nostrum est vitae qui. Architecto aut aliquid quia magnam et possimus libero cupiditate. Nam laudantium ut sapiente odit et quasi deserunt. Aliquid provident autem placeat harum excepturi et ut. Officia ullam quae qui doloribus et tempore facilis. Nemo quam ut nesciunt fuga. Laudantium voluptates qui rem saepe eligendi nemo facilis. Dolor vero et voluptas eos reprehenderit expedita soluta. Commodi corporis deserunt sint dolorem. Voluptas occaecati sapiente occaecati sed vero. Sapiente magnam ab hic dolorem quia. Accusamus sint qui praesentium eveniet alias sint optio quia. Placeat repudiandae consectetur corporis omnis odit aut. Quasi ratione qui non dolores fugiat fugiat ut quisquam. Deserunt aut voluptas nam a. Voluptates est eligendi saepe veniam. Ipsam neque velit corporis corporis. Aut voluptas autem voluptatem repellendus enim velit asperiores. Rem voluptates tempore eligendi. Sit quia ad vero quo veritatis nostrum. Velit qui dolorum nobis voluptas. Voluptate excepturi laboriosam rem ut vel consequatur. Asperiores velit quia mollitia ipsam vel eius. Minus magni at quo autem. Delectus est aliquid omnis quo maxime. Nobis ullam et iste itaque. Harum ea consectetur quod voluptatum. Nihil officia magnam autem ab quasi. Provident non autem cumque omnis nostrum illo illo repudiandae. Explicabo quo et nesciunt natus occaecati provident. Ex aut officia dicta id. Ut cupiditate suscipit provident modi minus aut minima. Hic dolorum animi animi magni ducimus quo. Aperiam minima qui ipsum recusandae est. Libero consequuntur cupiditate ut nihil quis aliquid.&lt;/p&gt;&quot;,
-            &quot;less_content_html&quot;: &quot;&lt;p&gt;Mollitia quia fugit omnis consequuntur omnis et et. Non ad velit impedit sapiente sunt. Sapiente voluptate officiis reprehenderit. Sint cumque ullam ex modi minima quidem. In non sit magni et minima molestias. Qui odit in nihil praesentium est vel. Quam neque consectetur nostrum est vitae qui. Architecto aut aliquid quia magnam et possimus libero cupiditate. Nam laudantium ut sapiente odit et quasi deserunt. Aliquid provident autem placeat harum excepturi et ut. Officia ullam quae qui doloribus et tempore facilis. Nemo quam ut nesciunt fuga. Laudantium voluptates qui rem saepe eligendi nemo facilis. Dolor vero et voluptas eos reprehenderit expedita soluta. Commodi corporis deserunt sint dolorem. Voluptas occaecati sapiente occaecati sed vero. Sapiente magnam ab hic dolorem quia. Accusamus sint qui praesentium eveniet alias sint optio quia. Placeat repudiandae consectetur corporis omnis odit aut. Quasi ratione qui non dolores fugiat fugiat ut quisquam. Deserunt aut voluptas nam a. Voluptates est eligendi saepe veniam. Ipsam neque velit corporis corporis. Aut voluptas autem voluptatem repellendus enim velit asperiores. Rem voluptates tempore eligendi. Sit quia ad vero quo veritatis nostrum. Velit qui dolorum nobis voluptas. Voluptate excepturi laboriosam rem ut vel consequatur. Asperiores velit quia mollitia ipsam vel eius. Minus magni at quo autem. Delectus est aliquid omnis quo maxime. Nobis ullam et iste itaque. Harum ea consectetur quod voluptatum. Nihil officia magnam autem ab quasi. Provident non autem cumque omnis nostrum illo illo repudiandae. Explicabo quo et nesciunt natus occaecati provident. Ex aut officia dicta id. Ut cupiditate suscipit provident modi minus aut minima. Hic dolorum animi animi magni ducimus quo. Aperiam minima qui ipsum recusandae est. Libero consequuntur cupiditate ut nihil quis aliquid.&lt;/p&gt;&quot;,
-            &quot;seo_title&quot;: null,
-            &quot;meta_title&quot;: &quot;Quae nisi ut reiciendis.&quot;,
-            &quot;seo_desc&quot;: &quot;Unde ullam error dolorem natus ut voluptas. Ut aut culpa eos qui doloremque qui similique. Eligendi voluptatum qui quam dolor quis. Et quae odit quia iste repellendus aut.&quot;,
-            &quot;meta_desc&quot;: &quot;Unde ullam error dolorem natus ut voluptas. Ut aut culpa eos qui doloremque qui similique. Eligendi voluptatum qui quam dolor quis. Et quae odit quia iste repellendus aut.&quot;,
+            &quot;id&quot;: 217,
+            &quot;slug&quot;: &quot;quis-provident-pariatur-sequi-vero-consequatur&quot;,
+            &quot;title&quot;: &quot;Quis provident pariatur sequi vero consequatur.&quot;,
+            &quot;short_content&quot;: &quot;In eaque omnis sed omnis nisi. Laboriosam ad voluptatem et natus. Sapiente vel mollitia architecto sit sint quia accusamus. Veniam velit enim soluta minima illum accusantium nihil. Eaque qui harum quia cupiditate facilis explicabo. Quod fugiat ipsum dolores. Voluptas provident reprehenderit non aliquam doloremque occaecati. Corporis consequuntur necessitatibus harum dolore expedita omnis est sequi. Id placeat voluptates qui qui. Commodi neque ex minus sint. Fuga nulla sint est. Cupiditate non et&quot;,
+            &quot;content&quot;: &quot;In eaque omnis sed omnis nisi. Laboriosam ad voluptatem et natus. Sapiente vel mollitia architecto sit sint quia accusamus. Veniam velit enim soluta minima illum accusantium nihil. Eaque qui harum quia cupiditate facilis explicabo. Quod fugiat ipsum dolores. Voluptas provident reprehenderit non aliquam doloremque occaecati. Corporis consequuntur necessitatibus harum dolore expedita omnis est sequi. Id placeat voluptates qui qui. Commodi neque ex minus sint. Fuga nulla sint est. Cupiditate non et ut et nihil consequatur corrupti. Porro et delectus magnam qui laborum rerum. Aut et nulla eaque pariatur sunt consequatur et. Reprehenderit eligendi vitae et. Impedit quo quod vel facilis natus. Omnis aliquam optio unde amet. Est dolor omnis fugit. Libero velit aut rerum dolorem. Consequatur enim dignissimos unde quis. Est laborum rerum ad earum. Exercitationem explicabo ut qui autem omnis illo. Iusto adipisci sit animi. Ullam quia quia illo hic. Voluptas quas soluta earum nemo ut ut sit. Impedit modi sunt et exercitationem reiciendis. Aut ex autem et aut est vitae hic. Eos non voluptatem sunt sequi quia. Praesentium aspernatur nobis illo nemo. Voluptatibus earum qui et et est autem eligendi. Minima sed animi perferendis omnis dicta ratione fugiat. Sit qui occaecati deserunt neque beatae voluptatem. Labore aut sed quia sunt. Maiores consequatur possimus nulla magnam. A blanditiis totam libero dolorem. Modi culpa facere animi ullam necessitatibus amet ut maxime. Vitae repellendus beatae sit ad dolorem ullam. Illo dolor eos modi sed reiciendis. Id dolore sed velit laudantium voluptas amet fugit. Et dolores dignissimos quis omnis at et hic. Iste laboriosam magnam aut est culpa hic dignissimos. Ducimus ipsam aliquid perspiciatis. Commodi culpa asperiores fuga veritatis asperiores et. Ut illo dolor quia sint vel tenetur sunt.&quot;,
+            &quot;content_html&quot;: &quot;&lt;p&gt;In eaque omnis sed omnis nisi. Laboriosam ad voluptatem et natus. Sapiente vel mollitia architecto sit sint quia accusamus. Veniam velit enim soluta minima illum accusantium nihil. Eaque qui harum quia cupiditate facilis explicabo. Quod fugiat ipsum dolores. Voluptas provident reprehenderit non aliquam doloremque occaecati. Corporis consequuntur necessitatibus harum dolore expedita omnis est sequi. Id placeat voluptates qui qui. Commodi neque ex minus sint. Fuga nulla sint est. Cupiditate non et ut et nihil consequatur corrupti. Porro et delectus magnam qui laborum rerum. Aut et nulla eaque pariatur sunt consequatur et. Reprehenderit eligendi vitae et. Impedit quo quod vel facilis natus. Omnis aliquam optio unde amet. Est dolor omnis fugit. Libero velit aut rerum dolorem. Consequatur enim dignissimos unde quis. Est laborum rerum ad earum. Exercitationem explicabo ut qui autem omnis illo. Iusto adipisci sit animi. Ullam quia quia illo hic. Voluptas quas soluta earum nemo ut ut sit. Impedit modi sunt et exercitationem reiciendis. Aut ex autem et aut est vitae hic. Eos non voluptatem sunt sequi quia. Praesentium aspernatur nobis illo nemo. Voluptatibus earum qui et et est autem eligendi. Minima sed animi perferendis omnis dicta ratione fugiat. Sit qui occaecati deserunt neque beatae voluptatem. Labore aut sed quia sunt. Maiores consequatur possimus nulla magnam. A blanditiis totam libero dolorem. Modi culpa facere animi ullam necessitatibus amet ut maxime. Vitae repellendus beatae sit ad dolorem ullam. Illo dolor eos modi sed reiciendis. Id dolore sed velit laudantium voluptas amet fugit. Et dolores dignissimos quis omnis at et hic. Iste laboriosam magnam aut est culpa hic dignissimos. Ducimus ipsam aliquid perspiciatis. Commodi culpa asperiores fuga veritatis asperiores et. Ut illo dolor quia sint vel tenetur sunt.&lt;/p&gt;&quot;,
+            &quot;no_more_content_html&quot;: &quot;&lt;p&gt;In eaque omnis sed omnis nisi. Laboriosam ad voluptatem et natus. Sapiente vel mollitia architecto sit sint quia accusamus. Veniam velit enim soluta minima illum accusantium nihil. Eaque qui harum quia cupiditate facilis explicabo. Quod fugiat ipsum dolores. Voluptas provident reprehenderit non aliquam doloremque occaecati. Corporis consequuntur necessitatibus harum dolore expedita omnis est sequi. Id placeat voluptates qui qui. Commodi neque ex minus sint. Fuga nulla sint est. Cupiditate non et ut et nihil consequatur corrupti. Porro et delectus magnam qui laborum rerum. Aut et nulla eaque pariatur sunt consequatur et. Reprehenderit eligendi vitae et. Impedit quo quod vel facilis natus. Omnis aliquam optio unde amet. Est dolor omnis fugit. Libero velit aut rerum dolorem. Consequatur enim dignissimos unde quis. Est laborum rerum ad earum. Exercitationem explicabo ut qui autem omnis illo. Iusto adipisci sit animi. Ullam quia quia illo hic. Voluptas quas soluta earum nemo ut ut sit. Impedit modi sunt et exercitationem reiciendis. Aut ex autem et aut est vitae hic. Eos non voluptatem sunt sequi quia. Praesentium aspernatur nobis illo nemo. Voluptatibus earum qui et et est autem eligendi. Minima sed animi perferendis omnis dicta ratione fugiat. Sit qui occaecati deserunt neque beatae voluptatem. Labore aut sed quia sunt. Maiores consequatur possimus nulla magnam. A blanditiis totam libero dolorem. Modi culpa facere animi ullam necessitatibus amet ut maxime. Vitae repellendus beatae sit ad dolorem ullam. Illo dolor eos modi sed reiciendis. Id dolore sed velit laudantium voluptas amet fugit. Et dolores dignissimos quis omnis at et hic. Iste laboriosam magnam aut est culpa hic dignissimos. Ducimus ipsam aliquid perspiciatis. Commodi culpa asperiores fuga veritatis asperiores et. Ut illo dolor quia sint vel tenetur sunt.&lt;/p&gt;&quot;,
+            &quot;less_content_html&quot;: &quot;&lt;p&gt;In eaque omnis sed omnis nisi. Laboriosam ad voluptatem et natus. Sapiente vel mollitia architecto sit sint quia accusamus. Veniam velit enim soluta minima illum accusantium nihil. Eaque qui harum quia cupiditate facilis explicabo. Quod fugiat ipsum dolores. Voluptas provident reprehenderit non aliquam doloremque occaecati. Corporis consequuntur necessitatibus harum dolore expedita omnis est sequi. Id placeat voluptates qui qui. Commodi neque ex minus sint. Fuga nulla sint est. Cupiditate non et ut et nihil consequatur corrupti. Porro et delectus magnam qui laborum rerum. Aut et nulla eaque pariatur sunt consequatur et. Reprehenderit eligendi vitae et. Impedit quo quod vel facilis natus. Omnis aliquam optio unde amet. Est dolor omnis fugit. Libero velit aut rerum dolorem. Consequatur enim dignissimos unde quis. Est laborum rerum ad earum. Exercitationem explicabo ut qui autem omnis illo. Iusto adipisci sit animi. Ullam quia quia illo hic. Voluptas quas soluta earum nemo ut ut sit. Impedit modi sunt et exercitationem reiciendis. Aut ex autem et aut est vitae hic. Eos non voluptatem sunt sequi quia. Praesentium aspernatur nobis illo nemo. Voluptatibus earum qui et et est autem eligendi. Minima sed animi perferendis omnis dicta ratione fugiat. Sit qui occaecati deserunt neque beatae voluptatem. Labore aut sed quia sunt. Maiores consequatur possimus nulla magnam. A blanditiis totam libero dolorem. Modi culpa facere animi ullam necessitatibus amet ut maxime. Vitae repellendus beatae sit ad dolorem ullam. Illo dolor eos modi sed reiciendis. Id dolore sed velit laudantium voluptas amet fugit. Et dolores dignissimos quis omnis at et hic. Iste laboriosam magnam aut est culpa hic dignissimos. Ducimus ipsam aliquid perspiciatis. Commodi culpa asperiores fuga veritatis asperiores et. Ut illo dolor quia sint vel tenetur sunt.&lt;/p&gt;&quot;,
+            &quot;seo_title&quot;: &quot;Expedita qui quasi eos magni quia minus.&quot;,
+            &quot;meta_title&quot;: &quot;Expedita qui quasi eos magni quia minus.&quot;,
+            &quot;seo_desc&quot;: &quot;Qui nostrum repellat dignissimos laudantium illum non. Magnam omnis itaque non dolores. Voluptate et reprehenderit modi dolore provident doloribus.&quot;,
+            &quot;meta_desc&quot;: &quot;Qui nostrum repellat dignissimos laudantium illum non. Magnam omnis itaque non dolores. Voluptate et reprehenderit modi dolore provident doloribus.&quot;,
             &quot;seo_noindex&quot;: true,
             &quot;seo_nofollow&quot;: false,
             &quot;status&quot;: {
@@ -5116,36 +5600,36 @@ response.json()</code></pre></div>
             },
             &quot;comment&quot;: false,
             &quot;first_image&quot;: null,
-            &quot;published_at&quot;: &quot;2022-02-02T23:25:01.000000Z&quot;,
-            &quot;created_at&quot;: &quot;2022-03-15T10:32:00.000000Z&quot;,
-            &quot;updated_at&quot;: &quot;2022-03-15T10:32:00.000000Z&quot;,
+            &quot;published_at&quot;: &quot;2021-10-30T06:43:12.000000Z&quot;,
+            &quot;created_at&quot;: &quot;2022-03-17T19:40:56.000000Z&quot;,
+            &quot;updated_at&quot;: &quot;2022-03-17T19:40:56.000000Z&quot;,
             &quot;user&quot;: {
-                &quot;id&quot;: 12266,
-                &quot;name&quot;: &quot;Leland Schuster&quot;,
+                &quot;id&quot;: 12465,
+                &quot;name&quot;: &quot;Zakary Rempel MD&quot;,
                 &quot;status&quot;: {
-                    &quot;value&quot;: 0,
-                    &quot;label&quot;: &quot;inactive&quot;
+                    &quot;value&quot;: 1,
+                    &quot;label&quot;: &quot;active&quot;
                 },
-                &quot;created_at&quot;: &quot;2022-03-15T10:32:00.000000Z&quot;,
-                &quot;updated_at&quot;: &quot;2022-03-15T10:32:00.000000Z&quot;
+                &quot;created_at&quot;: &quot;2022-03-17T19:40:56.000000Z&quot;,
+                &quot;updated_at&quot;: &quot;2022-03-17T19:40:56.000000Z&quot;
             },
             &quot;links&quot;: {
-                &quot;web&quot;: &quot;http://idir.test:8443/posts/quae-nisi-ut-reiciendis&quot;
+                &quot;web&quot;: &quot;http://idir.test:8443/posts/quis-provident-pariatur-sequi-vero-consequatur&quot;
             }
         },
         {
-            &quot;id&quot;: 188,
-            &quot;slug&quot;: &quot;perferendis-enim-est-quasi-maxime-tempore&quot;,
-            &quot;title&quot;: &quot;Perferendis enim est quasi maxime tempore.&quot;,
-            &quot;short_content&quot;: &quot;Natus nihil laudantium rerum qui. Similique quisquam fugit autem ipsum minima. Vel sed fuga repellendus. Dolor doloribus tempore dolorem repellat alias quis aliquid. Ab sed consectetur omnis consequuntur fuga tempore eum. Dicta laudantium placeat molestiae voluptatum. Blanditiis est quam est ab ex. Qui excepturi quisquam corporis sed iure porro. Sapiente inventore atque voluptatem consequatur. Voluptatibus et neque error eum fugiat quis quia. Ipsam voluptatem quo voluptas quaerat voluptates corp&quot;,
-            &quot;content&quot;: &quot;Natus nihil laudantium rerum qui. Similique quisquam fugit autem ipsum minima. Vel sed fuga repellendus. Dolor doloribus tempore dolorem repellat alias quis aliquid. Ab sed consectetur omnis consequuntur fuga tempore eum. Dicta laudantium placeat molestiae voluptatum. Blanditiis est quam est ab ex. Qui excepturi quisquam corporis sed iure porro. Sapiente inventore atque voluptatem consequatur. Voluptatibus et neque error eum fugiat quis quia. Ipsam voluptatem quo voluptas quaerat voluptates corporis. Quidem consequuntur ex omnis nam fugit explicabo autem. Consequatur aperiam et optio rerum illo officiis id provident. Ea quisquam et aperiam velit a explicabo impedit. Inventore debitis repudiandae officia commodi facere sequi. Aut asperiores voluptatum quisquam dicta rerum rerum ullam. Repellendus dolor quod deserunt voluptatum ipsa qui pariatur. Qui ab iusto amet velit. Ad placeat nesciunt deleniti non blanditiis reprehenderit atque. Modi quam ab voluptas voluptate. Omnis in molestiae odio magnam voluptatem. Ut qui nam libero corrupti itaque voluptatem officiis. Quibusdam aut deleniti sed dignissimos labore sed enim. Quaerat maxime non cum quasi ut ut. Ea perferendis rem est aut sed necessitatibus. Odit totam modi odit tenetur cupiditate blanditiis magnam. Eveniet aut ea rerum. Eaque sunt eligendi aliquid aspernatur velit ut esse quasi. Et quas ipsam molestiae quam maxime odio et. Doloremque nesciunt voluptatibus repellat magnam maxime cumque accusamus. Est sed et expedita omnis enim corrupti rerum. Nihil iusto aliquid eum numquam accusantium amet. Fuga ipsum ea consequatur delectus. Dolorem eligendi et maxime impedit voluptatum. Hic dolorem tempore adipisci libero quia. Perferendis possimus et modi voluptates. Dolor id ea culpa eligendi totam. Suscipit culpa magni quos. Soluta sit rerum sit. Incidunt temporibus sint natus corrupti quo. Necessitatibus quisquam rem facilis. Voluptatum fuga nesciunt molestiae reiciendis quia culpa.&quot;,
-            &quot;content_html&quot;: &quot;&lt;p&gt;Natus nihil laudantium rerum qui. Similique quisquam fugit autem ipsum minima. Vel sed fuga repellendus. Dolor doloribus tempore dolorem repellat alias quis aliquid. Ab sed consectetur omnis consequuntur fuga tempore eum. Dicta laudantium placeat molestiae voluptatum. Blanditiis est quam est ab ex. Qui excepturi quisquam corporis sed iure porro. Sapiente inventore atque voluptatem consequatur. Voluptatibus et neque error eum fugiat quis quia. Ipsam voluptatem quo voluptas quaerat voluptates corporis. Quidem consequuntur ex omnis nam fugit explicabo autem. Consequatur aperiam et optio rerum illo officiis id provident. Ea quisquam et aperiam velit a explicabo impedit. Inventore debitis repudiandae officia commodi facere sequi. Aut asperiores voluptatum quisquam dicta rerum rerum ullam. Repellendus dolor quod deserunt voluptatum ipsa qui pariatur. Qui ab iusto amet velit. Ad placeat nesciunt deleniti non blanditiis reprehenderit atque. Modi quam ab voluptas voluptate. Omnis in molestiae odio magnam voluptatem. Ut qui nam libero corrupti itaque voluptatem officiis. Quibusdam aut deleniti sed dignissimos labore sed enim. Quaerat maxime non cum quasi ut ut. Ea perferendis rem est aut sed necessitatibus. Odit totam modi odit tenetur cupiditate blanditiis magnam. Eveniet aut ea rerum. Eaque sunt eligendi aliquid aspernatur velit ut esse quasi. Et quas ipsam molestiae quam maxime odio et. Doloremque nesciunt voluptatibus repellat magnam maxime cumque accusamus. Est sed et expedita omnis enim corrupti rerum. Nihil iusto aliquid eum numquam accusantium amet. Fuga ipsum ea consequatur delectus. Dolorem eligendi et maxime impedit voluptatum. Hic dolorem tempore adipisci libero quia. Perferendis possimus et modi voluptates. Dolor id ea culpa eligendi totam. Suscipit culpa magni quos. Soluta sit rerum sit. Incidunt temporibus sint natus corrupti quo. Necessitatibus quisquam rem facilis. Voluptatum fuga nesciunt molestiae reiciendis quia culpa.&lt;/p&gt;&quot;,
-            &quot;no_more_content_html&quot;: &quot;&lt;p&gt;Natus nihil laudantium rerum qui. Similique quisquam fugit autem ipsum minima. Vel sed fuga repellendus. Dolor doloribus tempore dolorem repellat alias quis aliquid. Ab sed consectetur omnis consequuntur fuga tempore eum. Dicta laudantium placeat molestiae voluptatum. Blanditiis est quam est ab ex. Qui excepturi quisquam corporis sed iure porro. Sapiente inventore atque voluptatem consequatur. Voluptatibus et neque error eum fugiat quis quia. Ipsam voluptatem quo voluptas quaerat voluptates corporis. Quidem consequuntur ex omnis nam fugit explicabo autem. Consequatur aperiam et optio rerum illo officiis id provident. Ea quisquam et aperiam velit a explicabo impedit. Inventore debitis repudiandae officia commodi facere sequi. Aut asperiores voluptatum quisquam dicta rerum rerum ullam. Repellendus dolor quod deserunt voluptatum ipsa qui pariatur. Qui ab iusto amet velit. Ad placeat nesciunt deleniti non blanditiis reprehenderit atque. Modi quam ab voluptas voluptate. Omnis in molestiae odio magnam voluptatem. Ut qui nam libero corrupti itaque voluptatem officiis. Quibusdam aut deleniti sed dignissimos labore sed enim. Quaerat maxime non cum quasi ut ut. Ea perferendis rem est aut sed necessitatibus. Odit totam modi odit tenetur cupiditate blanditiis magnam. Eveniet aut ea rerum. Eaque sunt eligendi aliquid aspernatur velit ut esse quasi. Et quas ipsam molestiae quam maxime odio et. Doloremque nesciunt voluptatibus repellat magnam maxime cumque accusamus. Est sed et expedita omnis enim corrupti rerum. Nihil iusto aliquid eum numquam accusantium amet. Fuga ipsum ea consequatur delectus. Dolorem eligendi et maxime impedit voluptatum. Hic dolorem tempore adipisci libero quia. Perferendis possimus et modi voluptates. Dolor id ea culpa eligendi totam. Suscipit culpa magni quos. Soluta sit rerum sit. Incidunt temporibus sint natus corrupti quo. Necessitatibus quisquam rem facilis. Voluptatum fuga nesciunt molestiae reiciendis quia culpa.&lt;/p&gt;&quot;,
-            &quot;less_content_html&quot;: &quot;&lt;p&gt;Natus nihil laudantium rerum qui. Similique quisquam fugit autem ipsum minima. Vel sed fuga repellendus. Dolor doloribus tempore dolorem repellat alias quis aliquid. Ab sed consectetur omnis consequuntur fuga tempore eum. Dicta laudantium placeat molestiae voluptatum. Blanditiis est quam est ab ex. Qui excepturi quisquam corporis sed iure porro. Sapiente inventore atque voluptatem consequatur. Voluptatibus et neque error eum fugiat quis quia. Ipsam voluptatem quo voluptas quaerat voluptates corporis. Quidem consequuntur ex omnis nam fugit explicabo autem. Consequatur aperiam et optio rerum illo officiis id provident. Ea quisquam et aperiam velit a explicabo impedit. Inventore debitis repudiandae officia commodi facere sequi. Aut asperiores voluptatum quisquam dicta rerum rerum ullam. Repellendus dolor quod deserunt voluptatum ipsa qui pariatur. Qui ab iusto amet velit. Ad placeat nesciunt deleniti non blanditiis reprehenderit atque. Modi quam ab voluptas voluptate. Omnis in molestiae odio magnam voluptatem. Ut qui nam libero corrupti itaque voluptatem officiis. Quibusdam aut deleniti sed dignissimos labore sed enim. Quaerat maxime non cum quasi ut ut. Ea perferendis rem est aut sed necessitatibus. Odit totam modi odit tenetur cupiditate blanditiis magnam. Eveniet aut ea rerum. Eaque sunt eligendi aliquid aspernatur velit ut esse quasi. Et quas ipsam molestiae quam maxime odio et. Doloremque nesciunt voluptatibus repellat magnam maxime cumque accusamus. Est sed et expedita omnis enim corrupti rerum. Nihil iusto aliquid eum numquam accusantium amet. Fuga ipsum ea consequatur delectus. Dolorem eligendi et maxime impedit voluptatum. Hic dolorem tempore adipisci libero quia. Perferendis possimus et modi voluptates. Dolor id ea culpa eligendi totam. Suscipit culpa magni quos. Soluta sit rerum sit. Incidunt temporibus sint natus corrupti quo. Necessitatibus quisquam rem facilis. Voluptatum fuga nesciunt molestiae reiciendis quia culpa.&lt;/p&gt;&quot;,
-            &quot;seo_title&quot;: null,
-            &quot;meta_title&quot;: &quot;Perferendis enim est quasi maxime tempore.&quot;,
-            &quot;seo_desc&quot;: &quot;Consequuntur dicta non eos omnis. Facere tempora quibusdam expedita eaque praesentium eum. Quidem aliquam dolores fugiat neque qui. Assumenda et voluptatem aliquid id praesentium.&quot;,
-            &quot;meta_desc&quot;: &quot;Consequuntur dicta non eos omnis. Facere tempora quibusdam expedita eaque praesentium eum. Quidem aliquam dolores fugiat neque qui. Assumenda et voluptatem aliquid id praesentium.&quot;,
+            &quot;id&quot;: 218,
+            &quot;slug&quot;: &quot;maiores-quo-quia-assumenda-deleniti&quot;,
+            &quot;title&quot;: &quot;Maiores quo quia assumenda deleniti.&quot;,
+            &quot;short_content&quot;: &quot;Sit cumque velit repudiandae in aspernatur. Atque ut qui laboriosam reprehenderit. Cum ratione quia dolorem laudantium odio maxime. Labore magni maxime molestias ipsam inventore quis. Qui maiores quo id voluptatibus. Error alias fugiat ut voluptas voluptatem quia voluptatibus. Est exercitationem numquam dolorem. Totam minus deleniti inventore et et fuga adipisci. Exercitationem officia dignissimos vero sit id culpa sint. Autem debitis quo molestias perferendis ut. Aspernatur saepe ipsum sint rer&quot;,
+            &quot;content&quot;: &quot;Sit cumque velit repudiandae in aspernatur. Atque ut qui laboriosam reprehenderit. Cum ratione quia dolorem laudantium odio maxime. Labore magni maxime molestias ipsam inventore quis. Qui maiores quo id voluptatibus. Error alias fugiat ut voluptas voluptatem quia voluptatibus. Est exercitationem numquam dolorem. Totam minus deleniti inventore et et fuga adipisci. Exercitationem officia dignissimos vero sit id culpa sint. Autem debitis quo molestias perferendis ut. Aspernatur saepe ipsum sint rerum et quo odio velit. Vitae et alias et enim. Quia est illum voluptatem officiis nisi fugiat sed. Quo id deserunt et. Enim vero quo vel. Aut aliquam cupiditate quia est. Voluptatem laboriosam fuga ut eos ut vel eos. Ea deserunt delectus et sequi. Quia officia sint animi error. Nisi nisi sequi ipsam laboriosam nihil autem. Odit iste quod modi animi est. Incidunt saepe soluta qui architecto. Numquam sunt amet enim esse rerum ipsam assumenda. Dolorum culpa ut accusamus maxime. Voluptatem iure tenetur occaecati qui voluptatem adipisci. Voluptatem sint ut accusantium quisquam nisi. Voluptas sint et eos occaecati blanditiis explicabo. Beatae sit quam aut eaque rerum rerum. Quia accusantium voluptatem quos molestiae. Impedit placeat odit doloremque non aliquid est. Provident dolorum reiciendis commodi ducimus dignissimos. Rem accusamus id occaecati fugit sunt eos. Adipisci iure et vel quia et ad voluptatem. Eos laborum voluptatem voluptates laboriosam corporis magnam minus nobis. Enim explicabo voluptas voluptas alias facere doloribus corrupti. Quidem asperiores deserunt atque tenetur voluptas maiores. Fugit officia laborum consequatur dolor nihil qui eum. Ex accusamus vitae laborum qui. Soluta quaerat voluptatem rerum nisi labore. Voluptas non est atque omnis aut tempore quia. Aut dolor ut omnis consectetur odit. Eum fuga labore et eos repellat ut tenetur.&quot;,
+            &quot;content_html&quot;: &quot;&lt;p&gt;Sit cumque velit repudiandae in aspernatur. Atque ut qui laboriosam reprehenderit. Cum ratione quia dolorem laudantium odio maxime. Labore magni maxime molestias ipsam inventore quis. Qui maiores quo id voluptatibus. Error alias fugiat ut voluptas voluptatem quia voluptatibus. Est exercitationem numquam dolorem. Totam minus deleniti inventore et et fuga adipisci. Exercitationem officia dignissimos vero sit id culpa sint. Autem debitis quo molestias perferendis ut. Aspernatur saepe ipsum sint rerum et quo odio velit. Vitae et alias et enim. Quia est illum voluptatem officiis nisi fugiat sed. Quo id deserunt et. Enim vero quo vel. Aut aliquam cupiditate quia est. Voluptatem laboriosam fuga ut eos ut vel eos. Ea deserunt delectus et sequi. Quia officia sint animi error. Nisi nisi sequi ipsam laboriosam nihil autem. Odit iste quod modi animi est. Incidunt saepe soluta qui architecto. Numquam sunt amet enim esse rerum ipsam assumenda. Dolorum culpa ut accusamus maxime. Voluptatem iure tenetur occaecati qui voluptatem adipisci. Voluptatem sint ut accusantium quisquam nisi. Voluptas sint et eos occaecati blanditiis explicabo. Beatae sit quam aut eaque rerum rerum. Quia accusantium voluptatem quos molestiae. Impedit placeat odit doloremque non aliquid est. Provident dolorum reiciendis commodi ducimus dignissimos. Rem accusamus id occaecati fugit sunt eos. Adipisci iure et vel quia et ad voluptatem. Eos laborum voluptatem voluptates laboriosam corporis magnam minus nobis. Enim explicabo voluptas voluptas alias facere doloribus corrupti. Quidem asperiores deserunt atque tenetur voluptas maiores. Fugit officia laborum consequatur dolor nihil qui eum. Ex accusamus vitae laborum qui. Soluta quaerat voluptatem rerum nisi labore. Voluptas non est atque omnis aut tempore quia. Aut dolor ut omnis consectetur odit. Eum fuga labore et eos repellat ut tenetur.&lt;/p&gt;&quot;,
+            &quot;no_more_content_html&quot;: &quot;&lt;p&gt;Sit cumque velit repudiandae in aspernatur. Atque ut qui laboriosam reprehenderit. Cum ratione quia dolorem laudantium odio maxime. Labore magni maxime molestias ipsam inventore quis. Qui maiores quo id voluptatibus. Error alias fugiat ut voluptas voluptatem quia voluptatibus. Est exercitationem numquam dolorem. Totam minus deleniti inventore et et fuga adipisci. Exercitationem officia dignissimos vero sit id culpa sint. Autem debitis quo molestias perferendis ut. Aspernatur saepe ipsum sint rerum et quo odio velit. Vitae et alias et enim. Quia est illum voluptatem officiis nisi fugiat sed. Quo id deserunt et. Enim vero quo vel. Aut aliquam cupiditate quia est. Voluptatem laboriosam fuga ut eos ut vel eos. Ea deserunt delectus et sequi. Quia officia sint animi error. Nisi nisi sequi ipsam laboriosam nihil autem. Odit iste quod modi animi est. Incidunt saepe soluta qui architecto. Numquam sunt amet enim esse rerum ipsam assumenda. Dolorum culpa ut accusamus maxime. Voluptatem iure tenetur occaecati qui voluptatem adipisci. Voluptatem sint ut accusantium quisquam nisi. Voluptas sint et eos occaecati blanditiis explicabo. Beatae sit quam aut eaque rerum rerum. Quia accusantium voluptatem quos molestiae. Impedit placeat odit doloremque non aliquid est. Provident dolorum reiciendis commodi ducimus dignissimos. Rem accusamus id occaecati fugit sunt eos. Adipisci iure et vel quia et ad voluptatem. Eos laborum voluptatem voluptates laboriosam corporis magnam minus nobis. Enim explicabo voluptas voluptas alias facere doloribus corrupti. Quidem asperiores deserunt atque tenetur voluptas maiores. Fugit officia laborum consequatur dolor nihil qui eum. Ex accusamus vitae laborum qui. Soluta quaerat voluptatem rerum nisi labore. Voluptas non est atque omnis aut tempore quia. Aut dolor ut omnis consectetur odit. Eum fuga labore et eos repellat ut tenetur.&lt;/p&gt;&quot;,
+            &quot;less_content_html&quot;: &quot;&lt;p&gt;Sit cumque velit repudiandae in aspernatur. Atque ut qui laboriosam reprehenderit. Cum ratione quia dolorem laudantium odio maxime. Labore magni maxime molestias ipsam inventore quis. Qui maiores quo id voluptatibus. Error alias fugiat ut voluptas voluptatem quia voluptatibus. Est exercitationem numquam dolorem. Totam minus deleniti inventore et et fuga adipisci. Exercitationem officia dignissimos vero sit id culpa sint. Autem debitis quo molestias perferendis ut. Aspernatur saepe ipsum sint rerum et quo odio velit. Vitae et alias et enim. Quia est illum voluptatem officiis nisi fugiat sed. Quo id deserunt et. Enim vero quo vel. Aut aliquam cupiditate quia est. Voluptatem laboriosam fuga ut eos ut vel eos. Ea deserunt delectus et sequi. Quia officia sint animi error. Nisi nisi sequi ipsam laboriosam nihil autem. Odit iste quod modi animi est. Incidunt saepe soluta qui architecto. Numquam sunt amet enim esse rerum ipsam assumenda. Dolorum culpa ut accusamus maxime. Voluptatem iure tenetur occaecati qui voluptatem adipisci. Voluptatem sint ut accusantium quisquam nisi. Voluptas sint et eos occaecati blanditiis explicabo. Beatae sit quam aut eaque rerum rerum. Quia accusantium voluptatem quos molestiae. Impedit placeat odit doloremque non aliquid est. Provident dolorum reiciendis commodi ducimus dignissimos. Rem accusamus id occaecati fugit sunt eos. Adipisci iure et vel quia et ad voluptatem. Eos laborum voluptatem voluptates laboriosam corporis magnam minus nobis. Enim explicabo voluptas voluptas alias facere doloribus corrupti. Quidem asperiores deserunt atque tenetur voluptas maiores. Fugit officia laborum consequatur dolor nihil qui eum. Ex accusamus vitae laborum qui. Soluta quaerat voluptatem rerum nisi labore. Voluptas non est atque omnis aut tempore quia. Aut dolor ut omnis consectetur odit. Eum fuga labore et eos repellat ut tenetur.&lt;/p&gt;&quot;,
+            &quot;seo_title&quot;: &quot;Delectus corrupti necessitatibus veritatis nam.&quot;,
+            &quot;meta_title&quot;: &quot;Delectus corrupti necessitatibus veritatis nam.&quot;,
+            &quot;seo_desc&quot;: &quot;Voluptas velit et est et quis eveniet. Quia at consectetur error laudantium consequuntur sit. Eum asperiores qui sed voluptatem pariatur quidem. Odit in et reiciendis laudantium veniam sed.&quot;,
+            &quot;meta_desc&quot;: &quot;Voluptas velit et est et quis eveniet. Quia at consectetur error laudantium consequuntur sit. Eum asperiores qui sed voluptatem pariatur quidem. Odit in et reiciendis laudantium veniam sed.&quot;,
             &quot;seo_noindex&quot;: false,
             &quot;seo_nofollow&quot;: false,
             &quot;status&quot;: {
@@ -5154,21 +5638,21 @@ response.json()</code></pre></div>
             },
             &quot;comment&quot;: false,
             &quot;first_image&quot;: null,
-            &quot;published_at&quot;: &quot;2021-05-29T15:23:28.000000Z&quot;,
-            &quot;created_at&quot;: &quot;2022-03-15T10:32:00.000000Z&quot;,
-            &quot;updated_at&quot;: &quot;2022-03-15T10:32:00.000000Z&quot;,
+            &quot;published_at&quot;: &quot;2022-02-13T07:20:11.000000Z&quot;,
+            &quot;created_at&quot;: &quot;2022-03-17T19:40:56.000000Z&quot;,
+            &quot;updated_at&quot;: &quot;2022-03-17T19:40:56.000000Z&quot;,
             &quot;user&quot;: {
-                &quot;id&quot;: 12267,
-                &quot;name&quot;: &quot;Ms. Juana Feest Sr.&quot;,
+                &quot;id&quot;: 12466,
+                &quot;name&quot;: &quot;Carolyn Fritsch&quot;,
                 &quot;status&quot;: {
                     &quot;value&quot;: 0,
                     &quot;label&quot;: &quot;inactive&quot;
                 },
-                &quot;created_at&quot;: &quot;2022-03-15T10:32:00.000000Z&quot;,
-                &quot;updated_at&quot;: &quot;2022-03-15T10:32:00.000000Z&quot;
+                &quot;created_at&quot;: &quot;2022-03-17T19:40:56.000000Z&quot;,
+                &quot;updated_at&quot;: &quot;2022-03-17T19:40:56.000000Z&quot;
             },
             &quot;links&quot;: {
-                &quot;web&quot;: &quot;http://idir.test:8443/posts/perferendis-enim-est-quasi-maxime-tempore&quot;
+                &quot;web&quot;: &quot;http://idir.test:8443/posts/maiores-quo-quia-assumenda-deleniti&quot;
             }
         }
     ]
@@ -5304,7 +5788,7 @@ response.json()</code></pre></div>
                 <input type="number"
                name="filter.paginate"
                data-endpoint="POSTapi-posts-index"
-               value="25"
+               value=""
                data-component="body" hidden>
     <br>
 <p>Number of records in the list. Must be one of <code>25</code>, <code>50</code>, or <code>100</code>.</p>
@@ -5472,8 +5956,8 @@ response.json()</code></pre></div>
     \"filter\": {
         \"except\": [],
         \"search\": \"\",
-        \"orderby\": \"updated_at|asc\",
-        \"paginate\": 25
+        \"orderby\": \"\",
+        \"paginate\": \"\"
     }
 }"
 </code></pre></div>
@@ -5494,8 +5978,8 @@ let body = {
     "filter": {
         "except": [],
         "search": "",
-        "orderby": "updated_at|asc",
-        "paginate": 25
+        "orderby": "",
+        "paginate": ""
     }
 };
 
@@ -5520,8 +6004,8 @@ $response = $client-&gt;post(
             'filter' =&gt; [
                 'except' =&gt; [],
                 'search' =&gt; '',
-                'orderby' =&gt; 'updated_at|asc',
-                'paginate' =&gt; 25,
+                'orderby' =&gt; '',
+                'paginate' =&gt; '',
             ],
         ],
     ]
@@ -5540,8 +6024,8 @@ payload = {
     "filter": {
         "except": [],
         "search": "",
-        "orderby": "updated_at|asc",
-        "paginate": 25
+        "orderby": "",
+        "paginate": ""
     }
 }
 headers = {
@@ -5563,18 +6047,18 @@ response.json()</code></pre></div>
 <code class="language-json">{
     &quot;data&quot;: [
         {
-            &quot;id&quot;: 1,
-            &quot;name&quot;: &quot;usługi galwaniczne&quot;,
-            &quot;slug&quot;: &quot;uslugi-galwaniczne&quot;,
-            &quot;created_at&quot;: &quot;2021-01-06T17:01:54.000000Z&quot;,
-            &quot;updated_at&quot;: &quot;2021-01-06T17:01:54.000000Z&quot;
+            &quot;id&quot;: 35225,
+            &quot;name&quot;: &quot;Et&quot;,
+            &quot;slug&quot;: &quot;et&quot;,
+            &quot;created_at&quot;: &quot;2022-03-17T19:40:56.000000Z&quot;,
+            &quot;updated_at&quot;: &quot;2022-03-17T19:40:56.000000Z&quot;
         },
         {
-            &quot;id&quot;: 1,
-            &quot;name&quot;: &quot;usługi galwaniczne&quot;,
-            &quot;slug&quot;: &quot;uslugi-galwaniczne&quot;,
-            &quot;created_at&quot;: &quot;2021-01-06T17:01:54.000000Z&quot;,
-            &quot;updated_at&quot;: &quot;2021-01-06T17:01:54.000000Z&quot;
+            &quot;id&quot;: 35226,
+            &quot;name&quot;: &quot;Sunt&quot;,
+            &quot;slug&quot;: &quot;sunt&quot;,
+            &quot;created_at&quot;: &quot;2022-03-17T19:40:56.000000Z&quot;,
+            &quot;updated_at&quot;: &quot;2022-03-17T19:40:56.000000Z&quot;
         }
     ]
 }</code>
@@ -5671,7 +6155,7 @@ response.json()</code></pre></div>
                 <input type="text"
                name="filter.orderby"
                data-endpoint="POSTapi-tags-index"
-               value="updated_at|asc"
+               value=""
                data-component="body" hidden>
     <br>
 <p>Sorting the result list. Must be one of <code>created_at|asc</code>, <code>created_at|desc</code>, <code>updated_at|asc</code>, <code>updated_at|desc</code>, <code>sum|asc</code>, or <code>sum|desc</code>.</p>
@@ -5681,7 +6165,7 @@ response.json()</code></pre></div>
                 <input type="number"
                name="filter.paginate"
                data-endpoint="POSTapi-tags-index"
-               value="25"
+               value=""
                data-component="body" hidden>
     <br>
 <p>Number of records in the list. Must be one of <code>25</code>, <code>50</code>, or <code>100</code>.</p>
@@ -6121,9 +6605,9 @@ response.json()</code></pre></div>
         \"except\": [],
         \"search\": \"\",
         \"status\": 1,
-        \"role\": 1,
-        \"orderby\": \"created_at|desc\",
-        \"paginate\": 25
+        \"role\": \"\",
+        \"orderby\": \"updated_at|desc\",
+        \"paginate\": \"\"
     }
 }"
 </code></pre></div>
@@ -6146,9 +6630,9 @@ let body = {
         "except": [],
         "search": "",
         "status": 1,
-        "role": 1,
-        "orderby": "created_at|desc",
-        "paginate": 25
+        "role": "",
+        "orderby": "updated_at|desc",
+        "paginate": ""
     }
 };
 
@@ -6175,9 +6659,9 @@ $response = $client-&gt;post(
                 'except' =&gt; [],
                 'search' =&gt; '',
                 'status' =&gt; 1,
-                'role' =&gt; 1,
-                'orderby' =&gt; 'created_at|desc',
-                'paginate' =&gt; 25,
+                'role' =&gt; '',
+                'orderby' =&gt; 'updated_at|desc',
+                'paginate' =&gt; '',
             ],
         ],
     ]
@@ -6197,9 +6681,9 @@ payload = {
         "except": [],
         "search": "",
         "status": 1,
-        "role": 1,
-        "orderby": "created_at|desc",
-        "paginate": 25
+        "role": "",
+        "orderby": "updated_at|desc",
+        "paginate": ""
     }
 }
 headers = {
@@ -6222,14 +6706,14 @@ response.json()</code></pre></div>
 <code class="language-json">{
     &quot;data&quot;: [
         {
-            &quot;id&quot;: 12263,
-            &quot;name&quot;: &quot;Rhoda Wiza&quot;,
+            &quot;id&quot;: 12462,
+            &quot;name&quot;: &quot;Mrs. Lauren Denesik PhD&quot;,
             &quot;status&quot;: {
                 &quot;value&quot;: 1,
                 &quot;label&quot;: &quot;active&quot;
             },
-            &quot;created_at&quot;: &quot;2022-03-15T10:31:59.000000Z&quot;,
-            &quot;updated_at&quot;: &quot;2022-03-15T10:31:59.000000Z&quot;,
+            &quot;created_at&quot;: &quot;2022-03-17T19:40:56.000000Z&quot;,
+            &quot;updated_at&quot;: &quot;2022-03-17T19:40:56.000000Z&quot;,
             &quot;roles&quot;: [
                 {
                     &quot;id&quot;: 3,
@@ -6240,14 +6724,14 @@ response.json()</code></pre></div>
             ]
         },
         {
-            &quot;id&quot;: 12264,
-            &quot;name&quot;: &quot;Prof. Carlos Pfeffer DVM&quot;,
+            &quot;id&quot;: 12463,
+            &quot;name&quot;: &quot;Prof. Taylor Crist II&quot;,
             &quot;status&quot;: {
                 &quot;value&quot;: 1,
                 &quot;label&quot;: &quot;active&quot;
             },
-            &quot;created_at&quot;: &quot;2022-03-15T10:31:59.000000Z&quot;,
-            &quot;updated_at&quot;: &quot;2022-03-15T10:31:59.000000Z&quot;,
+            &quot;created_at&quot;: &quot;2022-03-17T19:40:56.000000Z&quot;,
+            &quot;updated_at&quot;: &quot;2022-03-17T19:40:56.000000Z&quot;,
             &quot;roles&quot;: [
                 {
                     &quot;id&quot;: 3,
@@ -6370,7 +6854,7 @@ response.json()</code></pre></div>
                 <input type="number"
                name="filter.role"
                data-endpoint="POSTapi-users-index"
-               value="1"
+               value=""
                data-component="body" hidden>
     <br>
 
@@ -6380,7 +6864,7 @@ response.json()</code></pre></div>
                 <input type="text"
                name="filter.orderby"
                data-endpoint="POSTapi-users-index"
-               value="created_at|desc"
+               value="updated_at|desc"
                data-component="body" hidden>
     <br>
 <p>Sorting the result list. Must be one of <code>created_at|asc</code>, <code>created_at|desc</code>, <code>updated_at|asc</code>, or <code>updated_at|desc</code>.</p>
@@ -6390,7 +6874,7 @@ response.json()</code></pre></div>
                 <input type="number"
                name="filter.paginate"
                data-endpoint="POSTapi-users-index"
-               value="25"
+               value=""
                data-component="body" hidden>
     <br>
 <p>Number of records in the list. Must be one of <code>25</code>, <code>50</code>, or <code>100</code>.</p>

@@ -37,7 +37,7 @@ use N1ebieski\IDir\Http\Requests\Api\Payment\Interfaces\VerifyRequestStrategy;
 class PaymentController extends Controller implements Polymorphic
 {
     /**
-     * Initialise dir's payment
+     * Show dir's payment
      *
      * @urlParam payment_dir_pending string required The payment UUID. No-example
      * @urlParam driver string The payment driver. No-example
@@ -50,7 +50,6 @@ class PaymentController extends Controller implements Polymorphic
      * @responseField updated_at string
      * @responseField morph object Contains relationship Dir.
      * @responseField order object Contains relationship Price.
-     *
      * @responseField url string Link to the driver's payment page (for transfer type payment).
      *
      * @apiResource N1ebieski\IDir\Http\Resources\Payment\Dir\PaymentResource
