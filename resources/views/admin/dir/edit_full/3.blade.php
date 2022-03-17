@@ -44,7 +44,7 @@
             <form 
                 method="post" 
                 action="{{ route('admin.dir.update_full_3', [$dir->id, $group->id]) }}" 
-                id="edit-summary"
+                id="edit-dir-3"
             >
                 @csrf
                 @method('put')

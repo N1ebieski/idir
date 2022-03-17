@@ -39,7 +39,7 @@
             <form 
                 method="post"
                 action="{{ route('web.dir.store_3', [$group->id]) }}" 
-                id="create-summary"
+                id="create-dir-3"
             >
                 @csrf
 
@@ -86,6 +86,6 @@
 
 @push('script')
 @component('icore::web.partials.jsvalidation')
-{!! JsValidator::formRequest(\N1ebieski\IDir\Http\Requests\Web\Dir\Store3Request::class, '#create-summary'); !!}
+{!! JsValidator::formRequest(\N1ebieski\IDir\Http\Requests\Web\Dir\Store3Request::class, '#create-dir-3'); !!}
 @endcomponent
 @endpush
