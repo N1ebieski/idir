@@ -11,17 +11,13 @@ use N1ebieski\ICore\Models\Link;
 use N1ebieski\IDir\Models\Group;
 use N1ebieski\IDir\Models\Price;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Auth;
 use GuzzleHttp\Client as GuzzleClient;
-use Illuminate\Support\Facades\Config;
 use N1ebieski\IDir\Models\DirBacklink;
 use N1ebieski\IDir\Models\Field\Group\Field;
 use Illuminate\Http\Response as HttpResponse;
 use N1ebieski\IDir\Models\Payment\Dir\Payment;
 use GuzzleHttp\Psr7\Response as GuzzleResponse;
 use N1ebieski\IDir\Models\Category\Dir\Category;
-use N1ebieski\IDir\Http\Resources\Dir\DirResource;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class DirTest extends TestCase
@@ -32,7 +28,7 @@ class DirTest extends TestCase
      * [FIELD_TYPES description]
      * @var array
      */
-    protected const FIELD_TYPES = ['input', 'textarea', 'select', 'multiselect', 'checkbox', 'image'];
+    private const FIELD_TYPES = ['input', 'textarea', 'select', 'multiselect', 'checkbox', 'image'];
 
     /**
      * [dirSetup description]
@@ -78,14 +74,14 @@ class DirTest extends TestCase
         return $fields;
     }
 
-    public function testDirUpdateAsGuest()
+    public function testApiDirUpdateAsGuest()
     {
         $response = $this->putJson(route('api.dir.update', [rand(1, 1000), Group::DEFAULT]));
 
         $response->assertStatus(HttpResponse::HTTP_UNAUTHORIZED);
     }
 
-    public function testDirUpdateAsUserWithoutPermission()
+    public function testApiDirUpdateAsUserWithoutPermission()
     {
         $user = factory(User::class)->states('user')->create();
 
@@ -101,12 +97,10 @@ class DirTest extends TestCase
         $response = $this->putJson(route('api.dir.update', [$dir->id, $group->id]));
 
         $response->assertStatus(HttpResponse::HTTP_FORBIDDEN);
-        $response->assertJson([
-            'message' => 'User does not have the right permissions.'
-        ]);
+        $response->assertJson(['message' => 'User does not have the right permissions.']);
     }
 
-    public function testDirUpdateAsUserWithoutAbility()
+    public function testApiDirUpdateAsUserWithoutAbility()
     {
         $user = factory(User::class)->states(['user', 'api'])->create();
 
@@ -122,12 +116,10 @@ class DirTest extends TestCase
         $response = $this->putJson(route('api.dir.update', [$dir->id, $group->id]));
 
         $response->assertStatus(HttpResponse::HTTP_FORBIDDEN);
-        $response->assertJson([
-            'message' => 'Invalid ability provided.'
-        ]);
+        $response->assertJson(['message' => 'Invalid ability provided.']);
     }
 
-    public function testForeignDirUpdate()
+    public function testApiDirUpdateForeignDir()
     {
         $user = factory(User::class)->states(['user', 'api'])->create();
 
@@ -143,7 +135,7 @@ class DirTest extends TestCase
         $response->assertStatus(HttpResponse::HTTP_FORBIDDEN);
     }
 
-    public function testNoExistDirUpdate()
+    public function testApiDirUpdateNoExistDir()
     {
         $user = factory(User::class)->states(['user', 'api'])->create();
 
@@ -154,7 +146,7 @@ class DirTest extends TestCase
         $response->assertStatus(HttpResponse::HTTP_NOT_FOUND);
     }
 
-    public function testNoExistGroupUpdate()
+    public function testApiDirUpdateNoExistGroup()
     {
         $user = factory(User::class)->states(['user', 'api'])->create();
 
@@ -172,7 +164,7 @@ class DirTest extends TestCase
         $response->assertStatus(HttpResponse::HTTP_NOT_FOUND);
     }
 
-    public function testDirUpdatePrivateGroup()
+    public function testApiDirUpdatePrivateGroup()
     {
         $user = factory(User::class)->states(['user', 'api'])->create();
 
@@ -192,7 +184,7 @@ class DirTest extends TestCase
         $response->assertStatus(HttpResponse::HTTP_FORBIDDEN);
     }
 
-    public function testDirUpdateMaxModelsNewGroup()
+    public function testApiDirUpdateMaxModelsNewGroup()
     {
         $user = factory(User::class)->states(['user', 'api'])->create();
 
@@ -214,7 +206,7 @@ class DirTest extends TestCase
         $response->assertStatus(HttpResponse::HTTP_FORBIDDEN);
     }
 
-    public function testDirUpdateMaxModelsOldGroup()
+    public function testApiDirUpdateMaxModelsOldGroup()
     {
         $user = factory(User::class)->states(['user', 'api'])->create();
 
@@ -232,7 +224,7 @@ class DirTest extends TestCase
         $response->assertStatus(HttpResponse::HTTP_OK);
     }
 
-    public function testDirUpdateValidationFail()
+    public function testApiDirUpdateValidationFail()
     {
         $user = factory(User::class)->states(['user', 'api'])->create();
 
@@ -258,7 +250,7 @@ class DirTest extends TestCase
         $response->assertJsonValidationErrors(['title', 'categories', 'content_html', 'url']);
     }
 
-    public function testDirUpdateValidationUrlFail()
+    public function testApiDirUpdateValidationUrlFail()
     {
         $user = factory(User::class)->states(['user', 'api'])->create();
 
@@ -281,7 +273,7 @@ class DirTest extends TestCase
         $response->assertJsonValidationErrors(['url']);
     }
 
-    public function testDirUpdateValidationCategoriesFail()
+    public function testApiDirUpdateValidationCategoriesFail()
     {
         $user = factory(User::class)->states(['user', 'api'])->create();
 
@@ -306,7 +298,7 @@ class DirTest extends TestCase
         $response->assertJsonValidationErrors(['categories']);
     }
 
-    public function testDirUpdateValidationFieldsFail()
+    public function testApiDirUpdateValidationFieldsFail()
     {
         $user = factory(User::class)->states(['user', 'api'])->create();
 
@@ -334,7 +326,7 @@ class DirTest extends TestCase
         $response->assertJsonValidationErrors($fields);
     }
 
-    public function testDirUpdateValidationBacklinkFail()
+    public function testApiDirUpdateValidationBacklinkFail()
     {
         $user = factory(User::class)->states(['user', 'api'])->create();
 
@@ -357,7 +349,7 @@ class DirTest extends TestCase
         $response->assertJsonValidationErrors(['backlink', 'backlink_url']);
     }
 
-    public function testDirUpdateResource()
+    public function testApiDirUpdateInResource()
     {
         $user = factory(User::class)->states(['user', 'api'])->create();
 
@@ -386,7 +378,7 @@ class DirTest extends TestCase
         ]);
     }
 
-    public function testDirUpdateUserAsUserDatabase()
+    public function testApiDirUpdateUserAsUserInDatabase()
     {
         $user = factory(User::class)->states(['user', 'api'])->create();
 
@@ -412,7 +404,7 @@ class DirTest extends TestCase
         ]);
     }
 
-    public function testDirUpdateUserAsAdminDatabase()
+    public function testApiDirUpdateUserAsAdminInDatabase()
     {
         $user = factory(User::class)->states(['user', 'api', 'admin'])->create();
 
@@ -438,7 +430,7 @@ class DirTest extends TestCase
         ]);
     }
 
-    public function testDirUpdateBacklinkDatabase()
+    public function testApiDirUpdateBacklinkInDatabase()
     {
         $user = factory(User::class)->states(['user', 'api'])->create();
 
@@ -480,7 +472,7 @@ class DirTest extends TestCase
         ]);
     }
 
-    public function testDirUpdateExistBacklinkDatabase()
+    public function testApiDirUpdateExistBacklinkInDatabase()
     {
         $user = factory(User::class)->states(['user', 'api'])->create();
 
@@ -509,7 +501,7 @@ class DirTest extends TestCase
         ]);
     }
 
-    public function testDirUpdateFieldsDatabase()
+    public function testApiDirUpdateFieldsInDatabase()
     {
         $user = factory(User::class)->states(['user', 'api'])->create();
 
@@ -551,7 +543,7 @@ class DirTest extends TestCase
         ]);
     }
 
-    public function testDirUpdateExistFieldsDatabase()
+    public function testApiDirUpdateExistFieldsInDatabase()
     {
         $user = factory(User::class)->states(['user', 'api'])->create();
 
@@ -586,7 +578,7 @@ class DirTest extends TestCase
         ]);
     }
 
-    public function testDirUpdateValidationPaymentFail()
+    public function testApiDirUpdateValidationPaymentFail()
     {
         $user = factory(User::class)->states(['user', 'api'])->create();
 
@@ -613,7 +605,7 @@ class DirTest extends TestCase
         $response->assertJsonValidationErrors(['payment_transfer']);
     }
 
-    public function testDirUpdateValidationNoExistPaymentFail()
+    public function testApiDirUpdateValidationNoExistPaymentFail()
     {
         $user = factory(User::class)->states(['user', 'api'])->create();
 
@@ -641,7 +633,7 @@ class DirTest extends TestCase
         $response->assertJsonValidationErrors(['payment_transfer']);
     }
 
-    public function testDirUpdateNewGroupPaymentDatabase()
+    public function testApiDirUpdateNewGroupPaymentInDatabase()
     {
         $user = factory(User::class)->states(['user', 'api'])->create();
 
@@ -685,7 +677,7 @@ class DirTest extends TestCase
         $response->assertJsonFragment(['uuid' => $payment->uuid]);
     }
 
-    public function testDirUpdateOldGroupWithoutPaymentDatabase()
+    public function testApiDirUpdateOldGroupWithoutPaymentInDatabase()
     {
         $user = factory(User::class)->states(['user', 'api'])->create();
 
@@ -721,7 +713,7 @@ class DirTest extends TestCase
         ]);
     }
 
-    public function testPendingDirUpdateOldGroupPaymentFail()
+    public function testApiDirUpdatePendingValidationPaymentFail()
     {
         $user = factory(User::class)->states(['user', 'api'])->create();
 
@@ -743,7 +735,7 @@ class DirTest extends TestCase
         $response->assertJsonValidationErrors(['payment_type']);
     }
 
-    public function testDirUpdateValidationPaymentAutoCodeSmsDatabase()
+    public function testApiDirUpdateValidationPaymentAutoCodeSmsPass()
     {
         $user = factory(User::class)->states(['user', 'api'])->create();
 
