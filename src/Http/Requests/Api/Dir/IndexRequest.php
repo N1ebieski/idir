@@ -84,7 +84,12 @@ class IndexRequest extends FormRequest
                     'nullable',
                     'in:created_at|asc,created_at|desc,updated_at|asc,updated_at|desc,title|asc,title|desc,sum_rating|desc,sum_rating|asc,click|desc,click|asc,view|desc,view|asc',
                 ],
-                'filter.paginate' => Rule::in([$paginate, ($paginate * 2), ($paginate * 4)]) . '|integer'
+                'filter.paginate' => [
+                    'bail',
+                    'nullable',
+                    'integer',
+                    Rule::in([$paginate, ($paginate * 2), ($paginate * 4)])
+                ]
             ],
             optional($this->user())->can('admin.dirs.view') ?
             [
