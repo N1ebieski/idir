@@ -164,7 +164,7 @@ class Field extends Model
      */
     public function isPublic(): bool
     {
-        return $this->visible === static::VISIBLE;
+        return $this->getAttribute('visible') === static::VISIBLE;
     }
 
     /**
