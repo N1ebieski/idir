@@ -2,6 +2,7 @@
 
 namespace N1ebieski\IDir\Http\Requests\Traits;
 
+use Illuminate\Validation\Rule;
 use Illuminate\Http\UploadedFile;
 use N1ebieski\IDir\Models\Field\Field;
 use Illuminate\Support\Facades\Storage;
@@ -133,12 +134,8 @@ trait FieldsExtended
                     break;
 
                 case 'multiselect':
-                    $rules["field.{$field->id}"][] = 'array';
-                    break;
-
                 case 'checkbox':
                     $rules["field.{$field->id}"][] = 'array';
-                    $rules["field.{$field->id}"][] = 'no_js_validation';
                     break;
 
                 case 'image':
@@ -155,7 +152,7 @@ trait FieldsExtended
             }
 
             if (isset($field->options->options)) {
-                $rules["field.{$field->id}"][] = 'in:' . implode(',', $field->options->options);
+                $rules["field.{$field->id}"][] = Rule::in($field->options->options);
             }
             if (isset($field->options->min)) {
                 $rules["field.{$field->id}"][] = 'min:' . $field->options->min;
