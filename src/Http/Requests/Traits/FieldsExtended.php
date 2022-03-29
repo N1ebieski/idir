@@ -133,8 +133,12 @@ trait FieldsExtended
                     break;
 
                 case 'multiselect':
+                    $rules["field.{$field->id}"][] = 'array';
+                    break;
+
                 case 'checkbox':
                     $rules["field.{$field->id}"][] = 'array';
+                    $rules["field.{$field->id}"][] = 'no_js_validation';
                     break;
 
                 case 'image':
