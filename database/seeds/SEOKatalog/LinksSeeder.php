@@ -23,13 +23,13 @@ class LinksSeeder extends SEOKatalogSeeder
                 DB::transaction(function () use ($item) {
                     foreach (['in', 'out'] as $type) {
                         if ($item->{$type} !== 0) {
-                            $link = Link::create([
-                                'type' => $type === 'in' ?
-                                    'backlink'
-                                    : 'link',
-                                'name' => $item->title,
-                                'url' => static::url($item->url)
-                            ]);
+                            $link = Link::make();
+
+                            $link->type = $type === 'in' ? 'backlink' : 'link';
+                            $link->name = $item->title;
+                            $link->url = static::url($item->url);
+
+                            $link->save();
 
                             $link->categories()->attach(
                                 $item->cat === 'all' ?
@@ -55,7 +55,7 @@ class LinksSeeder extends SEOKatalogSeeder
      * @param string $url
      * @return string
      */
-    protected static function url(string $url) : string
+    protected static function url(string $url): string
     {
         return strtolower(strpos($url, 'https://') ? $url : 'http://' . $url);
     }
