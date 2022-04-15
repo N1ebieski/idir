@@ -9,7 +9,7 @@ class AuthServiceProvider extends ServiceProvider
     /**
      * The policy mappings for the application.
      *
-     * @var array
+     * @var array<class-string, class-string>
      */
     protected $policies = [
         \N1ebieski\IDir\Models\Dir::class => \N1ebieski\IDir\Policies\DirPolicy::class

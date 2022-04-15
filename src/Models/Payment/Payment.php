@@ -12,12 +12,15 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 use N1ebieski\IDir\Services\Payment\PaymentService;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use N1ebieski\ICore\Models\Traits\FullTextSearchable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use N1ebieski\IDir\Database\Factories\Payment\PaymentFactory;
 
 class Payment extends Model
 {
     use Polymorphic;
     use Carbonable;
     use FullTextSearchable;
+    use HasFactory;
 
     // Configuration
 
@@ -92,6 +95,16 @@ class Payment extends Model
         'created_at' => 'datetime',
         'updated_at' => 'datetime'
     ];
+
+    /**
+     * Create a new factory instance for the model.
+     *
+     * @return PaymentFactory
+     */
+    protected static function newFactory()
+    {
+        return \N1ebieski\IDir\Database\Factories\Payment\PaymentFactory::new();
+    }
 
     // Relations
 
@@ -188,5 +201,18 @@ class Payment extends Model
     public function makeRepo()
     {
         return App::make(PaymentRepo::class, ['payment' => $this]);
+    }
+
+    // Factories
+
+    /**
+     * Undocumented function
+     *
+     * @param mixed $parameters
+     * @return PaymentFactory
+     */
+    public static function makeFactory(...$parameters)
+    {
+        return static::factory($parameters);
     }
 }

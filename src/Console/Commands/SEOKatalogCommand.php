@@ -159,11 +159,11 @@ class SEOKatalogCommand extends Command
         $this->line("\n");
         $bar->advance();
         $this->line("\n");
-        $this->line($this->lang->get('icore::install.publish.seeds'));
+        $this->line($this->lang->get('icore::install.publish.Seeders'));
         $this->line("\n");
-        $this->call('vendor:publish', ['--tag' => 'icore.seeds', '--force' => $this->option('force')], $this->getOutput());
+        $this->call('vendor:publish', ['--tag' => 'icore.seeders', '--force' => $this->option('force')], $this->getOutput());
         $this->line("\n");
-        $this->call('vendor:publish', ['--tag' => 'idir.seeds', '--force' => $this->option('force')], $this->getOutput());
+        $this->call('vendor:publish', ['--tag' => 'idir.seeders', '--force' => $this->option('force')], $this->getOutput());
         $this->line("\n");
         $bar->advance();
         $this->line("\n");
@@ -187,9 +187,9 @@ class SEOKatalogCommand extends Command
         $this->line("\n");
         $this->line($this->lang->get('icore::install.seed'));
         $this->line("\n");
-        $this->call('db:seed', ['--class' => 'N1ebieski\ICore\Seeds\Install\InstallSeeder', '--force' => true], $this->getOutput());
+        $this->call('db:seed', ['--class' => 'N1ebieski\ICore\Database\Seeders\Install\InstallSeeder', '--force' => true], $this->getOutput());
         $this->line("\n");
-        $this->call('db:seed', ['--class' => 'N1ebieski\IDir\Seeds\Install\InstallSeeder', '--force' => true], $this->getOutput());
+        $this->call('db:seed', ['--class' => 'N1ebieski\IDir\Database\Seeders\Install\InstallSeeder', '--force' => true], $this->getOutput());
         $this->line("\n");
         $bar->advance();
         $this->line("\n");
@@ -201,7 +201,7 @@ class SEOKatalogCommand extends Command
         $this->line("\n");
         $this->line($this->lang->get('idir::import.seed'));
         $this->line("\n");
-        $this->call('db:seed', ['--class' => 'N1ebieski\IDir\Seeds\SEOKatalog\SEOKatalogSeeder', '--force' => true], $this->getOutput());
+        $this->call('db:seed', ['--class' => 'N1ebieski\IDir\Database\Seeders\SEOKatalog\SEOKatalogSeeder', '--force' => true], $this->getOutput());
         $this->info("\n");
         $bar->finish();
     }

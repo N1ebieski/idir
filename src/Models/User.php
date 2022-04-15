@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\App;
 use N1ebieski\IDir\Repositories\UserRepo;
 use N1ebieski\ICore\Models\User as BaseUser;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use N1ebieski\IDir\Database\Factories\User\UserFactory;
 
 class User extends BaseUser
 {
@@ -25,6 +26,16 @@ class User extends BaseUser
     public function getMorphClass()
     {
         return \N1ebieski\ICore\Models\User::class;
+    }
+
+    /**
+     * Create a new factory instance for the model.
+     *
+     * @return UserFactory
+     */
+    protected static function newFactory()
+    {
+        return \N1ebieski\IDir\Database\Factories\User\UserFactory::new();
     }
 
     // Relations
@@ -47,5 +58,16 @@ class User extends BaseUser
     public function makeRepo()
     {
         return App::make(UserRepo::class, ['user' => $this]);
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param mixed $parameters
+     * @return UserFactory
+     */
+    public static function makeFactory(...$parameters)
+    {
+        return static::factory($parameters);
     }
 }

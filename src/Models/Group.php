@@ -15,8 +15,10 @@ use N1ebieski\ICore\Models\Traits\Positionable;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use N1ebieski\ICore\Models\Traits\FullTextSearchable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use N1ebieski\IDir\Database\Factories\Group\GroupFactory;
 
 class Group extends Model
 {
@@ -25,6 +27,7 @@ class Group extends Model
     use Positionable;
     use Filterable;
     use FullTextSearchable;
+    use HasFactory;
 
     // Configuration
 
@@ -175,6 +178,16 @@ class Group extends Model
         'created_at' => 'datetime',
         'updated_at' => 'datetime'
     ];
+
+    /**
+     * Create a new factory instance for the model.
+     *
+     * @return GroupFactory
+     */
+    protected static function newFactory()
+    {
+        return \N1ebieski\IDir\Database\Factories\Group\GroupFactory::new();
+    }
 
     // Relations
 
@@ -396,5 +409,16 @@ class Group extends Model
     public function makeService()
     {
         return App::make(GroupService::class, ['group' => $this]);
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param mixed $parameters
+     * @return GroupFactory
+     */
+    public static function makeFactory(...$parameters)
+    {
+        return static::factory($parameters);
     }
 }

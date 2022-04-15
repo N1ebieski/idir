@@ -11,7 +11,7 @@ class IDirServiceProvider extends ServiceProvider
      * [public description]
      * @var string
      */
-    public const VERSION = "8.0.3";
+    public const VERSION = "9.0.0";
 
     /**
      * Register services.
@@ -32,24 +32,25 @@ class IDirServiceProvider extends ServiceProvider
         $this->app->register(CommandServiceProvider::class);
 
         Route::middlewareGroup('idir.web', [
-            // 'throttle:60,1',
             \N1ebieski\ICore\Http\Middleware\EncryptCookies::class,
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
             \Illuminate\Session\Middleware\StartSession::class,
             \Illuminate\Session\Middleware\AuthenticateSession::class,
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
-            \App\Http\Middleware\VerifyCsrfToken::class,
+            \Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \N1ebieski\ICore\Http\Middleware\XSSProtection::class,
+            \N1ebieski\ICore\Http\Middleware\TrimStrings::class,
             \N1ebieski\ICore\Http\Middleware\ClearWhitespacesInStrings::class,
             \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
             \Nckg\Minify\Middleware\MinifyResponse::class
         ]);
 
         Route::middlewareGroup('idir.api', [
-            'throttle:60,1',
+            'throttle:api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \N1ebieski\ICore\Http\Middleware\XSSProtection::class,
+            \N1ebieski\ICore\Http\Middleware\TrimStrings::class,
             \N1ebieski\ICore\Http\Middleware\ClearWhitespacesInStrings::class,
             \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
             \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
@@ -67,10 +68,6 @@ class IDirServiceProvider extends ServiceProvider
         $this->loadViewsFrom(__DIR__ . '/../../resources/views', 'idir');
 
         $this->loadTranslationsFrom(__DIR__ . '/../../resources/lang', 'idir');
-
-        if ($this->app->environment('local')) {
-            $this->app->make('Illuminate\Database\Eloquent\Factory')->load(base_path('database/factories') . '/vendor/idir');
-        }
 
         $this->publishes([
             __DIR__ . '/../../config/idir.php' => config_path('idir.php'),
@@ -139,7 +136,7 @@ class IDirServiceProvider extends ServiceProvider
         ], 'idir.migrations');
 
         $this->publishes([
-            __DIR__ . '/../../database/seeds' => base_path('database/seeds') . '/vendor/idir',
-        ], 'idir.seeds');
+            __DIR__ . '/../../database/seeders' => base_path('database/seeders') . '/vendor/idir',
+        ], 'idir.seeders');
     }
 }

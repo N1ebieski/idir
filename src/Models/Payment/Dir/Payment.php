@@ -4,6 +4,7 @@ namespace N1ebieski\IDir\Models\Payment\Dir;
 
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use N1ebieski\IDir\Models\Payment\Payment as BasePayment;
+use N1ebieski\IDir\Database\Factories\Payment\Dir\PaymentFactory;
 
 class Payment extends BasePayment
 {
@@ -17,6 +18,16 @@ class Payment extends BasePayment
     public function getMorphClass()
     {
         return \N1ebieski\IDir\Models\Payment\Payment::class;
+    }
+
+    /**
+     * Create a new factory instance for the model.
+     *
+     * @return PaymentFactory
+     */
+    protected static function newFactory()
+    {
+        return \N1ebieski\IDir\Database\Factories\Payment\Dir\PaymentFactory::new();
     }
 
     // Relations
@@ -67,5 +78,18 @@ class Payment extends BasePayment
     public function getPoliAttribute(): string
     {
         return 'dir';
+    }
+
+    // Factories
+
+    /**
+     * Undocumented function
+     *
+     * @param mixed $parameters
+     * @return PaymentFactory
+     */
+    public static function makeFactory(...$parameters)
+    {
+        return static::factory($parameters);
     }
 }

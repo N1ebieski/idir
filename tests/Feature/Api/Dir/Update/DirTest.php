@@ -6,8 +6,8 @@ use Tests\TestCase;
 use Illuminate\Support\Str;
 use Laravel\Sanctum\Sanctum;
 use N1ebieski\IDir\Models\Dir;
+use N1ebieski\IDir\Models\Link;
 use N1ebieski\IDir\Models\User;
-use N1ebieski\ICore\Models\Link;
 use N1ebieski\IDir\Models\Group;
 use N1ebieski\IDir\Models\Price;
 use Illuminate\Http\UploadedFile;
@@ -36,7 +36,7 @@ class DirTest extends TestCase
      */
     protected function dirSetup(): array
     {
-        $category = factory(Category::class)->states('active')->create();
+        $category = Category::makeFactory()->active()->create();
 
         return [
             'title' => 'Dolore deserunt et ex cupidatat.',
@@ -55,8 +55,7 @@ class DirTest extends TestCase
     protected function fieldsSetup(Group $group): array
     {
         foreach (static::FIELD_TYPES as $type) {
-            $field = factory(Field::class)->states([$type, 'public'])->create();
-            $field->morphs()->attach($group);
+            $field = Field::makeFactory()->public()->hasAttached($group, [], 'morphs')->{$type}()->create();
 
             $key = $field->id;
 
@@ -83,16 +82,13 @@ class DirTest extends TestCase
 
     public function testApiDirUpdateAsUserWithoutPermission()
     {
-        $user = factory(User::class)->states('user')->create();
+        $user = User::makeFactory()->user()->create();
 
-        Sanctum::actingAs($user, []);
+        Sanctum::actingAs($user);
 
-        $group = factory(Group::class)->states(['public'])->create();
+        $group = Group::makeFactory()->public()->create();
 
-        $dir = factory(Dir::class)->make();
-        $dir->group()->associate($group);
-        $dir->user()->associate($user);
-        $dir->save();
+        $dir = Dir::makeFactory()->for($group)->for($user)->create();
 
         $response = $this->putJson(route('api.dir.update', [$dir->id, $group->id]));
 
@@ -102,16 +98,13 @@ class DirTest extends TestCase
 
     public function testApiDirUpdateAsUserWithoutAbility()
     {
-        $user = factory(User::class)->states(['user', 'api'])->create();
+        $user = User::makeFactory()->user()->api()->create();
 
-        Sanctum::actingAs($user, []);
+        Sanctum::actingAs($user);
 
-        $group = factory(Group::class)->states(['public'])->create();
+        $group = Group::makeFactory()->public()->create();
 
-        $dir = factory(Dir::class)->make();
-        $dir->group()->associate($group);
-        $dir->user()->associate($user);
-        $dir->save();
+        $dir = Dir::makeFactory()->for($group)->for($user)->create();
 
         $response = $this->putJson(route('api.dir.update', [$dir->id, $group->id]));
 
@@ -121,14 +114,13 @@ class DirTest extends TestCase
 
     public function testApiDirUpdateForeignDir()
     {
-        $user = factory(User::class)->states(['user', 'api'])->create();
+        $user = User::makeFactory()->user()->api()->create();
 
         Sanctum::actingAs($user, ['api.dirs.edit']);
 
-        $group = factory(Group::class)->states(['public'])->create();
+        $group = Group::makeFactory()->public()->create();
 
-        $dir = factory(Dir::class)->states('with_user')->make();
-        $dir->group()->associate($group)->save();
+        $dir = Dir::makeFactory()->withUser()->for($group)->create();
 
         $response = $this->putJson(route('api.dir.update', [$dir->id, $dir->group->id]));
 
@@ -137,7 +129,7 @@ class DirTest extends TestCase
 
     public function testApiDirUpdateNoExistDir()
     {
-        $user = factory(User::class)->states(['user', 'api'])->create();
+        $user = User::makeFactory()->user()->api()->create();
 
         Sanctum::actingAs($user, ['api.dirs.edit']);
 
@@ -148,16 +140,13 @@ class DirTest extends TestCase
 
     public function testApiDirUpdateNoExistGroup()
     {
-        $user = factory(User::class)->states(['user', 'api'])->create();
+        $user = User::makeFactory()->user()->api()->create();
 
         Sanctum::actingAs($user, ['api.dirs.edit']);
 
-        $group = factory(Group::class)->states('public')->create();
+        $group = Group::makeFactory()->public()->create();
 
-        $dir = factory(Dir::class)->make();
-        $dir->group()->associate($group->id);
-        $dir->user()->associate($user->id);
-        $dir->save();
+        $dir = Dir::makeFactory()->for($group)->for($user)->create();
 
         $response = $this->putJson(route('api.dir.update', [$dir->id, rand(2, 1000)]));
 
@@ -166,18 +155,15 @@ class DirTest extends TestCase
 
     public function testApiDirUpdatePrivateGroup()
     {
-        $user = factory(User::class)->states(['user', 'api'])->create();
+        $user = User::makeFactory()->user()->api()->create();
 
         Sanctum::actingAs($user, ['api.dirs.edit']);
 
-        $privateGroup = factory(Group::class)->states('private')->create();
+        $privateGroup = Group::makeFactory()->private()->create();
 
-        $publicGroup = factory(Group::class)->states('public')->create();
+        $publicGroup = Group::makeFactory()->public()->create();
 
-        $dir = factory(Dir::class)->make();
-        $dir->group()->associate($publicGroup->id);
-        $dir->user()->associate($user->id);
-        $dir->save();
+        $dir = Dir::makeFactory()->for($publicGroup)->for($user)->create();
 
         $response = $this->putJson(route('api.dir.update', [$dir->id, $privateGroup->id]));
 
@@ -186,20 +172,17 @@ class DirTest extends TestCase
 
     public function testApiDirUpdateMaxModelsNewGroup()
     {
-        $user = factory(User::class)->states(['user', 'api'])->create();
+        $user = User::makeFactory()->user()->api()->create();
 
         Sanctum::actingAs($user, ['api.dirs.edit']);
 
-        $newGroup = factory(Group::class)->states(['public', 'max_models'])->create();
+        $newGroup = Group::makeFactory()->public()->maxModels()->create();
 
-        $dirInNewGroup = factory(Dir::class)->states(['with_user'])
-            ->create(['group_id' => $newGroup->id]);
+        $dirInNewGroup = Dir::makeFactory()->withUser()->for($newGroup)->create();
 
-        $oldGroup = factory(Group::class)->states('public')->create();
+        $oldGroup = Group::makeFactory()->public()->create();
 
-        $dirInOldGroup = factory(Dir::class)->make();
-        $dirInOldGroup->group()->associate($oldGroup->id);
-        $dirInOldGroup->user()->associate($user->id)->save();
+        $dirInOldGroup = Dir::makeFactory()->for($oldGroup)->for($user)->create();
 
         $response = $this->putJson(route('api.dir.update', [$dirInOldGroup->id, $newGroup->id]));
 
@@ -208,16 +191,13 @@ class DirTest extends TestCase
 
     public function testApiDirUpdateMaxModelsOldGroup()
     {
-        $user = factory(User::class)->states(['user', 'api'])->create();
+        $user = User::makeFactory()->user()->api()->create();
 
         Sanctum::actingAs($user, ['api.dirs.edit']);
 
-        $group = factory(Group::class)->states(['public', 'max_models'])->create();
+        $group = Group::makeFactory()->public()->maxModels()->create();
 
-        $dir = factory(Dir::class)->create([
-            'group_id' => $group->id,
-            'user_id' => $user->id
-        ]);
+        $dir = Dir::makeFactory()->for($group)->for($user)->create();
 
         $response = $this->putJson(route('api.dir.update', [$dir->id, $group->id]));
 
@@ -226,18 +206,15 @@ class DirTest extends TestCase
 
     public function testApiDirUpdateValidationFail()
     {
-        $user = factory(User::class)->states(['user', 'api'])->create();
+        $user = User::makeFactory()->user()->api()->create();
 
         Sanctum::actingAs($user, ['api.dirs.edit']);
 
-        $newGroup = factory(Group::class)->states(['public', 'required_url'])->create();
+        $newGroup = Group::makeFactory()->public()->requiredUrl()->create();
 
-        $oldGroup = factory(Group::class)->states('public')->create();
+        $oldGroup = Group::makeFactory()->public()->create();
 
-        $dir = factory(Dir::class)->states('without_url')->make();
-        $dir->group()->associate($oldGroup->id);
-        $dir->user()->associate($user->id);
-        $dir->save();
+        $dir = Dir::makeFactory()->withoutUrl()->for($oldGroup)->for($user)->create();
 
         $response = $this->putJson(route('api.dir.update', [$dir->id, $newGroup->id]), [
             'title' => '',
@@ -252,18 +229,15 @@ class DirTest extends TestCase
 
     public function testApiDirUpdateValidationUrlFail()
     {
-        $user = factory(User::class)->states(['user', 'api'])->create();
+        $user = User::makeFactory()->user()->api()->create();
 
         Sanctum::actingAs($user, ['api.dirs.edit']);
 
-        $newGroup = factory(Group::class)->states(['public', 'required_url'])->create();
+        $newGroup = Group::makeFactory()->public()->requiredUrl()->create();
 
-        $oldGroup = factory(Group::class)->states('public')->create();
+        $oldGroup = Group::makeFactory()->public()->create();
 
-        $dir = factory(Dir::class)->states('without_url')->make();
-        $dir->group()->associate($oldGroup->id);
-        $dir->user()->associate($user->id);
-        $dir->save();
+        $dir = Dir::makeFactory()->withoutUrl()->for($oldGroup)->for($user)->create();
 
         $response = $this->putJson(route('api.dir.update', [$dir->id, $newGroup->id]), [
             'url' => 'dadasdasdasdasdsa23232'
@@ -275,20 +249,17 @@ class DirTest extends TestCase
 
     public function testApiDirUpdateValidationCategoriesFail()
     {
-        $user = factory(User::class)->states(['user', 'api'])->create();
+        $user = User::makeFactory()->user()->api()->create();
 
         Sanctum::actingAs($user, ['api.dirs.edit']);
 
-        $newGroup = factory(Group::class)->states(['public', 'max_cats'])->create();
+        $newGroup = Group::makeFactory()->public()->maxCats()->create();
 
-        $categories = factory(Category::class, 3)->states('active')->create();
+        $categories = Category::makeFactory()->count(3)->active()->create();
 
-        $oldGroup = factory(Group::class)->states('public')->create();
+        $oldGroup = Group::makeFactory()->public()->create();
 
-        $dir = factory(Dir::class)->make();
-        $dir->group()->associate($oldGroup->id);
-        $dir->user()->associate($user->id);
-        $dir->save();
+        $dir = Dir::makeFactory()->for($oldGroup)->for($user)->create();
 
         $response = $this->putJson(route('api.dir.update', [$dir->id, $newGroup->id]), [
             'categories' => $categories->pluck('id')->toArray()
@@ -300,22 +271,18 @@ class DirTest extends TestCase
 
     public function testApiDirUpdateValidationFieldsFail()
     {
-        $user = factory(User::class)->states(['user', 'api'])->create();
+        $user = User::makeFactory()->user()->api()->create();
 
         Sanctum::actingAs($user, ['api.dirs.edit']);
 
-        $newGroup = factory(Group::class)->states(['public', 'max_cats'])->create();
+        $newGroup = Group::makeFactory()->public()->maxCats()->create();
 
-        $oldGroup = factory(Group::class)->states('public')->create();
+        $oldGroup = Group::makeFactory()->public()->create();
 
-        $dir = factory(Dir::class)->make();
-        $dir->group()->associate($oldGroup->id);
-        $dir->user()->associate($user->id);
-        $dir->save();
+        $dir = Dir::makeFactory()->for($oldGroup)->for($user)->create();
 
         foreach (static::FIELD_TYPES as $type) {
-            $field = factory(Field::class)->states([$type, 'public'])->create();
-            $field->morphs()->attach($newGroup);
+            $field = Field::makeFactory()->public()->hasAttached($newGroup, [], 'morphs')->{$type}()->create();
 
             $fields[] = "field.{$field->id}";
         }
@@ -328,20 +295,17 @@ class DirTest extends TestCase
 
     public function testApiDirUpdateValidationBacklinkFail()
     {
-        $user = factory(User::class)->states(['user', 'api'])->create();
+        $user = User::makeFactory()->user()->api()->create();
 
         Sanctum::actingAs($user, ['api.dirs.edit']);
 
-        $newGroup = factory(Group::class)->states(['public', 'required_backlink'])->create();
+        $newGroup = Group::makeFactory()->public()->requiredBacklink()->create();
 
-        $oldGroup = factory(Group::class)->states('public')->create();
+        $oldGroup = Group::makeFactory()->public()->create();
 
-        $dir = factory(Dir::class)->make();
-        $dir->group()->associate($oldGroup->id);
-        $dir->user()->associate($user->id);
-        $dir->save();
+        $dir = Dir::makeFactory()->for($oldGroup)->for($user)->create();
 
-        $link = factory(Link::class)->states('backlink')->create();
+        $link = Link::makeFactory()->backlink()->create();
 
         $response = $this->putJson(route('api.dir.update', [$dir->id, $newGroup->id]));
 
@@ -351,22 +315,15 @@ class DirTest extends TestCase
 
     public function testApiDirUpdateInResource()
     {
-        $user = factory(User::class)->states(['user', 'api'])->create();
+        $user = User::makeFactory()->user()->api()->create();
 
         Sanctum::actingAs($user, ['api.dirs.edit']);
 
-        $newGroup = factory(Group::class)
-            ->states([
-                'public',
-                'required_url',
-                'additional_options_for_editing_content'
-            ])->create();
+        $newGroup = Group::makeFactory()->public()->requiredUrl()->additionalOptionsForEditingContent()->create();
 
-        $oldGroup = factory(Group::class)->states('public')->create();
+        $oldGroup = Group::makeFactory()->public()->create();
 
-        $dir = factory(Dir::class)->states('without_url')->make();
-        $dir->group()->associate($oldGroup->id);
-        $dir->user()->associate($user->id)->save();
+        $dir = Dir::makeFactory()->withoutUrl()->for($oldGroup)->for($user)->create();
 
         $response = $this->putJson(route('api.dir.update', [$dir->id, $newGroup->id]), $this->dirSetup());
 
@@ -380,24 +337,22 @@ class DirTest extends TestCase
 
     public function testApiDirUpdateUserAsUserInDatabase()
     {
-        $user = factory(User::class)->states(['user', 'api'])->create();
+        $user = User::makeFactory()->user()->api()->create();
 
         Sanctum::actingAs($user, ['api.dirs.edit']);
 
-        $group = factory(Group::class)->states(['public', 'without_url'])->create();
+        $group = Group::makeFactory()->public()->withoutUrl()->create();
 
-        $newUser = factory(User::class)->states('user')->create();
+        $newUser = User::makeFactory()->user()->create();
 
-        $dir = factory(Dir::class)->states('without_url', 'with_category')->make();
-        $dir->group()->associate($group->id);
-        $dir->user()->associate($user->id);
-        $dir->save();
+        $dir = Dir::makeFactory()->withoutUrl()->withCategory()->for($group)->for($user)->create();
 
         $response = $this->putJson(route('api.dir.update', [$dir->id, $group->id]), [
             'user' => $newUser->id
         ]);
 
         $response->assertStatus(HttpResponse::HTTP_OK);
+
         $this->assertDatabaseMissing('dirs', [
             'id' => $dir->id,
             'user_id' => $newUser->id
@@ -406,24 +361,22 @@ class DirTest extends TestCase
 
     public function testApiDirUpdateUserAsAdminInDatabase()
     {
-        $user = factory(User::class)->states(['user', 'api', 'admin'])->create();
+        $user = User::makeFactory()->user()->api()->admin()->create();
 
         Sanctum::actingAs($user, ['api.dirs.edit']);
 
-        $group = factory(Group::class)->states(['public', 'without_url'])->create();
+        $group = Group::makeFactory()->public()->withoutUrl()->create();
 
-        $newUser = factory(User::class)->states('user')->create();
+        $newUser = User::makeFactory()->user()->create();
 
-        $dir = factory(Dir::class)->states('without_url', 'with_category')->make();
-        $dir->group()->associate($group->id);
-        $dir->user()->associate($user->id);
-        $dir->save();
+        $dir = Dir::makeFactory()->withoutUrl()->withCategory()->for($group)->for($user)->create();
 
         $response = $this->putJson(route('api.dir.update', [$dir->id, $group->id]), [
             'user' => $newUser->id
         ]);
 
         $response->assertStatus(HttpResponse::HTTP_OK);
+
         $this->assertDatabaseHas('dirs', [
             'id' => $dir->id,
             'user_id' => $newUser->id
@@ -432,20 +385,19 @@ class DirTest extends TestCase
 
     public function testApiDirUpdateBacklinkInDatabase()
     {
-        $user = factory(User::class)->states(['user', 'api'])->create();
+        $user = User::makeFactory()->user()->api()->create();
 
         Sanctum::actingAs($user, ['api.dirs.edit']);
 
-        $newGroup = factory(Group::class)->states(['public', 'required_backlink'])->create();
+        $newGroup = Group::makeFactory()->public()->requiredBacklink()->create();
 
-        $oldGroup = factory(Group::class)->states('public')->create();
+        $oldGroup = Group::makeFactory()->public()->create();
 
-        $dir = factory(Dir::class)->make(['url' => 'https://idir.test']);
-        $dir->group()->associate($oldGroup->id);
-        $dir->user()->associate($user->id);
-        $dir->save();
+        $dir = Dir::makeFactory()->for($oldGroup)->for($user)->create([
+            'url' => 'https://idir.test'
+        ]);
 
-        $link = factory(Link::class)->states('backlink')->create();
+        $link = Link::makeFactory()->backlink()->create();
 
         $backlinkUrl = 'https://idir.test/page-with-backlink';
 
@@ -463,8 +415,8 @@ class DirTest extends TestCase
         $dir = Dir::orderBy('id', 'desc')->first();
 
         $response->assertStatus(HttpResponse::HTTP_OK);
-        $this->assertTrue($dir->exists());
 
+        $this->assertTrue($dir->exists());
         $this->assertDatabaseHas('dirs_backlinks', [
             'dir_id' => $dir->id,
             'link_id' => $link->id,
@@ -474,23 +426,21 @@ class DirTest extends TestCase
 
     public function testApiDirUpdateExistBacklinkInDatabase()
     {
-        $user = factory(User::class)->states(['user', 'api'])->create();
+        $user = User::makeFactory()->user()->api()->create();
 
         Sanctum::actingAs($user, ['api.dirs.edit']);
 
-        $group = factory(Group::class)->states(['public', 'required_backlink'])->create();
+        $group = Group::makeFactory()->public()->requiredBacklink()->create();
 
-        $dir = factory(Dir::class)->make(['url' => 'https://idir.test']);
-        $dir->group()->associate($group->id);
-        $dir->user()->associate($user->id);
-        $dir->save();
+        $dir = Dir::makeFactory()->for($group)->for($user)->create([
+            'url' => 'https://idir.test'
+        ]);
 
-        $link = factory(Link::class)->states('backlink')->create();
+        $link = Link::makeFactory()->backlink()->create();
 
-        $backlink = DirBacklink::make(['url' => 'https://idir.test/page-with-backlink']);
-        $backlink->dir()->associate($dir->id);
-        $backlink->link()->associate($link->id);
-        $backlink->save();
+        $backlink = DirBacklink::makeFactory()->for($dir)->for($link)->create([
+            'url' => 'https://idir.test/page-with-backlink'
+        ]);
 
         $response = $this->putJson(route('api.dir.update', [$dir->id, $group->id]), $this->dirSetup());
 
@@ -503,18 +453,15 @@ class DirTest extends TestCase
 
     public function testApiDirUpdateFieldsInDatabase()
     {
-        $user = factory(User::class)->states(['user', 'api'])->create();
+        $user = User::makeFactory()->user()->api()->create();
 
         Sanctum::actingAs($user, ['api.dirs.edit']);
 
-        $newGroup = factory(Group::class)->states(['public', 'apply_active', 'required_url'])->create();
+        $newGroup = Group::makeFactory()->public()->applyActive()->requiredUrl()->create();
 
-        $oldGroup = factory(Group::class)->states('public')->create();
+        $oldGroup = Group::makeFactory()->public()->create();
 
-        $dir = factory(Dir::class)->states('with_category')->create([
-            'group_id' => $oldGroup->id,
-            'user_id' => $user->id
-        ]);
+        $dir = Dir::makeFactory()->withCategory()->for($oldGroup)->for($user)->create();
 
         $response = $this->putJson(
             route('api.dir.update', [$dir->id, $newGroup->id]),
@@ -524,6 +471,7 @@ class DirTest extends TestCase
         $dir = Dir::orderBy('id', 'desc')->first();
 
         $response->assertStatus(HttpResponse::HTTP_OK);
+
         $this->assertTrue($dir->exists());
 
         $this->assertDatabaseHas('categories_models', [
@@ -545,31 +493,26 @@ class DirTest extends TestCase
 
     public function testApiDirUpdateExistFieldsInDatabase()
     {
-        $user = factory(User::class)->states(['user', 'api'])->create();
+        $user = User::makeFactory()->user()->api()->create();
 
         Sanctum::actingAs($user, ['api.dirs.edit']);
 
-        $group = factory(Group::class)->states('public')->create();
-
-        $dir = factory(Dir::class)->states('with_category')->create([
-            'group_id' => $group->id,
-            'user_id' => $user->id
-        ]);
+        $group = Group::makeFactory()->public()->create();
 
         foreach (['input', 'textarea'] as $type) {
-            $field = factory(Field::class)->states([$type, 'public'])->create();
-            $field->morphs()->attach($group);
-
-            $dir->fields()->attach([
-                $field->id => ['value' => json_encode('Commodo laborum irure mollit laborum occaecat adipisicing dolore.')]
-            ]);
+            $fields[] = Field::makeFactory()->public()->hasAttached($group, [], 'morphs')->{$type}()->create();
         }
+
+        $dir = Dir::makeFactory()->withCategory()->for($group)->for($user)
+            ->hasAttached($fields, ['value' => json_encode('Commodo laborum irure mollit laborum occaecat adipisicing dolore.')])
+            ->create();
 
         $response = $this->putJson(route('api.dir.update', [$dir->id, $group->id]), $this->dirSetup());
 
         $dir = Dir::orderBy('id', 'desc')->first();
 
         $response->assertStatus(HttpResponse::HTTP_OK);
+
         $this->assertTrue($dir->exists());
 
         $this->assertDatabaseHas('fields_values', [
@@ -580,22 +523,17 @@ class DirTest extends TestCase
 
     public function testApiDirUpdateValidationPaymentFail()
     {
-        $user = factory(User::class)->states(['user', 'api'])->create();
+        $user = User::makeFactory()->user()->api()->create();
 
         Sanctum::actingAs($user, ['api.dirs.edit']);
 
-        $newGroup = factory(Group::class)->states(['public'])->create();
+        $newGroup = Group::makeFactory()->public()->create();
 
-        $price = factory(Price::class)->states(['transfer'])->make();
-        $price->group()->associate($newGroup);
-        $price->save();
+        $price = Price::makeFactory()->transfer()->for($newGroup)->create();
 
-        $oldGroup = factory(Group::class)->states('public')->create();
+        $oldGroup = Group::makeFactory()->public()->create();
 
-        $dir = factory(Dir::class)->states('with_category')->create([
-            'group_id' => $oldGroup->id,
-            'user_id' => $user->id
-        ]);
+        $dir = Dir::makeFactory()->withCategory()->for($oldGroup)->for($user)->create();
 
         $response = $this->putJson(route('api.dir.update', [$dir->id, $newGroup->id]), [
             'payment_type' => 'transfer'
@@ -607,22 +545,17 @@ class DirTest extends TestCase
 
     public function testApiDirUpdateValidationNoExistPaymentFail()
     {
-        $user = factory(User::class)->states(['user', 'api'])->create();
+        $user = User::makeFactory()->user()->api()->create();
 
         Sanctum::actingAs($user, ['api.dirs.edit']);
 
-        $newGroup = factory(Group::class)->states(['public'])->create();
+        $newGroup = Group::makeFactory()->public()->create();
 
-        $price = factory(Price::class)->states(['transfer'])->make();
-        $price->group()->associate($newGroup);
-        $price->save();
+        $price = Price::makeFactory()->transfer()->for($newGroup)->create();
 
-        $oldGroup = factory(Group::class)->states('public')->create();
+        $oldGroup = Group::makeFactory()->public()->create();
 
-        $dir = factory(Dir::class)->states('with_category')->create([
-            'group_id' => $oldGroup->id,
-            'user_id' => $user->id
-        ]);
+        $dir = Dir::makeFactory()->withCategory()->for($oldGroup)->for($user)->create();
 
         $response = $this->putJson(route('api.dir.update', [$dir->id, $newGroup->id]), [
             'payment_type' => 'transfer',
@@ -635,21 +568,17 @@ class DirTest extends TestCase
 
     public function testApiDirUpdateNewGroupPaymentInDatabase()
     {
-        $user = factory(User::class)->states(['user', 'api'])->create();
+        $user = User::makeFactory()->user()->api()->create();
 
         Sanctum::actingAs($user, ['api.dirs.edit']);
 
-        $newGroup = factory(Group::class)->states(['public', 'apply_inactive'])->create();
+        $newGroup = Group::makeFactory()->public()->applyInactive()->create();
 
-        $price = factory(Price::class)->states(['transfer'])->make();
-        $price->group()->associate($newGroup)->save();
+        $price = Price::makeFactory()->transfer()->for($newGroup)->create();
 
-        $oldGroup = factory(Group::class)->states('public')->create();
+        $oldGroup = Group::makeFactory()->public()->create();
 
-        $dir = factory(Dir::class)->states('with_category')->create([
-            'group_id' => $oldGroup->id,
-            'user_id' => $user->id
-        ]);
+        $dir = Dir::makeFactory()->withCategory()->for($oldGroup)->for($user)->create();
 
         $response = $this->putJson(route('api.dir.update', [$dir->id, $newGroup->id]), [
             'payment_type' => 'transfer',
@@ -679,19 +608,15 @@ class DirTest extends TestCase
 
     public function testApiDirUpdateOldGroupWithoutPaymentInDatabase()
     {
-        $user = factory(User::class)->states(['user', 'api'])->create();
+        $user = User::makeFactory()->user()->api()->create();
 
         Sanctum::actingAs($user, ['api.dirs.edit']);
 
-        $group = factory(Group::class)->states(['public', 'apply_inactive'])->create();
+        $group = Group::makeFactory()->public()->applyInactive()->create();
 
-        $price = factory(Price::class)->states(['transfer'])->make();
-        $price->group()->associate($group)->save();
+        $price = Price::makeFactory()->transfer()->for($group)->create();
 
-        $dir = factory(Dir::class)->states('with_category')->create([
-            'group_id' => $group->id,
-            'user_id' => $user->id
-        ]);
+        $dir = Dir::makeFactory()->withCategory()->for($group)->for($user)->create();
 
         $response = $this->putJson(route('api.dir.update', [$dir->id, $group->id]), $this->dirSetup());
 
@@ -715,19 +640,15 @@ class DirTest extends TestCase
 
     public function testApiDirUpdatePendingValidationPaymentFail()
     {
-        $user = factory(User::class)->states(['user', 'api'])->create();
+        $user = User::makeFactory()->user()->api()->create();
 
         Sanctum::actingAs($user, ['api.dirs.edit']);
 
-        $group = factory(Group::class)->states(['public', 'apply_inactive'])->create();
+        $group = Group::makeFactory()->public()->applyInactive()->create();
 
-        $price = factory(Price::class)->states(['transfer'])->make();
-        $price->group()->associate($group)->save();
+        $price = Price::makeFactory()->transfer()->for($group)->create();
 
-        $dir = factory(Dir::class)->states(['pending', 'with_category'])->create([
-            'group_id' => $group->id,
-            'user_id' => $user->id
-        ]);
+        $dir = Dir::makeFactory()->pending()->withCategory()->for($group)->for($user)->create();
 
         $response = $this->putJson(route('api.dir.update', [$dir->id, $group->id]), $this->dirSetup());
 
@@ -737,21 +658,17 @@ class DirTest extends TestCase
 
     public function testApiDirUpdateValidationPaymentAutoCodeSmsPass()
     {
-        $user = factory(User::class)->states(['user', 'api'])->create();
+        $user = User::makeFactory()->user()->api()->create();
 
         Sanctum::actingAs($user, ['api.dirs.edit']);
 
-        $newGroup = factory(Group::class)->states(['public', 'apply_active'])->create();
+        $newGroup = Group::makeFactory()->public()->applyActive()->create();
 
-        $price = factory(Price::class)->states(['code_sms', 'seasonal'])->make();
-        $price->group()->associate($newGroup)->save();
+        $price = Price::makeFactory()->codeSms()->seasonal()->for($newGroup)->create();
 
-        $oldGroup = factory(Group::class)->states('public')->create();
+        $oldGroup = Group::makeFactory()->public()->create();
 
-        $dir = factory(Dir::class)->states(['with_category'])->create([
-            'group_id' => $oldGroup->id,
-            'user_id' => $user->id
-        ]);
+        $dir = Dir::makeFactory()->withCategory()->for($oldGroup)->for($user)->create();
 
         $this->mock(GuzzleClient::class, function ($mock) use ($price) {
             $mock->shouldReceive('request')->andReturn(
@@ -781,6 +698,7 @@ class DirTest extends TestCase
         ]);
 
         $response->assertStatus(HttpResponse::HTTP_OK);
+
         $this->assertTrue($dir->privileged_to !== null);
     }
 }

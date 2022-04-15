@@ -20,8 +20,8 @@ class CustomException extends Exception
     public function __construct(string $message = '', int $code = 0, Throwable $previous = null)
     {
         parent::__construct(
-            !empty($this->message) ? $this->message : $message,
-            !empty($this->code) ? $this->code : $code,
+            !empty($this->message) && empty($message) ? $this->message : $message,
+            !empty($this->code) && empty($code) ? $this->code : $code,
             $previous
         );
     }

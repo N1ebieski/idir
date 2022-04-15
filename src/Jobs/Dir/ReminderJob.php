@@ -2,7 +2,7 @@
 
 namespace N1ebieski\IDir\Jobs\Dir;
 
-use Exception;
+use Throwable;
 use Illuminate\Bus\Queueable;
 use N1ebieski\IDir\Models\Dir;
 use Illuminate\Contracts\Mail\Mailer;
@@ -92,10 +92,10 @@ class ReminderJob implements ShouldQueue
     /**
      * The job failed to process.
      *
-     * @param  Exception  $exception
+     * @param  Throwable  $exception
      * @return void
      */
-    public function failed(Exception $exception)
+    public function failed(Throwable $exception)
     {
         //
     }

@@ -7,9 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 use N1ebieski\IDir\Services\DirBacklinkService;
 use N1ebieski\IDir\Repositories\DirBacklinkRepo;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use N1ebieski\IDir\Database\Factories\DirBacklink\DirBacklinkFactory;
 
 class DirBacklink extends Model
 {
+    use HasFactory;
+
     // Configuration
 
     /**
@@ -51,6 +55,16 @@ class DirBacklink extends Model
         'updated_at' => 'datetime'
     ];
 
+    /**
+     * Create a new factory instance for the model.
+     *
+     * @return DirBacklinkFactory
+     */
+    protected static function newFactory()
+    {
+        return \N1ebieski\IDir\Database\Factories\DirBacklink\DirBacklinkFactory::new();
+    }
+
     // Relations
 
     /**
@@ -91,5 +105,16 @@ class DirBacklink extends Model
     public function makeService()
     {
         return App::make(DirBacklinkService::class, ['dirBacklink' => $this]);
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param mixed $parameters
+     * @return DirBacklinkFactory
+     */
+    public static function makeFactory(...$parameters)
+    {
+        return static::factory($parameters);
     }
 }

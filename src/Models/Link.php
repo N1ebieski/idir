@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\App;
 use N1ebieski\IDir\Cache\LinkCache;
 use N1ebieski\IDir\Repositories\LinkRepo;
 use N1ebieski\ICore\Models\Link as BaseLink;
+use N1ebieski\IDir\Database\Factories\Link\LinkFactory;
 
 class Link extends BaseLink
 {
@@ -19,6 +20,16 @@ class Link extends BaseLink
     public function getMorphClass()
     {
         return BaseLink::class;
+    }
+
+    /**
+     * Create a new factory instance for the model.
+     *
+     * @return LinkFactory
+     */
+    protected static function newFactory()
+    {
+        return \N1ebieski\IDir\Database\Factories\Link\LinkFactory::new();
     }
 
     // Factories
@@ -39,5 +50,16 @@ class Link extends BaseLink
     public function makeRepo()
     {
         return App::make(LinkRepo::class, ['link' => $this]);
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param mixed $parameters
+     * @return LinkFactory
+     */
+    public static function makeFactory(...$parameters)
+    {
+        return static::factory($parameters);
     }
 }

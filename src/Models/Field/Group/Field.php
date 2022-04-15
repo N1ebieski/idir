@@ -6,6 +6,7 @@ use N1ebieski\IDir\Models\Group;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use N1ebieski\IDir\Models\Field\Field as BaseFieldModel;
+use N1ebieski\IDir\Database\Factories\Field\Group\FieldFactory;
 
 class Field extends BaseFieldModel
 {
@@ -28,6 +29,16 @@ class Field extends BaseFieldModel
     public function getMorphClass()
     {
         return \N1ebieski\IDir\Models\Field\Field::class;
+    }
+
+    /**
+     * Create a new factory instance for the model.
+     *
+     * @return FieldFactory
+     */
+    protected static function newFactory()
+    {
+        return \N1ebieski\IDir\Database\Factories\Field\Group\FieldFactory::new();
     }
 
     // Accessors
@@ -77,5 +88,18 @@ class Field extends BaseFieldModel
                 $query->where('model_id', $morph->id);
             });
         });
+    }
+
+    // Factories
+
+    /**
+     * Undocumented function
+     *
+     * @param mixed $parameters
+     * @return FieldFactory
+     */
+    public static function makeFactory(...$parameters)
+    {
+        return static::factory($parameters);
     }
 }

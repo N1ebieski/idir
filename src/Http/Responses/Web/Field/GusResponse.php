@@ -65,7 +65,6 @@ class GusResponse implements JsonResponseFactory
         }
 
         return $this->response->json([
-            'success' => '',
             'data' => $this->fieldData->setGusReport($gusReport)->toArray()
         ]);
     }

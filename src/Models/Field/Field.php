@@ -13,6 +13,8 @@ use N1ebieski\ICore\Models\Traits\Positionable;
 use N1ebieski\IDir\Services\Field\FieldService;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use N1ebieski\ICore\Models\Traits\FullTextSearchable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use N1ebieski\IDir\Database\Factories\Field\FieldFactory;
 
 class Field extends Model
 {
@@ -21,6 +23,7 @@ class Field extends Model
     use Positionable;
     use FullTextSearchable;
     use Filterable;
+    use HasFactory;
 
     // Configuration
 
@@ -93,6 +96,16 @@ class Field extends Model
         'created_at' => 'datetime',
         'updated_at' => 'datetime'
     ];
+
+    /**
+     * Create a new factory instance for the model.
+     *
+     * @return FieldFactory
+     */
+    protected static function newFactory()
+    {
+        return \N1ebieski\IDir\Database\Factories\Field\FieldFactory::new();
+    }
 
     // Relations
 
@@ -204,5 +217,16 @@ class Field extends Model
     public function makeService()
     {
         return App::make(FieldService::class, ['field' => $this]);
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param mixed $parameters
+     * @return FieldFactory
+     */
+    public static function makeFactory(...$parameters)
+    {
+        return static::factory($parameters);
     }
 }

@@ -7,8 +7,8 @@ use Illuminate\Support\Str;
 use Laravel\Sanctum\Sanctum;
 use N1ebieski\IDir\Models\Dir;
 use N1ebieski\IDir\Models\Code;
+use N1ebieski\IDir\Models\Link;
 use N1ebieski\IDir\Models\User;
-use N1ebieski\ICore\Models\Link;
 use N1ebieski\IDir\Models\Group;
 use N1ebieski\IDir\Models\Price;
 use Illuminate\Http\UploadedFile;
@@ -43,7 +43,7 @@ class DirTest extends TestCase
      */
     protected function dirSetup(): array
     {
-        $category = factory(Category::class)->states('active')->create();
+        $category = Category::makeFactory()->active()->create();
 
         return [
             'title' => 'Dolore deserunt et ex cupidatat.',
@@ -62,8 +62,7 @@ class DirTest extends TestCase
     protected function fieldsSetup(Group $group): array
     {
         foreach (static::FIELD_TYPES as $type) {
-            $field = factory(Field::class)->states([$type, 'public'])->create();
-            $field->morphs()->attach($group);
+            $field = Field::makeFactory()->public()->hasAttached($group, [], 'morphs')->{$type}()->create();
 
             $key = $field->id;
 
@@ -83,9 +82,9 @@ class DirTest extends TestCase
 
     public function testApiDirStoreNoExistGroup()
     {
-        $user = factory(User::class)->states('user')->create();
+        $user = User::makeFactory()->user()->create();
 
-        Sanctum::actingAs($user, []);
+        Sanctum::actingAs($user);
 
         $response = $this->postJson(route('api.dir.store', [rand(2, 1000)]));
 
@@ -94,11 +93,11 @@ class DirTest extends TestCase
 
     public function testApiDirStorePrivateGroup()
     {
-        $user = factory(User::class)->states('user')->create();
+        $user = User::makeFactory()->user()->create();
 
-        $group = factory(Group::class)->states('private')->create();
+        $group = Group::makeFactory()->private()->create();
 
-        Sanctum::actingAs($user, []);
+        Sanctum::actingAs($user);
 
         $response = $this->postJson(route('api.dir.store', [$group->id]));
 
@@ -107,11 +106,11 @@ class DirTest extends TestCase
 
     public function testApiDirStoreValidationFail()
     {
-        $user = factory(User::class)->states('user')->create();
+        $user = User::makeFactory()->user()->create();
 
-        Sanctum::actingAs($user, []);
+        Sanctum::actingAs($user);
 
-        $group = factory(Group::class)->states(['public', 'required_url'])->create();
+        $group = Group::makeFactory()->public()->requiredUrl()->create();
 
         $response = $this->postJson(route('api.dir.store', [$group->id]));
 
@@ -121,11 +120,11 @@ class DirTest extends TestCase
 
     public function testApiDirStoreValidationUrlFail()
     {
-        $user = factory(User::class)->states('user')->create();
+        $user = User::makeFactory()->user()->create();
 
-        Sanctum::actingAs($user, []);
+        Sanctum::actingAs($user);
 
-        $group = factory(Group::class)->states(['public', 'required_url'])->create();
+        $group = Group::makeFactory()->public()->requiredUrl()->create();
 
         $response = $this->postJson(route('api.dir.store', [$group->id]), [
             'url' => 'dadasdasdasdasdsa23232'
@@ -137,13 +136,13 @@ class DirTest extends TestCase
 
     public function testApiDirStoreValidationCategoriesFail()
     {
-        $user = factory(User::class)->states('user')->create();
+        $user = User::makeFactory()->user()->create();
 
-        Sanctum::actingAs($user, []);
+        Sanctum::actingAs($user);
 
-        $group = factory(Group::class)->states(['public', 'max_cats'])->create();
+        $group = Group::makeFactory()->public()->maxCats()->create();
 
-        $categories = factory(Category::class, 3)->states('active')->create();
+        $categories = Category::makeFactory()->count(3)->active()->create();
 
         $response = $this->postJson(route('api.dir.store', [$group->id]), [
             'categories' => $categories->pluck('id')->toArray()
@@ -155,20 +154,19 @@ class DirTest extends TestCase
 
     public function testApiDirStoreValidationFieldsFail()
     {
-        $user = factory(User::class)->states('user')->create();
+        $user = User::makeFactory()->user()->create();
 
-        Sanctum::actingAs($user, []);
+        Sanctum::actingAs($user);
 
-        $group = factory(Group::class)->states(['public', 'max_cats'])->create();
+        $group = Group::makeFactory()->public()->maxCats()->create();
 
         foreach (static::FIELD_TYPES as $type) {
-            $field = factory(Field::class)->states([$type, 'public'])->create();
-            $field->morphs()->attach($group);
+            $field = Field::makeFactory()->public()->hasAttached($group, [], 'morphs')->{$type}()->create();
 
             $fields[] = "field.{$field->id}";
         }
 
-        $response = $this->postJson(route('api.dir.store', [$group->id]), []);
+        $response = $this->postJson(route('api.dir.store', [$group->id]));
 
         $response->assertStatus(HttpResponse::HTTP_UNPROCESSABLE_ENTITY);
         $response->assertJsonValidationErrors($fields);
@@ -176,15 +174,15 @@ class DirTest extends TestCase
 
     public function testApiDirStoreValidationBacklinkFail()
     {
-        $user = factory(User::class)->states('user')->create();
+        $user = User::makeFactory()->user()->create();
 
-        Sanctum::actingAs($user, []);
+        Sanctum::actingAs($user);
 
-        $group = factory(Group::class)->states(['public', 'required_backlink'])->create();
+        $group = Group::makeFactory()->public()->requiredBacklink()->create();
 
-        $link = factory(Link::class)->states('backlink')->create();
+        $link = Link::makeFactory()->backlink()->create();
 
-        $response = $this->postJson(route('api.dir.store', [$group->id]), []);
+        $response = $this->postJson(route('api.dir.store', [$group->id]));
 
         $response->assertStatus(HttpResponse::HTTP_UNPROCESSABLE_ENTITY);
         $response->assertJsonValidationErrors(['backlink', 'backlink_url']);
@@ -192,7 +190,7 @@ class DirTest extends TestCase
 
     public function testApiDirStoreAsGuestValidationEmailFail()
     {
-        $group = factory(Group::class)->states(['public', 'required_url'])->create();
+        $group = Group::makeFactory()->public()->requiredUrl()->create();
 
         $response = $this->postJson(route('api.dir.store', [$group->id]), $this->dirSetup());
 
@@ -202,16 +200,11 @@ class DirTest extends TestCase
 
     public function testApiDirStoreInResource()
     {
-        $user = factory(User::class)->states('user')->create();
+        $user = User::makeFactory()->user()->create();
 
-        Sanctum::actingAs($user, []);
+        Sanctum::actingAs($user);
 
-        $group = factory(Group::class)
-            ->states([
-                'public',
-                'required_url',
-                'additional_options_for_editing_content'
-            ])->create();
+        $group = Group::makeFactory()->public()->requiredUrl()->additionalOptionsForEditingContent()->create();
 
         $response = $this->postJson(route('api.dir.store', [$group->id]), $this->dirSetup());
 
@@ -225,13 +218,13 @@ class DirTest extends TestCase
 
     public function testApiDirStoreValidationBacklinkPass()
     {
-        $user = factory(User::class)->states('user')->create();
+        $user = User::makeFactory()->user()->create();
 
-        Sanctum::actingAs($user, []);
+        Sanctum::actingAs($user);
 
-        $group = factory(Group::class)->states(['public', 'required_backlink'])->create();
+        $group = Group::makeFactory()->public()->requiredBacklink()->create();
 
-        $link = factory(Link::class)->states('backlink')->create();
+        $link = Link::makeFactory()->backlink()->create();
 
         $backlinkUrl = 'https://idir.test/page-with-backlink';
 
@@ -261,13 +254,13 @@ class DirTest extends TestCase
 
     public function testApiDirStoreFieldsInDatabase()
     {
-        $user = factory(User::class)->states('user')->create();
+        $user = User::makeFactory()->user()->create();
 
-        Sanctum::actingAs($user, []);
+        Sanctum::actingAs($user);
 
         Storage::fake('public');
 
-        $group = factory(Group::class)->states(['public', 'apply_active', 'required_url'])->create();
+        $group = Group::makeFactory()->public()->applyActive()->requiredUrl()->create();
 
         $dirSetup = $this->dirSetup();
 
@@ -298,15 +291,13 @@ class DirTest extends TestCase
 
     public function testApiDirStoreValidationPaymentFail()
     {
-        $user = factory(User::class)->states('user')->create();
+        $user = User::makeFactory()->user()->create();
 
-        Sanctum::actingAs($user, []);
+        Sanctum::actingAs($user);
 
-        $group = factory(Group::class)->states(['public'])->create();
+        $group = Group::makeFactory()->public()->create();
 
-        $price = factory(Price::class)->states(['transfer'])->make();
-        $price->group()->associate($group);
-        $price->save();
+        $price = Price::makeFactory()->transfer()->for($group)->create();
 
         $response = $this->postJson(route('api.dir.store', [$group->id]), [
             'payment_type' => 'transfer'
@@ -318,15 +309,13 @@ class DirTest extends TestCase
 
     public function testApiDirStoreValidationNoExistPaymentFail()
     {
-        $user = factory(User::class)->states('user')->create();
+        $user = User::makeFactory()->user()->create();
 
-        Sanctum::actingAs($user, []);
+        Sanctum::actingAs($user);
 
-        $group = factory(Group::class)->states(['public'])->create();
+        $group = Group::makeFactory()->public()->create();
 
-        $price = factory(Price::class)->states(['transfer'])->make();
-        $price->group()->associate($group);
-        $price->save();
+        $price = Price::makeFactory()->transfer()->for($group)->create();
 
         $response = $this->postJson(route('api.dir.store', [$group->id]), [
             'payment_type' => 'transfer',
@@ -339,15 +328,13 @@ class DirTest extends TestCase
 
     public function testApiDirStorePaymentInDatabase()
     {
-        $user = factory(User::class)->states('user')->create();
+        $user = User::makeFactory()->user()->create();
 
-        Sanctum::actingAs($user, []);
+        Sanctum::actingAs($user);
 
-        $group = factory(Group::class)->states(['public', 'apply_inactive'])->create();
+        $group = Group::makeFactory()->public()->applyInactive()->create();
 
-        $price = factory(Price::class)->states(['transfer'])->make();
-        $price->group()->associate($group);
-        $price->save();
+        $price = Price::makeFactory()->transfer()->for($group)->create();
 
         $dirSetup = $this->dirSetup();
 
@@ -378,7 +365,7 @@ class DirTest extends TestCase
 
     public function testApiDirStoreAsGuestInDatabase()
     {
-        $group = factory(Group::class)->states(['public', 'apply_inactive'])->create();
+        $group = Group::makeFactory()->public()->applyInactive()->create();
 
         $response = $this->postJson(route('api.dir.store', [$group->id]), [
             'email' => 'kontakt@intelekt.net.pl',
@@ -401,15 +388,13 @@ class DirTest extends TestCase
 
     public function testApiDirStoreValidationPaymentCodeSmsFail()
     {
-        $user = factory(User::class)->states('user')->create();
+        $user = User::makeFactory()->user()->create();
 
-        Sanctum::actingAs($user, []);
+        Sanctum::actingAs($user);
 
-        $group = factory(Group::class)->states(['public'])->create();
+        $group = Group::makeFactory()->public()->create();
 
-        $price = factory(Price::class)->states(['code_sms'])->make();
-        $price->group()->associate($group);
-        $price->save();
+        $price = Price::makeFactory()->codeSms()->for($group)->create();
 
         $response = $this->postJson(route('api.dir.store', [$group->id]), [
             'payment_type' => 'code_sms',
@@ -422,15 +407,13 @@ class DirTest extends TestCase
 
     public function testApiDirStoreValidationPaymentAutoCodeSmsPass()
     {
-        $user = factory(User::class)->states('user')->create();
+        $user = User::makeFactory()->user()->create();
 
-        Sanctum::actingAs($user, []);
+        Sanctum::actingAs($user);
 
-        $group = factory(Group::class)->states(['public', 'apply_active'])->create();
+        $group = Group::makeFactory()->public()->applyActive()->create();
 
-        $price = factory(Price::class)->states(['code_sms'])->make();
-        $price->group()->associate($group);
-        $price->save();
+        $price = Price::makeFactory()->codeSms()->for($group)->create();
 
         $this->mock(GuzzleClient::class, function ($mock) use ($price) {
             $mock->shouldReceive('request')->andReturn(
@@ -466,15 +449,13 @@ class DirTest extends TestCase
 
     public function testApiDirStoreValidationPaymentAutoCodeSmsError()
     {
-        $user = factory(User::class)->states('user')->create();
+        $user = User::makeFactory()->user()->create();
 
-        Sanctum::actingAs($user, []);
+        Sanctum::actingAs($user);
 
-        $group = factory(Group::class)->states(['public', 'apply_active'])->create();
+        $group = Group::makeFactory()->public()->applyActive()->create();
 
-        $price = factory(Price::class)->states(['code_sms'])->make();
-        $price->group()->associate($group);
-        $price->save();
+        $price = Price::makeFactory()->codeSms()->for($group)->create();
 
         $this->mock(GuzzleClient::class, function ($mock) use ($price) {
             $mock->shouldReceive('request')->andReturn(
@@ -496,15 +477,13 @@ class DirTest extends TestCase
 
     public function testApiDirStoreValidationPaymentCodeTransferFail()
     {
-        $user = factory(User::class)->states('user')->create();
+        $user = User::makeFactory()->user()->create();
 
-        Sanctum::actingAs($user, []);
+        Sanctum::actingAs($user);
 
-        $group = factory(Group::class)->states(['public'])->create();
+        $group = Group::makeFactory()->public()->create();
 
-        $price = factory(Price::class)->states(['code_transfer'])->make();
-        $price->group()->associate($group);
-        $price->save();
+        $price = Price::makeFactory()->codeTransfer()->for($group)->create();
 
         $response = $this->postJson(route('api.dir.store', [$group->id]), [
             'payment_type' => 'code_transfer',
@@ -517,15 +496,13 @@ class DirTest extends TestCase
 
     public function testApiDirStoreValidationPaymentAutoCodeTransferPass()
     {
-        $user = factory(User::class)->states('user')->create();
+        $user = User::makeFactory()->user()->create();
 
-        Sanctum::actingAs($user, []);
+        Sanctum::actingAs($user);
 
-        $group = factory(Group::class)->states(['public', 'apply_inactive'])->create();
+        $group = Group::makeFactory()->public()->applyInactive()->create();
 
-        $price = factory(Price::class)->states(['code_transfer'])->make();
-        $price->group()->associate($group);
-        $price->save();
+        $price = Price::makeFactory()->codeTransfer()->for($group)->create();
 
         $this->mock(GuzzleClient::class, function ($mock) {
             $mock->shouldReceive('request')->andReturn(
@@ -555,15 +532,13 @@ class DirTest extends TestCase
 
     public function testApiDirStoreValidationPaymentAutoCodeTransferError()
     {
-        $user = factory(User::class)->states('user')->create();
+        $user = User::makeFactory()->user()->create();
 
-        Sanctum::actingAs($user, []);
+        Sanctum::actingAs($user);
 
-        $group = factory(Group::class)->states(['public', 'apply_inactive'])->create();
+        $group = Group::makeFactory()->public()->applyInactive()->create();
 
-        $price = factory(Price::class)->states(['code_transfer'])->make();
-        $price->group()->associate($group);
-        $price->save();
+        $price = Price::makeFactory()->codeTransfer()->for($group)->create();
 
         $this->mock(GuzzleClient::class, function ($mock) {
             $mock->shouldReceive('request')->andReturn(
@@ -583,19 +558,15 @@ class DirTest extends TestCase
 
     public function testApiDirStoreValidationPaymentLocalCodeTransferPass()
     {
-        $user = factory(User::class)->states('user')->create();
+        $user = User::makeFactory()->user()->create();
 
-        Sanctum::actingAs($user, []);
+        Sanctum::actingAs($user);
 
-        $group = factory(Group::class)->states(['public', 'apply_inactive'])->create();
+        $group = Group::makeFactory()->public()->applyInactive()->create();
 
-        $price = factory(Price::class)->states(['code_transfer'])->make();
-        $price->group()->associate($group);
-        $price->save();
+        $price = Price::makeFactory()->codeTransfer()->for($group)->create();
 
-        $code = factory(Code::class)->states(['one'])->make();
-        $code->price()->associate($price);
-        $code->save();
+        $code = Code::makeFactory()->one()->for($price)->create();
 
         $this->assertDatabaseHas('codes', [
             'price_id' => $price->id,
@@ -631,19 +602,15 @@ class DirTest extends TestCase
 
     public function testApiDirStoreValidationPaymentLocalCodeSmsPass()
     {
-        $user = factory(User::class)->states('user')->create();
+        $user = User::makeFactory()->user()->create();
 
-        Sanctum::actingAs($user, []);
+        Sanctum::actingAs($user);
 
-        $group = factory(Group::class)->states(['public', 'apply_active'])->create();
+        $group = Group::makeFactory()->public()->applyActive()->create();
 
-        $price = factory(Price::class)->states(['code_sms'])->make();
-        $price->group()->associate($group);
-        $price->save();
+        $price = Price::makeFactory()->codeSms()->for($group)->create();
 
-        $code = factory(Code::class)->states(['two'])->make();
-        $code->price()->associate($price);
-        $code->save();
+        $code = Code::makeFactory()->two()->for($price)->create();
 
         $this->assertDatabaseHas('codes', [
             'price_id' => $price->id,
@@ -679,13 +646,13 @@ class DirTest extends TestCase
 
     public function testApiDirStoreModeratorNotificationDirs()
     {
-        $user = factory(User::class)->states('user')->create();
+        $user = User::makeFactory()->user()->create();
 
-        $admin = factory(User::class)->states('admin')->create();
+        $admin = User::makeFactory()->admin()->create();
 
-        Sanctum::actingAs($user, []);
+        Sanctum::actingAs($user);
 
-        $group = factory(Group::class)->states(['public', 'apply_inactive', 'without_url'])->create();
+        $group = Group::makeFactory()->public()->withoutUrl()->applyInactive()->create();
 
         Config::set('idir.dir.notification.hours', 0);
         Config::set('idir.dir.notification.dirs', 1);
@@ -719,13 +686,13 @@ class DirTest extends TestCase
 
     public function testApiDirStoreModeratorNotificationHours()
     {
-        $user = factory(User::class)->states('user')->create();
+        $user = User::makeFactory()->user()->create();
 
-        $admin = factory(User::class)->states('admin')->create();
+        $admin = User::makeFactory()->admin()->create();
 
-        Sanctum::actingAs($user, []);
+        Sanctum::actingAs($user);
 
-        $group = factory(Group::class)->states(['public', 'apply_inactive', 'without_url'])->create();
+        $group = Group::makeFactory()->public()->withoutUrl()->applyInactive()->create();
 
         Config::set('idir.dir.notification.dirs', 0);
         Config::set('idir.dir.notification.hours', 1);

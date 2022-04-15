@@ -161,11 +161,11 @@ class PHPLDCommand extends Command
         $this->line("\n");
         $bar->advance();
         $this->line("\n");
-        $this->line($this->lang->get('icore::install.publish.seeds'));
+        $this->line($this->lang->get('icore::install.publish.Seeders'));
         $this->line("\n");
-        $this->call('vendor:publish', ['--tag' => 'icore.seeds', '--force' => true], $this->getOutput());
+        $this->call('vendor:publish', ['--tag' => 'icore.seeders', '--force' => true], $this->getOutput());
         $this->line("\n");
-        $this->call('vendor:publish', ['--tag' => 'idir.seeds', '--force' => true], $this->getOutput());
+        $this->call('vendor:publish', ['--tag' => 'idir.seeders', '--force' => true], $this->getOutput());
         $this->line("\n");
         $bar->advance();
         $this->line("\n");
@@ -189,9 +189,9 @@ class PHPLDCommand extends Command
         $this->line("\n");
         $this->line($this->lang->get('icore::install.seed'));
         $this->line("\n");
-        $this->call('db:seed', ['--class' => 'N1ebieski\ICore\Seeds\Install\InstallSeeder', '--force' => true], $this->getOutput());
+        $this->call('db:seed', ['--class' => 'N1ebieski\ICore\Database\Seeders\Install\InstallSeeder', '--force' => true], $this->getOutput());
         $this->line("\n");
-        $this->call('db:seed', ['--class' => 'N1ebieski\IDir\Seeds\Install\InstallSeeder', '--force' => true], $this->getOutput());
+        $this->call('db:seed', ['--class' => 'N1ebieski\IDir\Database\Seeders\Install\InstallSeeder', '--force' => true], $this->getOutput());
         $this->line("\n");
         $bar->advance();
         $this->line("\n");
@@ -203,7 +203,7 @@ class PHPLDCommand extends Command
         $this->line("\n");
         $this->line($this->lang->get('idir::import.seed'));
         $this->line("\n");
-        $this->call('db:seed', ['--class' => 'N1ebieski\IDir\Seeds\PHPLD\PHPLDSeeder', '--force' => true], $this->getOutput());
+        $this->call('db:seed', ['--class' => 'N1ebieski\IDir\Database\Seeders\PHPLD\PHPLDSeeder', '--force' => true], $this->getOutput());
         $this->line("\n");
         $bar->finish();
     }

@@ -25,16 +25,13 @@ class DirTest extends TestCase
 
     public function testApiDirDestroyAsUserWithoutPermission()
     {
-        $user = factory(User::class)->states('user')->create();
+        $user = User::makeFactory()->user()->create();
 
-        Sanctum::actingAs($user, []);
+        Sanctum::actingAs($user);
 
-        $group = factory(Group::class)->states(['public'])->create();
+        $group = Group::makeFactory()->public()->create();
 
-        $dir = factory(Dir::class)->make();
-        $dir->group()->associate($group);
-        $dir->user()->associate($user);
-        $dir->save();
+        $dir = Dir::makeFactory()->for($group)->for($user)->create();
 
         $response = $this->deleteJson(route('api.dir.destroy', [$dir->id]));
 
@@ -44,16 +41,13 @@ class DirTest extends TestCase
 
     public function testApiDirDestroyAsUserWithoutAbility()
     {
-        $user = factory(User::class)->states(['user', 'api'])->create();
+        $user = User::makeFactory()->user()->api()->create();
 
-        Sanctum::actingAs($user, []);
+        Sanctum::actingAs($user);
 
-        $group = factory(Group::class)->states(['public'])->create();
+        $group = Group::makeFactory()->public()->create();
 
-        $dir = factory(Dir::class)->make();
-        $dir->group()->associate($group);
-        $dir->user()->associate($user);
-        $dir->save();
+        $dir = Dir::makeFactory()->for($group)->for($user)->create();
 
         $response = $this->deleteJson(route('api.dir.destroy', [$dir->id]));
 
@@ -63,15 +57,13 @@ class DirTest extends TestCase
 
     public function testApiDirDestroyForeignDir()
     {
-        $user = factory(User::class)->states(['user', 'api'])->create();
+        $user = User::makeFactory()->user()->api()->create();
 
         Sanctum::actingAs($user, ['api.dirs.delete']);
 
-        $group = factory(Group::class)->states(['public'])->create();
+        $group = Group::makeFactory()->public()->create();
 
-        $dir = factory(Dir::class)->states('with_user')->make();
-        $dir->group()->associate($group);
-        $dir->save();
+        $dir = Dir::makeFactory()->withUser()->for($group)->create();
 
         $response = $this->deleteJson(route('api.dir.destroy', [$dir->id]));
 
@@ -80,7 +72,7 @@ class DirTest extends TestCase
 
     public function testApiDirDestroyNoExistDir()
     {
-        $user = factory(User::class)->states(['user', 'api'])->create();
+        $user = User::makeFactory()->user()->api()->create();
 
         Sanctum::actingAs($user, ['api.dirs.delete']);
 
@@ -91,18 +83,15 @@ class DirTest extends TestCase
 
     public function testApiDirDestroyAsUserInDatabase()
     {
-        $user = factory(User::class)->states(['user', 'api'])->create();
+        $user = User::makeFactory()->user()->api()->create();
 
         Sanctum::actingAs($user, ['api.dirs.delete']);
 
         Mail::fake();
 
-        $group = factory(Group::class)->states(['public'])->create();
+        $group = Group::makeFactory()->public()->create();
 
-        $dir = factory(Dir::class)->states('with_category')->make();
-        $dir->group()->associate($group->id);
-        $dir->user()->associate($user->id);
-        $dir->save();
+        $dir = Dir::makeFactory()->withCategory()->for($group)->for($user)->create();
 
         $this->assertDatabaseHas('dirs', [
             'id' => $dir->id,
@@ -133,20 +122,17 @@ class DirTest extends TestCase
 
     public function testApiDirDestroyAsAdminInDatabase()
     {
-        $user = factory(User::class)->states(['user', 'api'])->create();
+        $user = User::makeFactory()->user()->api()->create();
 
-        $admin = factory(User::class)->states(['user', 'api', 'admin'])->create();
+        $admin = User::makeFactory()->user()->api()->admin()->create();
 
         Sanctum::actingAs($admin, ['api.dirs.delete']);
 
         Mail::fake();
 
-        $group = factory(Group::class)->states(['public'])->create();
+        $group = Group::makeFactory()->public()->create();
 
-        $dir = factory(Dir::class)->states('with_category')->make();
-        $dir->group()->associate($group->id);
-        $dir->user()->associate($user->id);
-        $dir->save();
+        $dir = Dir::makeFactory()->withCategory()->for($group)->for($user)->create();
 
         $this->assertDatabaseHas('dirs', [
             'id' => $dir->id,

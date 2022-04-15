@@ -4,6 +4,7 @@ namespace N1ebieski\IDir\Models\Category\Dir;
 
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use N1ebieski\IDir\Models\Category\Category as BaseCategory;
+use N1ebieski\IDir\Database\Factories\Category\Dir\CategoryFactory;
 
 class Category extends BaseCategory
 {
@@ -27,6 +28,16 @@ class Category extends BaseCategory
     public function getMorphClass()
     {
         return \N1ebieski\ICore\Models\Category\Category::class;
+    }
+
+    /**
+     * Create a new factory instance for the model.
+     *
+     * @return CategoryFactory
+     */
+    protected static function newFactory()
+    {
+        return \N1ebieski\IDir\Database\Factories\Category\Dir\CategoryFactory::new();
     }
 
     // Relations
@@ -87,5 +98,18 @@ class Category extends BaseCategory
                         ->orderBy('depth', 'desc');
                 }
             ]);
+    }
+
+    // Factories
+
+    /**
+     * Undocumented function
+     *
+     * @param mixed $parameters
+     * @return CategoryFactory
+     */
+    public static function makeFactory(...$parameters)
+    {
+        return static::factory($parameters);
     }
 }

@@ -4,8 +4,8 @@
     "keywords": ["iDir"],
     "type": "package",
     "require": {
-        "php": "^7.2",
-        "n1ebieski/icore": "^6.0",
+        "php": "^7.3|^8.0",
+        "n1ebieski/icore": "^7.0",
         "gusapi/gusapi": "^5.1",
         "league/omnipay": "^3.0",
         "omnipay/paypal": "^3.0",
@@ -13,10 +13,10 @@
         "simplesoftwareio/simple-qrcode": "^4.0"
     },
     "require-dev": {
-        "fzaninotto/faker": "^1.4",
+        "fakerphp/faker": "^1.9.1",
         "mmo/faker-images": "^0.3",
-        "mockery/mockery": "^1.0",
-        "phpunit/phpunit": "^7.0"
+        "mockery/mockery": "^1.4.4",
+        "phpunit/phpunit": "^9.5.10"
     },
     "authors": [
         {

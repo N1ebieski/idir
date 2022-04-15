@@ -14,11 +14,14 @@ use Illuminate\Support\Collection as Collect;
 use N1ebieski\ICore\Models\Traits\Carbonable;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use N1ebieski\IDir\Database\Factories\Price\PriceFactory;
 
 class Price extends Model
 {
     use Filterable;
     use Carbonable;
+    use HasFactory;
 
     // Configuration
 
@@ -74,6 +77,16 @@ class Price extends Model
     protected $attributes = [
         'discount_price' => null
     ];
+
+    /**
+     * Create a new factory instance for the model.
+     *
+     * @return PriceFactory
+     */
+    protected static function newFactory()
+    {
+        return \N1ebieski\IDir\Database\Factories\Price\PriceFactory::new();
+    }
 
     // Relations
 
@@ -223,5 +236,16 @@ class Price extends Model
     public function makeRepo()
     {
         return App::make(PriceRepo::class, ['price' => $this]);
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param mixed $parameters
+     * @return PriceFactory
+     */
+    public static function makeFactory(...$parameters)
+    {
+        return static::factory($parameters);
     }
 }

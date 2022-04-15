@@ -2,7 +2,7 @@
 
 namespace N1ebieski\IDir\Jobs\Dir;
 
-use Exception;
+use Throwable;
 use Illuminate\Bus\Queueable;
 use Illuminate\Support\Carbon;
 use Illuminate\Queue\SerializesModels;
@@ -218,10 +218,10 @@ class CheckBacklinkJob implements ShouldQueue
     /**
      * The job failed to process.
      *
-     * @param  Exception  $exception
+     * @param  Throwable  $exception
      * @return void
      */
-    public function failed(Exception $exception)
+    public function failed(Throwable $exception)
     {
         //
     }

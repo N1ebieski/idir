@@ -29,6 +29,8 @@ use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use N1ebieski\ICore\Models\Traits\FullTextSearchable;
+use N1ebieski\IDir\Database\Factories\Dir\DirFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 class Dir extends Model
@@ -38,6 +40,7 @@ class Dir extends Model
     use FullTextSearchable;
     use Carbonable;
     use PivotEventTrait;
+    use HasFactory;
     use Filterable, StatFilterable {
         StatFilterable::scopeFilterOrderBy insteadof Filterable;
     }
@@ -147,6 +150,16 @@ class Dir extends Model
                 'source' => 'title'
             ]
         ];
+    }
+
+    /**
+     * Create a new factory instance for the model.
+     *
+     * @return DirFactory
+     */
+    protected static function newFactory()
+    {
+        return \N1ebieski\IDir\Database\Factories\Dir\DirFactory::new();
     }
 
     // Overrides
@@ -899,4 +912,15 @@ class Dir extends Model
     {
         return App::make(DirService::class, ['dir' => $this]);
     }
+
+    /**
+     * Undocumented function
+     *
+     * @param mixed $parameters
+     * @return DirFactory
+     */
+    public static function makeFactory(...$parameters)
+    {
+        return static::factory($parameters);
+    }    
 }

@@ -64,9 +64,9 @@ class EnvCommand extends Command
         $this->info("\n");
         $bar->advance();
         $this->info("\n");
-        $this->call('vendor:publish', ['--tag' => 'icore.seeds', '--force' => true], $this->getOutput());
+        $this->call('vendor:publish', ['--tag' => 'icore.seeders', '--force' => true], $this->getOutput());
         $this->info("\n");
-        $this->call('vendor:publish', ['--tag' => 'idir.seeds', '--force' => true], $this->getOutput());
+        $this->call('vendor:publish', ['--tag' => 'idir.seeders', '--force' => true], $this->getOutput());
         $this->info("\n");
         $bar->advance();
         $this->info("\n");
@@ -82,9 +82,9 @@ class EnvCommand extends Command
         $this->line("\n");
         $bar->advance();
         $this->info("\n");
-        $this->call('db:seed', ['--class' => 'N1ebieski\ICore\Seeds\Env\EnvSeeder'], $this->getOutput());
+        $this->call('db:seed', ['--class' => 'N1ebieski\ICore\Database\Seeders\Env\EnvSeeder'], $this->getOutput());
         $this->info("\n");
-        $this->call('db:seed', ['--class' => 'N1ebieski\IDir\Seeds\Env\EnvSeeder'], $this->getOutput());
+        $this->call('db:seed', ['--class' => 'N1ebieski\IDir\Database\Seeders\Env\EnvSeeder'], $this->getOutput());
         $this->info("\n");
         $bar->advance();
         $this->line("\n");

@@ -1,30 +1,44 @@
 <?php
 
-use Faker\Generator as Faker;
+namespace N1ebieski\IDir\Database\Factories\Payment\Dir;
+
 use N1ebieski\IDir\Models\Dir;
 use N1ebieski\IDir\Models\Price;
 use N1ebieski\IDir\Models\Payment\Dir\Payment;
+use N1ebieski\IDir\Database\Factories\Payment\PaymentFactory as BasePaymentFactory;
 
-$factory->define(Payment::class, function (Faker $faker) {
-    return [
-        //
-    ];
-});
+class PaymentFactory extends BasePaymentFactory
+{
+    /**
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
+    protected $model = Payment::class;
 
-$factory->state(Payment::class, 'pending', function (Faker $faker) {
-    return [
-        'status' => Payment::PENDING
-    ];
-});
+    /**
+     * Undocumented function
+     *
+     * @return static
+     */
+    public function withMorph()
+    {
+        return $this->for(
+            Dir::makeFactory()->titleSentence()->contentText()->pending()->withUser()->withCategory()->withDefaultGroup(),
+            'morph'
+        );
+    }
 
-$factory->afterMakingState(Payment::class, 'with_morph', function ($payment) {
-    $payment->morph()->associate(
-        factory(Dir::class)->states(['title_sentence', 'content_text', 'with_user', 'pending', 'with_category', 'with_default_group'])->create()
-    );
-});
-
-$factory->afterMakingState(Payment::class, 'with_order', function ($payment) {
-    $payment->orderMorph()->associate(
-        factory(Price::class)->states(['transfer', 'with_group'])->create()
-    );
-});
+    /**
+     * Undocumented function
+     *
+     * @return static
+     */
+    public function withOrder()
+    {
+        return $this->for(
+            Price::makeFactory()->transfer()->withGroup(),
+            'orderMorph'
+        );
+    }
+}

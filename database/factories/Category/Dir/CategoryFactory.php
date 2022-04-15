@@ -1,23 +1,16 @@
 <?php
 
-use Faker\Generator as Faker;
+namespace N1ebieski\IDir\Database\Factories\Category\Dir;
+
 use N1ebieski\IDir\Models\Category\Dir\Category;
+use N1ebieski\ICore\Database\Factories\Category\CategoryFactory as BaseCategoryFactory;
 
-$factory->define(Category::class, function (Faker $faker) {
-    return [
-        'name' => ucfirst($faker->word),
-        'status' => rand(Category::INACTIVE, Category::ACTIVE)
-    ];
-});
-
-$factory->state(Category::class, 'active', function (Faker $faker) {
-    return [
-        'status' => Category::ACTIVE
-    ];
-});
-
-$factory->state(Category::class, 'sentence', function (Faker $faker) {
-    return [
-        'name' => ucfirst($faker->word . ' ' . $faker->word)
-    ];
-});
+class CategoryFactory extends BaseCategoryFactory
+{
+    /**
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
+    protected $model = Category::class;
+}

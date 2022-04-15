@@ -3,8 +3,8 @@
 namespace N1ebieski\IDir\Services\Field\Value\Types;
 
 use Illuminate\Http\UploadedFile;
-use N1ebieski\ICore\Utils\FileUtil;
 use N1ebieski\IDir\Models\Field\Field;
+use N1ebieski\ICore\Utils\File\FileUtil;
 use Illuminate\Database\DatabaseManager as DB;
 
 class Image extends Value
@@ -48,9 +48,9 @@ class Image extends Value
     public function prepare($value): string
     {
         if ($value instanceof UploadedFile) {
-            $path = is_int($this->field->morph->id) ? $this->path() : null;
-
-            return $this->fileUtil->make($path, $value)->prepare();
+            return $this->fileUtil->makeFromFile($value)->prepare([
+                is_int($this->field->morph->id) ? $this->path() : []
+            ]);
         }
 
         return $value;
@@ -64,12 +64,7 @@ class Image extends Value
      */
     public function create(UploadedFile $value): string
     {
-        $file = $this->fileUtil->make($this->path(), $value);
-
-        $file->prepare();
-        $file->moveFromTemp();
-
-        return $file->getFilePath();
+        return $this->fileUtil->makeFromPath($this->prepare($value))->moveFromTemp($this->path());
     }
 
     /**
@@ -80,16 +75,13 @@ class Image extends Value
      */
     public function update(UploadedFile $value): string
     {
-        $file = $this->fileUtil->make($this->path(), $value);
-
-        if ($this->getFieldValue() !== $file->getFilePath()) {
-            $file->prepare();
-            $file->moveFromTemp();
-
+        if ($this->getFieldValue() !== $this->path() . "/" . $value->getClientOriginalName()) {
             $this->delete();
+
+            return $this->create($value);
         }
 
-        return $file->getFilePath();
+        return $this->getFieldValue();
     }
 
     /**
@@ -100,7 +92,7 @@ class Image extends Value
     public function delete(): bool
     {
         if ($this->getFieldValue() !== null) {
-            return $this->fileUtil->make($this->getFieldValue())->delete();
+            return $this->fileUtil->delete($this->getFieldValue());
         }
 
         return false;
