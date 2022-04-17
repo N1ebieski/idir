@@ -1,23 +1,16 @@
 <?php
 
-namespace N1ebieski\IDir\Http\Responses\Data\Dir\Chart;
+namespace N1ebieski\IDir\Http\Responses\Data\Chart\Dir;
 
 use Illuminate\Support\Str;
 use N1ebieski\IDir\Models\Group;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Contracts\Routing\UrlGenerator as URL;
-use N1ebieski\IDir\Http\Responses\Data\DataInterface;
 use Illuminate\Contracts\Translation\Translator as Lang;
+use N1ebieski\ICore\Http\Responses\Data\Chart\DataInterface;
 
 class GroupData implements DataInterface
 {
-    /**
-     * Undocumented variable
-     *
-     * @var Collection
-     */
-    protected $collection;
-
     /**
      * Undocumented variable
      *
@@ -63,21 +56,17 @@ class GroupData implements DataInterface
     /**
      * Undocumented function
      *
-     * @param Collection $collection
      * @param Group $group
      * @param Lang $lang
      * @param URL $url
      * @param Str $str
      */
     public function __construct(
-        Collection $collection,
         Group $group,
         Lang $lang,
         URL $url,
         Str $str
     ) {
-        $this->collection = $collection;
-
         $this->group = $group;
 
         $this->lang = $lang;
@@ -90,7 +79,7 @@ class GroupData implements DataInterface
      *
      * @return array
      */
-    public function toArray(): array
+    public function toArray(Collection $collection): array
     {
         $data = [];
 
@@ -101,7 +90,7 @@ class GroupData implements DataInterface
                 return $group;
             });
 
-        $this->collection->sortBy('group_id')
+        $collection->sortBy('group_id')
             ->each(function ($item) use (&$data, $groups) {
                 $group = $groups->firstWhere('id', $item->group_id);
 

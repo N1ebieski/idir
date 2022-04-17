@@ -2,6 +2,7 @@
 
 namespace N1ebieski\IDir\Utils\Payment\Factories;
 
+use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Contracts\Container\Container as App;
 use N1ebieski\IDir\Utils\Payment\Interfaces\TransferUtilStrategy;
 
@@ -42,7 +43,7 @@ class TransferUtilFactory
 
         throw new \N1ebieski\IDir\Exceptions\Payment\DriverNotFoundException(
             "Driver {$driver} not found",
-            403
+            HttpResponse::HTTP_FORBIDDEN
         );
     }
 }

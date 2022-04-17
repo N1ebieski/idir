@@ -3,8 +3,9 @@
 namespace N1ebieski\IDir\Services\Field\Value\Types;
 
 use N1ebieski\IDir\Services\Field\Value\Types\Value;
+use N1ebieski\IDir\Services\Field\Value\Types\Interfaces\ArrayInterface;
 
-class Map extends Value
+class Map extends Value implements ArrayInterface
 {
     /**
      * Undocumented function

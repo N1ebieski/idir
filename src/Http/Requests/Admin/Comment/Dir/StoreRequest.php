@@ -15,10 +15,6 @@ class StoreRequest extends FormRequest
      */
     public function authorize()
     {
-        // if ((bool)$this->post->isCommentable() === false) {
-        //     abort(403, 'Adding comments has been disabled for this post.');
-        // }
-
         return $this->dir->isActive();
     }
 

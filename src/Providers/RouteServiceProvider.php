@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 
 class RouteServiceProvider extends ServiceProvider
@@ -31,22 +32,22 @@ class RouteServiceProvider extends ServiceProvider
 
         Route::bind('payment_dir_pending', function ($value) {
             return $this->app->make(\N1ebieski\IDir\Models\Payment\Dir\Payment::class)
-                ->makeRepo()->firstPendingByUuid($value) ?? abort(404);
+                ->makeRepo()->firstPendingByUuid($value) ?? abort(HttpResponse::HTTP_NOT_FOUND);
         });
 
         Route::bind('category_dir_cache', function ($value) {
             return $this->app->make(\N1ebieski\IDir\Models\Category\Dir\Category::class)
-                ->makeCache()->rememberBySlug($value) ?? abort(404);
+                ->makeCache()->rememberBySlug($value) ?? abort(HttpResponse::HTTP_NOT_FOUND);
         });
 
         Route::bind('region_cache', function ($value) {
             return $this->app->make(\N1ebieski\IDir\Models\Region\Region::class)
-                ->makeCache()->rememberBySlug($value) ?? abort(404);
+                ->makeCache()->rememberBySlug($value) ?? abort(HttpResponse::HTTP_NOT_FOUND);
         });
 
         Route::bind('dir_cache', function ($value) {
             return $this->app->make(\N1ebieski\IDir\Models\Dir::class)
-                ->makeCache()->rememberBySlug($value) ?? abort(404);
+                ->makeCache()->rememberBySlug($value) ?? abort(HttpResponse::HTTP_NOT_FOUND);
         });
 
         Route::bind('stat_dir_cache', function ($value) {
@@ -56,10 +57,10 @@ class RouteServiceProvider extends ServiceProvider
             ) {
                 return $this->app->make(\N1ebieski\IDir\Models\Stat\Dir\Stat::class)
                     ->makeCache()->rememberBySlug($value)
-                    ?? $this->app->abort(404);
+                    ?? $this->app->abort(HttpResponse::HTTP_NOT_FOUND);
             }
 
-            $this->app->abort(404);
+            $this->app->abort(HttpResponse::HTTP_NOT_FOUND);
         });
 
         $this->routes(function () {

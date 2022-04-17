@@ -1,11 +1,11 @@
 <?php
 
-namespace N1ebieski\IDir\Http\Responses\Data\Field;
+namespace N1ebieski\IDir\Http\Responses\Data\Gus\Field;
 
 use GusApi\SearchReport as GusReport;
 use Illuminate\Contracts\Config\Repository as Config;
-use N1ebieski\IDir\Http\Responses\Data\DataInterface;
-use N1ebieski\IDir\Http\Responses\Data\Field\Value\ValueFactory;
+use N1ebieski\IDir\Http\Responses\Data\Gus\DataInterface;
+use N1ebieski\IDir\Http\Responses\Data\Gus\Field\Value\ValueFactory;
 
 class FieldData implements DataInterface
 {
@@ -19,13 +19,6 @@ class FieldData implements DataInterface
     /**
      * Undocumented variable
      *
-     * @var GusReport|null
-     */
-    protected $gusReport;
-
-    /**
-     * Undocumented variable
-     *
      * @var ValueFactory
      */
     protected $valueFactory;
@@ -35,15 +28,9 @@ class FieldData implements DataInterface
      *
      * @param Config $config
      * @param ValueFactory $valueFactory
-     * @param GusReport $gusReport
      */
-    public function __construct(
-        Config $config,
-        ValueFactory $valueFactory,
-        GusReport $gusReport = null
-    ) {
-        $this->gusReport = $gusReport;
-
+    public function __construct(Config $config, ValueFactory $valueFactory)
+    {
         $this->valueFactory = $valueFactory;
 
         $this->config = $config;
@@ -52,22 +39,9 @@ class FieldData implements DataInterface
     /**
      * Undocumented function
      *
-     * @param GusReport $gusReport
-     * @return self
-     */
-    public function setGusReport(GusReport $gusReport)
-    {
-        $this->gusReport = $gusReport;
-
-        return $this;
-    }
-
-    /**
-     * Undocumented function
-     *
      * @return array
      */
-    public function toArray(): array
+    public function toArray(GusReport $gusReport): array
     {
         $data = [];
 
@@ -78,7 +52,7 @@ class FieldData implements DataInterface
                 continue;
             }
 
-            $gusValue = $this->makeValue($key);
+            $gusValue = $this->valueFactory->makeValue($key, $gusReport)();
 
             if (empty($gusValue)) {
                 continue;
@@ -98,17 +72,6 @@ class FieldData implements DataInterface
         }
 
         return $data;
-    }
-
-    /**
-     * Undocumented function
-     *
-     * @param string $type
-     * @return mixed|null
-     */
-    protected function makeValue(string $type)
-    {
-        return $this->valueFactory->makeValue($type, $this->gusReport)();
     }
 
     /**

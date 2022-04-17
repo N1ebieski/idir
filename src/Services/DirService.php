@@ -147,13 +147,15 @@ class DirService implements
      */
     public function createSession(array $attributes): void
     {
-        $this->session->put(
-            $this->sessionName(),
-            $this->dir->fields()->make()
-                ->setRelations(['morph' => $this->dir])
-                ->makeService()
-                ->prepareFieldAttribute($attributes)
-        );
+        $this->session->put($this->sessionName(), array_merge(
+            $attributes,
+            [
+                'field' => $this->dir->fields()->make()
+                    ->setRelations(['morph' => $this->dir])
+                    ->makeService()
+                    ->prepareValues($attributes['field'] ?? [])
+            ]
+        ));
     }
 
     /**
@@ -163,14 +165,16 @@ class DirService implements
      */
     public function updateSession(array $attributes): void
     {
-        $this->session->put(
-            $this->sessionName(),
-            $this->dir->fields()->make()
-                ->setRelations(['morph' => $this->dir])
-                ->makeService()
-                ->prepareFieldAttribute($attributes)
-            + $this->session->get($this->sessionName())
-        );
+        $this->session->put($this->sessionName(), array_merge(
+            $this->session->get($this->sessionName()),
+            $attributes,
+            [
+                'field' => $this->dir->fields()->make()
+                    ->setRelations(['morph' => $this->dir])
+                    ->makeService()
+                    ->prepareValues($attributes['field'] ?? [])
+            ],
+        ));
     }
 
     /**

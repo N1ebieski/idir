@@ -9,16 +9,10 @@ use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Contracts\Routing\UrlGenerator as URL;
 use Illuminate\Contracts\Translation\Translator as Lang;
-use N1ebieski\IDir\Http\Responses\RedirectResponseFactory;
+use N1ebieski\IDir\Http\Responses\Web\Dir\RedirectResponseFactory;
 
 class UpdateRenewResponse implements RedirectResponseFactory
 {
-    /**
-     * [private description]
-     * @var Dir
-     */
-    protected $dir;
-
     /**
      * [protected description]
      * @var Request
@@ -75,22 +69,12 @@ class UpdateRenewResponse implements RedirectResponseFactory
     }
 
     /**
-     * @param Dir $dir
+     * Undocumented function
      *
-     * @return static
+     * @param Dir $dir
+     * @return RedirectResponse
      */
-    public function setDir(Dir $dir)
-    {
-        $this->dir = $dir;
-
-        return $this;
-    }
-
-    /**
-     * [response description]
-     * @return RedirectResponse [description]
-     */
-    public function makeResponse(): RedirectResponse
+    public function makeResponse(Dir $dir): RedirectResponse
     {
         if (in_array($this->request->input('payment_type'), ['transfer', 'paypal_express'])) {
             return $this->response->redirectToRoute('web.payment.dir.show', [
@@ -99,7 +83,7 @@ class UpdateRenewResponse implements RedirectResponseFactory
             ]);
         }
 
-        switch ($this->dir->status) {
+        switch ($dir->status) {
             case Dir::ACTIVE:
                 return $this->response->redirectToRoute('web.profile.dirs')
                     ->with('success', $this->lang->get('idir::dirs.success.update_renew.' . Dir::ACTIVE));

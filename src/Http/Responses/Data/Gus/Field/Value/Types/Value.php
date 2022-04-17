@@ -1,6 +1,6 @@
 <?php
 
-namespace N1ebieski\IDir\Http\Responses\Data\Field\Value\Types;
+namespace N1ebieski\IDir\Http\Responses\Data\Gus\Field\Value\Types;
 
 use GusApi\SearchReport as GusReport;
 

@@ -4,10 +4,11 @@ namespace N1ebieski\IDir\Http\Responses\Admin\Field;
 
 use Illuminate\Http\JsonResponse;
 use GusApi\SearchReport as GusReport;
+use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Contracts\Translation\Translator;
-use N1ebieski\IDir\Http\Responses\JsonResponseFactory;
-use N1ebieski\IDir\Http\Responses\Data\Field\FieldData;
+use N1ebieski\IDir\Http\Responses\Data\Gus\Field\FieldData;
 use Illuminate\Contracts\Routing\ResponseFactory as Response;
+use N1ebieski\IDir\Http\Responses\Admin\Field\JsonResponseFactory;
 
 class GusResponse implements JsonResponseFactory
 {
@@ -61,12 +62,11 @@ class GusResponse implements JsonResponseFactory
                 'errors' => [
                     'gus' => [$this->lang->get('idir::fields.error.gus')]
                 ]
-            ], 404);
+            ], HttpResponse::HTTP_NOT_FOUND);
         }
 
         return $this->response->json([
-            'success' => '',
-            'data' => $this->fieldData->setGusReport($gusReport)->toArray()
+            'data' => $this->fieldData->toArray($gusReport)
         ]);
     }
 }

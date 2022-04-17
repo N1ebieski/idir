@@ -211,7 +211,7 @@ class DirController
 
         Event::dispatch(App::make(DirStoreEvent::class, ['dir' => $dir]));
 
-        return $response->setDir($dir)->makeResponse();
+        return $response->makeResponse($dir);
     }
 
     /**
@@ -314,7 +314,7 @@ class DirController
 
         Event::dispatch(App::make(DirUpdateEvent::class, ['dir' => $dir]));
 
-        return $response->setDir($dir)->makeResponse();
+        return $response->makeResponse($dir);
     }
 
     /**
@@ -354,7 +354,7 @@ class DirController
         Event::dispatch(App::make(PaymentStoreEvent::class, ['payment' => $payment]));
         Event::dispatch(App::make(DirUpdateRenewEvent::class, ['dir' => $dir]));
 
-        return $response->setDir($dir)->makeResponse();
+        return $response->makeResponse($dir);
     }
 
     /**

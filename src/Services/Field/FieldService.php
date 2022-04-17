@@ -11,14 +11,10 @@ use N1ebieski\ICore\Services\Interfaces\Updatable;
 use N1ebieski\IDir\Services\Field\Value\Types\Value;
 use N1ebieski\IDir\Services\Field\Value\ValueFactory;
 use N1ebieski\ICore\Services\Interfaces\PositionUpdatable;
+use N1ebieski\IDir\Exceptions\Field\ValueNotFoundException;
 
 class FieldService implements Creatable, Updatable, PositionUpdatable
 {
-    /**
-     * @var array
-     */
-    protected const SPECIAL = ['image', 'map', 'regions'];
-
     /**
      * Model
      * @var Field
@@ -60,7 +56,7 @@ class FieldService implements Creatable, Updatable, PositionUpdatable
         DB $db,
         Collect $collect
     ) {
-        $this->setField($field);
+        $this->field = $field;
 
         $this->valueFactory = $valueFactory;
 
@@ -69,34 +65,25 @@ class FieldService implements Creatable, Updatable, PositionUpdatable
     }
 
     /**
-     * Undocumented function
-     *
-     * @param Field $field
-     * @return static
-     */
-    public function setField(Field $field)
-    {
-        $this->field = $field;
-
-        return $this;
-    }
-
-    /**
      * [prepareField description]
      * @param  array $attributes [description]
      * @return array             [description]
      */
-    public function prepareFieldAttribute(array $attributes): array
+    public function prepareValues(array $attributes): array
     {
-        if (array_key_exists('field', $attributes)) {
-            foreach ($this->field->morph->group->fields()->get() as $field) {
-                if (!empty($attributes['field'][$field->id])) {
-                    $value = $attributes['field'][$field->id];
+        foreach ($this->field->all() as $field) {
+            if (!array_key_exists($field->id, $attributes)) {
+                continue;
+            }
 
-                    if (in_array($field->type, static::SPECIAL)) {
-                        $attributes['field'][$field->id] = $this->makeValue($field)->prepare($value);
-                    }
-                }
+            if (empty($attributes[$field->id])) {
+                continue;
+            }
+
+            try {
+                $attributes[$field->id] = $this->makeValue($field)->prepare($attributes[$field->id]);
+            } catch (ValueNotFoundException $e) {
+                continue;
             }
         }
 
@@ -113,19 +100,23 @@ class FieldService implements Creatable, Updatable, PositionUpdatable
         return $this->db->transaction(function () use ($attributes) {
             $i = 0;
 
-            foreach ($this->field->morph->group->fields()->get() as $field) {
-                if (array_key_exists($field->id, $attributes)) {
-                    if (!empty($attributes[$field->id])) {
-                        $value = $attributes[$field->id];
-
-                        if (in_array($field->type, static::SPECIAL)) {
-                            $value = $this->makeValue($field)->create($value);
-                        }
-
-                        $ids[$field->id] = ['value' => json_encode($value)];
-                        $i++;
-                    }
+            foreach ($this->field->all() as $field) {
+                if (!array_key_exists($field->id, $attributes)) {
+                    continue;
                 }
+
+                if (empty($attributes[$field->id])) {
+                    continue;
+                }
+
+                try {
+                    $attributes[$field->id] = $this->makeValue($field)->create($attributes[$field->id]);
+                } catch (ValueNotFoundException $e) {
+                    //
+                }
+
+                $ids[$field->id] = ['value' => json_encode($attributes[$field->id])];
+                $i++;
             }
 
             $this->field->morph->fields()->attach($ids ?? []);
@@ -144,21 +135,25 @@ class FieldService implements Creatable, Updatable, PositionUpdatable
         return $this->db->transaction(function () use ($attributes) {
             $i = 0;
 
-            foreach ($this->field->morph->group->fields()->get() as $field) {
-                if (array_key_exists($field->id, $attributes)) {
-                    if (!empty($attributes[$field->id])) {
-                        $value = $attributes[$field->id];
+            foreach ($this->field->all() as $field) {
+                if (!array_key_exists($field->id, $attributes)) {
+                    continue;
+                }
 
-                        if (in_array($field->type, static::SPECIAL)) {
-                            $value = $this->makeValue($field)->update($value);
-                        }
+                if (!empty($attributes[$field->id])) {
+                    try {
+                        $attributes[$field->id] = $this->makeValue($field)->update($attributes[$field->id]);
+                    } catch (ValueNotFoundException $e) {
+                        //
+                    }
 
-                        $ids[$field->id] = ['value' => json_encode($value)];
-                        $i++;
-                    } else {
-                        if (in_array($field->type, static::SPECIAL)) {
-                            $this->makeValue($field)->delete();
-                        }
+                    $ids[$field->id] = ['value' => json_encode($attributes[$field->id])];
+                    $i++;
+                } else {
+                    try {
+                        $this->makeValue($field)->delete($attributes[$field->id]);
+                    } catch (ValueNotFoundException $e) {
+                        //
                     }
                 }
             }

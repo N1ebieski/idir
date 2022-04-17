@@ -3,8 +3,9 @@
 namespace N1ebieski\IDir\Services\Field\Value\Types;
 
 use N1ebieski\IDir\Services\Field\Value\Types\Value;
+use N1ebieski\IDir\Services\Field\Value\Types\Interfaces\ArrayInterface;
 
-class Regions extends Value
+class Regions extends Value implements ArrayInterface
 {
     /**
      * Undocumented function
@@ -26,7 +27,7 @@ class Regions extends Value
     public function create(array $value): array
     {
         return $this->db->transaction(function () use ($value) {
-            $this->field->morph->regions()->attach($value ?? []);
+            $this->field->morph->regions()->attach($value);
 
             return $value;
         });
@@ -41,7 +42,7 @@ class Regions extends Value
     public function update(array $value): array
     {
         return $this->db->transaction(function () use ($value) {
-            $this->field->morph->regions()->sync($value ?? []);
+            $this->field->morph->regions()->sync($value);
 
             return $value;
         });
@@ -54,6 +55,8 @@ class Regions extends Value
      */
     public function delete(): bool
     {
-        return false;
-    }    
+        return $this->db->transaction(function () {
+            return $this->field->morph->regions()->detach();
+        });
+    }
 }

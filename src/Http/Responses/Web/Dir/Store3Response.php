@@ -8,16 +8,10 @@ use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Contracts\Routing\UrlGenerator as URL;
 use Illuminate\Contracts\Translation\Translator as Lang;
-use N1ebieski\IDir\Http\Responses\RedirectResponseFactory;
+use N1ebieski\IDir\Http\Responses\Web\Dir\RedirectResponseFactory;
 
 class Store3Response implements RedirectResponseFactory
 {
-    /**
-     * [private description]
-     * @var Dir
-     */
-    protected $dir;
-
     /**
      * [private description]
      * @var ResponseFactory
@@ -61,34 +55,24 @@ class Store3Response implements RedirectResponseFactory
     }
 
     /**
-     * @param Dir $dir
+     * Undocumented function
      *
-     * @return static
+     * @param Dir $dir
+     * @return RedirectResponse
      */
-    public function setDir(Dir $dir)
+    public function makeResponse(Dir $dir): RedirectResponse
     {
-        $this->dir = $dir;
-
-        return $this;
-    }
-
-    /**
-     * [response description]
-     * @return RedirectResponse [description]
-     */
-    public function makeResponse(): RedirectResponse
-    {
-        switch ($this->dir->status) {
+        switch ($dir->status) {
             case Dir::INACTIVE:
                 return $this->response->redirectToRoute('web.dir.create_1')
                     ->with('success', $this->lang->get('idir::dirs.success.store.' . Dir::INACTIVE));
             case Dir::ACTIVE:
-                return $this->response->redirectToRoute('web.dir.show', [$this->dir->slug])
+                return $this->response->redirectToRoute('web.dir.show', [$dir->slug])
                     ->with('success', $this->lang->get('idir::dirs.success.store.' . Dir::ACTIVE));
             case Dir::PAYMENT_INACTIVE:
                 return $this->response->redirectToRoute('web.payment.dir.show', [
-                    $this->dir->payment->uuid,
-                    $this->dir->payment->driver
+                    $dir->payment->uuid,
+                    $dir->payment->driver
                 ]);
         }
     }

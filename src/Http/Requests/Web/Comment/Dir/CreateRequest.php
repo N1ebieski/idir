@@ -2,8 +2,8 @@
 
 namespace N1ebieski\IDir\Http\Requests\Web\Comment\Dir;
 
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Illuminate\Foundation\Http\FormRequest;
 use N1ebieski\IDir\Models\Comment\Dir\Comment;
 
 class CreateRequest extends FormRequest
@@ -15,10 +15,6 @@ class CreateRequest extends FormRequest
      */
     public function authorize()
     {
-        // if ((bool)$this->post->comment === false) {
-        //     abort(403, 'Adding comments has been disabled for this post.');
-        // }
-
         return true;
     }
 

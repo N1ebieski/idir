@@ -6,8 +6,9 @@ use Illuminate\Http\UploadedFile;
 use N1ebieski\IDir\Models\Field\Field;
 use N1ebieski\ICore\Utils\File\FileUtil;
 use Illuminate\Database\DatabaseManager as DB;
+use N1ebieski\IDir\Services\Field\Value\Types\Interfaces\FileInterface;
 
-class Image extends Value
+class Image extends Value implements FileInterface
 {
     /**
      * Undocumented variable
@@ -32,16 +33,6 @@ class Image extends Value
     /**
      * Undocumented function
      *
-     * @return string|null
-     */
-    public function getFieldValue(): ?string
-    {
-        return optional($this->field->morph->fields->where('id', $this->field->id)->first())->decode_value;
-    }
-
-    /**
-     * Undocumented function
-     *
      * @param UploadedFile|string $value
      * @return string
      */
@@ -49,7 +40,7 @@ class Image extends Value
     {
         if ($value instanceof UploadedFile) {
             return $this->fileUtil->makeFromFile($value)->prepare([
-                is_int($this->field->morph->id) ? $this->path() : []
+                is_int($this->field->morph->id) ? $this->path() : null
             ]);
         }
 
@@ -96,6 +87,16 @@ class Image extends Value
         }
 
         return false;
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @return string|null
+     */
+    protected function getFieldValue(): ?string
+    {
+        return optional($this->field->morph->fields->firstWhere('id', $this->field->id))->decode_value;
     }
 
     /**

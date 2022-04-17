@@ -1,21 +1,14 @@
 <?php
 
-namespace N1ebieski\IDir\Http\Responses\Data\Dir\Chart;
+namespace N1ebieski\IDir\Http\Responses\Data\Chart\Dir;
 
 use Illuminate\Support\Str;
 use N1ebieski\IDir\Models\Group;
 use Illuminate\Database\Eloquent\Collection;
-use N1ebieski\IDir\Http\Responses\Data\DataInterface;
+use N1ebieski\ICore\Http\Responses\Data\Chart\DataInterface;
 
 class TimelineData implements DataInterface
 {
-    /**
-     * Undocumented variable
-     *
-     * @var Collection
-     */
-    protected $collection;
-
     /**
      * Undocumented variable
      *
@@ -47,13 +40,11 @@ class TimelineData implements DataInterface
     /**
      * Undocumented function
      *
-     * @param Collection $collection
      * @param Group $group
+     * @param Str $str
      */
-    public function __construct(Collection $collection, Group $group, Str $str)
+    public function __construct(Group $group, Str $str)
     {
-        $this->collection = $collection;
-
         $this->group = $group;
 
         $this->str = $str;
@@ -64,7 +55,7 @@ class TimelineData implements DataInterface
      *
      * @return array
      */
-    public function toArray(): array
+    public function toArray(Collection $collection): array
     {
         $data = [];
 
@@ -75,7 +66,7 @@ class TimelineData implements DataInterface
                 return $group;
             });
 
-        $this->collection->each(function ($item) use (&$data, $groups) {
+        $collection->each(function ($item) use (&$data, $groups) {
             $group = $groups->firstWhere('id', $item->first_group_id);
 
             $data[] = [

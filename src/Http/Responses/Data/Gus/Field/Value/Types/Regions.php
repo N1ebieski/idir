@@ -1,11 +1,11 @@
 <?php
 
-namespace N1ebieski\IDir\Http\Responses\Data\Field\Value\Types;
+namespace N1ebieski\IDir\Http\Responses\Data\Gus\Field\Value\Types;
 
 use Illuminate\Support\Str;
 use GusApi\SearchReport as GusReport;
 use N1ebieski\IDir\Models\Region\Region;
-use N1ebieski\IDir\Http\Responses\Data\Field\Value\Types\Value;
+use N1ebieski\IDir\Http\Responses\Data\Gus\Field\Value\Types\Value;
 
 class Regions extends Value
 {

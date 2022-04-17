@@ -28,6 +28,16 @@ class ValueFactory
     /**
      * Undocumented function
      *
+     * @return boolean
+     */
+    protected function isClassExists(string $type): bool
+    {
+        return class_exists($this->className($type)) || $this->app->bound($this->className($type));
+    }
+
+    /**
+     * Undocumented function
+     *
      * @return string
      */
     protected function className(string $type): string
@@ -38,12 +48,18 @@ class ValueFactory
     /**
      * Undocumented function
      *
-     * @param string $type
-     * @param GusReport $gusReport
+     * @param Field $field
+     * @throws ValueNotFoundException
      * @return Value
      */
     public function makeValue(Field $field): Value
     {
-        return $this->app->make($this->className($field->type), ['field' => $field]);
+        if ($this->isClassExists($field->type)) {
+            return $this->app->make($this->className($field->type), ['field' => $field]);
+        }
+
+        throw new \N1ebieski\IDir\Exceptions\Field\ValueNotFoundException(
+            "Field value \"{$field->type}\" not found"
+        );
     }
 }

@@ -5,6 +5,7 @@ namespace N1ebieski\IDir\Tests\Feature\Web\Field;
 use Tests\TestCase;
 use N1ebieski\IDir\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class FieldTest extends TestCase
@@ -22,7 +23,7 @@ class FieldTest extends TestCase
             'number' => 111111111
         ]);
 
-        $response->assertStatus(404);
+        $response->assertStatus(HttpResponse::HTTP_NOT_FOUND);
         $response->assertJsonValidationErrors(['gus']);
     }
 
@@ -37,7 +38,7 @@ class FieldTest extends TestCase
             'number' => 'asjkdasjkdajskdjaskdjskdsd'
         ]);
 
-        $response->assertStatus(302);
+        $response->assertStatus(HttpResponse::HTTP_FOUND);
         $response->assertSessionHasErrors(['number']);
     }
 

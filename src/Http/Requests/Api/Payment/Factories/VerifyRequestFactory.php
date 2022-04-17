@@ -2,6 +2,7 @@
 
 namespace N1ebieski\IDir\Http\Requests\Api\Payment\Factories;
 
+use Illuminate\Http\Response as HttpResponse;
 use N1ebieski\IDir\Http\Requests\Api\Payment\Interfaces\VerifyRequestStrategy;
 
 class VerifyRequestFactory
@@ -24,7 +25,7 @@ class VerifyRequestFactory
 
         throw new \N1ebieski\IDir\Exceptions\Payment\DriverNotFoundException(
             "Driver {$driver} not found",
-            403
+            HttpResponse::HTTP_FORBIDDEN
         );
     }
 }

@@ -2,6 +2,7 @@
 
 namespace N1ebieski\IDir\Utils\Payment\PayPal;
 
+use Illuminate\Http\Response as HttpResponse;
 use Mdb\PayPal\Ipn\Event\MessageInvalidEvent;
 use Omnipay\PayPal\ExpressGateway as PayPalGateway;
 use Illuminate\Contracts\Config\Repository as Config;
@@ -279,14 +280,14 @@ class PayPalExpressAdapter implements TransferUtilStrategy
         $listener->onInvalid(function (MessageInvalidEvent $event) {
             throw new \N1ebieski\IDir\Exceptions\Payment\PayPal\Express\InvalidException(
                 $event->getMessage(),
-                403
+                HttpResponse::HTTP_FORBIDDEN
             );
         });
 
         $listener->onVerificationFailure(function (MessageVerificationFailureEvent $event) {
             throw new \N1ebieski\IDir\Exceptions\Payment\PayPal\VerificationFailureException(
                 $event->getError(),
-                403
+                HttpResponse::HTTP_FORBIDDEN
             );
         });
 

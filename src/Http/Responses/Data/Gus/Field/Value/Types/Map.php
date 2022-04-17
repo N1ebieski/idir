@@ -1,22 +1,11 @@
 <?php
 
-namespace N1ebieski\IDir\Http\Responses\Data\Field\Value\Types;
+namespace N1ebieski\IDir\Http\Responses\Data\Gus\Field\Value\Types;
 
-use GusApi\SearchReport as GusReport;
-use N1ebieski\IDir\Http\Responses\Data\Field\Value\Types\Value;
+use N1ebieski\IDir\Http\Responses\Data\Gus\Field\Value\Types\Value;
 
 class Map extends Value
 {
-    /**
-     * Undocumented function
-     *
-     * @param GusReport $gusReport
-     */
-    public function __construct(GusReport $gusReport)
-    {
-        parent::__construct($gusReport);
-    }
-
     /**
      * Undocumented function
      *

@@ -10,10 +10,10 @@ use Illuminate\Support\Facades\Response;
 use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Support\Collection as Collect;
 use N1ebieski\ICore\Http\Clients\Intelekt\Client;
-use N1ebieski\IDir\Http\Responses\Data\Dir\Chart\GroupData as DirGroupData;
-use N1ebieski\IDir\Http\Responses\Data\Dir\Chart\StatusData as DirStatusData;
-use N1ebieski\IDir\Http\Responses\Data\Dir\Chart\TimelineData as DirTimelineData;
-use N1ebieski\ICore\Http\Responses\Data\Post\Chart\TimelineData as PostAndPagesTimelineData;
+use N1ebieski\IDir\Http\Responses\Data\Chart\Dir\GroupData as DirGroupData;
+use N1ebieski\IDir\Http\Responses\Data\Chart\Dir\StatusData as DirStatusData;
+use N1ebieski\IDir\Http\Responses\Data\Chart\Dir\TimelineData as DirTimelineData;
+use N1ebieski\ICore\Http\Responses\Data\Chart\Post\TimelineData as PostAndPagesTimelineData;
 
 class HomeController
 {
@@ -42,18 +42,14 @@ class HomeController
 
         return Response::view('idir::admin.home.index', [
             'posts' => $posts,
-            'countDirsByStatus' => App::make(DirStatusData::class, [
-                'collection' => $dir->makeRepo()->countByStatus()
-            ])->toArray(),
-            'countDirsByGroup' => App::make(DirGroupData::class, [
-                'collection' => $dir->makeRepo()->countByGroup()
-            ])->toArray(),
-            'countDirsByDateAndGroup' => App::make(DirTimelineData::class, [
-                'collection' => $dir->makeRepo()->countByDateAndGroup()
-            ])->toArray(),
-            'countPostsAndPagesByDate' => App::make(PostAndPagesTimelineData::class, [
-                'collection' => $post->makeRepo()->countActiveByDateUnionPages($page->activeByDate())
-            ])->toArray()
+            'countDirsByStatus' => App::make(DirStatusData::class)
+                ->toArray($dir->makeRepo()->countByStatus()),
+            'countDirsByGroup' => App::make(DirGroupData::class)
+                ->toArray($dir->makeRepo()->countByGroup()),
+            'countDirsByDateAndGroup' => App::make(DirTimelineData::class)
+                ->toArray($dir->makeRepo()->countByDateAndGroup()),
+            'countPostsAndPagesByDate' => App::make(PostAndPagesTimelineData::class)
+                ->toArray($post->makeRepo()->countActiveByDateUnionPages($page->activeByDate()))
         ]);
     }
 }

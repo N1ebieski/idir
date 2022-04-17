@@ -5,18 +5,10 @@ namespace N1ebieski\IDir\Tests\Feature\Api\Payment\Dir;
 use Tests\TestCase;
 use Illuminate\Support\Str;
 use N1ebieski\IDir\Models\Dir;
-use N1ebieski\IDir\Models\User;
-use N1ebieski\ICore\Models\Link;
 use N1ebieski\IDir\Models\Group;
 use N1ebieski\IDir\Models\Price;
-use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Auth;
-use GuzzleHttp\Client as GuzzleClient;
 use Illuminate\Support\Facades\Config;
-use N1ebieski\IDir\Models\Field\Group\Field;
 use N1ebieski\IDir\Models\Payment\Dir\Payment;
-use GuzzleHttp\Psr7\Response as GuzzleResponse;
-use N1ebieski\IDir\Models\Category\Dir\Category;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class PaymentTest extends TestCase
@@ -30,121 +22,92 @@ class PaymentTest extends TestCase
     private const PAYMENT_PROVIDER = 'cashbill';
 
     /**
-     * [protected description]
-     * @var string
-     */
-    protected $key;
-
-    /**
-     * [setUp description]
-     */
-    public function setUp(): void
-    {
-        parent::setUp();
-
-        $this->key = Config::get('services.' . static::PAYMENT_PROVIDER . '.transfer.key');
-    }
-
-    /**
      * [providerSetup description]
      * @param  Payment $payment [description]
      * @return array            [description]
      */
     protected function providerSetup(Payment $payment): array
     {
-        $provider['service'] = config('services.' . static::PAYMENT_PROVIDER . '.transfer.service');
+        $key = Config::get('services.' . self::PAYMENT_PROVIDER . '.transfer.key');
+
+        $provider['service'] = Config::get('services.' . self::PAYMENT_PROVIDER . '.transfer.service');
         $provider['orderid'] = '2372832783';
         $provider['amount'] = $payment->order->price;
         $provider['userdata'] = json_encode(['uuid' => $payment->uuid, 'redirect' => route('web.profile.dirs')]);
         $provider['status'] = 'ok';
         $provider['sign'] = md5($provider['service'] . $provider['orderid'] . $provider['amount']
-        . $provider['userdata'] . $provider['status'] . $this->key);
+        . $provider['userdata'] . $provider['status'] . $key);
 
         return $provider;
     }
 
     public function testPaymentVerifyInactive()
     {
-        $group = factory(Group::class)->states(['public', 'apply_inactive'])->create();
+        $group = Group::makeFactory()->public()->applyInactive()->create();
 
-        $price = factory(Price::class)->states(['transfer'])->make();
-        $price->group()->associate($group)->save();
+        $price = Price::makeFactory()->transfer()->for($group)->create();
 
-        $dir = factory(Dir::class)->states(['with_user', 'pending'])->make();
-        $dir->group()->associate($group)->save();
+        $dir = Dir::makeFactory()->withUser()->pending()->for($group)->create();
 
-        $payment = factory(Payment::class)->states(['pending'])->make();
-        $payment->morph()->associate($dir);
-        $payment->orderMorph()->associate($price);
-        $payment->save();
+        $payment = Payment::makeFactory()->pending()->for($dir, 'morph')->for($price, 'orderMorph')->create();
 
-        $response = $this->post(route('api.payment.dir.verify'), $this->providerSetup($payment));
+        $response = $this->post(route('api.payment.dir.verify'), $this->providerSetup($payment->load('orderMorph')));
 
         $response->assertSeeText('OK');
 
         $this->assertDatabaseHas('payments', [
             'uuid' => $payment->uuid,
             'model_id' => $dir->id,
-            'model_type' => 'N1ebieski\\IDir\\Models\\Dir',
+            'model_type' => $dir->getMorphClass(),
             'order_id' => $price->id,
-            'status' => 0
+            'status' => Payment::UNFINISHED
         ]);
 
         $this->assertDatabaseHas('dirs', [
             'id' => $dir->id,
-            'status' => 0
+            'status' => Dir::INACTIVE
         ]);
     }
 
     public function testPaymentVerifyActive()
     {
-        $group = factory(Group::class)->states(['public', 'apply_active'])->create();
+        $group = Group::makeFactory()->public()->applyActive()->create();
 
-        $price = factory(Price::class)->states(['transfer'])->make();
-        $price->group()->associate($group)->save();
+        $price = Price::makeFactory()->transfer()->for($group)->create();
 
-        $dir = factory(Dir::class)->states(['with_user', 'pending'])->make();
-        $dir->group()->associate($group)->save();
+        $dir = Dir::makeFactory()->withUser()->pending()->for($group)->create();
 
-        $payment = factory(Payment::class)->states(['pending'])->make();
-        $payment->morph()->associate($dir);
-        $payment->orderMorph()->associate($price);
-        $payment->save();
+        $payment = Payment::makeFactory()->pending()->for($dir, 'morph')->for($price, 'orderMorph')->create();
 
-        $response = $this->post(route('api.payment.dir.verify'), $this->providerSetup($payment));
+        $response = $this->post(route('api.payment.dir.verify'), $this->providerSetup($payment->load('orderMorph')));
 
         $response->assertSeeText('OK');
 
         $this->assertDatabaseHas('payments', [
             'uuid' => $payment->uuid,
             'model_id' => $dir->id,
-            'model_type' => 'N1ebieski\\IDir\\Models\\Dir',
+            'model_type' => $dir->getMorphClass(),
             'order_id' => $price->id,
-            'status' => 1
+            'status' => Payment::FINISHED
         ]);
 
         $this->assertDatabaseHas('dirs', [
             'id' => $dir->id,
-            'status' => 1
+            'status' => Dir::ACTIVE
         ]);
     }
 
     public function testPaymentVerifyStatusError()
     {
-        $group = factory(Group::class)->states(['public', 'apply_active'])->create();
+        $group = Group::makeFactory()->public()->applyActive()->create();
 
-        $price = factory(Price::class)->states(['transfer'])->make();
-        $price->group()->associate($group)->save();
+        $price = Price::makeFactory()->transfer()->for($group)->create();
 
-        $dir = factory(Dir::class)->states(['with_user', 'pending'])->make();
-        $dir->group()->associate($group)->save();
+        $dir = Dir::makeFactory()->withUser()->pending()->for($group)->create();
 
-        $payment = factory(Payment::class)->states(['pending'])->make();
-        $payment->morph()->associate($dir);
-        $payment->orderMorph()->associate($price);
-        $payment->save();
+        $payment = Payment::makeFactory()->pending()->for($dir, 'morph')->for($price, 'orderMorph')->create();
 
-        $providerSetup = $this->providerSetup($payment);
+        $providerSetup = $this->providerSetup($payment->load('orderMorph'));
         $providerSetup['status'] = 'err';
 
         $response = $this->post(route('api.payment.dir.verify'), $providerSetup);
@@ -158,20 +121,15 @@ class PaymentTest extends TestCase
 
     public function testPaymentVerifyAmountError()
     {
-        $group = factory(Group::class)->states(['public', 'apply_active'])->create();
+        $group = Group::makeFactory()->public()->applyActive()->create();
 
-        $price = factory(Price::class)->states(['transfer'])->make();
-        $price->group()->associate($group)->save();
+        $price = Price::makeFactory()->transfer()->for($group)->create();
 
-        $dir = factory(Dir::class)->states(['with_user', 'pending'])->make();
-        $dir->group()->associate($group)->save();
+        $dir = Dir::makeFactory()->withUser()->pending()->for($group)->create();
 
-        $payment = factory(Payment::class)->states(['pending'])->make();
-        $payment->morph()->associate($dir);
-        $payment->orderMorph()->associate($price);
-        $payment->save();
+        $payment = Payment::makeFactory()->pending()->for($dir, 'morph')->for($price, 'orderMorph')->create();
 
-        $providerSetup = $this->providerSetup($payment);
+        $providerSetup = $this->providerSetup($payment->load('orderMorph'));
         $providerSetup['amount'] = "999.99";
 
         $response = $this->post(route('api.payment.dir.verify'), $providerSetup);
@@ -185,20 +143,15 @@ class PaymentTest extends TestCase
 
     public function testPaymentVerifySignError()
     {
-        $group = factory(Group::class)->states(['public', 'apply_active'])->create();
+        $group = Group::makeFactory()->public()->applyActive()->create();
 
-        $price = factory(Price::class)->states(['transfer'])->make();
-        $price->group()->associate($group)->save();
+        $price = Price::makeFactory()->transfer()->for($group)->create();
 
-        $dir = factory(Dir::class)->states(['with_user', 'pending'])->make();
-        $dir->group()->associate($group)->save();
+        $dir = Dir::makeFactory()->withUser()->pending()->for($group)->create();
 
-        $payment = factory(Payment::class)->states(['pending'])->make();
-        $payment->morph()->associate($dir);
-        $payment->orderMorph()->associate($price);
-        $payment->save();
+        $payment = Payment::makeFactory()->pending()->for($dir, 'morph')->for($price, 'orderMorph')->create();
 
-        $providerSetup = $this->providerSetup($payment);
+        $providerSetup = $this->providerSetup($payment->load('orderMorph'));
         $providerSetup['sign'] = "dupa";
 
         $response = $this->post(route('api.payment.dir.verify'), $providerSetup);
@@ -207,6 +160,6 @@ class PaymentTest extends TestCase
 
         $this->assertTrue(Str::contains($payment->logs, 'Invalid sign'));
 
-        $response->assertOk(403);
+        $response->assertOk();
     }
 }

@@ -2,6 +2,7 @@
 
 namespace N1ebieski\IDir\Http\Requests\Web\Payment\Factories;
 
+use Illuminate\Http\Response as HttpResponse;
 use N1ebieski\IDir\Http\Requests\Web\Payment\Interfaces\CompleteRequestStrategy;
 
 class CompleteRequestFactory
@@ -24,7 +25,7 @@ class CompleteRequestFactory
 
         throw new \N1ebieski\IDir\Exceptions\Payment\DriverNotFoundException(
             "Driver {$driver} not found",
-            403
+            HttpResponse::HTTP_FORBIDDEN
         );
     }
 }

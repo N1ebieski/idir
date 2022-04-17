@@ -19,6 +19,7 @@ use N1ebieski\IDir\Crons\Dir\BacklinkCron;
 use N1ebieski\IDir\Crons\Dir\ReminderCron;
 use N1ebieski\IDir\Mail\Dir\CompletedMail;
 use N1ebieski\IDir\Crons\Dir\CompletedCron;
+use Illuminate\Http\Response as HttpResponse;
 use GuzzleHttp\Middleware as GuzzleMiddleware;
 use GuzzleHttp\Psr7\Response as GuzzleResponse;
 use N1ebieski\IDir\Models\Category\Dir\Category;
@@ -261,7 +262,7 @@ class DirTest extends TestCase
 
         $this->mock(GuzzleClient::class, function ($mock) use ($link) {
             $mock->shouldReceive('request')->with('GET', 'http://dadadad.pl', ['verify' => false])->andReturn(
-                new GuzzleResponse(200, [], 'dadasdasd sdsajdhjashdj')
+                new GuzzleResponse(HttpResponse::HTTP_OK, [], 'dadasdasd sdsajdhjashdj')
             );
         });
 
@@ -317,7 +318,7 @@ class DirTest extends TestCase
 
         $this->mock(GuzzleClient::class, function ($mock) use ($link) {
             $mock->shouldReceive('request')->with('GET', 'http://dadadad.pl', ['verify' => false])->andReturn(
-                new GuzzleResponse(200, [], '<a href="' . $link->url . '">dadasdasd</a>')
+                new GuzzleResponse(HttpResponse::HTTP_OK, [], '<a href="' . $link->url . '">dadasdasd</a>')
             );
         });
 
@@ -370,13 +371,13 @@ class DirTest extends TestCase
         ]);
 
         $mock = new MockHandler([
-            new GuzzleResponse(302, [
+            new GuzzleResponse(HttpResponse::HTTP_FOUND, [
                 'Location' => 'https://gzermplatz.aftermarket.pl/redir.php?panel=Market_Auction&params=id%3D2493603&type=auction&id=2493603&medium=direct:direct'
             ]),
-            new GuzzleResponse(302, [
+            new GuzzleResponse(HttpResponse::HTTP_FOUND, [
                 'Location' => 'https://www.aftermarket.pl/aukcja/2493603/?_track=504ea78ba428635f7787e4f49c326f88',
             ]),
-            new GuzzleResponse(200)
+            new GuzzleResponse(HttpResponse::HTTP_OK)
         ]);
 
         $stack = new HandlerStack($mock);
@@ -422,13 +423,13 @@ class DirTest extends TestCase
         Config::set('idir.dir.status.parked_domains', []);
 
         $mock = new MockHandler([
-            new GuzzleResponse(302, [
+            new GuzzleResponse(HttpResponse::HTTP_FOUND, [
                 'Location' => 'https://gzermplatz.dasdasdasd.pl/redir.php?panel=Market_Auction&params=id%3D2493603&type=auction&id=2493603&medium=direct:direct'
             ]),
-            new GuzzleResponse(302, [
+            new GuzzleResponse(HttpResponse::HTTP_FOUND, [
                 'Location' => 'https://www.dasdasdas.pl/aukcja/2493603/?_track=504ea78ba428635f7787e4f49c326f88',
             ]),
-            new GuzzleResponse(200)
+            new GuzzleResponse(HttpResponse::HTTP_OK)
         ]);
 
         $stack = new HandlerStack($mock);
@@ -473,7 +474,7 @@ class DirTest extends TestCase
         Config::set('idir.dir.status.max_attempts', 1);
 
         $mock = new MockHandler([
-            new GuzzleResponse(404)
+            new GuzzleResponse(HttpResponse::HTTP_NOT_FOUND)
         ]);
 
         $stack = new HandlerStack($mock);
@@ -519,7 +520,7 @@ class DirTest extends TestCase
         Config::set('idir.dir.status.max_attempts', 1);
 
         $mock = new MockHandler([
-            new GuzzleResponse(200)
+            new GuzzleResponse(HttpResponse::HTTP_OK)
         ]);
 
         $stack = new HandlerStack($mock);

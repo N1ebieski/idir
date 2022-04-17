@@ -1,22 +1,15 @@
 <?php
 
-namespace N1ebieski\IDir\Http\Responses\Data\Dir\Chart;
+namespace N1ebieski\IDir\Http\Responses\Data\Chart\Dir;
 
 use N1ebieski\IDir\Models\Dir;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Contracts\Routing\UrlGenerator as URL;
-use N1ebieski\IDir\Http\Responses\Data\DataInterface;
 use Illuminate\Contracts\Translation\Translator as Lang;
+use N1ebieski\ICore\Http\Responses\Data\Chart\DataInterface;
 
 class StatusData implements DataInterface
 {
-    /**
-     * Undocumented variable
-     *
-     * @var Collection
-     */
-    protected $collection;
-
     /**
      * Undocumented variable
      *
@@ -48,14 +41,11 @@ class StatusData implements DataInterface
     /**
      * Undocumented function
      *
-     * @param Collection $collection
      * @param Lang $lang
      * @param URL $url
      */
-    public function __construct(Collection $collection, Lang $lang, URL $url)
+    public function __construct(Lang $lang, URL $url)
     {
-        $this->collection = $collection;
-
         $this->lang = $lang;
         $this->url = $url;
     }
@@ -65,11 +55,11 @@ class StatusData implements DataInterface
      *
      * @return array
      */
-    public function toArray(): array
+    public function toArray(Collection $collection): array
     {
         $data = [];
 
-        $this->collection->sortBy('status')
+        $collection->sortBy('status')
             ->each(function ($item) use (&$data) {
                 $data[] = [
                     'status' => [

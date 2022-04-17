@@ -12,6 +12,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use N1ebieski\IDir\Repositories\DirRepo;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Http\Response as HttpResponse;
 use N1ebieski\IDir\Repositories\DirStatusRepo;
 use N1ebieski\IDir\Http\Clients\Dir\StatusClient;
 use Illuminate\Contracts\Config\Repository as Config;
@@ -192,7 +193,7 @@ class CheckStatusJob implements ShouldQueue
      */
     protected function isStatus(): bool
     {
-        return $this->client->getResponse()->getStatusCode() === 200;
+        return $this->client->getResponse()->getStatusCode() === HttpResponse::HTTP_OK;
     }
 
     /**

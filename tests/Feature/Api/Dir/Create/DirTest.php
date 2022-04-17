@@ -230,7 +230,7 @@ class DirTest extends TestCase
 
         $this->mock(GuzzleClient::class, function ($mock) use ($link, $backlinkUrl) {
             $mock->shouldReceive('request')->with('GET', $backlinkUrl, ['verify' => false])->andReturn(
-                new GuzzleResponse(200, [], '<a href="' . $link->url . '">backlink</a>')
+                new GuzzleResponse(HttpResponse::HTTP_OK, [], '<a href="' . $link->url . '">backlink</a>')
             );
         });
 
@@ -417,7 +417,7 @@ class DirTest extends TestCase
 
         $this->mock(GuzzleClient::class, function ($mock) use ($price) {
             $mock->shouldReceive('request')->andReturn(
-                new GuzzleResponse(200, [], json_encode([
+                new GuzzleResponse(HttpResponse::HTTP_OK, [], json_encode([
                     'active' => true,
                     'number' => $price->number,
                     'activeFrom' => null,
@@ -459,7 +459,7 @@ class DirTest extends TestCase
 
         $this->mock(GuzzleClient::class, function ($mock) use ($price) {
             $mock->shouldReceive('request')->andReturn(
-                new GuzzleResponse(404, [], json_encode([
+                new GuzzleResponse(HttpResponse::HTTP_NOT_FOUND, [], json_encode([
                     'error' => 'Something wrong'
                 ]))
             );
@@ -506,7 +506,7 @@ class DirTest extends TestCase
 
         $this->mock(GuzzleClient::class, function ($mock) {
             $mock->shouldReceive('request')->andReturn(
-                new GuzzleResponse(200, [], "OK\n23782738273")
+                new GuzzleResponse(HttpResponse::HTTP_OK, [], "OK\n23782738273")
             );
         });
 
@@ -542,7 +542,7 @@ class DirTest extends TestCase
 
         $this->mock(GuzzleClient::class, function ($mock) {
             $mock->shouldReceive('request')->andReturn(
-                new GuzzleResponse(200, [], "ERROR")
+                new GuzzleResponse(HttpResponse::HTTP_OK, [], "ERROR")
             );
         });
 

@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use GuzzleHttp\Client as GuzzleClient;
 use Illuminate\Support\Facades\Config;
 use N1ebieski\IDir\Models\Field\Group\Field;
+use Illuminate\Http\Response as HttpResponse;
 use N1ebieski\IDir\Models\Payment\Dir\Payment;
 use GuzzleHttp\Psr7\Response as GuzzleResponse;
 use N1ebieski\IDir\Models\Category\Dir\Category;
@@ -94,7 +95,7 @@ class DirTest extends TestCase
 
         $response = $this->get(route('web.dir.edit_1', [232]));
 
-        $response->assertStatus(404);
+        $response->assertStatus(HttpResponse::HTTP_NOT_FOUND);
 
         $this->assertTrue(Auth::check());
     }
@@ -112,7 +113,7 @@ class DirTest extends TestCase
 
         $response = $this->get(route('web.dir.edit_1', [$dir->id]));
 
-        $response->assertStatus(403);
+        $response->assertStatus(HttpResponse::HTTP_FORBIDDEN);
 
         $this->assertTrue(Auth::check());
     }
@@ -158,7 +159,7 @@ class DirTest extends TestCase
 
         $response = $this->get(route('web.dir.edit_2', [$dir->id, 23]));
 
-        $response->assertStatus(404);
+        $response->assertStatus(HttpResponse::HTTP_NOT_FOUND);
     }
 
     public function testDirEdit2NoexistDir()
@@ -171,7 +172,7 @@ class DirTest extends TestCase
 
         $response = $this->get(route('web.dir.edit_2', [34, $group->id]));
 
-        $response->assertStatus(404);
+        $response->assertStatus(HttpResponse::HTTP_NOT_FOUND);
     }
 
     public function testDirEdit2Foreign()
@@ -187,7 +188,7 @@ class DirTest extends TestCase
 
         $response = $this->get(route('web.dir.edit_2', [$dir->id, $group->id]));
 
-        $response->assertStatus(403);
+        $response->assertStatus(HttpResponse::HTTP_FORBIDDEN);
 
         $this->assertTrue(Auth::check());
     }
@@ -207,7 +208,7 @@ class DirTest extends TestCase
 
         $response = $this->get(route('web.dir.edit_2', [$dir->id, $group->id]));
 
-        $response->assertStatus(403);
+        $response->assertStatus(HttpResponse::HTTP_FORBIDDEN);
     }
 
     public function testDirEdit2MaxModelsNewGroup()
@@ -226,7 +227,7 @@ class DirTest extends TestCase
 
         $response = $this->get(route('web.dir.edit_2', [$dir->id, $new_group->id]));
 
-        $response->assertStatus(403);
+        $response->assertStatus(HttpResponse::HTTP_FORBIDDEN);
     }
 
     public function testDirEdit2MaxModelsOldGroup()
@@ -291,7 +292,7 @@ class DirTest extends TestCase
 
         $response = $this->put(route('web.dir.update_2', [$dir->id, 23]));
 
-        $response->assertStatus(404);
+        $response->assertStatus(HttpResponse::HTTP_NOT_FOUND);
     }
 
     public function testDirUpdate2NoexistDir()
@@ -304,7 +305,7 @@ class DirTest extends TestCase
 
         $response = $this->put(route('web.dir.update_2', [34, $group->id]));
 
-        $response->assertStatus(404);
+        $response->assertStatus(HttpResponse::HTTP_NOT_FOUND);
     }
 
     public function testDirUpdate2Foreign()
@@ -320,7 +321,7 @@ class DirTest extends TestCase
 
         $response = $this->put(route('web.dir.update_2', [$dir->id, $group->id]));
 
-        $response->assertStatus(403);
+        $response->assertStatus(HttpResponse::HTTP_FORBIDDEN);
 
         $this->assertTrue(Auth::check());
     }
@@ -340,7 +341,7 @@ class DirTest extends TestCase
 
         $response = $this->put(route('web.dir.update_2', [$dir->id, $group->id]));
 
-        $response->assertStatus(403);
+        $response->assertStatus(HttpResponse::HTTP_FORBIDDEN);
     }
 
     public function testDirUpdate2ValidationFail()
@@ -427,7 +428,7 @@ class DirTest extends TestCase
 
         $response = $this->get(route('web.dir.edit_3', [$dir->id, 23]));
 
-        $response->assertStatus(404);
+        $response->assertStatus(HttpResponse::HTTP_NOT_FOUND);
     }
 
     public function testDirEdit3NoexistDir()
@@ -440,7 +441,7 @@ class DirTest extends TestCase
 
         $response = $this->get(route('web.dir.edit_3', [34, $group->id]));
 
-        $response->assertStatus(404);
+        $response->assertStatus(HttpResponse::HTTP_NOT_FOUND);
     }
 
     public function testDirEdit3Foreign()
@@ -456,7 +457,7 @@ class DirTest extends TestCase
 
         $response = $this->get(route('web.dir.edit_3', [$dir->id, $group->id]));
 
-        $response->assertStatus(403);
+        $response->assertStatus(HttpResponse::HTTP_FORBIDDEN);
 
         $this->assertTrue(Auth::check());
     }
@@ -530,7 +531,7 @@ class DirTest extends TestCase
 
         $response = $this->put(route('web.dir.update_3', [$dir->id, 23]));
 
-        $response->assertStatus(404);
+        $response->assertStatus(HttpResponse::HTTP_NOT_FOUND);
     }
 
     public function testDirUpdate3NoexistDir()
@@ -543,7 +544,7 @@ class DirTest extends TestCase
 
         $response = $this->put(route('web.dir.update_3', [34, $group->id]));
 
-        $response->assertStatus(404);
+        $response->assertStatus(HttpResponse::HTTP_NOT_FOUND);
     }
 
     public function testDirUpdate3Foreign()
@@ -559,7 +560,7 @@ class DirTest extends TestCase
 
         $response = $this->put(route('web.dir.update_3', [$dir->id, $group->id]));
 
-        $response->assertStatus(403);
+        $response->assertStatus(HttpResponse::HTTP_FORBIDDEN);
 
         $this->assertTrue(Auth::check());
     }
@@ -579,7 +580,7 @@ class DirTest extends TestCase
 
         $response = $this->put(route('web.dir.update_3', [$dir->id, $group->id]));
 
-        $response->assertStatus(403);
+        $response->assertStatus(HttpResponse::HTTP_FORBIDDEN);
     }
 
     public function testDirUpdate3ValidationUrlFail()
@@ -697,7 +698,7 @@ class DirTest extends TestCase
 
         $this->mock(GuzzleClient::class, function ($mock) use ($link) {
             $mock->shouldReceive('request')->with('GET', 'http://dadadad.pl/dasdas', ['verify' => false])->andReturn(
-                new GuzzleResponse(200, [], '<a href="' . $link->url . '">dadasdasd</a>')
+                new GuzzleResponse(HttpResponse::HTTP_OK, [], '<a href="' . $link->url . '">dadasdasd</a>')
             );
         });
 
@@ -937,7 +938,7 @@ class DirTest extends TestCase
 
         $this->mock(GuzzleClient::class, function ($mock) use ($price) {
             $mock->shouldReceive('request')->andReturn(
-                new GuzzleResponse(200, [], json_encode([
+                new GuzzleResponse(HttpResponse::HTTP_OK, [], json_encode([
                     'active' => true,
                     'number' => $price->number,
                     'activeFrom' => null,
