@@ -38,10 +38,10 @@ class DirTest extends TestCase
     private const FIELD_TYPES = ['input', 'textarea', 'select', 'multiselect', 'checkbox', 'image'];
 
     /**
-     * [dirSetup description]
+     * [setUpDir description]
      * @return array [description]
      */
-    protected function dirSetup(): array
+    protected function setUpDir(): array
     {
         $category = Category::makeFactory()->active()->create();
 
@@ -55,11 +55,11 @@ class DirTest extends TestCase
     }
 
     /**
-     * [fieldsSetup description]
+     * [setUpFields description]
      * @param  Group $group [description]
      * @return array        [description]
      */
-    protected function fieldsSetup(Group $group): array
+    protected function setUpFields(Group $group): array
     {
         foreach (static::FIELD_TYPES as $type) {
             $field = Field::makeFactory()->public()->hasAttached($group, [], 'morphs')->{$type}()->create();
@@ -192,7 +192,7 @@ class DirTest extends TestCase
     {
         $group = Group::makeFactory()->public()->requiredUrl()->create();
 
-        $response = $this->postJson(route('api.dir.store', [$group->id]), $this->dirSetup());
+        $response = $this->postJson(route('api.dir.store', [$group->id]), $this->setUpDir());
 
         $response->assertStatus(HttpResponse::HTTP_UNPROCESSABLE_ENTITY);
         $response->assertJsonValidationErrors(['email']);
@@ -206,13 +206,13 @@ class DirTest extends TestCase
 
         $group = Group::makeFactory()->public()->requiredUrl()->additionalOptionsForEditingContent()->create();
 
-        $response = $this->postJson(route('api.dir.store', [$group->id]), $this->dirSetup());
+        $response = $this->postJson(route('api.dir.store', [$group->id]), $this->setUpDir());
 
         $response->assertStatus(HttpResponse::HTTP_CREATED);
         $response->assertJsonFragment([
-            'title' => $this->dirSetup()['title'],
-            'content_html' => "<p>{$this->dirSetup()['content_html']}</p>",
-            'url' => $this->dirSetup()['url']
+            'title' => $this->setUpDir()['title'],
+            'content_html' => "<p>{$this->setUpDir()['content_html']}</p>",
+            'url' => $this->setUpDir()['url']
         ]);
     }
 
@@ -234,14 +234,14 @@ class DirTest extends TestCase
             );
         });
 
-        $response = $this->postJson(route('api.dir.store', [$group->id]), $this->dirSetup() + [
+        $response = $this->postJson(route('api.dir.store', [$group->id]), $this->setUpDir() + [
             'backlink' => $link->id,
             'backlink_url' => $backlinkUrl
         ]);
 
         $response->assertStatus(HttpResponse::HTTP_CREATED);
 
-        $dir = Dir::make()->where('url', $this->dirSetup()['url'])->first();
+        $dir = Dir::first();
 
         $this->assertTrue($dir->exists());
 
@@ -262,9 +262,9 @@ class DirTest extends TestCase
 
         $group = Group::makeFactory()->public()->applyActive()->requiredUrl()->create();
 
-        $dirSetup = $this->dirSetup();
+        $setUpDir = $this->setUpDir();
 
-        $response = $this->postJson(route('api.dir.store', [$group->id]), $dirSetup + $this->fieldsSetup($group));
+        $response = $this->postJson(route('api.dir.store', [$group->id]), $setUpDir + $this->setUpFields($group));
 
         $response->assertStatus(HttpResponse::HTTP_CREATED);
 
@@ -275,7 +275,7 @@ class DirTest extends TestCase
         $this->assertDatabaseHas('categories_models', [
             'model_id' => $dir->id,
             'model_type' => $dir->getMorphClass(),
-            'category_id' => $dirSetup['categories'][0]
+            'category_id' => $setUpDir['categories'][0]
         ]);
 
         $this->assertDatabaseHas('tags_models', [
@@ -336,12 +336,12 @@ class DirTest extends TestCase
 
         $price = Price::makeFactory()->transfer()->for($group)->create();
 
-        $dirSetup = $this->dirSetup();
+        $setUpDir = $this->setUpDir();
 
         $response = $this->postJson(route('api.dir.store', [$group->id]), [
             'payment_type' => 'transfer',
             'payment_transfer' => $price->id
-        ] + $dirSetup);
+        ] + $setUpDir);
 
         $dir = Dir::orderBy('id', 'desc')->first();
 
@@ -369,7 +369,7 @@ class DirTest extends TestCase
 
         $response = $this->postJson(route('api.dir.store', [$group->id]), [
             'email' => 'kontakt@intelekt.net.pl',
-        ] + $this->dirSetup());
+        ] + $this->setUpDir());
 
         $response->assertStatus(HttpResponse::HTTP_CREATED);
 
@@ -399,7 +399,7 @@ class DirTest extends TestCase
         $response = $this->postJson(route('api.dir.store', [$group->id]), [
             'payment_type' => 'code_sms',
             'payment_code_sms' => $price->id
-        ] + $this->dirSetup());
+        ] + $this->setUpDir());
 
         $response->assertStatus(HttpResponse::HTTP_UNPROCESSABLE_ENTITY);
         $response->assertJsonValidationErrors(['code_sms']);
@@ -431,7 +431,7 @@ class DirTest extends TestCase
             'payment_type' => 'code_sms',
             'payment_code_sms' => $price->id,
             'code_sms' => Str::random(10)
-        ] + $this->dirSetup());
+        ] + $this->setUpDir());
 
         $response->assertStatus(HttpResponse::HTTP_CREATED);
 
@@ -469,7 +469,7 @@ class DirTest extends TestCase
             'payment_type' => 'code_sms',
             'payment_code_sms' => $price->id,
             'code_sms' => Str::random(10)
-        ] + $this->dirSetup());
+        ] + $this->setUpDir());
 
         $response->assertStatus(HttpResponse::HTTP_UNPROCESSABLE_ENTITY);
         $response->assertJsonValidationErrors(['code_sms']);
@@ -488,7 +488,7 @@ class DirTest extends TestCase
         $response = $this->postJson(route('api.dir.store', [$group->id]), [
             'payment_type' => 'code_transfer',
             'payment_code_transfer' => $price->id
-        ] + $this->dirSetup());
+        ] + $this->setUpDir());
 
         $response->assertStatus(HttpResponse::HTTP_UNPROCESSABLE_ENTITY);
         $response->assertJsonValidationErrors(['code_transfer']);
@@ -514,7 +514,7 @@ class DirTest extends TestCase
             'payment_type' => 'code_transfer',
             'payment_code_transfer' => $price->id,
             'code_transfer' => Str::random(10)
-        ] + $this->dirSetup());
+        ] + $this->setUpDir());
 
         $response->assertStatus(HttpResponse::HTTP_CREATED);
 
@@ -550,7 +550,7 @@ class DirTest extends TestCase
             'payment_type' => 'code_transfer',
             'payment_code_transfer' => $price->id,
             'code_transfer' => Str::random(10)
-        ] + $this->dirSetup());
+        ] + $this->setUpDir());
 
         $response->assertStatus(HttpResponse::HTTP_UNPROCESSABLE_ENTITY);
         $response->assertJsonValidationErrors(['code_transfer']);
@@ -578,7 +578,7 @@ class DirTest extends TestCase
             'payment_type' => 'code_transfer',
             'payment_code_transfer' => $price->id,
             'code_transfer' => $code->code
-        ] + $this->dirSetup());
+        ] + $this->setUpDir());
 
         $response->assertStatus(HttpResponse::HTTP_CREATED);
 
@@ -622,7 +622,7 @@ class DirTest extends TestCase
             'payment_type' => 'code_sms',
             'payment_code_sms' => $price->id,
             'code_sms' => $code->code
-        ] + $this->dirSetup());
+        ] + $this->setUpDir());
 
         $response->assertStatus(HttpResponse::HTTP_CREATED);
 
@@ -661,7 +661,7 @@ class DirTest extends TestCase
 
         Mail::fake();
 
-        $response = $this->postJson(route('api.dir.store', [$group->id]), $this->dirSetup());
+        $response = $this->postJson(route('api.dir.store', [$group->id]), $this->setUpDir());
 
         $response->assertStatus(HttpResponse::HTTP_CREATED);
 
@@ -701,7 +701,7 @@ class DirTest extends TestCase
 
         Mail::fake();
 
-        $response = $this->postJson(route('api.dir.store', [$group->id]), $this->dirSetup());
+        $response = $this->postJson(route('api.dir.store', [$group->id]), $this->setUpDir());
 
         $response->assertStatus(HttpResponse::HTTP_CREATED);
 

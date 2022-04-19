@@ -53,7 +53,7 @@ class PaymentController extends Controller implements Polymorphic
      * @responseField url string Link to the driver's payment page (for transfer type payment).
      *
      * @apiResource N1ebieski\IDir\Http\Resources\Payment\Dir\PaymentResource
-     * @apiResourceModel N1ebieski\IDir\Models\Payment\Dir\Payment states=pending,with_morph,with_order with=morph,morph.group,morph.ratings,morph.user,orderMorph
+     * @apiResourceModel N1ebieski\IDir\Models\Payment\Dir\Payment states=pending,withMorph,withOrder with=morph,morph.group,morph.ratings,morph.user,orderMorph
      * @apiResourceAdditional url="https://paytest.cashbill.pl/pl/payment/eydJpZCI6IlRFU1RfNmV6OWZ6dXpvIiwicGMiOiIiLCJ0b2tlbiI6ImJiNjQ3ZGFhOTQ3NDU1NzM0OGRhMzhkYjEyMTE0YTI5MTA0NDhkMGUifQ--"
      *
      * @param Payment $payment

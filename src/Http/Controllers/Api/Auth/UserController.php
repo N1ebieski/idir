@@ -57,7 +57,7 @@ class UserController
      * @responseField meta object Paging, filtering and sorting information.
      *
      * @apiResourceCollection N1ebieski\IDir\Http\Resources\Dir\DirResource
-     * @apiResourceModel N1ebieski\IDir\Models\Dir states=title_sentence,content_text,with_user,pending,with_category,with_default_group with=ratings,categories,group,user
+     * @apiResourceModel N1ebieski\IDir\Models\Dir states=titleSentence,contentText,with_user,pending,withCategory,withDefaultGroup with=ratings,categories,group,user
      *
      * @param  DirsRequest $request [description]
      * @param  DirsFilter  $filter  [description]

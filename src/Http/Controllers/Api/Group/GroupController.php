@@ -53,7 +53,7 @@ class GroupController
      * @responseField meta object Paging, filtering and sorting information.
      *
      * @apiResourceCollection N1ebieski\IDir\Http\Resources\Group\GroupResource
-     * @apiResourceModel N1ebieski\IDir\Models\Group states=apply_alt_group,public,additional_options_for_editing_content with=privileges
+     * @apiResourceModel N1ebieski\IDir\Models\Group states=applyAltGroup,public,additionalOptionsForEditingContent with=privileges
      *
      * @param Group $group
      * @param IndexRequest $request

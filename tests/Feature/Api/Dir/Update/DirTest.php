@@ -31,10 +31,10 @@ class DirTest extends TestCase
     private const FIELD_TYPES = ['input', 'textarea', 'select', 'multiselect', 'checkbox', 'image'];
 
     /**
-     * [dirSetup description]
+     * [setUpDir description]
      * @return array [description]
      */
-    protected function dirSetup(): array
+    protected function setUpDir(): array
     {
         $category = Category::makeFactory()->active()->create();
 
@@ -48,11 +48,11 @@ class DirTest extends TestCase
     }
 
     /**
-     * [fieldsSetup description]
+     * [setUpFields description]
      * @param  Group $group [description]
      * @return array        [description]
      */
-    protected function fieldsSetup(Group $group): array
+    protected function setUpFields(Group $group): array
     {
         foreach (static::FIELD_TYPES as $type) {
             $field = Field::makeFactory()->public()->hasAttached($group, [], 'morphs')->{$type}()->create();
@@ -325,13 +325,13 @@ class DirTest extends TestCase
 
         $dir = Dir::makeFactory()->withoutUrl()->for($oldGroup)->for($user)->create();
 
-        $response = $this->putJson(route('api.dir.update', [$dir->id, $newGroup->id]), $this->dirSetup());
+        $response = $this->putJson(route('api.dir.update', [$dir->id, $newGroup->id]), $this->setUpDir());
 
         $response->assertStatus(HttpResponse::HTTP_OK);
         $response->assertJsonFragment([
-            'title' => $this->dirSetup()['title'],
-            'content_html' => "<p>{$this->dirSetup()['content_html']}</p>",
-            'url' => $this->dirSetup()['url']
+            'title' => $this->setUpDir()['title'],
+            'content_html' => "<p>{$this->setUpDir()['content_html']}</p>",
+            'url' => $this->setUpDir()['url']
         ]);
     }
 
@@ -442,12 +442,12 @@ class DirTest extends TestCase
             'url' => 'https://idir.test/page-with-backlink'
         ]);
 
-        $response = $this->putJson(route('api.dir.update', [$dir->id, $group->id]), $this->dirSetup());
+        $response = $this->putJson(route('api.dir.update', [$dir->id, $group->id]), $this->setUpDir());
 
         $response->assertStatus(HttpResponse::HTTP_OK);
 
         $this->assertDatabaseHas('dirs', [
-            'title' => $this->dirSetup()['title']
+            'title' => $this->setUpDir()['title']
         ]);
     }
 
@@ -465,7 +465,7 @@ class DirTest extends TestCase
 
         $response = $this->putJson(
             route('api.dir.update', [$dir->id, $newGroup->id]),
-            ($dirSetup = $this->dirSetup()) + $this->fieldsSetup($newGroup)
+            ($setUpDir = $this->setUpDir()) + $this->setUpFields($newGroup)
         );
 
         $dir = Dir::orderBy('id', 'desc')->first();
@@ -477,7 +477,7 @@ class DirTest extends TestCase
         $this->assertDatabaseHas('categories_models', [
             'model_id' => $dir->id,
             'model_type' => $dir->getMorphClass(),
-            'category_id' => $dirSetup['categories'][0]
+            'category_id' => $setUpDir['categories'][0]
         ]);
 
         $this->assertDatabaseHas('tags_models', [
@@ -507,7 +507,7 @@ class DirTest extends TestCase
             ->hasAttached($fields, ['value' => json_encode('Commodo laborum irure mollit laborum occaecat adipisicing dolore.')])
             ->create();
 
-        $response = $this->putJson(route('api.dir.update', [$dir->id, $group->id]), $this->dirSetup());
+        $response = $this->putJson(route('api.dir.update', [$dir->id, $group->id]), $this->setUpDir());
 
         $dir = Dir::orderBy('id', 'desc')->first();
 
@@ -583,7 +583,7 @@ class DirTest extends TestCase
         $response = $this->putJson(route('api.dir.update', [$dir->id, $newGroup->id]), [
             'payment_type' => 'transfer',
             'payment_transfer' => $price->id
-        ] + $this->dirSetup());
+        ] + $this->setUpDir());
 
         $response->assertStatus(HttpResponse::HTTP_OK);
 
@@ -618,7 +618,7 @@ class DirTest extends TestCase
 
         $dir = Dir::makeFactory()->withCategory()->for($group)->for($user)->create();
 
-        $response = $this->putJson(route('api.dir.update', [$dir->id, $group->id]), $this->dirSetup());
+        $response = $this->putJson(route('api.dir.update', [$dir->id, $group->id]), $this->setUpDir());
 
         $response->assertStatus(HttpResponse::HTTP_OK);
 
@@ -626,7 +626,7 @@ class DirTest extends TestCase
 
         $this->assertDatabaseHas('dirs', [
             'id' => $dir->id,
-            'title' => $this->dirSetup()['title'],
+            'title' => $this->setUpDir()['title'],
             'status' => Dir::INACTIVE
         ]);
 
@@ -650,7 +650,7 @@ class DirTest extends TestCase
 
         $dir = Dir::makeFactory()->pending()->withCategory()->for($group)->for($user)->create();
 
-        $response = $this->putJson(route('api.dir.update', [$dir->id, $group->id]), $this->dirSetup());
+        $response = $this->putJson(route('api.dir.update', [$dir->id, $group->id]), $this->setUpDir());
 
         $response->assertStatus(HttpResponse::HTTP_UNPROCESSABLE_ENTITY);
         $response->assertJsonValidationErrors(['payment_type']);
@@ -686,7 +686,7 @@ class DirTest extends TestCase
             'payment_type' => 'code_sms',
             'payment_code_sms' => $price->id,
             'code_sms' => Str::random(6)
-        ] + $this->dirSetup());
+        ] + $this->setUpDir());
 
         $dir->refresh();
 

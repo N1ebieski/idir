@@ -7,9 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 use N1ebieski\IDir\Services\DirStatusService;
 use N1ebieski\IDir\Repositories\DirStatusRepo;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class DirStatus extends Model
 {
+    use HasFactory;
+
     // Configuration
 
     /**
@@ -50,6 +53,16 @@ class DirStatus extends Model
         'updated_at' => 'datetime'
     ];
 
+    /**
+     * Create a new factory instance for the model.
+     *
+     * @return DirStatusFactory
+     */
+    protected static function newFactory()
+    {
+        return \N1ebieski\IDir\Database\Factories\DirStatus\DirStatusFactory::new();
+    }
+
     // Relations
 
     /**
@@ -81,4 +94,15 @@ class DirStatus extends Model
     {
         return App::make(DirStatusService::class, ['dirStatus' => $this]);
     }
+
+    /**
+     * Undocumented function
+     *
+     * @param mixed $parameters
+     * @return DirStatusFactory
+     */
+    public static function makeFactory(...$parameters)
+    {
+        return static::factory($parameters);
+    }    
 }

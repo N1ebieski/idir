@@ -164,7 +164,7 @@ class UpdateRequest extends FormRequest
         $rules = $this->prepareFieldsRulesTrait();
 
         foreach ($this->getFields() as $field) {
-            if (optional($this->dir)->fields->firstWhere('id', $field->id)) {
+            if (optional(optional($this->dir)->fields)->firstWhere('id', $field->id)) {
                 $rules["field.{$field->id}"] = array_diff($rules["field.{$field->id}"], ['required']);
             }
         }

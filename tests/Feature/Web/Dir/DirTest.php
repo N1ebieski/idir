@@ -6,13 +6,15 @@ use Carbon\Carbon;
 use Tests\TestCase;
 use GuzzleHttp\HandlerStack;
 use N1ebieski\IDir\Models\Dir;
-use N1ebieski\ICore\Models\Link;
+use N1ebieski\IDir\Models\Link;
 use N1ebieski\IDir\Models\Group;
 use N1ebieski\IDir\Models\Price;
 use GuzzleHttp\Handler\MockHandler;
 use Illuminate\Support\Facades\Mail;
+use N1ebieski\IDir\Models\DirStatus;
 use GuzzleHttp\Client as GuzzleClient;
 use Illuminate\Support\Facades\Config;
+use N1ebieski\IDir\Models\DirBacklink;
 use N1ebieski\IDir\Crons\Dir\StatusCron;
 use N1ebieski\IDir\Mail\Dir\ReminderMail;
 use N1ebieski\IDir\Crons\Dir\BacklinkCron;
@@ -32,16 +34,13 @@ class DirTest extends TestCase
 
     public function testReminderQueueJob()
     {
-        $group = factory(Group::class)->states(['apply_alt_deactivation'])->create();
+        $group = Group::makeFactory()->applyAltDeactivation()->create();
 
-        $price = factory(Price::class)->states(['seasonal'])->make();
-        $price->group()->associate($group)->save();
+        $price = Price::makeFactory()->seasonal()->for($group)->create();
 
-        $dir = factory(Dir::class)->states(['with_user', 'paid_seasonal', 'active'])
-            ->create([
-                'group_id' => $group->id,
-                'privileged_to' => Carbon::now()->subDays(14)
-            ]);
+        $dir = Dir::makeFactory()->withUser()->paidSeasonal()->active()->for($group)->create([
+            'privileged_to' => Carbon::now()->subDays(14)
+        ]);
 
         Mail::fake();
 
@@ -59,22 +58,19 @@ class DirTest extends TestCase
 
     public function testCompletedDeactivationQueueJob()
     {
-        $group = factory(Group::class)->states(['apply_alt_deactivation'])->create();
+        $group = Group::makeFactory()->applyAltDeactivation()->create();
 
-        $price = factory(Price::class)->states(['seasonal'])->make();
-        $price->group()->associate($group)->save();
+        $price = Price::makeFactory()->seasonal()->for($group)->create();
 
-        $dir = factory(Dir::class)->states(['with_user', 'paid_seasonal', 'active'])
-            ->create([
-                'group_id' => $group->id,
-                'privileged_to' => Carbon::now()->subDays(14)
-            ]);
+        $dir = Dir::makeFactory()->withUser()->paidSeasonal()->active()->for($group)->create([
+            'privileged_to' => Carbon::now()->subDays(14)
+        ]);
 
         Mail::fake();
 
         $this->assertDatabaseHas('dirs', [
             'id' => $dir->id,
-            'status' => 1,
+            'status' => Dir::ACTIVE,
             'group_id' => $group->id,
         ]);
 
@@ -91,7 +87,7 @@ class DirTest extends TestCase
 
         $this->assertDatabaseHas('dirs', [
             'id' => $dir->id,
-            'status' => 2,
+            'status' => Dir::PAYMENT_INACTIVE,
             'group_id' => $group->id,
             'privileged_at' => null,
             'privileged_to' => null
@@ -100,23 +96,20 @@ class DirTest extends TestCase
 
     public function testCompletedAltGroupQueueJob()
     {
-        $group = factory(Group::class)->states(['apply_alt_group'])->create();
+        $group = Group::makeFactory()->applyAltGroup()->create();
 
-        $price = factory(Price::class)->states(['seasonal'])->make();
-        $price->group()->associate($group)->save();
+        $price = Price::makeFactory()->seasonal()->for($group)->create();
 
-        $dir = factory(Dir::class)->states(['with_user', 'paid_seasonal', 'active'])
-            ->create([
-                'group_id' => $group->id,
-                'privileged_at' => null,
-                'privileged_to' => null
-            ]);
+        $dir = Dir::makeFactory()->withUser()->paidSeasonal()->active()->for($group)->create([
+            'privileged_at' => null,
+            'privileged_to' => null
+        ]);
 
         Mail::fake();
 
         $this->assertDatabaseHas('dirs', [
             'id' => $dir->id,
-            'status' => 1,
+            'status' => Dir::ACTIVE,
             'group_id' => $group->id,
             'privileged_at' => null,
             'privileged_to' => null
@@ -133,7 +126,7 @@ class DirTest extends TestCase
 
         $this->assertDatabaseHas('dirs', [
             'id' => $dir->id,
-            'status' => 1,
+            'status' => Dir::ACTIVE,
             'group_id' => $group->alt_id,
             'privileged_at' => null,
             'privileged_to' => null
@@ -142,23 +135,20 @@ class DirTest extends TestCase
 
     public function testCompletedAltGroupRemoveCatsQueueJob()
     {
-        $group = factory(Group::class)->states(['apply_alt_group'])->create([
+        $group = Group::makeFactory()->applyAltGroup()->create([
             'max_cats' => 5
         ]);
 
-        $price = factory(Price::class)->states(['seasonal'])->make();
-        $price->group()->associate($group)->save();
+        $price = Price::makeFactory()->seasonal()->for($group)->create();
 
-        $categories = factory(Category::class, 5)->states(['active'])->create();
+        $categories = Category::makeFactory()->count(5)->active()->create();
 
-        $dir = factory(Dir::class)->states(['with_user', 'paid_seasonal', 'active'])
+        $dir = Dir::makeFactory()->withUser()->paidSeasonal()->active()->for($group)
+            ->hasAttached($categories->pluck('id')->toArray(), [], 'categories')
             ->create([
-                'group_id' => $group->id,
                 'privileged_at' => null,
                 'privileged_to' => null
             ]);
-
-        $dir->categories()->attach($categories->pluck('id')->toArray());
 
         Mail::fake();
 
@@ -166,7 +156,7 @@ class DirTest extends TestCase
 
         $this->assertDatabaseHas('dirs', [
             'id' => $dir->id,
-            'status' => 1,
+            'status' => Dir::ACTIVE,
             'group_id' => $group->id,
             'privileged_at' => null,
             'privileged_to' => null
@@ -187,7 +177,7 @@ class DirTest extends TestCase
 
         $this->assertDatabaseHas('dirs', [
             'id' => $dir->id,
-            'status' => 1,
+            'status' => Dir::ACTIVE,
             'group_id' => $group->alt_id,
             'privileged_at' => null,
             'privileged_to' => null
@@ -196,22 +186,19 @@ class DirTest extends TestCase
 
     public function testCompletedAltGroupInfinitePrivilegedToQueueJobFail()
     {
-        $group = factory(Group::class)->states(['apply_alt_group'])->create();
+        $group = Group::makeFactory()->applyAltGroup()->create();
 
-        $price = factory(Price::class)->states(['seasonal'])->make();
-        $price->group()->associate($group)->save();
+        $price = Price::makeFactory()->seasonal()->for($group)->create();
 
-        $dir = factory(Dir::class)->states(['with_user', 'paid_seasonal', 'active'])
-            ->create([
-                'group_id' => $group->id,
-                'privileged_to' => null
-            ]);
+        $dir = Dir::makeFactory()->withUser()->paidSeasonal()->active()->for($group)->create([
+            'privileged_to' => null
+        ]);
 
         Mail::fake();
 
         $this->assertDatabaseHas('dirs', [
             'id' => $dir->id,
-            'status' => 1,
+            'status' => Dir::ACTIVE,
             'group_id' => $group->id,
             'privileged_to' => null
         ]);
@@ -229,7 +216,7 @@ class DirTest extends TestCase
 
         $this->assertDatabaseMissing('dirs', [
             'id' => $dir->id,
-            'status' => 1,
+            'status' => Dir::ACTIVE,
             'group_id' => $group->alt_id,
             'privileged_at' => null,
             'privileged_to' => null
@@ -238,23 +225,17 @@ class DirTest extends TestCase
 
     public function testDeactivateByBacklinkQueueJob()
     {
-        $group = factory(Group::class)->states(['required_backlink'])->create();
+        $group = Group::makeFactory()->requiredBacklink()->create();
 
-        $link = factory(Link::class)->states('backlink')->create();
+        $link = Link::makeFactory()->backlink()->create();
 
-        $dir = factory(Dir::class)->states(['with_user', 'active'])
-            ->create([
-                'group_id' => $group->id,
-            ]);
+        $dir = Dir::makeFactory()->withUser()->active()->for($group)->create();
 
-        $dirBacklink = $dir->backlink()->make(['url' => 'http://dadadad.pl']);
-        $dirBacklink->link()->associate($link);
-        $dirBacklink->dir()->associate($dir);
-        $dirBacklink->save();
+        $dirBacklink = DirBacklink::makeFactory()->for($link)->for($dir)->create(['url' => 'http://dadadad.pl']);
 
         $this->assertDatabaseHas('dirs', [
             'id' => $dir->id,
-            'status' => 1,
+            'status' => Dir::ACTIVE,
             'group_id' => $group->id,
         ]);
 
@@ -279,7 +260,7 @@ class DirTest extends TestCase
 
         $this->assertDatabaseHas('dirs', [
             'id' => $dir->id,
-            'status' => 3,
+            'status' => Dir::BACKLINK_INACTIVE,
             'group_id' => $group->id
         ]);
 
@@ -291,26 +272,20 @@ class DirTest extends TestCase
 
     public function testActivateByBacklinkQueueJob()
     {
-        $group = factory(Group::class)->states(['required_backlink'])->create();
+        $group = Group::makeFactory()->requiredBacklink()->create();
 
-        $link = factory(Link::class)->states('backlink')->create();
+        $link = Link::makeFactory()->backlink()->create();
 
-        $dir = factory(Dir::class)->states(['with_user', 'backlink_inactive'])
-            ->create([
-                'group_id' => $group->id,
-            ]);
+        $dir = Dir::makeFactory()->withUser()->backlinkInactive()->for($group)->create();
 
-        $dirBacklink = $dir->backlink()->make([
+        $dirBacklink = DirBacklink::makeFactory()->for($link)->for($dir)->create([
             'url' => 'http://dadadad.pl',
             'attempts' => 5
         ]);
-        $dirBacklink->link()->associate($link);
-        $dirBacklink->dir()->associate($dir);
-        $dirBacklink->save();
 
         $this->assertDatabaseHas('dirs', [
             'id' => $dir->id,
-            'status' => 3,
+            'status' => Dir::BACKLINK_INACTIVE,
             'group_id' => $group->id,
         ]);
 
@@ -335,7 +310,7 @@ class DirTest extends TestCase
 
         $this->assertDatabaseHas('dirs', [
             'id' => $dir->id,
-            'status' => 1,
+            'status' => Dir::ACTIVE,
             'group_id' => $group->id
         ]);
 
@@ -347,22 +322,18 @@ class DirTest extends TestCase
 
     public function testStatusKnownParkedDomainQueueJob()
     {
-        $group = factory(Group::class)->states(['required_url'])->create();
+        $group = Group::makeFactory()->requiredUrl()->create();
 
-        $dir = factory(Dir::class)->states(['with_user', 'active'])
-            ->create([
-                'group_id' => $group->id,
-                'url' => 'https://parked-domain.pl'
-            ]);
+        $dir = Dir::makeFactory()->withUser()->active()->for($group)->create([
+            'url' => 'https://parked-domain.pl'
+        ]);
 
         $this->assertDatabaseHas('dirs', [
             'id' => $dir->id,
             'status' => Dir::ACTIVE
         ]);
 
-        $dirStatus = $dir->status()->make();
-        $dirStatus->dir()->associate($dir);
-        $dirStatus->save();
+        $dirStatus = DirStatus::makeFactory()->for($dir)->create();
 
         Config::set('idir.dir.status.max_attempts', 1);
         Config::set('idir.dir.status.parked_domains', [
@@ -402,22 +373,18 @@ class DirTest extends TestCase
 
     public function testStatusUnknownParkedDomainQueueJob()
     {
-        $group = factory(Group::class)->states(['required_url'])->create();
+        $group = Group::makeFactory()->requiredUrl()->create();
 
-        $dir = factory(Dir::class)->states(['with_user', 'active'])
-            ->create([
-                'group_id' => $group->id,
-                'url' => 'https://parked-domain.pl'
-            ]);
+        $dir = Dir::makeFactory()->withUser()->active()->for($group)->create([
+            'url' => 'https://parked-domain.pl'
+        ]);
 
         $this->assertDatabaseHas('dirs', [
             'id' => $dir->id,
             'status' => Dir::ACTIVE
         ]);
 
-        $dirStatus = $dir->status()->make();
-        $dirStatus->dir()->associate($dir);
-        $dirStatus->save();
+        $dirStatus = DirStatus::makeFactory()->for($dir)->create();
 
         Config::set('idir.dir.status.max_attempts', 1);
         Config::set('idir.dir.status.parked_domains', []);
@@ -454,22 +421,18 @@ class DirTest extends TestCase
 
     public function testStatusQueueJobFailed()
     {
-        $group = factory(Group::class)->states(['required_url'])->create();
+        $group = Group::makeFactory()->requiredUrl()->create();
 
-        $dir = factory(Dir::class)->states(['with_user', 'active'])
-            ->create([
-                'group_id' => $group->id,
-                'url' => 'https://domain.pl'
-            ]);
+        $dir = Dir::makeFactory()->withUser()->active()->for($group)->create([
+            'url' => 'https://domain.pl'
+        ]);
 
         $this->assertDatabaseHas('dirs', [
             'id' => $dir->id,
             'status' => Dir::ACTIVE
         ]);
 
-        $dirStatus = $dir->status()->make();
-        $dirStatus->dir()->associate($dir);
-        $dirStatus->save();
+        $dirStatus = DirStatus::makeFactory()->for($dir)->create();
 
         Config::set('idir.dir.status.max_attempts', 1);
 
@@ -498,24 +461,20 @@ class DirTest extends TestCase
 
     public function testStatusQueueJobPass()
     {
-        $group = factory(Group::class)->states(['required_url'])->create();
+        $group = Group::makeFactory()->requiredUrl()->create();
 
-        $dir = factory(Dir::class)->states(['with_user', 'status_inactive'])
-            ->create([
-                'group_id' => $group->id,
-                'url' => 'https://domain.pl'
-            ]);
+        $dir = Dir::makeFactory()->withUser()->statusInactive()->for($group)->create([
+            'url' => 'https://domain.pl'
+        ]);
 
         $this->assertDatabaseHas('dirs', [
             'id' => $dir->id,
             'status' => Dir::STATUS_INACTIVE
         ]);
 
-        $dirStatus = $dir->status()->make([
+        $dirStatus = DirStatus::makeFactory()->for($dir)->create([
             'attempts' => 10
         ]);
-        $dirStatus->dir()->associate($dir);
-        $dirStatus->save();
 
         Config::set('idir.dir.status.max_attempts', 1);
 

@@ -96,7 +96,7 @@ class DirController
      * @responseField meta object Paging, filtering and sorting information.
      *
      * @apiResourceCollection N1ebieski\IDir\Http\Resources\Dir\DirResource
-     * @apiResourceModel N1ebieski\IDir\Models\Dir states=title_sentence,content_text,with_user,pending,with_category,with_default_group with=ratings,categories,group,user
+     * @apiResourceModel N1ebieski\IDir\Models\Dir states=titleSentence,contentText,withUser,pending,withCategory,withDefaultGroup with=ratings,categories,group,user
      *
      * @param Dir $dir
      * @param IndexRequest $request
@@ -170,7 +170,7 @@ class DirController
      * @responseField links object Contains links to resources on the website and in the administration panel.
      *
      * @apiResource 201 N1ebieski\IDir\Http\Resources\Dir\DirResource
-     * @apiResourceModel N1ebieski\IDir\Models\Dir states=title_sentence,content_text,with_user,pending,with_category,with_default_group with=ratings,categories,group,user
+     * @apiResourceModel N1ebieski\IDir\Models\Dir states=titleSentence,contentText,withUser,pending,withCategory,withDefaultGroup with=ratings,categories,group,user
      *
      * @param Group $group
      * @param Dir $dir
@@ -249,7 +249,7 @@ class DirController
      * @responseField links object Contains links to resources on the website and in the administration panel.
      *
      * @apiResource N1ebieski\IDir\Http\Resources\Dir\DirResource
-     * @apiResourceModel N1ebieski\IDir\Models\Dir states=title_sentence,content_text,with_user,pending,with_category,with_default_group with=ratings,categories,group,user
+     * @apiResourceModel N1ebieski\IDir\Models\Dir states=titleSentence,contentText,withUser,pending,withCategory,withDefaultGroup with=ratings,categories,group,user
      *
      * @param Dir $dir
      * @param Group $group
@@ -312,7 +312,7 @@ class DirController
      * @responseField links object Contains links to resources on the website and in the administration panel.
      *
      * @apiResource N1ebieski\IDir\Http\Resources\Dir\DirResource
-     * @apiResourceModel N1ebieski\IDir\Models\Dir states=title_sentence,content_text,with_user,pending,with_category,with_default_group with=ratings,categories,group,user
+     * @apiResourceModel N1ebieski\IDir\Models\Dir states=titleSentence,contentText,withUser,pending,withCategory,withDefaultGroup with=ratings,categories,group,user
      *
      * @param  Dir                 $dir     [description]
      * @return JsonResponse                 [description]

@@ -1,13 +1,13 @@
 {
-    "/js/vendor/idir/admin/admin.js": "/js/vendor/idir/admin/admin.js?id=c0e7a8c55dc705839770",
-    "/js/vendor/idir/vendor/vendor.js": "/js/vendor/idir/vendor/vendor.js?id=9cb03c3b57903b1aa5f1",
-    "/css/vendor/idir/vendor/vendor.css": "/css/vendor/idir/vendor/vendor.css?id=cf08986a0921243948a6",
-    "/css/vendor/idir/web/web.css": "/css/vendor/idir/web/web.css?id=3c244a2f18dedd5fd052",
-    "/css/vendor/idir/web/web-dark.css": "/css/vendor/idir/web/web-dark.css?id=da670569355dc97c6278",
-    "/css/vendor/idir/admin/admin.css": "/css/vendor/idir/admin/admin.css?id=116f4859fca38f22b034",
-    "/css/vendor/idir/admin/admin-dark.css": "/css/vendor/idir/admin/admin-dark.css?id=cf1784c6489111795fae",
-    "/js/vendor/idir/web/web.js": "/js/vendor/idir/web/web.js?id=27da2bcd56683041c903",
-    "/js/vendor/icore/web/recaptcha_invisible.js": "/js/vendor/icore/web/recaptcha_invisible.js?id=5a0c44667ce1e41f61b6",
-    "/js/vendor/idir/web/scripts.js": "/js/vendor/idir/web/scripts.js?id=dac6dd296f0661bba1bf",
-    "/js/vendor/idir/admin/scripts.js": "/js/vendor/idir/admin/scripts.js?id=f4544ae353837960ac79"
+    "/js/vendor/idir/vendor/vendor.js": "/js/vendor/idir/vendor/vendor.js?id=9b3e6d5d295ac89b054629a315c8d87d",
+    "/js/vendor/idir/web/web.js": "/js/vendor/idir/web/web.js?id=f935c54dd6683b6173fdc5758042378c",
+    "/js/vendor/idir/admin/admin.js": "/js/vendor/idir/admin/admin.js?id=813287ddad4d6d662eb99deff3c4ec43",
+    "/css/vendor/idir/vendor/vendor.css": "/css/vendor/idir/vendor/vendor.css?id=3c8ae839615847902a3be3d43723086c",
+    "/css/vendor/idir/web/web-dark.css": "/css/vendor/idir/web/web-dark.css?id=ec70ff316f301fd5d621f8c5379664e7",
+    "/css/vendor/idir/web/web.css": "/css/vendor/idir/web/web.css?id=fd3378601c4c6ba261e4b91c8f44460f",
+    "/css/vendor/idir/admin/admin-dark.css": "/css/vendor/idir/admin/admin-dark.css?id=1de2eff060c7952cafcfdfc4cb349a6b",
+    "/css/vendor/idir/admin/admin.css": "/css/vendor/idir/admin/admin.css?id=58e9a6d7fbf27e0264697a763d81149a",
+    "/js/vendor/icore/web/recaptcha_invisible.js": "/js/vendor/icore/web/recaptcha_invisible.js?id=5a0c44667ce1e41f61b6520314617151",
+    "/js/vendor/idir/web/scripts.js": "/js/vendor/idir/web/scripts.js?id=ac8797437f8f9d19356475bc4378f23a",
+    "/js/vendor/idir/admin/scripts.js": "/js/vendor/idir/admin/scripts.js?id=8cd9123e367207bcf15a886297c6dc88"
 }

@@ -14,9 +14,9 @@ class FieldTest extends TestCase
 
     public function testFieldGusNotFound()
     {
-        $user = factory(User::class)->states('user')->create();
+        $user = User::makeFactory()->user()->create();
 
-        Auth::login($user, true);
+        Auth::login($user);
 
         $response = $this->post(route('web.field.gus'), [
             'type' => 'nip',
@@ -29,9 +29,9 @@ class FieldTest extends TestCase
 
     public function testFieldGusNotValid()
     {
-        $user = factory(User::class)->states('user')->create();
+        $user = User::makeFactory()->user()->create();
 
-        Auth::login($user, true);
+        Auth::login($user);
 
         $response = $this->post(route('web.field.gus'), [
             'type' => 'nip',
@@ -44,9 +44,9 @@ class FieldTest extends TestCase
 
     public function testFieldGusValid()
     {
-        $user = factory(User::class)->states('user')->create();
+        $user = User::makeFactory()->user()->create();
 
-        Auth::login($user, true);
+        Auth::login($user);
 
         $response = $this->post(route('web.field.gus'), [
             'type' => 'nip',

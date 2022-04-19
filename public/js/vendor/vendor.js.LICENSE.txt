@@ -1,14 +1,38 @@
 /*!
-  * Bootstrap v4.4.1 (https://getbootstrap.com/)
-  * Copyright 2011-2019 The Bootstrap Authors (https://github.com/twbs/bootstrap/graphs/contributors)
-  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+  * Bootstrap v4.6.1 (https://getbootstrap.com/)
+  * Copyright 2011-2021 The Bootstrap Authors (https://github.com/twbs/bootstrap/graphs/contributors)
+  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
   */
 
 /*!
- * Bootstrap Confirmation (v4.1.0)
+ * Ajax Bootstrap Select
+ *
+ * Extends existing [Bootstrap Select] implementations by adding the ability to search via AJAX requests as you type. Originally for CROSCON.
+ *
+ * @version 1.4.5
+ * @author Adam Heim - https://github.com/truckingsim
+ * @link https://github.com/truckingsim/Ajax-Bootstrap-Select
+ * @copyright 2019 Adam Heim
+ * @license Released under the MIT license.
+ *
+ * Contributors:
+ *   Mark Carver - https://github.com/markcarver
+ *
+ * Last build: 2019-04-23 12:18:55 PM EDT
+ */
+
+/*!
+ * Bootstrap Confirmation (v4.2.1)
  * @copyright 2013 Nimit Suwannagate <ethaizone@hotmail.com>
- * @copyright 2014-2018 Damien "Mistic" Sorel <contact@git.strangeplanet.fr>
+ * @copyright 2014-2021 Damien "Mistic" Sorel <contact@git.strangeplanet.fr>
  * @licence Apache License, Version 2.0
+ */
+
+/*!
+ * Bootstrap-select v1.13.18 (https://developer.snapappointments.com/bootstrap-select)
+ *
+ * Copyright 2012-2020 SnapAppointments, LLC
+ * Licensed under MIT (https://github.com/snapappointments/bootstrap-select/blob/master/LICENSE)
  */
 
 /*!
@@ -17,22 +41,38 @@
  */
 
 /*!
- * Krajee SVG Theme Configuration for bootstrap-star-rating.
- * This file must be loaded after 'star-rating.js'.
- *
- * @see http://github.com/kartik-v/bootstrap-star-rating
- * @author Kartik Visweswaran <kartikv2@gmail.com>
+ * English translation for the "en-US" and "en" language codes.
+ * Mark Carver <mark.carver@me.com>
  */
 
 /*!
- * Sizzle CSS Selector Engine v2.3.4
+ * Krajee SVG Theme Configuration for bootstrap-star-rating.
+ * This file must be loaded after 'star-rating.js'.
+ *
+ * bootstrap-star-rating v4.1.2
+ * http://plugins.krajee.com/star-rating
+ *
+ * Author: Kartik Visweswaran
+ * Copyright: 2013 - 2021, Kartik Visweswaran, Krajee.com
+ *
+ * Licensed under the BSD 3-Clause
+ * https://github.com/kartik-v/bootstrap-star-rating/blob/master/LICENSE.md
+ */
+
+/*!
+ * Polish translation for the "pl-PL" and "pl" language codes.
+ * Robert Jaros <rjaros@treksoft.pl>
+ */
+
+/*!
+ * Sizzle CSS Selector Engine v2.3.6
  * https://sizzlejs.com/
  *
  * Copyright JS Foundation and other contributors
  * Released under the MIT license
  * https://js.foundation/
  *
- * Date: 2019-04-08
+ * Date: 2021-02-16
  */
 
 /*!
@@ -43,8 +83,13 @@
  *
  * NOTE: this file must be saved in UTF-8 encoding.
  *
- * @see http://github.com/kartik-v/bootstrap-star-rating
- * @author Kartik Visweswaran <kartikv2@gmail.com>
+ * bootstrap-star-rating v4.1.2
+ * http://plugins.krajee.com/star-rating
+ *
+ * Copyright: 2013 - 2021, Kartik Visweswaran, Krajee.com
+ *
+ * Licensed under the BSD 3-Clause
+ * https://github.com/kartik-v/bootstrap-star-rating/blob/master/LICENSE.md
  */
 
 /*!
@@ -53,11 +98,11 @@
  */
 
 /*!
- * bootstrap-star-rating v4.0.6
+ * bootstrap-star-rating v4.1.2
  * http://plugins.krajee.com/star-rating
  *
  * Author: Kartik Visweswaran
- * Copyright: 2013 - 2019, Kartik Visweswaran, Krajee.com
+ * Copyright: 2013 - 2021, Kartik Visweswaran, Krajee.com
  *
  * Licensed under the BSD 3-Clause
  * https://github.com/kartik-v/bootstrap-star-rating/blob/master/LICENSE.md
@@ -67,22 +112,22 @@
  * jQuery Cookie Plugin v1.4.1
  * https://github.com/carhartl/jquery-cookie
  *
- * Copyright 2006, 2014 Klaus Hartl
+ * Copyright 2013 Klaus Hartl
  * Released under the MIT license
  */
 
 /*!
- * jQuery JavaScript Library v3.4.1
+ * jQuery JavaScript Library v3.6.0
  * https://jquery.com/
  *
  * Includes Sizzle.js
  * https://sizzlejs.com/
  *
- * Copyright JS Foundation and other contributors
+ * Copyright OpenJS Foundation and other contributors
  * Released under the MIT license
  * https://jquery.org/license
  *
- * Date: 2019-05-01T21:04Z
+ * Date: 2021-03-02T17:08Z
  */
 
 /*!
@@ -105,10 +150,14 @@
  */
 
 /*!
- * typeahead.js 1.3.0
+ * typeahead.js 1.3.1
  * https://github.com/corejavascript/typeahead.js
- * Copyright 2013-2019 Twitter, Inc. and other contributors; Licensed MIT
+ * Copyright 2013-2020 Twitter, Inc. and other contributors; Licensed MIT
  */
+
+/*! Magnific Popup - v1.1.0 - 2016-02-20
+* http://dimsemenov.com/plugins/magnific-popup/
+* Copyright (c) 2016 Dmitry Semenov; */
 
 /**
  * @license
@@ -120,7 +169,7 @@
  */
 
 /**
- * Trumbowyg v2.21.0 - A lightweight WYSIWYG editor
+ * Trumbowyg v2.25.1 - A lightweight WYSIWYG editor
  * Trumbowyg core file
  * ------------------------
  * @link http://alex-d.github.io/Trumbowyg

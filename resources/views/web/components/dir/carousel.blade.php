@@ -26,6 +26,7 @@
                                 data-display-only="true"
                                 data-size="xs" 
                                 class="rating-loading"
+                                data-language="{{ config('app.locale') }}"
                             >
                         </small>
                     </div>
