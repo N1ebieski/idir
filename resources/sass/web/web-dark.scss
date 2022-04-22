@@ -1,11 +1,10 @@
 @import '~/../vendor/n1ebieski/icore/resources/sass/web/web-dark.scss';
 
+// Custom styles
 @import 'global.scss';
 @import 'carousel.scss';
 @import 'dark.scss';
 
-// cssmap-poland
+// Cssmap-poland styles
 @import 'cssmap-poland/cssmap-poland.css';
 @import 'cssmap-poland/cssmap-themes.css';
-
-@import '~bootstrap-star-rating/css/star-rating.css';
