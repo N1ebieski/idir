@@ -203,8 +203,6 @@ class Payment extends Model
         return App::make(PaymentRepo::class, ['payment' => $this]);
     }
 
-    // Factories
-
     /**
      * Undocumented function
      *

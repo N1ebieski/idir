@@ -48,7 +48,7 @@
                     id="nav-tab" 
                     role="tablist"
                 >
-                    @foreach ($price::AVAILABLE as $type)
+                    @foreach (Price\Type::getAvailable() as $type)
                     <a 
                         class="nav-item nav-link btn btn-link flex-grow-0 text-decoration-none shadow-none {{ $loop->first ? 'active' : null }}" 
                         id="nav-{{ $type }}-tab"
@@ -85,7 +85,7 @@
                     aria-labelledby="nav-input-tab"
                 >
                     @component('idir::admin.price.partials.components.code')
-                        @slot('name', 'code_sms')
+                        @slot('name', Price\Type::CODE_SMS)
                     @endcomponent 
                     <div class="form-group">
                         <label for="number">
@@ -112,7 +112,7 @@
                         >
                     </div>
                     @component('idir::admin.price.partials.components.codes')
-                        @slot('name', 'code_sms')
+                        @slot('name', Price\Type::CODE_SMS)
                     @endcomponent                                                    
                 </div>
                 <div 
@@ -122,10 +122,10 @@
                     aria-labelledby="nav-input-tab"
                 >
                     @component('idir::admin.price.partials.components.code')
-                        @slot('name', 'code_transfer')
+                        @slot('name', Price\Type::CODE_TRANSFER)
                     @endcomponent 
                     @component('idir::admin.price.partials.components.codes')
-                        @slot('name', 'code_transfer')
+                        @slot('name', Price\Type::CODE_TRANSFER)
                     @endcomponent                                                    
                 </div>                
                 <div 

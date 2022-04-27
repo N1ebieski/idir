@@ -4,6 +4,7 @@ namespace N1ebieski\IDir\Database\Factories\Price;
 
 use N1ebieski\IDir\Models\Group;
 use N1ebieski\IDir\Models\Price;
+use N1ebieski\IDir\ValueObjects\Price\Type;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class PriceFactory extends Factory
@@ -23,7 +24,7 @@ class PriceFactory extends Factory
     public function definition(): array
     {
         return [
-            'type' => $this->faker->randomElement(Price::AVAILABLE),
+            'type' => $this->faker->randomElement(Type::getAvailable()),
             'price' => number_format(rand(12, 57) / 10, 2),
             'days' => $this->faker->randomElement([rand(7, 365), null]),
         ];
@@ -38,7 +39,7 @@ class PriceFactory extends Factory
     {
         return $this->state(function () {
             return [
-                'type' => 'transfer'
+                'type' => Type::TRANSFER
             ];
         });
     }
@@ -52,7 +53,7 @@ class PriceFactory extends Factory
     {
         return $this->state(function () {
             return [
-                'type' => 'code_sms',
+                'type' => Type::CODE_SMS,
                 'number' => 99999,
                 'code' => 'XX.XXX',
                 'token' => 'c78zs8ds8ds'
@@ -69,7 +70,7 @@ class PriceFactory extends Factory
     {
         return $this->state(function () {
             return [
-                'type' => 'code_transfer',
+                'type' => Type::CODE_TRANSFER,
                 'code' => 'dasdasdasd'
             ];
         });

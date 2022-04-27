@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Database\Eloquent\Model;
 use N1ebieski\IDir\Services\PriceService;
 use N1ebieski\IDir\Repositories\PriceRepo;
+use N1ebieski\IDir\ValueObjects\Price\Type;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Database\Eloquent\Collection;
 use N1ebieski\IDir\Models\Traits\Filterable;
@@ -17,6 +18,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use N1ebieski\IDir\Database\Factories\Price\PriceFactory;
 
+/**
+ * @property Type $type
+ */
 class Price extends Model
 {
     use Filterable;
@@ -24,12 +28,6 @@ class Price extends Model
     use HasFactory;
 
     // Configuration
-
-    /**
-     * [public description]
-     * @var array
-     */
-    public const AVAILABLE = ['transfer', 'code_transfer', 'code_sms', 'paypal_express'];
 
     /**
      * The attributes that are mass assignable.
@@ -60,6 +58,7 @@ class Price extends Model
      */
     protected $casts = [
         'id' => 'integer',
+        'type' => \N1ebieski\IDir\Casts\Price\TypeCast::class,
         'group_id' => 'integer',
         'price' => 'decimal:2',
         'discount_price' => 'decimal:2',
@@ -201,7 +200,7 @@ class Price extends Model
      */
     public function getQrAsImageAttribute(): ?string
     {
-        return ($this->type === 'code_sms') ?
+        return ($this->type->isCodeSms()) ?
             QrCode::encoding('UTF-8')->generate("smsto:{$this->number}:{$this->code}")
             : null;
     }

@@ -12,7 +12,7 @@
                 id="nav-tab" 
                 role="tablist"
             >
-                @foreach ($price::AVAILABLE as $type)
+                @foreach (Price\Type::getAvailable() as $type)
                 @if ($pricesByType($type)->isNotEmpty())
                 <a 
                     class="nav-item nav-link btn btn-link flex-grow-0 text-decoration-none shadow-none {{ old('payment_type', $paymentType) === $type ? 'active' : null }}"
@@ -38,9 +38,9 @@
             </div>
         </nav>
         <div class="tab-content mt-3" id="nav-tabContent">
-            @if ($pricesByType('transfer')->isNotEmpty())
+            @if ($pricesByType(Price\Type::TRANSFER)->isNotEmpty())
             <div 
-                class="tab-pane fade {{ old('payment_type', $paymentType) === "transfer" ? 'show active' : null }}"
+                class="tab-pane fade {{ old('payment_type', $paymentType) === Price\Type::TRANSFER ? 'show active' : null }}"
                 id="nav-transfer" 
                 role="tabpanel" 
                 aria-labelledby="nav-transfer-tab"
@@ -56,18 +56,18 @@
                         id="payment_transfer" 
                         name="payment_transfer"
                     >
-                        @foreach ($pricesByType('transfer') as $price)
+                        @foreach ($pricesByType(Price\Type::TRANSFER) as $price)
                         <option 
                             value="{{ $price->id }}" 
                             data-content="
                                 @if ($price->discount_price)
                                 <span class='badge bg-success text-white'>-{{ $price->discount }}%</span>
-                                <span><s>{{ $price->regular_price }} {{ config("services.{$driverByType('transfer')}.transfer.currency", 'PLN') }}</s></span>
+                                <span><s>{{ $price->regular_price }} {{ config("services.{$driverByType(Price\Type::TRANSFER)}.transfer.currency", 'PLN') }}</s></span>
                                 @endif
                                 <span>
                                     {{ trans('idir::dirs.price', [
                                         'price' => $price->price,
-                                        'currency' => config("services.{$driverByType('transfer')}.transfer.currency"),
+                                        'currency' => config("services.{$driverByType(Price\Type::TRANSFER)}.transfer.currency"),
                                         'days' => $days = $price->days,
                                         'limit' => $days !== null ? 
                                             mb_strtolower(trans('idir::prices.days')) 
@@ -79,7 +79,7 @@
                         >
                             {{ trans('idir::dirs.price', [
                                 'price' => $price->price,
-                                'currency' => config("services.{$driverByType('transfer')}.transfer.currency"),                            
+                                'currency' => config("services.{$driverByType(Price\Type::TRANSFER)}.transfer.currency"),                            
                                 'days' => $days = $price->days,
                                 'limit' => $days !== null ? 
                                     mb_strtolower(trans('idir::prices.days')) 
@@ -92,18 +92,18 @@
                 </div>
                 <p>
                     {!! trans('idir::dirs.payment.transfer.info', [
-                        'provider_url' => config("idir.payment.{$driverByType('transfer')}.url"),
-                        'provider_name' => config("idir.payment.{$driverByType('transfer')}.name"),
-                        'provider_docs_url' => config("idir.payment.{$driverByType('transfer')}.docs_url"),
-                        'provider_rules_url' => config("idir.payment.{$driverByType('transfer')}.rules_url"),
+                        'provider_url' => config("idir.payment.{$driverByType(Price\Type::TRANSFER)}.url"),
+                        'provider_name' => config("idir.payment.{$driverByType(Price\Type::TRANSFER)}.name"),
+                        'provider_docs_url' => config("idir.payment.{$driverByType(Price\Type::TRANSFER)}.docs_url"),
+                        'provider_rules_url' => config("idir.payment.{$driverByType(Price\Type::TRANSFER)}.rules_url"),
                         'rules_url' => route('web.page.show', [str_slug(trans('idir::dirs.rules'))])
                     ]) !!}
                 </p>
             </div>
             @endif
-            @if ($pricesByType('code_transfer')->isNotEmpty())
+            @if ($pricesByType(Price\Type::CODE_TRANSFER)->isNotEmpty())
             <div 
-                class="tab-pane fade {{ old('payment_type', $paymentType) === "code_transfer" ? 'show active' : null }}"
+                class="tab-pane fade {{ old('payment_type', $paymentType) === Price\Type::CODE_TRANSFER ? 'show active' : null }}"
                 id="nav-code_transfer" 
                 role="tabpanel" 
                 aria-labelledby="nav-code_transfer-tab"
@@ -119,18 +119,18 @@
                         id="payment_code_transfer" 
                         name="payment_code_transfer"
                     >
-                        @foreach ($pricesByType('code_transfer') as $price)
+                        @foreach ($pricesByType(Price\Type::CODE_TRANSFER) as $price)
                         <option 
                             value="{{ $price->id }}"
                             data-content="
                                 @if ($price->discount_price)
                                 <span class='badge bg-success text-white'>-{{ $price->discount }}%</span>
-                                <span><s>{{ $price->regular_price }} {{ config("services.{$driverByType('code_transfer')}.code_transfer.currency", 'PLN') }}</s></span>
+                                <span><s>{{ $price->regular_price }} {{ config("services.{$driverByType(Price\Type::CODE_TRANSFER)}.code_transfer.currency", 'PLN') }}</s></span>
                                 @endif
                                 <span>
                                     {{ trans('idir::dirs.price', [
                                         'price' => $price->price,
-                                        'currency' => config("services.{$driverByType('code_transfer')}.code_transfer.currency"),
+                                        'currency' => config("services.{$driverByType(Price\Type::CODE_TRANSFER)}.code_transfer.currency"),
                                         'days' => $days = $price->days,
                                         'limit' => $days !== null ? 
                                             mb_strtolower(trans('idir::prices.days')) 
@@ -143,7 +143,7 @@
                         >
                             {{ trans('idir::dirs.price', [
                                 'price' => $price->price,
-                                'currency' => config("services.{$driverByType('code_transfer')}.code_transfer.currency"),                            
+                                'currency' => config("services.{$driverByType(Price\Type::CODE_TRANSFER)}.code_transfer.currency"),                            
                                 'days' => $days = $price->days,
                                 'limit' => $days !== null ? 
                                     mb_strtolower(trans('idir::prices.days')) 
@@ -163,26 +163,26 @@
                         value="" 
                         name="code_transfer" 
                         id="code_transfer" 
-                        class="form-control {{ $isValid('code_transfer') }}"
+                        class="form-control {{ $isValid(Price\Type::CODE_TRANSFER) }}"
                     >
                     @includeWhen($errors->has('code_transfer'), 'icore::admin.partials.errors', ['name' => 'code_transfer'])
                 </div>
                 <p>
                     {!! trans('idir::dirs.payment.code_transfer.info', [
-                        'code_transfer_url' => config("services.{$driverByType('code_transfer')}.code_transfer.url") . $paymentCodeTransferSelection->code,
+                        'code_transfer_url' => config("services.{$driverByType(Price\Type::CODE_TRANSFER)}.code_transfer.url") . $paymentCodeTransferSelection->code,
                         'price' => $paymentCodeTransferSelection->price,
-                        'provider_url' => config("idir.payment.{$driverByType('code_transfer')}.url"),
-                        'provider_name' => config("idir.payment.{$driverByType('code_transfer')}.name"),
-                        'provider_docs_url' => config("idir.payment.{$driverByType('code_transfer')}.docs_url"),
-                        'provider_rules_url' => config("idir.payment.{$driverByType('code_transfer')}.rules_url"),
+                        'provider_url' => config("idir.payment.{$driverByType(Price\Type::CODE_TRANSFER)}.url"),
+                        'provider_name' => config("idir.payment.{$driverByType(Price\Type::CODE_TRANSFER)}.name"),
+                        'provider_docs_url' => config("idir.payment.{$driverByType(Price\Type::CODE_TRANSFER)}.docs_url"),
+                        'provider_rules_url' => config("idir.payment.{$driverByType(Price\Type::CODE_TRANSFER)}.rules_url"),
                         'rules_url' => route('web.page.show', [str_slug(trans('idir::dirs.rules'))])
                     ]) !!}
                 </p>
             </div>
             @endif
-            @if ($pricesByType('code_sms')->isNotEmpty())
+            @if ($pricesByType(Price\Type::CODE_SMS)->isNotEmpty())
             <div 
-                class="tab-pane fade {{ old('payment_type', $paymentType) === "code_sms" ? 'show active' : null }}"
+                class="tab-pane fade {{ old('payment_type', $paymentType) === Price\Type::CODE_SMS ? 'show active' : null }}"
                 id="nav-code_sms" 
                 role="tabpanel" 
                 aria-labelledby="nav-code_sms-tab"
@@ -198,18 +198,18 @@
                         id="payment_code_sms" 
                         name="payment_code_sms"
                     >
-                        @foreach ($pricesByType('code_sms') as $price)
+                        @foreach ($pricesByType(Price\Type::CODE_SMS) as $price)
                         <option 
                             value="{{ $price->id }}"
                             data-content="
                                 @if ($price->discount_price)
                                 <span class='badge bg-success text-white'>-{{ $price->discount }}%</span>
-                                <span><s>{{ $price->regular_price }} {{ config("services.{$driverByType('code_sms')}.code_sms.currency", 'PLN') }}</s></span>
+                                <span><s>{{ $price->regular_price }} {{ config("services.{$driverByType(Price\Type::CODE_SMS)}.code_sms.currency", 'PLN') }}</s></span>
                                 @endif
                                 <span>
                                     {{ trans('idir::dirs.price', [
                                         'price' => $price->price,
-                                        'currency' => config("services.{$driverByType('code_sms')}.code_sms.currency"),                            
+                                        'currency' => config("services.{$driverByType(Price\Type::CODE_SMS)}.code_sms.currency"),                            
                                         'days' => $days = $price->days,
                                         'limit' => $days !== null ? 
                                             mb_strtolower(trans('idir::prices.days')) 
@@ -222,7 +222,7 @@
                         >
                             {{ trans('idir::dirs.price', [
                                 'price' => $price->price,
-                                'currency' => config("services.{$driverByType('code_sms')}.code_sms.currency"),                             
+                                'currency' => config("services.{$driverByType(Price\Type::CODE_SMS)}.code_sms.currency"),                             
                                 'days' => $days = $price->days,
                                 'limit' => $days !== null ? 
                                     mb_strtolower(trans('idir::prices.days')) 
@@ -254,18 +254,18 @@
                         'number' => $paymentCodeSmsSelection->number,
                         'code_sms' => $paymentCodeSmsSelection->code,
                         'price' => $paymentCodeSmsSelection->price,
-                        'provider_url' => config("idir.payment.{$driverByType('code_sms')}.url"),
-                        'provider_name' => config("idir.payment.{$driverByType('code_sms')}.name"),
-                        'provider_docs_url' => config("idir.payment.{$driverByType('code_sms')}.docs_url"),
-                        'provider_rules_url' => config("idir.payment.{$driverByType('code_sms')}.rules_url"),
+                        'provider_url' => config("idir.payment.{$driverByType(Price\Type::CODE_SMS)}.url"),
+                        'provider_name' => config("idir.payment.{$driverByType(Price\Type::CODE_SMS)}.name"),
+                        'provider_docs_url' => config("idir.payment.{$driverByType(Price\Type::CODE_SMS)}.docs_url"),
+                        'provider_rules_url' => config("idir.payment.{$driverByType(Price\Type::CODE_SMS)}.rules_url"),
                         'rules_url' => route('web.page.show', [str_slug(trans('idir::dirs.rules'))])
                     ]) !!}
                 </p>
             </div>
             @endif
-            @if ($pricesByType('paypal_express')->isNotEmpty())
+            @if ($pricesByType(Price\Type::PAYPAL_EXPRESS)->isNotEmpty())
             <div 
-                class="tab-pane fade {{ old('payment_type', $paymentType) === "paypal_express" ? 'show active' : null }}"
+                class="tab-pane fade {{ old('payment_type', $paymentType) === Price\Type::PAYPAL_EXPRESS ? 'show active' : null }}"
                 id="nav-paypal_express" 
                 role="tabpanel" 
                 aria-labelledby="nav-paypal_express-tab"
@@ -281,18 +281,18 @@
                         id="payment_paypal_express" 
                         name="payment_paypal_express"
                     >
-                        @foreach ($pricesByType('paypal_express')->sortBy('price') as $price)
+                        @foreach ($pricesByType(Price\Type::PAYPAL_EXPRESS)->sortBy('price') as $price)
                         <option 
                             value="{{ $price->id }}"
                             data-content="
                                 @if ($price->discount_price)
                                 <span class='badge bg-success text-white'>-{{ $price->discount }}%</span>
-                                <span><s>{{ $price->regular_price }} {{ config("services.{$driverByType('paypal_express')}.paypal_express.currency", 'PLN') }}</s></span>
+                                <span><s>{{ $price->regular_price }} {{ config("services.{$driverByType(Price\Type::PAYPAL_EXPRESS)}.paypal_express.currency", 'PLN') }}</s></span>
                                 @endif
                                 <span>
                                     {{ trans('idir::dirs.price', [
                                         'price' => $price->price,
-                                        'currency' => config("services.{$driverByType('paypal_express')}.paypal_express.currency"),
+                                        'currency' => config("services.{$driverByType(Price\Type::PAYPAL_EXPRESS)}.paypal_express.currency"),
                                         'days' => $days = $price->days,
                                         'limit' => $days !== null ? 
                                             mb_strtolower(trans('idir::prices.days')) 
@@ -304,7 +304,7 @@
                         >
                             {{ trans('idir::dirs.price', [
                                 'price' => $price->price,
-                                'currency' => config("services.{$driverByType('paypal_express')}.paypal_express.currency"),
+                                'currency' => config("services.{$driverByType(Price\Type::PAYPAL_EXPRESS)}.paypal_express.currency"),
                                 'days' => $days = $price->days,
                                 'limit' => $days !== null ? 
                                     mb_strtolower(trans('idir::prices.days')) 
@@ -317,10 +317,10 @@
                 </div>
                 <p>
                     {!! trans('idir::dirs.payment.paypal_express.info', [
-                        'provider_url' => config("idir.payment.{$driverByType('paypal_express')}.url"),
-                        'provider_name' => config("idir.payment.{$driverByType('paypal_express')}.name"),
-                        'provider_docs_url' => config("idir.payment.{$driverByType('paypal_express')}.docs_url"),
-                        'provider_rules_url' => config("idir.payment.{$driverByType('paypal_express')}.rules_url"),
+                        'provider_url' => config("idir.payment.{$driverByType(Price\Type::PAYPAL_EXPRESS)}.url"),
+                        'provider_name' => config("idir.payment.{$driverByType(Price\Type::PAYPAL_EXPRESS)}.name"),
+                        'provider_docs_url' => config("idir.payment.{$driverByType(Price\Type::PAYPAL_EXPRESS)}.docs_url"),
+                        'provider_rules_url' => config("idir.payment.{$driverByType(Price\Type::PAYPAL_EXPRESS)}.rules_url"),
                         'rules_url' => route('web.page.show', [str_slug(trans('idir::dirs.rules'))])
                     ]) !!}
                 </p>

@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Storage;
 use N1ebieski\IDir\Mail\Dir\ModeratorMail;
+use N1ebieski\IDir\ValueObjects\Price\Type;
 use N1ebieski\IDir\Models\Field\Group\Field;
 use Illuminate\Http\Response as HttpResponse;
 use N1ebieski\IDir\Models\Payment\Dir\Payment;
@@ -300,7 +301,7 @@ class DirTest extends TestCase
         $price = Price::makeFactory()->transfer()->for($group)->create();
 
         $response = $this->postJson(route('api.dir.store', [$group->id]), [
-            'payment_type' => 'transfer'
+            'payment_type' => Type::TRANSFER
         ]);
 
         $response->assertStatus(HttpResponse::HTTP_UNPROCESSABLE_ENTITY);
@@ -318,7 +319,7 @@ class DirTest extends TestCase
         $price = Price::makeFactory()->transfer()->for($group)->create();
 
         $response = $this->postJson(route('api.dir.store', [$group->id]), [
-            'payment_type' => 'transfer',
+            'payment_type' => Type::TRANSFER,
             'payment_transfer' => rand(1, 1000)
         ]);
 
@@ -339,7 +340,7 @@ class DirTest extends TestCase
         $setUpDir = $this->setUpDir();
 
         $response = $this->postJson(route('api.dir.store', [$group->id]), [
-            'payment_type' => 'transfer',
+            'payment_type' => Type::TRANSFER,
             'payment_transfer' => $price->id
         ] + $setUpDir);
 
@@ -397,7 +398,7 @@ class DirTest extends TestCase
         $price = Price::makeFactory()->codeSms()->for($group)->create();
 
         $response = $this->postJson(route('api.dir.store', [$group->id]), [
-            'payment_type' => 'code_sms',
+            'payment_type' => Type::CODE_SMS,
             'payment_code_sms' => $price->id
         ] + $this->setUpDir());
 
@@ -428,7 +429,7 @@ class DirTest extends TestCase
         });
 
         $response = $this->postJson(route('api.dir.store', [$group->id]), [
-            'payment_type' => 'code_sms',
+            'payment_type' => Type::CODE_SMS,
             'payment_code_sms' => $price->id,
             'code_sms' => Str::random(10)
         ] + $this->setUpDir());
@@ -466,7 +467,7 @@ class DirTest extends TestCase
         });
 
         $response = $this->postJson(route('api.dir.store', [$group->id]), [
-            'payment_type' => 'code_sms',
+            'payment_type' => Type::CODE_SMS,
             'payment_code_sms' => $price->id,
             'code_sms' => Str::random(10)
         ] + $this->setUpDir());
@@ -486,7 +487,7 @@ class DirTest extends TestCase
         $price = Price::makeFactory()->codeTransfer()->for($group)->create();
 
         $response = $this->postJson(route('api.dir.store', [$group->id]), [
-            'payment_type' => 'code_transfer',
+            'payment_type' => Type::CODE_TRANSFER,
             'payment_code_transfer' => $price->id
         ] + $this->setUpDir());
 
@@ -511,7 +512,7 @@ class DirTest extends TestCase
         });
 
         $response = $this->postJson(route('api.dir.store', [$group->id]), [
-            'payment_type' => 'code_transfer',
+            'payment_type' => Type::CODE_TRANSFER,
             'payment_code_transfer' => $price->id,
             'code_transfer' => Str::random(10)
         ] + $this->setUpDir());
@@ -547,7 +548,7 @@ class DirTest extends TestCase
         });
 
         $response = $this->postJson(route('api.dir.store', [$group->id]), [
-            'payment_type' => 'code_transfer',
+            'payment_type' => Type::CODE_TRANSFER,
             'payment_code_transfer' => $price->id,
             'code_transfer' => Str::random(10)
         ] + $this->setUpDir());
@@ -575,7 +576,7 @@ class DirTest extends TestCase
         ]);
 
         $response = $this->postJson(route('api.dir.store', [$group->id]), [
-            'payment_type' => 'code_transfer',
+            'payment_type' => Type::CODE_TRANSFER,
             'payment_code_transfer' => $price->id,
             'code_transfer' => $code->code
         ] + $this->setUpDir());
@@ -619,7 +620,7 @@ class DirTest extends TestCase
         ]);
 
         $response = $this->postJson(route('api.dir.store', [$group->id]), [
-            'payment_type' => 'code_sms',
+            'payment_type' => Type::CODE_SMS,
             'payment_code_sms' => $price->id,
             'code_sms' => $code->code
         ] + $this->setUpDir());

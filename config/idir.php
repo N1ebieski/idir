@@ -1,5 +1,7 @@
 <?php
 
+use N1ebieski\IDir\ValueObjects\Price\Type;
+
 return [
 
     'version' => \N1ebieski\IDir\Providers\IDirServiceProvider::VERSION,
@@ -106,19 +108,19 @@ return [
 
     'payment' => [
 
-        'transfer' => [
+        Type::TRANSFER => [
             'driver' => 'cashbill'
         ],
 
-        'code_sms' => [
+        Type::CODE_SMS => [
             'driver' => 'cashbill'
         ],
 
-        'code_transfer' => [
+        Type::CODE_TRANSFER => [
             'driver' => 'cashbill'
         ],
 
-        'paypal_express' => [
+        Type::PAYPAL_EXPRESS => [
             'driver' => 'paypal'
         ],
 

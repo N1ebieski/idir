@@ -29,7 +29,8 @@ class CommandServiceProvider extends ServiceProvider
                 \N1ebieski\IDir\Console\Commands\PHPLDCommand::class,
                 \N1ebieski\IDir\Console\Commands\EnvCommand::class,
                 \N1ebieski\IDir\Console\Commands\EnvTestingCommand::class,
-                \N1ebieski\IDir\Console\Commands\InstallCommand::class
+                \N1ebieski\IDir\Console\Commands\InstallCommand::class,
+                \N1ebieski\IDir\Console\Commands\Update\UpdateCommand::class
             ]);
         }
     }

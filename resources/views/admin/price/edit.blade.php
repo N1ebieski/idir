@@ -25,7 +25,7 @@
             id="price"
         >
     </div>
-    @if ($price->type !== 'code_sms')
+    @if (!$price->type->isCodeSms())
     <div class="form-group">
         <label for="discount_price">
             <span>{{ trans('idir::prices.discount_price.label') }}:</span>
@@ -80,7 +80,7 @@
                     id="nav-tab" 
                     role="tablist"
                 >
-                    @foreach ($price::AVAILABLE as $type)
+                    @foreach (Price\Type::getAvailable() as $type)
                     <a 
                         class="nav-item nav-link btn btn-link flex-grow-0 text-decoration-none shadow-none {{ $price->type === $type ? 'active' : null }}" 
                         id="nav-{{ $type }}-tab"
@@ -105,19 +105,19 @@
             </nav>
             <div class="tab-content mt-3" id="nav-tabContent">
                 <div 
-                    class="tab-pane fade {{ $price->type === 'transfer' ? 'show active' : null }}" 
+                    class="tab-pane fade {{ $price->type->isTransfer() ? 'show active' : null }}" 
                     id="nav-transfer-edit" 
                     role="tabpanel" 
                     aria-labelledby="nav-input-tab"
                 ></div>
                 <div 
-                    class="tab-pane fade {{ $price->type === 'code_sms' ? 'show active' : null }}" 
+                    class="tab-pane fade {{ $price->type->isCodeSms() ? 'show active' : null }}" 
                     id="nav-code_sms-edit" 
                     role="tabpanel" 
                     aria-labelledby="nav-input-tab"
                 >
                     @component('idir::admin.price.partials.components.code')
-                        @slot('name', 'code_sms')
+                        @slot('name', Price\Type::CODE_SMS)
                         @slot('value', $price->code)
                     @endcomponent 
                     <div class="form-group">
@@ -145,29 +145,29 @@
                         >
                     </div>
                     @component('idir::admin.price.partials.components.codes')
-                        @slot('name', 'code_sms')
+                        @slot('name', Price\Type::CODE_SMS)
                         @slot('count', $price->codes->count())
                         @slot('value', $price->codes_as_string)
                     @endcomponent                                                    
                 </div>
                 <div 
-                    class="tab-pane fade {{ $price->type === 'code_transfer' ? 'show active' : null }}" 
+                    class="tab-pane fade {{ $price->type->isCodeTransfer() ? 'show active' : null }}" 
                     id="nav-code_transfer-edit" 
                     role="tabpanel" 
                     aria-labelledby="nav-input-tab"
                 >
                     @component('idir::admin.price.partials.components.code')
-                        @slot('name', 'code_transfer')
+                        @slot('name', Price\Type::CODE_TRANSFER)
                         @slot('value', $price->code)
                     @endcomponent 
                     @component('idir::admin.price.partials.components.codes')
-                        @slot('name', 'code_transfer')
+                        @slot('name', Price\Type::CODE_TRANSFER)
                         @slot('count', $price->codes->count())
                         @slot('value', $price->codes_as_string)
                     @endcomponent                                                    
                 </div>                
                 <div 
-                    class="tab-pane fade {{ $price->type === 'paypal_express' ? 'show active' : null }}" 
+                    class="tab-pane fade {{ $price->type->isPaypalExpress() ? 'show active' : null }}" 
                     id="nav-paypal_express-edit" 
                     role="tabpanel" 
                     aria-labelledby="nav-input-tab"

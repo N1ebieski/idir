@@ -7,6 +7,7 @@ use N1ebieski\IDir\Models\Dir;
 use N1ebieski\IDir\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Contracts\Session\Session;
+use N1ebieski\IDir\ValueObjects\Price\Type;
 use Illuminate\Contracts\Auth\Guard as Auth;
 use Illuminate\Database\DatabaseManager as DB;
 use N1ebieski\IDir\Models\Payment\Dir\Payment;
@@ -522,7 +523,7 @@ class DirService implements
      */
     protected function status(string $payment_type = null): int
     {
-        if (in_array($payment_type, ['transfer', 'paypal_express'])) {
+        if (in_array($payment_type, [Type::TRANSFER, Type::PAYPAL_EXPRESS])) {
             return $this->dir::PAYMENT_INACTIVE;
         }
 

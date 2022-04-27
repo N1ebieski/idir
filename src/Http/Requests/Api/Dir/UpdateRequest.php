@@ -6,13 +6,13 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use N1ebieski\ICore\Models\Link;
 use N1ebieski\IDir\Models\Group;
-use N1ebieski\IDir\Models\Price;
 use Illuminate\Support\Facades\App;
 use Mews\Purifier\Facades\Purifier;
 use N1ebieski\IDir\Models\BanValue;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Foundation\Http\FormRequest;
+use N1ebieski\IDir\ValueObjects\Price\Type;
 use Illuminate\Database\Eloquent\Collection;
 use N1ebieski\IDir\Models\Category\Dir\Category;
 use N1ebieski\IDir\Http\Requests\Traits\FieldsExtended;
@@ -278,52 +278,52 @@ class UpdateRequest extends FormRequest
                     'bail',
                     'required',
                     'string',
-                    Rule::in(Price::AVAILABLE)
+                    Rule::in(Type::getAvailable())
                 ],
-                'payment_transfer' => $this->input('payment_type') === 'transfer' ?
+                'payment_transfer' => $this->input('payment_type') === Type::TRANSFER ?
                 [
                     'bail',
-                    'required_if:payment_type,transfer',
+                    'required_if:payment_type,' . Type::TRANSFER,
                     'integer',
                     Rule::exists('prices', 'id')->where(function ($query) {
                         $query->where([
-                            ['type', 'transfer'],
+                            ['type', Type::TRANSFER],
                             ['group_id', $this->group->id]
                         ]);
                     })
                 ] : [],
-                'payment_code_sms' => $this->input('payment_type') === 'code_sms' ?
+                'payment_code_sms' => $this->input('payment_type') === Type::CODE_SMS ?
                  [
                     'bail',
-                    'required_if:payment_type,code_sms',
+                    'required_if:payment_type,' . Type::CODE_SMS,
                     'integer',
                     Rule::exists('prices', 'id')->where(function ($query) {
                         $query->where([
-                            ['type', 'code_sms'],
+                            ['type', Type::CODE_SMS],
                             ['group_id', $this->group->id]
                         ]);
                     })
                 ] : [],
-                'payment_code_transfer' => $this->input('payment_type') === 'code_transfer' ?
+                'payment_code_transfer' => $this->input('payment_type') === Type::CODE_TRANSFER ?
                 [
                     'bail',
-                    'required_if:payment_type,code_transfer',
+                    'required_if:payment_type,' . Type::CODE_TRANSFER,
                     'integer',
                     Rule::exists('prices', 'id')->where(function ($query) {
                         $query->where([
-                            ['type', 'code_transfer'],
+                            ['type', Type::CODE_TRANSFER],
                             ['group_id', $this->group->id]
                         ]);
                     })
                 ] : [],
-                'payment_paypal_express' => $this->input('payment_type') === 'paypal_express' ?
+                'payment_paypal_express' => $this->input('payment_type') === Type::PAYPAL_EXPRESS ?
                 [
                     'bail',
-                    'required_if:payment_type,paypal_express',
+                    'required_if:payment_type,' . Type::PAYPAL_EXPRESS,
                     'integer',
                     Rule::exists('prices', 'id')->where(function ($query) {
                         $query->where([
-                            ['type', 'paypal_express'],
+                            ['type', Type::PAYPAL_EXPRESS],
                             ['group_id', $this->group->id]
                         ]);
                     })

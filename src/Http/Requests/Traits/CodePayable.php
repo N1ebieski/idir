@@ -3,6 +3,7 @@
 namespace N1ebieski\IDir\Http\Requests\Traits;
 
 use Illuminate\Support\Facades\App;
+use N1ebieski\IDir\ValueObjects\Price\Type;
 
 trait CodePayable
 {
@@ -14,22 +15,22 @@ trait CodePayable
     public function prepareCodeRules()
     {
         return [
-            'code_sms' => $this->input('payment_type') === 'code_sms' ?
+            'code_sms' => $this->input('payment_type') === Type::CODE_SMS ?
                 [
                     'bail',
                     'nullable',
-                    'required_if:payment_type,code_sms',
+                    'required_if:payment_type,' . Type::CODE_SMS,
                     'string',
-                    App::make('N1ebieski\\IDir\\Rules\\Codes\\SMSRule')
+                    App::make(\N1ebieski\IDir\Rules\Codes\SMSRule::class)
                 ]
                 : [],
-            'code_transfer' => $this->input('payment_type') === 'code_transfer' ?
+            'code_transfer' => $this->input('payment_type') === Type::CODE_TRANSFER ?
                 [
                     'bail',
                     'nullable',
-                    'required_if:payment_type,code_transfer',
+                    'required_if:payment_type,' . Type::CODE_TRANSFER,
                     'string',
-                    App::make('N1ebieski\\IDir\\Rules\\Codes\\TransferRule')
+                    App::make(\N1ebieski\IDir\Rules\Codes\TransferRule::class)
                 ]
                 : []
         ];

@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Storage;
 use N1ebieski\IDir\Mail\Dir\ModeratorMail;
+use N1ebieski\IDir\ValueObjects\Price\Type;
 use N1ebieski\IDir\Models\Field\Group\Field;
 use Illuminate\Http\Response as HttpResponse;
 use N1ebieski\IDir\Models\Payment\Dir\Payment;
@@ -418,7 +419,7 @@ class DirTest extends TestCase
         $price = Price::makeFactory()->for($group)->transfer()->create();
 
         $response = $this->post(route('web.dir.store_3', [$group->id]), [
-            'payment_type' => 'transfer'
+            'payment_type' => Type::TRANSFER
         ]);
 
         $response->assertSessionHasErrors('payment_transfer');
@@ -436,7 +437,7 @@ class DirTest extends TestCase
         $price = Price::makeFactory()->transfer()->for($group)->create();
 
         $response = $this->post(route('web.dir.store_3', [$group->id]), [
-            'payment_type' => 'transfer',
+            'payment_type' => Type::TRANSFER,
             'payment_transfer' => 23232
         ]);
 
@@ -455,7 +456,7 @@ class DirTest extends TestCase
         $price = Price::makeFactory()->transfer()->for($group)->create();
 
         $response = $this->post(route('web.dir.store_3', [$group->id]), [
-            'payment_type' => 'transfer',
+            'payment_type' => Type::TRANSFER,
             'payment_transfer' => $price->id
         ] + $this->setUpDir());
 
@@ -517,7 +518,7 @@ class DirTest extends TestCase
         $price = Price::makeFactory()->codeSms()->for($group)->create();
 
         $response = $this->post(route('web.dir.store_3', [$group->id]), [
-            'payment_type' => 'code_sms',
+            'payment_type' => Type::CODE_SMS,
             'payment_code_sms' => $price->id
         ] + $this->setUpDir());
 
@@ -548,7 +549,7 @@ class DirTest extends TestCase
         });
 
         $response = $this->post(route('web.dir.store_3', [$group->id]), [
-            'payment_type' => 'code_sms',
+            'payment_type' => Type::CODE_SMS,
             'payment_code_sms' => $price->id,
             'code_sms' => 'dsadasd7a8s'
         ] + $this->setUpDir());
@@ -587,7 +588,7 @@ class DirTest extends TestCase
         });
 
         $response = $this->post(route('web.dir.store_3', [$group->id]), [
-            'payment_type' => 'code_sms',
+            'payment_type' => Type::CODE_SMS,
             'payment_code_sms' => $price->id,
             'code_sms' => 'dsadasd7a8s'
         ] + $this->setUpDir());
@@ -606,7 +607,7 @@ class DirTest extends TestCase
         $price = Price::makeFactory()->codeTransfer()->for($group)->create();
 
         $response = $this->post(route('web.dir.store_3', [$group->id]), [
-            'payment_type' => 'code_transfer',
+            'payment_type' => Type::CODE_TRANSFER,
             'payment_code_transfer' => $price->id
         ] + $this->setUpDir());
 
@@ -631,7 +632,7 @@ class DirTest extends TestCase
         });
 
         $response = $this->post(route('web.dir.store_3', [$group->id]), [
-            'payment_type' => 'code_transfer',
+            'payment_type' => Type::CODE_TRANSFER,
             'payment_code_transfer' => $price->id,
             'code_transfer' => 'dsadasd7a8s'
         ] + $this->setUpDir());
@@ -668,7 +669,7 @@ class DirTest extends TestCase
         });
 
         $response = $this->post(route('web.dir.store_3', [$group->id]), [
-            'payment_type' => 'code_transfer',
+            'payment_type' => Type::CODE_TRANSFER,
             'payment_code_transfer' => $price->id,
             'code_transfer' => 'dsadasd7a8s'
         ] + $this->setUpDir());
@@ -696,7 +697,7 @@ class DirTest extends TestCase
         ]);
 
         $response = $this->post(route('web.dir.store_3', [$group->id]), [
-            'payment_type' => 'code_transfer',
+            'payment_type' => Type::CODE_TRANSFER,
             'payment_code_transfer' => $price->id,
             'code_transfer' => $code->code
         ] + $this->setUpDir());
@@ -741,7 +742,7 @@ class DirTest extends TestCase
         ]);
 
         $response = $this->post(route('web.dir.store_3', [$group->id]), [
-            'payment_type' => 'code_sms',
+            'payment_type' => Type::CODE_SMS,
             'payment_code_sms' => $price->id,
             'code_sms' => $code->code
         ] + $this->setUpDir());

@@ -30,7 +30,7 @@ class PriceResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'type' => $this->type,
+            'type' => $this->type->getValue(),
             'price' => $this->price,
             'regular_price' => $this->regular_price,
             'discount_price' => $this->discount_price,
@@ -38,7 +38,7 @@ class PriceResource extends JsonResource
             'qr_as_image' => $this->qr_as_image,
             'days' => $this->days,
             $this->mergeWhen(
-                in_array($this->type, ['code_transfer', 'code_sms']),
+                $this->type->isCode(),
                 function () {
                     return [
                         'code' => $this->code
@@ -54,7 +54,7 @@ class PriceResource extends JsonResource
                 }
             ),
             $this->mergeWhen(
-                $this->type === 'code_sms',
+                $this->type->isCodeSms(),
                 function () {
                     return [
                         'number' => $this->number

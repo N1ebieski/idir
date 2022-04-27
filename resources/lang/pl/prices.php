@@ -1,5 +1,7 @@
 <?php
 
+use N1ebieski\IDir\ValueObjects\Price\Type;
+
 return [
     'success' => [
         'store' => 'Cena została dodana.',
@@ -29,9 +31,9 @@ return [
     'sync_codes' => 'Synchronizuj kody',
     'payment' => [
         'label' => 'Metoda płatności',
-        'transfer' => 'Przelew online',
-        'code_sms' => 'Kody SMS',
-        'code_transfer' => 'Kody przelewem',
-        'paypal_express' => 'PayPal'
+        Type::TRANSFER => 'Przelew online',
+        Type::CODE_SMS => 'Kody SMS',
+        Type::CODE_TRANSFER => 'Kody przelewem',
+        Type::PAYPAL_EXPRESS => 'PayPal'
     ]
 ];

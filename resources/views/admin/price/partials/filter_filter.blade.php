@@ -46,7 +46,7 @@
         <option value="">
             {{ trans('icore::filter.default') }}
         </option>
-        @foreach ($price::AVAILABLE as $type)
+        @foreach (Price\Type::getAvailable() as $type)
         <option 
             value="{{ $type }}" 
             {{ ($filter['type'] == $type) ? 'selected' : '' }}

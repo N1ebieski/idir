@@ -2,6 +2,7 @@
 
 namespace N1ebieski\IDir\Models\Category\Dir;
 
+use N1ebieski\ICore\ValueObjects\Category\Status;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use N1ebieski\IDir\Models\Category\Category as BaseCategory;
 use N1ebieski\IDir\Database\Factories\Category\Dir\CategoryFactory;
@@ -17,7 +18,7 @@ class Category extends BaseCategory
      */
     protected $attributes = [
         'model_type' => \N1ebieski\IDir\Models\Dir::class,
-        'status' => self::ACTIVE,
+        'status' => Status::ACTIVE,
     ];
 
     /**

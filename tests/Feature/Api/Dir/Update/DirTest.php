@@ -13,6 +13,7 @@ use N1ebieski\IDir\Models\Price;
 use Illuminate\Http\UploadedFile;
 use GuzzleHttp\Client as GuzzleClient;
 use N1ebieski\IDir\Models\DirBacklink;
+use N1ebieski\IDir\ValueObjects\Price\Type;
 use N1ebieski\IDir\Models\Field\Group\Field;
 use Illuminate\Http\Response as HttpResponse;
 use N1ebieski\IDir\Models\Payment\Dir\Payment;
@@ -536,7 +537,7 @@ class DirTest extends TestCase
         $dir = Dir::makeFactory()->withCategory()->for($oldGroup)->for($user)->create();
 
         $response = $this->putJson(route('api.dir.update', [$dir->id, $newGroup->id]), [
-            'payment_type' => 'transfer'
+            'payment_type' => Type::TRANSFER
         ]);
 
         $response->assertStatus(HttpResponse::HTTP_UNPROCESSABLE_ENTITY);
@@ -558,7 +559,7 @@ class DirTest extends TestCase
         $dir = Dir::makeFactory()->withCategory()->for($oldGroup)->for($user)->create();
 
         $response = $this->putJson(route('api.dir.update', [$dir->id, $newGroup->id]), [
-            'payment_type' => 'transfer',
+            'payment_type' => Type::TRANSFER,
             'payment_transfer' => rand(1, 1000)
         ]);
 
@@ -581,7 +582,7 @@ class DirTest extends TestCase
         $dir = Dir::makeFactory()->withCategory()->for($oldGroup)->for($user)->create();
 
         $response = $this->putJson(route('api.dir.update', [$dir->id, $newGroup->id]), [
-            'payment_type' => 'transfer',
+            'payment_type' => Type::TRANSFER,
             'payment_transfer' => $price->id
         ] + $this->setUpDir());
 
@@ -683,7 +684,7 @@ class DirTest extends TestCase
         });
 
         $response = $this->putJson(route('api.dir.update', [$dir->id, $newGroup->id]), [
-            'payment_type' => 'code_sms',
+            'payment_type' => Type::CODE_SMS,
             'payment_code_sms' => $price->id,
             'code_sms' => Str::random(6)
         ] + $this->setUpDir());

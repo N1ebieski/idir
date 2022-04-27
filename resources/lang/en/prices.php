@@ -1,5 +1,7 @@
 <?php
 
+use N1ebieski\IDir\ValueObjects\Price\Type;
+
 return [
     'success' => [
         'store' => 'Price has been added.',
@@ -25,9 +27,9 @@ return [
     'sync_codes' => 'Sync codes',
     'payment' => [
         'label' => 'Payment method',
-        'transfer' => 'Transfer online',
-        'code_sms' => 'SMS code',
-        'code_transfer' => 'Transfer code',
-        'paypal_express' => 'PayPal'
+        Type::TRANSFER => 'Transfer online',
+        Type::CODE_SMS => 'SMS code',
+        Type::CODE_TRANSFER => 'Transfer code',
+        Type::PAYPAL_EXPRESS => 'PayPal'
     ]
 ];

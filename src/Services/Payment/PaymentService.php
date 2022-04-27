@@ -5,6 +5,7 @@ namespace N1ebieski\IDir\Services\Payment;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use N1ebieski\IDir\Models\Payment\Payment;
+use N1ebieski\IDir\ValueObjects\Price\Type;
 use N1ebieski\ICore\Services\Interfaces\Creatable;
 use Illuminate\Contracts\Config\Repository as Config;
 use N1ebieski\ICore\Services\Interfaces\StatusUpdatable;
@@ -67,7 +68,7 @@ class PaymentService implements Creatable, StatusUpdatable
      */
     protected function status(string $payment_type = null): int
     {
-        if (in_array($payment_type, ['transfer', 'paypal_express'])) {
+        if (in_array($payment_type, [Type::TRANSFER, Type::PAYPAL_EXPRESS])) {
             return Payment::PENDING;
         }
 

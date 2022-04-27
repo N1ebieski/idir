@@ -3,8 +3,8 @@
 namespace N1ebieski\IDir\Http\Requests\Admin\Price;
 
 use Illuminate\Validation\Rule;
-use N1ebieski\IDir\Models\Price;
 use Illuminate\Foundation\Http\FormRequest;
+use N1ebieski\IDir\ValueObjects\Price\Type;
 use N1ebieski\IDir\Http\Requests\Admin\Price\Traits\CodePayable;
 
 class StoreRequest extends FormRequest
@@ -38,7 +38,10 @@ class StoreRequest extends FormRequest
     {
         $type = $this->input('type');
 
-        if (!in_array($type, ['code_sms', 'code_transfer']) || empty($this->input("{$type}.codes.codes"))) {
+        if (
+            !in_array($type, [Type::CODE_SMS, Type::CODE_TRANSFER])
+            || empty($this->input("{$type}.codes.codes"))
+        ) {
             return;
         }
 
@@ -63,43 +66,43 @@ class StoreRequest extends FormRequest
             'days' => 'bail|nullable|integer',
             'type' => [
                 'bail',
-                Rule::in(Price::AVAILABLE)
+                Rule::in(Type::getAvailable())
             ],
-            'code_sms.code' => $this->input('type') === 'code_sms' ? [
+            'code_sms.code' => $this->input('type') === Type::CODE_SMS ? [
                 'bail',
-                'required_if:type,code_sms',
+                'required_if:type,' . Type::CODE_SMS,
                 'string'
             ] : [],
-            'code_sms.token' => $this->input('type') === 'code_sms' ? [
+            'code_sms.token' => $this->input('type') === Type::CODE_SMS ? [
                 'bail',
                 'nullable',
                 'string'
             ] : [],
-            'code_sms.number' => $this->input('type') === 'code_sms' ? [
+            'code_sms.number' => $this->input('type') === Type::CODE_SMS ? [
                 'bail',
-                'required_if:type,code_sms',
+                'required_if:type,' . Type::CODE_SMS,
                 'integer'
             ] : [],
-            'code_sms.codes.codes' => $this->input('type') === 'code_sms' ? [
+            'code_sms.codes.codes' => $this->input('type') === Type::CODE_SMS ? [
                 'bail',
                 'nullable',
                 'array'
             ] : [],
-            'code_sms.codes.sync' => $this->input('type') === 'code_sms' ? [
+            'code_sms.codes.sync' => $this->input('type') === Type::CODE_SMS ? [
                 'bail',
                 'nullable'
             ] : [],
-            'code_transfer.code' => $this->input('type') === 'code_transfer' ? [
+            'code_transfer.code' => $this->input('type') === Type::CODE_TRANSFER ? [
                 'bail',
-                'required_if:type,code_transfer',
+                'required_if:type,' . Type::CODE_TRANSFER,
                 'string'
             ] : [],
-            'code_transfer.codes.codes' => $this->input('type') === 'code_transfer' ? [
+            'code_transfer.codes.codes' => $this->input('type') === Type::CODE_TRANSFER ? [
                 'bail',
                 'nullable',
                 'array'
             ] : [],
-            'code_transfer.codes.sync' => $this->input('type') === 'code_transfer' ? [
+            'code_transfer.codes.sync' => $this->input('type') === Type::CODE_TRANSFER ? [
                 'bail',
                 'nullable'
             ] : [],

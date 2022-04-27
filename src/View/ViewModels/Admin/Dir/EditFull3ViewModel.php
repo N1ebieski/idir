@@ -9,6 +9,7 @@ use N1ebieski\IDir\Models\User;
 use N1ebieski\IDir\Models\Group;
 use N1ebieski\IDir\Models\Price;
 use Spatie\ViewModels\ViewModel;
+use N1ebieski\IDir\ValueObjects\Price\Type;
 use Illuminate\Database\Eloquent\Collection;
 use N1ebieski\IDir\Models\Category\Dir\Category;
 
@@ -126,7 +127,7 @@ class EditFull3ViewModel extends ViewModel
         if (!$this->request->old('payment_type') && $this->group->prices->isNotEmpty()) {
             return $this->group->prices
                 ->sortBy(function ($item) {
-                    return array_search($item->type, Price::AVAILABLE);
+                    return array_search($item->type, Type::getAvailable());
                 })
                 ->first()
                 ->type;
@@ -146,7 +147,7 @@ class EditFull3ViewModel extends ViewModel
             return $this->group->prices->where('id', $this->request->old('payment_code_sms'))->first();
         }
 
-        return $this->pricesByType('code_sms')->first();
+        return $this->pricesByType(Type::CODE_SMS)->first();
     }
 
     /**
@@ -160,7 +161,7 @@ class EditFull3ViewModel extends ViewModel
             return $this->group->prices->where('id', $this->request->old('payment_code_transfer'))->first();
         }
 
-        return $this->pricesByType('code_transfer')->first();
+        return $this->pricesByType(Type::CODE_TRANSFER)->first();
     }
 
     /**

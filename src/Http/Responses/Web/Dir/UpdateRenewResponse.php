@@ -5,6 +5,7 @@ namespace N1ebieski\IDir\Http\Responses\Web\Dir;
 use Illuminate\Http\Request;
 use N1ebieski\IDir\Models\Dir;
 use Illuminate\Http\RedirectResponse;
+use N1ebieski\IDir\ValueObjects\Price\Type;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Contracts\Routing\UrlGenerator as URL;
@@ -76,7 +77,7 @@ class UpdateRenewResponse implements RedirectResponseFactory
      */
     public function makeResponse(Dir $dir): RedirectResponse
     {
-        if (in_array($this->request->input('payment_type'), ['transfer', 'paypal_express'])) {
+        if (in_array($this->request->input('payment_type'), [Type::TRANSFER, Type::PAYPAL_EXPRESS])) {
             return $this->response->redirectToRoute('web.payment.dir.show', [
                 $this->dir->payment->uuid,
                 $this->dir->payment->driver

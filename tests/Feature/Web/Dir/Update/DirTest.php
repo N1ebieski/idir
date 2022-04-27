@@ -12,6 +12,7 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
 use GuzzleHttp\Client as GuzzleClient;
 use Illuminate\Support\Facades\Config;
+use N1ebieski\IDir\ValueObjects\Price\Type;
 use N1ebieski\IDir\Models\Field\Group\Field;
 use Illuminate\Http\Response as HttpResponse;
 use N1ebieski\IDir\Models\Payment\Dir\Payment;
@@ -443,7 +444,7 @@ class DirTest extends TestCase
 
         $response2->assertOk()
             ->assertViewIs('idir::web.dir.edit.3')
-            ->assertDontSee('transfer');
+            ->assertDontSee(Type::TRANSFER);
     }
 
     public function testDirEdit3NewPaidGroup()
@@ -466,7 +467,7 @@ class DirTest extends TestCase
 
         $response2->assertOk()
             ->assertViewIs('idir::web.dir.edit.3')
-            ->assertSee('transfer');
+            ->assertSee(Type::TRANSFER);
     }
 
     public function testDirUpdate3AsGuest()
@@ -723,7 +724,7 @@ class DirTest extends TestCase
         $this->get(route('web.dir.edit_1', [$dir->id]));
 
         $response = $this->put(route('web.dir.update_3', [$dir->id, $newGroup->id]), [
-            'payment_type' => 'transfer'
+            'payment_type' => Type::TRANSFER
         ]);
 
         $response->assertSessionHasErrors('payment_transfer');
@@ -747,7 +748,7 @@ class DirTest extends TestCase
         $this->get(route('web.dir.edit_1', [$dir->id]));
 
         $response = $this->put(route('web.dir.update_3', [$dir->id, $newGroup->id]), [
-            'payment_type' => 'transfer',
+            'payment_type' => Type::TRANSFER,
             'payment_transfer' => 23232
         ]);
 
@@ -772,7 +773,7 @@ class DirTest extends TestCase
         $this->get(route('web.dir.edit_1', [$dir->id]));
 
         $response = $this->put(route('web.dir.update_3', [$dir->id, $newGroup->id]), [
-            'payment_type' => 'transfer',
+            'payment_type' => Type::TRANSFER,
             'payment_transfer' => $price->id
         ] + $this->setUpDir());
 
@@ -884,7 +885,7 @@ class DirTest extends TestCase
         $this->get(route('web.dir.edit_1', [$dir->id]));
 
         $response = $this->put(route('web.dir.update_3', [$dir->id, $newGroup->id]), [
-            'payment_type' => 'code_sms',
+            'payment_type' => Type::CODE_SMS,
             'payment_code_sms' => $price->id,
             'code_sms' => 'dsadasd7a8s'
         ] + $this->setUpDir());
