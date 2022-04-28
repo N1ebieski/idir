@@ -121,7 +121,7 @@ class SendModeratorNotification
      */
     public function verify(): bool
     {
-        return $this->isNotificationTurnOn() && $this->event->dir->isUpdateStatus();
+        return $this->isNotificationTurnOn() && $this->event->dir->status->isUpdateStatus();
     }
 
     /**

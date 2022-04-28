@@ -13,6 +13,7 @@ use N1ebieski\IDir\Models\Price;
 use Illuminate\Http\UploadedFile;
 use GuzzleHttp\Client as GuzzleClient;
 use N1ebieski\IDir\Models\DirBacklink;
+use N1ebieski\IDir\ValueObjects\Dir\Status;
 use N1ebieski\IDir\ValueObjects\Price\Type;
 use N1ebieski\IDir\Models\Field\Group\Field;
 use Illuminate\Http\Response as HttpResponse;
@@ -592,7 +593,7 @@ class DirTest extends TestCase
 
         $this->assertDatabaseHas('dirs', [
             'id' => $dir->id,
-            'status' => Dir::PAYMENT_INACTIVE
+            'status' => Status::PAYMENT_INACTIVE
         ]);
 
         $this->assertDatabaseHas('payments', [
@@ -628,7 +629,7 @@ class DirTest extends TestCase
         $this->assertDatabaseHas('dirs', [
             'id' => $dir->id,
             'title' => $this->setUpDir()['title'],
-            'status' => Dir::INACTIVE
+            'status' => Status::INACTIVE
         ]);
 
         $this->assertDatabaseMissing('payments', [
@@ -695,7 +696,7 @@ class DirTest extends TestCase
             'model_id' => $dir->id,
             'model_type' => $dir->getMorphClass(),
             'order_id' => $price->id,
-            'status' => Dir::ACTIVE
+            'status' => Status::ACTIVE
         ]);
 
         $response->assertStatus(HttpResponse::HTTP_OK);

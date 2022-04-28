@@ -3,16 +3,20 @@
 namespace N1ebieski\IDir\Http\Requests\Web\Dir;
 
 use Illuminate\Support\Str;
+use N1ebieski\IDir\Models\Dir;
 use Illuminate\Validation\Rule;
 use N1ebieski\ICore\Models\Link;
 use N1ebieski\IDir\Models\Group;
-use N1ebieski\IDir\Models\Price;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Lang;
 use N1ebieski\IDir\ValueObjects\Price\Type;
 use N1ebieski\IDir\Http\Requests\Web\Dir\Update2Request;
 use N1ebieski\ICore\Http\Requests\Traits\CaptchaExtended;
 
+/**
+ * @property Dir $dir
+ * @property Group $group
+ */
 class Update3Request extends Update2Request
 {
     use CaptchaExtended;
@@ -26,7 +30,7 @@ class Update3Request extends Update2Request
     {
         $check = $this->group->isPublic();
 
-        return $this->dir->isGroup($this->group->id) ?
+        return $this->group->id === $this->dir->group->id ?
             $check : $check && $this->group->isAvailable();
     }
 

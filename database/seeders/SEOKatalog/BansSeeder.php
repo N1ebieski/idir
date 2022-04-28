@@ -5,6 +5,7 @@ namespace N1ebieski\IDir\Database\Seeders\SEOKatalog;
 use N1ebieski\IDir\Models\User;
 use Illuminate\Support\Facades\DB;
 use N1ebieski\IDir\Models\BanValue;
+use N1ebieski\IDir\ValueObjects\BanValue\Type;
 use N1ebieski\IDir\Models\BanModel\Dir\BanModel;
 use N1ebieski\IDir\Database\Seeders\SEOKatalog\SEOKatalogSeeder;
 
@@ -26,14 +27,14 @@ class BansSeeder extends SEOKatalogSeeder
                         if (!empty($item->url)) {
                             BanValue::create([
                                 'value' => $this->url($item->url),
-                                'type' => 'url'
+                                'type' => Type::URL
                             ]);
                         }
 
                         if (!empty($item->ip)) {
                             BanValue::create([
                                 'value' => $item->ip,
-                                'type' => 'ip'
+                                'type' => Type::IP
                             ]);
                         }
 

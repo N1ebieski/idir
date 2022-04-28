@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use N1ebieski\IDir\ValueObjects\Dir\Status;
 use N1ebieski\IDir\Models\Category\Dir\Category;
 
 class DirsJob implements ShouldQueue
@@ -121,8 +122,8 @@ class DirsJob implements ShouldQueue
                 $dir->content_html = utf8_decode($item->DESCRIPTION);
                 $dir->content = utf8_decode($item->DESCRIPTION);
                 $dir->status = $item->STATUS === 2 ?
-                    Dir::ACTIVE
-                    : Dir::INACTIVE;
+                    Status::ACTIVE
+                    : Status::INACTIVE;
                 $dir->url = mb_strtolower($item->URL);
                 $dir->privileged_at = static::privilegedAt($item);
                 $dir->privileged_to = static::privilegedTo($item);

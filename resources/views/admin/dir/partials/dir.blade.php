@@ -40,7 +40,7 @@
                 <li>
                     {!! $dir->title_as_link !!}
                     @if (!isset($filter['status']))
-                    <span class="badge badge-{{ $dir->status === $dir::ACTIVE ? 'success' : 'warning' }}">
+                    <span class="badge badge-{{ $dir->status->isActive() ? 'success' : 'warning' }}">
                         {{ trans("idir::dirs.status.{$dir->status}") }}
                     </span>
                     @endif
@@ -213,7 +213,7 @@
                         </small>
                     </li>
                 </ul>
-                @if ($dir->isUrl() && !$dir->isNotOk())
+                @if ($dir->url->isUrl() && !$dir->status->isStatusInactive())
                 <div class="mb-3 d-sm-none">
                     @yield('thumbnail')
                 </div>
@@ -246,14 +246,14 @@
                 </div>
                 @endcan
                 @can('admin.dirs.status')
-                @if ($dir->isUpdateStatus())
+                @if ($dir->status->isUpdateStatus())
                 <button 
-                    data-status="{{ $dir::ACTIVE }}" 
+                    data-status="{{ Dir\Status::ACTIVE }}" 
                     type="button" 
                     class="btn btn-success status-dir"
                     data-route="{{ route('admin.dir.update_status', [$dir->id]) }}" 
                     data-id="{{ $dir->id }}"
-                    {{ $dir->status == $dir::ACTIVE ? 'disabled' : '' }}
+                    {{ $dir->status->isActive() ? 'disabled' : '' }}
                 >
                     <i class="fas fa-toggle-on"></i>
                     <span class="d-none d-sm-inline"> 
@@ -262,12 +262,12 @@
                 </button>
                 <div class="btn-group-vertical">
                     <button 
-                        data-status="{{ $dir::INACTIVE }}" 
+                        data-status="{{ Dir\Status::INACTIVE }}" 
                         type="button" 
                         class="btn btn-warning status-dir"
                         data-route="{{ route('admin.dir.update_status', [$dir->id]) }}" 
                         data-id="{{ $dir->id }}"
-                        {{ $dir->status == $dir::INACTIVE ? 'disabled' : '' }}
+                        {{ $dir->status->isInactive() ? 'disabled' : '' }}
                     >
                         <i class="fas fa-toggle-off"></i>
                         <span class="d-none d-sm-inline"> 
@@ -275,7 +275,7 @@
                         </span>
                     </button>
                     <button 
-                        data-status="{{ $dir::INCORRECT_INACTIVE }}" 
+                        data-status="{{ Dir\Status::INCORRECT_INACTIVE }}" 
                         type="button" 
                         class="btn btn-warning"
                         data-route="{{ route('admin.dir.update_status', [$dir->id]) }}"
@@ -291,7 +291,7 @@
                         data-reasons="{{ json_encode(config('idir.dir.reasons')) }}" 
                         data-reasons-label="{{ trans('idir::dirs.reason.label') }}"
                         data-reasons-custom="{{ trans('idir::dirs.reason.custom') }}"                        
-                        {{ $dir->status == $dir::INCORRECT_INACTIVE ? 'disabled' : '' }}
+                        {{ $dir->status->isIncorrectInactive() ? 'disabled' : '' }}
                     >
                         <i class="far fa-times-circle"></i>
                         <span class="d-none d-sm-inline"> 
@@ -299,7 +299,7 @@
                         </span>
                     </button>                    
                 </div>
-                @elseif ($dir->isNotOk())
+                @elseif ($dir->status->isStatusInactive())
                 <button 
                     type="button" 
                     class="btn btn-success"
@@ -322,7 +322,7 @@
                         {{ trans('idir::status.delay') }}
                     </span>
                 </button>
-                @elseif ($dir->isBacklinkNotOk())
+                @elseif ($dir->status->isBacklinkInactive())
                 <button 
                     type="button" 
                     class="btn btn-success"
@@ -389,7 +389,7 @@
                     @endcan
                 </div>
             </div>
-            @if ($dir->isUrl() && !$dir->isNotOk())
+            @if ($dir->url->isUrl() && !$dir->status->isStatusInactive())
             <div class="d-none d-sm-block mt-auto ml-auto mb-3">
                 @yield('thumbnail')
             </div>

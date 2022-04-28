@@ -1,0 +1,29 @@
+<?php
+
+namespace N1ebieski\IDir\ValueObjects\BanValue;
+
+use N1ebieski\ICore\ValueObjects\BanValue\Type as BaseType;
+
+class Type extends BaseType
+{
+    /**
+     * [public description]
+     * @var string
+     */
+    public const URL = 'url';
+
+    /**
+     * Undocumented function
+     *
+     * @param string $value
+     * @return void
+     */
+    protected function validate(string $value): void
+    {
+        $in = [static::IP, static::WORD, self::URL];
+
+        if (!in_array($value, $in)) {
+            throw new \InvalidArgumentException("The given value must be in: " . implode(', ', $in));
+        }
+    }
+}

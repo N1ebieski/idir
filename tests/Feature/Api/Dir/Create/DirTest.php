@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Storage;
 use N1ebieski\IDir\Mail\Dir\ModeratorMail;
+use N1ebieski\IDir\ValueObjects\Dir\Status;
 use N1ebieski\IDir\ValueObjects\Price\Type;
 use N1ebieski\IDir\Models\Field\Group\Field;
 use Illuminate\Http\Response as HttpResponse;
@@ -348,7 +349,7 @@ class DirTest extends TestCase
 
         $this->assertDatabaseHas('dirs', [
             'id' => $dir->id,
-            'status' => Dir::PAYMENT_INACTIVE,
+            'status' => Status::PAYMENT_INACTIVE,
             'user_id' => $user->id
         ]);
 
@@ -380,7 +381,7 @@ class DirTest extends TestCase
 
         $this->assertDatabaseHas('dirs', [
             'id' => $dir->id,
-            'status' => Dir::INACTIVE,
+            'status' => Status::INACTIVE,
             'user_id' => $user->id
         ]);
 
@@ -525,10 +526,10 @@ class DirTest extends TestCase
             'model_id' => $dir->id,
             'model_type' => $dir->getMorphClass(),
             'order_id' => $price->id,
-            'status' => Dir::INACTIVE
+            'status' => Status::INACTIVE
         ]);
 
-        $this->assertTrue($dir->privileged_at === null && $dir->status === Dir::INACTIVE);
+        $this->assertTrue($dir->privileged_at === null && $dir->status->isInactive());
     }
 
     public function testApiDirStoreValidationPaymentAutoCodeTransferError()
@@ -595,10 +596,10 @@ class DirTest extends TestCase
             'model_id' => $dir->id,
             'model_type' => $dir->getMorphClass(),
             'order_id' => $price->id,
-            'status' => Dir::INACTIVE
+            'status' => Status::INACTIVE
         ]);
 
-        $this->assertTrue($dir->privileged_at === null && $dir->status === Dir::INACTIVE);
+        $this->assertTrue($dir->privileged_at === null && $dir->status->isInactive());
     }
 
     public function testApiDirStoreValidationPaymentLocalCodeSmsPass()
@@ -639,10 +640,10 @@ class DirTest extends TestCase
             'model_id' => $dir->id,
             'model_type' => $dir->getMorphClass(),
             'order_id' => $price->id,
-            'status' => Dir::ACTIVE
+            'status' => Status::ACTIVE
         ]);
 
-        $this->assertTrue($dir->privileged_at !== null && $dir->status === Dir::ACTIVE);
+        $this->assertTrue($dir->privileged_at !== null && $dir->status->isActive());
     }
 
     public function testApiDirStoreModeratorNotificationDirs()
@@ -670,7 +671,7 @@ class DirTest extends TestCase
 
         $this->assertDatabaseHas('dirs', [
             'id' => $dir->id,
-            'status' => Dir::INACTIVE,
+            'status' => Status::INACTIVE,
             'group_id' => $group->id,
             'privileged_to' => null
         ]);
@@ -710,7 +711,7 @@ class DirTest extends TestCase
 
         $this->assertDatabaseHas('dirs', [
             'id' => $dir->id,
-            'status' => Dir::INACTIVE,
+            'status' => Status::INACTIVE,
             'group_id' => $group->id,
             'privileged_to' => null
         ]);

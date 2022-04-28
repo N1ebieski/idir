@@ -3,8 +3,9 @@
 namespace N1ebieski\IDir\Database\Seeders\PHPLD;
 
 use Illuminate\Support\Facades\DB;
-use N1ebieski\IDir\Database\Seeders\PHPLD\PHPLDSeeder;
 use N1ebieski\IDir\Models\Category\Dir\Category;
+use N1ebieski\ICore\ValueObjects\Category\Status;
+use N1ebieski\IDir\Database\Seeders\PHPLD\PHPLDSeeder;
 
 class CategoriesSeeder extends PHPLDSeeder
 {
@@ -27,8 +28,8 @@ class CategoriesSeeder extends PHPLDSeeder
                     $category->id = $item->ID;
                     $category->name = $item->TITLE;
                     $category->status = $item->STATUS === 0 ?
-                        Category::INACTIVE
-                        : Category::ACTIVE;
+                        Status::INACTIVE
+                        : Status::ACTIVE;
                     $category->parent_id = !empty($item->PARENT_ID) && Category::find($item->PARENT_ID) !== null ?
                         $item->PARENT_ID
                         : null;

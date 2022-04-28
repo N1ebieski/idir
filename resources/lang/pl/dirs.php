@@ -1,6 +1,6 @@
 <?php
 
-use N1ebieski\IDir\Models\Dir;
+use N1ebieski\IDir\ValueObjects\Dir\Status;
 use N1ebieski\IDir\ValueObjects\Price\Type;
 
 return [
@@ -24,20 +24,20 @@ return [
     ],
     'success' => [
         'store' => [
-            Dir::INACTIVE => 'Wpis został dodany i oczekuje na akceptację przez moderatora.',
-            Dir::ACTIVE => 'Wpis został dodany i jest aktywny.'
+            Status::INACTIVE => 'Wpis został dodany i oczekuje na akceptację przez moderatora.',
+            Status::ACTIVE => 'Wpis został dodany i jest aktywny.'
         ],
         'update' => [
-            Dir::INACTIVE => 'Wpis został zaktualizowany i oczekuje na akceptację przez moderatora.',
-            Dir::ACTIVE => 'Wpis został zaktualizowany i jest aktywny.'
+            Status::INACTIVE => 'Wpis został zaktualizowany i oczekuje na akceptację przez moderatora.',
+            Status::ACTIVE => 'Wpis został zaktualizowany i jest aktywny.'
         ],
         'update_status' => [
-            Dir::ACTIVE => 'Wpis został aktywowany',
-            Dir::INCORRECT_INACTIVE => 'Wpis został zgłoszony do poprawy'
+            Status::ACTIVE => 'Wpis został aktywowany',
+            Status::INCORRECT_INACTIVE => 'Wpis został zgłoszony do poprawy'
         ],
         'update_renew' => [
-            Dir::INACTIVE => 'Dziękujemy. Czas ważności wpisu zostanie przedłużony w momencie akceptacji wpisu przez moderację.',
-            Dir::ACTIVE => 'Dziękujemy. Czas ważności wpisu został przedłużony.'
+            Status::INACTIVE => 'Dziękujemy. Czas ważności wpisu zostanie przedłużony w momencie akceptacji wpisu przez moderację.',
+            Status::ACTIVE => 'Dziękujemy. Czas ważności wpisu został przedłużony.'
         ],
         'destroy' => 'Wpis został usunięty',
         'destroy_global' => 'Pomyślnie usunięto :affected wpisów'
@@ -80,12 +80,12 @@ return [
     'unlimited' => 'nielimitowany',
     'status' => [
         'label' => 'Status',
-        Dir::ACTIVE => 'aktywny',
-        Dir::INACTIVE => 'oczekujący na moderację',
-        Dir::PAYMENT_INACTIVE => 'oczekujący na płatność',
-        Dir::BACKLINK_INACTIVE => 'oczekujący na backlink',
-        Dir::STATUS_INACTIVE => 'oczekujący na status 200',
-        Dir::INCORRECT_INACTIVE => 'oczekujący na poprawę'
+        Status::ACTIVE => 'aktywny',
+        Status::INACTIVE => 'oczekujący na moderację',
+        Status::PAYMENT_INACTIVE => 'oczekujący na płatność',
+        Status::BACKLINK_INACTIVE => 'oczekujący na backlink',
+        Status::STATUS_INACTIVE => 'oczekujący na status 200',
+        Status::INCORRECT_INACTIVE => 'oczekujący na poprawę'
     ],
     'privileged_to' => 'Data wygaśnięcia',
     'reason' => [

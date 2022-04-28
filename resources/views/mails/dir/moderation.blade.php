@@ -20,7 +20,7 @@
     <span>
         <a 
             style="color:orange" 
-            href="{{ route('admin.dir.index', ['filter[status]' => $dir::INACTIVE]) }}"
+            href="{{ route('admin.dir.index', ['filter[status]' => Dir\Status::INACTIVE]) }}"
         >
             ({{ trans('icore::filter.inactive') }}: {{ $dirs_inactive_count }})
         </a>
@@ -30,9 +30,9 @@
     <span>
         <a 
             style="color:red" 
-            href="{{ route('admin.dir.index', ['filter[report]' => $report::REPORTED]) }}"
+            href="{{ route('admin.dir.index', ['filter[report]' => Report\Reported::ACTIVE]) }}"
         >
-            ({{ trans('icore::filter.report.' . $report::REPORTED) }}: {{ $dirs_reported_count }})
+            ({{ trans('icore::filter.report.' . Report\Reported::ACTIVE) }}: {{ $dirs_reported_count }})
         </a>
     </span>
     @endif    
@@ -41,7 +41,7 @@
 <p>
     <span>
         <a 
-            style="color:{{ $dir->isActive() ? 'green' : 'orange' }}" 
+            style="color:{{ $dir->status->isActive() ? 'green' : 'orange' }}" 
             href="{{ route('admin.dir.index', ['filter[search]' => 'id:"' . $dir->id . '"']) }}"
         >
             {{ $dir->title }}
@@ -49,7 +49,7 @@
     </span>
     @if ($dir->group->prices->isNotEmpty() && $dir->payments->isNotEmpty())
     <span style="background-color:yellow;color:initial">
-        <b>({{ trans('idir::groups.payment.' . $payment::FINISHED) }})</b>
+        <b>({{ trans('idir::groups.payment.' . Payment\Status::FINISHED) }})</b>
     </span>
     @endif 
 </p>       

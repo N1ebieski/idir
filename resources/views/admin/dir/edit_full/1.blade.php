@@ -39,10 +39,10 @@
     <div class="row">
         @foreach($groups as $group)
         <div class="col-lg-4 col-md-6 mb-4">
-            <div class="card h-100 {{ $dir->isGroup($group->id) ? 'border-primary border' : null }}">
+            <div class="card h-100 {{ $group->id === $dir->group->id ? 'border-primary border' : null }}">
                 @include('idir::admin.dir.partials.group')
-                <div class="card-footer mt-auto {{ $dir->isGroup($group->id) || $group->isAvailable() ? null : 'bg-warning' }}">
-                    @if ($dir->isGroup($group->id))
+                <div class="card-footer mt-auto {{ $group->id === $dir->group->id || $group->isAvailable() ? null : 'bg-warning' }}">
+                    @if ($group->id === $dir->group->id)
                     <a 
                         href="{{ route('admin.dir.edit_full_2', [$dir->id, $group->id]) }}" 
                         class="btn btn-link"

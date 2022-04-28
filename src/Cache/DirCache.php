@@ -135,7 +135,7 @@ class DirCache
             $this->carbon->now()->addDays($this->config->get('idir.dir.thumbnail.cache.days')),
             function () {
                 return $this->config->get('idir.dir.thumbnail.cache.url')
-                    . app('crypt.thumbnail')->encryptString($this->dir->url);
+                    . app('crypt.thumbnail')->encryptString($this->dir->url->getValue());
             }
         );
     }

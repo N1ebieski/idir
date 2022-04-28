@@ -4,6 +4,7 @@ namespace N1ebieski\IDir\Http\Responses\Admin\Dir;
 
 use N1ebieski\IDir\Models\Dir;
 use Illuminate\Http\RedirectResponse;
+use N1ebieski\IDir\ValueObjects\Dir\Status;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Contracts\Routing\UrlGenerator as URL;
@@ -62,14 +63,14 @@ class Store3Response implements RedirectResponseFactory
      */
     public function makeResponse(Dir $dir): RedirectResponse
     {
-        switch ($dir->status) {
-            case Dir::INACTIVE:
+        switch ($dir->status->getValue()) {
+            case Status::INACTIVE:
                 return $this->response->redirectToRoute('admin.dir.index')
-                    ->with('success', $this->lang->get('idir::dirs.success.store.' . Dir::INACTIVE));
-            case Dir::ACTIVE:
+                    ->with('success', $this->lang->get('idir::dirs.success.store.' . Status::INACTIVE));
+            case Status::ACTIVE:
                 return $this->response->redirectToRoute('admin.dir.index')
-                    ->with('success', $this->lang->get('idir::dirs.success.store.' . Dir::ACTIVE));
-            case Dir::PAYMENT_INACTIVE:
+                    ->with('success', $this->lang->get('idir::dirs.success.store.' . Status::ACTIVE));
+            case Status::PAYMENT_INACTIVE:
                 return $this->response->redirectToRoute('admin.payment.dir.show', [
                     $dir->payment->uuid,
                     $dir->payment->driver

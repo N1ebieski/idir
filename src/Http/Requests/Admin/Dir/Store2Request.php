@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Database\Eloquent\Collection;
 use N1ebieski\IDir\Models\Category\Dir\Category;
+use N1ebieski\ICore\ValueObjects\Category\Status;
 use N1ebieski\IDir\Http\Requests\Traits\FieldsExtended;
 
 class Store2Request extends FormRequest
@@ -183,8 +184,8 @@ class Store2Request extends FormRequest
                 'distinct',
                 Rule::exists('categories', 'id')->where(function ($query) {
                     $query->where([
-                        ['status', Category::ACTIVE],
-                        ['model_type', 'N1ebieski\\IDir\\Models\\Dir']
+                        ['status', Status::ACTIVE],
+                        ['model_type', \N1ebieski\IDir\Models\Dir::class]
                     ]);
                 }),
                 'no_js_validation'

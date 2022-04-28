@@ -6,7 +6,7 @@ use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Lang;
 use N1ebieski\ICore\Models\BanValue;
 use Illuminate\Foundation\Http\FormRequest;
-use N1ebieski\IDir\Models\Comment\Dir\Comment;
+use N1ebieski\ICore\ValueObjects\Comment\Status;
 use N1ebieski\ICore\Http\Requests\Traits\CaptchaExtended;
 
 class StoreRequest extends FormRequest
@@ -82,7 +82,7 @@ class StoreRequest extends FormRequest
                 'nullable',
                 'integer',
                 Rule::exists('comments', 'id')->where(function ($query) {
-                    $query->where('status', Comment::ACTIVE);
+                    $query->where('status', Status::ACTIVE);
                 }),
             ]
         ], $this->prepareCaptchaRules());

@@ -32,7 +32,7 @@ class CategoryRepo extends BaseCategoryRepo
                     ->leftJoin($morph->getTable(), function ($query) use ($morph) {
                         $query->on('categories_models.model_id', '=', "{$morph->getTable()}.id")
                             ->where('categories_models.model_type', $morph->getMorphClass())
-                            ->where("{$morph->getTable()}.status", $morph::ACTIVE);
+                            ->where("{$morph->getTable()}.status", $morph->status::ACTIVE);
                     })
                     ->groupBy("{$morph->getTable()}.id", 'categories.id');
 
@@ -71,7 +71,7 @@ class CategoryRepo extends BaseCategoryRepo
                     ->leftJoin($morph->getTable(), function ($query) use ($morph) {
                         $query->on('categories_models.model_id', '=', "{$morph->getTable()}.id")
                             ->where('categories_models.model_type', $morph->getMorphClass())
-                            ->where("{$morph->getTable()}.status", $morph::ACTIVE);
+                            ->where("{$morph->getTable()}.status", $morph->status::ACTIVE);
                     })
                     ->groupBy("{$morph->getTable()}.id", 'categories.id');
 

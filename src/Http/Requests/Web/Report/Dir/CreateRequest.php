@@ -2,8 +2,12 @@
 
 namespace N1ebieski\IDir\Http\Requests\Web\Report\Dir;
 
+use N1ebieski\IDir\Models\Dir;
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * @property Dir $dir
+ */
 class CreateRequest extends FormRequest
 {
     /**
@@ -13,7 +17,7 @@ class CreateRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->dir->isActive();
+        return $this->dir->status->isActive();
     }
 
     /**

@@ -7,6 +7,7 @@ use N1ebieski\IDir\Models\Dir;
 use Spatie\ViewModels\ViewModel;
 use N1ebieski\ICore\Filters\Filter;
 use N1ebieski\IDir\Models\Stat\Dir\Stat;
+use N1ebieski\ICore\ValueObjects\Stat\Slug;
 use Illuminate\Database\Eloquent\Collection;
 use N1ebieski\IDir\Models\Comment\Dir\Comment;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -127,8 +128,8 @@ class ShowViewModel extends ViewModel
      */
     public function statCtr(): float
     {
-        $click = $this->statBySlug(Stat::CLICK);
-        $view = $this->statBySlug(Stat::VIEW);
+        $click = $this->statBySlug(Slug::CLICK);
+        $view = $this->statBySlug(Slug::VIEW);
 
         if (!$click || !$view) {
             return (float)0;

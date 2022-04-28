@@ -2,8 +2,12 @@
 
 namespace N1ebieski\IDir\Http\Requests\Web\Dir;
 
+use N1ebieski\IDir\Models\Dir;
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * @property Dir $dir_cache
+ */
 class ShowRequest extends FormRequest
 {
     /**
@@ -13,7 +17,7 @@ class ShowRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->dir_cache->isActive();
+        return $this->dir_cache->status->isActive();
     }
 
     /**

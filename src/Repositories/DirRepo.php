@@ -10,7 +10,9 @@ use Illuminate\Database\Eloquent\Collection;
 use N1ebieski\IDir\Models\Rating\Dir\Rating;
 use Illuminate\Contracts\Auth\Factory as Auth;
 use Illuminate\Contracts\Config\Repository as Config;
+use N1ebieski\IDir\ValueObjects\Dir\Status as DirStatus;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use N1ebieski\ICore\ValueObjects\Comment\Status as CommentStatus;
 
 class DirRepo
 {
@@ -65,7 +67,7 @@ class DirRepo
     {
         return $this->dir->selectRaw('`dirs`.*')
             ->withCount('reports')
-            ->withAllRels()        
+            ->withAllRels()
             ->filterAuthor($filter['author'])
             ->filterExcept($filter['except'])
             ->when($filter['search'] !== null, function ($query) use ($filter) {
@@ -151,7 +153,7 @@ class DirRepo
      */
     public function deactivateByBacklink(): bool
     {
-        return $this->dir->update(['status' => Dir::BACKLINK_INACTIVE]);
+        return $this->dir->update(['status' => DirStatus::BACKLINK_INACTIVE]);
     }
 
     /**
@@ -160,7 +162,7 @@ class DirRepo
      */
     public function deactivateByStatus(): bool
     {
-        return $this->dir->update(['status' => Dir::STATUS_INACTIVE]);
+        return $this->dir->update(['status' => DirStatus::STATUS_INACTIVE]);
     }
 
     /**
@@ -169,7 +171,7 @@ class DirRepo
      */
     public function deactivateByPayment(): bool
     {
-        return $this->dir->update(['status' => Dir::PAYMENT_INACTIVE]);
+        return $this->dir->update(['status' => DirStatus::PAYMENT_INACTIVE]);
     }
 
     /**
@@ -178,7 +180,7 @@ class DirRepo
      */
     public function activate(): bool
     {
-        return $this->dir->update(['status' => Dir::ACTIVE]);
+        return $this->dir->update(['status' => DirStatus::ACTIVE]);
     }
 
     /**
@@ -350,7 +352,7 @@ class DirRepo
     {
         return $this->dir->comments()->where([
                 ['comments.parent_id', null],
-                ['comments.status', \N1ebieski\ICore\Models\Comment\Comment::ACTIVE]
+                ['comments.status', CommentStatus::ACTIVE]
             ])
             ->withAllRels($filter['orderby'])
             ->filterExcept($filter['except'])
@@ -409,7 +411,7 @@ class DirRepo
     public function getLatestForModeratorsByLimit(int $limit): Collection
     {
         return $this->dir->withAllPublicRels()
-            ->whereIn('status', [Dir::INACTIVE, Dir::ACTIVE])
+            ->whereIn('status', [DirStatus::INACTIVE, DirStatus::ACTIVE])
             ->latest()
             ->limit($limit)
             ->get();
@@ -424,7 +426,7 @@ class DirRepo
     public function getLatestForModeratorsByCreatedAt(string $timestamp): Collection
     {
         return $this->dir->withAllPublicRels()
-            ->whereIn('status', [Dir::INACTIVE, Dir::ACTIVE])
+            ->whereIn('status', [DirStatus::INACTIVE, DirStatus::ACTIVE])
             ->where(function ($query) use ($timestamp) {
                 $query->whereDate('created_at', '>', Carbon::parse($timestamp)->format('Y-m-d'))
                     ->orWhere(function ($query) use ($timestamp) {
@@ -617,7 +619,7 @@ class DirRepo
                     ->where('p1.order_type', $price->getMorphClass());
             })
             ->from("{$this->dir->getTable()} AS d")
-            ->where('d.status', $this->dir::ACTIVE)
+            ->where('d.status', DirStatus::ACTIVE)
             ->groupBy('year')
             ->groupBy('month')
             ->groupBy('first_group_id')

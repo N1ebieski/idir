@@ -22,6 +22,7 @@ use N1ebieski\IDir\Models\Region\Region;
 use N1ebieski\IDir\Models\Field\Dir\Field;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use N1ebieski\ICore\ValueObjects\Link\Type;
 use N1ebieski\IDir\Models\Category\Dir\Category;
 
 class DirsJob implements ShouldQueue
@@ -199,7 +200,7 @@ class DirsJob implements ShouldQueue
                 if (!empty($item->backlink_link)) {
                     $backlink = Link::where([
                         ['url', static::url($item->backlink)],
-                        ['type', 'backlink']
+                        ['type', Type::BACKLINK]
                     ])->first();
 
                     if (is_int(optional($backlink)->id)) {

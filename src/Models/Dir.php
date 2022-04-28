@@ -14,10 +14,10 @@ use Illuminate\Database\Eloquent\Model;
 use N1ebieski\IDir\Services\DirService;
 use Cviebrock\EloquentTaggable\Taggable;
 use N1ebieski\ICore\Utils\MigrationUtil;
-use N1ebieski\IDir\Models\Stat\Dir\Stat;
 use N1ebieski\IDir\Repositories\DirRepo;
 use Illuminate\Database\Eloquent\Builder;
 use Cviebrock\EloquentSluggable\Sluggable;
+use N1ebieski\IDir\ValueObjects\Dir\Status;
 use N1ebieski\IDir\Models\Traits\Filterable;
 use Illuminate\Support\Collection as Collect;
 use N1ebieski\ICore\Models\Traits\Carbonable;
@@ -32,7 +32,12 @@ use N1ebieski\ICore\Models\Traits\FullTextSearchable;
 use N1ebieski\IDir\Database\Factories\Dir\DirFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use N1ebieski\ICore\ValueObjects\Stat\Slug as StatSlug;
 
+/**
+ * @property Status $status
+ * @property \N1ebieski\IDir\ValueObjects\Dir\Url $url
+ */
 class Dir extends Model
 {
     use Sluggable;
@@ -46,42 +51,6 @@ class Dir extends Model
     }
 
     // Configuration
-
-    /**
-     * [public description]
-     * @var int
-     */
-    public const ACTIVE = 1;
-
-    /**
-     * [public description]
-     * @var int
-     */
-    public const INACTIVE = 0;
-
-    /**
-     * [public description]
-     * @var int
-     */
-    public const PAYMENT_INACTIVE = 2;
-
-    /**
-     * [public description]
-     * @var int
-     */
-    public const BACKLINK_INACTIVE = 3;
-
-    /**
-     * [public description]
-     * @var int
-     */
-    public const STATUS_INACTIVE = 4;
-
-    /**
-     * [public description]
-     * @var int
-     */
-    public const INCORRECT_INACTIVE = 5;
 
     /**
      * The attributes that are mass assignable.
@@ -116,7 +85,7 @@ class Dir extends Model
      * @var array
      */
     protected $attributes = [
-        'status' => self::INACTIVE,
+        'status' => Status::INACTIVE,
         'notes' => null,
         'privileged_at' => null,
         'privileged_to' => null
@@ -131,7 +100,8 @@ class Dir extends Model
         'id' => 'integer',
         'group_id' => 'integer',
         'user_id' => 'integer',
-        'status' => 'integer',
+        'status' => \N1ebieski\IDir\Casts\Dir\StatusCast::class,
+        'url' => \N1ebieski\IDir\Casts\Dir\UrlCast::class,
         'privileged_at' => 'datetime',
         'privileged_to' => 'datetime',
         'created_at' => 'datetime',
@@ -413,7 +383,7 @@ class Dir extends Model
      */
     public function scopeActive(Builder $query): Builder
     {
-        return $query->where('dirs.status', static::ACTIVE);
+        return $query->where('dirs.status', Status::ACTIVE);
     }
 
     /**
@@ -423,7 +393,7 @@ class Dir extends Model
      */
     public function scopeInactive(Builder $query): Builder
     {
-        return $query->where('dirs.status', static::INACTIVE);
+        return $query->where('dirs.status', Status::INACTIVE);
     }
 
     /**
@@ -433,7 +403,7 @@ class Dir extends Model
      */
     public function scopePending(Builder $query): Builder
     {
-        return $query->where('dirs.status', static::PAYMENT_INACTIVE);
+        return $query->where('dirs.status', Status::PAYMENT_INACTIVE);
     }
 
     /**
@@ -443,7 +413,7 @@ class Dir extends Model
      */
     public function scopeBacklinkInactive(Builder $query): Builder
     {
-        return $query->where('dirs.status', static::BACKLINK_INACTIVE);
+        return $query->where('dirs.status', Status::BACKLINK_INACTIVE);
     }
 
     /**
@@ -516,15 +486,6 @@ class Dir extends Model
     }
 
     /**
-     * [getHostAttribute description]
-     * @return string        [description]
-     */
-    public function getUrlAsHostAttribute(): string
-    {
-        return parse_url($this->url, PHP_URL_HOST);
-    }
-
-    /**
      * [getPrivilegedToDiffAttribute description]
      * @return string [description]
      */
@@ -552,7 +513,7 @@ class Dir extends Model
      */
     public function getTitleAsLinkAttribute(): string
     {
-        if ($this->url !== null) {
+        if ($this->url->isUrl()) {
             $link = '<a rel="noopener';
 
             if ($this->group->hasNoFollowPrivilege()) {
@@ -562,7 +523,7 @@ class Dir extends Model
             $link .= '" target="_blank" title="' . e($this->title) . '" ';
 
             if (App::make(MigrationUtil::class)->contains('create_stats_table')) {
-                $link .= 'class="click-stat" data-route="' . URL::route('web.stat.dir.click', [Stat::CLICK, $this->slug]) . '" ';
+                $link .= 'class="click-stat" data-route="' . URL::route('web.stat.dir.click', [StatSlug::CLICK, $this->slug]) . '" ';
             }
 
             $link .= 'href="' . e($this->url) . '">' . e($this->title) . '</a>';
@@ -578,7 +539,7 @@ class Dir extends Model
      */
     public function getUrlAsLinkAttribute(): ?string
     {
-        if ($this->url !== null) {
+        if ($this->url->isUrl()) {
             $link = '<a rel="noopener';
 
             if ($this->getRelation('group')->hasNoFollowPrivilege()) {
@@ -588,10 +549,10 @@ class Dir extends Model
             $link .= '" target="_blank" title="' . e($this->title) . '" ';
 
             if (App::make(MigrationUtil::class)->contains('create_stats_table')) {
-                $link .= 'class="click-stat" data-route="' . URL::route('web.stat.dir.click', [Stat::CLICK, $this->slug]) . '" ';
+                $link .= 'class="click-stat" data-route="' . URL::route('web.stat.dir.click', [StatSlug::CLICK, $this->slug]) . '" ';
             }
 
-            $link .= 'href="' . e($this->url) . '">' . e($this->url_as_host) . '</a>';
+            $link .= 'href="' . e($this->url) . '">' . e($this->url->getHost()) . '</a>';
         }
 
         return $link ?? null;
@@ -604,7 +565,7 @@ class Dir extends Model
      */
     public function getLinkAttribute(): string
     {
-        if ($this->url !== null) {
+        if ($this->url->isUrl()) {
             if ($this->getRelation('group')->hasDirectLinkPrivilege()) {
                 return $this->title_as_link;
             }
@@ -700,90 +661,13 @@ class Dir extends Model
     }
 
     /**
-     * Undocumented function
-     *
-     * @return boolean
-     */
-    public function isCommentable(): bool
-    {
-        return true;
-    }
-
-    /**
      * [isRenew description]
      * @return bool [description]
      */
     public function isRenew(): bool
     {
-        return ($this->privileged_to !== null || $this->isPending())
+        return ($this->privileged_to !== null || $this->status->isPaymentInactive())
             && $this->getRelation('group')->getRelation('prices')->isNotEmpty();
-    }
-
-    /**
-     * [isGroup description]
-     * @param  int  $id [description]
-     * @return bool     [description]
-     */
-    public function isGroup(int $id): bool
-    {
-        return $this->group_id === $id;
-    }
-
-    /**
-     * [isUrl description]
-     * @return bool [description]
-     */
-    public function isUrl(): bool
-    {
-        return $this->url !== null;
-    }
-
-    /**
-     * [isPending description]
-     * @return bool [description]
-     */
-    public function isPending(): bool
-    {
-        return $this->status === static::PAYMENT_INACTIVE;
-    }
-
-    /**
-     * Undocumented function
-     *
-     * @return boolean
-     */
-    public function isNotOk(): bool
-    {
-        return $this->status === static::STATUS_INACTIVE;
-    }
-
-    /**
-     * Undocumented function
-     *
-     * @return boolean
-     */
-    public function isBacklinkNotOk(): bool
-    {
-        return $this->status === static::BACKLINK_INACTIVE;
-    }
-
-    /**
-     * Undocumented function
-     *
-     * @return boolean
-     */
-    public function isIncorrect(): bool
-    {
-        return $this->status === static::INCORRECT_INACTIVE;
-    }
-
-    /**
-     * [isActive description]
-     * @return bool [description]
-     */
-    public function isActive(): bool
-    {
-        return $this->status === static::ACTIVE;
     }
 
     /**
@@ -793,20 +677,7 @@ class Dir extends Model
      */
     public function isPayment(int $id): bool
     {
-        return !$this->isGroup($id) || $this->isPending();
-    }
-
-    /**
-     * [isUpdateStatus description]
-     * @return bool [description]
-     */
-    public function isUpdateStatus(): bool
-    {
-        return in_array($this->status, [
-            static::ACTIVE,
-            static::INACTIVE,
-            static::INCORRECT_INACTIVE
-        ]);
+        return $this->group_id !== $id || $this->status->isPaymentInactive();
     }
 
     // Loads
@@ -922,5 +793,5 @@ class Dir extends Model
     public static function makeFactory(...$parameters)
     {
         return static::factory($parameters);
-    }    
+    }
 }

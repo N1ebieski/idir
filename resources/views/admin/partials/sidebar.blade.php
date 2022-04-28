@@ -51,7 +51,7 @@
         @canany(['admin.dirs.view', 'admin.bans.view'])
         <li 
             class="nav-item dropdown {{ $isUrlContains(['*/dirs', '*/dirs/*']) }}
-            {{ $isUrl(route('admin.banvalue.index', ['type' => 'url'])) }}"
+            {{ $isUrl(route('admin.banvalue.index', ['type' => BanValue\Type::URL])) }}"
         >
             <div 
                 class="nav-link dropdown-toggle"
@@ -82,7 +82,7 @@
                     @if ($dirs_inactive_count > 0)
                     <span>
                         <a 
-                            href="{{ route('admin.dir.index', ['filter[status]' => 0]) }}"
+                            href="{{ route('admin.dir.index', ['filter[status]' => Dir\Status::INACTIVE]) }}"
                             class="badge badge-warning"
                         >
                             {{ $dirs_inactive_count }}
@@ -92,7 +92,7 @@
                     @if ($dirs_reported_count > 0)
                     <span>
                         <a 
-                            href="{{ route('admin.dir.index', ['filter[report]' => 1]) }}"
+                            href="{{ route('admin.dir.index', ['filter[report]' => Dir\Status::ACTIVE]) }}"
                             class="badge badge-danger"
                         >
                             {{ $dirs_reported_count }}
@@ -103,8 +103,8 @@
                 @endcan
                 @can('admin.bans.view')
                 <a 
-                    class="dropdown-item {{ $isUrl(route('admin.banvalue.index', ['type' => 'url'])) }}"
-                    href="{{ route('admin.banvalue.index', ['type' => 'url']) }}"
+                    class="dropdown-item {{ $isUrl(route('admin.banvalue.index', ['type' => BanValue\Type::URL])) }}"
+                    href="{{ route('admin.banvalue.index', ['type' => BanValue\Type::URL]) }}"
                     title="{{ trans('idir::bans.value.url.route.index') }}"
                 >
                     {{ trans('idir::bans.value.url.route.index') }}
@@ -151,7 +151,7 @@
                     @if ($count = $comments_inactive_count->where('model', $type)->first())
                     <span>
                         <a 
-                            href="{{ route("admin.comment.{$type}.index", ['filter[status]' => 0]) }}"
+                            href="{{ route("admin.comment.{$type}.index", ['filter[status]' => Comment\Status::INACTIVE]) }}"
                             class="badge badge-warning"
                         >
                             {{ $count->count }}
@@ -161,7 +161,7 @@
                     @if ($count = $comments_reported_count->where('model', $type)->first())
                     <span>
                         <a 
-                            href="{{ route("admin.comment.{$type}.index", ['filter[report]' => 1]) }}"
+                            href="{{ route("admin.comment.{$type}.index", ['filter[report]' => Report\Reported::ACTIVE]) }}"
                             class="badge badge-danger"
                         >
                             {{ $count->count }}
@@ -283,7 +283,7 @@
                 route('admin.user.index'),
                 route('admin.role.index'),
                 route('admin.banmodel.user.index'),
-                route('admin.banvalue.index', ['type' => 'ip'])
+                route('admin.banvalue.index', ['type' => BanValue\Type::IP])
             ]) }} 
             {{ $isUrlContains(['*/roles', '*/roles/*']) }}"
         >
@@ -330,8 +330,8 @@
                     {{ trans('icore::bans.model.user.route.index') }}
                 </a>
                 <a 
-                    class="dropdown-item {{ $isUrl(route('admin.banvalue.index', ['type' => 'ip'])) }}"
-                    href="{{ route('admin.banvalue.index', ['type' => 'ip']) }}"
+                    class="dropdown-item {{ $isUrl(route('admin.banvalue.index', ['type' => BanValue\Type::IP])) }}"
+                    href="{{ route('admin.banvalue.index', ['type' => BanValue\Type::IP]) }}"
                     title="{{ trans('icore::bans.value.ip.route.index') }}"
                 >
                     {{ trans('icore::bans.value.ip.route.index') }}
@@ -355,9 +355,9 @@
         @canany(['admin.bans.view', 'admin.links.view', 'admin.tags.view'])
         <li 
             class="nav-item dropdown {{ $isUrl([
-                route('admin.banvalue.index', ['word']),
-                route('admin.link.index', ['link']),
-                route('admin.link.index', ['backlink']),
+                route('admin.banvalue.index', [BanValue\Type::WORD]),
+                route('admin.link.index', [Link\Type::LINK]),
+                route('admin.link.index', [LINK\Type::BACKLINK]),
                 route('admin.tag.index')
             ]) }}"
         >
@@ -376,8 +376,8 @@
             <div class="dropdown-menu" aria-labelledby="other-dropdown">
                 @can('admin.bans.view')
                 <a 
-                    class="dropdown-item {{ $isUrl(route('admin.banvalue.index', ['word'])) }}"
-                    href="{{ route('admin.banvalue.index', ['word']) }}"
+                    class="dropdown-item {{ $isUrl(route('admin.banvalue.index', [BanValue\Type::WORD])) }}"
+                    href="{{ route('admin.banvalue.index', [BanValue\Type::WORD]) }}"
                     title="{{ trans('icore::bans.value.word.route.index') }}"
                 >
                     {{ trans('icore::bans.value.word.route.index') }}
@@ -385,15 +385,15 @@
                 @endcan
                 @can('admin.links.view')
                 <a 
-                    class="dropdown-item {{ $isUrl(route('admin.link.index', ['link'])) }}"
-                    href="{{ route('admin.link.index', ['link']) }}"
+                    class="dropdown-item {{ $isUrl(route('admin.link.index', [Link\Type::LINK])) }}"
+                    href="{{ route('admin.link.index', [Link\Type::LINK]) }}"
                     title="{{ trans('icore::links.link.route.index') }}"
                 >
                     {{ trans('icore::links.link.route.index') }}
                 </a>
                 <a 
-                    class="dropdown-item {{ $isUrl(route('admin.link.index', ['backlink'])) }}"
-                    href="{{ route('admin.link.index', ['backlink']) }}"
+                    class="dropdown-item {{ $isUrl(route('admin.link.index', [Link\Type::BACKLINK])) }}"
+                    href="{{ route('admin.link.index', [Link\Type::BACKLINK]) }}"
                     title="{{ trans('icore::links.backlink.route.index') }}"
                 >
                     {{ trans('icore::links.backlink.route.index') }}

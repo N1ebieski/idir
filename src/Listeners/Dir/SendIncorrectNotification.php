@@ -57,7 +57,7 @@ class SendIncorrectNotification
      */
     public function verify(): bool
     {
-        return $this->event->dir->isIncorrect()
+        return $this->event->dir->status->isIncorrectInactive()
             && optional($this->event->dir->user)->email
             && optional($this->event->dir->user)->hasPermissionTo('web.dirs.notification');
     }

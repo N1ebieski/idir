@@ -7,6 +7,7 @@ use Illuminate\Http\JsonResponse;
 use N1ebieski\IDir\Models\BanValue;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Response;
+use N1ebieski\IDir\ValueObjects\BanValue\Type;
 use N1ebieski\IDir\Models\BanModel\Dir\BanModel;
 use N1ebieski\IDir\Http\Requests\Admin\BanModel\Dir\StoreRequest;
 use N1ebieski\IDir\Http\Controllers\Admin\BanModel\Dir\Polymorphic;
@@ -46,14 +47,14 @@ class BanModelController implements Polymorphic
 
         if ($request->has('ip')) {
             $banValue->create([
-                'type' => 'ip',
+                'type' => Type::IP,
                 'value' => $request->input('ip')
             ]);
         }
 
         if ($request->has('url')) {
             $banValue->create([
-                'type' => 'url',
+                'type' => Type::URL,
                 'value' => $request->input('url')
             ]);
         }

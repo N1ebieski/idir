@@ -44,7 +44,7 @@
         </div>
     </div>
     @endif
-    @if (!is_null($dir->url))
+    @if ($dir->url->isUrl())
     <div class="form-group">
         <div class="custom-control custom-checkbox">
             <input 

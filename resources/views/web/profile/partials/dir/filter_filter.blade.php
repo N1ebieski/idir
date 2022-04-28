@@ -36,40 +36,40 @@
             {{ trans('icore::filter.default') }}
         </option>
         <option 
-            value="{{ $dir::ACTIVE }}" 
-            {{ ($filter['status'] === $dir::ACTIVE) ? 'selected' : '' }}
+            value="{{ Dir\Status::ACTIVE }}" 
+            {{ ($filter['status'] === Dir\Status::ACTIVE) ? 'selected' : '' }}
         >
-            {{ trans('idir::dirs.status.'.$dir::ACTIVE) }}
+            {{ trans('idir::dirs.status.'.Dir\Status::ACTIVE) }}
         </option>
         <option 
-            value="{{ $dir::INACTIVE }}" 
-            {{ ($filter['status'] === $dir::INACTIVE) ? 'selected' : '' }}
+            value="{{ Dir\Status::INACTIVE }}" 
+            {{ ($filter['status'] === Dir\Status::INACTIVE) ? 'selected' : '' }}
         >
-            {{ trans('idir::dirs.status.'.$dir::INACTIVE) }}
+            {{ trans('idir::dirs.status.'.Dir\Status::INACTIVE) }}
         </option>
         <option 
-            value="{{ $dir::PAYMENT_INACTIVE }}" 
-            {{ ($filter['status'] === $dir::PAYMENT_INACTIVE) ? 'selected' : '' }}
+            value="{{ Dir\Status::PAYMENT_INACTIVE }}" 
+            {{ ($filter['status'] === Dir\Status::PAYMENT_INACTIVE) ? 'selected' : '' }}
         >
-            {{ trans('idir::dirs.status.'.$dir::PAYMENT_INACTIVE) }}
+            {{ trans('idir::dirs.status.'.Dir\Status::PAYMENT_INACTIVE) }}
         </option>
         <option 
-            value="{{ $dir::BACKLINK_INACTIVE }}" 
-            {{ ($filter['status'] === $dir::BACKLINK_INACTIVE) ? 'selected' : '' }}
+            value="{{ Dir\Status::BACKLINK_INACTIVE }}" 
+            {{ ($filter['status'] === Dir\Status::BACKLINK_INACTIVE) ? 'selected' : '' }}
         >
-            {{ trans('idir::dirs.status.'.$dir::BACKLINK_INACTIVE) }}
+            {{ trans('idir::dirs.status.'.Dir\Status::BACKLINK_INACTIVE) }}
         </option>
         <option 
-            value="{{ $dir::STATUS_INACTIVE }}" 
-            {{ ($filter['status'] === $dir::STATUS_INACTIVE) ? 'selected' : '' }}
+            value="{{ Dir\Status::STATUS_INACTIVE }}" 
+            {{ ($filter['status'] === Dir\Status::STATUS_INACTIVE) ? 'selected' : '' }}
         >
-            {{ trans('idir::dirs.status.'.$dir::STATUS_INACTIVE) }}
+            {{ trans('idir::dirs.status.'.Dir\Status::STATUS_INACTIVE) }}
         </option>
         <option 
-            value="{{ $dir::INCORRECT_INACTIVE }}" 
-            {{ ($filter['status'] === $dir::INCORRECT_INACTIVE) ? 'selected' : '' }}
+            value="{{ Dir\Status::INCORRECT_INACTIVE }}" 
+            {{ ($filter['status'] === Dir\Status::INCORRECT_INACTIVE) ? 'selected' : '' }}
         >
-            {{ trans('idir::dirs.status.'.$dir::INCORRECT_INACTIVE) }}
+            {{ trans('idir::dirs.status.'.Dir\Status::INCORRECT_INACTIVE) }}
         </option>
     </select>
 </div>

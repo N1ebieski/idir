@@ -17,7 +17,7 @@ class Checkout
      */
     public function verify(): bool
     {
-        return $this->event->dir->isActive();
+        return $this->event->dir->status->isActive();
     }
 
     /**

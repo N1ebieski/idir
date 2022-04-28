@@ -2,7 +2,6 @@
 
 namespace N1ebieski\IDir\Services;
 
-use N1ebieski\IDir\Models\Dir;
 use N1ebieski\IDir\Models\Group;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection as Collect;
@@ -10,6 +9,7 @@ use Illuminate\Database\DatabaseManager as DB;
 use N1ebieski\ICore\Services\Interfaces\Creatable;
 use N1ebieski\ICore\Services\Interfaces\Deletable;
 use N1ebieski\ICore\Services\Interfaces\Updatable;
+use N1ebieski\IDir\ValueObjects\Dir\Status as DirStatus;
 use N1ebieski\ICore\Services\Interfaces\PositionUpdatable;
 
 class GroupService implements Creatable, Updatable, PositionUpdatable, Deletable
@@ -129,8 +129,8 @@ class GroupService implements Creatable, Updatable, PositionUpdatable, Deletable
                 'privileged_at' => null,
                 'privileged_to' => null
             ]);
-            $this->group->dirs()->pending()->update(['status' => Dir::INACTIVE]);
-            $this->group->dirs()->backlinkInactive()->update(['status' => Dir::INACTIVE]);
+            $this->group->dirs()->pending()->update(['status' => DirStatus::INACTIVE]);
+            $this->group->dirs()->backlinkInactive()->update(['status' => DirStatus::INACTIVE]);
 
             // Manually remove relations, because the field model is polymorfic and foreign key doesn't work
             $this->group->fields()->detach();

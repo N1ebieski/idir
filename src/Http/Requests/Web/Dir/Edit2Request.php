@@ -2,8 +2,14 @@
 
 namespace N1ebieski\IDir\Http\Requests\Web\Dir;
 
+use N1ebieski\IDir\Models\Dir;
+use N1ebieski\IDir\Models\Group;
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * @property Dir $dir
+ * @property Group $group
+ */
 class Edit2Request extends FormRequest
 {
     /**
@@ -15,9 +21,8 @@ class Edit2Request extends FormRequest
     {
         $check = $this->group->isPublic();
 
-        return $this->dir->isGroup($this->group->id) ?
-            $check
-            : ($check && $this->group->isAvailable());
+        return $this->group->id === $this->dir->group->id ?
+            $check : ($check && $this->group->isAvailable());
     }
 
     /**

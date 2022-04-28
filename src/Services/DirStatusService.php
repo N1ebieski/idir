@@ -146,6 +146,6 @@ class DirStatusService implements Creatable
      */
     protected function isSync(array $attributes): bool
     {
-        return $this->dirStatus->dir->url !== $attributes['url'];
+        return $this->dirStatus->dir->url->getValue() !== $attributes['url'];
     }
 }

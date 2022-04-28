@@ -2,9 +2,13 @@
 
 namespace N1ebieski\IDir\Http\Requests\Web\Stat\Dir;
 
+use N1ebieski\IDir\Models\Dir;
 use N1ebieski\ICore\Utils\MigrationUtil;
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * @property Dir $dir_cache
+ */
 class ClickRequest extends FormRequest
 {
     /**
@@ -33,8 +37,8 @@ class ClickRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->dir_cache->isActive()
-            && $this->dir_cache->isUrl()
+        return $this->dir_cache->status->isActive()
+            && $this->dir_cache->url->isUrl()
             && $this->migrationUtil->contains('create_stats_table');
     }
 

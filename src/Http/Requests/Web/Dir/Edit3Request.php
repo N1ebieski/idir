@@ -2,8 +2,14 @@
 
 namespace N1ebieski\IDir\Http\Requests\Web\Dir;
 
+use N1ebieski\IDir\Models\Dir;
+use N1ebieski\IDir\Models\Group;
 use N1ebieski\IDir\Http\Requests\Web\Dir\Update2Request;
 
+/**
+ * @property Dir $dir
+ * @property Group $group
+ */
 class Edit3Request extends Update2Request
 {
     /**
@@ -15,9 +21,8 @@ class Edit3Request extends Update2Request
     {
         $check = $this->group->isPublic();
 
-        return $this->dir->isGroup($this->group->id) ?
-            $check :
-            ($check && $this->group->isAvailable());
+        return $this->group->id === $this->dir->group->id ?
+            $check : ($check && $this->group->isAvailable());
     }
 
     /**

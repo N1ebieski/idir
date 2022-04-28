@@ -8,6 +8,7 @@ use N1ebieski\IDir\Models\Dir;
 use N1ebieski\IDir\Models\User;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use N1ebieski\IDir\ValueObjects\Dir\Status;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Contracts\Translation\Translator as Lang;
 
@@ -59,7 +60,7 @@ class ModeratorMail extends Mailable implements ShouldQueue
             ->with([
                 'dirs' => $this->dirs,
                 'dirs_inactive_count' => $dirRepo->countByStatus()
-                    ->firstWhere('status', $dir::INACTIVE)->count ?? 0,
+                    ->firstWhere('status', Status::INACTIVE)->count ?? 0,
                 'dirs_reported_count' => $dirRepo->countReported() ?? 0
             ])
             ->markdown('idir::mails.dir.moderation');

@@ -13,7 +13,7 @@ class DelayRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->dirBacklink->dir->isBacklinkNotOk();
+        return $this->dirBacklink->dir->status->isBacklinkInactive();
     }
 
     /**

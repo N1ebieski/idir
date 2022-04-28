@@ -11,6 +11,8 @@ use N1ebieski\ICore\Models\Comment\Comment;
 use N1ebieski\IDir\Models\Category\Dir\Category;
 use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Contracts\View\Factory as ViewFactory;
+use N1ebieski\ICore\ValueObjects\Comment\Status as CommentStatus;
+use N1ebieski\ICore\ValueObjects\Category\Status as CategoryStatus;
 
 class StatComponent implements Htmlable
 {
@@ -109,12 +111,12 @@ class StatComponent implements Htmlable
     {
         return $this->view->make('idir::web.components.stat', [
             'countCategories' => $this->category->makeCache()->rememberCountByStatus()
-                ->firstWhere('status', $this->category::ACTIVE),
+                ->firstWhere('status', CategoryStatus::active()),
 
             'countDirs' => $this->dir->makeCache()->rememberCountByStatus(),
 
             'countComments' => $this->comment->makeCache()->rememberCountByModelTypeAndStatus()
-                ->where('status', $this->comment::ACTIVE),
+                ->where('status', CommentStatus::active()),
 
             'lastActivity' => $this->dir->makeCache()->rememberLastActivity(),
 

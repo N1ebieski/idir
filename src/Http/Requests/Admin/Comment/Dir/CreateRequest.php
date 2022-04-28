@@ -4,7 +4,7 @@ namespace N1ebieski\IDir\Http\Requests\Admin\Comment\Dir;
 
 use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
-use N1ebieski\IDir\Models\Comment\Dir\Comment;
+use N1ebieski\ICore\ValueObjects\Comment\Status;
 
 class CreateRequest extends FormRequest
 {
@@ -15,7 +15,7 @@ class CreateRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->dir->isActive();
+        return $this->dir->status->isActive();
     }
 
     /**
@@ -30,7 +30,7 @@ class CreateRequest extends FormRequest
                 'required',
                 'integer',
                 Rule::exists('comments', 'id')->where(function ($query) {
-                    $query->where('status', Comment::ACTIVE);
+                    $query->where('status', Status::ACTIVE);
                 }),
             ]
         ];

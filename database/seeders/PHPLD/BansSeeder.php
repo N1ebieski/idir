@@ -4,6 +4,7 @@ namespace N1ebieski\IDir\Database\Seeders\PHPLD;
 
 use Illuminate\Support\Facades\DB;
 use N1ebieski\IDir\Models\BanValue;
+use N1ebieski\IDir\ValueObjects\BanValue\Type;
 use N1ebieski\IDir\Database\Seeders\PHPLD\PHPLDSeeder;
 
 class BansSeeder extends PHPLDSeeder
@@ -24,14 +25,14 @@ class BansSeeder extends PHPLDSeeder
                         if (!empty($item->BAN_DOMAIN)) {
                             BanValue::create([
                                 'value' => $item->BAN_DOMAIN,
-                                'type' => 'url'
+                                'type' => Type::URL
                             ]);
                         }
 
                         if (!empty($item->BAN_IP)) {
                             BanValue::create([
                                 'value' => $item->BAN_IP,
-                                'type' => 'ip'
+                                'type' => Type::IP
                             ]);
                         }
                     });

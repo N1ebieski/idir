@@ -79,7 +79,7 @@ class CompletedJob implements ShouldQueue
      */
     protected function verify(): bool
     {
-        return $this->dir->isActive() && (
+        return $this->dir->status->isActive() && (
             (
                 $this->dir->privileged_to !== null
                 && $this->carbon->parse($this->dir->privileged_to)->lessThanOrEqualTo(

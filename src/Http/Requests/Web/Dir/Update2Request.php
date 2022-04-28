@@ -2,6 +2,7 @@
 
 namespace N1ebieski\IDir\Http\Requests\Web\Dir;
 
+use N1ebieski\IDir\Models\Dir;
 use Illuminate\Validation\Rule;
 use N1ebieski\IDir\Models\Group;
 use Illuminate\Support\Facades\App;
@@ -12,8 +13,13 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Database\Eloquent\Collection;
 use N1ebieski\IDir\Models\Category\Dir\Category;
+use N1ebieski\ICore\ValueObjects\Category\Status;
 use N1ebieski\IDir\Http\Requests\Traits\FieldsExtended;
 
+/**
+ * @property Dir $dir
+ * @property Group $group
+ */
 class Update2Request extends FormRequest
 {
     use FieldsExtended;
@@ -61,7 +67,7 @@ class Update2Request extends FormRequest
     {
         $check = $this->group->isPublic();
 
-        return $this->dir->isGroup($this->group->id) ?
+        return $this->group->id === $this->dir->group->id ?
             $check : $check && $this->group->isAvailable();
     }
 
@@ -194,8 +200,8 @@ class Update2Request extends FormRequest
                 'distinct',
                 Rule::exists('categories', 'id')->where(function ($query) {
                     $query->where([
-                        ['status', Category::ACTIVE],
-                        ['model_type', 'N1ebieski\\IDir\\Models\\Dir']
+                        ['status', Status::ACTIVE],
+                        ['model_type', \N1ebieski\IDir\Models\Dir::class]
                     ]);
                 }),
                 'no_js_validation'

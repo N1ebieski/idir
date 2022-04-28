@@ -21,6 +21,7 @@ use N1ebieski\IDir\Crons\Dir\BacklinkCron;
 use N1ebieski\IDir\Crons\Dir\ReminderCron;
 use N1ebieski\IDir\Mail\Dir\CompletedMail;
 use N1ebieski\IDir\Crons\Dir\CompletedCron;
+use N1ebieski\IDir\ValueObjects\Dir\Status;
 use Illuminate\Http\Response as HttpResponse;
 use GuzzleHttp\Middleware as GuzzleMiddleware;
 use GuzzleHttp\Psr7\Response as GuzzleResponse;
@@ -70,7 +71,7 @@ class DirTest extends TestCase
 
         $this->assertDatabaseHas('dirs', [
             'id' => $dir->id,
-            'status' => Dir::ACTIVE,
+            'status' => Statustus::ACTIVE,
             'group_id' => $group->id,
         ]);
 
@@ -87,7 +88,7 @@ class DirTest extends TestCase
 
         $this->assertDatabaseHas('dirs', [
             'id' => $dir->id,
-            'status' => Dir::PAYMENT_INACTIVE,
+            'status' => Status::PAYMENT_INACTIVE,
             'group_id' => $group->id,
             'privileged_at' => null,
             'privileged_to' => null
@@ -109,7 +110,7 @@ class DirTest extends TestCase
 
         $this->assertDatabaseHas('dirs', [
             'id' => $dir->id,
-            'status' => Dir::ACTIVE,
+            'status' => Statustus::ACTIVE,
             'group_id' => $group->id,
             'privileged_at' => null,
             'privileged_to' => null
@@ -126,7 +127,7 @@ class DirTest extends TestCase
 
         $this->assertDatabaseHas('dirs', [
             'id' => $dir->id,
-            'status' => Dir::ACTIVE,
+            'status' => Statustus::ACTIVE,
             'group_id' => $group->alt_id,
             'privileged_at' => null,
             'privileged_to' => null
@@ -156,7 +157,7 @@ class DirTest extends TestCase
 
         $this->assertDatabaseHas('dirs', [
             'id' => $dir->id,
-            'status' => Dir::ACTIVE,
+            'status' => Statustus::ACTIVE,
             'group_id' => $group->id,
             'privileged_at' => null,
             'privileged_to' => null
@@ -177,7 +178,7 @@ class DirTest extends TestCase
 
         $this->assertDatabaseHas('dirs', [
             'id' => $dir->id,
-            'status' => Dir::ACTIVE,
+            'status' => Statustus::ACTIVE,
             'group_id' => $group->alt_id,
             'privileged_at' => null,
             'privileged_to' => null
@@ -198,7 +199,7 @@ class DirTest extends TestCase
 
         $this->assertDatabaseHas('dirs', [
             'id' => $dir->id,
-            'status' => Dir::ACTIVE,
+            'status' => Statustus::ACTIVE,
             'group_id' => $group->id,
             'privileged_to' => null
         ]);
@@ -216,7 +217,7 @@ class DirTest extends TestCase
 
         $this->assertDatabaseMissing('dirs', [
             'id' => $dir->id,
-            'status' => Dir::ACTIVE,
+            'status' => Statustus::ACTIVE,
             'group_id' => $group->alt_id,
             'privileged_at' => null,
             'privileged_to' => null
@@ -235,7 +236,7 @@ class DirTest extends TestCase
 
         $this->assertDatabaseHas('dirs', [
             'id' => $dir->id,
-            'status' => Dir::ACTIVE,
+            'status' => Statustus::ACTIVE,
             'group_id' => $group->id,
         ]);
 
@@ -260,7 +261,7 @@ class DirTest extends TestCase
 
         $this->assertDatabaseHas('dirs', [
             'id' => $dir->id,
-            'status' => Dir::BACKLINK_INACTIVE,
+            'status' => Status::BACKLINK_INACTIVE,
             'group_id' => $group->id
         ]);
 
@@ -285,7 +286,7 @@ class DirTest extends TestCase
 
         $this->assertDatabaseHas('dirs', [
             'id' => $dir->id,
-            'status' => Dir::BACKLINK_INACTIVE,
+            'status' => Status::BACKLINK_INACTIVE,
             'group_id' => $group->id,
         ]);
 
@@ -310,7 +311,7 @@ class DirTest extends TestCase
 
         $this->assertDatabaseHas('dirs', [
             'id' => $dir->id,
-            'status' => Dir::ACTIVE,
+            'status' => Statustus::ACTIVE,
             'group_id' => $group->id
         ]);
 
@@ -330,7 +331,7 @@ class DirTest extends TestCase
 
         $this->assertDatabaseHas('dirs', [
             'id' => $dir->id,
-            'status' => Dir::ACTIVE
+            'status' => Status::ACTIVE
         ]);
 
         $dirStatus = DirStatus::makeFactory()->for($dir)->create();
@@ -367,7 +368,7 @@ class DirTest extends TestCase
 
         $this->assertDatabaseHas('dirs', [
             'id' => $dir->id,
-            'status' => Dir::STATUS_INACTIVE
+            'status' => Status::STATUS_INACTIVE
         ]);
     }
 
@@ -381,7 +382,7 @@ class DirTest extends TestCase
 
         $this->assertDatabaseHas('dirs', [
             'id' => $dir->id,
-            'status' => Dir::ACTIVE
+            'status' => Status::ACTIVE
         ]);
 
         $dirStatus = DirStatus::makeFactory()->for($dir)->create();
@@ -415,7 +416,7 @@ class DirTest extends TestCase
 
         $this->assertDatabaseHas('dirs', [
             'id' => $dir->id,
-            'status' => Dir::ACTIVE
+            'status' => Status::ACTIVE
         ]);
     }
 
@@ -429,7 +430,7 @@ class DirTest extends TestCase
 
         $this->assertDatabaseHas('dirs', [
             'id' => $dir->id,
-            'status' => Dir::ACTIVE
+            'status' => Status::ACTIVE
         ]);
 
         $dirStatus = DirStatus::makeFactory()->for($dir)->create();
@@ -455,7 +456,7 @@ class DirTest extends TestCase
 
         $this->assertDatabaseHas('dirs', [
             'id' => $dir->id,
-            'status' => Dir::STATUS_INACTIVE
+            'status' => Status::STATUS_INACTIVE
         ]);
     }
 
@@ -469,7 +470,7 @@ class DirTest extends TestCase
 
         $this->assertDatabaseHas('dirs', [
             'id' => $dir->id,
-            'status' => Dir::STATUS_INACTIVE
+            'status' => Status::STATUS_INACTIVE
         ]);
 
         $dirStatus = DirStatus::makeFactory()->for($dir)->create([
@@ -497,7 +498,7 @@ class DirTest extends TestCase
 
         $this->assertDatabaseHas('dirs', [
             'id' => $dir->id,
-            'status' => Dir::ACTIVE
+            'status' => Status::ACTIVE
         ]);
     }
 }

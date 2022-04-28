@@ -2,8 +2,12 @@
 
 namespace N1ebieski\IDir\Http\Requests\Web\Contact\Dir;
 
+use N1ebieski\IDir\Models\Dir;
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * @property Dir $dir
+ */
 class ShowRequest extends FormRequest
 {
     /**
@@ -13,7 +17,7 @@ class ShowRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->dir->isActive() && isset($this->dir->user->email);
+        return $this->dir->status->isActive() && isset($this->dir->user->email);
     }
 
     /**

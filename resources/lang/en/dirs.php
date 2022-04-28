@@ -1,6 +1,6 @@
 <?php
 
-use N1ebieski\IDir\Models\Dir;
+use N1ebieski\IDir\ValueObjects\Dir\Status;
 use N1ebieski\IDir\ValueObjects\Price\Type;
 
 return [
@@ -24,20 +24,20 @@ return [
     ],
     'success' => [
         'store' => [
-            Dir::INACTIVE => 'The entry has been added and awaits the approval of the moderator.',
-            Dir::ACTIVE => 'The entry has been added and is active.'
+            Status::INACTIVE => 'The entry has been added and awaits the approval of the moderator.',
+            Status::ACTIVE => 'The entry has been added and is active.'
         ],
         'update' => [
-            Dir::INACTIVE => 'The entry has been updated and awaits the approval of the moderator.',
-            Dir::ACTIVE => 'The entry has been updated and is active.'
+            Status::INACTIVE => 'The entry has been updated and awaits the approval of the moderator.',
+            Status::ACTIVE => 'The entry has been updated and is active.'
         ],
         'update_status' => [
-            Dir::ACTIVE => 'The entry has been activated',
-            Dir::INCORRECT_INACTIVE => 'The entry has been submitted for correction'
+            Status::ACTIVE => 'The entry has been activated',
+            Status::INCORRECT_INACTIVE => 'The entry has been submitted for correction'
         ],
         'update_renew' => [
-            Dir::INACTIVE => 'Thank you. The validity of the entry will be extended when the moderator accepts the entry.',
-            Dir::ACTIVE => 'Thank you. The entry has been extended.'
+            Status::INACTIVE => 'Thank you. The validity of the entry will be extended when the moderator accepts the entry.',
+            Status::ACTIVE => 'Thank you. The entry has been extended.'
         ],
         'destroy' => 'The entry was deleted',
         'destroy_global' => 'Successfully deleted :affected entries'
@@ -80,12 +80,12 @@ return [
     'unlimited' => 'unlimited',
     'status' => [
         'label' => 'Status',
-        Dir::ACTIVE => 'active',
-        Dir::INACTIVE => 'pending acceptance',
-        Dir::PAYMENT_INACTIVE => 'waiting for payment',
-        Dir::BACKLINK_INACTIVE => 'waiting for backlink',
-        Dir::STATUS_INACTIVE => 'pending 200 status',
-        Dir::INCORRECT_INACTIVE => 'waiting for correction'
+        Status::ACTIVE => 'active',
+        Status::INACTIVE => 'pending acceptance',
+        Status::PAYMENT_INACTIVE => 'waiting for payment',
+        Status::BACKLINK_INACTIVE => 'waiting for backlink',
+        Status::STATUS_INACTIVE => 'pending 200 status',
+        Status::INCORRECT_INACTIVE => 'waiting for correction'
     ],
     'privileged_to' => 'Expires at',
     'reason' => [

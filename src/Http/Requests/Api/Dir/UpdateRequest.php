@@ -3,6 +3,7 @@
 namespace N1ebieski\IDir\Http\Requests\Api\Dir;
 
 use Illuminate\Support\Str;
+use N1ebieski\IDir\Models\Dir;
 use Illuminate\Validation\Rule;
 use N1ebieski\ICore\Models\Link;
 use N1ebieski\IDir\Models\Group;
@@ -14,10 +15,14 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Foundation\Http\FormRequest;
 use N1ebieski\IDir\ValueObjects\Price\Type;
 use Illuminate\Database\Eloquent\Collection;
-use N1ebieski\IDir\Models\Category\Dir\Category;
+use N1ebieski\ICore\ValueObjects\Category\Status;
 use N1ebieski\IDir\Http\Requests\Traits\FieldsExtended;
 use N1ebieski\ICore\Http\Requests\Traits\CaptchaExtended;
 
+/**
+ * @property Dir $dir
+ * @property Group $group
+ */
 class UpdateRequest extends FormRequest
 {
     use CaptchaExtended;
@@ -66,10 +71,11 @@ class UpdateRequest extends FormRequest
      */
     public function authorize()
     {
-        $check = $this->group
-            && ($this->group->isPublic() || optional($this->user())->can('admin.dirs.edit'));
+        $check = $this->group && (
+            $this->group->isPublic() || optional($this->user())->can('admin.dirs.edit')
+        );
 
-        return $this->dir->isGroup($this->group->id) ?
+        return $this->group->id === $this->dir->group->id ?
             $check : $check && $this->group->isAvailable();
     }
 
@@ -204,7 +210,7 @@ class UpdateRequest extends FormRequest
                     'distinct',
                     Rule::exists('categories', 'id')->where(function ($query) {
                         $query->where([
-                            ['status', Category::ACTIVE],
+                            ['status', Status::ACTIVE],
                             ['model_type', \N1ebieski\IDir\Models\Dir::class]
                         ]);
                     })

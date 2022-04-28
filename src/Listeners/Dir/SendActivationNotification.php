@@ -2,7 +2,6 @@
 
 namespace N1ebieski\IDir\Listeners\Dir;
 
-use N1ebieski\IDir\Models\Dir;
 use Illuminate\Contracts\Mail\Mailer;
 use N1ebieski\IDir\Mail\Dir\ActivationMail;
 use Illuminate\Contracts\Foundation\Application as App;
@@ -58,7 +57,7 @@ class SendActivationNotification
      */
     public function verify(): bool
     {
-        return $this->event->dir->isActive()
+        return $this->event->dir->status->isActive()
             && optional($this->event->dir->user)->email
             && optional($this->event->dir->user)->hasPermissionTo('web.dirs.notification');
     }
@@ -77,7 +76,7 @@ class SendActivationNotification
             return;
         }
 
-        if ($event->dir->status === Dir::ACTIVE) {
+        if ($event->dir->status->isActive()) {
             try {
                 $this->mailer->send($this->app->make(ActivationMail::class, [
                     'dir' => $event->dir

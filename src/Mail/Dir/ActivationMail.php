@@ -6,6 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use N1ebieski\IDir\Models\Dir;
 use Illuminate\Queue\SerializesModels;
+use N1ebieski\IDir\ValueObjects\Dir\Status;
 use Illuminate\Contracts\Translation\Translator as Lang;
 
 class ActivationMail extends Mailable
@@ -53,7 +54,7 @@ class ActivationMail extends Mailable
      */
     public function build(): self
     {
-        return $this->subject($this->lang->get('idir::dirs.success.update_status.' . Dir::ACTIVE))
+        return $this->subject($this->lang->get('idir::dirs.success.update_status.' . Status::ACTIVE))
             ->to($this->dir->user->email)
             ->markdown('idir::mails.dir.activation');
     }

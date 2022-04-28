@@ -5,6 +5,7 @@ namespace N1ebieski\IDir\Http\Requests\Api\Dir;
 use N1ebieski\IDir\Models\Dir;
 use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
+use N1ebieski\IDir\ValueObjects\Dir\Status;
 
 /**
  * @property Dir $dir
@@ -18,7 +19,7 @@ class UpdateStatusRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->dir->isUpdateStatus();
+        return $this->dir->status->isUpdateStatus();
     }
 
     /**
@@ -34,9 +35,9 @@ class UpdateStatusRequest extends FormRequest
                 'required',
                 'integer',
                 Rule::in([
-                    Dir::ACTIVE,
-                    Dir::INACTIVE,
-                    Dir::INCORRECT_INACTIVE
+                    Status::ACTIVE,
+                    Status::INACTIVE,
+                    Status::INCORRECT_INACTIVE
                 ])
             ],
             'reason' => 'bail|nullable|string'
@@ -52,7 +53,7 @@ class UpdateStatusRequest extends FormRequest
     {
         return [
             'status' => [
-                'example' => Dir::ACTIVE
+                'example' => Status::ACTIVE
             ]
         ];
     }

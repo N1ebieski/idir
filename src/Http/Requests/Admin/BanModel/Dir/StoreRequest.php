@@ -2,8 +2,9 @@
 
 namespace N1ebieski\IDir\Http\Requests\Admin\BanModel\Dir;
 
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Illuminate\Foundation\Http\FormRequest;
+use N1ebieski\IDir\ValueObjects\BanValue\Type;
 
 class StoreRequest extends FormRequest
 {
@@ -39,7 +40,7 @@ class StoreRequest extends FormRequest
                 'string',
                 'required_without_all:user,url',
                 Rule::unique('bans_values', 'value')->where(function ($query) {
-                    $query->where('type', 'ip');
+                    $query->where('type', Type::IP);
                 })
             ],
             'url' => [
@@ -47,7 +48,7 @@ class StoreRequest extends FormRequest
                 'string',
                 'required_without_all:user,ip',
                 Rule::unique('bans_values', 'value')->where(function ($query) {
-                    $query->where('type', 'url');
+                    $query->where('type', Type::URL);
                 })
             ]
         ];

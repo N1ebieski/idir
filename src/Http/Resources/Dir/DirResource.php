@@ -43,7 +43,7 @@ class DirResource extends JsonResource
             'id' => $this->id,
             'slug' => $this->slug,
             'title' => $this->title,
-            'url' => $this->url,
+            'url' => $this->url->getValue(),
             'short_content' => $this->short_content,
             'content' => $this->content,
             'content_html' => $this->content_html,
@@ -70,7 +70,7 @@ class DirResource extends JsonResource
                 function () {
                     return [
                         'status' => [
-                            'value' => $this->status,
+                            'value' => $this->status->getValue(),
                             'label' => Lang::get("idir::dirs.status.{$this->status}")
                         ]
                     ];
@@ -169,7 +169,7 @@ class DirResource extends JsonResource
             ),
             'links' => [
                 $this->mergeWhen(
-                    Config::get('icore.routes.web.enabled') === true && $this->status === Dir::ACTIVE,
+                    Config::get('icore.routes.web.enabled') === true && $this->status->isActive(),
                     function () {
                         return [
                             'web' => URL::route('web.dir.show', [$this->slug])

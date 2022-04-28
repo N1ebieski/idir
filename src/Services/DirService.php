@@ -7,7 +7,7 @@ use N1ebieski\IDir\Models\Dir;
 use N1ebieski\IDir\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Contracts\Session\Session;
-use N1ebieski\IDir\ValueObjects\Price\Type;
+use N1ebieski\IDir\ValueObjects\Dir\Status;
 use Illuminate\Contracts\Auth\Guard as Auth;
 use Illuminate\Database\DatabaseManager as DB;
 use N1ebieski\IDir\Models\Payment\Dir\Payment;
@@ -189,7 +189,14 @@ class DirService implements
             $this->dir->fill($attributes);
 
             $this->dir->content = $attributes['content_html'];
-            $this->dir->status = $this->status($attributes['payment_type'] ?? null);
+
+            try {
+                $this->dir->status = Status::fromString(
+                    $attributes['payment_type'] ?? $this->dir->group->apply_status
+                );
+            } catch (\InvalidArgumentException $e) {
+                $this->dir->status = $this->dir->group->apply_status;
+            }
 
             $this->dir->user()->associate(
                 $this->auth->user() ?? $this->makeUser($attributes)
@@ -321,9 +328,15 @@ class DirService implements
                 $this->dir->content = $attributes['content_html'];
             }
 
-            $this->dir->status = $this->status($attributes['payment_type'] ?? null);
+            try {
+                $this->dir->status = Status::fromString(
+                    $attributes['payment_type'] ?? $this->dir->group->apply_status
+                );
+            } catch (\InvalidArgumentException $e) {
+                $this->dir->status = $this->dir->group->apply_status;
+            }
 
-            if (!$this->dir->isGroup($this->dir->group->id)) {
+            if ($this->dir->group_id !== $this->dir->group->id) {
                 $this->dir->group()->associate($this->dir->group);
                 $this->dir->makeRepo()->nullablePrivileged();
             }
@@ -514,21 +527,5 @@ class DirService implements
     protected function makeUser(array $attributes): User
     {
         return $this->userFactory->makeUser($attributes['email']);
-    }
-
-    /**
-     * [status description]
-     * @param  string|null  $payment_type  [description]
-     * @return int [description]
-     */
-    protected function status(string $payment_type = null): int
-    {
-        if (in_array($payment_type, [Type::TRANSFER, Type::PAYPAL_EXPRESS])) {
-            return $this->dir::PAYMENT_INACTIVE;
-        }
-
-        return $this->dir->group->apply_status === $this->dir::ACTIVE ?
-            $this->dir::ACTIVE
-            : $this->dir::INACTIVE;
     }
 }

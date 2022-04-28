@@ -146,7 +146,7 @@ class CheckStatusJob implements ShouldQueue
     protected function validateStatus(): bool
     {
         try {
-            $this->client->get($this->dirStatus->dir->url);
+            $this->client->get($this->dirStatus->dir->url->getValue());
         } catch (\N1ebieski\IDir\Exceptions\Dir\TransferException $e) {
             return false;
         }

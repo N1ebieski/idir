@@ -2,12 +2,12 @@
 
 namespace N1ebieski\IDir\Http\Requests\Api\Dir;
 
-use N1ebieski\IDir\Models\Dir;
 use Illuminate\Validation\Rule;
 use N1ebieski\IDir\Models\Group;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Foundation\Http\FormRequest;
-use N1ebieski\IDir\Models\Category\Dir\Category;
+use N1ebieski\IDir\ValueObjects\Dir\Status as DirStatus;
+use N1ebieski\ICore\ValueObjects\Category\Status as CategoryStatus;
 
 class IndexRequest extends FormRequest
 {
@@ -42,14 +42,14 @@ class IndexRequest extends FormRequest
                     'integer',
                     Rule::in(array_merge(
                         [
-                            Dir::ACTIVE
+                            DirStatus::ACTIVE
                         ],
                         optional($this->user())->can('api.dirs.view') ? [
-                            Dir::INACTIVE,
-                            Dir::PAYMENT_INACTIVE,
-                            Dir::STATUS_INACTIVE,
-                            Dir::BACKLINK_INACTIVE,
-                            Dir::INCORRECT_INACTIVE
+                            DirStatus::INACTIVE,
+                            DirStatus::PAYMENT_INACTIVE,
+                            DirStatus::STATUS_INACTIVE,
+                            DirStatus::BACKLINK_INACTIVE,
+                            DirStatus::INCORRECT_INACTIVE
                         ] : [],
                     ))
                 ],
@@ -74,7 +74,7 @@ class IndexRequest extends FormRequest
                         $query->when(
                             !optional($this->user())->can('admin.dirs.view'),
                             function ($query) {
-                                $query->where('status', Category::ACTIVE);
+                                $query->where('status', CategoryStatus::ACTIVE);
                             }
                         );
                     })
@@ -121,14 +121,14 @@ class IndexRequest extends FormRequest
             'filter.status' => [
                 'description' => sprintf(
                     'Must be one of %1$s or (available only for admin.dirs.view) %2$s, %3$s, %4$s, %5$s, %6$s.',
-                    Dir::ACTIVE,
-                    Dir::INACTIVE,
-                    Dir::PAYMENT_INACTIVE,
-                    Dir::BACKLINK_INACTIVE,
-                    Dir::STATUS_INACTIVE,
-                    Dir::INCORRECT_INACTIVE
+                    DirStatus::ACTIVE,
+                    DirStatus::INACTIVE,
+                    DirStatus::PAYMENT_INACTIVE,
+                    DirStatus::BACKLINK_INACTIVE,
+                    DirStatus::STATUS_INACTIVE,
+                    DirStatus::INCORRECT_INACTIVE
                 ),
-                'example' => Dir::ACTIVE
+                'example' => DirStatus::ACTIVE
             ],
             'filter.group' => [
                 'description' => 'ID of Group relationship.',

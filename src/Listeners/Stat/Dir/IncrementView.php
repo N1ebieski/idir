@@ -4,6 +4,7 @@ namespace N1ebieski\IDir\Listeners\Stat\Dir;
 
 use N1ebieski\ICore\Utils\MigrationUtil;
 use N1ebieski\IDir\Models\Stat\Dir\Stat;
+use N1ebieski\ICore\ValueObjects\Stat\Slug;
 
 class IncrementView
 {
@@ -46,7 +47,7 @@ class IncrementView
      */
     public function verify(): bool
     {
-        return $this->event->dir->isActive()
+        return $this->event->dir->status->isActive()
             && $this->migrationUtil->contains('create_stats_table');
     }
 
@@ -65,7 +66,7 @@ class IncrementView
         }
 
         $this->stat->makeCache()
-            ->rememberBySlug($this->stat::VIEW)
+            ->rememberBySlug(Slug::VIEW)
             ->setRelations(['morph' => $this->event->dir])
             ->makeService()
             ->increment();

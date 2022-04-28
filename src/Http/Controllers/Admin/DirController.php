@@ -334,8 +334,7 @@ class DirController
         );
 
         return Response::json([
-            'success' => '',
-            'status' => $dir->status,
+            'status' => $dir->status->getValue(),
             'view' => View::make('idir::admin.dir.partials.dir', [
                 'dir' => $dir
             ])

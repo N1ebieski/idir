@@ -6,6 +6,7 @@ use Closure;
 use Carbon\Carbon;
 use N1ebieski\IDir\Models\Dir;
 use N1ebieski\IDir\Models\DirBacklink;
+use N1ebieski\IDir\ValueObjects\Dir\Status;
 use Illuminate\Contracts\Config\Repository as Config;
 
 class DirBacklinkRepo
@@ -68,7 +69,7 @@ class DirBacklinkRepo
     ): bool {
         return $this->dirBacklink
             ->whereHas('dir', function ($query) {
-                $query->whereIn('status', [Dir::ACTIVE, Dir::BACKLINK_INACTIVE])
+                $query->whereIn('status', [Status::ACTIVE, Status::BACKLINK_INACTIVE])
                     ->whereHas('group', function ($query) {
                         $query->obligatoryBacklink();
                     });

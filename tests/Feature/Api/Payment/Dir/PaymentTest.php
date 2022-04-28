@@ -8,6 +8,7 @@ use N1ebieski\IDir\Models\Dir;
 use N1ebieski\IDir\Models\Group;
 use N1ebieski\IDir\Models\Price;
 use Illuminate\Support\Facades\Config;
+use N1ebieski\IDir\ValueObjects\Dir\Status;
 use N1ebieski\IDir\Models\Payment\Dir\Payment;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
@@ -65,7 +66,7 @@ class PaymentTest extends TestCase
 
         $this->assertDatabaseHas('dirs', [
             'id' => $dir->id,
-            'status' => Dir::INACTIVE
+            'status' => Status::INACTIVE
         ]);
     }
 
@@ -93,7 +94,7 @@ class PaymentTest extends TestCase
 
         $this->assertDatabaseHas('dirs', [
             'id' => $dir->id,
-            'status' => Dir::ACTIVE
+            'status' => Status::ACTIVE
         ]);
     }
 

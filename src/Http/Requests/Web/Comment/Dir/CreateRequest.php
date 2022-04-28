@@ -4,7 +4,7 @@ namespace N1ebieski\IDir\Http\Requests\Web\Comment\Dir;
 
 use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
-use N1ebieski\IDir\Models\Comment\Dir\Comment;
+use N1ebieski\ICore\ValueObjects\Comment\Status;
 
 class CreateRequest extends FormRequest
 {
@@ -18,6 +18,11 @@ class CreateRequest extends FormRequest
         return true;
     }
 
+    /**
+     * Undocumented function
+     *
+     * @return void
+     */
     protected function prepareForValidation()
     {
         if (!$this->has('parent_id') || $this->get('parent_id') == 0) {
@@ -39,7 +44,7 @@ class CreateRequest extends FormRequest
                 'nullable',
                 'integer',
                 Rule::exists('comments', 'id')->where(function ($query) {
-                    $query->where('status', Comment::ACTIVE);
+                    $query->where('status', Status::ACTIVE);
                 }),
             ]
         ];

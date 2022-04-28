@@ -5,6 +5,7 @@ namespace N1ebieski\IDir\Http\Responses\Web\Dir;
 use Illuminate\Http\Request;
 use N1ebieski\IDir\Models\Dir;
 use Illuminate\Http\RedirectResponse;
+use N1ebieski\IDir\ValueObjects\Dir\Status;
 use N1ebieski\IDir\ValueObjects\Price\Type;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Contracts\Config\Repository as Config;
@@ -84,13 +85,13 @@ class UpdateRenewResponse implements RedirectResponseFactory
             ]);
         }
 
-        switch ($dir->status) {
-            case Dir::ACTIVE:
+        switch ($dir->status->getValue()) {
+            case Status::ACTIVE:
                 return $this->response->redirectToRoute('web.profile.dirs')
-                    ->with('success', $this->lang->get('idir::dirs.success.update_renew.' . Dir::ACTIVE));
+                    ->with('success', $this->lang->get('idir::dirs.success.update_renew.' . Status::ACTIVE));
             default:
                 return $this->response->redirectToRoute('web.profile.dirs')
-                    ->with('success', $this->lang->get('idir::dirs.success.update_renew.' . Dir::INACTIVE));
+                    ->with('success', $this->lang->get('idir::dirs.success.update_renew.' . Status::INACTIVE));
         }
     }
 }

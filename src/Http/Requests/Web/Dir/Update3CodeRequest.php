@@ -2,9 +2,15 @@
 
 namespace N1ebieski\IDir\Http\Requests\Web\Dir;
 
+use N1ebieski\IDir\Models\Dir;
+use N1ebieski\IDir\Models\Group;
 use Illuminate\Foundation\Http\FormRequest;
 use N1ebieski\IDir\Http\Requests\Traits\CodePayable;
 
+/**
+ * @property Dir $dir
+ * @property Group $group
+ */
 class Update3CodeRequest extends FormRequest
 {
     use CodePayable;
@@ -18,7 +24,7 @@ class Update3CodeRequest extends FormRequest
     {
         $check = $this->group->isPublic();
 
-        return $this->dir->isGroup($this->group->id) ?
+        return $this->group->id === $this->dir->group->id ?
             $check : $check && $this->group->isAvailable();
     }
 

@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use N1ebieski\ICore\Models\Traits\FullTextSearchable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use N1ebieski\IDir\ValueObjects\Dir\Status as DirStatus;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use N1ebieski\IDir\Database\Factories\Group\GroupFactory;
 
@@ -255,7 +256,7 @@ class Group extends Model
     {
         return $this->hasMany(\N1ebieski\IDir\Models\Dir::class)
             ->whereDate('created_at', '=', Carbon::now()->format('Y-m-d'))
-            ->whereIn('status', [Dir::INACTIVE, Dir::ACTIVE]);
+            ->whereIn('status', [DirStatus::INACTIVE, DirStatus::ACTIVE]);
     }
 
     /**

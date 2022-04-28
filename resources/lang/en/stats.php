@@ -1,13 +1,13 @@
 <?php
 
-use N1ebieski\IDir\Models\Dir;
+use N1ebieski\IDir\ValueObjects\Dir\Status;
 
 return [
     'dir' => [
         'label' => 'Entries',
         'status' => [
-            Dir::ACTIVE => 'active',
-            Dir::INACTIVE => 'pending'
+            Status::ACTIVE => 'active',
+            Status::INACTIVE => 'pending'
         ]
     ]
 ];

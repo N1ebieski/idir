@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 use N1ebieski\IDir\Models\Dir;
 use N1ebieski\IDir\Models\User;
 use N1ebieski\IDir\Models\Group;
+use N1ebieski\IDir\ValueObjects\Dir\Status;
 use N1ebieski\IDir\Models\Category\Dir\Category;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -35,7 +36,7 @@ class DirFactory extends Factory
             'content_html' => $content,
             'content' => $content,
             'url' => $url['scheme'] . "://" . $url['host'],
-            'status' => rand(Dir::INACTIVE, Dir::ACTIVE)
+            'status' => rand(Status::INACTIVE, Status::ACTIVE)
         ];
     }
 
@@ -79,7 +80,7 @@ class DirFactory extends Factory
     {
         return $this->state(function () {
             return [
-                'status' => Dir::ACTIVE
+                'status' => Status::ACTIVE
             ];
         });
     }
@@ -93,7 +94,7 @@ class DirFactory extends Factory
     {
         return $this->state(function () {
             return [
-                'status' => Dir::INACTIVE
+                'status' => Status::INACTIVE
             ];
         });
     }
@@ -107,7 +108,7 @@ class DirFactory extends Factory
     {
         return $this->state(function () {
             return [
-                'status' => Dir::PAYMENT_INACTIVE
+                'status' => Status::PAYMENT_INACTIVE
             ];
         });
     }
@@ -121,7 +122,7 @@ class DirFactory extends Factory
     {
         return $this->state(function () {
             return [
-                'status' => Dir::ACTIVE,
+                'status' => Status::ACTIVE,
                 'privileged_at' => Carbon::now(),
                 'privileged_to' => Carbon::now()->addDays(14)
             ];
@@ -151,7 +152,7 @@ class DirFactory extends Factory
     {
         return $this->state(function () {
             return [
-                'status' => Dir::BACKLINK_INACTIVE
+                'status' => Status::BACKLINK_INACTIVE
             ];
         });
     }
@@ -165,7 +166,7 @@ class DirFactory extends Factory
     {
         return $this->state(function () {
             return [
-                'status' => Dir::STATUS_INACTIVE
+                'status' => Status::STATUS_INACTIVE
             ];
         });
     }

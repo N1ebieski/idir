@@ -2,6 +2,7 @@
 
 namespace N1ebieski\IDir\Cache;
 
+use N1ebieski\IDir\ValueObjects\BanValue\Type;
 use N1ebieski\ICore\Cache\BanValueCache as BaseBanValueCache;
 
 class BanValueCache extends BaseBanValueCache
@@ -16,7 +17,7 @@ class BanValueCache extends BaseBanValueCache
             "banValue.getAllUrlsAsString",
             $this->carbon->now()->addMinutes($this->config->get('cache.minutes')),
             function () {
-                $urls = $this->banValue->whereType('url')->get();
+                $urls = $this->banValue->where('type', Type::URL)->get();
 
                 return $this->str->escaped($urls->implode('value', '|'));
             }

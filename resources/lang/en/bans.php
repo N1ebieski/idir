@@ -1,9 +1,11 @@
 <?php
 
+use N1ebieski\IDir\ValueObjects\BanValue\Type;
+
 return [
     'value' => [
         'url' => [
-            'url' => 'URL',
+            Type::URL => 'URL',
             'route' => [
                 'index' => 'Banned URLs'
             ],

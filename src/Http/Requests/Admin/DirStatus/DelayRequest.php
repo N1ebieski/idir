@@ -13,7 +13,7 @@ class DelayRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->dirStatus->dir->isNotOk();
+        return $this->dirStatus->dir->status->isStatusInactive();
     }
 
     /**

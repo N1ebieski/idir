@@ -21,7 +21,7 @@ class ThumbnailController implements Polymorphic
      */
     public function reload(Dir $dir, Client $client): JsonResponse
     {
-        $client->patch(Config::get('idir.dir.thumbnail.api.reload_url'), [$dir->url]);
+        $client->patch(Config::get('idir.dir.thumbnail.api.reload_url'), [$dir->url->getValue()]);
 
         sleep(10);
 

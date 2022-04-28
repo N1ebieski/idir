@@ -14,18 +14,18 @@
         </div>
         <div class="d-flex justify-content-between">
             <div>
-                - {{ trans("idir::stats.dir.status.1") }}:
+                - {{ trans("idir::stats.dir.status.".Dir\Status::ACTIVE) }}:
             </div>
             <div class="text-right">
-                {{ $countDirs->firstWhere('status', 1)->count ?? 0 }}
+                {{ $countDirs->firstWhere('status', Dir\Status::active())->count ?? 0 }}
             </div>
         </div>
         <div class="d-flex justify-content-between">
             <div>
-                - {{ trans("idir::stats.dir.status.0") }}:
+                - {{ trans("idir::stats.dir.status.".Dir\Status::INACTIVE) }}:
             </div>
             <div class="text-right">
-                {{ $countDirs->firstWhere('status', 0)->count ?? 0 }}
+                {{ $countDirs->firstWhere('status', Dir\Status::inactive())->count ?? 0 }}
             </div>
         </div>    
     </div>

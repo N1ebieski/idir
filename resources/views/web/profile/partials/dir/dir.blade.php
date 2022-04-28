@@ -15,7 +15,7 @@
                     {{ $dir->title }}
                 </a>
                 @if ($filter['status'] === null)
-                <span class="badge badge-{{ $dir->status === $dir::ACTIVE ? 'success' : 'warning' }}">
+                <span class="badge badge-{{ $dir->status->isActive() ? 'success' : 'warning' }}">
                     {{ trans("idir::dirs.status.{$dir->status}") }}
                 </span>
                 @endif

@@ -13,6 +13,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use N1ebieski\IDir\Models\Comment\Dir\Comment;
+use N1ebieski\ICore\ValueObjects\Comment\Status;
 
 class CommentsJob implements ShouldQueue
 {
@@ -73,8 +74,8 @@ class CommentsJob implements ShouldQueue
                 $comment->content_html = $this->contentHtml($item->COMMENT);
                 $comment->content = $this->contentHtml($item->COMMENT);
                 $comment->status = $item->STATUS === 2 ?
-                    Comment::ACTIVE
-                    : Comment::INACTIVE;
+                    Status::ACTIVE
+                    : Status::INACTIVE;
                 $comment->created_at = $item->DATE_ADDED;
                 $comment->updated_at = $item->DATE_ADDED;
 

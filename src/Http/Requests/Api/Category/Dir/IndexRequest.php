@@ -4,6 +4,7 @@ namespace N1ebieski\IDir\Http\Requests\Api\Category\Dir;
 
 use Illuminate\Validation\Rule;
 use N1ebieski\IDir\Models\Category\Dir\Category;
+use N1ebieski\ICore\ValueObjects\Category\Status;
 use N1ebieski\ICore\Http\Requests\Api\Category\IndexRequest as BaseIndexRequest;
 
 class IndexRequest extends BaseIndexRequest
@@ -36,7 +37,7 @@ class IndexRequest extends BaseIndexRequest
                             ->when(
                                 !optional($this->user())->can('admin.categories.view'),
                                 function ($query) {
-                                    $query->where('status', Category::ACTIVE);
+                                    $query->where('status', Status::ACTIVE);
                                 }
                             );
                     })
