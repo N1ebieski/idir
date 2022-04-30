@@ -67,22 +67,22 @@
                 <span>{{ $field->title }}:</span><br>
                 <span>
                 @switch($field->type)
-                    @case('input')
-                    @case('textarea')
-                    @case('select')
+                    @case(Field\Type::INPUT)
+                    @case(Field\Type::TEXTAREA)
+                    @case(Field\Type::SELECT)
                         {{ $value['field'][$field->id] }}
                         @break;
 
-                    @case('multiselect')
-                    @case('checkbox')
+                    @case(Field\Type::MULTISELECT)
+                    @case(Field\Type::CHECKBOX)
                         {{ implode(', ', $value['field'][$field->id]) }}
                         @break;
 
-                    @case('regions')
+                    @case(Field\Type::REGIONS)
                         {{ implode(', ', $regions->whereIn('id', $value['field'][$field->id])->pluck('name')->toArray()) }}
                         @break;
 
-                    @case('map')
+                    @case(Field\Type::MAP)
                         @render('idir::map.dir.mapComponent', [
                             'coords_marker' => [
                                 [$value['field'][$field->id][0]['lat'], $value['field'][$field->id][0]['long']]
@@ -90,7 +90,7 @@
                         ])
                         @break;                        
 
-                    @case('image')
+                    @case(Field\Type::IMAGE)
                         <img 
                             class="img-fluid" 
                             src="{{ app('filesystem')->url($value['field'][$field->id]) }}"

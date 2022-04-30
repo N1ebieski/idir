@@ -12,6 +12,7 @@ use Illuminate\Contracts\Auth\Factory as Auth;
 use Illuminate\Contracts\Config\Repository as Config;
 use N1ebieski\IDir\ValueObjects\Dir\Status as DirStatus;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use N1ebieski\IDir\ValueObjects\Payment\Status as PaymentStatus;
 use N1ebieski\ICore\ValueObjects\Comment\Status as CommentStatus;
 
 class DirRepo
@@ -85,7 +86,7 @@ class DirRepo
                                 $query->on('payments.model_id', '=', 'dirs.id')
                                     ->where([
                                         ['payments.model_type', $this->dir->getMorphClass()],
-                                        ['payments.status', $payment::FINISHED]
+                                        ['payments.status', PaymentStatus::FINISHED]
                                     ]);
                             })
                             ->whereRaw("MATCH ({$columns}) AGAINST (? IN BOOLEAN MODE)", [
@@ -611,7 +612,7 @@ class DirRepo
                     ->on(
                         'p1.created_at',
                         '=',
-                        DB::raw('(SELECT MIN(`created_at`) FROM `payments` WHERE `model_id` = `p1`.`model_id` AND `model_type` = "' . $this->dir->getMorphClass() . '" AND `status` = ' . $payment::FINISHED . ')')
+                        DB::raw('(SELECT MIN(`created_at`) FROM `payments` WHERE `model_id` = `p1`.`model_id` AND `model_type` = "' . $this->dir->getMorphClass() . '" AND `status` = ' . PaymentStatus::FINISHED . ')')
                     );
             })
             ->leftJoin("{$price->getTable()} AS p2", function ($query) use ($price) {

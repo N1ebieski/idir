@@ -3,6 +3,7 @@
 namespace N1ebieski\IDir\Database\Seeders\PHPLD;
 
 use Illuminate\Support\Facades\DB;
+use N1ebieski\IDir\ValueObjects\Field\Type;
 use N1ebieski\IDir\Models\Field\Group\Field;
 use N1ebieski\IDir\Database\Seeders\PHPLD\PHPLDSeeder;
 
@@ -74,16 +75,16 @@ class FieldsSeeder extends PHPLDSeeder
     {
         switch ($type) {
             case 'STR':
-                return 'input';
+                return Type::INPUT;
 
             case 'TXT':
-                return 'textarea';
+                return Type::TEXTAREA;
 
             case 'DROPDOWN':
-                return 'select';
+                return Type::SELECT;
 
             case 'IMAGEGROUP':
-                return 'image';
+                return Type::IMAGE;
         }
     }
 

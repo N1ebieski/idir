@@ -2,7 +2,7 @@
     <label for="field.{{ $field->id }}" class="d-flex justify-content-between">
         <div>
             <span>{{ $field->title }}:</span>
-            @if ($field->isRequired())
+            @if ($field->options->required->isActive())
             <span>*</span>
             @endif            
             @if ($field->desc !== null)

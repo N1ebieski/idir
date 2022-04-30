@@ -42,7 +42,7 @@ class PaymentResource extends JsonResource
                 }
             ),
             'status' => [
-                'value' => $this->status,
+                'value' => $this->status->getValue(),
                 'label' => Lang::get("idir::payments.status.{$this->status}")
             ],
             'created_at' => $this->created_at,

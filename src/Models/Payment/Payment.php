@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Builder;
 use N1ebieski\IDir\Repositories\PaymentRepo;
 use N1ebieski\ICore\Models\Traits\Carbonable;
 use N1ebieski\ICore\Models\Traits\Polymorphic;
+use N1ebieski\IDir\ValueObjects\Payment\Status;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use N1ebieski\IDir\Services\Payment\PaymentService;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -15,6 +16,9 @@ use N1ebieski\ICore\Models\Traits\FullTextSearchable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use N1ebieski\IDir\Database\Factories\Payment\PaymentFactory;
 
+/**
+ * @property Status $status
+ */
 class Payment extends Model
 {
     use Polymorphic;
@@ -23,24 +27,6 @@ class Payment extends Model
     use HasFactory;
 
     // Configuration
-
-    /**
-     * [public description]
-     * @var int
-     */
-    public const FINISHED = 1;
-
-    /**
-     * [public description]
-     * @var int
-     */
-    public const UNFINISHED = 0;
-
-    /**
-     * [public description]
-     * @var int
-     */
-    public const PENDING = 2;
 
     /**
      * The attributes that are mass assignable.
@@ -83,6 +69,15 @@ class Payment extends Model
     protected $keyType = 'string';
 
     /**
+     * The model's default values for attributes.
+     *
+     * @var array
+     */
+    protected $attributes = [
+        'status' => Status::PENDING
+    ];
+
+    /**
      * The attributes that should be cast to native types.
      *
      * @var array
@@ -91,7 +86,7 @@ class Payment extends Model
         'id' => 'integer',
         'model_id' => 'integer',
         'order_id' => 'integer',
-        'status' => 'integer',
+        'status' => \N1ebieski\IDir\Casts\Payment\StatusCast::class,
         'created_at' => 'datetime',
         'updated_at' => 'datetime'
     ];
@@ -159,28 +154,7 @@ class Payment extends Model
      */
     public function scopePending(Builder $query): Builder
     {
-        return $query->where('status', static::PENDING);
-    }
-
-    // Checkers
-
-    /**
-     * [isPending description]
-     * @return bool [description]
-     */
-    public function isPending(): bool
-    {
-        return $this->status === static::PENDING;
-    }
-
-    /**
-     * Undocumented function
-     *
-     * @return boolean
-     */
-    public function isUnfinished(): bool
-    {
-        return $this->status === static::UNFINISHED;
+        return $query->where('status', Status::PENDING);
     }
 
     // Factories

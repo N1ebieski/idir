@@ -20,7 +20,6 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Storage;
 use N1ebieski\IDir\Mail\Dir\ModeratorMail;
 use N1ebieski\IDir\ValueObjects\Dir\Status;
-use N1ebieski\IDir\ValueObjects\Price\Type;
 use N1ebieski\IDir\Models\Field\Group\Field;
 use Illuminate\Http\Response as HttpResponse;
 use N1ebieski\IDir\Models\Payment\Dir\Payment;
@@ -28,16 +27,13 @@ use GuzzleHttp\Psr7\Response as GuzzleResponse;
 use N1ebieski\IDir\Models\Category\Dir\Category;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use N1ebieski\IDir\Crons\Dir\ModeratorNotificationCron;
+use N1ebieski\IDir\ValueObjects\Field\Type as FieldType;
+use N1ebieski\IDir\ValueObjects\Price\Type as PriceType;
+use N1ebieski\IDir\ValueObjects\Payment\Status as PaymentStatus;
 
 class DirTest extends TestCase
 {
     use DatabaseTransactions;
-
-    /**
-     * [FIELD_TYPES description]
-     * @var array
-     */
-    private const FIELD_TYPES = ['input', 'textarea', 'select', 'multiselect', 'checkbox', 'image'];
 
     /**
      * [setUpDir description]
@@ -63,19 +59,27 @@ class DirTest extends TestCase
      */
     protected function setUpFields(Group $group): array
     {
-        foreach (static::FIELD_TYPES as $type) {
+        foreach (FieldType::getAvailable() as $type) {
             $field = Field::makeFactory()->public()->hasAttached($group, [], 'morphs')->{$type}()->create();
 
-            $key = $field->id;
+            switch ($field->type) {
+                case FieldType::INPUT:
+                case FieldType::TEXTAREA:
+                    $fields['field'][$field->id] = 'Cupidatat magna enim officia non sunt esse qui Lorem quis.';
+                    break;
 
-            if (in_array($field->type, ['input', 'textarea'])) {
-                $fields['field'][$key] = 'Cupidatat magna enim officia non sunt esse qui Lorem quis.';
-            } elseif ($field->type === 'select') {
-                $fields['field'][$key] = $field->options->options[0];
-            } elseif (in_array($field->type, ['multiselect', 'checkbox'])) {
-                $fields['field'][$key] = array_slice($field->options->options, 0, 2);
-            } elseif ($field->type === 'image') {
-                $fields['field'][$key] = UploadedFile::fake()->image('avatar.jpg', 500, 200)->size(1000);
+                case FieldType::SELECT:
+                    $fields['field'][$field->id] = $field->options->options[0];
+                    break;
+
+                case FieldType::MULTISELECT:
+                case FieldType::CHECKBOX:
+                    $fields['field'][$field->id] = array_slice($field->options->options, 0, 2);
+                    break;
+
+                case FieldType::IMAGE:
+                    $fields['field'][$field->id] = UploadedFile::fake()->image('avatar.jpg', 500, 200)->size(1000);
+                    break;
             }
         }
 
@@ -162,7 +166,7 @@ class DirTest extends TestCase
 
         $group = Group::makeFactory()->public()->maxCats()->create();
 
-        foreach (static::FIELD_TYPES as $type) {
+        foreach (FieldType::getAvailable() as $type) {
             $field = Field::makeFactory()->public()->hasAttached($group, [], 'morphs')->{$type}()->create();
 
             $fields[] = "field.{$field->id}";
@@ -302,7 +306,7 @@ class DirTest extends TestCase
         $price = Price::makeFactory()->transfer()->for($group)->create();
 
         $response = $this->postJson(route('api.dir.store', [$group->id]), [
-            'payment_type' => Type::TRANSFER
+            'payment_type' => PriceType::TRANSFER
         ]);
 
         $response->assertStatus(HttpResponse::HTTP_UNPROCESSABLE_ENTITY);
@@ -320,7 +324,7 @@ class DirTest extends TestCase
         $price = Price::makeFactory()->transfer()->for($group)->create();
 
         $response = $this->postJson(route('api.dir.store', [$group->id]), [
-            'payment_type' => Type::TRANSFER,
+            'payment_type' => PriceType::TRANSFER,
             'payment_transfer' => rand(1, 1000)
         ]);
 
@@ -341,7 +345,7 @@ class DirTest extends TestCase
         $setUpDir = $this->setUpDir();
 
         $response = $this->postJson(route('api.dir.store', [$group->id]), [
-            'payment_type' => Type::TRANSFER,
+            'payment_type' => PriceType::TRANSFER,
             'payment_transfer' => $price->id
         ] + $setUpDir);
 
@@ -357,7 +361,7 @@ class DirTest extends TestCase
             'model_id' => $dir->id,
             'model_type' => $dir->getMorphClass(),
             'order_id' => $price->id,
-            'status' => Payment::PENDING
+            'status' => PaymentStatus::PENDING
         ]);
 
         $payment = Payment::orderBy('created_at', 'desc')->first();
@@ -399,7 +403,7 @@ class DirTest extends TestCase
         $price = Price::makeFactory()->codeSms()->for($group)->create();
 
         $response = $this->postJson(route('api.dir.store', [$group->id]), [
-            'payment_type' => Type::CODE_SMS,
+            'payment_type' => PriceType::CODE_SMS,
             'payment_code_sms' => $price->id
         ] + $this->setUpDir());
 
@@ -430,7 +434,7 @@ class DirTest extends TestCase
         });
 
         $response = $this->postJson(route('api.dir.store', [$group->id]), [
-            'payment_type' => Type::CODE_SMS,
+            'payment_type' => PriceType::CODE_SMS,
             'payment_code_sms' => $price->id,
             'code_sms' => Str::random(10)
         ] + $this->setUpDir());
@@ -443,7 +447,7 @@ class DirTest extends TestCase
             'model_id' => $dir->id,
             'model_type' => $dir->getMorphClass(),
             'order_id' => $price->id,
-            'status' => Payment::FINISHED
+            'status' => PaymentStatus::FINISHED
         ]);
 
         $this->assertTrue($dir->privileged_at !== null);
@@ -468,7 +472,7 @@ class DirTest extends TestCase
         });
 
         $response = $this->postJson(route('api.dir.store', [$group->id]), [
-            'payment_type' => Type::CODE_SMS,
+            'payment_type' => PriceType::CODE_SMS,
             'payment_code_sms' => $price->id,
             'code_sms' => Str::random(10)
         ] + $this->setUpDir());
@@ -488,7 +492,7 @@ class DirTest extends TestCase
         $price = Price::makeFactory()->codeTransfer()->for($group)->create();
 
         $response = $this->postJson(route('api.dir.store', [$group->id]), [
-            'payment_type' => Type::CODE_TRANSFER,
+            'payment_type' => PriceType::CODE_TRANSFER,
             'payment_code_transfer' => $price->id
         ] + $this->setUpDir());
 
@@ -513,7 +517,7 @@ class DirTest extends TestCase
         });
 
         $response = $this->postJson(route('api.dir.store', [$group->id]), [
-            'payment_type' => Type::CODE_TRANSFER,
+            'payment_type' => PriceType::CODE_TRANSFER,
             'payment_code_transfer' => $price->id,
             'code_transfer' => Str::random(10)
         ] + $this->setUpDir());
@@ -549,7 +553,7 @@ class DirTest extends TestCase
         });
 
         $response = $this->postJson(route('api.dir.store', [$group->id]), [
-            'payment_type' => Type::CODE_TRANSFER,
+            'payment_type' => PriceType::CODE_TRANSFER,
             'payment_code_transfer' => $price->id,
             'code_transfer' => Str::random(10)
         ] + $this->setUpDir());
@@ -577,7 +581,7 @@ class DirTest extends TestCase
         ]);
 
         $response = $this->postJson(route('api.dir.store', [$group->id]), [
-            'payment_type' => Type::CODE_TRANSFER,
+            'payment_type' => PriceType::CODE_TRANSFER,
             'payment_code_transfer' => $price->id,
             'code_transfer' => $code->code
         ] + $this->setUpDir());
@@ -621,7 +625,7 @@ class DirTest extends TestCase
         ]);
 
         $response = $this->postJson(route('api.dir.store', [$group->id]), [
-            'payment_type' => Type::CODE_SMS,
+            'payment_type' => PriceType::CODE_SMS,
             'payment_code_sms' => $price->id,
             'code_sms' => $code->code
         ] + $this->setUpDir());

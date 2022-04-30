@@ -3,6 +3,8 @@
 namespace N1ebieski\IDir\Database\Factories\Field;
 
 use N1ebieski\IDir\Models\Field\Field;
+use N1ebieski\IDir\ValueObjects\Field\Type;
+use N1ebieski\IDir\ValueObjects\Field\Required;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class FieldFactory extends Factory
@@ -65,11 +67,11 @@ class FieldFactory extends Factory
     {
         return $this->state(function () {
             return [
-                'type' => 'input',
+                'type' => Type::INPUT,
                 'options' => [
                     'min' => rand(3, 30),
                     'max' => rand(100, 300),
-                    'required' => Field::REQUIRED
+                    'required' => Required::ACTIVE
                 ]
             ];
         });
@@ -84,11 +86,11 @@ class FieldFactory extends Factory
     {
         return $this->state(function () {
             return [
-                'type' => 'textarea',
+                'type' => Type::TEXTAREA,
                 'options' => [
                     'min' => rand(3, 30),
                     'max' => rand(100, 3000),
-                    'required' => Field::REQUIRED
+                    'required' => Required::ACTIVE
                 ]
             ];
         });
@@ -103,10 +105,10 @@ class FieldFactory extends Factory
     {
         return $this->state(function () {
             return [
-                'type' => 'select',
+                'type' => Type::SELECT,
                 'options' => [
                     'options' => $this->faker->words(5, false),
-                    'required' => Field::REQUIRED
+                    'required' => Required::ACTIVE
                 ]
             ];
         });
@@ -121,10 +123,10 @@ class FieldFactory extends Factory
     {
         return $this->state(function () {
             return [
-                'type' => 'multiselect',
+                'type' => Type::MULTISELECT,
                 'options' => [
                     'options' => $this->faker->words(5, false),
-                    'required' => Field::REQUIRED
+                    'required' => Required::ACTIVE
                 ]
             ];
         });
@@ -139,10 +141,10 @@ class FieldFactory extends Factory
     {
         return $this->state(function () {
             return [
-                'type' => 'checkbox',
+                'type' => Type::CHECKBOX,
                 'options' => [
                     'options' => $this->faker->words(5, false),
-                    'required' => Field::REQUIRED
+                    'required' => Required::ACTIVE
                 ]
             ];
         });
@@ -157,12 +159,12 @@ class FieldFactory extends Factory
     {
         return $this->state(function () {
             return [
-                'type' => 'image',
+                'type' => Type::IMAGE,
                 'options' => [
                     'width' => 720,
                     'height' => 480,
                     'size' => 2048,
-                    'required' => Field::REQUIRED
+                    'required' => Required::ACTIVE
                 ]
             ];
         });

@@ -6,9 +6,11 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use N1ebieski\IDir\Repositories\FieldRepo;
+use N1ebieski\IDir\ValueObjects\Field\Type;
 use N1ebieski\IDir\Models\Traits\Filterable;
 use N1ebieski\ICore\Models\Traits\Carbonable;
 use N1ebieski\ICore\Models\Traits\Polymorphic;
+use N1ebieski\IDir\ValueObjects\Field\Options;
 use N1ebieski\ICore\Models\Traits\Positionable;
 use N1ebieski\IDir\Services\Field\FieldService;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -16,6 +18,10 @@ use N1ebieski\ICore\Models\Traits\FullTextSearchable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use N1ebieski\IDir\Database\Factories\Field\FieldFactory;
 
+/**
+ * @property Type $type
+ * @property Options $options
+ */
 class Field extends Model
 {
     use Polymorphic;
@@ -52,18 +58,6 @@ class Field extends Model
     public const OPTIONAL = 0;
 
     /**
-     * [public description]
-     * @var array
-     */
-    public const DEFAULT = ['regions', 'map', 'gus'];
-
-    /**
-     * [public description]
-     * @var array
-     */
-    public const AVAILABLE = ['input', 'textarea', 'select', 'multiselect', 'checkbox', 'image'];
-
-    /**
      * The columns of the full text index
      *
      * @var array
@@ -91,6 +85,8 @@ class Field extends Model
      */
     protected $casts = [
         'id' => 'integer',
+        'type' => \N1ebieski\IDir\Casts\Field\TypeCast::class,
+        'options' => \N1ebieski\IDir\Casts\Field\OptionsCast::class,
         'visible' => 'integer',
         'position' => 'integer',
         'created_at' => 'datetime',
@@ -134,38 +130,12 @@ class Field extends Model
     // Accessors
 
     /**
-     * [getOptionsAttribute description]
-     * @return object [description]
-     */
-    public function getOptionsAttribute(): object
-    {
-        $options = json_decode($this->attributes['options']);
-
-        if (isset($options->options)) {
-            $options->options_as_string = implode("\r\n", $options->options);
-        }
-
-        return $options;
-    }
-
-    /**
      * [getDecodeValueAttribute description]
      * @return mixed [description]
      */
     public function getDecodeValueAttribute()
     {
         return json_decode($this->pivot->value);
-    }
-
-    // Mutators
-
-    /**
-     * [setOptionsAttribute description]
-     * @param array $value [description]
-     */
-    public function setOptionsAttribute(array $value): void
-    {
-        $this->attributes['options'] = json_encode($value);
     }
 
     // Checkers
@@ -178,25 +148,6 @@ class Field extends Model
     public function isPublic(): bool
     {
         return $this->getAttribute('visible') === static::VISIBLE;
-    }
-
-    /**
-     * [isNotDefault description]
-     * @return bool [description]
-     */
-    public function isNotDefault(): bool
-    {
-        return !in_array($this->type, static::DEFAULT);
-    }
-
-    /**
-     * Undocumented function
-     *
-     * @return boolean
-     */
-    public function isRequired(): bool
-    {
-        return (int)$this->options->required === static::REQUIRED;
     }
 
     // Factories

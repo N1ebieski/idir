@@ -6,6 +6,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use N1ebieski\IDir\Models\Payment\Payment;
 use N1ebieski\IDir\ValueObjects\Price\Type;
+use N1ebieski\IDir\ValueObjects\Payment\Status;
 use N1ebieski\ICore\Services\Interfaces\Creatable;
 use Illuminate\Contracts\Config\Repository as Config;
 use N1ebieski\ICore\Services\Interfaces\StatusUpdatable;
@@ -61,31 +62,25 @@ class PaymentService implements Creatable, StatusUpdatable
     }
 
     /**
-     * Undocumented function
-     *
-     * @param string $payment_type
-     * @return integer
-     */
-    protected function status(string $payment_type = null): int
-    {
-        if (in_array($payment_type, [Type::TRANSFER, Type::PAYPAL_EXPRESS])) {
-            return Payment::PENDING;
-        }
-
-        return Payment::UNFINISHED;
-    }
-
-    /**
      * [create description]
      * @param  array $attributes [description]
      * @return Model             [description]
      */
     public function create(array $attributes): Model
     {
-        $this->payment->status = $this->status($attributes['payment_type'] ?? null);
+        try {
+            $this->payment->status = Status::fromString(
+                $attributes['payment_type'] ?? Status::UNFINISHED
+            );
+        } catch (\InvalidArgumentException $e) {
+            $this->payment->status = Status::UNFINISHED;
+        }
+
         $this->payment->driver = $this->config->get("idir.payment.{$attributes['payment_type']}.driver");
+
         $this->payment->morph()->associate($this->payment->morph);
         $this->payment->orderMorph()->associate($this->payment->order);
+
         $this->payment->save();
 
         return $this->payment;

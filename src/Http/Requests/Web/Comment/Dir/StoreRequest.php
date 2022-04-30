@@ -55,16 +55,6 @@ class StoreRequest extends FormRequest
     }
 
     /**
-     * Undocumented function
-     *
-     * @return void
-     */
-    public function attributes()
-    {
-        return array_merge([], $this->prepareCaptchaAttributes());
-    }
-
-    /**
      * Get the validation rules that apply to the request.
      *
      * @return array

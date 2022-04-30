@@ -6,6 +6,7 @@ use Illuminate\Validation\Rule;
 use Illuminate\Http\UploadedFile;
 use N1ebieski\IDir\Models\Field\Field;
 use Illuminate\Support\Facades\Storage;
+use N1ebieski\IDir\ValueObjects\Field\Type;
 use Illuminate\Support\Collection as Collect;
 
 trait FieldsExtended
@@ -33,7 +34,7 @@ trait FieldsExtended
      */
     protected function prepareFieldMapAttribute(Field $field): void
     {
-        if ($field->type !== 'map') {
+        if (!$field->type->isMap()) {
             return;
         }
 
@@ -59,7 +60,7 @@ trait FieldsExtended
      */
     protected function prepareFieldImageAttribute(Field $field): void
     {
-        if ($field->type !== 'image') {
+        if (!$field->type->isImage()) {
             return;
         }
 
@@ -100,54 +101,53 @@ trait FieldsExtended
     {
         foreach ($this->getFields() as $field) {
             $rules["field.{$field->id}"][] = 'bail';
-            $rules["field.{$field->id}"][] = $field->isRequired() ? 'required' : 'nullable';
+            $rules["field.{$field->id}"][] = $field->options->required->isActive() ? 'required' : 'nullable';
 
             switch ($field->type) {
-                case 'map':
+                case Type::MAP:
                     $rules["field.{$field->id}"][] = 'array';
                     $rules["field.{$field->id}"][] = 'max:1';
                     $rules["field.{$field->id}"][] = 'no_js_validation';
                     $rules["field.{$field->id}.*.lat"] = [
                         'bail',
-                        $field->isRequired() ? 'required' : 'nullable',
+                        $field->options->required->isActive() ? 'required' : 'nullable',
                         "required_with:field.{$field->id}.*.long",
                         'numeric',
                         'between:-90,90'
                     ];
                     $rules["field.{$field->id}.*.long"] = [
                         'bail',
-                        $field->isRequired() ? 'required' : 'nullable',
+                        $field->options->required->isActive() ? 'required' : 'nullable',
                         "required_with:field.{$field->id}.*.lat",
                         'numeric',
                         'between:-180,180'
                     ];
                     break;
 
-                case 'regions':
+                case Type::REGIONS:
                     $rules["field.{$field->id}"][] = 'array';
                     $rules["field.{$field->id}"][] = 'exists:regions,id';
                     break;
 
-                case 'gus':
+                case Type::GUS:
                     $rules["field.{$field->id}"][] = 'not_present';
                     $rules["field.{$field->id}"][] = 'no_js_validation';
                     break;
 
-                case 'multiselect':
-                case 'checkbox':
+                case Type::MULTISELECT:
+                case Type::CHECKBOX:
                     $rules["field.{$field->id}"][] = 'array';
                     break;
 
-                case 'image':
+                case Type::IMAGE:
                     $rules["field.{$field->id}"][] = 'image';
                     $rules["field.{$field->id}"][] = 'mimes:jpeg,png,jpg';
                     $rules["field.{$field->id}"][] = 'max:' . $field->options->size;
                     $rules["field.{$field->id}"][] = 'dimensions:max_width=' . $field->options->width . ',max_height=' . $field->options->height;
-                    // $rules["field.{$field->id}"][] = 'no_js_validation';
                     break;
 
-                case 'input':
-                case 'textarea':
+                case Type::INPUT:
+                case Type::TEXTAREA:
                     $rules["field.{$field->id}"][] = 'string';
             }
 

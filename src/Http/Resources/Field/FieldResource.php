@@ -4,6 +4,7 @@ namespace N1ebieski\IDir\Http\Resources\Field;
 
 use Illuminate\Support\Facades\Lang;
 use N1ebieski\IDir\Models\Field\Field;
+use N1ebieski\IDir\ValueObjects\Field\Type;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class FieldResource extends JsonResource
@@ -31,7 +32,7 @@ class FieldResource extends JsonResource
             'position' => $this->position,
             'title' => $this->title,
             'desc' => $this->desc,
-            'type' => $this->type,
+            'type' => $this->type->getValue(),
             'visible' => [
                 'value' => $this->visible,
                 'label' => Lang::get("idir::fields.visible.{$this->visible}")
@@ -42,20 +43,20 @@ class FieldResource extends JsonResource
                     return [
                         'options' => [
                             'required' => [
-                                'value' => (int)$this->options->required,
+                                'value' => $this->options->required,
                                 'label' => Lang::get("idir::fields.required.{$this->options->required}")
                             ],
                             $this->mergeWhen(
-                                in_array($this->type, ['input', 'textarea']),
+                                in_array($this->type->getValue(), [Type::INPUT, Type::TEXTAREA]),
                                 function () {
                                     return [
-                                        'min' => (int)$this->options->min,
-                                        'max' => (int)$this->options->max
+                                        'min' => $this->options->min,
+                                        'max' => $this->options->max
                                     ];
                                 }
                             ),
                             $this->mergeWhen(
-                                in_array($this->type, ['select', 'multiselect', 'checkbox']),
+                                in_array($this->type->getValue(), [Type::SELECT, Type::MULTISELECT, Type::CHECKBOX]),
                                 function () {
                                     return [
                                         'options' => $this->options->options
@@ -63,12 +64,12 @@ class FieldResource extends JsonResource
                                 }
                             ),
                             $this->mergeWhen(
-                                in_array($this->type, ['image']),
+                                in_array($this->type->getValue(), [Type::IMAGE]),
                                 function () {
                                     return [
-                                        'width' => (int)$this->options->width,
-                                        'height' => (int)$this->options->height,
-                                        'size' => (int)$this->options->size
+                                        'width' => $this->options->width,
+                                        'height' => $this->options->height,
+                                        'size' => $this->options->size
                                     ];
                                 }
                             )

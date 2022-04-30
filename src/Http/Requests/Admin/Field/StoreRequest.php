@@ -2,7 +2,9 @@
 
 namespace N1ebieski\IDir\Http\Requests\Admin\Field;
 
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
+use N1ebieski\IDir\ValueObjects\Field\Type;
 
 class StoreRequest extends FormRequest
 {
@@ -10,7 +12,7 @@ class StoreRequest extends FormRequest
      * [protected description]
      * @var array
      */
-    protected $types = ['select', 'multiselect', 'checkbox'];
+    protected $types = [Type::SELECT, Type::MULTISELECT, Type::CHECKBOX];
 
     /**
      * Determine if the user is authorized to make this request.
@@ -58,64 +60,70 @@ class StoreRequest extends FormRequest
         return [
             'title' => 'bail|required|string|between:3,255|no_js_validation',
             'desc' => 'bail|nullable|string|between:3,5000|no_js_validation',
-            'type' => 'bail|required|string|in:input,textarea,select,multiselect,checkbox,image|no_js_validation',
-            'input.min' => $this->input('type') === 'input' ? [
+            'type' => [
                 'bail',
-                'required_if:type,input',
+                'required',
+                'string',
+                Rule::in(Type::getAvailable()),
+                'no_js_validation'
+            ],
+            'input.min' => $this->input('type') === Type::INPUT ? [
+                'bail',
+                'required_if:type,' . Type::INPUT,
                 'integer',
                 'no_js_validation'
             ] : ['no_js_validation'],
-            'input.max' => $this->input('type') === 'input' ? [
+            'input.max' => $this->input('type') === Type::INPUT ? [
                 'bail',
-                'required_if:type,input',
+                'required_if:type,' . Type::INPUT,
                 'integer',
                 'no_js_validation'
             ] : ['no_js_validation'],
-            'textarea.min' => $this->input('type') === 'textarea' ? [
+            'textarea.min' => $this->input('type') === Type::TEXTAREA ? [
                 'bail',
-                'required_if:type,textarea',
+                'required_if:type,' . Type::TEXTAREA,
                 'integer',
                 'no_js_validation'
             ] : ['no_js_validation'],
-            'textarea.max' => $this->input('type') === 'textarea' ? [
+            'textarea.max' => $this->input('type') === Type::TEXTAREA ? [
                 'bail',
-                'required_if:type,textarea',
+                'required_if:type,' . Type::TEXTAREA,
                 'integer',
                 'no_js_validation'
             ] : ['no_js_validation'],
-            'select.options' => $this->input('type') === 'select' ? [
+            'select.options' => $this->input('type') === Type::SELECT ? [
                 'bail',
-                'required_if:type,select',
+                'required_if:type,' . Type::SELECT,
                 'array',
                 'no_js_validation'
             ] : ['no_js_validation'],
-            'multiselect.options' => $this->input('type') === 'multiselect' ? [
+            'multiselect.options' => $this->input('type') === Type::MULTISELECT ? [
                 'bail',
-                'required_if:type,multiselect',
+                'required_if:type,' . Type::MULTISELECT,
                 'array',
                 'no_js_validation'
             ] : ['no_js_validation'],
-            'checkbox.options' => $this->input('type') === 'checkbox' ? [
+            'checkbox.options' => $this->input('type') === Type::CHECKBOX ? [
                 'bail',
-                'required_if:type,checkbox',
+                'required_if:type,' . Type::CHECKBOX,
                 'array',
                 'no_js_validation'
             ] : ['no_js_validation'],
-            'image.width' => $this->input('type') === 'image' ? [
+            'image.width' => $this->input('type') === Type::IMAGE ? [
                 'bail',
-                'required_if:type,image',
+                'required_if:type,' . Type::IMAGE,
                 'integer',
                 'no_js_validation'
             ] : ['no_js_validation'],
-            'image.height' => $this->input('type') === 'image' ? [
+            'image.height' => $this->input('type') === Type::IMAGE ? [
                 'bail',
-                'required_if:type,image',
+                'required_if:type,' . Type::IMAGE,
                 'integer',
                 'no_js_validation'
             ] : ['no_js_validation'],
-            'image.size' => $this->input('type') === 'image' ? [
+            'image.size' => $this->input('type') === Type::IMAGE ? [
                 'bail',
-                'required_if:type,image',
+                'required_if:type,' . Type::IMAGE,
                 'integer',
                 'no_js_validation'
             ] : ['no_js_validation'],

@@ -3,6 +3,7 @@
 namespace N1ebieski\IDir\Database\Seeders\SEOKatalog;
 
 use Illuminate\Support\Facades\DB;
+use N1ebieski\IDir\ValueObjects\Field\Type;
 use N1ebieski\IDir\Models\Field\Group\Field;
 use N1ebieski\IDir\Database\Seeders\SEOKatalog\SEOKatalogSeeder;
 
@@ -72,19 +73,19 @@ class FieldsSeeder extends SEOKatalogSeeder
     {
         switch ($type) {
             case 1:
-                return 'input';
+                return Type::INPUT;
 
             case 2:
-                return 'textarea';
+                return Type::TEXTAREA;
 
             case 3:
-                return 'select';
+                return Type::SELECT;
 
             case 4:
-                return 'checkbox';
+                return Type::CHECKBOX;
 
             case 5:
-                return 'image';
+                return Type::IMAGE;
         }
     }
 

@@ -6,7 +6,7 @@ use N1ebieski\ICore\Models\Token\PersonalAccessToken as BasePersonalAccessToken;
 
 class PersonalAccessToken extends BasePersonalAccessToken
 {
-    // Configration
+    // Configuration
 
     /**
      * @var array

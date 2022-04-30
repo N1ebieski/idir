@@ -44,7 +44,7 @@
                 </div>
                 @endcan
                 @can('admin.fields.delete')
-                @if ($field->isNotDefault())
+                @if (!$field->type->isDefault())
                 <button 
                     type="button"                
                     class="btn btn-danger" 

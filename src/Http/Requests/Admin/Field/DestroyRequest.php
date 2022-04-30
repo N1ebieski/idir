@@ -2,8 +2,12 @@
 
 namespace N1ebieski\IDir\Http\Requests\Admin\Field;
 
+use N1ebieski\IDir\Models\Field\Field;
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * @property Field $field
+ */
 class DestroyRequest extends FormRequest
 {
     /**
@@ -13,7 +17,7 @@ class DestroyRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->field->isNotDefault();
+        return !$this->field->type->isDefault();
     }
 
     /**

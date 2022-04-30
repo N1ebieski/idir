@@ -208,11 +208,35 @@ class FieldService implements Creatable, Updatable, PositionUpdatable
         return $this->db->transaction(function () use ($attributes) {
             $this->field->fill($attributes);
 
-            $this->field->options = array_merge(
-                ['required' => $attributes['required']],
-                isset($attributes['type']) ?
-                    $attributes[$attributes['type']] : []
-            );
+            if (array_key_exists('required', $attributes)) {
+                $this->field->options->setRequired($attributes['required']);
+            }
+
+            if (isset($attributes['type'])) {
+                if (array_key_exists('options', $attributes[$attributes['type']])) {
+                    $this->field->options->setOptions($attributes[$attributes['type']]['options']);
+                }
+
+                if (array_key_exists('min', $attributes[$attributes['type']])) {
+                    $this->field->options->setMin($attributes[$attributes['type']]['min']);
+                }
+
+                if (array_key_exists('max', $attributes[$attributes['type']])) {
+                    $this->field->options->setMax($attributes[$attributes['type']]['max']);
+                }
+
+                if (array_key_exists('height', $attributes[$attributes['type']])) {
+                    $this->field->options->setOptions($attributes[$attributes['type']]['height']);
+                }
+
+                if (array_key_exists('width', $attributes[$attributes['type']])) {
+                    $this->field->options->setOptions($attributes[$attributes['type']]['width']);
+                }
+
+                if (array_key_exists('size', $attributes[$attributes['type']])) {
+                    $this->field->options->setOptions($attributes[$attributes['type']]['size']);
+                }
+            }
 
             if (array_key_exists('morphs', $attributes)) {
                 $this->field->morphs()->sync($attributes['morphs'] ?? []);

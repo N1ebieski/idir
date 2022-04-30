@@ -61,7 +61,7 @@
         <option value="">
             {{ trans('icore::filter.default') }}
         </option>
-        @foreach ($field::AVAILABLE as $type)
+        @foreach (Field\Type::getAvailable() as $type)
         <option 
             value="{{ $type }}" 
             {{ ($filter['type'] == $type) ? 'selected' : '' }}

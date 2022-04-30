@@ -3,6 +3,7 @@
 namespace N1ebieski\IDir\Database\Factories\Payment;
 
 use N1ebieski\IDir\Models\Payment\Payment;
+use N1ebieski\IDir\ValueObjects\Payment\Status;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class PaymentFactory extends Factory
@@ -35,7 +36,7 @@ class PaymentFactory extends Factory
     {
         return $this->state(function () {
             return [
-                'status' => Payment::PENDING
+                'status' => Status::PENDING
             ];
         });
     }

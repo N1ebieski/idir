@@ -17,8 +17,8 @@ class MarkAsPaid
      */
     public function verify(): bool
     {
-        return $this->event->payment->isUnfinished()
-            && $this->event->payment->morph->isPending();
+        return $this->event->payment->status->isUnfinished()
+            && $this->event->payment->morph->status->isPaymentInactive();
     }
 
     /**

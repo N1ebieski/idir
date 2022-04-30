@@ -50,6 +50,31 @@ class Schema900 implements SchemaInterface
                     'to' => 'Status::INCORRECT_INACTIVE'
                 ],
                 [
+                    'type' => 'replace',
+                    'search' => '/Payment::PENDING/',
+                    'to' => 'Status::PENDING'
+                ],
+                [
+                    'type' => 'replace',
+                    'search' => '/Payment::FINISHED/',
+                    'to' => 'Status::FINISHED'
+                ],
+                [
+                    'type' => 'replace',
+                    'search' => '/Payment::UNFINISHED/',
+                    'to' => 'Status::UNFINISHED'
+                ],
+                [
+                    'type' => 'replace',
+                    'search' => '/Field::OPTIONAL/',
+                    'to' => 'Required::INACTIVE'
+                ],
+                [
+                    'type' => 'replace',
+                    'search' => '/Field::REQUIRED/',
+                    'to' => 'Required::ACTIVE'
+                ],
+                [
                     'type' => 'afterFirst',
                     'search' => '/use\s*N1ebieski\\\IDir\\\Models\\\Dir;/',
                     'to' => 'use N1ebieski\IDir\ValueObjects\Dir\Status;'
@@ -57,6 +82,24 @@ class Schema900 implements SchemaInterface
                 [
                     'type' => 'removeFirst',
                     'search' => '/use\s*N1ebieski\\\IDir\\\Models\\\Dir;\\n*/'
+                ],
+                [
+                    'type' => 'afterFirst',
+                    'search' => '/use\s*N1ebieski\\\IDir\\\Models\\\Payment\\\Payment;/',
+                    'to' => 'use N1ebieski\IDir\ValueObjects\Payment\Status;'
+                ],
+                [
+                    'type' => 'removeFirst',
+                    'search' => '/use\s*N1ebieski\\\IDir\\\Models\\\Payment\\\Payment;\\n*/'
+                ],
+                [
+                    'type' => 'afterFirst',
+                    'search' => '/use\s*N1ebieski\\\IDir\\\Models\\\Field\\\Field;/',
+                    'to' => 'use N1ebieski\IDir\ValueObjects\Field\Required;'
+                ],
+                [
+                    'type' => 'removeFirst',
+                    'search' => '/use\s*N1ebieski\\\IDir\\\Models\\\Field\\\Field;\\n*/'
                 ]
             ]
         ],
@@ -161,6 +204,11 @@ class Schema900 implements SchemaInterface
                     'type' => 'replace',
                     'search' => '/\$countDirs->firstWhere\(\'status\',\s*0\)/',
                     'to' => '$countDirs->firstWhere(\'status\', Dir\Status::inactive())'
+                ],
+                [
+                    'type' => 'replace',
+                    'search' => '/\$field->isRequired\(\)/',
+                    'to' => '$field->options->required->isActive()'
                 ],
                 [
                     'type' => 'replace',

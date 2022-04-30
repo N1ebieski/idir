@@ -1,7 +1,7 @@
 <div class="form-group">
     <label for="field.{{ $field->id }}">
         <span>{{ $field->title }}:</span>
-        @if ($field->isRequired())
+        @if ($field->options->required->isActive())
         <span>*</span>
         @endif        
         @if ($field->desc !== null)

@@ -59,6 +59,7 @@ class PriceService implements Creatable, Updatable, Deletable
     {
         return $this->db->transaction(function () use ($attributes) {
             $price = $this->price->make($attributes);
+
             $price->code = $attributes[$attributes['type']]['code'] ?? null;
             $price->token = $attributes[$attributes['type']]['token'] ?? null;
             $price->number = $attributes[$attributes['type']]['number'] ?? null;
@@ -66,11 +67,13 @@ class PriceService implements Creatable, Updatable, Deletable
             $price->group()->associate($attributes['group']);
             $price->save();
 
-            if (array_key_exists('codes', $attributes[$attributes['type']] ?? [])) {
-                $this->price->codes()->make()
-                    ->setRelations(['price' => $price])
-                    ->makeService()
-                    ->sync($attributes[$attributes['type']]['codes'] ?? []);
+            if (array_key_exists('type', $attributes)) {
+                if (array_key_exists('codes', $attributes[$attributes['type']])) {
+                    $this->price->codes()->make()
+                        ->setRelations(['price' => $price])
+                        ->makeService()
+                        ->sync($attributes[$attributes['type']]['codes'] ?? []);
+                }
             }
 
             return $price;
@@ -86,17 +89,32 @@ class PriceService implements Creatable, Updatable, Deletable
     {
         return $this->db->transaction(function () use ($attributes) {
             $this->price->fill($attributes);
-            $this->price->code = $attributes[$attributes['type']]['code'] ?? null;
-            $this->price->token = $attributes[$attributes['type']]['token'] ?? null;
-            $this->price->number = $attributes[$attributes['type']]['number'] ?? null;
 
-            $this->price->group()->associate($attributes['group']);
+            if (array_key_exists('type', $attributes)) {
+                if (array_key_exists('code', $attributes[$attributes['type']])) {
+                    $this->price->code = $attributes[$attributes['type']]['code'];
+                }
 
-            if (array_key_exists('codes', $attributes[$attributes['type']] ?? [])) {
-                $this->price->codes()->make()
-                    ->setRelations(['price' => $this->price])
-                    ->makeService()
-                    ->sync($attributes[$attributes['type']]['codes'] ?? []);
+                if (array_key_exists('token', $attributes[$attributes['type']])) {
+                    $this->price->token = $attributes[$attributes['type']]['token'];
+                }
+
+                if (array_key_exists('number', $attributes[$attributes['type']])) {
+                    $this->price->number = $attributes[$attributes['type']]['number'];
+                }
+            }
+
+            if (array_key_exists('group', $attributes)) {
+                $this->price->group()->associate($attributes['group']);
+            }
+
+            if (array_key_exists('type', $attributes)) {
+                if (array_key_exists('codes', $attributes[$attributes['type']])) {
+                    $this->price->codes()->make()
+                        ->setRelations(['price' => $this->price])
+                        ->makeService()
+                        ->sync($attributes[$attributes['type']]['codes'] ?? []);
+                }
             }
 
             return $this->price->save();

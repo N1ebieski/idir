@@ -44,7 +44,7 @@
                     id="nav-tab" 
                     role="tablist"
                 >
-                    @foreach ($field::AVAILABLE as $type)
+                    @foreach (Field\Type::getAvailable() as $type)
                     <a 
                         class="nav-item nav-link btn btn-link flex-grow-0 text-decoration-none shadow-none {{ $loop->first ? 'active' : null }}" 
                         id="nav-{{ $type }}-tab"
@@ -75,11 +75,11 @@
                     aria-labelledby="nav-input-tab"
                 >
                     @component('idir::admin.field.partials.components.input')
-                        @slot('name', ['input', 'min'])
+                        @slot('name', [Field\Type::INPUT, 'min'])
                         @slot('value', 3)
                     @endcomponent
                     @component('idir::admin.field.partials.components.input')
-                        @slot('name', ['input', 'max'])
+                        @slot('name', [Field\Type::INPUT, 'max'])
                         @slot('value', 255)
                     @endcomponent
                 </div>
@@ -90,11 +90,11 @@
                     aria-labelledby="nav-textarea-tab"
                 >
                     @component('idir::admin.field.partials.components.input')
-                        @slot('name', ['textarea', 'min'])
+                        @slot('name', [Field\Type::TEXTAREA, 'min'])
                         @slot('value', 3)
                     @endcomponent
                     @component('idir::admin.field.partials.components.input')
-                        @slot('name', ['textarea', 'max'])
+                        @slot('name', [Field\Type::TEXTAREA, 'max'])
                         @slot('value', 5000)
                     @endcomponent
                 </div>
@@ -105,7 +105,7 @@
                     aria-labelledby="nav-select-tab"
                 >
                     @component('idir::admin.field.partials.components.textarea')
-                        @slot('name', ['select', 'options'])
+                        @slot('name', [Field\Type::SELECT, 'options'])
                     @endcomponent
                 </div>
                 <div 
@@ -115,7 +115,7 @@
                     aria-labelledby="nav-multiselect-tab"
                 >
                     @component('idir::admin.field.partials.components.textarea')
-                        @slot('name', ['multiselect', 'options'])
+                        @slot('name', [Field\Type::MULTISELECT, 'options'])
                     @endcomponent
                 </div>
                 <div 
@@ -125,7 +125,7 @@
                     aria-labelledby="nav-checkbox-tab"
                 >
                     @component('idir::admin.field.partials.components.textarea')
-                        @slot('name', ['checkbox', 'options'])
+                        @slot('name', [Field\Type::CHECKBOX, 'options'])
                     @endcomponent
                 </div>
                 <div 
@@ -135,15 +135,15 @@
                     aria-labelledby="nav-image-tab"
                 >
                     @component('idir::admin.field.partials.components.input')
-                        @slot('name', ['image', 'width'])
+                        @slot('name', [Field\Type::IMAGE, 'width'])
                         @slot('value', 720)
                     @endcomponent
                     @component('idir::admin.field.partials.components.input')
-                        @slot('name', ['image', 'height'])
+                        @slot('name', [Field\Type::IMAGE, 'height'])
                         @slot('value', 480)
                     @endcomponent
                     @component('idir::admin.field.partials.components.input')
-                        @slot('name', ['image', 'size'])
+                        @slot('name', [Field\Type::IMAGE, 'size'])
                         @slot('value', 2048)
                     @endcomponent
                 </div>
@@ -174,11 +174,11 @@
             {{ trans('idir::fields.required.label') }}:
         </label>
         <select class="form-control custom-select" id="required" name="required">
-            <option value="{{ $field::OPTIONAL }}">
-                {{ trans('idir::fields.required.'.$field::OPTIONAL) }}
+            <option value="{{ Field\Required::INACTIVE }}">
+                {{ trans('idir::fields.required.'.Field\Required::INACTIVE) }}
             </option>
-            <option value="{{ $field::REQUIRED }}">
-                {{ trans('idir::fields.required.'.$field::REQUIRED) }}
+            <option value="{{ Field\Required::ACTIVE }}">
+                {{ trans('idir::fields.required.'.Field\Required::ACTIVE) }}
             </option>
         </select>
     </div>

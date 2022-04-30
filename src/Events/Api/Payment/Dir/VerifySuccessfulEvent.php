@@ -7,8 +7,9 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Foundation\Events\Dispatchable;
 use N1ebieski\IDir\Models\Payment\Dir\Payment;
 use Illuminate\Broadcasting\InteractsWithSockets;
+use N1ebieski\IDir\Events\Interfaces\Dir\DirEventInterface;
 
-class VerifySuccessfulEvent
+class VerifySuccessfulEvent implements DirEventInterface
 {
     use Dispatchable;
     use InteractsWithSockets;

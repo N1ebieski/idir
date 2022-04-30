@@ -38,7 +38,7 @@
             rows="3"
         >{{ $field->desc }}</textarea>
     </div>
-    @if ($field->isNotDefault())
+    @if (!$field->type->isDefault())
     <div class="form-group">
         <label for="type">
             {{ trans('idir::fields.choose_type') }}:
@@ -51,7 +51,7 @@
                     id="nav-tab" 
                     role="tablist"
                 >
-                    @foreach ($field::AVAILABLE as $type)
+                    @foreach (Field\Type::getAvailable() as $type)
                     <a 
                         class="nav-item nav-link btn btn-link flex-grow-0 text-decoration-none shadow-none {{ $field->type == $type ? 'active' : null }}" 
                         id="nav-{{ $type }}-tab"
@@ -76,84 +76,84 @@
             </nav>
             <div class="tab-content mt-3" id="nav-tabContent">
                 <div 
-                    class="tab-pane fade {{ $field->type == 'input' ? 'show active' : null }}"
+                    class="tab-pane fade {{ $field->type->isInput() ? 'show active' : null }}"
                     id="nav-input-edit" 
                     role="tabpanel" 
                     aria-labelledby="nav-input-tab"
                 >
                     @component('idir::admin.field.partials.components.input')
-                        @slot('name', ['input', 'min'])
+                        @slot('name', [Field\Type::INPUT, 'min'])
                         @slot('value', $field->options->min ?? 3)
                     @endcomponent
                     @component('idir::admin.field.partials.components.input')
-                        @slot('name', ['input', 'max'])
+                        @slot('name', [Field\Type::INPUT, 'max'])
                         @slot('value', $field->options->max ?? 255)
                     @endcomponent
                 </div>
                 <div 
-                    class="tab-pane fade {{ $field->type == 'textarea' ? 'show active' : null }}"
+                    class="tab-pane fade {{ $field->type->isTextarea() ? 'show active' : null }}"
                     id="nav-textarea-edit" 
                     role="tabpanel" 
                     aria-labelledby="nav-textarea-tab"
                 >
                     @component('idir::admin.field.partials.components.input')
-                        @slot('name', ['textarea', 'min'])
+                        @slot('name', [Field\Type::TEXTAREA, 'min'])
                         @slot('value', $field->options->min ?? 3)
                     @endcomponent
                     @component('idir::admin.field.partials.components.input')
-                        @slot('name', ['textarea', 'max'])
+                        @slot('name', [Field\Type::TEXTAREA, 'max'])
                         @slot('value', $field->options->max ?? 5000)
                     @endcomponent
                 </div>
                 <div 
-                    class="tab-pane fade {{ $field->type == 'select' ? 'show active' : null }}"
+                    class="tab-pane fade {{ $field->type->isSelect() ? 'show active' : null }}"
                     id="nav-select-edit" 
                     role="tabpanel" 
                     aria-labelledby="nav-select-tab"
                 >
                     @component('idir::admin.field.partials.components.textarea')
-                        @slot('name', ['select', 'options'])
-                        @slot('value', $field->options->options_as_string ?? null)
+                        @slot('name', [Field\Type::SELECT, 'options'])
+                        @slot('value', $field->options->getOptionsAsString() ?? null)
                     @endcomponent
                 </div>
                 <div 
-                    class="tab-pane fade {{ $field->type == 'multiselect' ? 'show active' : null }}"
+                    class="tab-pane fade {{ $field->type->isMultiselect() ? 'show active' : null }}"
                     id="nav-multiselect-edit" 
                     role="tabpanel" 
                     aria-labelledby="nav-multiselect-tab"
                 >
                     @component('idir::admin.field.partials.components.textarea')
-                        @slot('name', ['multiselect', 'options'])
-                        @slot('value', $field->options->options_as_string ?? null)
+                        @slot('name', [Field\Type::MULTISELECT, 'options'])
+                        @slot('value', $field->options->getOptionsAsString() ?? null)
                     @endcomponent
                 </div>
                 <div 
-                    class="tab-pane fade {{ $field->type == 'checkbox' ? 'show active' : null }}"
+                    class="tab-pane fade {{ $field->type->isCheckbox() ? 'show active' : null }}"
                     id="nav-checkbox-edit" 
                     role="tabpanel" 
                     aria-labelledby="nav-checkbox-tab"
                 >
                     @component('idir::admin.field.partials.components.textarea')
-                        @slot('name', ['checkbox', 'options'])
-                        @slot('value', $field->options->options_as_string ?? null)
+                        @slot('name', [Field\Type::CHECKBOX, 'options'])
+                        @slot('value', $field->options->getOptionsAsString() ?? null)
                     @endcomponent
                 </div>
                 <div 
-                    class="tab-pane fade {{ $field->type == 'image' ? 'show active' : null }}"
+                    class="tab-pane fade {{ $field->type->isImage() ? 'show active' : null }}"
                     id="nav-image-edit" 
                     role="tabpanel" 
                     aria-labelledby="nav-image-tab"
                 >
                     @component('idir::admin.field.partials.components.input')
-                        @slot('name', ['image', 'width'])
+                        @slot('name', [Field\Type::IMAGE, 'width'])
                         @slot('value', $field->options->width ?? 720)
                     @endcomponent
                     @component('idir::admin.field.partials.components.input')
-                        @slot('name', ['image', 'height'])
+                        @slot('name', [Field\Type::IMAGE, 'height'])
                         @slot('value', $field->options->height ?? 480)
                     @endcomponent
                     @component('idir::admin.field.partials.components.input')
-                        @slot('name', ['image', 'size'])
+                        @slot('name', [Field\Type::IMAGE, 'size'])
                         @slot('value', $field->options->size ?? 2048)
                     @endcomponent
                 </div>
@@ -192,16 +192,16 @@
         </label>
         <select class="form-control custom-select" id="required" name="required">
             <option 
-                value="{{ $field::OPTIONAL }}" 
-                {{ $field->options->required == $field::OPTIONAL ? 'selected' : null }}
+                value="{{ Field\Required::INACTIVE }}" 
+                {{ $field->options->required->isInactive() ? 'selected' : null }}
             >
-                {{ trans('idir::fields.required.'.$field::OPTIONAL) }}
+                {{ trans('idir::fields.required.'.Field\Required::INACTIVE) }}
             </option>
             <option 
-                value="{{ $field::REQUIRED }}" 
-                {{ $field->options->required == $field::REQUIRED ? 'selected' : null }}
+                value="{{ Field\Required::ACTIVE }}" 
+                {{ $field->options->required->isActive() ? 'selected' : null }}
             >
-                {{ trans('idir::fields.required.'.$field::REQUIRED) }}
+                {{ trans('idir::fields.required.'.Field\Required::ACTIVE) }}
             </option>
         </select>
     </div>

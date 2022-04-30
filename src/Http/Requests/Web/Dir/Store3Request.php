@@ -183,9 +183,4 @@ class Store3Request extends Store2Request
             ])
         ];
     }
-
-    public function attributes()
-    {
-        return array_merge(parent::attributes(), $this->prepareCaptchaAttributes());
-    }
 }

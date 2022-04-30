@@ -17,11 +17,9 @@ use N1ebieski\ICore\Utils\MigrationUtil;
 use N1ebieski\IDir\Repositories\DirRepo;
 use Illuminate\Database\Eloquent\Builder;
 use Cviebrock\EloquentSluggable\Sluggable;
-use N1ebieski\IDir\ValueObjects\Dir\Status;
 use N1ebieski\IDir\Models\Traits\Filterable;
 use Illuminate\Support\Collection as Collect;
 use N1ebieski\ICore\Models\Traits\Carbonable;
-use N1ebieski\IDir\Models\Payment\Dir\Payment;
 use N1ebieski\ICore\Models\Traits\StatFilterable;
 use Fico7489\Laravel\Pivot\Traits\PivotEventTrait;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -33,6 +31,8 @@ use N1ebieski\IDir\Database\Factories\Dir\DirFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use N1ebieski\ICore\ValueObjects\Stat\Slug as StatSlug;
+use N1ebieski\IDir\ValueObjects\Dir\Status as DirStatus;
+use N1ebieski\IDir\ValueObjects\Payment\Status as PaymentStatus;
 
 /**
  * @property Status $status
@@ -85,7 +85,7 @@ class Dir extends Model
      * @var array
      */
     protected $attributes = [
-        'status' => Status::INACTIVE,
+        'status' => DirStatus::INACTIVE,
         'notes' => null,
         'privileged_at' => null,
         'privileged_to' => null
@@ -383,7 +383,7 @@ class Dir extends Model
      */
     public function scopeActive(Builder $query): Builder
     {
-        return $query->where('dirs.status', Status::ACTIVE);
+        return $query->where('dirs.status', DirStatus::ACTIVE);
     }
 
     /**
@@ -393,7 +393,7 @@ class Dir extends Model
      */
     public function scopeInactive(Builder $query): Builder
     {
-        return $query->where('dirs.status', Status::INACTIVE);
+        return $query->where('dirs.status', DirStatus::INACTIVE);
     }
 
     /**
@@ -403,7 +403,7 @@ class Dir extends Model
      */
     public function scopePending(Builder $query): Builder
     {
-        return $query->where('dirs.status', Status::PAYMENT_INACTIVE);
+        return $query->where('dirs.status', DirStatus::PAYMENT_INACTIVE);
     }
 
     /**
@@ -413,7 +413,7 @@ class Dir extends Model
      */
     public function scopeBacklinkInactive(Builder $query): Builder
     {
-        return $query->where('dirs.status', Status::BACKLINK_INACTIVE);
+        return $query->where('dirs.status', DirStatus::BACKLINK_INACTIVE);
     }
 
     /**
@@ -689,7 +689,7 @@ class Dir extends Model
     public function loadCheckoutPayments(): self
     {
         return $this->load(['payments' => function ($query) {
-            $query->with('orderMorph')->where('status', Payment::UNFINISHED);
+            $query->with('orderMorph')->where('status', PaymentStatus::UNFINISHED);
         }]);
     }
 

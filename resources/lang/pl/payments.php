@@ -1,6 +1,6 @@
 <?php
 
-use N1ebieski\IDir\Models\Payment\Payment;
+use N1ebieski\IDir\ValueObjects\Payment\Status;
 
 return [
     'dir' => [
@@ -18,8 +18,8 @@ return [
     ],
     'status' => [
         'label' => 'Status',
-        Payment::FINISHED => 'zrealizowana',
-        Payment::UNFINISHED => 'oczekujący na realizację',
-        Payment::PENDING => 'oczekujący na płatność'
+        Status::FINISHED => 'zrealizowana',
+        Status::UNFINISHED => 'oczekujący na realizację',
+        Status::PENDING => 'oczekujący na płatność'
     ],
 ];

@@ -1,6 +1,7 @@
 <?php
 
 use N1ebieski\IDir\Models\Field\Field;
+use N1ebieski\IDir\ValueObjects\Field\Required;
 
 return [
     'group' => [
@@ -51,8 +52,8 @@ return [
     ],
     'required' => [
         'label' => 'Warunek pola',
-        Field::OPTIONAL => 'nieobowiązkowe',
-        Field::REQUIRED => 'obowiązkowe',
+        Required::INACTIVE => 'nieobowiązkowe',
+        Required::ACTIVE => 'obowiązkowe',
     ],
     'groups' => 'Dotyczy grup',
     'remove_marker' => 'Usuń marker',

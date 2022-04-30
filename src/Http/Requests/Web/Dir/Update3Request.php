@@ -180,9 +180,4 @@ class Update3Request extends Update2Request
             'backlink_url.regex' => __('validation.regex') . ' ' . Lang::get('idir::validation.backlink_url')
         ];
     }
-
-    public function attributes()
-    {
-        return array_merge(parent::attributes(), $this->prepareCaptchaAttributes());
-    }
 }

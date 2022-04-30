@@ -20,16 +20,12 @@ use N1ebieski\IDir\Models\Payment\Dir\Payment;
 use GuzzleHttp\Psr7\Response as GuzzleResponse;
 use N1ebieski\IDir\Models\Category\Dir\Category;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use N1ebieski\IDir\ValueObjects\Field\Type as FieldType;
+use N1ebieski\IDir\ValueObjects\Payment\Status as PaymentStatus;
 
 class DirTest extends TestCase
 {
     use DatabaseTransactions;
-
-    /**
-     * [FIELD_TYPES description]
-     * @var array
-     */
-    private const FIELD_TYPES = ['input', 'textarea', 'select', 'multiselect', 'checkbox', 'image'];
 
     /**
      * [setUpDir description]
@@ -58,17 +54,27 @@ class DirTest extends TestCase
      */
     protected function setUpFields(Group $group): array
     {
-        foreach (static::FIELD_TYPES as $type) {
+        foreach (FieldType::getAvailable() as $type) {
             $field = Field::makeFactory()->public()->hasAttached($group, [], 'morphs')->{$type}()->create();
 
-            if (in_array($field->type, ['input', 'textarea'])) {
-                $fields['field'][$field->id] = 'dasdasdadasds23238dfd8fdshjfdshfjsdhfjsdhfsdjf';
-            } elseif ($field->type === 'select') {
-                $fields['field'][$field->id] = $field->options->options[0];
-            } elseif (in_array($field->type, ['multiselect', 'checkbox'])) {
-                $fields['field'][$field->id] = array_slice($field->options->options, 0, 2);
-            } elseif ($field->type === 'image') {
-                $fields['field'][$field->id] = UploadedFile::fake()->image('avatar.jpg', 500, 200)->size(1000);
+            switch ($field->type) {
+                case FieldType::INPUT:
+                case FieldType::TEXTAREA:
+                    $fields['field'][$field->id] = 'Cupidatat magna enim officia non sunt esse qui Lorem quis.';
+                    break;
+
+                case FieldType::SELECT:
+                    $fields['field'][$field->id] = $field->options->options[0];
+                    break;
+
+                case FieldType::MULTISELECT:
+                case FieldType::CHECKBOX:
+                    $fields['field'][$field->id] = array_slice($field->options->options, 0, 2);
+                    break;
+
+                case FieldType::IMAGE:
+                    $fields['field'][$field->id] = UploadedFile::fake()->image('avatar.jpg', 500, 200)->size(1000);
+                    break;
             }
         }
 
@@ -595,7 +601,7 @@ class DirTest extends TestCase
 
         $dir = Dir::makeFactory()->for($oldGroup)->for($user)->create();
 
-        foreach (static::FIELD_TYPES as $type) {
+        foreach (FieldType::getAvailable() as $type) {
             $field = Field::makeFactory()->public()->hasAttached($newGroup, [], 'morphs')->{$type}()->create();
 
             $fields[] = "field.{$field->id}";
@@ -789,7 +795,7 @@ class DirTest extends TestCase
             'model_id' => $dir->id,
             'model_type' => $dir->getMorphClass(),
             'order_id' => $price->id,
-            'status' => Payment::PENDING
+            'status' => PaymentStatus::PENDING
         ]);
 
         $payment = Payment::orderBy('created_at', 'desc')->first();
@@ -828,7 +834,7 @@ class DirTest extends TestCase
             'model_id' => $dir->id,
             'model_type' => $dir->getMorphClass(),
             'order_id' => $price->id,
-            'status' => Payment::PENDING
+            'status' => PaymentStatus::PENDING
         ]);
 
         $payment = Payment::orderBy('created_at', 'desc')->first();
@@ -897,7 +903,7 @@ class DirTest extends TestCase
             'model_id' => $dir->id,
             'model_type' => $dir->getMorphClass(),
             'order_id' => $price->id,
-            'status' => Payment::FINISHED
+            'status' => PaymentStatus::FINISHED
         ]);
 
         $this->assertTrue($dir->privileged_to !== null);

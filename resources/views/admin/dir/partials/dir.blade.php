@@ -78,27 +78,27 @@
                     {{ $field->title }}: 
                     <span>
                     @switch($field->type)
-                        @case('input')
-                        @case('textarea')
-                        @case('select')
+                        @case(Field\Type::INPUT)
+                        @case(Field\Type::TEXTAREA)
+                        @case(Field\Type::SELECT)
                             {{ $value }}
                             @break
 
-                        @case('multiselect')
-                        @case('checkbox')
+                        @case(Field\Type::MULTISELECT)
+                        @case(Field\Type::CHECKBOX)
                             {{ implode(', ', $value) }}
                             @break
 
-                        @case('regions')
+                        @case(Field\Type::REGIONS)
                             {{ implode(', ', $dir->regions->pluck('name')->toArray()) }}
                             @break
 
-                        @case('image')
+                        @case(Field\Type::IMAGE)
                             <br>
                             <img class="img-fluid" src="{{ app('filesystem')->url($value) }}">
                             @break
 
-                        @case('map')
+                        @case(Field\Type::MAP)
                             {{ $value[0]->lat }} : {{ $value[0]->long }}
                             @break
                     @endswitch

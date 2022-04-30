@@ -3,6 +3,7 @@
 namespace N1ebieski\IDir\Repositories;
 
 use N1ebieski\IDir\Models\Payment\Payment;
+use N1ebieski\IDir\ValueObjects\Payment\Status;
 
 class PaymentRepo
 {
@@ -54,7 +55,7 @@ class PaymentRepo
      */
     public function finished(): bool
     {
-        return $this->payment->update(['status' => Payment::FINISHED]);
+        return $this->payment->update(['status' => Status::FINISHED]);
     }
 
     /**
@@ -63,6 +64,6 @@ class PaymentRepo
      */
     public function paid(): bool
     {
-        return $this->payment->update(['status' => Payment::UNFINISHED]);
+        return $this->payment->update(['status' => Status::UNFINISHED]);
     }
 }

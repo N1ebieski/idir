@@ -1,6 +1,6 @@
 <?php
 
-use N1ebieski\IDir\Models\Payment\Payment;
+use N1ebieski\IDir\ValueObjects\Payment\Status;
 
 return [
     'dir' => [
@@ -18,8 +18,8 @@ return [
     ],
     'status' => [
         'label' => 'Status',
-        Payment::FINISHED => 'finished',
-        Payment::UNFINISHED => 'in progress',
-        Payment::PENDING => 'pending'
+        Status::FINISHED => 'finished',
+        Status::UNFINISHED => 'in progress',
+        Status::PENDING => 'pending'
     ],
 ];

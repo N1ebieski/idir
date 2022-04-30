@@ -1,7 +1,7 @@
 <div class="form-group">
     <label for="field.{{ $field->id }}">
         <span>{{ $field->title }}:</span>
-        @if ($field->isRequired())
+        @if ($field->options->required->isActive())
         <span>*</span>
         @endif       
         @if ($field->desc !== null)
@@ -18,7 +18,7 @@
         id="field.{{ $field->id }}"
         name="field[{{ $field->id }}]"
     >
-        @if (!$field->isRequired())
+        @if (!$field->options->required->isActive())
         <option value="">{{ trans('idir::fields.choose') }}</option>
         @endif
         @foreach ($field->options->options as $option)

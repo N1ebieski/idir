@@ -17,7 +17,7 @@
             </small>
             <small class="lr-auto">
                 <span 
-                    class="badge badge-{{ $payment->status === $payment::FINISHED ? 'success' : 'warning' }}"
+                    class="badge badge-{{ $payment->status->isFinished() ? 'success' : 'warning' }}"
                 >
                     {{ trans("idir::payments.status.{$payment->status}") }}
                 </span>

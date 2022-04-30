@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Config;
 use N1ebieski\IDir\ValueObjects\Dir\Status;
 use N1ebieski\IDir\Models\Payment\Dir\Payment;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use N1ebieski\IDir\ValueObjects\Payment\Status as PaymentStatus;
 
 class PaymentTest extends TestCase
 {
@@ -61,7 +62,7 @@ class PaymentTest extends TestCase
             'model_id' => $dir->id,
             'model_type' => $dir->getMorphClass(),
             'order_id' => $price->id,
-            'status' => Payment::UNFINISHED
+            'status' => PaymentStatus::UNFINISHED
         ]);
 
         $this->assertDatabaseHas('dirs', [
@@ -89,7 +90,7 @@ class PaymentTest extends TestCase
             'model_id' => $dir->id,
             'model_type' => $dir->getMorphClass(),
             'order_id' => $price->id,
-            'status' => Payment::FINISHED
+            'status' => PaymentStatus::FINISHED
         ]);
 
         $this->assertDatabaseHas('dirs', [
