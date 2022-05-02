@@ -1,5 +1,3 @@
-@inject('dir', 'N1ebieski\IDir\Models\Dir')
-
 @component('icore::web.partials.modal')
 
 @slot('modal_id', 'filter-modal')

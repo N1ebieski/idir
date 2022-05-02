@@ -48,7 +48,6 @@ class PriceController
     public function create(Price $price, Group $group, CreateRequest $request): JsonResponse
     {
         return Response::json([
-            'success' => '',
             'view' => View::make('idir::admin.price.create', [
                 'price' => $price,
                 'groups' => $group->makeRepo()->getExceptDefault(),
@@ -70,7 +69,7 @@ class PriceController
 
         $request->session()->flash('success', trans('idir::prices.success.store'));
 
-        return Response::json(['success' => '' ]);
+        return Response::json([]);
     }
 
     /**
@@ -84,7 +83,6 @@ class PriceController
     public function edit(Price $price, Group $group, EditLoad $load): JsonResponse
     {
         return Response::json([
-            'success' => '',
             'view' => View::make('idir::admin.price.edit', [
                 'price' => $price,
                 'groups' => $group->makeRepo()->getExceptDefault()
@@ -104,7 +102,6 @@ class PriceController
         $price->makeService()->update($request->validated());
 
         return Response::json([
-            'success' => '',
             'view' => View::make('idir::admin.price.partials.price', [
                 'price' => $price
             ])->render()
@@ -121,6 +118,6 @@ class PriceController
     {
         $price->makeService()->delete();
 
-        return Response::json(['success' => '']);
+        return Response::json([]);
     }
 }

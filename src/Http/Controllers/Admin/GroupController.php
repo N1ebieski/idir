@@ -105,7 +105,6 @@ class GroupController
     public function editPosition(Group $group): JsonResponse
     {
         return Response::json([
-            'success' => '',
             'view' => View::make('idir::admin.group.edit_position', [
                 'group' => $group,
                 'siblings_count' => $group->count()
@@ -124,7 +123,6 @@ class GroupController
         $group->makeService()->updatePosition($request->only('position'));
 
         return Response::json([
-            'success' => '',
             'siblings' => $group->makeRepo()->getSiblingsAsArray()
         ]);
     }

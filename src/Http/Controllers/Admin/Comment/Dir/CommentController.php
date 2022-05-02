@@ -60,7 +60,6 @@ class CommentController implements Polymorphic
     public function create(Dir $dir, CreateRequest $request): JsonResponse
     {
         return Response::json([
-            'success' => '',
             'view' => View::make('icore::admin.comment.create', [
                 'model' => $dir,
                 'parent_id' => $request->get('parent_id')
@@ -84,7 +83,6 @@ class CommentController implements Polymorphic
         Event::dispatch(App::make(CommentStoreEvent::class, ['comment' => $comment]));
 
         return Response::json([
-            'success' => '',
             'view' => View::make('icore::admin.comment.partials.comment', [
                 'comment' => $comment
             ])->render()

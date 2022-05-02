@@ -23,6 +23,6 @@ class StatController implements Polymorphic
     {
         $stat->setRelations(['morph' => $dir])->makeService()->increment();
 
-        return Response::json(['success' => '']);
+        return Response::json([]);
     }
 }

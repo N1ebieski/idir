@@ -65,7 +65,7 @@ class FieldController extends BaseFieldController implements Polymorphic
 
         $request->session()->flash('success', trans('idir::fields.success.store'));
 
-        return Response::json(['success' => '' ]);
+        return Response::json([]);
     }
 
     /**

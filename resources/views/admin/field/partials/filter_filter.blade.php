@@ -1,5 +1,3 @@
-@inject('field', 'N1ebieski\IDir\Models\Field\Field')
-
 @component('icore::admin.partials.modal')
 
 @slot('modal_id', 'filter-modal')

@@ -20,8 +20,6 @@ class ThumbnailController extends Controller
     {
         $thumbnailUtil->make($request->input('url'))->reload();
 
-        return Response::json([
-            'success' => ''
-        ]);
+        return Response::json([]);
     }
 }

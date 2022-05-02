@@ -288,7 +288,6 @@ class DirController
     public function edit(Dir $dir, EditLoad $load): JsonResponse
     {
         return Response::json([
-            'success' => '',
             'view' => View::make('idir::admin.dir.edit', [
                 'dir' => $dir
             ])->render(),
@@ -308,7 +307,6 @@ class DirController
             ->update($request->validated());
 
         return Response::json([
-            'success' => '',
             'view' => View::make('idir::admin.dir.partials.dir', [
                 'dir' => $dir->loadAllRels()
             ])->render()
@@ -361,7 +359,7 @@ class DirController
             ])
         );
 
-        return Response::json(['success' => '']);
+        return Response::json([]);
     }
 
     /**

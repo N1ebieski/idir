@@ -1,5 +1,3 @@
-@inject('price', 'N1ebieski\IDir\Models\Price')
-
 <div class="form-group">
     <label for="payment">
         {{ trans('idir::dirs.choose_payment_type') }}:

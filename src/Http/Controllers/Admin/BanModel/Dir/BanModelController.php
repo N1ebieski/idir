@@ -23,7 +23,6 @@ class BanModelController implements Polymorphic
     public function create(Dir $dir): JsonResponse
     {
         return Response::json([
-            'success' => '',
             'view' => View::make('idir::admin.banmodel.dir.create', [
                 'dir' => $dir
             ])->render()

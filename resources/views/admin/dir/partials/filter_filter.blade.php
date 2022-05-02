@@ -1,6 +1,3 @@
-@inject('dir', 'N1ebieski\IDir\Models\Dir')
-@inject('report', 'N1ebieski\IDir\Models\Report\Dir\Report')
-
 @component('icore::admin.partials.modal')
 
 @slot('modal_id', 'filter-modal')

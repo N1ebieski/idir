@@ -1,5 +1,3 @@
-@inject('price', 'N1ebieski\IDir\Models\Price')
-
 @component('icore::admin.partials.modal')
 
 @slot('modal_id', 'filter-modal')

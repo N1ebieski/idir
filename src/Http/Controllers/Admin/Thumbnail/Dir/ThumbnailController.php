@@ -28,7 +28,6 @@ class ThumbnailController implements Polymorphic
         Cache::forget("dir.thumbnailUrl.{$dir->slug}");
 
         return Response::json([
-            'success' => '',
             'thumbnail_url' => $dir->thumbnail_url
         ]);
     }

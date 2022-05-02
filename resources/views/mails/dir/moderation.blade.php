@@ -1,9 +1,4 @@
-@inject('dir', 'N1ebieski\IDir\Models\Dir')
-@inject('report', 'N1ebieski\ICore\Models\Report\Report')
-@inject('payment', 'N1ebieski\IDir\Models\Payment\Payment')
-
 @component('mail::message')
-{{-- Greeting --}}
 @if (! empty($greeting))
 # {{ $greeting }}
 @else

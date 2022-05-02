@@ -691,8 +691,6 @@ class DirTest extends TestCase
 
         $dir = Dir::orderBy('id', 'desc')->first();
 
-        $response->assertSessionHas('success');
-
         $this->assertTrue($dir->exists());
 
         $this->assertDatabaseHas('categories_models', [
@@ -840,7 +838,7 @@ class DirTest extends TestCase
         $payment = Payment::orderBy('created_at', 'desc')->first();
 
         $response->assertSessionDoesntHaveErrors('payment_transfer');
-        $response->assertRedirect(route('web.profile.dirs'))->assertSessionHas('success');
+        $response->assertRedirect(route('web.profile.dirs'));
     }
 
     public function testPendingDirUpdate3OldGroupPaymentFail()

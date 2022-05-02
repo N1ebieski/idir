@@ -370,6 +370,6 @@ class DirController
 
         Event::dispatch(App::make(DirDestroyEvent::class, ['dir' => $dir]));
 
-        return Response::json(['success' => '']);
+        return Response::json([]);
     }
 }

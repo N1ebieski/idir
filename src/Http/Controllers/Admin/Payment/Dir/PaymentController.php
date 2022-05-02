@@ -4,11 +4,11 @@ namespace N1ebieski\IDir\Http\Controllers\Admin\Payment\Dir;
 
 use N1ebieski\IDir\Models\Dir;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\View;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Response;
-use Illuminate\Support\Facades\URL;
 use N1ebieski\IDir\Models\Payment\Dir\Payment;
 use N1ebieski\IDir\Loads\Admin\Payment\ShowLoad;
 use N1ebieski\IDir\Utils\Payment\Interfaces\TransferUtilStrategy;
@@ -65,7 +65,6 @@ class PaymentController implements Polymorphic
     public function showLogs(Dir $dir): JsonResponse
     {
         return Response::json([
-            'success' => '',
             'view' => View::make('idir::admin.payment.show_logs', [
                 'payments' => $dir->makeRepo()->getPayments(),
             ])->render()

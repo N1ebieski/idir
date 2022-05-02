@@ -4,8 +4,6 @@
     'keys' => [trans('idir::groups.route.create')]
 ])
 
-@inject('group', 'N1ebieski\IDir\Models\Group')
-
 @section('breadcrumb')
 <li class="breadcrumb-item">
     <a 

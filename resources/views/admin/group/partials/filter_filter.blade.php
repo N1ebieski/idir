@@ -1,5 +1,3 @@
-@inject('group', 'N1ebieski\IDir\Models\Group')
-
 @component('icore::admin.partials.modal')
 
 @slot('modal_id', 'filter-modal')

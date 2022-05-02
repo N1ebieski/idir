@@ -392,8 +392,6 @@ class DirTest extends TestCase
 
         $dir = Dir::orderBy('id', 'desc')->first();
 
-        $response->assertSessionHas('success');
-
         $this->assertTrue($dir->exists());
 
         $this->assertDatabaseHas('categories_models', [

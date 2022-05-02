@@ -19,7 +19,6 @@ class ReportController implements Polymorphic
     public function show(Dir $dir): JsonResponse
     {
         return Response::json([
-            'success' => '',
             'view' => View::make('icore::admin.report.show', [
                 'reports' => $dir->makeRepo()->getReportsWithUser(),
                 'model' => $dir
@@ -38,7 +37,6 @@ class ReportController implements Polymorphic
         $dir->reports()->delete();
 
         return Response::json([
-            'success' => '',
             'view' => View::make('idir::admin.dir.partials.dir', [
                 'dir' => $dir->loadAllRels()
             ])->render()
