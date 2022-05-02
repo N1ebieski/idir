@@ -5,6 +5,8 @@ namespace N1ebieski\IDir\Database\Seeders\PHPLD;
 use Illuminate\Support\Facades\DB;
 use N1ebieski\IDir\ValueObjects\Field\Type;
 use N1ebieski\IDir\Models\Field\Group\Field;
+use N1ebieski\IDir\ValueObjects\Field\Visible;
+use N1ebieski\IDir\ValueObjects\Field\Required;
 use N1ebieski\IDir\Database\Seeders\PHPLD\PHPLDSeeder;
 
 class FieldsSeeder extends PHPLDSeeder
@@ -39,8 +41,8 @@ class FieldsSeeder extends PHPLDSeeder
                         : null;
                     $field->type = $this->type($item->TYPE);
                     $field->visible = $item->STATUS === 0 ?
-                        Field::INVISIBLE
-                        : FIELD::VISIBLE;
+                        Visible::INACTIVE
+                        : Visible::ACTIVE;
                     $field->options = $this->options($item);
 
                     $field->save();
@@ -113,7 +115,7 @@ class FieldsSeeder extends PHPLDSeeder
             $options['options'] = $value;
         }
 
-        $options['required'] = Field::OPTIONAL;
+        $options['required'] = Required::INACTIVE;
 
         if ($item->TYPE === 'IMAGEGROUP') {
             $options['width'] = 720;

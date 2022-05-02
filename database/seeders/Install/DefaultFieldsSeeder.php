@@ -3,7 +3,10 @@
 namespace N1ebieski\IDir\Database\Seeders\Install;
 
 use Illuminate\Database\Seeder;
+use N1ebieski\IDir\ValueObjects\Field\Type;
 use N1ebieski\IDir\Models\Field\Group\Field;
+use N1ebieski\IDir\ValueObjects\Field\Visible;
+use N1ebieski\IDir\ValueObjects\Field\Required;
 
 class DefaultFieldsSeeder extends Seeder
 {
@@ -16,16 +19,16 @@ class DefaultFieldsSeeder extends Seeder
     {
         Field::create([
             'title' => 'Region',
-            'type' => 'regions',
-            'visible' => Field::VISIBLE,
-            'options' => ['required' => 0]
+            'type' => Type::REGIONS,
+            'visible' => Visible::ACTIVE,
+            'options' => ['required' => Required::INACTIVE]
         ]);
 
         Field::create([
             'title' => 'Lokalizacja',
-            'type' => 'map',
-            'visible' => Field::VISIBLE,
-            'options' => ['required' => 0]
+            'type' => Type::MAP,
+            'visible' => Visible::ACTIVE,
+            'options' => ['required' => Required::INACTIVE]
         ]);
     }
 }

@@ -5,6 +5,9 @@ namespace N1ebieski\IDir\Http\Requests\Admin\Group;
 use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * @property Group $group
+ */
 class UpdateRequest extends FormRequest
 {
 
@@ -15,7 +18,7 @@ class UpdateRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->group->isNotDefault();
+        return !$this->group->slug->isDefault();
     }
 
     /**

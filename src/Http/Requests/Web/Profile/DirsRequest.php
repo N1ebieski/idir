@@ -6,6 +6,7 @@ use Illuminate\Validation\Rule;
 use N1ebieski\IDir\Models\Group;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Foundation\Http\FormRequest;
+use N1ebieski\IDir\ValueObjects\Group\Visible;
 
 class DirsRequest extends FormRequest
 {
@@ -39,7 +40,7 @@ class DirsRequest extends FormRequest
                 'nullable',
                 'integer',
                 'no_js_validation',
-                Rule::exists('groups', 'id')->where('visible', Group::VISIBLE)
+                Rule::exists('groups', 'id')->where('visible', Visible::ACTIVE)
             ],
             'filter.orderby' => [
                 'bail',

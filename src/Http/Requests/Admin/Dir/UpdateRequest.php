@@ -206,7 +206,7 @@ class UpdateRequest extends FormRequest
             'notes' => 'bail|nullable|string|between:3,255',
             'url' => [
                 'bail',
-                $this->dir->group->url === Group::OBLIGATORY_URL ?
+                $this->dir->group->url->isActive() ?
                     'required'
                     : 'nullable',
                 'string',

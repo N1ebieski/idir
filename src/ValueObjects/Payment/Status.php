@@ -69,17 +69,17 @@ class Status extends ValueObject
             'pending',
             Type::TRANSFER,
             Type::PAYPAL_EXPRESS,
-            self::PENDING
+            (string)self::PENDING
             ])
         ) {
             return static::pending();
         }
 
-        if (in_array($value, ['finished', self::FINISHED])) {
+        if (in_array($value, ['finished', (string)self::FINISHED])) {
             return static::finished();
         }
 
-        if (in_array($value, ['unfinished', self::UNFINISHED])) {
+        if (in_array($value, ['unfinished', (string)self::UNFINISHED])) {
             return static::unfinished();
         }
 

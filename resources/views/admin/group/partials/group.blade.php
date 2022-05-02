@@ -34,7 +34,7 @@
                 {{ trans("idir::groups.visible.label") }}: {{ trans("idir::groups.visible.{$group->visible}") }}
             </li>
             <li>
-                {{ trans("idir::groups.payment.label") }}: {{ $group->prices_count > 0 ? trans('idir::groups.payment.' . $group::PAYMENT) : trans('idir::groups.payment.' . $group::WITHOUT_PAYMENT) }}
+                {{ trans("idir::groups.payment.label") }}: {{ $group->prices_count > 0 ? trans('idir::groups.payment.' . Group\Payment::ACTIVE) : trans('idir::groups.payment.' . Group\Payment::INACTIVE) }}
             </li>
             <li>
                 <small>{{ trans('icore::filter.created_at') }}: {{ $group->created_at_diff }}</small>
@@ -46,7 +46,7 @@
         <div class="text-right ml-3">
             <div class="responsive-btn-group">
                 @can('admin.groups.edit')
-                @if ($group->isNotDefault())
+                @if (!$group->slug->isDefault())
                 <a 
                     class="btn btn-primary align-bottom" 
                     href="{{ route('admin.group.edit', [$group->id]) }}"
@@ -60,7 +60,7 @@
                 @endif
                 @endcan
                 @can('admin.groups.delete')
-                @if ($group->isNotDefault())
+                @if (!$group->slug->isDefault())
                 <form action="{{ route('admin.group.destroy', [$group->id]) }}" method="post">
                     @csrf
                     @method('delete')

@@ -6,6 +6,7 @@ use Illuminate\Validation\Rule;
 use N1ebieski\IDir\Models\Group;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Foundation\Http\FormRequest;
+use N1ebieski\IDir\ValueObjects\Group\Visible;
 
 class IndexRequest extends FormRequest
 {
@@ -77,10 +78,10 @@ class IndexRequest extends FormRequest
             'filter.visible' => [
                 'description' => sprintf(
                     'Must be one of %1$s or %2$s (available only for admin.groups.view)',
-                    Group::VISIBLE,
-                    Group::INVISIBLE
+                    Visible::ACTIVE,
+                    Visible::INACTIVE
                 ),
-                'example' => Group::VISIBLE
+                'example' => Visible::ACTIVE
             ],
             'filter.orderby' => [
                 'description' => 'Sorting the result list.',

@@ -110,7 +110,7 @@ class EditFull3ViewModel extends ViewModel
      */
     public function backlinks(): ?Collection
     {
-        return $this->backlinks = $this->group->backlink > 0 ?
+        return $this->backlinks = !$this->group->backlink->isInactive() ?
             $this->link->makeRepo()->getAvailableBacklinksByCats(array_merge(
                 $this->categoriesSelection->pluck('ancestors')->flatten()->pluck('id')->toArray(),
                 $this->categoriesSelection->pluck('id')->toArray()

@@ -17,7 +17,7 @@ class Create2Request extends FormRequest
      */
     public function authorize()
     {
-        return $this->group->isAvailable() && $this->group->isPublic();
+        return $this->group->isAvailable() && $this->group->visible->isActive();
     }
 
     /**

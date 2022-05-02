@@ -5,6 +5,12 @@ namespace N1ebieski\IDir\Database\Seeders\PHPLD;
 use N1ebieski\IDir\Models\Group;
 use Illuminate\Support\Facades\DB;
 use N1ebieski\IDir\Models\Privilege;
+use N1ebieski\IDir\ValueObjects\Group\Id;
+use N1ebieski\IDir\ValueObjects\Group\Url;
+use N1ebieski\IDir\ValueObjects\Group\Slug;
+use N1ebieski\IDir\ValueObjects\Group\Visible;
+use N1ebieski\IDir\ValueObjects\Group\Backlink;
+use N1ebieski\IDir\ValueObjects\Group\ApplyStatus;
 use N1ebieski\IDir\Database\Seeders\PHPLD\PHPLDSeeder;
 
 class GroupsAndPrivilegesSeeder extends PHPLDSeeder
@@ -28,7 +34,7 @@ class GroupsAndPrivilegesSeeder extends PHPLDSeeder
 
                     $group->id = $this->groupLastId + $item->ID;
                     $group->name = $item->NAME;
-                    $group->alt_id = Group::DEFAULT;
+                    $group->alt_id = $group->makeCache()->rememberBySlug(Slug::default())->id;
                     $group->desc = strlen($item->DESCRIPTION) > 0 ?
                         strip_tags($item->DESCRIPTION)
                         : null;
@@ -36,13 +42,13 @@ class GroupsAndPrivilegesSeeder extends PHPLDSeeder
                     $group->max_models = null;
                     $group->max_models_daily = null;
                     $group->visible = $item->STATUS === 0 ?
-                        Group::INVISIBLE
-                        : Group::VISIBLE;
+                        Visible::INACTIVE
+                        : Visible::ACTIVE;
                     $group->apply_status = $item->REQUIRE_APPROVAL === 1 ?
-                        Group::APPLY_INACTIVE
-                        : Group::APPLY_ACTIVE;
-                    $group->url = Group::OBLIGATORY_URL;
-                    $group->backlink = Group::WITHOUT_BACKLINK;
+                        ApplyStatus::INACTIVE
+                        : ApplyStatus::ACTIVE;
+                    $group->url = Url::ACTIVE;
+                    $group->backlink = Backlink::INACTIVE;
 
                     $group->save();
 

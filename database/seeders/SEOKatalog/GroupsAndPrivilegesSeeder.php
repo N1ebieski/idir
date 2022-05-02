@@ -5,6 +5,9 @@ namespace N1ebieski\IDir\Database\Seeders\SEOKatalog;
 use N1ebieski\IDir\Models\Group;
 use Illuminate\Support\Facades\DB;
 use N1ebieski\IDir\Models\Privilege;
+use N1ebieski\IDir\ValueObjects\Group\Url;
+use N1ebieski\IDir\ValueObjects\Group\Backlink;
+use N1ebieski\IDir\ValueObjects\Group\ApplyStatus;
 use N1ebieski\IDir\Database\Seeders\SEOKatalog\SEOKatalogSeeder;
 
 class GroupsAndPrivilegesSeeder extends SEOKatalogSeeder
@@ -40,11 +43,11 @@ class GroupsAndPrivilegesSeeder extends SEOKatalogSeeder
                         $item->max
                         : null;
                     $group->visible = $item->type;
-                    $group->apply_status = Group::APPLY_INACTIVE;
-                    $group->url = Group::OBLIGATORY_URL;
+                    $group->apply_status = ApplyStatus::INACTIVE;
+                    $group->url = Url::ACTIVE;
                     $group->backlink = $item->backlink === 0 ?
-                        Group::WITHOUT_BACKLINK
-                        : ($item->backlink === 2 ? Group::OPTIONAL_BACKLINK : Group::OBLIGATORY_BACKLINK);
+                        Backlink::INACTIVE
+                        : ($item->backlink === 2 ? Backlink::OPTIONAL : Backlink::ACTIVE);
 
                     $group->save();
 

@@ -4,6 +4,12 @@ namespace N1ebieski\IDir\Database\Factories\Group;
 
 use N1ebieski\IDir\Models\Group;
 use N1ebieski\IDir\Models\Privilege;
+use N1ebieski\IDir\ValueObjects\Group\Id;
+use N1ebieski\IDir\ValueObjects\Group\Url;
+use N1ebieski\IDir\ValueObjects\Group\Slug;
+use N1ebieski\IDir\ValueObjects\Group\Visible;
+use N1ebieski\IDir\ValueObjects\Group\Backlink;
+use N1ebieski\IDir\ValueObjects\Group\ApplyStatus;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class GroupFactory extends Factory
@@ -28,10 +34,10 @@ class GroupFactory extends Factory
             'max_cats' => rand(1, 5),
             'max_models' => $this->faker->randomElement([rand(10, 50), null]),
             'max_models_daily' => $this->faker->randomElement([rand(5, 10), null]),
-            'visible' => rand(Group::INVISIBLE, Group::VISIBLE),
-            'apply_status' => rand(Group::APPLY_INACTIVE, Group::APPLY_ACTIVE),
-            'backlink' => rand(Group::WITHOUT_BACKLINK, Group::OPTIONAL_BACKLINK),
-            'url' => rand(Group::WITHOUT_URL, Group::OBLIGATORY_URL)
+            'visible' => rand(Visible::INACTIVE, Visible::ACTIVE),
+            'apply_status' => rand(ApplyStatus::INACTIVE, ApplyStatus::ACTIVE),
+            'backlink' => rand(Backlink::INACTIVE, Backlink::OPTIONAL),
+            'url' => rand(Url::INACTIVE, Url::ACTIVE)
         ];
     }
 
@@ -58,7 +64,7 @@ class GroupFactory extends Factory
     {
         return $this->state(function () {
             return [
-                'alt_id' => Group::DEFAULT
+                'alt_id' => Group::make()->makeCache()->rememberBySlug(Slug::default())->id
             ];
         });
     }
@@ -72,7 +78,7 @@ class GroupFactory extends Factory
     {
         return $this->state(function () {
             return [
-                'apply_status' => Group::APPLY_ACTIVE
+                'apply_status' => ApplyStatus::ACTIVE
             ];
         });
     }
@@ -86,7 +92,7 @@ class GroupFactory extends Factory
     {
         return $this->state(function () {
             return [
-                'apply_status' => Group::APPLY_INACTIVE
+                'apply_status' => ApplyStatus::INACTIVE
             ];
         });
     }
@@ -100,7 +106,7 @@ class GroupFactory extends Factory
     {
         return $this->state(function () {
             return [
-                'backlink' => Group::OBLIGATORY_BACKLINK
+                'backlink' => Backlink::ACTIVE
             ];
         });
     }
@@ -114,7 +120,7 @@ class GroupFactory extends Factory
     {
         return $this->state(function () {
             return [
-                'url' => Group::WITHOUT_URL
+                'url' => Url::INACTIVE
             ];
         });
     }
@@ -128,7 +134,7 @@ class GroupFactory extends Factory
     {
         return $this->state(function () {
             return [
-                'url' => Group::OBLIGATORY_URL
+                'url' => Url::ACTIVE
             ];
         });
     }
@@ -184,7 +190,7 @@ class GroupFactory extends Factory
     {
         return $this->state(function () {
             return [
-                'visible' => Group::VISIBLE
+                'visible' => Visible::ACTIVE
             ];
         });
     }
@@ -198,7 +204,7 @@ class GroupFactory extends Factory
     {
         return $this->state(function () {
             return [
-                'visible' => Group::INVISIBLE
+                'visible' => Visible::INACTIVE
             ];
         });
     }

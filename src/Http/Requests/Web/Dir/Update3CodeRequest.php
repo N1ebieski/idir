@@ -22,7 +22,7 @@ class Update3CodeRequest extends FormRequest
      */
     public function authorize()
     {
-        $check = $this->group->isPublic();
+        $check = $this->group->visible->isActive();
 
         return $this->group->id === $this->dir->group->id ?
             $check : $check && $this->group->isAvailable();

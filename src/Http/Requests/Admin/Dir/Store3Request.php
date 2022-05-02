@@ -6,12 +6,14 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use N1ebieski\ICore\Models\Link;
 use N1ebieski\IDir\Models\Group;
-use N1ebieski\IDir\Models\Price;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Lang;
 use N1ebieski\IDir\ValueObjects\Price\Type;
 use N1ebieski\IDir\Http\Requests\Admin\Dir\Store2Request;
 
+/**
+ * @property Group $group
+ */
 class Store3Request extends Store2Request
 {
     /**
@@ -61,7 +63,7 @@ class Store3Request extends Store2Request
                 'backlink' => [
                     'bail',
                     'integer',
-                    $this->group->backlink === Group::OBLIGATORY_BACKLINK ?
+                    $this->group->backlink->isActive() ?
                         'required'
                         : 'nullable',
                     Rule::exists('links', 'id')->where(function ($query) {
@@ -85,13 +87,13 @@ class Store3Request extends Store2Request
                 'backlink_url' => [
                     'bail',
                     'string',
-                    $this->group->backlink === Group::OBLIGATORY_BACKLINK ?
+                    $this->group->backlink->isActive() ?
                         'required'
                         : 'nullable',
                     $this->input('url') !== null ?
                         'regex:/^' . Str::escaped($this->input('url')) . '/'
                         : 'regex:/^(https|http):\/\/([\da-z\.-]+)(\.[a-z]{2,6})/',
-                    $this->group->backlink === Group::OBLIGATORY_BACKLINK && $this->has('backlink') ?
+                    $this->group->backlink->isActive() && $this->has('backlink') ?
                         App::make('N1ebieski\\IDir\\Rules\\BacklinkRule', [
                             'link' => Link::find($this->input('backlink'))->url
                         ]) : null,

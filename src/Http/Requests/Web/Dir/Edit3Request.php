@@ -19,7 +19,7 @@ class Edit3Request extends Update2Request
      */
     public function authorize()
     {
-        $check = $this->group->isPublic();
+        $check = $this->group->visible->isActive();
 
         return $this->group->id === $this->dir->group->id ?
             $check : ($check && $this->group->isAvailable());

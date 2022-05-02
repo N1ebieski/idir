@@ -303,9 +303,9 @@ class DirRepo
     /**
      * [firstBySlug description]
      * @param  string $slug [description]
-     * @return Category|null       [description]
+     * @return Dir|null       [description]
      */
-    public function firstBySlug(string $slug)
+    public function firstBySlug(string $slug): ?Dir
     {
         return $this->dir->where('slug', $slug)->first();
     }

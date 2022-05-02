@@ -9,8 +9,9 @@ use N1ebieski\ICore\Models\Link;
 use N1ebieski\IDir\Models\Group;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Lang;
-use N1ebieski\IDir\ValueObjects\Price\Type;
+use N1ebieski\ICore\ValueObjects\Link\Type as LinkType;
 use N1ebieski\IDir\Http\Requests\Web\Dir\Update2Request;
+use N1ebieski\IDir\ValueObjects\Price\Type as PriceType;
 use N1ebieski\ICore\Http\Requests\Traits\CaptchaExtended;
 
 /**
@@ -28,7 +29,7 @@ class Update3Request extends Update2Request
      */
     public function authorize()
     {
-        $check = $this->group->isPublic();
+        $check = $this->group->visible->isActive();
 
         return $this->group->id === $this->dir->group->id ?
             $check : $check && $this->group->isAvailable();
@@ -71,11 +72,11 @@ class Update3Request extends Update2Request
                 'backlink' => [
                     'bail',
                     'integer',
-                    $this->group->backlink === Group::OBLIGATORY_BACKLINK ?
+                    $this->group->backlink->isActive() ?
                         'required'
                         : 'nullable',
                     Rule::exists('links', 'id')->where(function ($query) {
-                        $query->where('links.type', 'backlink')
+                        $query->where('links.type', LinkType::BACKLINK)
                             ->whereNotExists(function ($query) {
                                 $query->from('categories_models')
                                     ->whereRaw('links.id = categories_models.model_id')
@@ -95,7 +96,7 @@ class Update3Request extends Update2Request
                 'backlink_url' => [
                     'bail',
                     'string',
-                    $this->group->backlink === Group::OBLIGATORY_BACKLINK ?
+                    $this->group->backlink->isActive() ?
                         'required'
                         : 'nullable',
                     $this->input('url') !== null ?
@@ -114,53 +115,53 @@ class Update3Request extends Update2Request
                     'bail',
                     'required',
                     'string',
-                    Rule::in(Type::getAvailable()),
+                    Rule::in(PriceType::getAvailable()),
                     'no_js_validation'
                 ],
-                'payment_transfer' => $this->input('payment_type') === Type::TRANSFER ?
+                'payment_transfer' => $this->input('payment_type') === PriceType::TRANSFER ?
                 [
                     'bail',
-                    'required_if:payment_type,' . Type::TRANSFER,
+                    'required_if:payment_type,' . PriceType::TRANSFER,
                     'integer',
                     Rule::exists('prices', 'id')->where(function ($query) {
                         $query->where([
-                            ['type', Type::TRANSFER],
+                            ['type', PriceType::TRANSFER],
                             ['group_id', $this->group->id]
                         ]);
                     })
                 ] : ['no_js_validation'],
-                'payment_code_sms' => $this->input('payment_type') === Type::CODE_SMS ?
+                'payment_code_sms' => $this->input('payment_type') === PriceType::CODE_SMS ?
                  [
                     'bail',
-                    'required_if:payment_type,' . Type::CODE_SMS,
+                    'required_if:payment_type,' . PriceType::CODE_SMS,
                     'integer',
                     Rule::exists('prices', 'id')->where(function ($query) {
                         $query->where([
-                            ['type', Type::CODE_SMS],
+                            ['type', PriceType::CODE_SMS],
                             ['group_id', $this->group->id]
                         ]);
                     })
                 ] : ['no_js_validation'],
-                'payment_code_transfer' => $this->input('payment_type') === Type::CODE_TRANSFER ?
+                'payment_code_transfer' => $this->input('payment_type') === PriceType::CODE_TRANSFER ?
                 [
                     'bail',
-                    'required_if:payment_type,' . Type::CODE_TRANSFER,
+                    'required_if:payment_type,' . PriceType::CODE_TRANSFER,
                     'integer',
                     Rule::exists('prices', 'id')->where(function ($query) {
                         $query->where([
-                            ['type', Type::CODE_TRANSFER],
+                            ['type', PriceType::CODE_TRANSFER],
                             ['group_id', $this->group->id]
                         ]);
                     })
                 ] : ['no_js_validation'],
-                'payment_paypal_express' => $this->input('payment_type') === Type::PAYPAL_EXPRESS ?
+                'payment_paypal_express' => $this->input('payment_type') === PriceType::PAYPAL_EXPRESS ?
                 [
                     'bail',
-                    'required_if:payment_type,' . Type::PAYPAL_EXPRESS,
+                    'required_if:payment_type,' . PriceType::PAYPAL_EXPRESS,
                     'integer',
                     Rule::exists('prices', 'id')->where(function ($query) {
                         $query->where([
-                            ['type', Type::PAYPAL_EXPRESS],
+                            ['type', PriceType::PAYPAL_EXPRESS],
                             ['group_id', $this->group->id]
                         ]);
                     })

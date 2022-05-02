@@ -49,7 +49,6 @@ class RegionCache
 
         $this->cache = $cache;
         $this->config = $config;
-        $this->config = $config;
         $this->carbon = $carbon;
     }
 

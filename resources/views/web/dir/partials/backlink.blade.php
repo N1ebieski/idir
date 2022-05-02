@@ -35,7 +35,7 @@
 <div class="form-group">
     <label for="backlink_url">
         <span>{{ trans('idir::dirs.backlink_url') }}:</span>
-        @if ($group->backlink === $group::OBLIGATORY_BACKLINK)
+        @if ($group->backlink->isActive())
         <span>*</span>
         @endif
     </label>

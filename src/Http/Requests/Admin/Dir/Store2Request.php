@@ -206,7 +206,7 @@ class Store2Request extends FormRequest
             'notes' => 'bail|nullable|string|between:3,255',
             'url' => [
                 'bail',
-                ($this->group->url === Group::OBLIGATORY_URL) ? 'required' : 'nullable',
+                $this->group->url->isActive() ? 'required' : 'nullable',
                 'string',
                 'regex:/^(https|http):\/\/([\da-z\.-]+)(\.[a-z]{2,6})\/?$/',
                 App::make(\N1ebieski\IDir\Rules\UniqueUrlRule::class, [

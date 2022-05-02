@@ -2,10 +2,14 @@
 
 namespace N1ebieski\IDir\Http\Requests\Web\Dir;
 
+use N1ebieski\IDir\Models\Dir;
 use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 use N1ebieski\IDir\ValueObjects\Price\Type;
 
+/**
+ * @property Dir $dir
+ */
 class UpdateRenewRequest extends FormRequest
 {
     /**
@@ -15,7 +19,7 @@ class UpdateRenewRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->dir->group->isPublic() && $this->dir->isRenew();
+        return $this->dir->group->visible->isActive() && $this->dir->isRenew();
     }
 
     /**

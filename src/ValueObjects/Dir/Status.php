@@ -85,35 +85,35 @@ class Status extends ValueObject
      */
     public static function fromString(string $value)
     {
-        if (in_array($value, ['active', self::ACTIVE])) {
+        if (in_array($value, ['active', (string)self::ACTIVE])) {
             return static::active();
         }
 
-        if (in_array($value, ['inactive', self::INACTIVE])) {
+        if (in_array($value, ['inactive', (string)self::INACTIVE])) {
             return static::inactive();
         }
 
         if (
             in_array($value, [
-            'payment_inactive',
-            'pending',
-            Type::TRANSFER,
-            Type::PAYPAL_EXPRESS,
-            self::PAYMENT_INACTIVE
+                'payment_inactive',
+                'pending',
+                Type::TRANSFER,
+                Type::PAYPAL_EXPRESS,
+                (string)self::PAYMENT_INACTIVE
             ])
         ) {
             return static::paymentInactive();
         }
 
-        if (in_array($value, ['backlink_inactive', self::BACKLINK_INACTIVE])) {
+        if (in_array($value, ['backlink_inactive', (string)self::BACKLINK_INACTIVE])) {
             return static::backlinkInactive();
         }
 
-        if (in_array($value, ['status_inactive', self::STATUS_INACTIVE])) {
+        if (in_array($value, ['status_inactive', (string)self::STATUS_INACTIVE])) {
             return static::statusInactive();
         }
 
-        if (in_array($value, ['incorrect_inactive', self::INCORRECT_INACTIVE])) {
+        if (in_array($value, ['incorrect_inactive', (string)self::INCORRECT_INACTIVE])) {
             return static::incorrectInactive();
         }
 

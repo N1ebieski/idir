@@ -45,7 +45,7 @@
 
                 @includeWhen(!auth()->check(), 'idir::web.dir.partials.email')
 
-                @includeWhen($group->backlink > 0 && optional($backlinks)->isNotEmpty(), 'idir::web.dir.partials.backlink')
+                @includeWhen(!$group->backlink->isInactive() && optional($backlinks)->isNotEmpty(), 'idir::web.dir.partials.backlink')
 
                 @if ($group->prices->isNotEmpty())
                     @include('idir::web.dir.partials.payment')

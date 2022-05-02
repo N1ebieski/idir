@@ -161,11 +161,11 @@
             ></i>
         </label>
         <select class="form-control custom-select" id="visible" name="visible">
-            <option value="{{ $field::VISIBLE }}">
-                {{ trans('idir::fields.visible.'.$field::VISIBLE) }}
+            <option value="{{ Field\Visible::ACTIVE }}">
+                {{ trans('idir::fields.visible.'.Field\Visible::ACTIVE) }}
             </option>
-            <option value="{{ $field::INVISIBLE }}">
-                {{ trans('idir::fields.visible.'.$field::INVISIBLE) }}
+            <option value="{{ Field\Visible::INACTIVE }}">
+                {{ trans('idir::fields.visible.'.Field\Visible::INACTIVE) }}
             </option>
         </select>
     </div>

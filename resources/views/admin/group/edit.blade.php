@@ -81,22 +81,22 @@
                         name="url"
                     >
                         <option 
-                            value="{{ $group::WITHOUT_URL }}" 
-                            {{ old('url', $group->url) == $group::WITHOUT_URL ? 'selected' : null }}
+                            value="{{ Group\Url::INACTIVE }}" 
+                            {{ old('url', $group->url->getValue()) == Group\Url::INACTIVE ? 'selected' : null }}
                         >
-                            {{ trans('idir::groups.url.'.$group::WITHOUT_URL) }}
+                            {{ trans('idir::groups.url.'.Group\Url::INACTIVE) }}
                         </option>
                         <option 
-                            value="{{ $group::OPTIONAL_URL }}" 
-                            {{ old('url', $group->url) == $group::OPTIONAL_URL ? 'selected' : null }}
+                            value="{{ Group\Url::OPTIONAL }}" 
+                            {{ old('url', $group->url->getValue()) == Group\Url::OPTIONAL ? 'selected' : null }}
                         >
-                            {{ trans('idir::groups.url.'.$group::OPTIONAL_URL) }}
+                            {{ trans('idir::groups.url.'.Group\Url::OPTIONAL) }}
                         </option>
                         <option 
-                            value="{{ $group::OBLIGATORY_URL }}" 
-                            {{ old('url', $group->url) == $group::OBLIGATORY_URL ? 'selected' : null }}
+                            value="{{ Group\Url::ACTIVE }}" 
+                            {{ old('url', $group->url->getValue()) == Group\Url::ACTIVE ? 'selected' : null }}
                         >
-                            {{ trans('idir::groups.url.'.$group::OBLIGATORY_URL) }}
+                            {{ trans('idir::groups.url.'.Group\Url::ACTIVE) }}
                         </option>
                     </select>
                     @includeWhen($errors->has('url'), 'icore::admin.partials.errors', ['name' => 'url'])
@@ -111,16 +111,16 @@
                         name="apply_status"
                     >
                         <option 
-                            value="{{ $group::APPLY_INACTIVE }}" 
-                            {{ old('apply_status', $group->apply_status) == $group::APPLY_INACTIVE ? 'selected' : null }}
+                            value="{{ Group\ApplyStatus::INACTIVE }}" 
+                            {{ old('apply_status', $group->apply_status->getValue()) == Group\ApplyStatus::INACTIVE ? 'selected' : null }}
                         >
-                            {{ trans('idir::groups.apply_status.'.$group::APPLY_INACTIVE) }}
+                            {{ trans('idir::groups.apply_status.'.Group\ApplyStatus::INACTIVE) }}
                         </option>
                         <option 
-                            value="{{ $group::APPLY_ACTIVE }}" 
-                            {{ old('apply_status', $group->apply_status) == $group::APPLY_ACTIVE ? 'selected' : null }}
+                            value="{{ Group\ApplyStatus::ACTIVE }}" 
+                            {{ old('apply_status', $group->apply_status->getValue()) == Group\ApplyStatus::ACTIVE ? 'selected' : null }}
                         >
-                            {{ trans('idir::groups.apply_status.'.$group::APPLY_ACTIVE) }}
+                            {{ trans('idir::groups.apply_status.'.Group\ApplyStatus::ACTIVE) }}
                         </option>
                     </select>
                     @includeWhen($errors->has('apply_status'), 'icore::admin.partials.errors', ['name' => 'apply_status'])
@@ -150,16 +150,16 @@
                         name="visible"
                     >
                         <option 
-                            value="{{ $group::VISIBLE }}" 
-                            {{ old('visible', $group->visible) == $group::VISIBLE ? 'selected' : null }}
+                            value="{{ Group\Visible::ACTIVE }}" 
+                            {{ old('visible', $group->visible->getValue()) == Group\Visible::ACTIVE ? 'selected' : null }}
                         >
-                            {{ trans('idir::groups.visible.'.$group::VISIBLE) }}
+                            {{ trans('idir::groups.visible.'.Group\Visible::ACTIVE) }}
                         </option>
                         <option 
-                            value="{{ $group::INVISIBLE }}" 
-                            {{ old('visible', $group->visible) == $group::INVISIBLE ? 'selected' : null }}
+                            value="{{ Group\Visible::INACTIVE }}" 
+                            {{ old('visible', $group->visible->getValue()) == Group\Visible::INACTIVE ? 'selected' : null }}
                         >
-                            {{ trans('idir::groups.visible.'.$group::INVISIBLE) }}
+                            {{ trans('idir::groups.visible.'.Group\Visible::INACTIVE) }}
                         </option>
                     </select>
                     @includeWhen($errors->has('visible'), 'icore::admin.partials.errors', ['name' => 'visible'])
@@ -232,22 +232,22 @@
                         name="backlink"
                     >
                         <option 
-                            value="{{ $group::WITHOUT_BACKLINK }}" 
-                            {{ old('backlink', $group->backlink) ==  $group::WITHOUT_BACKLINK ? 'selected' : null }}
+                            value="{{ Group\Backlink::INACTIVE }}" 
+                            {{ old('backlink', $group->backlink->getValue()) == Group\Backlink::INACTIVE ? 'selected' : null }}
                         >
-                            {{ trans('idir::groups.backlink.'.$group::WITHOUT_BACKLINK) }}
+                            {{ trans('idir::groups.backlink.'.Group\Backlink::INACTIVE) }}
                         </option>
                         <option 
-                            value="{{ $group::OPTIONAL_BACKLINK }}" 
-                            {{ old('backlink', $group->backlink) == $group::OPTIONAL_BACKLINK ? 'selected' : null }}
+                            value="{{ Group\Backlink::OPTIONAL }}" 
+                            {{ old('backlink', $group->backlink->getValue()) == Group\Backlink::OPTIONAL ? 'selected' : null }}
                         >
-                            {{ trans('idir::groups.backlink.'.$group::OPTIONAL_BACKLINK) }}
+                            {{ trans('idir::groups.backlink.'.Group\Backlink::OPTIONAL) }}
                         </option>
                         <option 
-                            value="{{ $group::OBLIGATORY_BACKLINK }}" 
-                            {{ old('backlink', $group->backlink) == $group::OBLIGATORY_BACKLINK ? 'selected' : null }}
+                            value="{{ Group\Backlink::ACTIVE }}" 
+                            {{ old('backlink', $group->backlink->getValue()) == Group\Backlink::ACTIVE ? 'selected' : null }}
                         >
-                            {{ trans('idir::groups.backlink.'.$group::OBLIGATORY_BACKLINK) }}
+                            {{ trans('idir::groups.backlink.'.Group\Backlink::ACTIVE) }}
                         </option>
                     </select>
                     @includeWhen($errors->has('backlink'), 'icore::admin.partials.errors', ['name' => 'backlink'])

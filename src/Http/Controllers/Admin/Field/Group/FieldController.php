@@ -46,7 +46,6 @@ class FieldController extends BaseFieldController implements Polymorphic
     public function create(Field $field, Group $group): JsonResponse
     {
         return Response::json([
-            'success' => '',
             'view' => View::make('idir::admin.field.group.create', [
                 'field' => $field,
                 'groups' => $group->all()
@@ -78,7 +77,6 @@ class FieldController extends BaseFieldController implements Polymorphic
     public function edit(Field $field, Group $group): JsonResponse
     {
         return Response::json([
-            'success' => '',
             'view' => View::make('idir::admin.field.group.edit', [
                 'field' => $field,
                 'groups' => $group->makeRepo()->getWithField($field->id)
@@ -97,7 +95,6 @@ class FieldController extends BaseFieldController implements Polymorphic
         $field->makeService()->update($request->validated());
 
         return Response::json([
-            'success' => '',
             'view' => View::make('idir::admin.field.partials.field', [
                 'field' => $field
             ])->render()

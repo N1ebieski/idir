@@ -19,10 +19,12 @@ use Illuminate\Support\Facades\Config;
 use N1ebieski\IDir\Models\DirBacklink;
 use Illuminate\Queue\InteractsWithQueue;
 use N1ebieski\IDir\Models\Region\Region;
+use N1ebieski\IDir\ValueObjects\Group\Id;
 use N1ebieski\IDir\Models\Field\Dir\Field;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use N1ebieski\ICore\ValueObjects\Link\Type;
+use N1ebieski\IDir\ValueObjects\Group\Slug;
 use N1ebieski\IDir\Models\Category\Dir\Category;
 
 class DirsJob implements ShouldQueue
@@ -158,7 +160,7 @@ class DirsJob implements ShouldQueue
                 $dir->group()->associate(
                     !empty($item->group) && Group::find($this->groupLastId + $item->group) !== null ?
                         $this->groupLastId + $item->group
-                        : Group::DEFAULT
+                        : Group::make()->makeCache()->rememberBySlug(Slug::default())
                 );
 
                 $dir->user()->associate(

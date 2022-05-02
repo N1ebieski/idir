@@ -5,10 +5,11 @@ namespace N1ebieski\IDir\Database\Seeders\Install;
 use Illuminate\Database\Seeder;
 use N1ebieski\IDir\Models\Group;
 use N1ebieski\IDir\Models\Privilege;
+use N1ebieski\IDir\ValueObjects\Group\Url;
+use N1ebieski\IDir\ValueObjects\Group\Visible;
+use N1ebieski\IDir\ValueObjects\Group\Backlink;
+use N1ebieski\IDir\ValueObjects\Group\ApplyStatus;
 
-/**
- * [GroupSeeder description]
- */
 class DefaultGroupAndPrivilegesSeeder extends Seeder
 {
     /**
@@ -18,7 +19,6 @@ class DefaultGroupAndPrivilegesSeeder extends Seeder
      */
     public function run()
     {
-        // create privileges
         Privilege::firstOrCreate(['name' => 'highest position on homepage']);
         Privilege::firstOrCreate(['name' => 'highest position in their categories']);
         Privilege::firstOrCreate(['name' => 'highest position in ancestor categories']);
@@ -35,10 +35,10 @@ class DefaultGroupAndPrivilegesSeeder extends Seeder
             'name' => 'Default',
             'max_cats' => 3,
             'position' => 0,
-            'visible' => Group::INVISIBLE,
-            'backlink' => Group::WITHOUT_BACKLINK,
-            'apply_status' => Group::APPLY_INACTIVE,
-            'url' => Group::OPTIONAL_URL
+            'visible' => Visible::INACTIVE,
+            'backlink' => Backlink::INACTIVE,
+            'apply_status' => ApplyStatus::INACTIVE,
+            'url' => Url::OPTIONAL
         ]);
 
         $default->privileges()->sync([$nofollow->id]);

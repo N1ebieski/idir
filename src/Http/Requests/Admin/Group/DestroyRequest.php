@@ -2,8 +2,12 @@
 
 namespace N1ebieski\IDir\Http\Requests\Admin\Group;
 
+use N1ebieski\IDir\Models\Group;
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * @property Group $group
+ */
 class DestroyRequest extends FormRequest
 {
     /**
@@ -13,7 +17,7 @@ class DestroyRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->group->isNotDefault();
+        return !$this->group->slug->isDefault();
     }
 
     /**

@@ -4,15 +4,21 @@ namespace N1ebieski\IDir\Models;
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\App;
+use N1ebieski\IDir\Cache\GroupCache;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use N1ebieski\IDir\Services\GroupService;
 use Cviebrock\EloquentSluggable\Sluggable;
 use N1ebieski\IDir\Repositories\GroupRepo;
+use N1ebieski\IDir\ValueObjects\Group\Url;
+use N1ebieski\IDir\ValueObjects\Group\Slug;
 use N1ebieski\IDir\Models\Traits\Filterable;
 use N1ebieski\ICore\Models\Traits\Carbonable;
+use N1ebieski\IDir\ValueObjects\Group\Visible;
 use N1ebieski\ICore\Models\Traits\Positionable;
+use N1ebieski\IDir\ValueObjects\Group\Backlink;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use N1ebieski\IDir\ValueObjects\Group\ApplyStatus;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use N1ebieski\ICore\Models\Traits\FullTextSearchable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -21,6 +27,13 @@ use N1ebieski\IDir\ValueObjects\Dir\Status as DirStatus;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use N1ebieski\IDir\Database\Factories\Group\GroupFactory;
 
+/**
+ * @property Slug $slug
+ * @property Visible $visible
+ * @property ApplyStatus $apply_status
+ * @property Url $url
+ * @property Backlink $backlink
+ */
 class Group extends Model
 {
     use Sluggable;
@@ -31,84 +44,6 @@ class Group extends Model
     use HasFactory;
 
     // Configuration
-
-    /**
-     * [public description]
-     * @var int
-     */
-    public const VISIBLE = 1;
-
-    /**
-     * [public description]
-     * @var int
-     */
-    public const INVISIBLE = 0;
-
-    /**
-     * [public description]
-     * @var int
-     */
-    public const PAYMENT = 1;
-
-    /**
-     * [public description]
-     * @var int
-     */
-    public const WITHOUT_PAYMENT = 0;
-
-    /**
-     * [public description]
-     * @var int
-     */
-    public const APPLY_ACTIVE = 1;
-
-    /**
-     * [public description]
-     * @var int
-     */
-    public const APPLY_INACTIVE = 0;
-
-    /**
-     * [public description]
-     * @var int
-     */
-    public const OPTIONAL_URL = 1;
-
-    /**
-     * [public description]
-     * @var int
-     */
-    public const WITHOUT_URL = 0;
-
-    /**
-     * [public description]
-     * @var int
-     */
-    public const OBLIGATORY_URL = 2;
-
-    /**
-     * [public description]
-     * @var int
-     */
-    public const OPTIONAL_BACKLINK = 1;
-
-    /**
-     * [public description]
-     * @var int
-     */
-    public const WITHOUT_BACKLINK = 0;
-
-    /**
-     * [public description]
-     * @var int
-     */
-    public const OBLIGATORY_BACKLINK = 2;
-
-    /**
-     * [public description]
-     * @var int
-     */
-    public const DEFAULT = 1;
 
     /**
      * The attributes that are mass assignable.
@@ -152,30 +87,22 @@ class Group extends Model
     }
 
     /**
-     * The model's default values for attributes.
-     *
-     * @var array
-     */
-    protected $attributes = [
-        'alt_id' => self::DEFAULT
-    ];
-
-    /**
      * The attributes that should be cast to native types.
      *
      * @var array
      */
     protected $casts = [
         'id' => 'integer',
+        'slug' => \N1ebieski\IDir\Casts\Group\SlugCast::class,
         'alt_id' => 'integer',
         'max_cats' => 'integer',
         'max_models' => 'integer',
         'max_models_daily' => 'integer',
         'position' => 'integer',
-        'visible' => 'integer',
-        'apply_status' => 'integer',
-        'url' => 'integer',
-        'backlink' => 'integer',
+        'visible' => \N1ebieski\IDir\Casts\Group\VisibleCast::class,
+        'apply_status' => \N1ebieski\IDir\Casts\Group\ApplyStatusCast::class,
+        'url' => \N1ebieski\IDir\Casts\Group\UrlCast::class,
+        'backlink' => \N1ebieski\IDir\Casts\Group\BacklinkCast::class,
         'created_at' => 'datetime',
         'updated_at' => 'datetime'
     ];
@@ -278,7 +205,7 @@ class Group extends Model
      */
     public function scopePublic(Builder $query): Builder
     {
-        return $query->where('visible', static::VISIBLE);
+        return $query->where('visible', Visible::ACTIVE);
     }
 
     /**
@@ -288,7 +215,7 @@ class Group extends Model
      */
     public function scopeObligatoryBacklink(Builder $query): Builder
     {
-        return $query->where('backlink', static::OBLIGATORY_BACKLINK);
+        return $query->where('backlink', Backlink::ACTIVE);
     }
 
     /**
@@ -298,7 +225,7 @@ class Group extends Model
      */
     public function scopeExceptDefault(Builder $query): Builder
     {
-        return $query->where('id', '<>', self::DEFAULT);
+        return $query->where('slug', '<>', Slug::DEFAULT);
     }
 
     // Checkers
@@ -359,24 +286,6 @@ class Group extends Model
         return $available;
     }
 
-    /**
-     * [isNotDefault description]
-     * @return bool [description]
-     */
-    public function isNotDefault(): bool
-    {
-        return strtolower($this->name) !== 'default';
-    }
-
-    /**
-     * [isPublic description]
-     * @return bool [description]
-     */
-    public function isPublic(): bool
-    {
-        return $this->getAttribute('visible') === static::VISIBLE;
-    }
-
     // Loads
 
     /**
@@ -401,6 +310,15 @@ class Group extends Model
     public function makeRepo()
     {
         return App::make(GroupRepo::class, ['group' => $this]);
+    }
+
+    /**
+     * [makeCache description]
+     * @return GroupCache [description]
+     */
+    public function makeCache()
+    {
+        return App::make(GroupCache::class, ['group' => $this]);
     }
 
     /**

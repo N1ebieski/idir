@@ -42,23 +42,10 @@ class PaymentService implements Creatable, StatusUpdatable
      */
     public function __construct(Payment $payment, Carbon $carbon, Config $config)
     {
-        $this->setPayment($payment);
+        $this->payment = $payment;
 
         $this->carbon = $carbon;
         $this->config = $config;
-    }
-
-    /**
-     * Undocumented function
-     *
-     * @param Payment $payment
-     * @return static
-     */
-    public function setPayment(Payment $payment)
-    {
-        $this->payment = $payment;
-
-        return $this;
     }
 
     /**

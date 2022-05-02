@@ -71,7 +71,7 @@ class DirTest extends TestCase
 
         $this->assertDatabaseHas('dirs', [
             'id' => $dir->id,
-            'status' => Statustus::ACTIVE,
+            'status' => Status::ACTIVE,
             'group_id' => $group->id,
         ]);
 
@@ -110,7 +110,7 @@ class DirTest extends TestCase
 
         $this->assertDatabaseHas('dirs', [
             'id' => $dir->id,
-            'status' => Statustus::ACTIVE,
+            'status' => Status::ACTIVE,
             'group_id' => $group->id,
             'privileged_at' => null,
             'privileged_to' => null
@@ -127,7 +127,7 @@ class DirTest extends TestCase
 
         $this->assertDatabaseHas('dirs', [
             'id' => $dir->id,
-            'status' => Statustus::ACTIVE,
+            'status' => Status::ACTIVE,
             'group_id' => $group->alt_id,
             'privileged_at' => null,
             'privileged_to' => null
@@ -157,7 +157,7 @@ class DirTest extends TestCase
 
         $this->assertDatabaseHas('dirs', [
             'id' => $dir->id,
-            'status' => Statustus::ACTIVE,
+            'status' => Status::ACTIVE,
             'group_id' => $group->id,
             'privileged_at' => null,
             'privileged_to' => null
@@ -178,7 +178,7 @@ class DirTest extends TestCase
 
         $this->assertDatabaseHas('dirs', [
             'id' => $dir->id,
-            'status' => Statustus::ACTIVE,
+            'status' => Status::ACTIVE,
             'group_id' => $group->alt_id,
             'privileged_at' => null,
             'privileged_to' => null
@@ -199,7 +199,7 @@ class DirTest extends TestCase
 
         $this->assertDatabaseHas('dirs', [
             'id' => $dir->id,
-            'status' => Statustus::ACTIVE,
+            'status' => Status::ACTIVE,
             'group_id' => $group->id,
             'privileged_to' => null
         ]);
@@ -217,7 +217,7 @@ class DirTest extends TestCase
 
         $this->assertDatabaseMissing('dirs', [
             'id' => $dir->id,
-            'status' => Statustus::ACTIVE,
+            'status' => Status::ACTIVE,
             'group_id' => $group->alt_id,
             'privileged_at' => null,
             'privileged_to' => null
@@ -236,7 +236,7 @@ class DirTest extends TestCase
 
         $this->assertDatabaseHas('dirs', [
             'id' => $dir->id,
-            'status' => Statustus::ACTIVE,
+            'status' => Status::ACTIVE,
             'group_id' => $group->id,
         ]);
 
@@ -311,7 +311,7 @@ class DirTest extends TestCase
 
         $this->assertDatabaseHas('dirs', [
             'id' => $dir->id,
-            'status' => Statustus::ACTIVE,
+            'status' => Status::ACTIVE,
             'group_id' => $group->id
         ]);
 

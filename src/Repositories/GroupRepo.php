@@ -3,6 +3,7 @@
 namespace N1ebieski\IDir\Repositories;
 
 use N1ebieski\IDir\Models\Group;
+use N1ebieski\IDir\ValueObjects\Group\Slug;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Contracts\Auth\Factory as Auth;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -199,5 +200,16 @@ class GroupRepo
             ->where('id', '!=', $this->group->id)
             ->orderBy('position', 'asc')
             ->get();
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param Slug $slug
+     * @return Group|null
+     */
+    public function firstBySlug(Slug $slug): ?Group
+    {
+        return $this->group->where('slug', $slug->getValue())->first();
     }
 }

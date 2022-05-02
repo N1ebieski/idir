@@ -36,7 +36,7 @@ class MarkAsPaid
         }
 
         $event->payment->morph->makeService()->updateStatus([
-            'status' => $event->payment->morph->group->apply_status
+            'status' => $event->payment->morph->group->apply_status->getValue()
         ]);
     }
 }

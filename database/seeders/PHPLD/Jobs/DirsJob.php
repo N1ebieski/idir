@@ -15,9 +15,11 @@ use N1ebieski\ICore\Models\Stat\Stat;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Queue\InteractsWithQueue;
+use N1ebieski\IDir\ValueObjects\Group\Id;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use N1ebieski\IDir\ValueObjects\Dir\Status;
+use N1ebieski\IDir\ValueObjects\Group\Slug;
 use N1ebieski\IDir\Models\Category\Dir\Category;
 
 class DirsJob implements ShouldQueue
@@ -133,7 +135,7 @@ class DirsJob implements ShouldQueue
                 $dir->group()->associate(
                     !empty($item->LINK_TYPE) && Group::find($this->groupLastId + $item->LINK_TYPE) !== null ?
                         $this->groupLastId + $item->LINK_TYPE
-                        : Group::DEFAULT
+                        : Group::make()->makeCache()->rememberBySlug(Slug::default())
                 );
 
                 $dir->user()->associate(

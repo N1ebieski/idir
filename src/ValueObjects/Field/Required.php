@@ -54,11 +54,11 @@ class Required extends ValueObject implements JsonSerializable
      */
     public static function fromString(string $value)
     {
-        if (in_array($value, ['active', self::ACTIVE])) {
+        if (in_array($value, ['active', (string)self::ACTIVE])) {
             return static::active();
         }
 
-        if (in_array($value, ['inactive', self::INACTIVE])) {
+        if (in_array($value, ['inactive', (string)self::INACTIVE])) {
             return static::inactive();
         }
 

@@ -48,7 +48,7 @@
                 @csrf
                 @method('put')
 
-                @includeWhen($group->backlink > 0 && optional($backlinks)->isNotEmpty(), 'idir::web.dir.partials.backlink')
+                @includeWhen(!$group->backlink->isInactive() && optional($backlinks)->isNotEmpty(), 'idir::web.dir.partials.backlink')
 
                 @if ($dir->isPayment($group->id) && $group->prices->isNotEmpty())
                     @include('idir::web.dir.partials.payment')

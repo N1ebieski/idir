@@ -2,9 +2,13 @@
 
 namespace N1ebieski\IDir\Http\Requests\Api\Dir;
 
+use N1ebieski\IDir\Models\Group;
 use Illuminate\Foundation\Http\FormRequest;
 use N1ebieski\IDir\Http\Requests\Traits\CodePayable;
 
+/**
+ * @property Group $group
+ */
 class StoreCodeRequest extends FormRequest
 {
     use CodePayable;
@@ -17,7 +21,7 @@ class StoreCodeRequest extends FormRequest
     public function authorize()
     {
         return $this->group->isAvailable()
-            && ($this->group->isPublic() || optional($this->user())->can('admin.dirs.create'));
+            && ($this->group->visible->isActive() || optional($this->user())->can('admin.dirs.create'));
     }
 
     /**

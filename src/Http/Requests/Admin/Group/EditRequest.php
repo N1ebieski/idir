@@ -2,10 +2,11 @@
 
 namespace N1ebieski\IDir\Http\Requests\Admin\Group;
 
+use N1ebieski\IDir\Models\Group;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
- * [EditRequest description]
+ * @property Group $group
  */
 class EditRequest extends FormRequest
 {
@@ -16,7 +17,7 @@ class EditRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->group->isNotDefault();
+        return !$this->group->slug->isDefault();
     }
 
     /**

@@ -26,7 +26,6 @@ class RatingController implements Polymorphic
             ->createOrUpdateOrDelete($request->only('rating'));
 
         return Response::json([
-            'success' => '',
             'sum_rating' => $dir->load('ratings')->sum_rating
         ]);
     }

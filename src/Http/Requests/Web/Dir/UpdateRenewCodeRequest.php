@@ -2,9 +2,13 @@
 
 namespace N1ebieski\IDir\Http\Requests\Web\Dir;
 
+use N1ebieski\IDir\Models\Dir;
 use Illuminate\Foundation\Http\FormRequest;
 use N1ebieski\IDir\Http\Requests\Traits\CodePayable;
 
+/**
+ * @property Dir $dir
+ */
 class UpdateRenewCodeRequest extends FormRequest
 {
     use CodePayable;
@@ -16,7 +20,7 @@ class UpdateRenewCodeRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->dir->group->isPublic() && $this->dir->isRenew();
+        return $this->dir->group->visible->isActive() && $this->dir->isRenew();
     }
 
     /**

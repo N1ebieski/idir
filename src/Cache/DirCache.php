@@ -143,9 +143,9 @@ class DirCache
     /**
      * Cache route binding of Dir
      * @param  string $slug [description]
-     * @return Region|null       [description]
+     * @return Dir|null       [description]
      */
-    public function rememberBySlug(string $slug)
+    public function rememberBySlug(string $slug): ?Dir
     {
         return $this->cache->tags(["dir.{$slug}"])->remember(
             "dir.firstBySlug.{$slug}",

@@ -173,16 +173,16 @@
         </label>
         <select class="form-control custom-select" id="visible" name="visible">
             <option 
-                value="{{ $field::VISIBLE }}" 
-                {{ $field->visible == $field::VISIBLE ? 'selected' : null }}
+                value="{{ Field\Visible::ACTIVE }}" 
+                {{ $field->visible->isActive() ? 'selected' : null }}
             >
-                {{ trans('idir::fields.visible.'.$field::VISIBLE) }}
+                {{ trans('idir::fields.visible.'.Field\Visible::ACTIVE) }}
             </option>
             <option 
-                value="{{ $field::INVISIBLE }}" 
-                {{ $field->visible == $field::INVISIBLE ? 'selected' : null }}
+                value="{{ Field\Visible::INACTIVE }}" 
+                {{ $field->visible->isInactive() ? 'selected' : null }}
             >
-                {{ trans('idir::fields.visible.'.$field::INVISIBLE) }}
+                {{ trans('idir::fields.visible.'.Field\Visible::INACTIVE) }}
             </option>
         </select>
     </div>

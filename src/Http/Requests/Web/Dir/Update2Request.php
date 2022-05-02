@@ -12,7 +12,6 @@ use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Database\Eloquent\Collection;
-use N1ebieski\IDir\Models\Category\Dir\Category;
 use N1ebieski\ICore\ValueObjects\Category\Status;
 use N1ebieski\IDir\Http\Requests\Traits\FieldsExtended;
 
@@ -65,7 +64,7 @@ class Update2Request extends FormRequest
      */
     public function authorize()
     {
-        $check = $this->group->isPublic();
+        $check = $this->group->visible->isActive();
 
         return $this->group->id === $this->dir->group->id ?
             $check : $check && $this->group->isAvailable();
@@ -222,9 +221,7 @@ class Update2Request extends FormRequest
             'notes' => 'bail|nullable|string|between:3,255',
             'url' => [
                 'bail',
-                $this->group->url === Group::OBLIGATORY_URL ?
-                    'required'
-                    : 'nullable',
+                $this->group->url->isActive() ? 'required' : 'nullable',
                 'string',
                 'regex:/^(https|http):\/\/([\da-z\.-]+)(\.[a-z]{2,6})\/?$/',
                 !empty($this->bans_urls) ? 'not_regex:/(' . $this->bans_urls . ')/i' : null,

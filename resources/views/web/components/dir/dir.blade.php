@@ -6,7 +6,7 @@
     @foreach ($dirs as $dir)
     <div class="col-xl-{{ floor(12/$cols) }} col-md-6 col-12 mb-4">
         <div class="card h-100">
-            @if ($dir->url->isUrl())
+            @if ($dir->isUrl())
             <div>
                 <img 
                     data-src="{{ $dir->thumbnail_url }}" 

@@ -10,7 +10,7 @@
     'og' => [
         'title' => $dir->title,
         'desc' => $dir->short_content,
-        'image' => $dir->url->isUrl() ? $dir->thumbnail_url : null
+        'image' => $dir->isUrl() ? $dir->thumbnail_url : null
     ]
 ])
 
@@ -137,7 +137,7 @@
             </div>
         </div>
         <div class="col-md-4 order-1">
-            @if ($dir->url->isUrl())
+            @if ($dir->isUrl())
             <div>
                 <img 
                     src="{{ $dir->thumbnail_url }}" 
@@ -170,7 +170,7 @@
                         data-language="{{ config('app.locale') }}"
                     >
                 </div>
-                @if ($dir->url->isUrl())
+                @if ($dir->isUrl())
                 <div class="list-group-item">
                     <div class="float-left mr-2">
                         {{ trans('idir::dirs.url') }}:

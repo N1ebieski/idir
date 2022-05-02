@@ -4,6 +4,7 @@ namespace N1ebieski\IDir\Services;
 
 use N1ebieski\IDir\Models\Group;
 use Illuminate\Database\Eloquent\Model;
+use N1ebieski\IDir\ValueObjects\Group\Slug;
 use Illuminate\Support\Collection as Collect;
 use Illuminate\Database\DatabaseManager as DB;
 use N1ebieski\ICore\Services\Interfaces\Creatable;
@@ -42,23 +43,10 @@ class GroupService implements Creatable, Updatable, PositionUpdatable, Deletable
      */
     public function __construct(Group $group, Collect $collect, DB $db)
     {
-        $this->setGroup($group);
+        $this->group = $group;
 
         $this->collect = $collect;
         $this->db = $db;
-    }
-
-    /**
-     * Undocumented function
-     *
-     * @param Group $group
-     * @return static
-     */
-    public function setGroup(Group $group)
-    {
-        $this->group = $group;
-
-        return $this;
     }
 
     /**
@@ -122,10 +110,12 @@ class GroupService implements Creatable, Updatable, PositionUpdatable, Deletable
     {
         return $this->db->transaction(function () {
             // If you delete a group, you have to change the alternative of other groups to Default
-            $this->group->where('alt_id', $this->group->id)->update(['alt_id' => Group::DEFAULT]);
+            $this->group->where('alt_id', $this->group->id)->update([
+                'alt_id' => $this->group->makeCache()->rememberBySlug(Slug::default())->id
+            ]);
 
             $this->group->dirs()->update([
-                'group_id' => Group::DEFAULT,
+                'group_id' => $this->group->makeCache()->rememberBySlug(Slug::default())->id,
                 'privileged_at' => null,
                 'privileged_to' => null
             ]);

@@ -34,7 +34,7 @@ class FieldResource extends JsonResource
             'desc' => $this->desc,
             'type' => $this->type->getValue(),
             'visible' => [
-                'value' => $this->visible,
+                'value' => $this->visible->getValue(),
                 'label' => Lang::get("idir::fields.visible.{$this->visible}")
             ],
             $this->mergeWhen(
@@ -43,7 +43,7 @@ class FieldResource extends JsonResource
                     return [
                         'options' => [
                             'required' => [
-                                'value' => $this->options->required,
+                                'value' => $this->options->required->getValue(),
                                 'label' => Lang::get("idir::fields.required.{$this->options->required}")
                             ],
                             $this->mergeWhen(

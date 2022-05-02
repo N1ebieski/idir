@@ -6,6 +6,7 @@ use Illuminate\Validation\Rule;
 use N1ebieski\IDir\Models\Group;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Foundation\Http\FormRequest;
+use N1ebieski\IDir\ValueObjects\Group\Visible;
 use N1ebieski\IDir\ValueObjects\Dir\Status as DirStatus;
 use N1ebieski\ICore\ValueObjects\Category\Status as CategoryStatus;
 
@@ -61,7 +62,7 @@ class IndexRequest extends FormRequest
                         $query->when(
                             !optional($this->user())->can('admin.dirs.view'),
                             function ($query) {
-                                $query->where('visible', Group::VISIBLE);
+                                $query->where('visible', Visible::ACTIVE);
                             }
                         );
                     })

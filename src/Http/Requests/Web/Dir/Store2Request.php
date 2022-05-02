@@ -14,6 +14,9 @@ use Illuminate\Database\Eloquent\Collection;
 use N1ebieski\ICore\ValueObjects\Category\Status;
 use N1ebieski\IDir\Http\Requests\Traits\FieldsExtended;
 
+/**
+ * @property Group $group
+ */
 class Store2Request extends FormRequest
 {
     use FieldsExtended;
@@ -59,7 +62,7 @@ class Store2Request extends FormRequest
      */
     public function authorize()
     {
-        return $this->group->isAvailable() && $this->group->isPublic();
+        return $this->group->isAvailable() && $this->group->visible->isActive();
     }
 
     /**
@@ -213,7 +216,7 @@ class Store2Request extends FormRequest
             'notes' => 'bail|nullable|string|between:3,255',
             'url' => [
                 'bail',
-                ($this->group->url === Group::OBLIGATORY_URL) ?
+                $this->group->url->isActive() ?
                     'required'
                     : 'nullable',
                 'string',

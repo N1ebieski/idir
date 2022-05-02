@@ -36,16 +36,16 @@
             {{ trans('icore::filter.default') }}
         </option>
         <option 
-            value="{{ $group::VISIBLE }}" 
-            {{ ($filter['visible'] === $group::VISIBLE) ? 'selected' : '' }}
+            value="{{ Group\Visible::ACTIVE }}" 
+            {{ ($filter['visible'] === Group\Visible::ACTIVE) ? 'selected' : '' }}
         >
-            {{ trans('idir::groups.visible.'.$group::VISIBLE) }}
+            {{ trans('idir::groups.visible.'.Group\Visible::ACTIVE) }}
         </option>
         <option 
-            value="{{ $group::INVISIBLE }}" 
-            {{ ($filter['visible'] === $group::INVISIBLE) ? 'selected' : '' }}
+            value="{{ Group\Visible::INACTIVE }}" 
+            {{ ($filter['visible'] === Group\Visible::INACTIVE) ? 'selected' : '' }}
         >
-            {{ trans('idir::groups.visible.'.$group::INVISIBLE) }}
+            {{ trans('idir::groups.visible.'.Group\Visible::INACTIVE) }}
         </option>
     </select>
 </div>

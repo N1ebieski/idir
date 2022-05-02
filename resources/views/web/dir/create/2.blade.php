@@ -116,11 +116,11 @@
                     >
                     @includeWhen($errors->has('tags'), 'icore::web.partials.errors', ['name' => 'tags'])
                 </div>
-                @if ($group->url > 0)
+                @if (!$group->url->isInactive())
                 <div class="form-group">
                     <label for="url">
                         <span>{{ trans('idir::dirs.url') }}:</span>
-                        @if ($group->url === $group::OBLIGATORY_URL)
+                        @if ($group->url->isActive())
                         <span>*</span>
                         @endif
                     </label>

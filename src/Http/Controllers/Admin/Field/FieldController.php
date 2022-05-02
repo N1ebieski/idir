@@ -8,8 +8,8 @@ use Illuminate\Support\Facades\View;
 use N1ebieski\IDir\Models\Field\Field;
 use GusApi\Exception\NotFoundException;
 use Illuminate\Support\Facades\Response;
-use N1ebieski\IDir\Http\Responses\Admin\Field\GusResponse;
 use N1ebieski\IDir\Http\Requests\Admin\Field\GusRequest;
+use N1ebieski\IDir\Http\Responses\Admin\Field\GusResponse;
 use N1ebieski\IDir\Http\Controllers\Admin\Field\Polymorphic;
 use N1ebieski\IDir\Http\Requests\Admin\Field\DestroyRequest;
 use N1ebieski\IDir\Http\Requests\Admin\Field\UpdatePositionRequest;
@@ -24,7 +24,6 @@ class FieldController implements Polymorphic
     public function editPosition(Field $field): JsonResponse
     {
         return Response::json([
-            'success' => '',
             'view' => View::make('idir::admin.field.edit_position', [
                 'field' => $field,
                 'siblings_count' => $field->countSiblings()
@@ -43,7 +42,6 @@ class FieldController implements Polymorphic
         $field->makeService()->updatePosition($request->only('position'));
 
         return Response::json([
-            'success' => '',
             'siblings' => $field->makeRepo()->getSiblingsAsArray()
         ]);
     }
@@ -59,7 +57,7 @@ class FieldController implements Polymorphic
     {
         $field->delete();
 
-        return Response::json(['success' => '']);
+        return Response::json([]);
     }
 
     /**

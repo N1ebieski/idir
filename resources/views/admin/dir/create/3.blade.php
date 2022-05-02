@@ -43,7 +43,7 @@
                 id="create-dir-2"
             >
                 @csrf
-                @includeWhen($group->backlink > 0 && optional($backlinks)->isNotEmpty(), 'idir::admin.dir.partials.backlink')
+                @includeWhen(!$group->backlink->isInactive() && optional($backlinks)->isNotEmpty(), 'idir::admin.dir.partials.backlink')
 
                 @if ($group->prices->isNotEmpty())
                 @include('idir::admin.dir.partials.payment')

@@ -75,13 +75,79 @@ class Schema900 implements SchemaInterface
                     'to' => 'Required::ACTIVE'
                 ],
                 [
+                    'type' => 'replace',
+                    'search' => '/Field::INVISIBLE/',
+                    'to' => 'Visible::INACTIVE'
+                ],
+                [
+                    'type' => 'replace',
+                    'search' => '/Field::VISIBLE/',
+                    'to' => 'Visible::ACTIVE'
+                ],
+                [
+                    'type' => 'replace',
+                    'search' => '/Group::INVISIBLE/',
+                    'to' => 'Visible::INACTIVE'
+                ],
+                [
+                    'type' => 'replace',
+                    'search' => '/Group::VISIBLE/',
+                    'to' => 'Visible::ACTIVE'
+                ],
+                [
+                    'type' => 'replace',
+                    'search' => '/Group::PAYMENT/',
+                    'to' => 'Payment::ACTIVE'
+                ],
+                [
+                    'type' => 'replace',
+                    'search' => '/Group::WITHOUT_PAYMENT/',
+                    'to' => 'Payment::INACTIVE'
+                ],
+                [
+                    'type' => 'replace',
+                    'search' => '/Group::APPLY_ACTIVE/',
+                    'to' => 'ApplyStatus::ACTIVE'
+                ],
+                [
+                    'type' => 'replace',
+                    'search' => '/Group::APPLY_INACTIVE/',
+                    'to' => 'ApplyStatus::INACTIVE'
+                ],
+                [
+                    'type' => 'replace',
+                    'search' => '/Group::OBLIGATORY_URL/',
+                    'to' => 'Url::ACTIVE'
+                ],
+                [
+                    'type' => 'replace',
+                    'search' => '/Group::WITHOUT_URL/',
+                    'to' => 'Url::INACTIVE'
+                ],
+                [
+                    'type' => 'replace',
+                    'search' => '/Group::OPTIONAL_URL/',
+                    'to' => 'Url::OPTIONAL'
+                ],
+                [
+                    'type' => 'replace',
+                    'search' => '/Group::OBLIGATORY_BACKLINK/',
+                    'to' => 'Backlink::ACTIVE'
+                ],
+                [
+                    'type' => 'replace',
+                    'search' => '/Group::WITHOUT_BACKLINK/',
+                    'to' => 'Backlink::INACTIVE'
+                ],
+                [
+                    'type' => 'replace',
+                    'search' => '/Group::OPTIONAL_BACKLINK/',
+                    'to' => 'Backlink::OPTIONAL'
+                ],
+                [
                     'type' => 'afterFirst',
                     'search' => '/use\s*N1ebieski\\\IDir\\\Models\\\Dir;/',
                     'to' => 'use N1ebieski\IDir\ValueObjects\Dir\Status;'
-                ],
-                [
-                    'type' => 'removeFirst',
-                    'search' => '/use\s*N1ebieski\\\IDir\\\Models\\\Dir;\\n*/'
                 ],
                 [
                     'type' => 'afterFirst',
@@ -89,17 +155,50 @@ class Schema900 implements SchemaInterface
                     'to' => 'use N1ebieski\IDir\ValueObjects\Payment\Status;'
                 ],
                 [
-                    'type' => 'removeFirst',
-                    'search' => '/use\s*N1ebieski\\\IDir\\\Models\\\Payment\\\Payment;\\n*/'
-                ],
-                [
                     'type' => 'afterFirst',
                     'search' => '/use\s*N1ebieski\\\IDir\\\Models\\\Field\\\Field;/',
                     'to' => 'use N1ebieski\IDir\ValueObjects\Field\Required;'
                 ],
                 [
+                    'type' => 'afterFirst',
+                    'search' => '/use\s*N1ebieski\\\IDir\\\Models\\\Field\\\Field;/',
+                    'to' => 'use N1ebieski\IDir\ValueObjects\Field\Visible;'
+                ],
+                [
+                    'type' => 'afterFirst',
+                    'search' => '/use\s*N1ebieski\\\IDir\\\Models\\\Group;/',
+                    'to' => 'use N1ebieski\IDir\ValueObjects\Group\Visible;'
+                ],
+                [
+                    'type' => 'afterFirst',
+                    'search' => '/use\s*N1ebieski\\\IDir\\\Models\\\Group;/',
+                    'to' => 'use N1ebieski\IDir\ValueObjects\Group\Payment;'
+                ],
+                [
+                    'type' => 'afterFirst',
+                    'search' => '/use\s*N1ebieski\\\IDir\\\Models\\\Group;/',
+                    'to' => 'use N1ebieski\IDir\ValueObjects\Group\ApplyStatus;'
+                ],
+                [
+                    'type' => 'afterFirst',
+                    'search' => '/use\s*N1ebieski\\\IDir\\\Models\\\Group;/',
+                    'to' => 'use N1ebieski\IDir\ValueObjects\Group\Backlink;'
+                ],
+                [
+                    'type' => 'removeFirst',
+                    'search' => '/use\s*N1ebieski\\\IDir\\\Models\\\Dir;\\n*/'
+                ],
+                [
+                    'type' => 'removeFirst',
+                    'search' => '/use\s*N1ebieski\\\IDir\\\Models\\\Payment\\\Payment;\\n*/'
+                ],
+                [
                     'type' => 'removeFirst',
                     'search' => '/use\s*N1ebieski\\\IDir\\\Models\\\Field\\\Field;\\n*/'
+                ],
+                [
+                    'type' => 'removeFirst',
+                    'search' => '/use\s*N1ebieski\\\IDir\\\Models\\\Group;\\n*/'
                 ]
             ]
         ],
@@ -182,13 +281,8 @@ class Schema900 implements SchemaInterface
                 ],
                 [
                     'type' => 'replace',
-                    'search' => '/\$dir->isUrl\(\)/',
-                    'to' => '$dir->url->isUrl()'
-                ],
-                [
-                    'type' => 'replace',
                     'search' => '/\$dir->url\s*\!={2,3}\s*null/',
-                    'to' => '$dir->url->isUrl()'
+                    'to' => '$dir->isUrl()'
                 ],
                 [
                     'type' => 'replace',
@@ -204,6 +298,26 @@ class Schema900 implements SchemaInterface
                     'type' => 'replace',
                     'search' => '/\$countDirs->firstWhere\(\'status\',\s*0\)/',
                     'to' => '$countDirs->firstWhere(\'status\', Dir\Status::inactive())'
+                ],
+                [
+                    'type' => 'replace',
+                    'search' => '/\$group->url\s*={2,3}\s*\$group::OBLIGATORY_URL/',
+                    'to' => '$group->url->isActive()'
+                ],
+                [
+                    'type' => 'replace',
+                    'search' => '/\$group->url\s*>\s*0/',
+                    'to' => '!$group->url->isInactive()'
+                ],
+                [
+                    'type' => 'replace',
+                    'search' => '/\$group->backlink\s*={2,3}\s*\$group::OBLIGATORY_BACKLINK/',
+                    'to' => '$group->backlink->isActive()'
+                ],
+                [
+                    'type' => 'replace',
+                    'search' => '/\$group->backlink\s*>\s*0/',
+                    'to' => '!$group->backlink->isInactive()'
                 ],
                 [
                     'type' => 'replace',

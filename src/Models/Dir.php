@@ -37,6 +37,7 @@ use N1ebieski\IDir\ValueObjects\Payment\Status as PaymentStatus;
 /**
  * @property Status $status
  * @property \N1ebieski\IDir\ValueObjects\Dir\Url $url
+ * @property \N1ebieski\IDir\Models\Group $group
  */
 class Dir extends Model
 {
@@ -565,7 +566,7 @@ class Dir extends Model
      */
     public function getLinkAttribute(): string
     {
-        if ($this->url->isUrl()) {
+        if ($this->isUrl()) {
             if ($this->getRelation('group')->hasDirectLinkPrivilege()) {
                 return $this->title_as_link;
             }
@@ -671,13 +672,24 @@ class Dir extends Model
     }
 
     /**
-     * [isPayment description]
-     * @param  int  $id [description]
-     * @return bool     [description]
+     * Undocumented function
+     *
+     * @param GroupId $id
+     * @return boolean
      */
     public function isPayment(int $id): bool
     {
         return $this->group_id !== $id || $this->status->isPaymentInactive();
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @return boolean
+     */
+    public function isUrl(): bool
+    {
+        return !$this->getRelation('group')->url->isInactive() && $this->url->isUrl();
     }
 
     // Loads

@@ -92,11 +92,11 @@
             data-max-chars="{{ config('icore.tag.max_chars') }}"
         >
     </div>
-    @if ($dir->group->url > 0)
+    @if (!$dir->group->url->isInactive())
     <div class="form-group">
         <label for="url">
             <span>{{ trans('idir::dirs.url') }}:</span>
-            @if ($dir->group->url === $dir->group::OBLIGATORY_URL)
+            @if ($dir->group->url->isActive())
             <span>*</span>
             @endif
         </label>

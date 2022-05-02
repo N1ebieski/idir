@@ -4,6 +4,7 @@ namespace N1ebieski\IDir\Database\Factories\Field;
 
 use N1ebieski\IDir\Models\Field\Field;
 use N1ebieski\IDir\ValueObjects\Field\Type;
+use N1ebieski\IDir\ValueObjects\Field\Visible;
 use N1ebieski\IDir\ValueObjects\Field\Required;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -26,7 +27,7 @@ class FieldFactory extends Factory
         return [
             'title' => ucfirst($this->faker->unique()->word),
             'desc' => $this->faker->text(300),
-            'visible' => rand(Field::INVISIBLE, Field::VISIBLE)
+            'visible' => rand(Visible::INACTIVE, Visible::ACTIVE)
         ];
     }
 
@@ -39,7 +40,7 @@ class FieldFactory extends Factory
     {
         return $this->state(function () {
             return [
-                'visible' => Field::VISIBLE
+                'visible' => Visible::ACTIVE
             ];
         });
     }
@@ -53,7 +54,7 @@ class FieldFactory extends Factory
     {
         return $this->state(function () {
             return [
-                'visible' => Field::INVISIBLE
+                'visible' => Visible::INACTIVE
             ];
         });
     }

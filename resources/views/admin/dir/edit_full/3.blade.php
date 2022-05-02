@@ -76,10 +76,7 @@
                     @includeWhen($errors->has('user'), 'icore::admin.partials.errors', ['name' => 'user'])
                 </div>
 
-                @includeWhen(
-                    $group->backlink > 0 && optional($backlinks)->isNotEmpty(),
-                    'idir::admin.dir.partials.backlink'
-                )
+                @includeWhen(!$group->backlink->isInactive() && optional($backlinks)->isNotEmpty(), 'idir::admin.dir.partials.backlink')
 
                 @if ($dir->isPayment($group->id) && $group->prices->isNotEmpty())
                     @include('idir::admin.dir.partials.payment')

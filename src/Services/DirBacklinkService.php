@@ -39,23 +39,10 @@ class DirBacklinkService implements Creatable
      */
     public function __construct(DirBacklink $dirBacklink, Carbon $carbon, DB $db)
     {
-        $this->setDirBacklink($dirBacklink);
+        $this->dirBacklink = $dirBacklink;
 
         $this->carbon = $carbon;
         $this->db = $db;
-    }
-
-    /**
-     * Undocumented function
-     *
-     * @param DirBacklink $dirBacklink
-     * @return static
-     */
-    public function setDirBacklink(DirBacklink $dirBacklink)
-    {
-        $this->dirBacklink = $dirBacklink;
-
-        return $this;
     }
 
     /**

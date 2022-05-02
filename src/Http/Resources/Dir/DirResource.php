@@ -152,7 +152,7 @@ class DirResource extends JsonResource
                             ->collection(
                                 $this->fields->whereIn('id', $this->group->fields->pluck('id')->toArray())
                                     ->filter(function ($item) use ($request) {
-                                        if (!$item->isPublic() && !optional($request->user())->can('view', $this->resource)) {
+                                        if (!$item->visible->isActive() && !optional($request->user())->can('view', $this->resource)) {
                                             return false;
                                         }
 

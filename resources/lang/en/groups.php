@@ -1,6 +1,10 @@
 <?php
 
-use N1ebieski\IDir\Models\Group;
+use N1ebieski\IDir\ValueObjects\Group\Url;
+use N1ebieski\IDir\ValueObjects\Group\Payment;
+use N1ebieski\IDir\ValueObjects\Group\Visible;
+use N1ebieski\IDir\ValueObjects\Group\Backlink;
+use N1ebieski\IDir\ValueObjects\Group\ApplyStatus;
 
 return [
     'dir' => [
@@ -32,33 +36,33 @@ return [
     'visible' => [
         'label' => 'Visibility',
         'tooltip' => 'Public - visible to everyone. Private - visible for moderators.',
-        Group::INVISIBLE => 'private',
-        Group::VISIBLE => 'public'
+        Visible::INACTIVE => 'private',
+        Visible::ACTIVE => 'public'
     ],
     'backlink' => [
         'label' => 'Backlink',
-        Group::WITHOUT_BACKLINK => 'none',
-        Group::OPTIONAL_BACKLINK => 'optional',
-        Group::OBLIGATORY_BACKLINK => 'required'
+        Backlink::INACTIVE => 'none',
+        Backlink::OPTIONAL => 'optional',
+        Backlink::ACTIVE => 'required'
     ],
     'url' => [
         'label' => 'URL',
-        Group::WITHOUT_URL => 'none',
-        Group::OPTIONAL_URL => 'optional',
-        Group::OBLIGATORY_URL => 'required'
+        Url::INACTIVE => 'none',
+        Url::OPTIONAL => 'optional',
+        Url::ACTIVE => 'required'
     ],
     'apply_status' => [
         'label' => 'Status after adding entry',
-        Group::APPLY_INACTIVE => 'pending acceptance',
-        Group::APPLY_ACTIVE => 'active immediately'
+        ApplyStatus::INACTIVE => 'pending acceptance',
+        ApplyStatus::ACTIVE => 'active immediately'
     ],
     'max_models' => 'Maximum number of entries in the group',
     'max_models_daily' => 'Daily maximum number of entries in the group',
     'empty' => 'No groups available',
     'payment' => [
         'label' => 'Payment',
-        Group::WITHOUT_PAYMENT => 'free',
-        Group::PAYMENT => 'paid'
+        Payment::INACTIVE => 'free',
+        Payment::ACTIVE => 'paid'
     ],
     'alt' => [
         'label' => 'Alternative group',

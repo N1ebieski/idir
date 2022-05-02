@@ -5,6 +5,7 @@ namespace N1ebieski\IDir\Database\Seeders\SEOKatalog;
 use Illuminate\Support\Facades\DB;
 use N1ebieski\IDir\ValueObjects\Field\Type;
 use N1ebieski\IDir\Models\Field\Group\Field;
+use N1ebieski\IDir\ValueObjects\Field\Visible;
 use N1ebieski\IDir\Database\Seeders\SEOKatalog\SEOKatalogSeeder;
 
 class FieldsSeeder extends SEOKatalogSeeder
@@ -35,8 +36,8 @@ class FieldsSeeder extends SEOKatalogSeeder
                         : null;
                     $field->type = $this->type($item->type);
                     $field->visible = $item->type_f === 0 ?
-                        Field::VISIBLE
-                        : Field::INVISIBLE;
+                        Visible::ACTIVE
+                        : Visible::INACTIVE;
                     $field->options = $this->options($item);
 
                     $field->save();

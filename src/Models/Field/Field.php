@@ -11,6 +11,7 @@ use N1ebieski\IDir\Models\Traits\Filterable;
 use N1ebieski\ICore\Models\Traits\Carbonable;
 use N1ebieski\ICore\Models\Traits\Polymorphic;
 use N1ebieski\IDir\ValueObjects\Field\Options;
+use N1ebieski\IDir\ValueObjects\Field\Visible;
 use N1ebieski\ICore\Models\Traits\Positionable;
 use N1ebieski\IDir\Services\Field\FieldService;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -21,6 +22,7 @@ use N1ebieski\IDir\Database\Factories\Field\FieldFactory;
 /**
  * @property Type $type
  * @property Options $options
+ * @property Visible $visible
  */
 class Field extends Model
 {
@@ -32,30 +34,6 @@ class Field extends Model
     use HasFactory;
 
     // Configuration
-
-    /**
-     * [public description]
-     * @var int
-     */
-    public const VISIBLE = 1;
-
-    /**
-     * [public description]
-     * @var int
-     */
-    public const INVISIBLE = 0;
-
-    /**
-     * [public description]
-     * @var int
-     */
-    public const REQUIRED = 1;
-
-    /**
-     * [public description]
-     * @var int
-     */
-    public const OPTIONAL = 0;
 
     /**
      * The columns of the full text index
@@ -87,7 +65,7 @@ class Field extends Model
         'id' => 'integer',
         'type' => \N1ebieski\IDir\Casts\Field\TypeCast::class,
         'options' => \N1ebieski\IDir\Casts\Field\OptionsCast::class,
-        'visible' => 'integer',
+        'visible' => \N1ebieski\IDir\Casts\Field\VisibleCast::class,
         'position' => 'integer',
         'created_at' => 'datetime',
         'updated_at' => 'datetime'
@@ -124,7 +102,7 @@ class Field extends Model
      */
     public function scopePublic(Builder $query): Builder
     {
-        return $query->where('visible', static::VISIBLE);
+        return $query->where('visible', Visible::ACTIVE);
     }
 
     // Accessors
@@ -136,18 +114,6 @@ class Field extends Model
     public function getDecodeValueAttribute()
     {
         return json_decode($this->pivot->value);
-    }
-
-    // Checkers
-
-    /**
-     * Undocumented function
-     *
-     * @return boolean
-     */
-    public function isPublic(): bool
-    {
-        return $this->getAttribute('visible') === static::VISIBLE;
     }
 
     // Factories

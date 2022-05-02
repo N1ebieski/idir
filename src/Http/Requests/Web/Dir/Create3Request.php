@@ -2,9 +2,13 @@
 
 namespace N1ebieski\IDir\Http\Requests\Web\Dir;
 
+use N1ebieski\IDir\Models\Group;
 use N1ebieski\IDir\Models\BanValue;
 use N1ebieski\IDir\Http\Requests\Web\Dir\Store2Request;
 
+/**
+ * @property Group $group
+ */
 class Create3Request extends Store2Request
 {
     /**
@@ -23,7 +27,7 @@ class Create3Request extends Store2Request
      */
     public function authorize()
     {
-        return $this->group->isAvailable() && $this->group->isPublic();
+        return $this->group->isAvailable() && $this->group->visible->isActive();
     }
 
     /**

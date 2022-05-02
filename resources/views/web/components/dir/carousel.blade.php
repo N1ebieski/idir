@@ -4,7 +4,7 @@
         @foreach ($dirs as $dir)
         <div class="carousel-item {{ $loop->first ? 'active' : null }}">
             <div class="row">
-                <div class="col-md-{{ $dir->url->isUrl() ? '8' : '12' }} order-2">
+                <div class="col-md-{{ $dir->isUrl() ? '8' : '12' }} order-2">
                     <h2 class="h5 border-bottom pb-2 my-2">
                         <a 
                             href="{{ route('web.dir.show', [$dir->slug]) }}" 

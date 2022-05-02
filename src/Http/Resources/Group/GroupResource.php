@@ -10,6 +10,9 @@ use N1ebieski\IDir\Http\Resources\Field\FieldResource;
 use N1ebieski\IDir\Http\Resources\Price\PriceResource;
 use N1ebieski\IDir\Http\Resources\Privilege\PrivilegeResource;
 
+/**
+ * @mixin Group
+ */
 class GroupResource extends JsonResource
 {
     /**
@@ -32,7 +35,7 @@ class GroupResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'slug' => $this->slug,
+            'slug' => $this->slug->getValue(),
             'position' => $this->position,
             'name' => $this->name,
             'desc' => $this->desc,
@@ -41,19 +44,19 @@ class GroupResource extends JsonResource
             'max_models' => $this->max_models,
             'max_models_daily' => $this->max_models_daily,
             'visible' => [
-                'value' => $this->visible,
+                'value' => $this->visible->getValue(),
                 'label' => Lang::get("idir::groups.visible.{$this->visible}")
             ],
             'apply_status' => [
-                'value' => $this->apply_status,
+                'value' => $this->apply_status->getValue(),
                 'label' => Lang::get("idir::groups.apply_status.{$this->apply_status}")
             ],
             'url' => [
-                'value' => $this->url,
+                'value' => $this->url->getValue(),
                 'label' => Lang::get("idir::groups.url.{$this->url}")
             ],
             'backlink' => [
-                'value' => $this->backlink,
+                'value' => $this->backlink->getValue(),
                 'label' => Lang::get("idir::groups.backlink.{$this->backlink}")
             ],
             'created_at' => $this->created_at,

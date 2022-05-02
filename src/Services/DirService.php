@@ -103,7 +103,7 @@ class DirService implements
         Auth $auth,
         DB $db
     ) {
-        $this->setDir($dir);
+        $this->dir = $dir;
 
         $this->paymentFactory = $paymentFactory;
         $this->userFactory = $userFactory;
@@ -112,19 +112,6 @@ class DirService implements
         $this->carbon = $carbon;
         $this->auth = $auth;
         $this->db = $db;
-    }
-
-    /**
-     * Undocumented function
-     *
-     * @param Dir $dir
-     * @return self
-     */
-    public function setDir(Dir $dir)
-    {
-        $this->dir = $dir;
-
-        return $this;
     }
 
     /**
@@ -192,10 +179,10 @@ class DirService implements
 
             try {
                 $this->dir->status = Status::fromString(
-                    $attributes['payment_type'] ?? $this->dir->group->apply_status
+                    $attributes['payment_type'] ?? $this->dir->group->apply_status->getValue()
                 );
             } catch (\InvalidArgumentException $e) {
-                $this->dir->status = $this->dir->group->apply_status;
+                $this->dir->status = $this->dir->group->apply_status->getValue();
             }
 
             $this->dir->user()->associate(
@@ -330,10 +317,10 @@ class DirService implements
 
             try {
                 $this->dir->status = Status::fromString(
-                    $attributes['payment_type'] ?? $this->dir->group->apply_status
+                    $attributes['payment_type'] ?? $this->dir->group->apply_status->getValue()
                 );
             } catch (\InvalidArgumentException $e) {
-                $this->dir->status = $this->dir->group->apply_status;
+                $this->dir->status = $this->dir->group->apply_status->getValue();
             }
 
             if ($this->dir->group_id !== $this->dir->group->id) {

@@ -7,7 +7,9 @@ use Illuminate\Support\Str;
 use N1ebieski\IDir\Models\Dir;
 use N1ebieski\IDir\Models\User;
 use N1ebieski\IDir\Models\Group;
+use N1ebieski\IDir\ValueObjects\Group\Id;
 use N1ebieski\IDir\ValueObjects\Dir\Status;
+use N1ebieski\IDir\ValueObjects\Group\Slug;
 use N1ebieski\IDir\Models\Category\Dir\Category;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -188,7 +190,7 @@ class DirFactory extends Factory
      */
     public function withDefaultGroup()
     {
-        return $this->for(Group::find(Group::DEFAULT));
+        return $this->for(Group::make()->makeCache()->rememberBySlug(Slug::default()));
     }
 
     /**

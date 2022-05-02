@@ -14,6 +14,7 @@ use Illuminate\Http\UploadedFile;
 use GuzzleHttp\Client as GuzzleClient;
 use N1ebieski\IDir\Models\DirBacklink;
 use N1ebieski\IDir\ValueObjects\Dir\Status;
+use N1ebieski\IDir\ValueObjects\Group\Slug;
 use N1ebieski\IDir\ValueObjects\Price\Type;
 use N1ebieski\IDir\Models\Field\Group\Field;
 use Illuminate\Http\Response as HttpResponse;
@@ -81,7 +82,10 @@ class DirTest extends TestCase
 
     public function testApiDirUpdateAsGuest()
     {
-        $response = $this->putJson(route('api.dir.update', [rand(1, 1000), Group::DEFAULT]));
+        $response = $this->putJson(route('api.dir.update', [
+            rand(1, 1000),
+            Group::make()->makeCache()->rememberBySlug(Slug::default())->id
+        ]));
 
         $response->assertStatus(HttpResponse::HTTP_UNAUTHORIZED);
     }
@@ -139,7 +143,10 @@ class DirTest extends TestCase
 
         Sanctum::actingAs($user, ['api.dirs.edit']);
 
-        $response = $this->putJson(route('api.dir.update', [rand(1, 1000), Group::DEFAULT]));
+        $response = $this->putJson(route('api.dir.update', [
+            rand(1, 1000),
+            Group::make()->makeCache()->rememberBySlug(Slug::default())->id
+        ]));
 
         $response->assertStatus(HttpResponse::HTTP_NOT_FOUND);
     }

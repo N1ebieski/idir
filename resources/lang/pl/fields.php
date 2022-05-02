@@ -1,6 +1,6 @@
 <?php
 
-use N1ebieski\IDir\Models\Field\Field;
+use N1ebieski\IDir\ValueObjects\Field\Visible;
 use N1ebieski\IDir\ValueObjects\Field\Required;
 
 return [
@@ -47,8 +47,8 @@ return [
     'visible' => [
         'label' => 'Widoczność',
         'tooltip' => 'Publiczna - widoczna dla wszystkich. Prywatna - widoczna dla ról z uprawnieniem admina.',
-        Field::INVISIBLE => 'prywatna',
-        Field::VISIBLE => 'publiczna'
+        Visible::INACTIVE => 'prywatna',
+        Visible::ACTIVE => 'publiczna'
     ],
     'required' => [
         'label' => 'Warunek pola',

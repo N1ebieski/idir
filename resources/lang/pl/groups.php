@@ -1,6 +1,11 @@
 <?php
 
 use N1ebieski\IDir\Models\Group;
+use N1ebieski\IDir\ValueObjects\Group\Url;
+use N1ebieski\IDir\ValueObjects\Group\Payment;
+use N1ebieski\IDir\ValueObjects\Group\Visible;
+use N1ebieski\IDir\ValueObjects\Group\Backlink;
+use N1ebieski\IDir\ValueObjects\Group\ApplyStatus;
 
 return [
     'dir' => [
@@ -32,33 +37,33 @@ return [
     'visible' => [
         'label' => 'Widoczność',
         'tooltip' => 'Publiczna - widoczna dla wszystkich. Prywatna - widoczna dla ról z uprawnieniem admina.',
-        Group::INVISIBLE => 'prywatna',
-        Group::VISIBLE => 'publiczna'
+        Visible::INACTIVE => 'prywatna',
+        Visible::ACTIVE => 'publiczna'
     ],
     'backlink' => [
         'label' => 'Link zwrotny',
-        Group::WITHOUT_BACKLINK => 'brak',
-        Group::OPTIONAL_BACKLINK => 'nieobowiązkowy',
-        Group::OBLIGATORY_BACKLINK => 'obowiązkowy'
+        Backlink::INACTIVE => 'brak',
+        Backlink::OPTIONAL => 'nieobowiązkowy',
+        Backlink::ACTIVE => 'obowiązkowy'
     ],
     'url' => [
         'label' => 'Adres strony',
-        Group::WITHOUT_URL => 'brak',
-        Group::OPTIONAL_URL => 'nieobowiązkowy',
-        Group::OBLIGATORY_URL => 'obowiązkowy'
+        Url::INACTIVE => 'brak',
+        Url::OPTIONAL => 'nieobowiązkowy',
+        Url::ACTIVE => 'obowiązkowy'
     ],
     'apply_status' => [
         'label' => 'Status po dodaniu/edycji wpisu',
-        Group::APPLY_INACTIVE => 'oczekujący na moderację',
-        Group::APPLY_ACTIVE => 'natychmiast aktywny'
+        ApplyStatus::INACTIVE => 'oczekujący na moderację',
+        ApplyStatus::ACTIVE => 'natychmiast aktywny'
     ],
     'max_models' => 'Maksymalna ilość wpisów w grupie',
     'max_models_daily' => 'Dzienna maksymalna ilość wpisów w grupie',
     'empty' => 'Brak dostępnych grup',
     'payment' => [
         'label' => 'Płatność',
-        Group::WITHOUT_PAYMENT => 'darmowa',
-        Group::PAYMENT => 'płatna'
+        Payment::INACTIVE => 'darmowa',
+        Payment::ACTIVE => 'płatna'
     ],
     'alt' => [
         'label' => 'Alternatywna grupa',
