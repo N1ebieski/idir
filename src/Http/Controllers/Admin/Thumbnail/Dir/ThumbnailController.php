@@ -5,9 +5,8 @@ namespace N1ebieski\IDir\Http\Controllers\Admin\Thumbnail\Dir;
 use N1ebieski\IDir\Models\Dir;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Response;
-use N1ebieski\IDir\Http\Clients\Thumbnail\Client;
+use N1ebieski\IDir\Http\Clients\Thumbnail\ThumbnailClient;
 use N1ebieski\IDir\Http\Controllers\Admin\Thumbnail\Dir\Polymorphic;
 
 class ThumbnailController implements Polymorphic
@@ -16,12 +15,12 @@ class ThumbnailController implements Polymorphic
      * Undocumented function
      *
      * @param Dir $dir
-     * @param Client $client
+     * @param ThumbnailClient $client
      * @return JsonResponse
      */
-    public function reload(Dir $dir, Client $client): JsonResponse
+    public function reload(Dir $dir, ThumbnailClient $client): JsonResponse
     {
-        $client->patch(Config::get('idir.dir.thumbnail.api.reload_url'), [$dir->url->getValue()]);
+        $client->reload(['url' => $dir->url->getValue()]);
 
         sleep(10);
 

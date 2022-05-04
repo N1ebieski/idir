@@ -8,14 +8,15 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Support\Carbon;
 use N1ebieski\IDir\Models\DirStatus;
 use Illuminate\Queue\SerializesModels;
+use Psr\Http\Message\ResponseInterface;
 use Illuminate\Queue\InteractsWithQueue;
 use N1ebieski\IDir\Repositories\DirRepo;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Http\Response as HttpResponse;
 use N1ebieski\IDir\Repositories\DirStatusRepo;
-use N1ebieski\IDir\Http\Clients\Dir\StatusClient;
 use Illuminate\Contracts\Config\Repository as Config;
+use N1ebieski\IDir\Http\Clients\DirStatus\DirStatusClient;
 
 class CheckStatusJob implements ShouldQueue
 {
@@ -26,9 +27,16 @@ class CheckStatusJob implements ShouldQueue
 
     /**
      * [protected description]
-     * @var StatusClient
+     * @var DirStatusClient
      */
     protected $client;
+
+    /**
+     * Undocumented variable
+     *
+     * @var ResponseInterface
+     */
+    protected $response;
 
     /**
      * Delete the job if its models no longer exist.
@@ -77,24 +85,6 @@ class CheckStatusJob implements ShouldQueue
     protected $config;
 
     /**
-     * [protected description]
-     * @var int
-     */
-    protected $max_attempts;
-
-    /**
-     * [protected description]
-     * @var int
-     */
-    protected $days;
-
-    /**
-     * [protected description]
-     * @var array
-     */
-    protected $parked_domains;
-
-    /**
      * Create a new job instance.
      *
      * @param DirStatus $dirStatus
@@ -112,9 +102,19 @@ class CheckStatusJob implements ShouldQueue
      */
     public function getLastUrlFromRedirect(): string
     {
-        $redirects = $this->client->getResponse()->getHeader(\GuzzleHttp\RedirectMiddleware::HISTORY_HEADER);
+        $redirects = $this->response->getHeader(\GuzzleHttp\RedirectMiddleware::HISTORY_HEADER);
 
         return end($redirects);
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @return string
+     */
+    protected function getParkedDomainsAsString(): string
+    {
+        return $this->str->escaped(implode('|', $this->config->get('idir.dir.status.parked_domains')));
     }
 
     /**
@@ -125,7 +125,7 @@ class CheckStatusJob implements ShouldQueue
     {
         return $this->dirStatus->attempted_at === null ||
             $this->carbon->parse($this->dirStatus->attempted_at)->lessThanOrEqualTo(
-                $this->carbon->now()->subDays($this->days)
+                $this->carbon->now()->subDays($this->config->get('idir.dir.status.check_days'))
             );
     }
 
@@ -136,7 +136,7 @@ class CheckStatusJob implements ShouldQueue
      */
     protected function isMaxAttempt(): bool
     {
-        return $this->dirStatus->attempts >= $this->max_attempts;
+        return $this->dirStatus->attempts >= $this->config->get('idir.dir.status.max_attempts');
     }
 
     /**
@@ -146,8 +146,8 @@ class CheckStatusJob implements ShouldQueue
     protected function validateStatus(): bool
     {
         try {
-            $this->client->get($this->dirStatus->dir->url->getValue());
-        } catch (\N1ebieski\IDir\Exceptions\Dir\TransferException $e) {
+            $this->response = $this->client->show($this->dirStatus->dir->url->getValue());
+        } catch (\N1ebieski\IDir\Exceptions\DirStatus\TransferException $e) {
             return false;
         }
 
@@ -165,22 +165,15 @@ class CheckStatusJob implements ShouldQueue
     /**
      * Undocumented function
      *
-     * @return string
-     */
-    protected function prepareParkedDomains(): string
-    {
-        return $this->parked_domains = $this->str->escaped(implode('|', $this->parked_domains));
-    }
-
-    /**
-     * Undocumented function
-     *
      * @return boolean
      */
     protected function isParked(): bool
     {
-        if (count($this->parked_domains) > 0 && $redirect = $this->getLastUrlFromRedirect()) {
-            return preg_match('/(' . $this->prepareParkedDomains() . ')/', $redirect);
+        if (
+            count($this->config->get('idir.dir.status.parked_domains')) > 0
+            && $redirect = $this->getLastUrlFromRedirect()
+        ) {
+            return preg_match('/(' . $this->getParkedDomainsAsString() . ')/', $redirect);
         }
 
         return false;
@@ -193,7 +186,7 @@ class CheckStatusJob implements ShouldQueue
      */
     protected function isStatus(): bool
     {
-        return $this->client->getResponse()->getStatusCode() === HttpResponse::HTTP_OK;
+        return $this->response->getStatusCode() === HttpResponse::HTTP_OK;
     }
 
     /**
@@ -225,13 +218,13 @@ class CheckStatusJob implements ShouldQueue
     /**
      * Undocumented function
      *
-     * @param StatusClient $client
+     * @param DirStatusClient $client
      * @param Carbon $carbon
      * @param Config $config
      * @return void
      */
     public function handle(
-        StatusClient $client,
+        DirStatusClient $client,
         Carbon $carbon,
         Config $config,
         Str $str
@@ -242,9 +235,8 @@ class CheckStatusJob implements ShouldQueue
         $this->client = $client;
         $this->carbon = $carbon;
         $this->str = $str;
+        $this->config = $config;
 
-        $this->days = $config->get('idir.dir.status.check_days');
-        $this->max_attempts = $config->get('idir.dir.status.max_attempts');
         $this->parked_domains = $config->get('idir.dir.status.parked_domains');
 
         if ($this->isAttempt()) {

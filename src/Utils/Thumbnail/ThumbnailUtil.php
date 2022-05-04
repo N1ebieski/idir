@@ -1,21 +1,18 @@
 <?php
 
-namespace N1ebieski\IDir\Utils;
+namespace N1ebieski\IDir\Utils\Thumbnail;
 
 use Illuminate\Support\Carbon;
-use N1ebieski\ICore\Utils\Traits\Factory;
 use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Contracts\Filesystem\Factory as Storage;
-use N1ebieski\IDir\Http\Clients\Thumbnail\Provider\Client;
+use N1ebieski\IDir\Http\Clients\Thumbnail\Provider\ThumbnailClient;
 
 class ThumbnailUtil
 {
-    use Factory;
-
     /**
      * Undocumented variable
      *
-     * @var Client
+     * @var ThumbnailClient
      */
     public $client;
 
@@ -48,24 +45,10 @@ class ThumbnailUtil
     protected $url;
 
     /**
-     * Undocumented variable
-     *
-     * @var string
-     */
-    protected $host;
-
-    /**
      * [protected description]
      * @var string
      */
     protected $path = 'vendor/idir/thumbnails';
-
-    /**
-     * Undocumented variable
-     *
-     * @var string
-     */
-    protected $file_path;
 
     /**
      * Undocumented variable
@@ -77,7 +60,7 @@ class ThumbnailUtil
     /**
      * Undocumented function
      *
-     * @param Client $client
+     * @param ThumbnailClient $client
      * @param Storage $storage
      * @param Carbon $carbon
      * @param Config $config
@@ -85,7 +68,7 @@ class ThumbnailUtil
      * @param string $disk
      */
     public function __construct(
-        Client $client,
+        ThumbnailClient $client,
         Storage $storage,
         Carbon $carbon,
         Config $config,
@@ -99,11 +82,6 @@ class ThumbnailUtil
 
         $this->url = $url;
         $this->disk = $disk;
-
-        if (!empty($this->url)) {
-            $this->setHostFromUrl($this->url);
-            $this->setFilePathFromHost($this->host);
-        }
     }
 
     /**
@@ -112,27 +90,32 @@ class ThumbnailUtil
      * @param string $url
      * @return static
      */
-    protected function setHostFromUrl(string $url)
+    public function make(string $url)
     {
-        $this->host = parse_url($url, PHP_URL_HOST);
-
-        return $this;
+        return new static($this->client, $this->storage, $this->carbon, $this->config, $url, $this->disk);
     }
 
     /**
      * Undocumented function
      *
-     * @param string $host
-     * @return static
+     * @return string
      */
-    protected function setFilePathFromHost(string $host)
+    protected function getHost(): string
     {
-        $hash = md5($host);
+        return parse_url($this->url, PHP_URL_HOST);
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @return void
+     */
+    protected function getFilePath()
+    {
+        $hash = md5($this->getHost());
         $path = implode('/', array_slice(str_split($hash), 0, 3));
 
-        $this->file_path = $this->path . '/' . $path . '/' . $hash . '.jpg';
-
-        return $this;
+        return $this->path . '/' . $path . '/' . $hash . '.jpg';
     }
 
     /**
@@ -142,7 +125,7 @@ class ThumbnailUtil
      */
     public function getLastModified(): string
     {
-        return $this->storage->disk($this->disk)->lastModified($this->file_path);
+        return $this->storage->disk($this->disk)->lastModified($this->getFilePath());
     }
 
     /**
@@ -170,10 +153,11 @@ class ThumbnailUtil
      */
     protected function isTimeToReload(): bool
     {
-        $modified_at = $this->storage->disk($this->disk)->lastModified($this->file_path);
+        $modified_at = $this->storage->disk($this->disk)->lastModified($this->getFilePath());
 
         return $this->carbon->parse($modified_at)
-            ->addDays($this->config->get('idir.dir.thumbnail.cache.days')) < $this->carbon->now();
+            ->addDays($this->config->get('idir.dir.thumbnail.cache.days'))
+            ->lessThan($this->carbon->now());
     }
 
     /**
@@ -183,7 +167,7 @@ class ThumbnailUtil
      */
     protected function isExists(): bool
     {
-        return $this->storage->disk($this->disk)->exists($this->file_path);
+        return $this->storage->disk($this->disk)->exists($this->getFilePath());
     }
 
     /**
@@ -195,12 +179,12 @@ class ThumbnailUtil
     {
         if ($this->isReload()) {
             $this->storage->disk($this->disk)->put(
-                $this->file_path,
-                $this->client->get($this->config->get('idir.dir.thumbnail.url'), [$this->url])
+                $this->getFilePath(),
+                $this->client->show(['url' => $this->url])->getBody()->getContents()
             );
         }
 
-        return $this->storage->disk($this->disk)->get($this->file_path);
+        return $this->storage->disk($this->disk)->get($this->getFilePath());
     }
 
     /**
@@ -210,10 +194,10 @@ class ThumbnailUtil
      */
     public function reload(): bool
     {
-        $this->client->get($this->config->get('idir.dir.thumbnail.reload_url'), [$this->url]);
+        $this->client->reload(['url' => $this->url]);
 
         if ($this->isExists()) {
-            $this->storage->disk($this->disk)->delete($this->file_path);
+            $this->storage->disk($this->disk)->delete($this->getFilePath());
         }
 
         return true;

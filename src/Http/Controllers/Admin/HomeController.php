@@ -9,7 +9,7 @@ use N1ebieski\ICore\Models\Page\Page;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Support\Collection as Collect;
-use N1ebieski\ICore\Http\Clients\Intelekt\Client;
+use N1ebieski\ICore\Http\Clients\Intelekt\Post\PostClient;
 use N1ebieski\IDir\Http\Responses\Data\Chart\Dir\GroupData as DirGroupData;
 use N1ebieski\IDir\Http\Responses\Data\Chart\Dir\StatusData as DirStatusData;
 use N1ebieski\IDir\Http\Responses\Data\Chart\Dir\TimelineData as DirTimelineData;
@@ -23,19 +23,17 @@ class HomeController
      * @param Dir $dir
      * @param Post $post
      * @param Page $page
-     * @param Client $client
+     * @param PostClient $client
      * @return HttpResponse
      */
-    public function index(Dir $dir, Post $post, Page $page, Client $client): HttpResponse
+    public function index(Dir $dir, Post $post, Page $page, PostClient $client): HttpResponse
     {
         try {
-            $posts = Collect::make($client->post('/api/posts/index', [
-                'filter' => [
-                    'status' => 1,
-                    'orderby' => 'created_at|desc',
-                    'search' => 'idir'
-                ]
-            ])->data);
+            $posts = $client->index(['filter' => [
+                'status' => 1,
+                'orderby' => 'created_at|desc',
+                'search' => 'icore',
+            ]])->data;
         } catch (\N1ebieski\ICore\Exceptions\Client\TransferException $e) {
             $posts = null;
         }

@@ -86,18 +86,6 @@ class CheckBacklinkJob implements ShouldQueue
     protected $config;
 
     /**
-     * [protected description]
-     * @var int
-     */
-    protected $max_attempts;
-
-    /**
-     * [protected description]
-     * @var int
-     */
-    protected $hours;
-
-    /**
      * Create a new job instance.
      *
      * @param DirBacklink $dirBacklink
@@ -116,7 +104,7 @@ class CheckBacklinkJob implements ShouldQueue
     {
         return $this->dirBacklink->attempted_at === null ||
             $this->carbon->parse($this->dirBacklink->attempted_at)->lessThanOrEqualTo(
-                $this->carbon->now()->subHours($this->hours)
+                $this->carbon->now()->subHours($this->config->get('idir.dir.backlink.check_hours'))
             );
     }
 
@@ -127,7 +115,7 @@ class CheckBacklinkJob implements ShouldQueue
      */
     protected function isMaxAttempt(): bool
     {
-        return $this->dirBacklink->attempts === $this->max_attempts;
+        return $this->dirBacklink->attempts === $this->config->get('idir.dir.backlink.max_attempts');
     }
 
     /**
@@ -194,9 +182,7 @@ class CheckBacklinkJob implements ShouldQueue
         $this->validator = $validator;
         $this->app = $app;
         $this->carbon = $carbon;
-
-        $this->hours = $config->get('idir.dir.backlink.check_hours');
-        $this->max_attempts = $config->get('idir.dir.backlink.max_attempts');
+        $this->config = $config;
 
         if ($this->isAttempt()) {
             $this->dirBacklinkRepo->attemptedNow();

@@ -5,10 +5,9 @@ namespace N1ebieski\IDir\Http\Controllers\Web;
 use Carbon\Carbon;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Config;
-use N1ebieski\IDir\Utils\ThumbnailUtil;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Http\Response as HttpResponse;
-use Illuminate\Http\Response as HttpResponse;
+use N1ebieski\IDir\Utils\Thumbnail\ThumbnailUtil;
 use N1ebieski\IDir\Http\Requests\Web\Thumbnail\ShowRequest;
 
 class ThumbnailController extends Controller

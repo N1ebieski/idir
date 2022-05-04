@@ -1,6 +1,6 @@
 <?php
 
-namespace N1ebieski\IDir\Exceptions\Dir;
+namespace N1ebieski\IDir\Exceptions\DirBacklink;
 
 use N1ebieski\IDir\Exceptions\CustomException;
 

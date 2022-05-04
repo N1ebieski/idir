@@ -21,7 +21,6 @@ class PaymentResource extends JsonResource
         parent::__construct($payment);
     }
 
-
     /**
      * Transform the resource into an array.
      *

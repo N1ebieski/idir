@@ -4,8 +4,8 @@ namespace N1ebieski\IDir\Rules;
 
 use Illuminate\Support\Str;
 use Illuminate\Contracts\Validation\Rule;
-use N1ebieski\IDir\Http\Clients\Dir\BacklinkClient;
 use Illuminate\Contracts\Translation\Translator as Lang;
+use N1ebieski\IDir\Http\Clients\DirBacklink\DirBacklinkClient;
 
 class BacklinkRule implements Rule
 {
@@ -17,7 +17,7 @@ class BacklinkRule implements Rule
 
     /**
      * [protected description]
-     * @var BacklinkClient
+     * @var DirBacklinkClient
      */
     protected $client;
 
@@ -31,11 +31,11 @@ class BacklinkRule implements Rule
     /**
      * Undocumented function
      *
-     * @param BacklinkClient $client
+     * @param DirBacklinkClient $client
      * @param Lang $lang
      * @param string $link
      */
-    public function __construct(BacklinkClient $client, Lang $lang, string $link)
+    public function __construct(DirBacklinkClient $client, Lang $lang, string $link)
     {
         $this->link = $link;
 
@@ -66,14 +66,14 @@ class BacklinkRule implements Rule
     public function passes($attribute, $value)
     {
         try {
-            $this->client->get($value);
-        } catch (\N1ebieski\IDir\Exceptions\Dir\TransferException $e) {
+            $response = $this->client->show($value);
+        } catch (\N1ebieski\IDir\Exceptions\DirBacklink\TransferException $e) {
             return false;
         }
 
         return preg_match(
             '/<a\s((?:(?!nofollow|>).)*)href=([\"\']??)' . Str::escaped($this->link) . '([\"\']??)((?:(?!nofollow|>).)*)>(.*)<\/a>/siU',
-            $this->client->getContents()
+            $response->getBody()->getContents()
         );
     }
 

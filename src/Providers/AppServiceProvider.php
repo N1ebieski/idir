@@ -19,7 +19,7 @@ class AppServiceProvider extends ServiceProvider
             ->needs('$temp_path')
             ->give('vendor/idir/temp');
 
-        $this->app->when(\N1ebieski\IDir\Utils\ThumbnailUtil::class)
+        $this->app->when(\N1ebieski\IDir\Utils\Thumbnail\ThumbnailUtil::class)
             ->needs('$url')
             ->give('');
 
@@ -32,6 +32,13 @@ class AppServiceProvider extends ServiceProvider
             ->give(function () {
                 return $this->app->make(\N1ebieski\IDir\Console\Commands\Update\SchemaFactory::class);
             });
+
+        $this->app->bind(\N1ebieski\IDir\Http\Clients\Payment\Interfaces\Codes\SmsClientInterface::class, function ($app) {
+            switch ($app['config']['idir.payment.code_sms.driver']) {
+                case 'cashbill':
+                    return $app->make(\N1ebieski\IDir\Http\Clients\Payment\Cashbill\Codes\SMS\SmsClient::class);
+            }
+        });
     }
 
     /**

@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use N1ebieski\IDir\Models\Price;
 use N1ebieski\IDir\Rules\Codes\CodesRule;
 use Illuminate\Contracts\Translation\Translator as Lang;
-use N1ebieski\IDir\Utils\Payment\Interfaces\Codes\SMSUtilStrategy;
+use N1ebieski\IDir\Http\Clients\Payment\Interfaces\Codes\SmsClientInterface;
 
 class SMSRule extends CodesRule
 {
@@ -18,9 +18,9 @@ class SMSRule extends CodesRule
 
     /**
      * [private description]
-     * @var SMSUtilStrategy
+     * @var SmsClientInterface
      */
-    protected $smsUtil;
+    protected $client;
 
     /**
      * Undocumented function
@@ -28,27 +28,17 @@ class SMSRule extends CodesRule
      * @param Price $price
      * @param Request $request
      * @param Lang $lang
-     * @param SMSUtilStrategy $smsUtil
+     * @param SmsClientInterface $client
      */
-    public function __construct(Price $price, Request $request, Lang $lang, SMSUtilStrategy $smsUtil)
+    public function __construct(Price $price, Request $request, Lang $lang, SmsClientInterface $client)
     {
         parent::__construct($request, $lang);
 
         $this->price = $price;
 
-        $this->smsUtil = $smsUtil;
+        $this->client = $client;
 
-        $this->makePrice();
-    }
-
-    /**
-     * Undocumented function
-     *
-     * @return Price
-     */
-    protected function makePrice(): Price
-    {
-        return $this->price = $this->price->find($this->request->input('payment_code_sms'));
+        $this->price = $this->price->find($this->request->input('payment_code_sms'));
     }
 
     /**
@@ -82,7 +72,7 @@ class SMSRule extends CodesRule
         }
 
         try {
-            $this->smsUtil->authorize([
+            $response = $this->client->authorize([
                 'code' => $value,
                 'number' => $this->price->number,
                 'token' => $this->price->token
@@ -92,7 +82,7 @@ class SMSRule extends CodesRule
         }
 
         $this->request->merge([
-            'logs' => (array)$this->smsUtil->client->getContents() + ['code' => $value]
+            'logs' => array_merge((array)$response->getParameters(), ['code' => $value])
         ]);
 
         return true;
