@@ -2,8 +2,8 @@
 
 namespace N1ebieski\IDir\Exceptions\Payment;
 
-use N1ebieski\IDir\Exceptions\CustomException;
 use N1ebieski\IDir\Models\Payment\Payment;
+use N1ebieski\IDir\Exceptions\CustomException;
 
 class Exception extends CustomException
 {
@@ -27,7 +27,7 @@ class Exception extends CustomException
     /**
      * Report the exception.
      *
-     * @return void
+     * @return boolean
      */
     public function report()
     {

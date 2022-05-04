@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use N1ebieski\IDir\Models\Price;
 use N1ebieski\IDir\Rules\Codes\CodesRule;
 use Illuminate\Contracts\Translation\Translator as Lang;
-use N1ebieski\IDir\Utils\Payment\Interfaces\Codes\TransferUtilStrategy;
+use N1ebieski\IDir\Http\Clients\Payment\Interfaces\Codes\TransferClientInterface;
 
 class TransferRule extends CodesRule
 {
@@ -18,9 +18,9 @@ class TransferRule extends CodesRule
 
     /**
      * [private description]
-     * @var TransferUtilStrategy
+     * @var TransferClientInterface
      */
-    protected $transferUtil;
+    protected $client;
 
     /**
      * Undocumented function
@@ -28,27 +28,15 @@ class TransferRule extends CodesRule
      * @param Price $price
      * @param Request $request
      * @param Lang $lang
-     * @param TransferUtilStrategy $transferUtil
+     * @param TransferClientInterface $client
      */
-    public function __construct(Price $price, Request $request, Lang $lang, TransferUtilStrategy $transferUtil)
+    public function __construct(Price $price, Request $request, Lang $lang, TransferClientInterface $client)
     {
         parent::__construct($request, $lang);
 
-        $this->price = $price;
+        $this->client = $client;
 
-        $this->transferUtil = $transferUtil;
-
-        $this->makePrice();
-    }
-
-    /**
-     * Undocumented function
-     *
-     * @return Price
-     */
-    protected function makePrice(): Price
-    {
-        return $this->price = $this->price->find($this->request->input('payment_code_transfer'));
+        $this->price = $price->find($this->request->input('payment_code_transfer'));
     }
 
     /**
@@ -78,8 +66,8 @@ class TransferRule extends CodesRule
         }
 
         try {
-            $this->transferUtil->authorize([
-                'code' => $value,
+            $response = $this->client->authorize([
+                'check' => $value,
                 'id' => $this->price->code
             ]);
         } catch (\Exception $e) {
@@ -87,7 +75,7 @@ class TransferRule extends CodesRule
         }
 
         $this->request->merge([
-            'logs' => (array)$this->transferUtil->client->getContents() + ['code' => $value]
+            'logs' => array_merge((array)$response->getParameters(), ['code' => $value])
         ]);
 
         return true;

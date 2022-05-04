@@ -39,6 +39,13 @@ class AppServiceProvider extends ServiceProvider
                     return $app->make(\N1ebieski\IDir\Http\Clients\Payment\Cashbill\Codes\SMS\SmsClient::class);
             }
         });
+
+        $this->app->bind(\N1ebieski\IDir\Http\Clients\Payment\Interfaces\Codes\TransferClientInterface::class, function ($app) {
+            switch ($app['config']['idir.payment.code_transfer.driver']) {
+                case 'cashbill':
+                    return $app->make(\N1ebieski\IDir\Http\Clients\Payment\Cashbill\Codes\Transfer\TransferClient::class);
+            }
+        });
     }
 
     /**

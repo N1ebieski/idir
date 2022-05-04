@@ -34,11 +34,9 @@ class SMSRule extends CodesRule
     {
         parent::__construct($request, $lang);
 
-        $this->price = $price;
-
         $this->client = $client;
 
-        $this->price = $this->price->find($this->request->input('payment_code_sms'));
+        $this->price = $price->find($this->request->input('payment_code_sms'));
     }
 
     /**
