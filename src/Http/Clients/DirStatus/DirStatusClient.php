@@ -33,8 +33,13 @@ class DirStatusClient
      */
     public function show(string $url): ResponseInterface
     {
-        return $this->app->make(ShowRequest::class, [
+        /**
+         * @var ShowRequest
+         */
+        $request = $this->app->make(ShowRequest::class, [
             'url' => $url
-        ])();
+        ]);
+
+        return $request->makeRequest();
     }
 }

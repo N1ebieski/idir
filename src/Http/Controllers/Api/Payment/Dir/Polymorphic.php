@@ -6,8 +6,8 @@ use Illuminate\Http\JsonResponse;
 use N1ebieski\IDir\Models\Payment\Dir\Payment;
 use N1ebieski\IDir\Loads\Api\Payment\Dir\ShowLoad;
 use N1ebieski\IDir\Loads\Api\Payment\Dir\VerifyLoad;
-use N1ebieski\IDir\Utils\Payment\Interfaces\TransferUtilStrategy;
-use N1ebieski\IDir\Http\Requests\Api\Payment\Interfaces\VerifyRequestStrategy;
+use N1ebieski\IDir\Http\Requests\Api\Payment\Interfaces\VerifyRequestInterface;
+use N1ebieski\IDir\Http\Clients\Payment\Interfaces\Transfer\TransferClientInterface;
 
 interface Polymorphic
 {
@@ -17,29 +17,29 @@ interface Polymorphic
      * @param Payment $payment
      * @param string $driver
      * @param ShowLoad $load
-     * @param TransferUtilStrategy $transferUtil
+     * @param TransferClientInterface $client
      * @return JsonResponse
      */
     public function show(
         Payment $payment,
         string $driver = null,
         ShowLoad $load,
-        TransferUtilStrategy $transferUtil
+        TransferClientInterface $client
     ): JsonResponse;
 
     /**
      * Undocumented function
      *
      * @param string $driver
-     * @param VerifyRequestStrategy $request
+     * @param VerifyRequestInterface $request
      * @param VerifyLoad $load
-     * @param TransferUtilStrategy $transferUtil
+     * @param TransferClientInterface $client
      * @return string
      */
     public function verify(
         string $driver = null,
-        VerifyRequestStrategy $request,
+        VerifyRequestInterface $request,
         VerifyLoad $load,
-        TransferUtilStrategy $transferUtil
+        TransferClientInterface $client
     ): string;
 }

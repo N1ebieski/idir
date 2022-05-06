@@ -3,7 +3,7 @@
 namespace N1ebieski\IDir\Http\Requests\Web\Payment\Factories;
 
 use Illuminate\Http\Response as HttpResponse;
-use N1ebieski\IDir\Http\Requests\Web\Payment\Interfaces\CompleteRequestStrategy;
+use N1ebieski\IDir\Http\Requests\Web\Payment\Interfaces\CompleteRequestInterface;
 
 class CompleteRequestFactory
 {
@@ -11,9 +11,9 @@ class CompleteRequestFactory
      * Undocumented function
      *
      * @param string $driver
-     * @return CompleteRequestStrategy
+     * @return CompleteRequestInterface
      */
-    public function makeRequest(string $driver): CompleteRequestStrategy
+    public function makeRequest(string $driver): CompleteRequestInterface
     {
         switch ($driver) {
             case 'paypal':

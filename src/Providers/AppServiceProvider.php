@@ -46,6 +46,25 @@ class AppServiceProvider extends ServiceProvider
                     return $app->make(\N1ebieski\IDir\Http\Clients\Payment\Cashbill\Codes\Transfer\TransferClient::class);
             }
         });
+
+        $this->app->bind(\N1ebieski\IDir\Http\Clients\Payment\Interfaces\Transfer\TransferClientInterface::class, function ($app) {
+            $driver = $app['request']->route('driver') ?? $app['config']['idir.payment.transfer.driver'];
+
+            return $app->make(\N1ebieski\IDir\Http\Clients\Payment\Factories\TransferClientFactory::class)->makeClient($driver);
+        });
+
+        $this->app->bind(\N1ebieski\IDir\Http\Requests\Web\Payment\Interfaces\CompleteRequestInterface::class, function ($app) {
+            $driver = $app['request']->route('driver') ?? $app['config']['idir.payment.transfer.driver'];
+
+            return (new \N1ebieski\IDir\Http\Requests\Web\Payment\Factories\CompleteRequestFactory())->makeRequest($driver);
+        });
+
+
+        $this->app->bind(\N1ebieski\IDir\Http\Requests\Api\Payment\Interfaces\VerifyRequestInterface::class, function ($app) {
+            $driver = $app['request']->route('driver') ?? $app['config']['idir.payment.transfer.driver'];
+
+            return (new \N1ebieski\IDir\Http\Requests\Api\Payment\Factories\VerifyRequestFactory())->makeRequest($driver);
+        });
     }
 
     /**

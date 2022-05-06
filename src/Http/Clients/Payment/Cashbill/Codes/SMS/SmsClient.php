@@ -46,7 +46,7 @@ class SmsClient implements SmsClientInterface
          * @var AuthorizeResponse
          */
         $response = $this->app->make(AuthorizeResponse::class, [
-            'parameters' => json_decode($request()->getBody())
+            'parameters' => json_decode($request->makeRequest()->getBody())
         ]);
 
         if (!$response->isActive()) {

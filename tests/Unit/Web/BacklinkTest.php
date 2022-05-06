@@ -5,12 +5,11 @@ namespace N1ebieski\IDir\Tests\Unit\Web;
 use Tests\TestCase;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Handler\MockHandler;
-use Illuminate\Support\Facades\App;
 use GuzzleHttp\Client as GuzzleClient;
 use Illuminate\Http\Response as HttpResponse;
 use GuzzleHttp\Psr7\Response as GuzzleResponse;
-use N1ebieski\IDir\Http\Clients\Dir\BacklinkClient;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use N1ebieski\IDir\Http\Clients\DirBacklink\Requests\ShowRequest;
 
 class BacklinkTest extends TestCase
 {
@@ -31,10 +30,14 @@ class BacklinkTest extends TestCase
         $handler = HandlerStack::create($mock);
         $client = new GuzzleClient(['handler' => $handler]);
 
-        $rule = App::make(\N1ebieski\IDir\Rules\BacklinkRule::class, [
-            'link' => $this->url,
-            'client' => new BacklinkClient($client)
+        $this->app->bind(ShowRequest::class, function ($app, $with) use ($client) {
+            return new ShowRequest($with['url'], $client);
+        });
+
+        $rule = $this->app->make(\N1ebieski\IDir\Rules\BacklinkRule::class, [
+            'link' => $this->url
         ]);
+
         $response = $rule->passes(null, 'http://wewewew.pl');
 
         $this->assertTrue($response === 0);
@@ -49,10 +52,14 @@ class BacklinkTest extends TestCase
         $handler = HandlerStack::create($mock);
         $client = new GuzzleClient(['handler' => $handler]);
 
-        $rule = App::make(\N1ebieski\IDir\Rules\BacklinkRule::class, [
-            'link' => $this->url,
-            'client' => new BacklinkClient($client)
+        $this->app->bind(ShowRequest::class, function ($app, $with) use ($client) {
+            return new ShowRequest($with['url'], $client);
+        });
+
+        $rule = $this->app->make(\N1ebieski\IDir\Rules\BacklinkRule::class, [
+            'link' => $this->url
         ]);
+
         $response = $rule->passes(null, 'http://wewewew.pl');
 
         $this->assertTrue($response === 1);

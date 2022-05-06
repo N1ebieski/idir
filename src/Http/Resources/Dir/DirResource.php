@@ -18,6 +18,10 @@ use N1ebieski\IDir\Http\Resources\Field\Dir\FieldResource;
 use N1ebieski\ICore\Http\Resources\Category\CategoryResource;
 use N1ebieski\IDir\Http\Resources\Payment\Dir\PaymentResource;
 
+/**
+ * @mixin Dir
+ * @package N1ebieski\IDir\Http\Resources\Dir
+ */
 class DirResource extends JsonResource
 {
     /**
@@ -29,7 +33,6 @@ class DirResource extends JsonResource
     {
         parent::__construct($dir);
     }
-
 
     /**
      * Transform the resource into an array.

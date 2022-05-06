@@ -55,7 +55,7 @@ class AuthorizeRequest extends Request
      * @return ResponseInterface
      * @throws \N1ebieski\IDir\Exceptions\Payment\Cashbill\Exception
      */
-    public function __invoke(): ResponseInterface
+    public function makeRequest(): ResponseInterface
     {
         try {
             $response = $this->client->request(
@@ -75,9 +75,7 @@ class AuthorizeRequest extends Request
     }
 
     /**
-     * Temporary fix for users who use the old pattern url
      *
-     * @param string $url
      * @return string
      */
     protected function getCashbillUrl(): string

@@ -5,9 +5,9 @@ namespace N1ebieski\IDir\Http\Requests\Api\Payment\PayPal;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Foundation\Http\FormRequest;
-use N1ebieski\IDir\Http\Requests\Api\Payment\Interfaces\VerifyRequestStrategy;
+use N1ebieski\IDir\Http\Requests\Api\Payment\Interfaces\VerifyRequestInterface;
 
-class VerifyRequest extends FormRequest implements VerifyRequestStrategy
+class VerifyRequest extends FormRequest implements VerifyRequestInterface
 {
     /**
      * Determine if the user is authorized to make this request.

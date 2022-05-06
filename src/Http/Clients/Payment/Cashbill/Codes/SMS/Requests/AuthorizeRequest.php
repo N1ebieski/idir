@@ -55,7 +55,7 @@ class AuthorizeRequest extends Request
      * @return ResponseInterface
      * @throws \N1ebieski\IDir\Exceptions\Payment\Cashbill\Exception
      */
-    public function __invoke(): ResponseInterface
+    public function makeRequest(): ResponseInterface
     {
         try {
             $response = $this->client->request(

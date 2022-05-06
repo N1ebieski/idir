@@ -11,7 +11,7 @@ class Map extends Value
      *
      * @return string
      */
-    public function __invoke(): string
+    public function handle(): string
     {
         return $this->gusReport->getStreet()
             . ' ' . $this->gusReport->getPropertyNumber()

@@ -3,9 +3,9 @@
 namespace N1ebieski\IDir\Http\Requests\Web\Payment\PayPal;
 
 use Illuminate\Foundation\Http\FormRequest;
-use N1ebieski\IDir\Http\Requests\Web\Payment\Interfaces\CompleteRequestStrategy;
+use N1ebieski\IDir\Http\Requests\Web\Payment\Interfaces\CompleteRequestInterface;
 
-class CompleteRequest extends FormRequest implements CompleteRequestStrategy
+class CompleteRequest extends FormRequest implements CompleteRequestInterface
 {
     /**
      * Determine if the user is authorized to make this request.

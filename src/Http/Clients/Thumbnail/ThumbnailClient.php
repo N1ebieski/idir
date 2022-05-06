@@ -33,8 +33,13 @@ class ThumbnailClient
      */
     public function reload(array $parameters)
     {
-        return $this->app->make(ReloadRequest::class, [
+        /**
+         * @var ReloadRequest
+         */
+        $request = $this->app->make(ReloadRequest::class, [
             'parameters' => $parameters
-        ])();
+        ]);
+
+        return $request->makeRequest();
     }
 }

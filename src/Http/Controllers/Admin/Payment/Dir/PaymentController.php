@@ -11,8 +11,8 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Response;
 use N1ebieski\IDir\Models\Payment\Dir\Payment;
 use N1ebieski\IDir\Loads\Admin\Payment\ShowLoad;
-use N1ebieski\IDir\Utils\Payment\Interfaces\TransferUtilStrategy;
 use N1ebieski\IDir\Http\Controllers\Admin\Payment\Dir\Polymorphic;
+use N1ebieski\IDir\Http\Clients\Payment\Interfaces\Transfer\TransferClientInterface;
 
 class PaymentController implements Polymorphic
 {
@@ -22,38 +22,37 @@ class PaymentController implements Polymorphic
      * @param Payment $payment
      * @param string $driver
      * @param ShowLoad $load
-     * @param TransferUtilStrategy $transferUtil
+     * @param TransferClientInterface $client
      * @return RedirectResponse
      */
     public function show(
         Payment $payment,
         string $driver = null,
         ShowLoad $load,
-        TransferUtilStrategy $transferUtil
+        TransferClientInterface $client
     ): RedirectResponse {
         try {
-            $transferUtil->setAmount($payment->order->price)
-                ->setDesc(
-                    Lang::get('idir::payments.dir.desc', [
-                        'title' => $payment->morph->title,
-                        'group' => $payment->order->group->name,
-                        'days' => $days = $payment->order->days,
-                        'limit' => $days !== null ?
-                            strtolower(Lang::get('idir::prices.days'))
-                            : strtolower(Lang::get('idir::prices.unlimited'))
-                    ])
-                )
-                ->setUuid($payment->uuid)
-                ->setRedirect(URL::route('admin.dir.index'))
-                ->setNotifyUrl(URL::route('api.payment.dir.verify', [$driver]))
-                ->setReturnUrl(URL::route('web.payment.dir.complete', [$driver]))
-                ->setCancelUrl(URL::route('web.payment.dir.complete', [$driver]))
-                ->purchase();
+            $response = $client->purchase([
+                'amount' => $payment->order->price,
+                'desc' => Lang::get('idir::payments.dir.desc', [
+                    'title' => $payment->morph->title,
+                    'group' => $payment->order->group->name,
+                    'days' => $days = $payment->order->days,
+                    'limit' => $days !== null ?
+                        strtolower(Lang::get('idir::prices.days'))
+                        : strtolower(Lang::get('idir::prices.unlimited'))
+                ]),
+                'uuid' => $payment->uuid,
+                'redirect' => URL::route('admin.dir.index'),
+                'notifyUrl' => URL::route('api.payment.dir.verify', [$driver]),
+                'returnUrl' => URL::route('web.payment.dir.complete', [$driver]),
+                'cancelUrl' => URL::route('web.payment.dir.complete', [$driver])
+            ]);
         } catch (\N1ebieski\IDir\Exceptions\Payment\Exception $e) {
             throw $e->setPayment($payment);
         }
 
-        return Response::redirectTo($transferUtil->getUrlToPayment());
+        return Response::redirectTo($response->getUrlToPayment());
     }
 
     /**

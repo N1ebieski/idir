@@ -3,7 +3,7 @@
 namespace N1ebieski\IDir\Http\Requests\Api\Payment\Factories;
 
 use Illuminate\Http\Response as HttpResponse;
-use N1ebieski\IDir\Http\Requests\Api\Payment\Interfaces\VerifyRequestStrategy;
+use N1ebieski\IDir\Http\Requests\Api\Payment\Interfaces\VerifyRequestInterface;
 
 class VerifyRequestFactory
 {
@@ -11,9 +11,9 @@ class VerifyRequestFactory
      * Undocumented function
      *
      * @param string $driver
-     * @return VerifyRequestStrategy
+     * @return VerifyRequestInterface
      */
-    public function makeRequest(string $driver): VerifyRequestStrategy
+    public function makeRequest(string $driver): VerifyRequestInterface
     {
         switch ($driver) {
             case 'paypal':

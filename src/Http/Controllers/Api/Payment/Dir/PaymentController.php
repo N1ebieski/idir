@@ -16,8 +16,8 @@ use N1ebieski\IDir\Events\Api\Payment\Dir\VerifyAttemptEvent;
 use N1ebieski\IDir\Http\Resources\Payment\Dir\PaymentResource;
 use N1ebieski\IDir\Events\Api\Payment\Dir\VerifySuccessfulEvent;
 use N1ebieski\IDir\Http\Controllers\Api\Payment\Dir\Polymorphic;
-use N1ebieski\IDir\Utils\Payment\Interfaces\TransferUtilStrategy;
-use N1ebieski\IDir\Http\Requests\Api\Payment\Interfaces\VerifyRequestStrategy;
+use N1ebieski\IDir\Http\Requests\Api\Payment\Interfaces\VerifyRequestInterface;
+use N1ebieski\IDir\Http\Clients\Payment\Interfaces\Transfer\TransferClientInterface;
 
 /**
  * @group Payments
@@ -59,43 +59,40 @@ class PaymentController extends Controller implements Polymorphic
      * @param Payment $payment
      * @param string $driver
      * @param ShowLoad $load
-     * @param TransferUtilStrategy $transferUtil
+     * @param TransferClientInterface $client
      * @return JsonResponse
      */
     public function show(
         Payment $payment,
         string $driver = null,
         ShowLoad $load,
-        TransferUtilStrategy $transferUtil
+        TransferClientInterface $client
     ): JsonResponse {
         try {
-            $transferUtil->setAmount($payment->order->price)
-                ->setDesc(
-                    Lang::get('idir::payments.dir.desc', [
-                        'title' => $payment->morph->title,
-                        'group' => $payment->order->group->name,
-                        'days' => $days = $payment->order->days,
-                        'limit' => $days !== null ?
-                            strtolower(Lang::get('idir::prices.days'))
-                            : strtolower(Lang::get('idir::prices.unlimited'))
-                    ])
-                )
-                ->setUuid($payment->uuid)
-                ->setRedirect(
-                    Auth::check() ?
-                        URL::route('web.profile.dirs')
-                        : URL::route('web.dir.create_1')
-                )
-                ->setNotifyUrl(URL::route('api.payment.dir.verify', [$driver]))
-                ->setReturnUrl(URL::route('web.payment.dir.complete', [$driver]))
-                ->setCancelUrl(URL::route('web.payment.dir.complete', [$driver]))
-                ->purchase();
+            $response = $client->purchase([
+                'amount' => $payment->order->price,
+                'desc' => Lang::get('idir::payments.dir.desc', [
+                    'title' => $payment->morph->title,
+                    'group' => $payment->order->group->name,
+                    'days' => $days = $payment->order->days,
+                    'limit' => $days !== null ?
+                        strtolower(Lang::get('idir::prices.days'))
+                        : strtolower(Lang::get('idir::prices.unlimited'))
+                ]),
+                'uuid' => $payment->uuid,
+                'redirect' => Auth::check() ?
+                    URL::route('web.profile.dirs')
+                    : URL::route('web.dir.create_1'),
+                'notifyUrl' => URL::route('api.payment.dir.verify', [$driver]),
+                'returnUrl' => URL::route('web.payment.dir.complete', [$driver]),
+                'cancelUrl' => URL::route('web.payment.dir.complete', [$driver])
+            ]);
         } catch (\N1ebieski\IDir\Exceptions\Payment\Exception $e) {
             throw $e->setPayment($payment);
         }
 
         return App::make(PaymentResource::class, ['payment' => $payment])
-            ->additional(['url' => $transferUtil->getUrlToPayment()])
+            ->additional(['url' => $response->getUrlToPayment()])
             ->response();
     }
 
@@ -103,22 +100,21 @@ class PaymentController extends Controller implements Polymorphic
      * @hideFromAPIDocumentation
      *
      * @param string $driver
-     * @param VerifyRequestStrategy $request
+     * @param VerifyRequestInterface $request
      * @param VerifyLoad $load
-     * @param TransferUtilStrategy $transferUtil
+     * @param TransferClientInterface $client
      * @return string
      */
     public function verify(
         string $driver = null,
-        VerifyRequestStrategy $request,
+        VerifyRequestInterface $request,
         VerifyLoad $load,
-        TransferUtilStrategy $transferUtil
+        TransferClientInterface $client
     ): string {
         try {
             Event::dispatch(App::make(VerifyAttemptEvent::class, ['payment' => $load->getPayment()]));
 
-            $transferUtil->setAmount($load->getPayment()->order->price)
-                ->authorize($request->all());
+            $client->authorize(['amount' => $load->getPayment()->order->price], $request->all());
 
             $load->getPayment()->makeRepo()->paid();
 

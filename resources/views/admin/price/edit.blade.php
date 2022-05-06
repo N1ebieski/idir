@@ -82,13 +82,13 @@
                 >
                     @foreach (Price\Type::getAvailable() as $type)
                     <a 
-                        class="nav-item nav-link btn btn-link flex-grow-0 text-decoration-none shadow-none {{ $price->type === $type ? 'active' : null }}" 
+                        class="nav-item nav-link btn btn-link flex-grow-0 text-decoration-none shadow-none {{ $price->type->getValue() === $type ? 'active' : null }}" 
                         id="nav-{{ $type }}-tab"
                         data-toggle="tab" 
                         href="#nav-{{ $type }}-edit" 
                         role="tab"
                         aria-controls="nav-{{ $type }}-edit" 
-                        aria-selected="{{ $price->type === $type ? 'true' : 'false' }}"
+                        aria-selected="{{ $price->type->getValue() === $type ? 'true' : 'false' }}"
                     >
                         <input 
                             type="radio" 
@@ -96,7 +96,7 @@
                             value="{{ $type }}" 
                             id="nav-{{ $type }}-tab"
                             autocomplete="off" 
-                            {{ $price->type === $type ? 'checked' : null }}
+                            {{ $price->type->getValue() === $type ? 'checked' : null }}
                         >
                         {{ trans("idir::prices.payment.{$type}") }}
                     </a>

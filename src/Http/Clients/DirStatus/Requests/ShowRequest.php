@@ -61,7 +61,7 @@ class ShowRequest
      * @return ResponseInterface
      * @throws \N1ebieski\IDir\Exceptions\DirStatus\TransferException
      */
-    public function __invoke(): ResponseInterface
+    public function makeRequest(): ResponseInterface
     {
         try {
             $response = $this->client->request(

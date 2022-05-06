@@ -1,8 +1,8 @@
 <?php
 
-namespace N1ebieski\IDir\Http\Requests\Web\Payment\Interfaces;
+namespace N1ebieski\IDir\Http\Requests\Api\Payment\Interfaces;
 
-interface CompleteRequestStrategy
+interface VerifyRequestInterface
 {
     /**
      * Determine if the user is authorized to make this request.

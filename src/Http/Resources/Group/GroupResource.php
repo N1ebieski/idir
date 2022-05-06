@@ -16,9 +16,9 @@ use N1ebieski\IDir\Http\Resources\Privilege\PrivilegeResource;
 class GroupResource extends JsonResource
 {
     /**
-     * Undocumented function
      *
      * @param Group $group
+     * @return void
      */
     public function __construct(Group $group)
     {

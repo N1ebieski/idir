@@ -22,4 +22,11 @@ abstract class Value
     {
         $this->gusReport = $gusReport;
     }
+
+    /**
+     * Undocumented function
+     *
+     * @return mixed
+     */
+    abstract public function handle();
 }

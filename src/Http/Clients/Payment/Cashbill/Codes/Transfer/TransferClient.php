@@ -2,9 +2,13 @@
 
 namespace N1ebieski\IDir\Http\Clients\Payment\Cashbill\Codes\Transfer;
 
+use RuntimeException;
 use N1ebieski\ICore\Http\Clients\Response;
 use Illuminate\Contracts\Container\Container as App;
+use N1ebieski\IDir\Exceptions\Payment\Cashbill\Exception;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use N1ebieski\IDir\Http\Clients\Payment\Interfaces\Codes\TransferClientInterface;
+use N1ebieski\IDir\Exceptions\Payment\Cashbill\Codes\Transfer\InactiveCodeException;
 use N1ebieski\IDir\Http\Clients\Payment\Cashbill\Codes\Transfer\Requests\AuthorizeRequest;
 use N1ebieski\IDir\Http\Clients\Payment\Cashbill\Codes\Transfer\Responses\AuthorizeResponse;
 
@@ -28,10 +32,13 @@ class TransferClient implements TransferClientInterface
     }
 
     /**
-     * Undocumented function
      *
      * @param array $parameters
      * @return Response
+     * @throws BindingResolutionException
+     * @throws Exception
+     * @throws RuntimeException
+     * @throws InactiveCodeException
      */
     public function authorize(array $parameters): Response
     {
@@ -42,7 +49,7 @@ class TransferClient implements TransferClientInterface
             'parameters' => $parameters
         ]);
 
-        $contents = explode("\n", trim($request()->getBody()->getContents()));
+        $contents = explode("\n", trim($request->makeRequest()->getBody()->getContents()));
 
         /**
          * @var AuthorizeResponse

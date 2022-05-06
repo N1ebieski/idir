@@ -52,7 +52,7 @@ class FieldData implements DataInterface
                 continue;
             }
 
-            $gusValue = $this->valueFactory->makeValue($key, $gusReport)();
+            $gusValue = $this->valueFactory->makeValue($key, $gusReport)->handle();
 
             if (empty($gusValue)) {
                 continue;

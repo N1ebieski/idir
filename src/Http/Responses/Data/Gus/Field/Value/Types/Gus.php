@@ -52,7 +52,7 @@ class Gus extends Value
      *
      * @return string|null
      */
-    public function __invoke(): ?string
+    public function handle(): ?string
     {
         if ($this->isMethodExists()) {
             $method = $this->methodName();

@@ -92,7 +92,7 @@ class Type extends ValueObject
      *
      * @return boolean
      */
-    public function isCodeTranfer(): bool
+    public function isCodeTransfer(): bool
     {
         return $this->value === self::CODE_TRANSFER;
     }
