@@ -2,6 +2,7 @@
 
 namespace N1ebieski\IDir\Http\Requests\Admin\Dir;
 
+use N1ebieski\IDir\Models\Dir;
 use Illuminate\Validation\Rule;
 use N1ebieski\IDir\Models\Group;
 use Illuminate\Support\Facades\App;
@@ -11,10 +12,14 @@ use N1ebieski\ICore\Models\BanValue;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Database\Eloquent\Collection;
-use N1ebieski\IDir\Models\Category\Dir\Category;
 use N1ebieski\ICore\ValueObjects\Category\Status;
 use N1ebieski\IDir\Http\Requests\Traits\FieldsExtended;
 
+/**
+ *
+ * @property Dir $dir
+ * @author Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ */
 class UpdateRequest extends FormRequest
 {
     use FieldsExtended;
@@ -81,7 +86,7 @@ class UpdateRequest extends FormRequest
     protected function prepareUrlAttribute(): void
     {
         if ($this->has('url') && $this->input('url') !== null) {
-            if ($this->dir->group->url === 0) {
+            if ($this->dir->group->url->isInactive()) {
                 $this->merge(['url' => null]);
             } else {
                 $this->merge(['url' => preg_replace('/(\/)$/', '', $this->input('url'))]);

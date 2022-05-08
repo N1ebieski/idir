@@ -11,10 +11,14 @@ use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Database\Eloquent\Collection;
-use N1ebieski\IDir\Models\Category\Dir\Category;
 use N1ebieski\ICore\ValueObjects\Category\Status;
 use N1ebieski\IDir\Http\Requests\Traits\FieldsExtended;
 
+/**
+ *
+ * @property Group $group
+ * @author Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ */
 class Store2Request extends FormRequest
 {
     use FieldsExtended;
@@ -81,7 +85,7 @@ class Store2Request extends FormRequest
     protected function prepareUrlAttribute(): void
     {
         if ($this->has('url') && $this->input('url') !== null) {
-            if ($this->group->url === 0) {
+            if ($this->group->url->isInactive()) {
                 $this->merge(['url' => null]);
             } else {
                 $this->merge(['url' => preg_replace('/(\/)$/', '', $this->input('url'))]);

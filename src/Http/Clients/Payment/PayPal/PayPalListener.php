@@ -1,6 +1,6 @@
 <?php
 
-namespace N1ebieski\IDir\Utils\Payment\PayPal;
+namespace N1ebieski\IDir\Http\Clients\Payment\PayPal;
 
 use Illuminate\Contracts\Config\Repository as Config;
 use Mdb\PayPal\Ipn\ListenerBuilder\Guzzle\ArrayListenerBuilder;

@@ -82,7 +82,7 @@ class PaymentController extends Controller implements Polymorphic
             throw $e->setPayment($load->getPayment());
         }
 
-        return Response::redirectTo($response->get('redirect'))->with(
+        return Response::redirectTo($request->input('redirect'))->with(
             $response->isSuccessful() ? 'success' : 'danger',
             $response->isSuccessful() ?
                 Lang::get('idir::payments.success.complete')

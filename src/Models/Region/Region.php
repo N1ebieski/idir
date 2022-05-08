@@ -7,12 +7,12 @@ use N1ebieski\IDir\Cache\RegionCache;
 use Illuminate\Database\Eloquent\Model;
 use Cviebrock\EloquentSluggable\Sluggable;
 use N1ebieski\IDir\Repositories\RegionRepo;
-use N1ebieski\ICore\Models\Traits\Polymorphic;
+use N1ebieski\ICore\Models\Traits\HasPolymorphic;
 
 class Region extends Model
 {
     use Sluggable;
-    use Polymorphic;
+    use HasPolymorphic;
 
     // Configuration
 

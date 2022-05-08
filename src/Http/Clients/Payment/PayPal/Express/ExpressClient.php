@@ -2,14 +2,20 @@
 
 namespace N1ebieski\IDir\Http\Clients\Payment\PayPal\Express;
 
+use N1ebieski\IDir\Http\Clients\Payment\PayPal\PayPalListener;
 use Illuminate\Contracts\Container\Container as App;
 use Illuminate\Contracts\Config\Repository as Config;
-use N1ebieski\IDir\Utils\Payment\PayPal\PayPalListener;
 use Illuminate\Contracts\Container\BindingResolutionException;
+use N1ebieski\IDir\Http\Clients\Payment\PayPal\Express\Requests\CompleteRequest;
 use N1ebieski\IDir\Http\Clients\Payment\PayPal\Express\Requests\PurchaseRequest;
+use N1ebieski\IDir\Http\Clients\Payment\PayPal\Express\Requests\AuthorizeRequest;
+use N1ebieski\IDir\Http\Clients\Payment\PayPal\Express\Responses\CompleteResponse;
 use N1ebieski\IDir\Http\Clients\Payment\PayPal\Express\Responses\PurchaseResponse;
+use N1ebieski\IDir\Http\Clients\Payment\PayPal\Express\Responses\AuthorizeResponse;
 use N1ebieski\IDir\Http\Clients\Payment\Interfaces\Transfer\TransferClientInterface;
+use N1ebieski\IDir\Http\Clients\Payment\Interfaces\Transfer\Responses\CompleteResponseInterface;
 use N1ebieski\IDir\Http\Clients\Payment\Interfaces\Transfer\Responses\PurchaseResponseInterface;
+use N1ebieski\IDir\Http\Clients\Payment\Interfaces\Transfer\Responses\AuthorizeResponseInterface;
 
 /**
  *
@@ -64,7 +70,7 @@ class ExpressClient implements TransferClientInterface
             'username' => $this->config->get('services.paypal.paypal_express.username'),
             'password' => $this->config->get('services.paypal.paypal_express.password'),
             'signature' => $this->config->get('services.paypal.paypal_express.signature'),
-            'testMode' => $this->config->get('services.paypal.paypal_express.sandbox'),
+            'sandbox' => $this->config->get('services.paypal.paypal_express.sandbox'),
             'currency' => $this->config->get('services.paypal.paypal_express.currency'),
             'lang' => $this->config->get('services.paypal.paypal_express.lang')
         ];
@@ -91,6 +97,58 @@ class ExpressClient implements TransferClientInterface
         $response = $this->app->make(PurchaseResponse::class, [
             'response' => $request->makeRequest()
         ]);
+
+        return $response;
+    }
+
+    /**
+     *
+     * @param array $parameters
+     * @param array $recievedParameters
+     * @return CompleteResponseInterface
+     * @throws BindingResolutionException
+     */
+    public function complete(array $parameters, array $recievedParameters): CompleteResponseInterface
+    {
+       /**
+         * @var CompleteRequest
+         */
+        $request = $this->app->make(CompleteRequest::class, [
+            'parameters' => array_merge($this->getDefaultParameters(), $recievedParameters, $parameters)
+        ]);
+
+        /**
+         * @var CompleteResponse
+         */
+        $response = $this->app->make(CompleteResponse::class, [
+            'response' => $request->makeRequest()
+        ]);
+
+        return $response;
+    }
+
+    /**
+     *
+     * @param array $parameters
+     * @param array $recievedParameters
+     * @return AuthorizeResponseInterface
+     * @throws BindingResolutionException
+     */
+    public function authorize(array $parameters, array $recievedParameters): AuthorizeResponseInterface
+    {
+        /**
+         * @var AuthorizeRequest
+         */
+        $request = $this->app->make(AuthorizeRequest::class, [
+            'parameters' => array_merge($recievedParameters, $parameters)
+        ]);
+
+        $request->makeRequest();
+
+        /**
+         * @var AuthorizeResponse
+         */
+        $response = $this->app->make(AuthorizeResponse::class);
 
         return $response;
     }

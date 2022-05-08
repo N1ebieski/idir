@@ -11,7 +11,7 @@ use N1ebieski\IDir\Http\Requests\Admin\Category\Dir\IndexRequest;
 use N1ebieski\IDir\Http\Requests\Admin\Category\Dir\StoreRequest;
 use N1ebieski\IDir\Http\Requests\Admin\Category\Dir\StoreGlobalRequest;
 
-interface Polymorphic
+interface PolymorphicInterface
 {
     /**
      * Display a listing of the Category.

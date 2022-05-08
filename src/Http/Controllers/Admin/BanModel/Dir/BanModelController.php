@@ -10,9 +10,9 @@ use Illuminate\Support\Facades\Response;
 use N1ebieski\IDir\ValueObjects\BanValue\Type;
 use N1ebieski\IDir\Models\BanModel\Dir\BanModel;
 use N1ebieski\IDir\Http\Requests\Admin\BanModel\Dir\StoreRequest;
-use N1ebieski\IDir\Http\Controllers\Admin\BanModel\Dir\Polymorphic;
+use N1ebieski\IDir\Http\Controllers\Admin\BanModel\Dir\PolymorphicInterface;
 
-class BanModelController implements Polymorphic
+class BanModelController implements PolymorphicInterface
 {
     /**
      * Show the form for creating a new BanModel.

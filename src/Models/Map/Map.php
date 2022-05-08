@@ -3,11 +3,11 @@
 namespace N1ebieski\IDir\Models\Map;
 
 use Illuminate\Database\Eloquent\Model;
-use N1ebieski\ICore\Models\Traits\Polymorphic;
+use N1ebieski\ICore\Models\Traits\HasPolymorphic;
 
 class Map extends Model
 {
-    use Polymorphic;
+    use HasPolymorphic;
 
     // Configuration
 

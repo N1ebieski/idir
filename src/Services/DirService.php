@@ -12,22 +12,26 @@ use Illuminate\Contracts\Auth\Guard as Auth;
 use Illuminate\Database\DatabaseManager as DB;
 use N1ebieski\IDir\Models\Payment\Dir\Payment;
 use N1ebieski\IDir\Services\User\AutoUserFactory;
-use N1ebieski\ICore\Services\Interfaces\Creatable;
-use N1ebieski\ICore\Services\Interfaces\Deletable;
-use N1ebieski\ICore\Services\Interfaces\Updatable;
 use Illuminate\Contracts\Container\Container as App;
-use N1ebieski\ICore\Services\Interfaces\FullUpdatable;
 use N1ebieski\IDir\Services\Payment\Dir\PaymentFactory;
-use N1ebieski\ICore\Services\Interfaces\GlobalDeletable;
-use N1ebieski\ICore\Services\Interfaces\StatusUpdatable;
+use N1ebieski\ICore\Services\Interfaces\CreateInterface;
+use N1ebieski\ICore\Services\Interfaces\DeleteInterface;
+use N1ebieski\ICore\Services\Interfaces\UpdateInterface;
+use N1ebieski\ICore\Services\Interfaces\FullUpdateInterface;
+use N1ebieski\ICore\Services\Interfaces\GlobalDeleteInterface;
+use N1ebieski\ICore\Services\Interfaces\StatusUpdateInterface;
 
+/**
+ *
+ * @author Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ */
 class DirService implements
-    Creatable,
-    Updatable,
-    StatusUpdatable,
-    FullUpdatable,
-    Deletable,
-    GlobalDeletable
+    CreateInterface,
+    UpdateInterface,
+    StatusUpdateInterface,
+    FullUpdateInterface,
+    DeleteInterface,
+    GlobalDeleteInterface
 {
     /**
      * Model

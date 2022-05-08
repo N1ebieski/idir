@@ -6,9 +6,13 @@ use Carbon\Carbon;
 use N1ebieski\IDir\Models\DirStatus;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\DatabaseManager as DB;
-use N1ebieski\ICore\Services\Interfaces\Creatable;
+use N1ebieski\ICore\Services\Interfaces\CreateInterface;
 
-class DirStatusService implements Creatable
+/**
+ *
+ * @author Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ */
+class DirStatusService implements CreateInterface
 {
     /**
      * [private description]

@@ -2,6 +2,7 @@
 
 namespace N1ebieski\IDir\Exceptions\Payment;
 
+use Illuminate\Support\Facades\Log;
 use N1ebieski\IDir\Models\Payment\Payment;
 use N1ebieski\IDir\Exceptions\CustomException;
 

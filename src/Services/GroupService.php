@@ -7,13 +7,21 @@ use Illuminate\Database\Eloquent\Model;
 use N1ebieski\IDir\ValueObjects\Group\Slug;
 use Illuminate\Support\Collection as Collect;
 use Illuminate\Database\DatabaseManager as DB;
-use N1ebieski\ICore\Services\Interfaces\Creatable;
-use N1ebieski\ICore\Services\Interfaces\Deletable;
-use N1ebieski\ICore\Services\Interfaces\Updatable;
+use N1ebieski\ICore\Services\Interfaces\CreateInterface;
+use N1ebieski\ICore\Services\Interfaces\DeleteInterface;
+use N1ebieski\ICore\Services\Interfaces\UpdateInterface;
 use N1ebieski\IDir\ValueObjects\Dir\Status as DirStatus;
-use N1ebieski\ICore\Services\Interfaces\PositionUpdatable;
+use N1ebieski\ICore\Services\Interfaces\PositionUpdateInterface;
 
-class GroupService implements Creatable, Updatable, PositionUpdatable, Deletable
+/**
+ *
+ * @author Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ */
+class GroupService implements
+    CreateInterface,
+    UpdateInterface,
+    PositionUpdateInterface,
+    DeleteInterface
 {
     /**
      * Model

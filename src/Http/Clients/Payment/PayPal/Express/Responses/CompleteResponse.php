@@ -1,38 +1,36 @@
 <?php
 
-namespace N1ebieski\IDir\Http\Clients\Payment\Cashbill\Transfer\Responses;
+namespace N1ebieski\IDir\Http\Clients\Payment\PayPal\Express\Responses;
 
-use N1ebieski\ICore\Http\Clients\Response;
+use Omnipay\Common\Message\ResponseInterface as OmniPayResponse;
 use N1ebieski\IDir\Http\Clients\Payment\Interfaces\Transfer\Responses\CompleteResponseInterface;
 
-class CompleteResponse extends Response implements CompleteResponseInterface
+/**
+ *
+ * @author Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ */
+class CompleteResponse implements CompleteResponseInterface
 {
+    /**
+     * @var OmniPayResponse
+     */
+    protected $response;
+
+    /**
+     * Constructor.
+     * @param OmniPayResponse $response
+     */
+    public function __construct(OmniPayResponse $response)
+    {
+        $this->response = $response;
+    }
+
     /**
      *
      * @return bool
      */
     public function isSuccessful(): bool
     {
-        return $this->status === "ok";
-    }
-
-    /**
-     *
-     * @param string $amount
-     * @return bool
-     */
-    public function isAmount(string $amount): bool
-    {
-        return number_format($this->amount, 2, '.', '') === $amount;
-    }
-
-    /**
-     *
-     * @return bool
-     */
-    public function isSign(string $key): bool
-    {
-        return md5($this->service . $this->orderid . $this->amount
-            . $this->userdata . $this->status . $key) === $this->sign;
+        return $this->response->isSuccessful();
     }
 }

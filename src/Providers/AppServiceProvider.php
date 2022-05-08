@@ -15,11 +15,11 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->bind(\N1ebieski\ICore\Models\Token\PersonalAccessToken::class, \N1ebieski\IDir\Models\Token\PersonalAccessToken::class);
 
-        $this->app->when(\N1ebieski\ICore\Utils\File\FileUtil::class)
+        $this->app->when(\N1ebieski\ICore\Utils\File\File::class)
             ->needs('$temp_path')
             ->give('vendor/idir/temp');
 
-        $this->app->when(\N1ebieski\IDir\Utils\Thumbnail\ThumbnailUtil::class)
+        $this->app->when(\N1ebieski\IDir\Utils\Thumbnail\Thumbnail::class)
             ->needs('$url')
             ->give('');
 

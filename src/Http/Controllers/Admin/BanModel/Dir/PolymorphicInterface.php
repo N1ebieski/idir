@@ -8,7 +8,7 @@ use N1ebieski\IDir\Models\BanValue;
 use N1ebieski\IDir\Models\BanModel\Dir\BanModel;
 use N1ebieski\IDir\Http\Requests\Admin\BanModel\Dir\StoreRequest;
 
-interface Polymorphic
+interface PolymorphicInterface
 {
     /**
      * Show the form for creating a new BanModel.

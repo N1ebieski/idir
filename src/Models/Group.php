@@ -20,7 +20,7 @@ use N1ebieski\IDir\ValueObjects\Group\Backlink;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use N1ebieski\IDir\ValueObjects\Group\ApplyStatus;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use N1ebieski\ICore\Models\Traits\FullTextSearchable;
+use N1ebieski\ICore\Models\Traits\HasFullTextSearchable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use N1ebieski\IDir\ValueObjects\Dir\Status as DirStatus;
@@ -40,7 +40,7 @@ class Group extends Model
     use Carbonable;
     use Positionable;
     use Filterable;
-    use FullTextSearchable;
+    use HasFullTextSearchable;
     use HasFactory;
 
     // Configuration

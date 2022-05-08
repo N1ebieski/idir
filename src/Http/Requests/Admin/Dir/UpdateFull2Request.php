@@ -3,6 +3,7 @@
 namespace N1ebieski\IDir\Http\Requests\Admin\Dir;
 
 use Illuminate\Validation\Rule;
+use N1ebieski\IDir\Models\Group;
 use Illuminate\Support\Facades\App;
 use Mews\Purifier\Facades\Purifier;
 use Illuminate\Support\Facades\Lang;
@@ -10,10 +11,14 @@ use N1ebieski\ICore\Models\BanValue;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Database\Eloquent\Collection;
-use N1ebieski\IDir\Models\Category\Dir\Category;
 use N1ebieski\ICore\ValueObjects\Category\Status;
 use N1ebieski\IDir\Http\Requests\Traits\FieldsExtended;
 
+/**
+ *
+ * @property Group $group
+ * @author Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ */
 class UpdateFull2Request extends FormRequest
 {
     use FieldsExtended;
@@ -80,7 +85,7 @@ class UpdateFull2Request extends FormRequest
     protected function prepareUrlAttribute(): void
     {
         if ($this->has('url') && $this->input('url') !== null) {
-            if ($this->group->url === 0) {
+            if ($this->group->url->isInactive()) {
                 $this->merge(['url' => null]);
             } else {
                 $this->merge(['url' => preg_replace('/(\/)$/', '', $this->input('url'))]);
@@ -205,7 +210,7 @@ class UpdateFull2Request extends FormRequest
             'notes' => 'bail|nullable|string|between:3,255',
             'url' => [
                 'bail',
-                ($this->group->url === 2) ? 'required' : 'nullable',
+                ($this->group->url->isActive()) ? 'required' : 'nullable',
                 'string',
                 'regex:/^(https|http):\/\/([\da-z\.-]+)(\.[a-z]{2,6})\/?$/',
                 App::make(\N1ebieski\IDir\Rules\UniqueUrlRule::class, [

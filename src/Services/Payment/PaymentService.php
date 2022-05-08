@@ -5,13 +5,16 @@ namespace N1ebieski\IDir\Services\Payment;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use N1ebieski\IDir\Models\Payment\Payment;
-use N1ebieski\IDir\ValueObjects\Price\Type;
 use N1ebieski\IDir\ValueObjects\Payment\Status;
-use N1ebieski\ICore\Services\Interfaces\Creatable;
 use Illuminate\Contracts\Config\Repository as Config;
-use N1ebieski\ICore\Services\Interfaces\StatusUpdatable;
+use N1ebieski\ICore\Services\Interfaces\CreateInterface;
+use N1ebieski\ICore\Services\Interfaces\StatusUpdateInterface;
 
-class PaymentService implements Creatable, StatusUpdatable
+/**
+ *
+ * @author Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ */
+class PaymentService implements CreateInterface, StatusUpdateInterface
 {
     /**
      * Model

@@ -6,14 +6,14 @@ use N1ebieski\IDir\Models\Field\Field;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection as Collect;
 use Illuminate\Database\DatabaseManager as DB;
-use N1ebieski\ICore\Services\Interfaces\Creatable;
-use N1ebieski\ICore\Services\Interfaces\Updatable;
 use N1ebieski\IDir\Services\Field\Value\Types\Value;
 use N1ebieski\IDir\Services\Field\Value\ValueFactory;
-use N1ebieski\ICore\Services\Interfaces\PositionUpdatable;
+use N1ebieski\ICore\Services\Interfaces\CreateInterface;
+use N1ebieski\ICore\Services\Interfaces\UpdateInterface;
 use N1ebieski\IDir\Exceptions\Field\ValueNotFoundException;
+use N1ebieski\ICore\Services\Interfaces\PositionUpdateInterface;
 
-class FieldService implements Creatable, Updatable, PositionUpdatable
+class FieldService implements CreateInterface, UpdateInterface, PositionUpdateInterface
 {
     /**
      * Model
@@ -212,29 +212,31 @@ class FieldService implements Creatable, Updatable, PositionUpdatable
                 $this->field->options->setRequired($attributes['required']);
             }
 
-            if (isset($attributes['type'])) {
-                if (array_key_exists('options', $attributes[$attributes['type']])) {
-                    $this->field->options->setOptions($attributes[$attributes['type']]['options']);
+            if (array_key_exists('type', $attributes) && array_key_exists($attributes['type'], $attributes)) {
+                $options = $attributes[$attributes['type']];
+
+                if (array_key_exists('options', $options)) {
+                    $this->field->options->setOptions($options['options']);
                 }
 
-                if (array_key_exists('min', $attributes[$attributes['type']])) {
-                    $this->field->options->setMin($attributes[$attributes['type']]['min']);
+                if (array_key_exists('min', $options)) {
+                    $this->field->options->setMin($options['min']);
                 }
 
-                if (array_key_exists('max', $attributes[$attributes['type']])) {
-                    $this->field->options->setMax($attributes[$attributes['type']]['max']);
+                if (array_key_exists('max', $options)) {
+                    $this->field->options->setMax($options['max']);
                 }
 
-                if (array_key_exists('height', $attributes[$attributes['type']])) {
-                    $this->field->options->setOptions($attributes[$attributes['type']]['height']);
+                if (array_key_exists('height', $options)) {
+                    $this->field->options->setOptions($options['height']);
                 }
 
-                if (array_key_exists('width', $attributes[$attributes['type']])) {
-                    $this->field->options->setOptions($attributes[$attributes['type']]['width']);
+                if (array_key_exists('width', $options)) {
+                    $this->field->options->setOptions($options['width']);
                 }
 
-                if (array_key_exists('size', $attributes[$attributes['type']])) {
-                    $this->field->options->setOptions($attributes[$attributes['type']]['size']);
+                if (array_key_exists('size', $options)) {
+                    $this->field->options->setOptions($options['size']);
                 }
             }
 

@@ -9,14 +9,14 @@ use N1ebieski\IDir\Repositories\FieldRepo;
 use N1ebieski\IDir\ValueObjects\Field\Type;
 use N1ebieski\IDir\Models\Traits\Filterable;
 use N1ebieski\ICore\Models\Traits\Carbonable;
-use N1ebieski\ICore\Models\Traits\Polymorphic;
 use N1ebieski\IDir\ValueObjects\Field\Options;
 use N1ebieski\IDir\ValueObjects\Field\Visible;
 use N1ebieski\ICore\Models\Traits\Positionable;
 use N1ebieski\IDir\Services\Field\FieldService;
+use N1ebieski\ICore\Models\Traits\HasPolymorphic;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use N1ebieski\ICore\Models\Traits\FullTextSearchable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use N1ebieski\ICore\Models\Traits\HasFullTextSearchable;
 use N1ebieski\IDir\Database\Factories\Field\FieldFactory;
 
 /**
@@ -26,10 +26,10 @@ use N1ebieski\IDir\Database\Factories\Field\FieldFactory;
  */
 class Field extends Model
 {
-    use Polymorphic;
+    use HasPolymorphic;
     use Carbonable;
     use Positionable;
-    use FullTextSearchable;
+    use HasFullTextSearchable;
     use Filterable;
     use HasFactory;
 

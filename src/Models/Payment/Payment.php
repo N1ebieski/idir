@@ -7,13 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use N1ebieski\IDir\Repositories\PaymentRepo;
 use N1ebieski\ICore\Models\Traits\Carbonable;
-use N1ebieski\ICore\Models\Traits\Polymorphic;
 use N1ebieski\IDir\ValueObjects\Payment\Status;
+use N1ebieski\ICore\Models\Traits\HasPolymorphic;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use N1ebieski\IDir\Services\Payment\PaymentService;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use N1ebieski\ICore\Models\Traits\FullTextSearchable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use N1ebieski\ICore\Models\Traits\HasFullTextSearchable;
 use N1ebieski\IDir\Database\Factories\Payment\PaymentFactory;
 
 /**
@@ -21,9 +21,9 @@ use N1ebieski\IDir\Database\Factories\Payment\PaymentFactory;
  */
 class Payment extends Model
 {
-    use Polymorphic;
+    use HasPolymorphic;
     use Carbonable;
-    use FullTextSearchable;
+    use HasFullTextSearchable;
     use HasFactory;
 
     // Configuration

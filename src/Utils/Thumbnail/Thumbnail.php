@@ -7,7 +7,7 @@ use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Contracts\Filesystem\Factory as Storage;
 use N1ebieski\IDir\Http\Clients\Thumbnail\Provider\ThumbnailClient;
 
-class ThumbnailUtil
+class Thumbnail
 {
     /**
      * Undocumented variable

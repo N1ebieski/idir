@@ -4,13 +4,13 @@ namespace N1ebieski\IDir\Http\Clients\Payment\PayPal\Express\Requests;
 
 use N1ebieski\ICore\Http\Clients\Request;
 use Omnipay\PayPal\ExpressGateway as PayPalGateway;
-use Omnipay\Common\Message\RedirectResponseInterface as OmniPayResponse;
+use Omnipay\Common\Message\ResponseInterface as OmniPayResponse;
 
 /**
  *
  * @author Mariusz Wysokiński <kontakt@intelekt.net.pl>
  */
-class PurchaseRequest extends Request
+class CompleteRequest extends Request
 {
     /**
      * Undocumented variable
@@ -66,61 +66,9 @@ class PurchaseRequest extends Request
      * @param string $desc
      * @return self
      */
-    protected function setDesc(string $desc)
-    {
-        $this->parameters['description'] = $desc;
-
-        return $this;
-    }
-
-    /**
-     * Undocumented function
-     *
-     * @param string $desc
-     * @return self
-     */
-    protected function setUuid(string $uuid)
+    public function setUuid(string $uuid)
     {
         $this->parameters['transactionId'] = $uuid;
-
-        return $this;
-    }
-
-    /**
-     * Undocumented function
-     *
-     * @param string $desc
-     * @return self
-     */
-    protected function setRedirect(string $redirect)
-    {
-        $this->parameters['redirect'] = $redirect;
-
-        return $this;
-    }
-
-    /**
-     * Undocumented function
-     *
-     * @param string $desc
-     * @return self
-     */
-    public function setCancelUrl(string $cancelUrl)
-    {
-        $this->parameters['cancelUrl'] = $cancelUrl . '?uuid=' . $this->get('transactionId') . '&status=err&redirect=' . $this->get('redirect');
-
-        return $this;
-    }
-
-    /**
-     * Undocumented function
-     *
-     * @param string $desc
-     * @return self
-     */
-    public function setReturnUrl(string $returnUrl)
-    {
-        $this->parameters['returnUrl'] = $returnUrl . '?uuid=' . $this->get('transactionId') . '&status=ok&redirect=' . $this->get('redirect');
 
         return $this;
     }
@@ -144,15 +92,12 @@ class PurchaseRequest extends Request
      */
     public function makeRequest(): OmniPayResponse
     {
-        return $this->gateway->purchase([
+        return $this->gateway->completePurchase([
             'amount' => $this->amount,
-            'description' => $this->description,
-            'transactionId' => $this->transactionId,
-            'cancelUrl' => $this->cancelUrl,
-            'returnUrl' => $this->returnUrl,
-            'notifyUrl' => $this->notifyUrl
+            'notifyUrl' => $this->notifyUrl,
+            'transactionId' => $this->uuid,
+            'PayerID' => $this->PayerID
         ])
-        ->setLocaleCode($this->lang)
         ->send();
     }
 }

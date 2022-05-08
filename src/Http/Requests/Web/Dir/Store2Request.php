@@ -91,7 +91,7 @@ class Store2Request extends FormRequest
     protected function prepareUrlAttribute(): void
     {
         if ($this->has('url') && $this->input('url') !== null) {
-            if ($this->group->url === 0) {
+            if ($this->group->url->isInactive()) {
                 $this->merge(['url' => null]);
             } else {
                 $this->merge(['url' => preg_replace('/(\/)$/', '', $this->input('url'))]);

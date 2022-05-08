@@ -7,7 +7,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Http\Response as HttpResponse;
-use N1ebieski\IDir\Utils\Thumbnail\ThumbnailUtil;
+use N1ebieski\IDir\Utils\Thumbnail\Thumbnail;
 use N1ebieski\IDir\Http\Requests\Web\Thumbnail\ShowRequest;
 
 class ThumbnailController extends Controller
@@ -18,9 +18,9 @@ class ThumbnailController extends Controller
      * @param ShowRequest $request
      * @return HttpResponse
      */
-    public function show(ShowRequest $request, ThumbnailUtil $thumbnailUtil): HttpResponse
+    public function show(ShowRequest $request, Thumbnail $thumbnail): HttpResponse
     {
-        $thumbnail = $thumbnailUtil->make($request->input('url'));
+        $thumbnail = $thumbnail->make($request->input('url'));
 
         return Response::make($thumbnail->generate(), HttpResponse::HTTP_OK, ['Content-Type' => 'image'])
             ->setMaxAge(Config::get('idir.dir.thumbnail.cache.days') * 24 * 60 * 60)

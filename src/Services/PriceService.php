@@ -5,11 +5,11 @@ namespace N1ebieski\IDir\Services;
 use N1ebieski\IDir\Models\Price;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\DatabaseManager as DB;
-use N1ebieski\ICore\Services\Interfaces\Creatable;
-use N1ebieski\ICore\Services\Interfaces\Deletable;
-use N1ebieski\ICore\Services\Interfaces\Updatable;
+use N1ebieski\ICore\Services\Interfaces\CreateInterface;
+use N1ebieski\ICore\Services\Interfaces\DeleteInterface;
+use N1ebieski\ICore\Services\Interfaces\UpdateInterface;
 
-class PriceService implements Creatable, Updatable, Deletable
+class PriceService implements CreateInterface, UpdateInterface, DeleteInterface
 {
     /**
      * Model
@@ -54,12 +54,14 @@ class PriceService implements Creatable, Updatable, Deletable
             $price->group()->associate($attributes['group']);
             $price->save();
 
-            if (array_key_exists('type', $attributes)) {
-                if (array_key_exists('codes', $attributes[$attributes['type']])) {
+            if (array_key_exists('type', $attributes) && array_key_exists($attributes['type'], $attributes)) {
+                $options = $attributes[$attributes['type']];
+
+                if (array_key_exists('codes', $options)) {
                     $this->price->codes()->make()
                         ->setRelations(['price' => $price])
                         ->makeService()
-                        ->sync($attributes[$attributes['type']]['codes'] ?? []);
+                        ->sync($options['codes'] ?? []);
                 }
             }
 
@@ -77,31 +79,31 @@ class PriceService implements Creatable, Updatable, Deletable
         return $this->db->transaction(function () use ($attributes) {
             $this->price->fill($attributes);
 
-            if (array_key_exists('type', $attributes)) {
-                if (array_key_exists('code', $attributes[$attributes['type']])) {
-                    $this->price->code = $attributes[$attributes['type']]['code'];
+            if (array_key_exists('type', $attributes) && array_key_exists($attributes['type'], $attributes)) {
+                $options = $attributes[$attributes['type']];
+
+                if (array_key_exists('code', $options)) {
+                    $this->price->code = $options['code'];
                 }
 
-                if (array_key_exists('token', $attributes[$attributes['type']])) {
-                    $this->price->token = $attributes[$attributes['type']]['token'];
+                if (array_key_exists('token', $options)) {
+                    $this->price->token = $options['token'];
                 }
 
-                if (array_key_exists('number', $attributes[$attributes['type']])) {
-                    $this->price->number = $attributes[$attributes['type']]['number'];
+                if (array_key_exists('number', $options)) {
+                    $this->price->number = $options['number'];
+                }
+
+                if (array_key_exists('codes', $options)) {
+                    $this->price->codes()->make()
+                        ->setRelations(['price' => $this->price])
+                        ->makeService()
+                        ->sync($options['codes'] ?? []);
                 }
             }
 
             if (array_key_exists('group', $attributes)) {
                 $this->price->group()->associate($attributes['group']);
-            }
-
-            if (array_key_exists('type', $attributes)) {
-                if (array_key_exists('codes', $attributes[$attributes['type']])) {
-                    $this->price->codes()->make()
-                        ->setRelations(['price' => $this->price])
-                        ->makeService()
-                        ->sync($attributes[$attributes['type']]['codes'] ?? []);
-                }
             }
 
             return $this->price->save();
