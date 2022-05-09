@@ -10,12 +10,12 @@ use N1ebieski\IDir\Models\DirStatus;
 use Illuminate\Queue\SerializesModels;
 use Psr\Http\Message\ResponseInterface;
 use Illuminate\Queue\InteractsWithQueue;
-use N1ebieski\IDir\Repositories\DirRepo;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use N1ebieski\IDir\Repositories\Dir\DirRepo;
 use Illuminate\Http\Response as HttpResponse;
-use N1ebieski\IDir\Repositories\DirStatusRepo;
 use Illuminate\Contracts\Config\Repository as Config;
+use N1ebieski\IDir\Repositories\DirStatus\DirStatusRepo;
 use N1ebieski\IDir\Http\Clients\DirStatus\DirStatusClient;
 
 class CheckStatusJob implements ShouldQueue

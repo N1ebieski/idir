@@ -4,10 +4,10 @@ namespace N1ebieski\IDir\Models;
 
 use Illuminate\Support\Facades\App;
 use Illuminate\Database\Eloquent\Model;
-use N1ebieski\IDir\Services\DirBacklinkService;
-use N1ebieski\IDir\Repositories\DirBacklinkRepo;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use N1ebieski\IDir\Services\DirBacklink\DirBacklinkService;
+use N1ebieski\IDir\Repositories\DirBacklink\DirBacklinkRepo;
 use N1ebieski\IDir\Database\Factories\DirBacklink\DirBacklinkFactory;
 
 class DirBacklink extends Model

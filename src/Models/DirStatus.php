@@ -4,10 +4,10 @@ namespace N1ebieski\IDir\Models;
 
 use Illuminate\Support\Facades\App;
 use Illuminate\Database\Eloquent\Model;
-use N1ebieski\IDir\Services\DirStatusService;
-use N1ebieski\IDir\Repositories\DirStatusRepo;
+use N1ebieski\IDir\Repositories\DirStatus\DirStatusRepo;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use N1ebieski\IDir\Services\DirStatus\DirStatusService;
 
 class DirStatus extends Model
 {
@@ -104,5 +104,5 @@ class DirStatus extends Model
     public static function makeFactory(...$parameters)
     {
         return static::factory($parameters);
-    }    
+    }
 }

@@ -12,14 +12,14 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Database\Eloquent\Collection;
 use N1ebieski\ICore\ValueObjects\Category\Status;
-use N1ebieski\IDir\Http\Requests\Traits\FieldsExtended;
+use N1ebieski\IDir\Http\Requests\Traits\HasFields;
 
 /**
  * @property Group $group
  */
 class Store2Request extends FormRequest
 {
-    use FieldsExtended;
+    use HasFields;
 
     /**
      * [private description]

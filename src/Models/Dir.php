@@ -4,33 +4,33 @@ namespace N1ebieski\IDir\Models;
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
-use N1ebieski\IDir\Cache\DirCache;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\URL;
 use Mews\Purifier\Facades\Purifier;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Config;
+use N1ebieski\IDir\Cache\Dir\DirCache;
 use Illuminate\Database\Eloquent\Model;
-use N1ebieski\IDir\Services\DirService;
 use Cviebrock\EloquentTaggable\Taggable;
 use N1ebieski\ICore\Utils\MigrationUtil;
-use N1ebieski\IDir\Repositories\DirRepo;
 use Illuminate\Database\Eloquent\Builder;
 use Cviebrock\EloquentSluggable\Sluggable;
+use N1ebieski\IDir\Services\Dir\DirService;
 use N1ebieski\IDir\Models\Traits\Filterable;
+use N1ebieski\IDir\Repositories\Dir\DirRepo;
 use Illuminate\Support\Collection as Collect;
-use N1ebieski\ICore\Models\Traits\Carbonable;
-use N1ebieski\ICore\Models\Traits\StatFilterable;
+use N1ebieski\ICore\Models\Traits\HasCarbonable;
 use Fico7489\Laravel\Pivot\Traits\PivotEventTrait;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
+use N1ebieski\ICore\Models\Traits\HasStatFilterable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
-use N1ebieski\ICore\Models\Traits\HasFullTextSearchable;
 use N1ebieski\IDir\Database\Factories\Dir\DirFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use N1ebieski\ICore\ValueObjects\Stat\Slug as StatSlug;
+use N1ebieski\ICore\Models\Traits\HasFullTextSearchable;
 use N1ebieski\IDir\ValueObjects\Dir\Status as DirStatus;
 use N1ebieski\IDir\ValueObjects\Payment\Status as PaymentStatus;
 
@@ -44,11 +44,11 @@ class Dir extends Model
     use Sluggable;
     use Taggable;
     use HasFullTextSearchable;
-    use Carbonable;
+    use HasCarbonable;
     use PivotEventTrait;
     use HasFactory;
-    use Filterable, StatFilterable {
-        StatFilterable::scopeFilterOrderBy insteadof Filterable;
+    use Filterable, HasStatFilterable {
+        HasStatFilterable::scopeFilterOrderBy insteadof Filterable;
     }
 
     // Configuration

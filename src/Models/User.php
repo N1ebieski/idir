@@ -3,8 +3,8 @@
 namespace N1ebieski\IDir\Models;
 
 use Illuminate\Support\Facades\App;
-use N1ebieski\IDir\Repositories\UserRepo;
 use N1ebieski\ICore\Models\User as BaseUser;
+use N1ebieski\IDir\Repositories\User\UserRepo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use N1ebieski\IDir\Database\Factories\User\UserFactory;
 

@@ -3,11 +3,11 @@
 namespace N1ebieski\IDir\Models\Region;
 
 use Illuminate\Support\Facades\App;
-use N1ebieski\IDir\Cache\RegionCache;
 use Illuminate\Database\Eloquent\Model;
 use Cviebrock\EloquentSluggable\Sluggable;
-use N1ebieski\IDir\Repositories\RegionRepo;
+use N1ebieski\IDir\Cache\Region\RegionCache;
 use N1ebieski\ICore\Models\Traits\HasPolymorphic;
+use N1ebieski\IDir\Repositories\Region\RegionRepo;
 
 class Region extends Model
 {

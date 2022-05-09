@@ -3,9 +3,9 @@
 namespace N1ebieski\IDir\Models;
 
 use Illuminate\Support\Facades\App;
-use N1ebieski\IDir\Cache\LinkCache;
-use N1ebieski\IDir\Repositories\LinkRepo;
+use N1ebieski\IDir\Cache\Link\LinkCache;
 use N1ebieski\ICore\Models\Link as BaseLink;
+use N1ebieski\IDir\Repositories\Link\LinkRepo;
 use N1ebieski\IDir\Database\Factories\Link\LinkFactory;
 
 class Link extends BaseLink

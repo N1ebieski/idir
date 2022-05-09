@@ -4,7 +4,7 @@ namespace N1ebieski\IDir\View\Components;
 
 use Illuminate\View\View;
 use N1ebieski\IDir\Models\Dir;
-use N1ebieski\ICore\Cache\SessionCache;
+use N1ebieski\ICore\Cache\Session\SessionCache;
 use N1ebieski\ICore\Utils\MigrationUtil;
 use Illuminate\Contracts\Support\Htmlable;
 use N1ebieski\ICore\Models\Comment\Comment;

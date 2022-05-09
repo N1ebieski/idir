@@ -5,7 +5,7 @@ namespace N1ebieski\IDir\Models\Traits;
 use N1ebieski\IDir\Models\Group;
 use N1ebieski\IDir\Models\Region\Region;
 use Illuminate\Database\Eloquent\Builder;
-use N1ebieski\ICore\Models\Traits\Filterable as BaseFilterable;
+use N1ebieski\ICore\Models\Traits\HasFilterable as BaseFilterable;
 
 trait Filterable
 {

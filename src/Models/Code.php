@@ -4,8 +4,8 @@ namespace N1ebieski\IDir\Models;
 
 use Illuminate\Support\Facades\App;
 use Illuminate\Database\Eloquent\Model;
-use N1ebieski\IDir\Services\CodeService;
-use N1ebieski\IDir\Repositories\CodeRepo;
+use N1ebieski\IDir\Services\Code\CodeService;
+use N1ebieski\IDir\Repositories\Code\CodeRepo;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use N1ebieski\IDir\Database\Factories\Code\CodeFactory;

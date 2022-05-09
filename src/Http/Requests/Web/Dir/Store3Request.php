@@ -10,17 +10,17 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Lang;
+use N1ebieski\ICore\Http\Requests\Traits\HasCaptcha;
 use N1ebieski\ICore\ValueObjects\Link\Type as LinkType;
 use N1ebieski\IDir\Http\Requests\Web\Dir\Store2Request;
 use N1ebieski\IDir\ValueObjects\Price\Type as PriceType;
-use N1ebieski\ICore\Http\Requests\Traits\CaptchaExtended;
 
 /**
  * @property Group $group
  */
 class Store3Request extends Store2Request
 {
-    use CaptchaExtended;
+    use HasCaptcha;
 
     /**
      * Determine if the user is authorized to make this request.

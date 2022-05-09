@@ -15,10 +15,10 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Database\Eloquent\Collection;
 use N1ebieski\ICore\ValueObjects\Category\Status;
+use N1ebieski\IDir\Http\Requests\Traits\HasFields;
+use N1ebieski\ICore\Http\Requests\Traits\HasCaptcha;
 use N1ebieski\ICore\ValueObjects\Link\Type as LinkType;
-use N1ebieski\IDir\Http\Requests\Traits\FieldsExtended;
 use N1ebieski\IDir\ValueObjects\Price\Type as PriceType;
-use N1ebieski\ICore\Http\Requests\Traits\CaptchaExtended;
 
 /**
  * @property Dir $dir
@@ -26,9 +26,9 @@ use N1ebieski\ICore\Http\Requests\Traits\CaptchaExtended;
  */
 class UpdateRequest extends FormRequest
 {
-    use CaptchaExtended;
-    use FieldsExtended {
-        FieldsExtended::prepareFieldsRules as prepareFieldsRulesTrait;
+    use HasCaptcha;
+    use HasFields {
+        HasFields::prepareFieldsRules as prepareFieldsRulesTrait;
     }
 
     /**

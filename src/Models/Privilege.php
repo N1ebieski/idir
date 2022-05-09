@@ -4,7 +4,7 @@ namespace N1ebieski\IDir\Models;
 
 use Illuminate\Support\Facades\App;
 use Illuminate\Database\Eloquent\Model;
-use N1ebieski\IDir\Repositories\PrivilegeRepo;
+use N1ebieski\IDir\Repositories\Privilege\PrivilegeRepo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Privilege extends Model

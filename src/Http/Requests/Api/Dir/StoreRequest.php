@@ -15,18 +15,18 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Collection as Collect;
 use N1ebieski\ICore\ValueObjects\Category\Status;
+use N1ebieski\IDir\Http\Requests\Traits\HasFields;
+use N1ebieski\ICore\Http\Requests\Traits\HasCaptcha;
 use N1ebieski\ICore\ValueObjects\Link\Type as LinkType;
-use N1ebieski\IDir\Http\Requests\Traits\FieldsExtended;
 use N1ebieski\IDir\ValueObjects\Price\Type as PriceType;
-use N1ebieski\ICore\Http\Requests\Traits\CaptchaExtended;
 
 /**
  * @property Group $group
  */
 class StoreRequest extends FormRequest
 {
-    use CaptchaExtended;
-    use FieldsExtended;
+    use HasCaptcha;
+    use HasFields;
 
     /**
      * [private description]

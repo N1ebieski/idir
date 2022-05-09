@@ -3,8 +3,8 @@
 namespace N1ebieski\IDir\Models\Category;
 
 use Illuminate\Support\Facades\App;
-use N1ebieski\IDir\Cache\CategoryCache;
-use N1ebieski\IDir\Repositories\CategoryRepo;
+use N1ebieski\IDir\Cache\Category\CategoryCache;
+use N1ebieski\IDir\Repositories\Category\CategoryRepo;
 use N1ebieski\ICore\Models\Category\Category as BaseCategory;
 
 class Category extends BaseCategory

@@ -5,14 +5,14 @@ namespace N1ebieski\IDir\Models;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Database\Eloquent\Model;
-use N1ebieski\IDir\Services\PriceService;
-use N1ebieski\IDir\Repositories\PriceRepo;
+use N1ebieski\IDir\Repositories\Price\PriceRepo;
 use N1ebieski\IDir\ValueObjects\Price\Type;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Database\Eloquent\Collection;
 use N1ebieski\IDir\Models\Traits\Filterable;
 use Illuminate\Support\Collection as Collect;
-use N1ebieski\ICore\Models\Traits\Carbonable;
+use N1ebieski\IDir\Services\Price\PriceService;
+use N1ebieski\ICore\Models\Traits\HasCarbonable;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -24,7 +24,7 @@ use N1ebieski\IDir\Database\Factories\Price\PriceFactory;
 class Price extends Model
 {
     use Filterable;
-    use Carbonable;
+    use HasCarbonable;
     use HasFactory;
 
     // Configuration

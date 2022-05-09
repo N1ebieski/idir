@@ -8,14 +8,14 @@ use Illuminate\Support\Carbon;
 use Illuminate\Queue\SerializesModels;
 use N1ebieski\IDir\Models\DirBacklink;
 use Illuminate\Queue\InteractsWithQueue;
-use N1ebieski\IDir\Repositories\DirRepo;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use N1ebieski\IDir\Repositories\DirBacklinkRepo;
+use N1ebieski\IDir\Repositories\Dir\DirRepo;
 use Illuminate\Contracts\Events\Dispatcher as Event;
 use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Contracts\Foundation\Application as App;
 use Illuminate\Contracts\Validation\Factory as Validator;
+use N1ebieski\IDir\Repositories\DirBacklink\DirBacklinkRepo;
 use N1ebieski\IDir\Events\Job\DirBacklink\InvalidBacklinkEvent;
 
 class CheckBacklinkJob implements ShouldQueue

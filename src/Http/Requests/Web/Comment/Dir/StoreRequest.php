@@ -7,11 +7,11 @@ use Illuminate\Support\Facades\Lang;
 use N1ebieski\ICore\Models\BanValue;
 use Illuminate\Foundation\Http\FormRequest;
 use N1ebieski\ICore\ValueObjects\Comment\Status;
-use N1ebieski\ICore\Http\Requests\Traits\CaptchaExtended;
+use N1ebieski\ICore\Http\Requests\Traits\HasCaptcha;
 
 class StoreRequest extends FormRequest
 {
-    use CaptchaExtended;
+    use HasCaptcha;
 
     /**
      * [private description]

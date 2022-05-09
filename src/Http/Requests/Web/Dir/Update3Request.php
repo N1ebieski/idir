@@ -9,10 +9,10 @@ use N1ebieski\ICore\Models\Link;
 use N1ebieski\IDir\Models\Group;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Lang;
+use N1ebieski\ICore\Http\Requests\Traits\HasCaptcha;
 use N1ebieski\ICore\ValueObjects\Link\Type as LinkType;
 use N1ebieski\IDir\Http\Requests\Web\Dir\Update2Request;
 use N1ebieski\IDir\ValueObjects\Price\Type as PriceType;
-use N1ebieski\ICore\Http\Requests\Traits\CaptchaExtended;
 
 /**
  * @property Dir $dir
@@ -20,7 +20,7 @@ use N1ebieski\ICore\Http\Requests\Traits\CaptchaExtended;
  */
 class Update3Request extends Update2Request
 {
-    use CaptchaExtended;
+    use HasCaptcha;
 
     /**
      * Determine if the user is authorized to make this request.
