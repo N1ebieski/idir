@@ -185,7 +185,7 @@ class DirsJob implements ShouldQueue
                     ]
                 ]);
 
-                if ($countTags < $this->MAX_TAGS) {
+                if ($countTags < static::MAX_TAGS) {
                     $keywords = Config::get('icore.tag.normalizer') !== null ?
                         Config::get('icore.tag.normalizer')($item->keywords)
                         : $item->keywords;
