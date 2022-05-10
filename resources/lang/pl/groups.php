@@ -1,6 +1,5 @@
 <?php
 
-use N1ebieski\IDir\Models\Group;
 use N1ebieski\IDir\ValueObjects\Group\Url;
 use N1ebieski\IDir\ValueObjects\Group\Payment;
 use N1ebieski\IDir\ValueObjects\Group\Visible;
