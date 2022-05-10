@@ -36,7 +36,8 @@ use N1ebieski\IDir\ValueObjects\Dir\Comment as DirComment;
 use N1ebieski\IDir\ValueObjects\Payment\Status as PaymentStatus;
 
 /**
- * @property Status $status
+ * @property DirStatus $status
+ * @property DirComment $comment
  * @property \N1ebieski\IDir\ValueObjects\Dir\Url $url
  * @property \N1ebieski\IDir\Models\Group $group
  */
@@ -88,7 +89,6 @@ class Dir extends Model
      */
     protected $attributes = [
         'status' => DirStatus::INACTIVE,
-        'comment' => DirComment::ACTIVE,
         'notes' => null,
         'privileged_at' => null,
         'privileged_to' => null
@@ -649,6 +649,15 @@ class Dir extends Model
         $output .= '</a>';
 
         return $output;
+    }
+
+    /**
+     *
+     * @return DirComment
+     */
+    public function getCommentAttribute(): DirComment
+    {
+        return DirComment::active();
     }
 
     // Checkers

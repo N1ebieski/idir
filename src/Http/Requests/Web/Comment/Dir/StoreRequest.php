@@ -2,6 +2,7 @@
 
 namespace N1ebieski\IDir\Http\Requests\Web\Comment\Dir;
 
+use N1ebieski\IDir\Models\Dir;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Lang;
 use N1ebieski\ICore\Models\BanValue;
@@ -9,6 +10,11 @@ use Illuminate\Foundation\Http\FormRequest;
 use N1ebieski\ICore\ValueObjects\Comment\Status;
 use N1ebieski\ICore\Http\Requests\Traits\HasCaptcha;
 
+/**
+ *
+ * @property Dir $dir
+ * @author Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ */
 class StoreRequest extends FormRequest
 {
     use HasCaptcha;
@@ -37,7 +43,7 @@ class StoreRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return $this->dir->comment->isActive();
     }
 
     /**
