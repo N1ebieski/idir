@@ -5,7 +5,7 @@ namespace N1ebieski\IDir\Http\Requests\Traits;
 use Illuminate\Support\Facades\App;
 use N1ebieski\IDir\ValueObjects\Price\Type;
 
-trait HasCodePayable
+trait HasCodes
 {
     /**
      * Get the validation rules that apply to the request.

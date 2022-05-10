@@ -8,12 +8,12 @@ use N1ebieski\IDir\Models\Group;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Contracts\Queue\Queue;
 use N1ebieski\IDir\Models\Field\Field;
-use N1ebieski\IDir\Database\Seeders\Traits\Importable;
 use Illuminate\Contracts\Cache\Factory as Cache;
+use N1ebieski\IDir\Database\Seeders\Traits\HasImportable;
 
 class SEOKatalogSeeder extends Seeder
 {
-    use Importable;
+    use HasImportable;
 
     /**
      * Undocumented variable

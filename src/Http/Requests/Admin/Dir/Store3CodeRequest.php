@@ -3,11 +3,11 @@
 namespace N1ebieski\IDir\Http\Requests\Admin\Dir;
 
 use Illuminate\Foundation\Http\FormRequest;
-use N1ebieski\IDir\Http\Requests\Traits\HasCodePayable;
+use N1ebieski\IDir\Http\Requests\Traits\HasCodes;
 
 class Store3CodeRequest extends FormRequest
 {
-    use HasCodePayable;
+    use HasCodes;
 
     /**
      * Determine if the user is authorized to make this request.

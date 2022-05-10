@@ -4,14 +4,14 @@ namespace N1ebieski\IDir\Http\Requests\Web\Dir;
 
 use N1ebieski\IDir\Models\Dir;
 use Illuminate\Foundation\Http\FormRequest;
-use N1ebieski\IDir\Http\Requests\Traits\HasCodePayable;
+use N1ebieski\IDir\Http\Requests\Traits\HasCodes;
 
 /**
  * @property Dir $dir
  */
 class UpdateRenewCodeRequest extends FormRequest
 {
-    use HasCodePayable;
+    use HasCodes;
 
     /**
      * Determine if the user is authorized to make this request.

@@ -4,7 +4,7 @@ namespace N1ebieski\IDir\Database\Seeders\Traits;
 
 use Symfony\Component\Process\Process;
 
-trait Importable
+trait HasImportable
 {
     /**
      * Undocumented variable

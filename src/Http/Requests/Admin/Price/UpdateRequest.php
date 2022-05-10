@@ -5,11 +5,11 @@ namespace N1ebieski\IDir\Http\Requests\Admin\Price;
 use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 use N1ebieski\IDir\ValueObjects\Price\Type;
-use N1ebieski\IDir\Http\Requests\Admin\Price\Traits\CodePayable;
+use N1ebieski\IDir\Http\Requests\Admin\Price\Traits\HasCodes;
 
 class UpdateRequest extends FormRequest
 {
-    use CodePayable;
+    use HasCodes;
 
     /**
      * Determine if the user is authorized to make this request.

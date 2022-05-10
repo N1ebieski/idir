@@ -2,7 +2,7 @@
 
 namespace N1ebieski\IDir\Http\Requests\Admin\Price\Traits;
 
-trait CodePayable
+trait HasCodes
 {
     /**
      * [prepareCodes description]

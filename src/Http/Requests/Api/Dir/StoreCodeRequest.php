@@ -4,14 +4,14 @@ namespace N1ebieski\IDir\Http\Requests\Api\Dir;
 
 use N1ebieski\IDir\Models\Group;
 use Illuminate\Foundation\Http\FormRequest;
-use N1ebieski\IDir\Http\Requests\Traits\HasCodePayable;
+use N1ebieski\IDir\Http\Requests\Traits\HasCodes;
 
 /**
  * @property Group $group
  */
 class StoreCodeRequest extends FormRequest
 {
-    use HasCodePayable;
+    use HasCodes;
 
     /**
      * Determine if the user is authorized to make this request.
