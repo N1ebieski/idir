@@ -182,6 +182,11 @@ class Schema900 implements SchemaInterface
                 [
                     'type' => 'afterFirst',
                     'search' => '/use\s*N1ebieski\\\IDir\\\Models\\\Group;/',
+                    'to' => 'use N1ebieski\IDir\ValueObjects\Group\Url;'
+                ],
+                [
+                    'type' => 'afterFirst',
+                    'search' => '/use\s*N1ebieski\\\IDir\\\Models\\\Group;/',
                     'to' => 'use N1ebieski\IDir\ValueObjects\Group\Backlink;'
                 ],
                 [
