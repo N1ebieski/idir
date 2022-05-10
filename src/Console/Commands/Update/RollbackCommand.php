@@ -2,23 +2,27 @@
 
 namespace N1ebieski\IDir\Console\Commands\Update;
 
-use N1ebieski\ICore\Console\Commands\Update\UpdateCommand as BaseUpdateCommand;
+use N1ebieski\ICore\Console\Commands\Update\RollbackCommand as BaseRollbackCommand;
 
-class UpdateCommand extends BaseUpdateCommand
+/**
+ *
+ * @author Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ */
+class RollbackCommand extends BaseRollbackCommand
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'idir:update {version : The version to which the application files will be updated}';
+    protected $signature = 'idir:update:rollback {version : The version to which the application files will be restored}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'iDir application updater.';
+    protected $description = 'iDir application updater rollback.';
 
     /**
      * Execute the console command.
@@ -27,9 +31,9 @@ class UpdateCommand extends BaseUpdateCommand
      */
     public function handle()
     {
-        $bar = $this->output->createProgressBar(3);
+        $bar = $this->output->createProgressBar(2);
 
-        $this->line("iDir updater");
+        $this->line("iDir updater rollback");
         $this->line("Author: Mariusz Wysokiński");
         $this->line("Version: {$this->config->get('idir.version')}");
         $this->line("\n");
@@ -41,11 +45,7 @@ class UpdateCommand extends BaseUpdateCommand
         $this->line("\n");
         $bar->advance();
         $this->line("\n");
-        $this->backup();
-        $this->line("\n");
-        $bar->advance();
-        $this->line("\n");
-        $this->update();
+        $this->rollback();
         $this->line("\n");
         $bar->finish();
     }

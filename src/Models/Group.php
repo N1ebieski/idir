@@ -4,14 +4,14 @@ namespace N1ebieski\IDir\Models;
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\App;
-use N1ebieski\IDir\Cache\Group\GroupCache;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Cviebrock\EloquentSluggable\Sluggable;
+use N1ebieski\IDir\Cache\Group\GroupCache;
 use N1ebieski\IDir\ValueObjects\Group\Url;
 use N1ebieski\IDir\ValueObjects\Group\Slug;
-use N1ebieski\IDir\Models\Traits\Filterable;
 use N1ebieski\IDir\ValueObjects\Group\Visible;
+use N1ebieski\IDir\Models\Traits\HasFilterable;
 use N1ebieski\IDir\Services\Group\GroupService;
 use N1ebieski\IDir\ValueObjects\Group\Backlink;
 use N1ebieski\ICore\Models\Traits\HasCarbonable;
@@ -39,7 +39,7 @@ class Group extends Model
     use Sluggable;
     use HasCarbonable;
     use HasPositionable;
-    use Filterable;
+    use HasFilterable;
     use HasFullTextSearchable;
     use HasFactory;
 

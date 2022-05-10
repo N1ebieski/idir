@@ -6,9 +6,9 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use N1ebieski\IDir\ValueObjects\Field\Type;
-use N1ebieski\IDir\Models\Traits\Filterable;
 use N1ebieski\IDir\ValueObjects\Field\Options;
 use N1ebieski\IDir\ValueObjects\Field\Visible;
+use N1ebieski\IDir\Models\Traits\HasFilterable;
 use N1ebieski\IDir\Services\Field\FieldService;
 use N1ebieski\ICore\Models\Traits\HasCarbonable;
 use N1ebieski\IDir\Repositories\Field\FieldRepo;
@@ -30,7 +30,7 @@ class Field extends Model
     use HasCarbonable;
     use HasPositionable;
     use HasFullTextSearchable;
-    use Filterable;
+    use HasFilterable;
     use HasFactory;
 
     // Configuration

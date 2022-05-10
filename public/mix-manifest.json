@@ -1,13 +1,13 @@
 {
-    "/js/vendor/idir/vendor/vendor.js": "/js/vendor/idir/vendor/vendor.js?id=9b3e6d5d295ac89b054629a315c8d87d",
-    "/js/vendor/idir/web/web.js": "/js/vendor/idir/web/web.js?id=f935c54dd6683b6173fdc5758042378c",
-    "/js/vendor/idir/admin/admin.js": "/js/vendor/idir/admin/admin.js?id=813287ddad4d6d662eb99deff3c4ec43",
+    "/js/vendor/idir/vendor/vendor.js": "/js/vendor/idir/vendor/vendor.js?id=0c15f0ab5b9d1cc3b18e08cb910b3e1a",
+    "/js/vendor/idir/web/web.js": "/js/vendor/idir/web/web.js?id=e35ec68a7b4a6c9d5a2bd68770897642",
+    "/js/vendor/idir/admin/admin.js": "/js/vendor/idir/admin/admin.js?id=477e41d065339816a75cbdcf5b49edb6",
     "/css/vendor/idir/vendor/vendor.css": "/css/vendor/idir/vendor/vendor.css?id=3c8ae839615847902a3be3d43723086c",
-    "/css/vendor/idir/web/web-dark.css": "/css/vendor/idir/web/web-dark.css?id=ec70ff316f301fd5d621f8c5379664e7",
+    "/css/vendor/idir/web/web-dark.css": "/css/vendor/idir/web/web-dark.css?id=8109c4f9fa2f5d409b743cc11b5e1fc0",
     "/css/vendor/idir/web/web.css": "/css/vendor/idir/web/web.css?id=fd3378601c4c6ba261e4b91c8f44460f",
-    "/css/vendor/idir/admin/admin-dark.css": "/css/vendor/idir/admin/admin-dark.css?id=1de2eff060c7952cafcfdfc4cb349a6b",
+    "/css/vendor/idir/admin/admin-dark.css": "/css/vendor/idir/admin/admin-dark.css?id=6afc67464b36bb21fa8fb376e4d69f28",
     "/css/vendor/idir/admin/admin.css": "/css/vendor/idir/admin/admin.css?id=58e9a6d7fbf27e0264697a763d81149a",
     "/js/vendor/icore/web/recaptcha_invisible.js": "/js/vendor/icore/web/recaptcha_invisible.js?id=5a0c44667ce1e41f61b6520314617151",
-    "/js/vendor/idir/web/scripts.js": "/js/vendor/idir/web/scripts.js?id=ac8797437f8f9d19356475bc4378f23a",
-    "/js/vendor/idir/admin/scripts.js": "/js/vendor/idir/admin/scripts.js?id=8cd9123e367207bcf15a886297c6dc88"
+    "/js/vendor/idir/web/scripts.js": "/js/vendor/idir/web/scripts.js?id=e7df44f4a3d1dbe0723acf67121a1e45",
+    "/js/vendor/idir/admin/scripts.js": "/js/vendor/idir/admin/scripts.js?id=4418c356e0d71836ca274a6d206921d6"
 }

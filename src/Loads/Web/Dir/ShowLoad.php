@@ -3,6 +3,7 @@
 namespace N1ebieski\IDir\Loads\Web\Dir;
 
 use Illuminate\Http\Request;
+use N1ebieski\IDir\Models\Dir;
 
 class ShowLoad
 {
@@ -12,9 +13,11 @@ class ShowLoad
      */
     public function __construct(Request $request)
     {
-        $request->route('dir_cache')->setRelations(
-            $request->route('dir_cache')->makeCache()
-                ->rememberLoadAllPublicRels()->getRelations()
-        );
+        /**
+         * @var Dir
+         */
+        $dir = $request->route('dir_cache');
+
+        $dir->setRelations($dir->makeCache()->rememberLoadAllPublicRels()->getRelations());
     }
 }

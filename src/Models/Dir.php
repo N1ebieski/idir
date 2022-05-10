@@ -16,7 +16,7 @@ use N1ebieski\ICore\Utils\MigrationUtil;
 use Illuminate\Database\Eloquent\Builder;
 use Cviebrock\EloquentSluggable\Sluggable;
 use N1ebieski\IDir\Services\Dir\DirService;
-use N1ebieski\IDir\Models\Traits\Filterable;
+use N1ebieski\IDir\Models\Traits\HasFilterable;
 use N1ebieski\IDir\Repositories\Dir\DirRepo;
 use Illuminate\Support\Collection as Collect;
 use N1ebieski\ICore\Models\Traits\HasCarbonable;
@@ -47,8 +47,8 @@ class Dir extends Model
     use HasCarbonable;
     use PivotEventTrait;
     use HasFactory;
-    use Filterable, HasStatFilterable {
-        HasStatFilterable::scopeFilterOrderBy insteadof Filterable;
+    use HasFilterable, HasStatFilterable {
+        HasStatFilterable::scopeFilterOrderBy insteadof HasFilterable;
     }
 
     // Configuration

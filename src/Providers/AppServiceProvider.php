@@ -24,7 +24,11 @@ class AppServiceProvider extends ServiceProvider
             ->give('');
 
         $this->app->when(\N1ebieski\IDir\Console\Commands\Update\UpdateCommand::class)
-            ->needs('$backupPath')
+            ->needs('$backup_path')
+            ->give('backup/vendor/idir');
+
+        $this->app->when(\N1ebieski\IDir\Console\Commands\Update\RollbackCommand::class)
+            ->needs('$backup_path')
             ->give('backup/vendor/idir');
 
         $this->app->when(\N1ebieski\IDir\Console\Commands\Update\UpdateCommand::class)
