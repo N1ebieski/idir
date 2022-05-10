@@ -16,9 +16,9 @@ use N1ebieski\ICore\Utils\MigrationUtil;
 use Illuminate\Database\Eloquent\Builder;
 use Cviebrock\EloquentSluggable\Sluggable;
 use N1ebieski\IDir\Services\Dir\DirService;
-use N1ebieski\IDir\Models\Traits\HasFilterable;
 use N1ebieski\IDir\Repositories\Dir\DirRepo;
 use Illuminate\Support\Collection as Collect;
+use N1ebieski\IDir\Models\Traits\HasFilterable;
 use N1ebieski\ICore\Models\Traits\HasCarbonable;
 use Fico7489\Laravel\Pivot\Traits\PivotEventTrait;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -32,6 +32,7 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use N1ebieski\ICore\ValueObjects\Stat\Slug as StatSlug;
 use N1ebieski\ICore\Models\Traits\HasFullTextSearchable;
 use N1ebieski\IDir\ValueObjects\Dir\Status as DirStatus;
+use N1ebieski\IDir\ValueObjects\Dir\Comment as DirComment;
 use N1ebieski\IDir\ValueObjects\Payment\Status as PaymentStatus;
 
 /**
@@ -87,6 +88,7 @@ class Dir extends Model
      */
     protected $attributes = [
         'status' => DirStatus::INACTIVE,
+        'comment' => DirComment::ACTIVE,
         'notes' => null,
         'privileged_at' => null,
         'privileged_to' => null
