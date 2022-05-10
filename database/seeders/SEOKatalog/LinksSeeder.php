@@ -55,7 +55,7 @@ class LinksSeeder extends SEOKatalogSeeder
      * @param string $url
      * @return string
      */
-    protected static function url(string $url): string
+    protected function url(string $url): string
     {
         return strtolower(strpos($url, 'https://') ? $url : 'http://' . $url);
     }

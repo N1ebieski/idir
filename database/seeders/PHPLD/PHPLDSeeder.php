@@ -72,7 +72,7 @@ class PHPLDSeeder extends Seeder
      *
      * @return integer
      */
-    protected static function userLastId(): int
+    protected function userLastId(): int
     {
         return (
             User::orderBy('id', 'desc')->first()->id
@@ -86,7 +86,7 @@ class PHPLDSeeder extends Seeder
      *
      * @return integer
      */
-    protected static function fieldLastId(): int
+    protected function fieldLastId(): int
     {
         return (
             (Field::orderBy('id', 'desc')->first()->id ?? 0)
@@ -100,7 +100,7 @@ class PHPLDSeeder extends Seeder
      *
      * @return integer
      */
-    protected static function groupLastId(): int
+    protected function groupLastId(): int
     {
         return (
             Group::orderBy('id', 'desc')->first()->id

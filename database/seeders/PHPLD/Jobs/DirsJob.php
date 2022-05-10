@@ -15,7 +15,6 @@ use N1ebieski\ICore\Models\Stat\Stat;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Queue\InteractsWithQueue;
-use N1ebieski\IDir\ValueObjects\Group\Id;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use N1ebieski\IDir\ValueObjects\Dir\Status;
@@ -112,7 +111,7 @@ class DirsJob implements ShouldQueue
         $countTags = Tag::count();
 
         $this->items->each(function ($item) use ($fields, $defaultStats, $countTags) {
-            if (!static::verify($item)) {
+            if (!$this->verify($item)) {
                 return;
             }
 
@@ -126,9 +125,15 @@ class DirsJob implements ShouldQueue
                 $dir->status = $item->STATUS === 2 ?
                     Status::ACTIVE
                     : Status::INACTIVE;
-                $dir->url = mb_strtolower($item->URL);
-                $dir->privileged_at = static::privilegedAt($item);
-                $dir->privileged_to = static::privilegedTo($item);
+
+                try {
+                    $dir->url = new Url($this->url(mb_strtolower($item->URL)));
+                } catch (\InvalidArgumentException $e) {
+                    return;
+                }
+
+                $dir->privileged_at = $this->privilegedAt($item);
+                $dir->privileged_to = $this->privilegedTo($item);
                 $dir->created_at = $item->DATE_ADDED;
                 $dir->updated_at = $item->DATE_MODIFIED;
 
@@ -152,7 +157,7 @@ class DirsJob implements ShouldQueue
                     ]
                 ]);
 
-                if ($countTags < static::MAX_TAGS) {
+                if ($countTags < $this->MAX_TAGS) {
                     $keywords = Config::get('icore.tag.normalizer') !== null ?
                         Config::get('icore.tag.normalizer')(utf8_decode($item->META_KEYWORDS))
                         : utf8_decode($item->META_KEYWORDS);
@@ -222,7 +227,7 @@ class DirsJob implements ShouldQueue
      * @param object $item
      * @return boolean
      */
-    protected static function verify(object $item): bool
+    protected function verify(object $item): bool
     {
         return Dir::where('id', $item->ID)
             ->orWhere('url', mb_strtolower($item->URL))->first() === null;
@@ -234,7 +239,7 @@ class DirsJob implements ShouldQueue
      * @param object $item
      * @return string|null
      */
-    protected static function privilegedAt(object $item): ?string
+    protected function privilegedAt(object $item): ?string
     {
         if ($item->FEATURED === 1) {
             if ($item->EXPIRY_DATE !== null && $item->EXPIRY_DATE !== '0000-00-00 00:00:00') {
@@ -253,7 +258,7 @@ class DirsJob implements ShouldQueue
      * @param object $item
      * @return string|null
      */
-    protected static function privilegedTo(object $item): ?string
+    protected function privilegedTo(object $item): ?string
     {
         if ($item->FEATURED === 1 && $item->EXPIRY_DATE !== null && $item->EXPIRY_DATE !== '0000-00-00 00:00:00') {
             return $item->EXPIRY_DATE;

@@ -67,10 +67,10 @@ class SEOKatalogSeeder extends Seeder
         $this->cache = $cache;
         $this->queue = $queue;
 
-        $this->groupLastId = static::groupLastId();
-        $this->fieldLastId = static::fieldLastId();
-        $this->subLastId = static::subLastId();
-        $this->userLastId = static::userLastId();
+        $this->groupLastId = $this->groupLastId();
+        $this->fieldLastId = $this->fieldLastId();
+        $this->subLastId = $this->subLastId();
+        $this->userLastId = $this->userLastId();
 
         DB::disableQueryLog();
     }
@@ -80,7 +80,7 @@ class SEOKatalogSeeder extends Seeder
      *
      * @return integer
      */
-    protected static function userLastId(): int
+    protected function userLastId(): int
     {
         return (
             User::orderBy('id', 'desc')->first()->id
@@ -94,7 +94,7 @@ class SEOKatalogSeeder extends Seeder
      *
      * @return integer
      */
-    protected static function subLastId(): int
+    protected function subLastId(): int
     {
         return DB::connection('import')->table('subcategories')->orderBy('id', 'desc')->first('id')->id;
     }
@@ -104,7 +104,7 @@ class SEOKatalogSeeder extends Seeder
      *
      * @return integer
      */
-    protected static function fieldLastId(): int
+    protected function fieldLastId(): int
     {
         return (
             (Field::orderBy('id', 'desc')->first()->id ?? 0)
@@ -118,7 +118,7 @@ class SEOKatalogSeeder extends Seeder
      *
      * @return integer
      */
-    protected static function groupLastId(): int
+    protected function groupLastId(): int
     {
         return (
             Group::orderBy('id', 'desc')->first()->id

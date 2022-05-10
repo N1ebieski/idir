@@ -62,7 +62,7 @@ class FieldsSeeder extends PHPLDSeeder
      *
      * @return integer
      */
-    protected static function fieldLastId(): int
+    protected function fieldLastId(): int
     {
         return Field::orderBy('id', 'desc')->first()->id ?? 0;
     }
@@ -73,7 +73,7 @@ class FieldsSeeder extends PHPLDSeeder
      * @param string $type
      * @return string
      */
-    protected static function type(string $type): string
+    protected function type(string $type): string
     {
         switch ($type) {
             case 'STR':
@@ -96,7 +96,7 @@ class FieldsSeeder extends PHPLDSeeder
      * @param object $item
      * @return array
      */
-    protected static function options(object $item): array
+    protected function options(object $item): array
     {
         if ($item->TYPE === 'STR') {
             $options['min'] = 3;

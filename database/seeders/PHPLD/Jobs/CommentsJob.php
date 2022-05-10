@@ -121,7 +121,7 @@ class CommentsJob implements ShouldQueue
      * @param string $content
      * @return string
      */
-    protected static function contentHtml(string $content): string
+    protected function contentHtml(string $content): string
     {
         return strip_tags(htmlspecialchars_decode(utf8_decode($content)));
     }

@@ -29,7 +29,7 @@ class UsersSeeder extends SEOKatalogSeeder
      *
      * @return integer
      */
-    protected static function userLastId(): int
+    protected function userLastId(): int
     {
         return User::orderBy('id', 'desc')->first()->id;
     }

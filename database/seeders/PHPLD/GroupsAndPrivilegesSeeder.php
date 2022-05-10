@@ -84,7 +84,7 @@ class GroupsAndPrivilegesSeeder extends PHPLDSeeder
      *
      * @return integer
      */
-    protected static function groupLastId(): int
+    protected function groupLastId(): int
     {
         return Group::orderBy('id', 'desc')->first()->id;
     }

@@ -59,7 +59,7 @@ class FieldsSeeder extends SEOKatalogSeeder
      *
      * @return integer
      */
-    protected static function fieldLastId(): int
+    protected function fieldLastId(): int
     {
         return Field::orderBy('id', 'desc')->first()->id ?? 0;
     }
@@ -70,7 +70,7 @@ class FieldsSeeder extends SEOKatalogSeeder
      * @param integer $type
      * @return string
      */
-    protected static function type(int $type): string
+    protected function type(int $type): string
     {
         switch ($type) {
             case 1:
@@ -96,7 +96,7 @@ class FieldsSeeder extends SEOKatalogSeeder
      * @param object $item
      * @return array
      */
-    protected static function options(object $item): array
+    protected function options(object $item): array
     {
         if ($item->min >= 0) {
             $options['min'] = $item->min;

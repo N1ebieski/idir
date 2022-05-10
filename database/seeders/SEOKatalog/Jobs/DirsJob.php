@@ -19,13 +19,12 @@ use Illuminate\Support\Facades\Config;
 use N1ebieski\IDir\Models\DirBacklink;
 use Illuminate\Queue\InteractsWithQueue;
 use N1ebieski\IDir\Models\Region\Region;
-use N1ebieski\IDir\ValueObjects\Group\Id;
+use N1ebieski\IDir\ValueObjects\Dir\Url;
 use N1ebieski\IDir\Models\Field\Dir\Field;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use N1ebieski\ICore\ValueObjects\Link\Type;
 use N1ebieski\IDir\ValueObjects\Group\Slug;
-use N1ebieski\IDir\Models\Category\Dir\Category;
 
 class DirsJob implements ShouldQueue
 {
@@ -143,14 +142,20 @@ class DirsJob implements ShouldQueue
 
                 $dir->id = $item->id;
                 $dir->title = htmlspecialchars_decode($item->title);
-                $dir->content_html = static::contentHtml($item->description);
-                $dir->content = static::contentHtml($item->description);
-                $dir->url = static::url($item->url);
+                $dir->content_html = $this->contentHtml($item->description);
+                $dir->content = $this->contentHtml($item->description);
+
+                try {
+                    $dir->url = new Url($this->url($item->url));
+                } catch (\InvalidArgumentException $e) {
+                    return;
+                }
+
                 $dir->status = $item->active;
                 $dir->privileged_at = $item->date_mod !== 0 ?
                     Carbon::createFromTimestamp($item->date_mod)
                     : null;
-                $dir->privileged_to = static::privilegedTo(
+                $dir->privileged_to = $this->privilegedTo(
                     $item->date_mod,
                     ($groups->where('id', $item->group)->first()->days ?? 0)
                 );
@@ -180,7 +185,7 @@ class DirsJob implements ShouldQueue
                     ]
                 ]);
 
-                if ($countTags < static::MAX_TAGS) {
+                if ($countTags < $this->MAX_TAGS) {
                     $keywords = Config::get('icore.tag.normalizer') !== null ?
                         Config::get('icore.tag.normalizer')($item->keywords)
                         : $item->keywords;
@@ -201,7 +206,7 @@ class DirsJob implements ShouldQueue
 
                 if (!empty($item->backlink_link)) {
                     $backlink = Link::where([
-                        ['url', static::url($item->backlink)],
+                        ['url', $this->url($item->backlink)],
                         ['type', Type::BACKLINK]
                     ])->first();
 
@@ -210,7 +215,7 @@ class DirsJob implements ShouldQueue
 
                         $dirBacklink->link()->associate($backlink->id);
                         $dirBacklink->dir()->associate($dir->id);
-                        $dirBacklink->url = static::url($item->backlink_link);
+                        $dirBacklink->url = $this->url($item->backlink_link);
                         $dirBacklink->save();
                     }
                 }
@@ -299,10 +304,10 @@ class DirsJob implements ShouldQueue
      * @param object $item
      * @return boolean
      */
-    protected static function verify(object $item): bool
+    protected function verify(object $item): bool
     {
         return Dir::where('id', $item->id)
-            ->orWhere('url', static::url($item->url))->first() === null;
+            ->orWhere('url', $this->url($item->url))->first() === null;
     }
 
     /**
@@ -311,7 +316,7 @@ class DirsJob implements ShouldQueue
      * @param string $url
      * @return string
      */
-    protected static function url(string $url): string
+    protected function url(string $url): string
     {
         return trim(strtolower(Str::contains($url, 'https://') ? $url : 'http://' . $url));
     }
@@ -322,7 +327,7 @@ class DirsJob implements ShouldQueue
      * @param string $desc
      * @return string
      */
-    protected static function contentHtml(string $desc): string
+    protected function contentHtml(string $desc): string
     {
         $desc = preg_replace('#\[([a-z0-9=]+)\]<br />(.*?)\[/([a-z]+)\]#si', '[\\1]\\2[/\\3]', $desc);
         $desc = str_replace(array('<br /><br />[list', '<br />[list'), array('[list', '[list'), $desc);
@@ -355,7 +360,7 @@ class DirsJob implements ShouldQueue
      * @param integer $days
      * @return string|null
      */
-    protected static function privilegedTo(int $date, int $days): ?string
+    protected function privilegedTo(int $date, int $days): ?string
     {
         if ($date !== 0 && $days > 0) {
             return Carbon::createFromTimestamp($date)->addDays($days);
