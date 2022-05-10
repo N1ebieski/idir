@@ -20,9 +20,9 @@ class BanValue extends BaseBanValue
      */
     public function __construct(array $attributes = [])
     {
-        parent::__construct($attributes);
-
         $this->casts['type'] = \N1ebieski\IDir\Casts\Banvalue\TypeCast::class;
+
+        parent::__construct($attributes);
     }
 
     // Factories

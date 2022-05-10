@@ -24,20 +24,15 @@ class BansSeeder extends SEOKatalogSeeder
             ->chunk(1000, function ($items) {
                 $items->each(function ($item) {
                     DB::transaction(function () use ($item) {
-                        /**
-                         * @var BanValue
-                         */
-                        $banValue = BanValue::make();
-
                         if (!empty($item->url)) {
-                            $banValue->create([
+                            BanValue::create([
                                 'value' => $this->url($item->url),
                                 'type' => Type::URL
                             ]);
                         }
 
                         if (!empty($item->ip)) {
-                            $banValue->create([
+                            BanValue::create([
                                 'value' => $item->ip,
                                 'type' => Type::IP
                             ]);
@@ -45,12 +40,7 @@ class BansSeeder extends SEOKatalogSeeder
 
                         if (is_int($item->user) && $item->user !== 0) {
                             if ($user = User::find($this->userLastId + $item->user)) {
-                                /**
-                                 * @var BanModel
-                                 */
-                                $banModel = BanModel::make();
-
-                                $banModel->morph()->associate($user)->save();
+                                BanModel::make()->morph()->associate($user)->save();
                             }
                         }
                     });
