@@ -47,22 +47,15 @@ class PriceService implements CreateInterface, UpdateInterface, DeleteInterface
         return $this->db->transaction(function () use ($attributes) {
             $price = $this->price->make($attributes);
 
-            $price->code = $attributes[$attributes['type']]['code'] ?? null;
-            $price->token = $attributes[$attributes['type']]['token'] ?? null;
-            $price->number = $attributes[$attributes['type']]['number'] ?? null;
-
             $price->group()->associate($attributes['group']);
+
             $price->save();
 
-            if (array_key_exists('type', $attributes) && array_key_exists($attributes['type'], $attributes)) {
-                $options = $attributes[$attributes['type']];
-
-                if (array_key_exists('codes', $options)) {
-                    $this->price->codes()->make()
-                        ->setRelations(['price' => $price])
-                        ->makeService()
-                        ->sync($options['codes'] ?? []);
-                }
+            if (array_key_exists('codes', $attributes)) {
+                $this->price->codes()->make()
+                    ->setRelations(['price' => $price])
+                    ->makeService()
+                    ->sync($attributes['codes'] ?? []);
             }
 
             return $price;
@@ -79,27 +72,11 @@ class PriceService implements CreateInterface, UpdateInterface, DeleteInterface
         return $this->db->transaction(function () use ($attributes) {
             $this->price->fill($attributes);
 
-            if (array_key_exists('type', $attributes) && array_key_exists($attributes['type'], $attributes)) {
-                $options = $attributes[$attributes['type']];
-
-                if (array_key_exists('code', $options)) {
-                    $this->price->code = $options['code'];
-                }
-
-                if (array_key_exists('token', $options)) {
-                    $this->price->token = $options['token'];
-                }
-
-                if (array_key_exists('number', $options)) {
-                    $this->price->number = $options['number'];
-                }
-
-                if (array_key_exists('codes', $options)) {
-                    $this->price->codes()->make()
-                        ->setRelations(['price' => $this->price])
-                        ->makeService()
-                        ->sync($options['codes'] ?? []);
-                }
+            if (array_key_exists('codes', $attributes)) {
+                $this->price->codes()->make()
+                    ->setRelations(['price' => $this->price])
+                    ->makeService()
+                    ->sync($attributes['codes'] ?? []);
             }
 
             if (array_key_exists('group', $attributes)) {

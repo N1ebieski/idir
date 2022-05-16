@@ -22,7 +22,7 @@ class DirBacklinkController
      */
     public function delay(DirBacklink $dirBacklink, DelayRequest $request): JsonResponse
     {
-        $dirBacklink->makeService()->delay($request->only('delay'));
+        $dirBacklink->makeService()->delay($request->input('delay'));
 
         $dirBacklink->dir->makeRepo()->activate();
 

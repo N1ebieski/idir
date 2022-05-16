@@ -50,6 +50,6 @@ class CreateLogs
             $logs .= $key . ': ' . $value . "\n";
         }
 
-        $event->payment->makeService()->updateLogs(['logs' => $logs]);
+        $event->payment->makeService()->updateLogs($logs);
     }
 }

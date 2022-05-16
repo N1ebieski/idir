@@ -2,6 +2,7 @@
 
 namespace N1ebieski\IDir\Services\Field;
 
+use Throwable;
 use N1ebieski\IDir\Models\Field\Field;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection as Collect;
@@ -174,27 +175,23 @@ class FieldService implements CreateInterface, UpdateInterface, PositionUpdateIn
     }
 
     /**
-     * [create description]
-     * @param  array $attributes [description]
-     * @return Model             [description]
+     *
+     * @param array $attributes
+     * @return Model
+     * @throws Throwable
      */
     public function create(array $attributes): Model
     {
         return $this->db->transaction(function () use ($attributes) {
-            $this->field->fill($attributes);
+            $field = $this->field->fill($attributes);
 
-            $this->field->options = array_merge(
-                $attributes[$attributes['type']],
-                ['required' => $attributes['required']]
-            );
-
-            $this->field->save();
+            $field->save();
 
             if (array_key_exists('morphs', $attributes)) {
-                $this->field->morphs()->attach($attributes['morphs'] ?? []);
+                $field->morphs()->attach($attributes['morphs'] ?? []);
             }
 
-            return $this->field;
+            return $field;
         });
     }
 
@@ -206,14 +203,16 @@ class FieldService implements CreateInterface, UpdateInterface, PositionUpdateIn
     public function update(array $attributes): bool
     {
         return $this->db->transaction(function () use ($attributes) {
-            $this->field->fill($attributes);
+            $this->field->fill(
+                $this->collect->make($attributes)->except('options')->toArray()
+            );
 
-            if (array_key_exists('required', $attributes)) {
-                $this->field->options->setRequired($attributes['required']);
-            }
+            if (array_key_exists('options', $attributes)) {
+                $options = $attributes['options'];
 
-            if (array_key_exists('type', $attributes) && array_key_exists($attributes['type'], $attributes)) {
-                $options = $attributes[$attributes['type']];
+                if (array_key_exists('required', $options)) {
+                    $this->field->options->setRequired($options['required']);
+                }
 
                 if (array_key_exists('options', $options)) {
                     $this->field->options->setOptions($options['options']);
@@ -228,15 +227,15 @@ class FieldService implements CreateInterface, UpdateInterface, PositionUpdateIn
                 }
 
                 if (array_key_exists('height', $options)) {
-                    $this->field->options->setOptions($options['height']);
+                    $this->field->options->setHeight($options['height']);
                 }
 
                 if (array_key_exists('width', $options)) {
-                    $this->field->options->setOptions($options['width']);
+                    $this->field->options->setWidth($options['width']);
                 }
 
                 if (array_key_exists('size', $options)) {
-                    $this->field->options->setOptions($options['size']);
+                    $this->field->options->setSize($options['size']);
                 }
             }
 
@@ -249,14 +248,15 @@ class FieldService implements CreateInterface, UpdateInterface, PositionUpdateIn
     }
 
     /**
-     * [updatePosition description]
-     * @param  array $attributes [description]
-     * @return bool              [description]
+     *
+     * @param int $position
+     * @return bool
+     * @throws Throwable
      */
-    public function updatePosition(array $attributes): bool
+    public function updatePosition(int $position): bool
     {
-        return $this->db->transaction(function () use ($attributes) {
-            return $this->field->update(['position' => (int)$attributes['position']]);
+        return $this->db->transaction(function () use ($position) {
+            return $this->field->update(['position' => $position]);
         });
     }
 

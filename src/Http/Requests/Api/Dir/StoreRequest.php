@@ -379,4 +379,27 @@ class StoreRequest extends FormRequest
             ],
         ];
     }
+
+    /**
+     *
+     * @return array
+     */
+    public function validated(): array
+    {
+        if ($this->has('payment_type')) {
+            $types = [];
+
+            foreach (PriceType::getAvailable() as $type) {
+                $types[] = "payment_{$type}";
+            }
+
+            return Collect::make($this->safe()->except($types))
+                ->merge([
+                    'price' => $this->safe()->collect()->get("payment_{$this->safe()->payment_type}")
+                ])
+                ->toArray();
+        }
+
+        return parent::validated();
+    }
 }

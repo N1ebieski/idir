@@ -2,6 +2,7 @@
 
 namespace N1ebieski\IDir\Services\DirStatus;
 
+use Throwable;
 use Carbon\Carbon;
 use N1ebieski\IDir\Models\DirStatus;
 use Illuminate\Database\Eloquent\Model;
@@ -102,18 +103,18 @@ class DirStatusService implements CreateInterface
     }
 
     /**
-     * Undocumented function
      *
-     * @param array $attributes
-     * @return boolean
+     * @param int $days
+     * @return bool
+     * @throws Throwable
      */
-    public function delay(array $attributes): bool
+    public function delay(int $days): bool
     {
-        return $this->db->transaction(function () use ($attributes) {
+        return $this->db->transaction(function () use ($days) {
             return $this->dirStatus->update([
                 'attempts' => 0,
                 'attempted_at' => $this->carbon->parse($this->dirStatus->attempted_at)
-                    ->addDays($attributes['delay'])
+                    ->addDays($days)
             ]);
         });
     }

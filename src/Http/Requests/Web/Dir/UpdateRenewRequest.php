@@ -6,6 +6,7 @@ use N1ebieski\IDir\Models\Dir;
 use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 use N1ebieski\IDir\ValueObjects\Price\Type;
+use Illuminate\Support\Collection as Collect;
 
 /**
  * @property Dir $dir
@@ -86,5 +87,17 @@ class UpdateRenewRequest extends FormRequest
                 })
             ] : ['no_js_validation']
         ];
+    }
+
+    /**
+     *
+     * @return array
+     */
+    public function validated(): array
+    {
+        return Collect::make([
+            'price' => $this->safe()->collect()->get("payment_{$this->safe()->payment_type}")
+        ])
+        ->toArray();
     }
 }

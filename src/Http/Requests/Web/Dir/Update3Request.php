@@ -9,6 +9,7 @@ use N1ebieski\ICore\Models\Link;
 use N1ebieski\IDir\Models\Group;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Lang;
+use Illuminate\Support\Collection as Collect;
 use N1ebieski\ICore\Http\Requests\Traits\HasCaptcha;
 use N1ebieski\ICore\ValueObjects\Link\Type as LinkType;
 use N1ebieski\IDir\Http\Requests\Web\Dir\Update2Request;
@@ -180,5 +181,28 @@ class Update3Request extends Update2Request
         return [
             'backlink_url.regex' => __('validation.regex') . ' ' . Lang::get('idir::validation.backlink_url')
         ];
+    }
+
+    /**
+     *
+     * @return array
+     */
+    public function validated(): array
+    {
+        if ($this->has('payment_type')) {
+            $types = [];
+
+            foreach (PriceType::getAvailable() as $type) {
+                $types[] = "payment_{$type}";
+            }
+
+            return Collect::make($this->safe()->except($types))
+                ->merge([
+                    'price' => $this->safe()->collect()->get("payment_{$this->safe()->payment_type}")
+                ])
+                ->toArray();
+        }
+
+        return parent::validated();
     }
 }

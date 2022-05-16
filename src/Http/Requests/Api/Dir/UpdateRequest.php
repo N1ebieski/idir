@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Collection as Collect;
 use N1ebieski\ICore\ValueObjects\Category\Status;
 use N1ebieski\IDir\Http\Requests\Traits\HasFields;
 use N1ebieski\ICore\Http\Requests\Traits\HasCaptcha;
@@ -399,5 +400,28 @@ class UpdateRequest extends FormRequest
                 'description' => $this->prepareCaptchaBodyParameters()['captcha']['description'] . ' Only required for free groups.'
             ]
         ];
+    }
+
+    /**
+     *
+     * @return array
+     */
+    public function validated(): array
+    {
+        if ($this->has('payment_type')) {
+            $types = [];
+
+            foreach (PriceType::getAvailable() as $type) {
+                $types[] = "payment_{$type}";
+            }
+
+            return Collect::make($this->safe()->except($types))
+                ->merge([
+                    'price' => $this->safe()->collect()->get("payment_{$this->safe()->payment_type}")
+                ])
+                ->toArray();
+        }
+
+        return parent::validated();
     }
 }

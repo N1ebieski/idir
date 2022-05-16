@@ -8,6 +8,7 @@ use N1ebieski\ICore\Models\Link;
 use N1ebieski\IDir\Models\Group;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Lang;
+use Illuminate\Support\Collection as Collect;
 use N1ebieski\ICore\ValueObjects\Link\Type as LinkType;
 use N1ebieski\IDir\ValueObjects\Price\Type as PriceType;
 use N1ebieski\IDir\Http\Requests\Admin\Dir\UpdateFull2Request;
@@ -173,5 +174,28 @@ class UpdateFull3Request extends UpdateFull2Request
         return [
             'backlink_url.regex' => __('validation.regex') . ' ' . Lang::get('idir::validation.backlink_url')
         ];
+    }
+
+    /**
+     *
+     * @return array
+     */
+    public function validated(): array
+    {
+        if ($this->has('payment_type')) {
+            $types = [];
+
+            foreach (PriceType::getAvailable() as $type) {
+                $types[] = "payment_{$type}";
+            }
+
+            return Collect::make($this->safe()->except($types))
+                ->merge([
+                    'price' => $this->safe()->collect()->get("payment_{$this->safe()->payment_type}")
+                ])
+                ->toArray();
+        }
+
+        return parent::validated();
     }
 }

@@ -22,7 +22,7 @@ class DirStatusController
      */
     public function delay(DirStatus $dirStatus, DelayRequest $request): JsonResponse
     {
-        $dirStatus->makeService()->delay($request->only('delay'));
+        $dirStatus->makeService()->delay($request->input('delay'));
 
         $dirStatus->dir->makeRepo()->activate();
 

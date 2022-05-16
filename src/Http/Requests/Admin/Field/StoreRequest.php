@@ -5,6 +5,8 @@ namespace N1ebieski\IDir\Http\Requests\Admin\Field;
 use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 use N1ebieski\IDir\ValueObjects\Field\Type;
+use N1ebieski\IDir\ValueObjects\Field\Visible;
+use N1ebieski\IDir\ValueObjects\Field\Required;
 
 class StoreRequest extends FormRequest
 {
@@ -127,8 +129,16 @@ class StoreRequest extends FormRequest
                 'integer',
                 'no_js_validation'
             ] : ['no_js_validation'],
-            'visible' => 'bail|required|in:0,1',
-            'required' => 'bail|required|in:0,1'
+            'visible' => [
+                'bail',
+                'required',
+                Rule::in([Visible::INACTIVE, Visible::ACTIVE])
+            ],
+            'required' => [
+                'bail',
+                'required',
+                Rule::in([Required::INACTIVE, Required::ACTIVE])
+            ]
         ];
     }
 }

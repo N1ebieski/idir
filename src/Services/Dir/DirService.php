@@ -2,15 +2,14 @@
 
 namespace N1ebieski\IDir\Services\Dir;
 
+use Throwable;
 use Illuminate\Support\Carbon;
 use N1ebieski\IDir\Models\Dir;
-use N1ebieski\IDir\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Contracts\Session\Session;
 use N1ebieski\IDir\ValueObjects\Dir\Status;
 use Illuminate\Contracts\Auth\Guard as Auth;
 use Illuminate\Database\DatabaseManager as DB;
-use N1ebieski\IDir\Models\Payment\Dir\Payment;
 use N1ebieski\IDir\Services\User\AutoUserFactory;
 use Illuminate\Contracts\Container\Container as App;
 use N1ebieski\IDir\Services\Payment\Dir\PaymentFactory;
@@ -190,7 +189,7 @@ class DirService implements
             }
 
             $this->dir->user()->associate(
-                $this->auth->user() ?? $this->makeUser($attributes)
+                $this->auth->user() ?? $this->userFactory->makeUser($attributes['email'])
             );
 
             $this->dir->group()->associate($this->dir->group);
@@ -232,7 +231,12 @@ class DirService implements
             }
 
             if (array_key_exists('payment_type', $attributes)) {
-                $this->dir->setRelations(['payment' => $this->makePayment($attributes)]);
+                $this->dir->setRelations([
+                    'payment' => $this->paymentFactory->makePayment(
+                        $this->dir,
+                        $attributes['price']
+                    )
+                ]);
             }
 
             return $this->dir;
@@ -345,7 +349,12 @@ class DirService implements
             }
 
             if (array_key_exists('payment_type', $attributes)) {
-                $this->dir->setRelations(['payment' => $this->makePayment($attributes)]);
+                $this->dir->setRelations([
+                    'payment' => $this->paymentFactory->makePayment(
+                        $this->dir,
+                        $attributes['price']
+                    )
+                ]);
             }
 
             return $this->dir->save();
@@ -353,15 +362,15 @@ class DirService implements
     }
 
     /**
-     * Update Status attribute the specified Dir in storage.
      *
-     * @param  array $attributes [description]
-     * @return bool              [description]
+     * @param array $status
+     * @return bool
+     * @throws Throwable
      */
-    public function updateStatus(array $attributes): bool
+    public function updateStatus(int $status): bool
     {
-        return $this->db->transaction(function () use ($attributes) {
-            return $this->dir->update(['status' => (int)$attributes['status']]);
+        return $this->db->transaction(function () use ($status) {
+            return $this->dir->update(['status' => $status]);
         });
     }
 
@@ -385,21 +394,21 @@ class DirService implements
     }
 
     /**
-     * Update Status attribute the specified Dir in storage.
      *
-     * @param  array $attributes [description]
-     * @return bool              [description]
+     * @param int|null $days
+     * @return bool
+     * @throws Throwable
      */
-    public function updatePrivileged(array $attributes): bool
+    public function updatePrivileged(int $days = null): bool
     {
-        return $this->db->transaction(function () use ($attributes) {
+        return $this->db->transaction(function () use ($days) {
             return $this->dir->update([
                 'privileged_at' => $this->carbon->now()->format('Y-m-d H:i:s'),
-                'privileged_to' => is_int($attributes['days']) ?
+                'privileged_to' => is_int($days) ?
                     (
                         $this->dir->privileged_to !== null ?
-                            $this->carbon->parse($this->dir->privileged_to)->addDays($attributes['days'])
-                            : $this->carbon->now()->addDays($attributes['days'])
+                            $this->carbon->parse($this->dir->privileged_to)->addDays($days)
+                            : $this->carbon->now()->addDays($days)
                     )
                     : null
             ]);
@@ -487,36 +496,10 @@ class DirService implements
     /**
      * Undocumented function
      *
-     * @param array $attributes
-     * @return Payment
-     */
-    public function makePayment(array $attributes): Payment
-    {
-        return $this->paymentFactory->makePayment(
-            $this->dir,
-            $attributes["payment_{$attributes['payment_type']}"],
-            $attributes['payment_type']
-        );
-    }
-
-    /**
-     * Undocumented function
-     *
      * @return string
      */
     public function sessionName(): string
     {
         return is_int($this->dir->id) ? 'dirId.' . $this->dir->id : 'dir';
-    }
-
-    /**
-     * Undocumented function
-     *
-     * @param array $attributes
-     * @return User
-     */
-    protected function makeUser(array $attributes): User
-    {
-        return $this->userFactory->makeUser($attributes['email']);
     }
 }

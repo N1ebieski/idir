@@ -2,12 +2,15 @@
 
 namespace N1ebieski\IDir\Services\Payment;
 
+use Throwable;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use N1ebieski\IDir\Models\Payment\Payment;
+use Illuminate\Database\DatabaseManager as DB;
 use N1ebieski\IDir\ValueObjects\Payment\Status;
 use Illuminate\Contracts\Config\Repository as Config;
 use N1ebieski\ICore\Services\Interfaces\CreateInterface;
+use Illuminate\Database\Eloquent\MassAssignmentException;
 use N1ebieski\ICore\Services\Interfaces\StatusUpdateInterface;
 
 /**
@@ -37,18 +40,26 @@ class PaymentService implements CreateInterface, StatusUpdateInterface
     protected $config;
 
     /**
-     * Undocumented function
+     *
+     * @var DB
+     */
+    protected $db;
+
+    /**
      *
      * @param Payment $payment
      * @param Carbon $carbon
      * @param Config $config
+     * @param DB $db
+     * @return void
      */
-    public function __construct(Payment $payment, Carbon $carbon, Config $config)
+    public function __construct(Payment $payment, Carbon $carbon, Config $config, DB $db)
     {
         $this->payment = $payment;
 
         $this->carbon = $carbon;
         $this->config = $config;
+        $this->db = $db;
     }
 
     /**
@@ -58,45 +69,51 @@ class PaymentService implements CreateInterface, StatusUpdateInterface
      */
     public function create(array $attributes): Model
     {
-        try {
-            $this->payment->status = Status::fromString(
-                $attributes['payment_type'] ?? Status::UNFINISHED
-            );
-        } catch (\InvalidArgumentException $e) {
-            $this->payment->status = Status::UNFINISHED;
-        }
+        return $this->db->transaction(function () use ($attributes) {
+            try {
+                $this->payment->status = Status::fromString(
+                    $attributes['payment_type'] ?? Status::UNFINISHED
+                );
+            } catch (\InvalidArgumentException $e) {
+                $this->payment->status = Status::UNFINISHED;
+            }
 
-        $this->payment->driver = $this->config->get("idir.payment.{$attributes['payment_type']}.driver");
+            $this->payment->driver = $this->config->get("idir.payment.{$attributes['payment_type']}.driver");
 
-        $this->payment->morph()->associate($this->payment->morph);
-        $this->payment->orderMorph()->associate($this->payment->order);
+            $this->payment->morph()->associate($this->payment->morph);
+            $this->payment->orderMorph()->associate($this->payment->order);
 
-        $this->payment->save();
+            $this->payment->save();
 
-        return $this->payment;
+            return $this->payment;
+        });
     }
 
     /**
-     * Update Status attribute the specified Payment in storage.
      *
-     * @param  array $attributes [description]
-     * @return bool              [description]
+     * @param int $status
+     * @return bool
+     * @throws MassAssignmentException
      */
-    public function updateStatus(array $attributes): bool
+    public function updateStatus(int $status): bool
     {
-        return $this->payment->update(['status' => $attributes['status']]);
+        return $this->db->transaction(function () use ($status) {
+            return $this->payment->update(['status' => $status]);
+        });
     }
 
     /**
-     * Update Logs attribute the specified Payment in storage.
      *
-     * @param  array $attributes [description]
-     * @return bool              [description]
+     * @param string $logs
+     * @return bool
+     * @throws Throwable
      */
-    public function updateLogs(array $attributes): bool
+    public function updateLogs(string $logs): bool
     {
-        return $this->payment->update([
-            'logs' => $this->payment->logs . "\r\n" . $this->carbon->now() . "\r\n" . $attributes['logs']
-        ]);
+        return $this->db->transaction(function () use ($logs) {
+            return $this->payment->update([
+                'logs' => $this->payment->logs . "\r\n" . $this->carbon->now() . "\r\n" . $logs
+            ]);
+        });
     }
 }

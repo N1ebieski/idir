@@ -27,13 +27,16 @@ use N1ebieski\IDir\Filters\Web\Dir\IndexFilter;
 use N1ebieski\IDir\Loads\Web\Dir\EditRenewLoad;
 use N1ebieski\IDir\Filters\Web\Dir\SearchFilter;
 use N1ebieski\IDir\Loads\Web\Dir\UpdateRenewLoad;
+use Illuminate\Database\ClassMorphViolationException;
 use N1ebieski\IDir\Http\Requests\Web\Dir\ShowRequest;
+use Illuminate\Database\Eloquent\InvalidCastException;
 use N1ebieski\IDir\Http\Requests\Web\Dir\Edit2Request;
 use N1ebieski\IDir\Http\Requests\Web\Dir\Edit3Request;
 use N1ebieski\IDir\Http\Requests\Web\Dir\IndexRequest;
 use N1ebieski\IDir\Http\Requests\Web\Dir\SearchRequest;
 use N1ebieski\IDir\Http\Requests\Web\Dir\Store2Request;
 use N1ebieski\IDir\Http\Requests\Web\Dir\Store3Request;
+use N1ebieski\IDir\Services\Payment\Dir\PaymentFactory;
 use N1ebieski\IDir\Http\Requests\Web\Dir\Create2Request;
 use N1ebieski\IDir\Http\Requests\Web\Dir\Create3Request;
 use N1ebieski\IDir\Http\Requests\Web\Dir\Update2Request;
@@ -332,23 +335,30 @@ class DirController
     }
 
     /**
-     * [updateRenew description]
-     * @param  Dir                    $dir            [description]
-     * @param  UpdateRenewLoad        $load           [description]
-     * @param  UpdateRenewRequest     $request        [description]
-     * @param  UpdateRenewCodeRequest $requestPayment [description]
-     * @param  UpdateRenewResponse    $response       [description]
-     * @return RedirectResponse                       [description]
+     *
+     * @param Dir $dir
+     * @param UpdateRenewLoad $load
+     * @param UpdateRenewRequest $request
+     * @param UpdateRenewCodeRequest $requestPayment
+     * @param PaymentFactory $paymentFactory
+     * @param UpdateRenewResponse $response
+     * @return RedirectResponse
+     * @throws InvalidCastException
+     * @throws ClassMorphViolationException
      */
     public function updateRenew(
         Dir $dir,
         UpdateRenewLoad $load,
         UpdateRenewRequest $request,
         UpdateRenewCodeRequest $requestPayment,
+        PaymentFactory $paymentFactory,
         UpdateRenewResponse $response
     ): RedirectResponse {
         $dir->setRelations([
-            'payment' => $payment = $dir->makeService()->makePayment($request->validated())
+            'payment' => $payment = $paymentFactory->makePayment(
+                $dir,
+                $request->validated()['price']
+            )
         ]);
 
         Event::dispatch(App::make(PaymentStoreEvent::class, ['payment' => $payment]));

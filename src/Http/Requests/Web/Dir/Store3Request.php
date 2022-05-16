@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Lang;
+use Illuminate\Support\Collection as Collect;
 use N1ebieski\ICore\Http\Requests\Traits\HasCaptcha;
 use N1ebieski\ICore\ValueObjects\Link\Type as LinkType;
 use N1ebieski\IDir\Http\Requests\Web\Dir\Store2Request;
@@ -186,5 +187,28 @@ class Store3Request extends Store2Request
                 'reset' => URL::route('password.request')
             ])
         ];
+    }
+
+    /**
+     *
+     * @return array
+     */
+    public function validated(): array
+    {
+        if ($this->has('payment_type')) {
+            $types = [];
+
+            foreach (PriceType::getAvailable() as $type) {
+                $types[] = "payment_{$type}";
+            }
+
+            return Collect::make($this->safe()->except($types))
+                ->merge([
+                    'price' => $this->safe()->collect()->get("payment_{$this->safe()->payment_type}")
+                ])
+                ->toArray();
+        }
+
+        return parent::validated();
     }
 }

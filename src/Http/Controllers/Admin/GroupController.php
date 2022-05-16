@@ -120,7 +120,7 @@ class GroupController
      */
     public function updatePosition(Group $group, UpdatePositionRequest $request): JsonResponse
     {
-        $group->makeService()->updatePosition($request->only('position'));
+        $group->makeService()->updatePosition($request->input('position'));
 
         return Response::json([
             'siblings' => $group->makeRepo()->getSiblingsAsArray()

@@ -5,6 +5,7 @@ namespace N1ebieski\IDir\Http\Requests\Admin\Price;
 use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 use N1ebieski\IDir\ValueObjects\Price\Type;
+use Illuminate\Support\Collection as Collect;
 use N1ebieski\IDir\Http\Requests\Admin\Price\Traits\HasCodes;
 
 class UpdateRequest extends FormRequest
@@ -109,5 +110,17 @@ class UpdateRequest extends FormRequest
             ] : [],
             'group' => 'bail|required|integer|exists:groups,id'
         ];
+    }
+
+    /**
+     * Get the validated data from the request.
+     *
+     * @return array
+     */
+    public function validated()
+    {
+        return Collect::make($this->safe()->except(Type::getAvailable()))
+            ->merge($this->safe()->collect()->get($this->safe()->type, []))
+            ->toArray();
     }
 }

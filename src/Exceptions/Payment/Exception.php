@@ -33,7 +33,7 @@ class Exception extends CustomException
     public function report()
     {
         if ($this->payment instanceof Payment) {
-            $this->payment->makeService()->updateLogs(['logs' => $this->getMessage() . "\r\n"]);
+            $this->payment->makeService()->updateLogs($this->getMessage() . "\r\n");
         }
     }
 }

@@ -39,7 +39,7 @@ class FieldController implements Polymorphic
      */
     public function updatePosition(Field $field, UpdatePositionRequest $request): JsonResponse
     {
-        $field->makeService()->updatePosition($request->only('position'));
+        $field->makeService()->updatePosition($request->input('position'));
 
         return Response::json([
             'siblings' => $field->makeRepo()->getSiblingsAsArray()

@@ -319,7 +319,7 @@ class DirController
      */
     public function updateStatus(Dir $dir, UpdateStatusRequest $request): JsonResponse
     {
-        $dir->makeService()->updateStatus($request->validated());
+        $dir->makeService()->updateStatus($request->input('status'));
 
         $dir->loadAllRels();
 

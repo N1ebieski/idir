@@ -8,7 +8,8 @@ use N1ebieski\ICore\Models\Link;
 use N1ebieski\IDir\Models\Group;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Lang;
-use N1ebieski\IDir\ValueObjects\Price\Type;
+use Illuminate\Support\Collection as Collect;
+use N1ebieski\IDir\ValueObjects\Price\Type as PriceType;
 use N1ebieski\IDir\Http\Requests\Admin\Dir\Store2Request;
 
 /**
@@ -106,53 +107,53 @@ class Store3Request extends Store2Request
                     'bail',
                     'required',
                     'string',
-                    Rule::in(Type::getAvailable()),
+                    Rule::in(PriceType::getAvailable()),
                     'no_js_validation'
                 ],
-                'payment_transfer' => $this->input('payment_type') === Type::TRANSFER ?
+                'payment_transfer' => $this->input('payment_type') === PriceType::TRANSFER ?
                 [
                     'bail',
-                    'required_if:payment_type,' . Type::TRANSFER,
+                    'required_if:payment_type,' . PriceType::TRANSFER,
                     'integer',
                     Rule::exists('prices', 'id')->where(function ($query) {
                         $query->where([
-                            ['type', Type::TRANSFER],
+                            ['type', PriceType::TRANSFER],
                             ['group_id', $this->group->id]
                         ]);
                     })
                 ] : ['no_js_validation'],
-                'payment_code_sms' => $this->input('payment_type') === Type::CODE_SMS ?
+                'payment_code_sms' => $this->input('payment_type') === PriceType::CODE_SMS ?
                  [
                     'bail',
-                    'required_if:payment_type,' . Type::CODE_SMS,
+                    'required_if:payment_type,' . PriceType::CODE_SMS,
                     'integer',
                     Rule::exists('prices', 'id')->where(function ($query) {
                         $query->where([
-                            ['type', Type::CODE_SMS],
+                            ['type', PriceType::CODE_SMS],
                             ['group_id', $this->group->id]
                         ]);
                     })
                 ] : ['no_js_validation'],
-                'payment_code_transfer' => $this->input('payment_type') === Type::CODE_TRANSFER ?
+                'payment_code_transfer' => $this->input('payment_type') === PriceType::CODE_TRANSFER ?
                 [
                     'bail',
-                    'required_if:payment_type,' . Type::CODE_TRANSFER,
+                    'required_if:payment_type,' . PriceType::CODE_TRANSFER,
                     'integer',
                     Rule::exists('prices', 'id')->where(function ($query) {
                         $query->where([
-                            ['type', Type::CODE_TRANSFER],
+                            ['type', PriceType::CODE_TRANSFER],
                             ['group_id', $this->group->id]
                         ]);
                     })
                 ] : ['no_js_validation'],
-                'payment_paypal_express' => $this->input('payment_type') === Type::PAYPAL_EXPRESS ?
+                'payment_paypal_express' => $this->input('payment_type') === PriceType::PAYPAL_EXPRESS ?
                 [
                     'bail',
-                    'required_if:payment_type,' . Type::PAYPAL_EXPRESS,
+                    'required_if:payment_type,' . PriceType::PAYPAL_EXPRESS,
                     'integer',
                     Rule::exists('prices', 'id')->where(function ($query) {
                         $query->where([
-                            ['type', Type::PAYPAL_EXPRESS],
+                            ['type', PriceType::PAYPAL_EXPRESS],
                             ['group_id', $this->group->id]
                         ]);
                     })
@@ -176,5 +177,28 @@ class Store3Request extends Store2Request
     public function attributes()
     {
         return parent::attributes();
+    }
+
+    /**
+     *
+     * @return array
+     */
+    public function validated(): array
+    {
+        if ($this->has('payment_type')) {
+            $types = [];
+
+            foreach (PriceType::getAvailable() as $type) {
+                $types[] = "payment_{$type}";
+            }
+
+            return Collect::make($this->safe()->except($types))
+                ->merge([
+                    'price' => $this->safe()->collect()->get("payment_{$this->safe()->payment_type}")
+                ])
+                ->toArray();
+        }
+
+        return parent::validated();
     }
 }
