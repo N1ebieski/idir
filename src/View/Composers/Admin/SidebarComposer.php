@@ -30,7 +30,7 @@ class SidebarComposer extends Composer
     public function __construct(Dir $dir)
     {
         $this->dirs_inactive_count = $dir->makeRepo()->countByStatus()
-            ->firstWhere('status', Status::INACTIVE)->count ?? 0;
+            ->firstWhere('status', Status::inactive())->count ?? 0;
 
         $this->dirs_reported_count = $dir->makeRepo()->countReported();
     }
