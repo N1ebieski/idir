@@ -14,9 +14,7 @@ class Schema900 implements SchemaInterface
     public $pattern = [
         [
             'paths' => [
-                'lang' => [
-                    'vendor/idir'
-                ]
+                'resources/lang/vendor/idir'
             ],
             'actions' => [
                 [
@@ -209,9 +207,7 @@ class Schema900 implements SchemaInterface
         ],
         [
             'paths' => [
-                'views' => [
-                    'vendor/idir/web'
-                ]
+                'resources/views/vendor/idir/web'
             ],
             'actions' => [
                 [
@@ -363,9 +359,7 @@ class Schema900 implements SchemaInterface
         ],
         [
             'paths' => [
-                'views' => [
-                    'vendor/idir/mails'
-                ]
+                'resources/views/vendor/idir/mails'
             ],
             'actions' => [
                 [
