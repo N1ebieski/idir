@@ -166,7 +166,7 @@
                         @else
                         data-display-only="true"
                         @endauth
-                        class="rating-loading" 
+                        class="rating-loading d-none" 
                         data-language="{{ config('app.locale') }}"
                     >
                 </div>

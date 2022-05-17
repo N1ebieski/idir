@@ -22,4 +22,4 @@
     <div class="text-break" style="word-break:break-word">
         {!! $dir->less_content_html !!}
     </div>
-</div>  
+</div>
