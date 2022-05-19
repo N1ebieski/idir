@@ -6,7 +6,6 @@ use Psr\Http\Message\ResponseInterface;
 use Illuminate\Contracts\Container\Container as App;
 use N1ebieski\IDir\Http\Clients\Thumbnail\Provider\Requests\ShowRequest;
 use N1ebieski\IDir\Http\Clients\Thumbnail\Provider\Requests\ReloadRequest;
-use N1ebieski\IDir\Http\Clients\Thumbnail\Provider\Responses\ShowResponse;
 
 class ThumbnailClient
 {
