@@ -28,4 +28,24 @@ class BacklinkClient extends Client
 
         return $this;
     }
+
+    /**
+     * Undocumented function
+     *
+     * @return ResponseInterface
+     */
+    protected function makeResponse(): ResponseInterface
+    {
+        try {
+            $response = parent::makeResponse();
+        } catch (\N1ebieski\ICore\Exceptions\Client\TransferException $e) {
+            throw new \N1ebieski\IDir\Exceptions\Dir\TransferException(
+                $e->getMessage(),
+                $e->getCode(),
+                $e
+            );
+        }
+
+        return $response;
+    }
 }
