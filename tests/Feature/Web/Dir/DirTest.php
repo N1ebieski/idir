@@ -5,6 +5,7 @@ namespace N1ebieski\IDir\Tests\Feature\Web\Dir;
 use Carbon\Carbon;
 use Tests\TestCase;
 use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Psr7\Request;
 use N1ebieski\IDir\Models\Dir;
 use N1ebieski\IDir\Models\Link;
 use N1ebieski\IDir\Models\Group;
@@ -17,6 +18,7 @@ use Illuminate\Support\Facades\Config;
 use N1ebieski\IDir\Models\DirBacklink;
 use N1ebieski\IDir\Crons\Dir\StatusCron;
 use N1ebieski\IDir\Mail\Dir\ReminderMail;
+use GuzzleHttp\Exception\RequestException;
 use N1ebieski\IDir\Crons\Dir\BacklinkCron;
 use N1ebieski\IDir\Crons\Dir\ReminderCron;
 use N1ebieski\IDir\Mail\Dir\CompletedMail;
@@ -420,7 +422,7 @@ class DirTest extends TestCase
         ]);
     }
 
-    public function testStatusQueueJobFailed()
+    public function testStatusQueueJobNotFoundFailed()
     {
         $group = Group::makeFactory()->requiredUrl()->create();
 
@@ -439,6 +441,46 @@ class DirTest extends TestCase
 
         $mock = new MockHandler([
             new GuzzleResponse(HttpResponse::HTTP_NOT_FOUND)
+        ]);
+
+        $stack = new HandlerStack($mock);
+        $client = new GuzzleClient(['handler' => $stack]);
+
+        $this->instance(GuzzleClient::class, $client);
+
+        $schedule = app()->make(StatusCron::class);
+        $schedule();
+
+        $this->assertDatabaseHas('dirs_status', [
+            'dir_id' => $dir->id,
+            'attempts' => 1
+        ]);
+
+        $this->assertDatabaseHas('dirs', [
+            'id' => $dir->id,
+            'status' => Status::STATUS_INACTIVE
+        ]);
+    }
+
+    public function testStatusQueueJobExceptionFailed()
+    {
+        $group = Group::makeFactory()->requiredUrl()->create();
+
+        $dir = Dir::makeFactory()->withUser()->active()->for($group)->create([
+            'url' => 'https://domain.pl'
+        ]);
+
+        $this->assertDatabaseHas('dirs', [
+            'id' => $dir->id,
+            'status' => Status::ACTIVE
+        ]);
+
+        $dirStatus = DirStatus::makeFactory()->for($dir)->create();
+
+        Config::set('idir.dir.status.max_attempts', 1);
+
+        $mock = new MockHandler([
+            new RequestException('Error Communicating with Server', new Request('GET', 'test'))
         ]);
 
         $stack = new HandlerStack($mock);
