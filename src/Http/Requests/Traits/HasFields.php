@@ -151,13 +151,13 @@ trait HasFields
                     $rules["field.{$field->id}"][] = 'string';
             }
 
-            if (isset($field->options->options)) {
+            if ($field->options->options) {
                 $rules["field.{$field->id}"][] = Rule::in($field->options->options);
             }
-            if (isset($field->options->min)) {
+            if ($field->options->min) {
                 $rules["field.{$field->id}"][] = 'min:' . $field->options->min;
             }
-            if (isset($field->options->max)) {
+            if ($field->options->max) {
                 $rules["field.{$field->id}"][] = 'max:' . $field->options->max;
             }
         }
