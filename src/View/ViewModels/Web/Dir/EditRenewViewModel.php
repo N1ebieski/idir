@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use N1ebieski\IDir\Models\Dir;
 use N1ebieski\IDir\Models\Price;
 use Spatie\ViewModels\ViewModel;
+use N1ebieski\IDir\Models\Field\Dir\Field;
 use N1ebieski\IDir\ValueObjects\Price\Type;
 use Illuminate\Database\Eloquent\Collection;
 use N1ebieski\IDir\Models\Category\Dir\Category;
@@ -111,8 +112,8 @@ class EditRenewViewModel extends ViewModel
             'field',
             $this->dir->fields
                 ->keyBy('id')
-                ->map(function ($item) {
-                    if ($item->type === 'map') {
+                ->map(function (Field $item) {
+                    if ($item->type->isMap()) {
                         return collect($item->decode_value)->map(function ($item) {
                             $item = (array)$item;
 

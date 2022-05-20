@@ -15,6 +15,7 @@ use Cviebrock\EloquentTaggable\Taggable;
 use N1ebieski\ICore\Utils\MigrationUtil;
 use Illuminate\Database\Eloquent\Builder;
 use Cviebrock\EloquentSluggable\Sluggable;
+use N1ebieski\IDir\Models\Field\Dir\Field;
 use N1ebieski\IDir\Services\Dir\DirService;
 use N1ebieski\IDir\Repositories\Dir\DirRepo;
 use Illuminate\Support\Collection as Collect;
@@ -622,8 +623,8 @@ class Dir extends Model
     {
         return $this->attributesToArray()
             + ['field' => $this->fields->keyBy('id')
-                ->map(function ($item) {
-                    if ($item->type === 'map') {
+                ->map(function (Field $item) {
+                    if ($item->type->isMap()) {
                         return Collect::make($item->decode_value)->map(function ($item) {
                             $item = (array)$item;
 

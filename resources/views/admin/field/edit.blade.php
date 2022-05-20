@@ -53,13 +53,13 @@
                 >
                     @foreach (Field\Type::getAvailable() as $type)
                     <a 
-                        class="nav-item nav-link btn btn-link flex-grow-0 text-decoration-none shadow-none {{ $field->type == $type ? 'active' : null }}" 
+                        class="nav-item nav-link btn btn-link flex-grow-0 text-decoration-none shadow-none {{ $field->type->getValue() === $type ? 'active' : null }}" 
                         id="nav-{{ $type }}-tab"
                         data-toggle="tab" 
                         href="#nav-{{ $type }}-edit" 
                         role="tab"
                         aria-controls="nav-{{ $type }}-edit" 
-                        aria-selected="{{ $field->type == $type ? 'true' : 'false' }}"
+                        aria-selected="{{ $field->type->getValue() === $type ? 'true' : 'false' }}"
                     >
                         <input 
                             type="radio" 
@@ -67,7 +67,7 @@
                             value="{{ $type }}" 
                             id="nav-{{ $type }}-tab"
                             autocomplete="off" 
-                            {{ $field->type == $type ? 'checked' : null }}
+                            {{ $field->type->getValue() === $type ? 'checked' : null }}
                         >
                         {{ $type }}
                     </a>
