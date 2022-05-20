@@ -136,7 +136,7 @@ class InstallCommand extends BaseInstallCommand
         $this->line("\n");
         $this->call('vendor:publish', ['--tag' => 'fm-views', '--force' => true], $this->getOutput());
         $this->line("\n");
-        $this->call('vendor:publish', ['--provider' => 'Laravel\Sanctum\SanctumServiceProvider', '--force' => true], $this->getOutput());
+        $this->call('vendor:publish', ['--provider' => 'Laravel\Sanctum\SanctumServiceProvider', '--tag' => 'sanctum-migrations', '--force' => true], $this->getOutput());
         $this->line("\n");
         $bar->advance();
         $this->line("\n");
