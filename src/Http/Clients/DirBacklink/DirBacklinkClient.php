@@ -29,7 +29,7 @@ class DirBacklinkClient
      * Undocumented function
      *
      * @param string $url
-     * @return ResponseInterface
+     * @return  ResponseInterface
      */
     public function show(string $url): ResponseInterface
     {
