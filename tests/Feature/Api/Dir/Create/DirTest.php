@@ -369,6 +369,41 @@ class DirTest extends TestCase
         $response->assertJsonFragment(['uuid' => $payment->uuid]);
     }
 
+    public function testApiDirStorePaymentAsGuestInDatabase()
+    {
+        $group = Group::makeFactory()->public()->applyInactive()->create();
+
+        $price = Price::makeFactory()->transfer()->for($group)->create();
+
+        $setUpDir = $this->setUpDir();
+
+        $response = $this->postJson(route('api.dir.store', [$group->id]), [
+            'email' => 'kontakt@intelekt.net.pl',
+            'payment_type' => PriceType::TRANSFER,
+            'payment_transfer' => $price->id
+        ] + $setUpDir);
+
+        $user = User::orderBy('id', 'desc')->first();
+        $dir = Dir::orderBy('id', 'desc')->first();
+
+        $this->assertDatabaseHas('dirs', [
+            'id' => $dir->id,
+            'status' => Status::PAYMENT_INACTIVE,
+            'user_id' => $user->id
+        ]);
+
+        $this->assertDatabaseHas('payments', [
+            'model_id' => $dir->id,
+            'model_type' => $dir->getMorphClass(),
+            'order_id' => $price->id,
+            'status' => PaymentStatus::PENDING
+        ]);
+
+        $payment = Payment::orderBy('created_at', 'desc')->first();
+
+        $response->assertJsonFragment(['uuid' => $payment->uuid]);
+    }
+
     public function testApiDirStoreAsGuestInDatabase()
     {
         $group = Group::makeFactory()->public()->applyInactive()->create();
