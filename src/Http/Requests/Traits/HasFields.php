@@ -134,6 +134,12 @@ trait HasFields
                     $rules["field.{$field->id}"][] = 'no_js_validation';
                     break;
 
+                case Type::SELECT:
+                    if ($field->options->options) {
+                        $rules["field.{$field->id}"][] = Rule::in($field->options->options);
+                    }
+                    break;
+
                 case Type::MULTISELECT:
                 case Type::CHECKBOX:
                     $rules["field.{$field->id}"][] = 'array';
