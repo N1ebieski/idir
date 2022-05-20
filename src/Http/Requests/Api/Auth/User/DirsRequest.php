@@ -3,7 +3,6 @@
 namespace N1ebieski\IDir\Http\Requests\Api\Auth\User;
 
 use Illuminate\Validation\Rule;
-use N1ebieski\IDir\Models\Group;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Foundation\Http\FormRequest;
 use N1ebieski\IDir\ValueObjects\Group\Visible;
@@ -31,7 +30,7 @@ class DirsRequest extends FormRequest
 
         return [
             'page' => 'integer',
-            'filter.except' => 'bail|array',
+            'filter.except' => 'bail|nullable|array',
             'filter.except.*' => 'bail|integer',
             'filter.search' => 'bail|nullable|string|min:3|max:255',
             'filter.status' => 'bail|nullable|integer|between:0,5',
@@ -47,7 +46,12 @@ class DirsRequest extends FormRequest
                 'in:created_at|asc,created_at|desc,updated_at|asc,updated_at|desc,title|asc,title|desc,sum_rating|desc,sum_rating|asc,click|asc,click|desc,view|asc,view|desc',
                 'no_js_validation'
             ],
-            'filter.paginate' => Rule::in([$paginate, ($paginate * 2), ($paginate * 4)]) . '|integer'
+            'filter.paginate' => [
+                'bail',
+                'nullable',
+                'integer',
+                Rule::in([$paginate, ($paginate * 2), ($paginate * 4)])
+            ]
         ];
     }
 
