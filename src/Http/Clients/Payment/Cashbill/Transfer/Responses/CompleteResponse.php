@@ -17,6 +17,16 @@ class CompleteResponse extends Response implements CompleteResponseInterface
     }
 
     /**
+     * [isService description]
+     * @param  string $service [description]
+     * @return bool            [description]
+     */
+    public function isService(string $service): bool
+    {
+        return $this->service === $service;
+    }
+
+    /**
      *
      * @param string $amount
      * @return bool
