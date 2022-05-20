@@ -119,7 +119,7 @@ class StoreRequest extends FormRequest
     public function validated()
     {
         return Collect::make($this->safe()->except(Type::getAvailable()))
-            ->merge($this->safe()->collect()->get($this->safe()->type, []))
+            ->merge($this->safe()->collect()->get(optional($this->safe())->type, []))
             ->toArray();
     }
 }

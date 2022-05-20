@@ -36,7 +36,7 @@ class StoreRequest extends BaseStoreRequest
         )
         ->merge([
             'options' => array_merge(
-                $this->safe()->collect()->get($this->safe()->type, []),
+                $this->safe()->collect()->get(optional($this->safe())->type, []),
                 $this->safe()->only('required')
             )
         ])
