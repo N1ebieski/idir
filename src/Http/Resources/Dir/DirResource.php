@@ -138,7 +138,7 @@ class DirResource extends JsonResource
                 }
             ),
             $this->mergeWhen(
-                $this->relationLoaded('payment') && optional($request->user())->can('view', $this->resource),
+                $this->relationLoaded('payment'),
                 function () {
                     return [
                         'payment' => $this->payment instanceof Payment ?
