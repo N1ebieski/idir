@@ -137,6 +137,10 @@ trait HasFields
                 case Type::MULTISELECT:
                 case Type::CHECKBOX:
                     $rules["field.{$field->id}"][] = 'array';
+
+                    if ($field->options->options) {
+                        $rules["field.{$field->id}"][] = Rule::in($field->options->options);
+                    }
                     break;
 
                 case Type::IMAGE:
@@ -149,16 +153,13 @@ trait HasFields
                 case Type::INPUT:
                 case Type::TEXTAREA:
                     $rules["field.{$field->id}"][] = 'string';
-            }
 
-            if ($field->options->options) {
-                $rules["field.{$field->id}"][] = Rule::in($field->options->options);
-            }
-            if ($field->options->min) {
-                $rules["field.{$field->id}"][] = 'min:' . $field->options->min;
-            }
-            if ($field->options->max) {
-                $rules["field.{$field->id}"][] = 'max:' . $field->options->max;
+                    if ($field->options->min) {
+                        $rules["field.{$field->id}"][] = 'min:' . $field->options->min;
+                    }
+                    if ($field->options->max) {
+                        $rules["field.{$field->id}"][] = 'max:' . $field->options->max;
+                    }
             }
         }
 
