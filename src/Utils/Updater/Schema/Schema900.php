@@ -14,6 +14,30 @@ class Schema900 implements SchemaInterface
     public $pattern = [
         [
             'paths' => [
+                'resources/views/vendor/idir/web/partials/nav.blade.php'
+            ],
+            'actions' => [
+                [
+                    'type' => 'replace',
+                    'search' => '/<a[^<]*?route\(\'logout\'\)[\s\S]*?<\/a>/',
+                    'to' => <<<EOD
+<form 
+                            class="d-inline" 
+                            method="POST" 
+                            action="{{ route('logout') }}"
+                        >
+                            @csrf
+
+                            <button type="submit" class="btn btn-link dropdown-item">
+                                {{ trans('icore::auth.route.logout') }}
+                            </button>
+                        </form>
+EOD
+                ]
+            ]
+        ],
+        [
+            'paths' => [
                 'resources/lang/vendor/idir'
             ],
             'actions' => [

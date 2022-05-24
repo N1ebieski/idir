@@ -54,13 +54,17 @@
                 </a>
                 @endcan
                 <div class="dropdown-divider"></div>
-                <a 
-                    class="dropdown-item" 
-                    href="{{ route('logout') }}"
-                    title="{{ trans('icore::auth.route.logout') }}"
+                <form 
+                    class="d-inline" 
+                    method="POST" 
+                    action="{{ route('logout') }}"
                 >
-                    {{ trans('icore::auth.route.logout') }}
-                </a>
+                    @csrf
+
+                    <button type="submit" class="btn btn-link dropdown-item">
+                        {{ trans('icore::auth.route.logout') }}
+                    </button>
+                </form>
             </div>
         </li>
     </ul>
