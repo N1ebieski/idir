@@ -14,6 +14,7 @@
 
     <link rel="canonical" href="{{ $getUrl }}">
     <link rel="icon" href="{{ asset('svg/vendor/idir/logo.svg') }}" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="{{ asset('images/vendor/idir/logo.png') }}">  
     <link href="{{ asset(mix('css/vendor/idir/vendor/vendor.css')) }}" rel="stylesheet">
     @stack('style')
     <link href="{{ asset(mix($getStylesheet('css/vendor/idir'))) }}" rel="stylesheet">
