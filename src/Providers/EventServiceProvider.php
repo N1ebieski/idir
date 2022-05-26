@@ -123,7 +123,7 @@ class EventServiceProvider extends ServiceProvider
 
         \N1ebieski\IDir\Models\Category\Dir\Category::observe(\N1ebieski\ICore\Observers\CategoryObserver::class);
 
-        \N1ebieski\IDir\Models\Rating\Dir\Rating::observe(\N1ebieski\ICore\Observers\RatingObserver::class);
+        \N1ebieski\IDir\Models\Rating\Dir\Rating::observe(\N1ebieski\IDir\Observers\Rating\Dir\RatingObserver::class);
 
         \N1ebieski\IDir\Models\Comment\Dir\Comment::observe(\N1ebieski\ICore\Observers\CommentObserver::class);
 

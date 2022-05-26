@@ -5,6 +5,7 @@ namespace N1ebieski\IDir\Repositories\Dir;
 use Closure;
 use Carbon\Carbon;
 use N1ebieski\IDir\Models\Dir;
+use N1ebieski\IDir\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Collection;
 use N1ebieski\IDir\Models\Rating\Dir\Rating;
@@ -303,13 +304,13 @@ class DirRepo
     }
 
     /**
-     * [firstRatingByUser description]
-     * @param  int    $id [description]
-     * @return Rating|null     [description]
+     *
+     * @param User $user
+     * @return null|Rating
      */
-    public function firstRatingByUser(int $id): ?Rating
+    public function firstRatingByUser(User $user): ?Rating
     {
-        return $this->dir->ratings()->where('user_id', $id)->first();
+        return $this->dir->ratings()->where('user_id', $user->id)->first();
     }
 
     /**

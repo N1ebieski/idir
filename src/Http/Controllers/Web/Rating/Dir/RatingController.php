@@ -21,9 +21,10 @@ class RatingController implements Polymorphic
      */
     public function rate(Rating $rating, Dir $dir, RateRequest $request): JsonResponse
     {
-        $rating->setRelations(['morph' => $dir])
-            ->makeService()
-            ->createOrUpdateOrDelete($request->only('rating'));
+        $rating = $dir->makeRepo()->firstRatingByUser($request->user())
+            ?? $rating->setRelations(['morph' => $dir]);
+
+        $rating->makeService()->createOrUpdateOrDelete($request->only('rating'));
 
         return Response::json([
             'sum_rating' => $dir->load('ratings')->sum_rating

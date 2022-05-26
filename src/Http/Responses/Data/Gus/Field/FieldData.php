@@ -5,6 +5,7 @@ namespace N1ebieski\IDir\Http\Responses\Data\Gus\Field;
 use GusApi\SearchReport as GusReport;
 use Illuminate\Contracts\Config\Repository as Config;
 use N1ebieski\IDir\Http\Responses\Data\Gus\DataInterface;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use N1ebieski\IDir\Http\Responses\Data\Gus\Field\Value\ValueFactory;
 
 class FieldData implements DataInterface
@@ -37,9 +38,10 @@ class FieldData implements DataInterface
     }
 
     /**
-     * Undocumented function
      *
+     * @param GusReport $gusReport
      * @return array
+     * @throws BindingResolutionException
      */
     public function toArray(GusReport $gusReport): array
     {
