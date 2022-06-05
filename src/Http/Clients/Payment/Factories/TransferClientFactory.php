@@ -41,7 +41,7 @@ class TransferClientFactory
                 return $this->app->make(\N1ebieski\IDir\Http\Clients\Payment\PayPal\Express\ExpressClient::class);
 
             case 'cashbill':
-                return $this->app->make(\N1ebieski\IDir\Http\Clients\Payment\Cashbill\transfer\TransferClient::class);
+                return $this->app->make(\N1ebieski\IDir\Http\Clients\Payment\Cashbill\Transfer\TransferClient::class);
         }
 
         throw new \N1ebieski\IDir\Exceptions\Payment\DriverNotFoundException(
