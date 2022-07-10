@@ -460,7 +460,7 @@ class DirTest extends TestCase
             $mock->shouldReceive('request')->andReturn(
                 new GuzzleResponse(HttpResponse::HTTP_OK, [], json_encode([
                     'active' => true,
-                    'number' => $price->number,
+                    'number' => (string)$price->number,
                     'activeFrom' => null,
                     'codeValidityTime' => 0,
                     'timeRemaining' => 0
