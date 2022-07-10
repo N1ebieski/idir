@@ -1,4 +1,4 @@
-# iDir 
+# iDir
 
 Application for creating complex web/company directories based on the modern Laravel framework. The successor of SEOKatalog in line with today's standards and customer expectations. Full responsiveness in Bootstrap, convenient interface, open code for modifications. Additionally, an integrated iCore module for running a mini blog platform.
 
