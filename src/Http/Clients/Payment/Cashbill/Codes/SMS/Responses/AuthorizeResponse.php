@@ -20,7 +20,7 @@ class AuthorizeResponse extends Response
      * @param  int $number [description]
      * @return bool           [description]
      */
-    public function isNumber(int $number): bool
+    public function isNumber(string $number): bool
     {
         return $this->get('number') === $number;
     }
