@@ -15,7 +15,13 @@ class UserRepo extends BaseUserRepo
      */
     public function paginateDirsByFilter(array $filter): LengthAwarePaginator
     {
+        /**
+         * @var \N1ebieski\IDir\Models\Dir $dir
+         */
+        $dir = $this->user->dirs()->make();
+
         return $this->user->dirs()
+            ->selectRaw("`{$dir->getTable()}`.*")
             ->withAllPublicRels()
             ->filterExcept($filter['except'])
             ->filterSearch($filter['search'])

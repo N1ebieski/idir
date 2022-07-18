@@ -59,7 +59,7 @@ class DirRepo
      */
     public function paginateByFilter(array $filter): LengthAwarePaginator
     {
-        return $this->dir->selectRaw('`dirs`.*')
+        return $this->dir->selectRaw("`{$this->dir->getTable()}`.*")
             ->withCount('reports')
             ->withAllRels()
             ->filterAuthor($filter['author'])

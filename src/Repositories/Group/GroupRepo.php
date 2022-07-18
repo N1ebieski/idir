@@ -43,7 +43,8 @@ class GroupRepo
      */
     public function paginateByFilter(array $filter): LengthAwarePaginator
     {
-        return $this->group->filterSearch($filter['search'])
+        return $this->group->selectRaw("`{$this->group->getTable()}`.*")
+            ->filterSearch($filter['search'])
             ->filterExcept($filter['except'])
             ->when(
                 $filter['visible'] === null && !optional($this->auth->user())->can('admin.groups.view'),

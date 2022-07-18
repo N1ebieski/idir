@@ -29,7 +29,8 @@ class FieldRepo
      */
     public function paginateByFilter(array $filter): LengthAwarePaginator
     {
-        return $this->field->poliType()
+        return $this->field->selectRaw("`{$this->field->getTable()}`.*")
+            ->poliType()
             ->filterExcept($filter['except'])
             ->filterSearch($filter['search'])
             ->filterVisible($filter['visible'])
