@@ -236,7 +236,8 @@ class DirRepo
             // po fulltext LUB po ids zawierających okreslony tag,
             // a mysql może wykorzystać tylko 1 indeks
             ->from(
-                $this->dir->search($name)
+                $this->dir->selectRaw("`{$this->dir->getTable()}`.*")
+                    ->search($name)
                     ->when($tag = $this->dir->tags()->make()->findByName($name), function ($query) use ($tag) {
                         $query->unionAll(
                             $this->dir->selectRaw('`dirs`.*, 0 as `url_relevance`, 0 as `title_relevance`, 0 as `content_relevance`')
