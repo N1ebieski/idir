@@ -213,7 +213,7 @@
             </div>
         </li>
         @endcan
-        @canany(['admin.groups.view', 'admin.fields.view'])
+        @canany(['admin.groups.view', 'admin.fields.view', 'admin.prices.view'])
         <li class="nav-item dropdown {{ $isUrlContains([
             '*/groups',
             '*/groups/*',

@@ -26,7 +26,7 @@
                     class="badge badge-primary filter-option" 
                     data-name="filter[type]"
                 >
-                    <span>{{ trans('icore::filter.type') }}: {{ $filter['type'] }}</span>
+                    <span>{{ trans('icore::filter.type') }}: {{ mb_strtolower(trans("idir::prices.payment.{$filter['type']}")) }}</span>
                     <span aria-hidden="true">&times;</span>
                 </a>
             </span>

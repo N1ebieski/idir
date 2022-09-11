@@ -32,7 +32,7 @@ class HomeController
             $posts = $client->index(['filter' => [
                 'status' => 1,
                 'orderby' => 'created_at|desc',
-                'search' => 'icore',
+                'search' => 'idir',
             ]])->data;
         } catch (\N1ebieski\ICore\Exceptions\Client\TransferException $e) {
             $posts = null;
