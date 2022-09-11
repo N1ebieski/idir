@@ -1,93 +1,61 @@
 <?php
 
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is licenced under the Software License Agreement
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://intelekt.net.pl/pages/regulamin
+ *
+ * With the purchase or the installation of the software in your application
+ * you accept the licence agreement.
+ *
+ * @author    Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ * @copyright Since 2019 INTELEKT - Usługi Komputerowe Mariusz Wysokiński
+ * @license   https://intelekt.net.pl/pages/regulamin
+ */
+
 namespace N1ebieski\IDir\View\Components\Dir;
 
-use Illuminate\View\View;
+use Illuminate\View\Component;
 use N1ebieski\IDir\Models\Dir;
-use Illuminate\Contracts\Support\Htmlable;
+use Illuminate\Contracts\View\View;
 use Illuminate\Contracts\View\Factory as ViewFactory;
 
-class DirComponent implements Htmlable
+class DirComponent extends Component
 {
     /**
-     * Undocumented variable
-     *
-     * @var ViewFactory
-     */
-    protected $view;
-
-    /**
-     * Undocumented variable
-     *
-     * @var Dir
-     */
-    protected $dir;
-
-    /**
-     * Undocumented variable
-     *
-     * @var int
-     */
-    protected $limit;
-
-    /**
-     * Undocumented variable
-     *
-     * @var int
-     */
-    protected $cols;
-
-    /**
-     * Undocumented variable
-     *
-     * @var [type]
-     */
-    protected $max_content;
-
-    /**
-     * Undocumented variable
-     *
-     * @var string
-     */
-    protected $orderby;
-
-    /**
-     * Undocumented function
      *
      * @param Dir $dir
      * @param ViewFactory $view
-     * @param integer $limit
-     * @param integer $cols
+     * @param int $limit
+     * @param int $cols
+     * @param int $maxContent
      * @param string $orderby
+     * @return void
      */
     public function __construct(
-        Dir $dir,
-        ViewFactory $view,
-        int $limit = 4,
-        int $cols = 4,
-        int $max_content = 100,
-        string $orderby = 'created_at|desc'
+        protected Dir $dir,
+        protected ViewFactory $view,
+        protected int $limit = 4,
+        protected int $cols = 4,
+        protected int $maxContent = 100,
+        protected string $orderby = 'created_at|desc'
     ) {
-        $this->dir = $dir;
-
-        $this->view = $view;
-
-        $this->limit = $limit;
-        $this->cols = $cols;
-        $this->max_content = $max_content;
-        $this->orderby = $orderby;
+        //
     }
 
     /**
-     * [toHtml description]
-     * @return View [description]
+     *
+     * @return View
      */
-    public function toHtml(): View
+    public function render(): View
     {
         return $this->view->make('idir::web.components.dir.dir', [
             'dirs' => $this->dir->makeCache()->rememberByComponent([
                 'limit' => $this->limit,
-                'max_content' => $this->max_content,
+                'max_content' => $this->maxContent,
                 'orderby' => $this->orderby
             ]),
             'cols' => $this->cols

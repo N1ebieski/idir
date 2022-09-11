@@ -1,46 +1,31 @@
 <?php
 
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is licenced under the Software License Agreement
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://intelekt.net.pl/pages/regulamin
+ *
+ * With the purchase or the installation of the software in your application
+ * you accept the licence agreement.
+ *
+ * @author    Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ * @copyright Since 2019 INTELEKT - Usługi Komputerowe Mariusz Wysokiński
+ * @license   https://intelekt.net.pl/pages/regulamin
+ */
+
 namespace N1ebieski\IDir\Crons\Dir;
 
 use Illuminate\Support\Carbon;
 use N1ebieski\IDir\Models\DirBacklink;
+use Illuminate\Database\Eloquent\Collection;
 use N1ebieski\IDir\Jobs\Dir\CheckBacklinkJob;
 use Illuminate\Contracts\Config\Repository as Config;
 
 class BacklinkCron
 {
-    /**
-     * [private description]
-     * @var DirBacklink
-     */
-    protected $dirBacklink;
-
-    /**
-     * [protected description]
-     * @var CheckBacklinkJob
-     */
-    protected $checkBacklinkJob;
-
-    /**
-     * Undocumented variable
-     *
-     * @var Carbon
-     */
-    protected $carbon;
-
-    /**
-     * Undocumented variable
-     *
-     * @var Config
-     */
-    protected $config;
-
-    /**
-     * [protected description]
-     * @var int
-     */
-    protected $checkHours;
-
     /**
      * Undocumented function
      *
@@ -50,19 +35,12 @@ class BacklinkCron
      * @param Carbon $carbon
      */
     public function __construct(
-        DirBacklink $dirBacklink,
-        CheckBacklinkJob $checkBacklinkJob,
-        Config $config,
-        Carbon $carbon
+        protected DirBacklink $dirBacklink,
+        protected CheckBacklinkJob $checkBacklinkJob,
+        protected Config $config,
+        protected Carbon $carbon
     ) {
-        $this->dirBacklink = $dirBacklink;
-
-        $this->checkBacklinkJob = $checkBacklinkJob;
-
-        $this->config = $config;
-        $this->carbon = $carbon;
-
-        $this->checkHours = (int)$this->config->get('idir.dir.backlink.check_hours');
+        //
     }
 
     /**
@@ -71,12 +49,12 @@ class BacklinkCron
     public function __invoke(): void
     {
         $this->dirBacklink->makeRepo()->chunkAvailableHasBacklinkRequirementByAttemptedAt(
-            function ($dirBacklinks) {
-                $dirBacklinks->each(function ($dirBacklink) {
+            function (Collection $dirBacklinks) {
+                $dirBacklinks->each(function (DirBacklink $dirBacklink) {
                     $this->addToQueue($dirBacklink);
                 });
             },
-            $this->makeCheckTimestamp()
+            $this->getCheckTimestamp()
         );
     }
 
@@ -85,9 +63,11 @@ class BacklinkCron
      *
      * @return string
      */
-    protected function makeCheckTimestamp(): string
+    protected function getCheckTimestamp(): string
     {
-        return $this->carbon->now()->subHours($this->checkHours);
+        return $this->carbon->now()->subHours(
+            $this->config->get('idir.dir.backlink.check_hours')
+        );
     }
 
     /**

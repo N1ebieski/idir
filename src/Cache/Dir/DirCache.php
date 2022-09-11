@@ -1,5 +1,21 @@
 <?php
 
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is licenced under the Software License Agreement
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://intelekt.net.pl/pages/regulamin
+ *
+ * With the purchase or the installation of the software in your application
+ * you accept the licence agreement.
+ *
+ * @author    Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ * @copyright Since 2019 INTELEKT - Usługi Komputerowe Mariusz Wysokiński
+ * @license   https://intelekt.net.pl/pages/regulamin
+ */
+
 namespace N1ebieski\IDir\Cache\Dir;
 
 use Illuminate\Http\Request;
@@ -7,49 +23,12 @@ use Illuminate\Support\Carbon;
 use N1ebieski\IDir\Models\Dir;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Collection as Collect;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\Cache\Repository as Cache;
 use Illuminate\Contracts\Config\Repository as Config;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class DirCache
 {
-    /**
-     * Dir model
-     * @var Dir
-     */
-    protected $dir;
-
-    /**
-     * Cache driver
-     * @var Cache
-     */
-    protected $cache;
-
-    /**
-     * Cache driver
-     * @var Config
-     */
-    protected $config;
-
-    /**
-     * Undocumented variable
-     *
-     * @var Carbon
-     */
-    protected $carbon;
-
-    /**
-     * [private description]
-     * @var Collect
-     */
-    protected $collect;
-
-    /**
-     * [private description]
-     * @var Request
-     */
-    protected $request;
-
     /**
      * Undocumented function
      *
@@ -61,20 +40,14 @@ class DirCache
      * @param Request $request
      */
     public function __construct(
-        Dir $dir,
-        Cache $cache,
-        Config $config,
-        Carbon $carbon,
-        Collect $collect,
-        Request $request
+        protected Dir $dir,
+        protected Cache $cache,
+        protected Config $config,
+        protected Carbon $carbon,
+        protected Collect $collect,
+        protected Request $request
     ) {
-        $this->dir = $dir;
-
-        $this->cache = $cache;
-        $this->config = $config;
-        $this->carbon = $carbon;
-        $this->collect = $collect;
-        $this->request = $request;
+        //
     }
 
     /**
@@ -109,14 +82,14 @@ class DirCache
     public function rememberForWebByFilter(array $filter): LengthAwarePaginator
     {
         if ($this->collect->make($filter)->isNullItems()) {
-            $dirs = $this->getForWebByFilter($this->request->input('page'));
+            $dirs = $this->getForWebByFilter();
         }
 
-        if (!isset($dirs) || !$dirs) {
+        if (!isset($dirs)) {
             $dirs = $this->dir->makeRepo()->paginateForWebByFilter($filter);
 
             if ($this->collect->make($filter)->isNullItems()) {
-                $this->putForWebByFilter($dirs, $this->request->input('page'));
+                $this->putForWebByFilter($dirs);
             }
         }
 
@@ -296,14 +269,14 @@ class DirCache
     public function rememberByFilter(array $filter): LengthAwarePaginator
     {
         if ($this->collect->make($filter)->isNullItems() && !$this->request->user()) {
-            $dirs = $this->getByFilter($this->request->input('page'));
+            $dirs = $this->getByFilter();
         }
 
-        if (!isset($dirs) || !$dirs) {
+        if (!isset($dirs)) {
             $dirs = $this->dir->makeRepo()->paginateByFilter($filter);
 
             if ($this->collect->make($filter)->isNullItems() && !$this->request->user()) {
-                $this->putByFilter($dirs, $this->request->input('page'));
+                $this->putByFilter($dirs);
             }
         }
 

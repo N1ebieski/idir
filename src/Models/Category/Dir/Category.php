@@ -1,7 +1,25 @@
 <?php
 
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is licenced under the Software License Agreement
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://intelekt.net.pl/pages/regulamin
+ *
+ * With the purchase or the installation of the software in your application
+ * you accept the licence agreement.
+ *
+ * @author    Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ * @copyright Since 2019 INTELEKT - Usługi Komputerowe Mariusz Wysokiński
+ * @license   https://intelekt.net.pl/pages/regulamin
+ */
+
 namespace N1ebieski\IDir\Models\Category\Dir;
 
+use N1ebieski\IDir\Models\Dir;
+use Illuminate\Database\Eloquent\Builder;
 use N1ebieski\ICore\ValueObjects\Category\Status;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use N1ebieski\IDir\Models\Category\Category as BaseCategory;
@@ -75,25 +93,25 @@ class Category extends BaseCategory
     {
         return $this
             ->loadCount([
-                'morphs' => function ($query) use ($filter) {
-                    $query->active()->filterRegion($filter['region']);
+                'morphs' => function (Builder|Dir $query) use ($filter) {
+                    return $query->active()->filterRegion($filter['region']);
                 }
             ])
             ->load([
-                'childrens' => function ($query) use ($filter) {
-                    $query->active()
+                'childrens' => function (Builder|Category $query) use ($filter) {
+                    return $query->active()
                         ->withCount([
-                            'morphs' => function ($query) use ($filter) {
-                                $query->active()->filterRegion($filter['region']);
+                            'morphs' => function (Builder|Dir $query) use ($filter) {
+                                return $query->active()->filterRegion($filter['region']);
                             }
                         ])
                         ->orderBy('position', 'asc');
                 },
-                'ancestors' => function ($query) use ($filter) {
-                    $query->whereColumn('ancestor', '!=', 'descendant')
+                'ancestors' => function (Builder|Category $query) use ($filter) {
+                    return $query->whereColumn('ancestor', '!=', 'descendant')
                         ->withCount([
-                            'morphs' => function ($query) use ($filter) {
-                                $query->active()->filterRegion($filter['region']);
+                            'morphs' => function (Builder|Dir $query) use ($filter) {
+                                return $query->active()->filterRegion($filter['region']);
                             }
                         ])
                         ->orderBy('depth', 'desc');

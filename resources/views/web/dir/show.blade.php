@@ -351,6 +351,6 @@
 
 @if (!empty(config('icore.captcha.driver')))
 @php
-app(\N1ebieski\ICore\View\Components\CaptchaComponent::class)->toHtml()->render();
+app(\N1ebieski\ICore\View\Components\CaptchaComponent::class)->render()->render();
 @endphp
 @endif

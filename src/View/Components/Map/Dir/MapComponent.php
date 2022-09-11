@@ -1,87 +1,71 @@
 <?php
 
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is licenced under the Software License Agreement
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://intelekt.net.pl/pages/regulamin
+ *
+ * With the purchase or the installation of the software in your application
+ * you accept the licence agreement.
+ *
+ * @author    Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ * @copyright Since 2019 INTELEKT - Usługi Komputerowe Mariusz Wysokiński
+ * @license   https://intelekt.net.pl/pages/regulamin
+ */
+
 namespace N1ebieski\IDir\View\Components\Map\Dir;
 
-use Illuminate\View\View;
+use Illuminate\View\Component;
 use N1ebieski\IDir\Models\Dir;
+use Illuminate\Contracts\View\View;
 use Illuminate\Support\Collection as Collect;
 use Illuminate\Contracts\View\Factory as ViewFactory;
-use N1ebieski\ICore\View\Components\Map\MapComponent as BaseMapComponent;
 
-class MapComponent extends BaseMapComponent
+class MapComponent extends Component
 {
     /**
-     * Undocumented variable
-     *
-     * @var string
-     */
-    protected $selector;
-
-    /**
-     * Undocumented variable
-     *
-     * @var array|null
-     */
-    protected $address_marker_pattern;
-
-    /**
-     * Undocumented variable
      *
      * @var Collect
      */
-    protected $address_marker;
+    protected $addressMarker;
 
     /**
-     * Undocumented variable
-     *
-     * @var array
-     */
-    protected $coords;
-
-    /**
-     * Undocumented variable
      *
      * @var Collect
      */
-    protected $coords_marker;
+    protected $coordsMarker;
 
     /**
-     * Undocumented variable
      *
-     * @var Collect
+     * @param Dir $dir
+     * @param Collect $collect
+     * @param ViewFactory $view
+     * @param string $containerClass
+     * @param int $zoom
+     * @param string $selector
+     * @param null|array $addressMarkerPattern
+     * @param array $coords
+     * @param array $addressMarker
+     * @param array $coordsMarker
+     * @return void
      */
-    protected $collect;
-
-    /**
-     * Undocumented variable
-     *
-     * @var Dir
-     */
-    protected $dir;
-
     public function __construct(
-        Dir $dir,
-        ViewFactory $view,
-        Collect $collect,
-        string $selector = 'map',
-        string $container_class = 'map',
-        int $zoom = 13,
-        array $address_marker = [],
-        array $address_marker_pattern = null,
-        array $coords_marker = [],
-        array $coords = [52.15, 21.00]
+        protected Dir $dir,
+        protected Collect $collect,
+        protected ViewFactory $view,
+        protected string $containerClass = 'map',
+        protected int $zoom = 13,
+        protected string $selector = 'map',
+        protected ?array $addressMarkerPattern = null,
+        protected array $coords = [52.15, 21.00],
+        array $addressMarker = [],
+        array $coordsMarker = []
     ) {
-        parent::__construct($view, $container_class, $zoom, $address_marker);
-
-        $this->dir = $dir;
-
-        $this->collect = $collect;
-
-        $this->selector = $selector;
-        $this->coords = $coords;
-        $this->address_marker = $collect->make($address_marker);
-        $this->address_marker_pattern = $address_marker_pattern;
-        $this->coords_marker = $collect->make($coords_marker);
+        $this->addressMarker = $collect->make($addressMarker);
+        $this->coordsMarker = $collect->make($coordsMarker);
     }
 
     /**
@@ -98,7 +82,7 @@ class MapComponent extends BaseMapComponent
         if ($this->dir->group->fields->contains('type', 'map')) {
             if (is_array($value = optional($this->dir->fields->where('type', 'map')->first())->decode_value)) {
                 foreach ($value as $row) {
-                    $this->coords_marker->push([$row->lat, $row->long]);
+                    $this->coordsMarker->push([$row->lat, $row->long]);
                 }
             }
         }
@@ -115,22 +99,22 @@ class MapComponent extends BaseMapComponent
             return;
         }
 
-        if ($this->coords_marker->isNotEmpty()) {
-            $this->address_marker = $this->collect->make([]);
-            
+        if ($this->coordsMarker->isNotEmpty()) {
+            $this->addressMarker = $this->collect->make([]);
+
             return;
         }
 
-        if ($this->address_marker_pattern !== null) {
+        if ($this->addressMarkerPattern !== null) {
             $check = $this->dir->group->fields->contains(function ($item) {
                 return in_array(
                     $item->id,
-                    $this->collect->make($this->address_marker_pattern)->flatten()->toArray()
+                    $this->collect->make($this->addressMarkerPattern)->flatten()->toArray()
                 );
             });
 
             if ($check === true) {
-                foreach ($this->address_marker_pattern as $row) {
+                foreach ($this->addressMarkerPattern as $row) {
                     $address = '';
 
                     foreach ($row as $col) {
@@ -140,7 +124,7 @@ class MapComponent extends BaseMapComponent
                     }
 
                     if (!empty($address)) {
-                        $this->address_marker->push(trim($address));
+                        $this->addressMarker->push(trim($address));
                     }
                 }
             }
@@ -148,10 +132,10 @@ class MapComponent extends BaseMapComponent
     }
 
     /**
-     * [toHtml description]
-     * @return View [description]
+     *
+     * @return View
      */
-    public function toHtml(): View
+    public function render(): View
     {
         $this->prepareCoordsMarker();
 
@@ -159,13 +143,13 @@ class MapComponent extends BaseMapComponent
 
         return $this->view->make('idir::web.components.map.dir.map', [
             'selector' => $this->selector,
-            'containerClass' => $this->container_class,
+            'containerClass' => $this->containerClass,
             'coords' => json_encode($this->coords),
             'zoom' => $this->zoom,
-            'addressMarker' => $this->address_marker->isNotEmpty() ?
-                json_encode($this->address_marker->toArray()) : null,
-            'coordsMarker' => $this->coords_marker->isNotEmpty() ?
-                json_encode($this->coords_marker->toArray()) : null
+            'addressMarker' => $this->addressMarker->isNotEmpty() ?
+                json_encode($this->addressMarker->toArray()) : null,
+            'coordsMarker' => $this->coordsMarker->isNotEmpty() ?
+                json_encode($this->coordsMarker->toArray()) : null
         ]);
     }
 }

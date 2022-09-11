@@ -1,5 +1,21 @@
 <?php
 
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is licenced under the Software License Agreement
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://intelekt.net.pl/pages/regulamin
+ *
+ * With the purchase or the installation of the software in your application
+ * you accept the licence agreement.
+ *
+ * @author    Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ * @copyright Since 2019 INTELEKT - Usługi Komputerowe Mariusz Wysokiński
+ * @license   https://intelekt.net.pl/pages/regulamin
+ */
+
 namespace N1ebieski\IDir\Crons\Dir;
 
 use Illuminate\Support\Carbon;
@@ -8,25 +24,18 @@ use N1ebieski\IDir\Models\User;
 use Illuminate\Contracts\Mail\Mailer;
 use N1ebieski\IDir\Mail\Dir\ModeratorMail;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Contracts\Cache\Factory as Cache;
+use Illuminate\Contracts\Cache\Repository as Cache;
 use Illuminate\Contracts\Container\Container as App;
 use Illuminate\Contracts\Config\Repository as Config;
+use Illuminate\Contracts\Cache\Factory as CacheFactory;
 
 class ModeratorNotificationCron
 {
     /**
-     * Undocumented variable
      *
-     * @var User
+     * @var Cache
      */
-    protected $user;
-
-    /**
-     * Undocumented variable
-     *
-     * @var Dir
-     */
-    protected $dir;
+    protected $cache;
 
     /**
      * Undocumented variable
@@ -36,71 +45,39 @@ class ModeratorNotificationCron
     protected $dirs;
 
     /**
-     * Undocumented variable
      *
-     * @var Carbon
-     */
-    protected $carbon;
-
-    /**
-     * Undocumented variable
-     *
-     * @var Config
-     */
-    protected $config;
-
-    /**
-     * Undocumented variable
-     *
-     * @var Cache
-     */
-    protected $cache;
-
-    /**
-     * Undocumented variable
-     *
-     * @var Mailer
-     */
-    protected $mailer;
-
-    /**
-     * Undocumented variable
-     *
-     * @var App
-     */
-    protected $app;
-
-    /**
-     * Undocumented variable
-     *
-     * @var int
-     */
-    protected $hours;
-
-    /**
-     * Create the event listener.
-     *
+     * @param User $user
+     * @param Dir $dir
+     * @param Config $config
+     * @param Carbon $carbon
+     * @param Mailer $mailer
+     * @param App $app
+     * @param CacheFactory $cache
      * @return void
      */
     public function __construct(
-        User $user,
-        Dir $dir,
-        Config $config,
-        Carbon $carbon,
-        Cache $cache,
-        Mailer $mailer,
-        App $app
+        protected User $user,
+        protected Dir $dir,
+        protected Config $config,
+        protected Carbon $carbon,
+        protected Mailer $mailer,
+        protected App $app,
+        CacheFactory $cache
     ) {
-        $this->user = $user;
-        $this->dir = $dir;
-
-        $this->config = $config;
-        $this->carbon = $carbon;
+        // @phpstan-ignore-next-line
         $this->cache = $cache->store($config->has('cache.stores.system') ? 'system' : null);
-        $this->mailer = $mailer;
-        $this->app = $app;
+    }
 
-        $this->hours = (int)$this->config->get('idir.dir.notification.hours');
+    /**
+     *
+     * @param Collection $dirs
+     * @return self
+     */
+    protected function setLatestDirsForModerators(Collection $dirs): self
+    {
+        $this->dirs = $dirs;
+
+        return $this;
     }
 
     /**
@@ -110,7 +87,7 @@ class ModeratorNotificationCron
      */
     protected function isNotificationTurnOn(): bool
     {
-        return $this->hours > 0;
+        return $this->config->get('idir.dir.notification.hours') > 0;
     }
 
     /**
@@ -121,7 +98,8 @@ class ModeratorNotificationCron
     protected function isTimeToSend(): bool
     {
         return $this->carbon->parse($this->getCheckpoint())
-            ->addHours($this->hours)->lessThanOrEqualTo($this->carbon->now());
+            ->addHours($this->config->get('idir.dir.notification.hours'))
+            ->lessThanOrEqualTo($this->carbon->now());
     }
 
     /**
@@ -133,7 +111,7 @@ class ModeratorNotificationCron
     {
         return $this->cache->get(
             'dir.notification.hours',
-            $this->carbon->now()->subHours($this->hours)
+            $this->carbon->now()->subHours($this->config->get('idir.dir.notification.hours'))
         );
     }
 
@@ -150,18 +128,6 @@ class ModeratorNotificationCron
     /**
      * Undocumented function
      *
-     * @return Collection
-     */
-    protected function makeLatestDirsForModerators(): Collection
-    {
-        return $this->dirs = $this->dir->makeRepo()->getLatestForModeratorsByCreatedAt(
-            $this->getCheckpoint()
-        );
-    }
-
-    /**
-     * Undocumented function
-     *
      * @return void
      */
     public function __invoke(): void
@@ -171,11 +137,15 @@ class ModeratorNotificationCron
         }
 
         if ($this->isTimeToSend()) {
-            $this->makeLatestDirsForModerators();
+            $this->setLatestDirsForModerators(
+                $this->dir->makeRepo()->getLatestForModeratorsByCreatedAt(
+                    $this->getCheckpoint()
+                )
+            );
 
             if ($this->dirs->isNotEmpty()) {
                 $this->user->makeRepo()->getModeratorsByNotificationDirsPermission()
-                    ->each(function ($user) {
+                    ->each(function (User $user) {
                         $this->sendMailToModerator($user);
                     });
 

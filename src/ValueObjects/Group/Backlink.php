@@ -1,5 +1,21 @@
 <?php
 
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is licenced under the Software License Agreement
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://intelekt.net.pl/pages/regulamin
+ *
+ * With the purchase or the installation of the software in your application
+ * you accept the licence agreement.
+ *
+ * @author    Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ * @copyright Since 2019 INTELEKT - Usługi Komputerowe Mariusz Wysokiński
+ * @license   https://intelekt.net.pl/pages/regulamin
+ */
+
 namespace N1ebieski\IDir\ValueObjects\Group;
 
 use N1ebieski\ICore\ValueObjects\ValueObject;
@@ -55,20 +71,20 @@ class Backlink extends ValueObject
      * Undocumented function
      *
      * @param string $value
-     * @return void
+     * @return self
      */
-    public static function fromString(string $value)
+    public static function fromString(string $value): self
     {
         if (in_array($value, ['active', (string)self::ACTIVE])) {
-            return static::active();
+            return self::active();
         }
 
         if (in_array($value, ['inactive', (string)self::INACTIVE])) {
-            return static::inactive();
+            return self::inactive();
         }
 
         if (in_array($value, ['inactive', (string)self::OPTIONAL])) {
-            return static::optional();
+            return self::optional();
         }
 
         throw new \InvalidArgumentException("Invalid string value: '{$value}'");
@@ -77,31 +93,31 @@ class Backlink extends ValueObject
     /**
      * Undocumented function
      *
-     * @return static
+     * @return self
      */
-    public static function active()
+    public static function active(): self
     {
-        return new static(self::ACTIVE);
+        return new self(self::ACTIVE);
     }
 
     /**
      * Undocumented function
      *
-     * @return static
+     * @return self
      */
-    public static function inactive()
+    public static function inactive(): self
     {
-        return new static(self::INACTIVE);
+        return new self(self::INACTIVE);
     }
 
     /**
      * Undocumented function
      *
-     * @return static
+     * @return self
      */
-    public static function optional()
+    public static function optional(): self
     {
-        return new static(self::OPTIONAL);
+        return new self(self::OPTIONAL);
     }
 
     /**

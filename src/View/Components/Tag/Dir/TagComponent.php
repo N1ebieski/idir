@@ -1,21 +1,30 @@
 <?php
 
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is licenced under the Software License Agreement
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://intelekt.net.pl/pages/regulamin
+ *
+ * With the purchase or the installation of the software in your application
+ * you accept the licence agreement.
+ *
+ * @author    Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ * @copyright Since 2019 INTELEKT - Usługi Komputerowe Mariusz Wysokiński
+ * @license   https://intelekt.net.pl/pages/regulamin
+ */
+
 namespace N1ebieski\IDir\View\Components\Tag\Dir;
 
-use Illuminate\View\View;
+use Illuminate\View\Component;
+use Illuminate\Contracts\View\View;
 use N1ebieski\IDir\Models\Tag\Dir\Tag;
 use Illuminate\Contracts\View\Factory as ViewFactory;
-use N1ebieski\ICore\View\Components\Tag\TagComponent as BaseTagComponent;
 
-class TagComponent extends BaseTagComponent
+class TagComponent extends Component
 {
-    /**
-     * Undocumented variable
-     *
-     * @var array|null
-     */
-    protected $cats;
-
     /**
      * Undocumented function
      *
@@ -26,22 +35,20 @@ class TagComponent extends BaseTagComponent
      * @param array $cats
      */
     public function __construct(
-        Tag $tag,
-        ViewFactory $view,
-        int $limit = 25,
-        array $colors = null,
-        array $cats = null
+        protected Tag $tag,
+        protected ViewFactory $view,
+        protected int $limit = 25,
+        protected ?array $colors = null,
+        protected ?array $cats = null
     ) {
-        parent::__construct($tag, $view, $limit, $colors);
-
-        $this->cats = $cats;
+        //
     }
 
     /**
-     * [toHtml description]
-     * @return View [description]
+     *
+     * @return View
      */
-    public function toHtml(): View
+    public function render(): View
     {
         return $this->view->make('idir::web.components.tag.dir.tag', [
             'tags' => $this->tag->makeCache()->rememberPopularByComponent([

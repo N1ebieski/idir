@@ -1,5 +1,21 @@
 <?php
 
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is licenced under the Software License Agreement
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://intelekt.net.pl/pages/regulamin
+ *
+ * With the purchase or the installation of the software in your application
+ * you accept the licence agreement.
+ *
+ * @author    Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ * @copyright Since 2019 INTELEKT - Usługi Komputerowe Mariusz Wysokiński
+ * @license   https://intelekt.net.pl/pages/regulamin
+ */
+
 namespace N1ebieski\IDir\ValueObjects\Payment;
 
 use N1ebieski\IDir\ValueObjects\Price\Type;
@@ -60,27 +76,27 @@ class Status extends ValueObject
      * Undocumented function
      *
      * @param string $value
-     * @return void
+     * @return self
      */
-    public static function fromString(string $value)
+    public static function fromString(string $value): self
     {
         if (
             in_array($value, [
-            'pending',
-            Type::TRANSFER,
-            Type::PAYPAL_EXPRESS,
-            (string)self::PENDING
+                'pending',
+                Type::TRANSFER,
+                Type::PAYPAL_EXPRESS,
+                (string)self::PENDING
             ])
         ) {
-            return static::pending();
+            return self::pending();
         }
 
         if (in_array($value, ['finished', (string)self::FINISHED])) {
-            return static::finished();
+            return self::finished();
         }
 
         if (in_array($value, ['unfinished', (string)self::UNFINISHED])) {
-            return static::unfinished();
+            return self::unfinished();
         }
 
         throw new \InvalidArgumentException("Invalid string value: '{$value}'");
@@ -89,31 +105,31 @@ class Status extends ValueObject
     /**
      * Undocumented function
      *
-     * @return static
+     * @return self
      */
-    public static function pending()
+    public static function pending(): self
     {
-        return new static(self::PENDING);
+        return new self(self::PENDING);
     }
 
     /**
      * Undocumented function
      *
-     * @return static
+     * @return self
      */
-    public static function finished()
+    public static function finished(): self
     {
-        return new static(self::FINISHED);
+        return new self(self::FINISHED);
     }
 
     /**
      * Undocumented function
      *
-     * @return static
+     * @return self
      */
-    public static function unfinished()
+    public static function unfinished(): self
     {
-        return new static(self::UNFINISHED);
+        return new self(self::UNFINISHED);
     }
 
     /**

@@ -1,52 +1,31 @@
 <?php
 
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is licenced under the Software License Agreement
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://intelekt.net.pl/pages/regulamin
+ *
+ * With the purchase or the installation of the software in your application
+ * you accept the licence agreement.
+ *
+ * @author    Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ * @copyright Since 2019 INTELEKT - Usługi Komputerowe Mariusz Wysokiński
+ * @license   https://intelekt.net.pl/pages/regulamin
+ */
+
 namespace N1ebieski\IDir\Crons\Dir;
 
 use Illuminate\Support\Carbon;
 use N1ebieski\IDir\Models\DirStatus;
 use N1ebieski\IDir\Jobs\Dir\CheckStatusJob;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Contracts\Config\Repository as Config;
 
 class StatusCron
 {
-    /**
-     * [private description]
-     * @var DirStatus
-     */
-    protected $dirStatus;
-
-    /**
-     * [protected description]
-     * @var CheckStatusJob
-     */
-    protected $checkStatusJob;
-
-    /**
-     * Undocumented variable
-     *
-     * @var Carbon
-     */
-    protected $carbon;
-
-    /**
-     * Undocumented variable
-     *
-     * @var Config
-     */
-    protected $config;
-
-    /**
-     * [protected description]
-     * @var int
-     */
-    protected $checkDays;
-
-    /**
-     * [protected description]
-     * @var int
-     */
-    protected $maxAttempts;
-
     /**
      * Undocumented function
      *
@@ -56,20 +35,12 @@ class StatusCron
      * @param Carbon $carbon
      */
     public function __construct(
-        DirStatus $dirStatus,
-        CheckStatusJob $checkStatusJob,
-        Config $config,
-        Carbon $carbon
+        protected DirStatus $dirStatus,
+        protected CheckStatusJob $checkStatusJob,
+        protected Config $config,
+        protected Carbon $carbon
     ) {
-        $this->dirStatus = $dirStatus;
-
-        $this->checkStatusJob = $checkStatusJob;
-
-        $this->config = $config;
-        $this->carbon = $carbon;
-
-        $this->checkDays = (int)$this->config->get('idir.dir.status.check_days');
-        $this->maxAttempts = (int)$this->config->get('idir.dir.status.max_attempts');
+        //
     }
 
     /**
@@ -79,7 +50,8 @@ class StatusCron
      */
     protected function isStatusCheckerTurnOn(): bool
     {
-        return $this->checkDays > 0 && $this->maxAttempts > 0;
+        return $this->config->get('idir.dir.status.check_days') > 0
+            && $this->config->get('idir.dir.status.max_attempts') > 0;
     }
 
     /**
@@ -87,9 +59,9 @@ class StatusCron
      *
      * @return string
      */
-    protected function makeCheckTimestamp(): string
+    protected function getCheckTimestamp(): string
     {
-        return $this->carbon->now()->subDays($this->checkDays);
+        return $this->carbon->now()->subDays($this->config->get('idir.dir.status.check_days'));
     }
 
     /**
@@ -102,12 +74,12 @@ class StatusCron
         }
 
         $this->dirStatus->makeRepo()->chunkAvailableHasUrlByAttemptedAt(
-            function ($dirStatuses) {
-                $dirStatuses->each(function ($dirStatus) {
+            function (Collection $dirStatuses) {
+                $dirStatuses->each(function (DirStatus $dirStatus) {
                     $this->addToQueue($dirStatus);
                 });
             },
-            $this->makeCheckTimestamp()
+            $this->getCheckTimestamp()
         );
     }
 

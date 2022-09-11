@@ -2,6 +2,7 @@
 
 namespace N1ebieski\IDir\ValueObjects\Dir;
 
+use InvalidArgumentException;
 use N1ebieski\ICore\ValueObjects\ValueObject;
 
 class Comment extends ValueObject
@@ -31,12 +32,12 @@ class Comment extends ValueObject
     }
 
     /**
-     * Undocumented function
      *
-     * @param boolean $value
+     * @param int $value
      * @return void
+     * @throws InvalidArgumentException
      */
-    protected function validate(bool $value): void
+    protected function validate(int $value): void
     {
         $in = [self::ACTIVE, self::INACTIVE];
 
@@ -49,16 +50,16 @@ class Comment extends ValueObject
      * Undocumented function
      *
      * @param string $value
-     * @return void
+     * @return self
      */
-    public static function fromString(string $value)
+    public static function fromString(string $value): self
     {
         if (in_array($value, ['active', (string)self::ACTIVE])) {
-            return static::active();
+            return self::active();
         }
 
         if (in_array($value, ['inactive', (string)self::INACTIVE])) {
-            return static::inactive();
+            return self::inactive();
         }
 
         throw new \InvalidArgumentException("Invalid string value: '{$value}'");
@@ -67,21 +68,21 @@ class Comment extends ValueObject
     /**
      * Undocumented function
      *
-     * @return static
+     * @return self
      */
-    public static function active()
+    public static function active(): self
     {
-        return new static(self::ACTIVE);
+        return new self(self::ACTIVE);
     }
 
     /**
      * Undocumented function
      *
-     * @return static
+     * @return self
      */
-    public static function inactive()
+    public static function inactive(): self
     {
-        return new static(self::INACTIVE);
+        return new self(self::INACTIVE);
     }
 
     /**

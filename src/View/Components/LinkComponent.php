@@ -1,57 +1,35 @@
 <?php
 
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is licenced under the Software License Agreement
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://intelekt.net.pl/pages/regulamin
+ *
+ * With the purchase or the installation of the software in your application
+ * you accept the licence agreement.
+ *
+ * @author    Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ * @copyright Since 2019 INTELEKT - Usługi Komputerowe Mariusz Wysokiński
+ * @license   https://intelekt.net.pl/pages/regulamin
+ */
+
 namespace N1ebieski\IDir\View\Components;
 
-use Illuminate\View\View;
 use Illuminate\Http\Request;
+use Illuminate\View\Component;
 use N1ebieski\IDir\Models\Dir;
 use N1ebieski\IDir\Models\Link;
-use Illuminate\Contracts\Support\Htmlable;
+use Illuminate\Contracts\View\View;
 use Illuminate\Support\Collection as Collect;
 use Illuminate\Contracts\View\Factory as ViewFactory;
 
-class LinkComponent implements Htmlable
+class LinkComponent extends Component
 {
     /**
-     * Model
-     * @var Dir
-     */
-    protected $dir;
-
-    /**
-     * [private description]
-     * @var Link
-     */
-    protected $link;
-
-    /**
-     * Undocumented variable
      *
-     * @var ViewFactory
-     */
-    protected $view;
-
-    /**
-     * [private description]
-     * @var Collect
-     */
-    protected $collect;
-
-    /**
-     * Undocumented variable
-     *
-     * @var Request
-     */
-    protected $request;
-
-    /**
-     * Number of columns
-     * @var int
-     */
-    protected $limit;
-
-    /**
-     * [protected description]
      * @var array|null
      */
     protected $cats;
@@ -68,45 +46,38 @@ class LinkComponent implements Htmlable
      * @param array $cats
      */
     public function __construct(
-        Dir $dir,
-        Link $link,
-        ViewFactory $view,
-        Collect $collect,
-        Request $request,
-        int $limit = 5,
+        protected Dir $dir,
+        protected Link $link,
+        protected ViewFactory $view,
+        protected Collect $collect,
+        protected Request $request,
+        protected int $limit = 5,
         array $cats = null
     ) {
-        $this->dir = $dir;
-        $this->link = $link;
-
-        $this->view = $view;
-        $this->collect = $collect;
-        $this->request = $request;
-
-        $this->limit = $limit;
-        $this->makeCats($cats);
+        $this->setCats($cats);
     }
 
     /**
-     * Undocumented function
      *
      * @param array|null $cats
-     * @return array|null
+     * @return self
      */
-    protected function makeCats(array $cats = null): ?array
+    protected function setCats(array $cats = null): self
     {
-        return $this->cats = ($cats !== null ?
+        $this->cats = !is_null($cats) ?
             $this->collect->make($cats)->flatten()->toArray()
-            : null);
+            : null;
+
+        return $this;
     }
 
     /**
-     * [toHtml description]
-     * @return View [description]
+     *
+     * @return View
      */
-    public function toHtml(): View
+    public function render(): View
     {
-        $dirs = $this->cats !== null ?
+        $dirs = !is_null($this->cats) ?
             $this->dir->activeHasLinkPriviligeByComponent([
                 'cats' => $this->cats
             ])

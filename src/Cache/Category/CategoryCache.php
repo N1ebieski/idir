@@ -1,5 +1,21 @@
 <?php
 
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is licenced under the Software License Agreement
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://intelekt.net.pl/pages/regulamin
+ *
+ * With the purchase or the installation of the software in your application
+ * you accept the licence agreement.
+ *
+ * @author    Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ * @copyright Since 2019 INTELEKT - Usługi Komputerowe Mariusz Wysokiński
+ * @license   https://intelekt.net.pl/pages/regulamin
+ */
+
 namespace N1ebieski\IDir\Cache\Category;
 
 use Illuminate\Database\Eloquent\Collection;
@@ -89,14 +105,14 @@ class CategoryCache extends BaseCategoryCache
     public function rememberDirsByFilter(array $filter): LengthAwarePaginator
     {
         if ($this->collect->make($filter)->except(['region'])->isNullItems()) {
-            $dirs = $this->getDirsByFilter($filter, $this->request->input('page'));
+            $dirs = $this->getDirsByFilter($filter);
         }
 
-        if (!isset($dirs) || !$dirs) {
+        if (!isset($dirs)) {
             $dirs = $this->category->makeRepo()->paginateDirsByFilter($filter);
 
             if ($this->collect->make($filter)->except(['region'])->isNullItems()) {
-                $this->putDirsByFilter($dirs, $filter, $this->request->input('page'));
+                $this->putDirsByFilter($dirs, $filter);
             }
         }
 

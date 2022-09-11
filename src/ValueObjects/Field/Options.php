@@ -1,5 +1,21 @@
 <?php
 
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is licenced under the Software License Agreement
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://intelekt.net.pl/pages/regulamin
+ *
+ * With the purchase or the installation of the software in your application
+ * you accept the licence agreement.
+ *
+ * @author    Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ * @copyright Since 2019 INTELEKT - Usługi Komputerowe Mariusz Wysokiński
+ * @license   https://intelekt.net.pl/pages/regulamin
+ */
+
 namespace N1ebieski\IDir\ValueObjects\Field;
 
 use N1ebieski\ICore\ValueObjects\ValueObject;
@@ -27,6 +43,7 @@ class Options extends ValueObject
 
         $this->value = (object)[];
 
+        // @phpstan-ignore-next-line
         $this->setRequired($value->required);
 
         if (property_exists($value, 'options')) {
@@ -83,7 +100,7 @@ class Options extends ValueObject
      * @param integer $value
      * @return self
      */
-    public function setMin(int $value)
+    public function setMin(int $value): self
     {
         $this->value->min = $value;
 
@@ -96,7 +113,7 @@ class Options extends ValueObject
      * @param integer $value
      * @return self
      */
-    public function setMax(int $value)
+    public function setMax(int $value): self
     {
         $this->value->max = $value;
 
@@ -109,7 +126,7 @@ class Options extends ValueObject
      * @param integer $value
      * @return self
      */
-    public function setHeight(int $value)
+    public function setHeight(int $value): self
     {
         $this->value->height = $value;
 
@@ -122,7 +139,7 @@ class Options extends ValueObject
      * @param integer $value
      * @return self
      */
-    public function setWidth(int $value)
+    public function setWidth(int $value): self
     {
         $this->value->width = $value;
 
@@ -135,7 +152,7 @@ class Options extends ValueObject
      * @param integer $value
      * @return self
      */
-    public function setSize(int $value)
+    public function setSize(int $value): self
     {
         $this->value->size = $value;
 
@@ -148,7 +165,7 @@ class Options extends ValueObject
      * @param array $value
      * @return self
      */
-    public function setOptions(array $value)
+    public function setOptions(array $value): self
     {
         $this->value->options = $value;
 
@@ -204,6 +221,6 @@ class Options extends ValueObject
      */
     public function __toString()
     {
-        return json_encode($this->value);
+        return json_encode($this->value) ?: '';
     }
 }

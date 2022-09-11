@@ -1,41 +1,31 @@
 <?php
 
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is licenced under the Software License Agreement
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://intelekt.net.pl/pages/regulamin
+ *
+ * With the purchase or the installation of the software in your application
+ * you accept the licence agreement.
+ *
+ * @author    Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ * @copyright Since 2019 INTELEKT - Usługi Komputerowe Mariusz Wysokiński
+ * @license   https://intelekt.net.pl/pages/regulamin
+ */
+
 namespace N1ebieski\IDir\Crons\Dir;
 
 use Illuminate\Support\Carbon;
 use N1ebieski\IDir\Models\Dir;
 use N1ebieski\IDir\Jobs\Dir\CompletedJob;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Contracts\Config\Repository as Config;
 
 class CompletedCron
 {
-    /**
-     * [private description]
-     * @var Dir
-     */
-    protected $dir;
-
-    /**
-     * Undocumented variable
-     *
-     * @var Carbon
-     */
-    protected $carbon;
-
-    /**
-     * Undocumented variable
-     *
-     * @var Config
-     */
-    protected $config;
-
-    /**
-     * Undocumented variable
-     *
-     * @var CompletedJob
-     */
-    protected $completedJob;
-
     /**
      * Undocumented function
      *
@@ -44,14 +34,13 @@ class CompletedCron
      * @param Config $config
      * @param Carbon $carbon
      */
-    public function __construct(Dir $dir, CompletedJob $completedJob, Config $config, Carbon $carbon)
-    {
-        $this->dir = $dir;
-
-        $this->completedJob = $completedJob;
-
-        $this->config = $config;
-        $this->carbon = $carbon;
+    public function __construct(
+        protected Dir $dir,
+        protected CompletedJob $completedJob,
+        protected Config $config,
+        protected Carbon $carbon
+    ) {
+        //
     }
 
     /**
@@ -60,8 +49,8 @@ class CompletedCron
     public function __invoke(): void
     {
         $this->dir->makeRepo()->chunkAvailableHasPaidRequirementByPrivilegedTo(
-            function ($dirs) {
-                $dirs->each(function ($dir) {
+            function (Collection $dirs) {
+                $dirs->each(function (Dir $dir) {
                     $this->addToQueue($dir);
                 });
             },

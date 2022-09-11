@@ -16,29 +16,29 @@
  * @license   https://intelekt.net.pl/pages/regulamin
  */
 
-namespace N1ebieski\IDir\Providers;
+namespace N1ebieski\IDir\Utils\Updater\Schema;
 
-use Illuminate\Support\ServiceProvider;
+use N1ebieski\ICore\Utils\Updater\Schema\Interfaces\SchemaInterface;
 
-class AppServiceProvider extends ServiceProvider
+class Schema1000 implements SchemaInterface
 {
     /**
-     * Register any application services.
+     * Undocumented variable
      *
-     * @return void
+     * @var array
      */
-    public function register()
-    {
-        //
-    }
-
-    /**
-     * Bootstrap any application services.
-     *
-     * @return void
-     */
-    public function boot()
-    {
-        //
-    }
+    public $pattern = [
+        [
+            'paths' => [
+                'resources/views/vendor/idir/web/dir/show.blade.php'
+            ],
+            'actions' => [
+                [
+                    'type' => 'replace',
+                    'search' => '/->toHtml\(\)->render\(\);/',
+                    'to' => '->render()->render();'
+                ]
+            ]
+        ]
+    ];
 }
