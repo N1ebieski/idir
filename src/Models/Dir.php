@@ -1,5 +1,21 @@
 <?php
 
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is licenced under the Software License Agreement
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://intelekt.net.pl/pages/regulamin
+ *
+ * With the purchase or the installation of the software in your application
+ * you accept the licence agreement.
+ *
+ * @author    Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ * @copyright Since 2019 INTELEKT - Usługi Komputerowe Mariusz Wysokiński
+ * @license   https://intelekt.net.pl/pages/regulamin
+ */
+
 namespace N1ebieski\IDir\Models;
 
 use Carbon\Carbon;
@@ -37,10 +53,115 @@ use N1ebieski\IDir\ValueObjects\Dir\Comment as DirComment;
 use N1ebieski\IDir\ValueObjects\Payment\Status as PaymentStatus;
 
 /**
+ * N1ebieski\IDir\Models\Dir
+ *
  * @property DirStatus $status
  * @property DirComment $comment
  * @property \N1ebieski\IDir\ValueObjects\Dir\Url $url
  * @property \N1ebieski\IDir\Models\Group $group
+ * @property \N1ebieski\IDir\Models\Payment\Dir\Payment|null $payment
+ * @property int $id
+ * @property string $slug
+ * @property int $group_id
+ * @property int|null $user_id
+ * @property string $title
+ * @property string $content_html
+ * @property string $content
+ * @property string|null $notes
+ * @property \Illuminate\Support\Carbon|null $privileged_at
+ * @property \Illuminate\Support\Carbon|null $privileged_to
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \N1ebieski\IDir\Models\DirBacklink|null $backlink
+ * @property-read \Franzose\ClosureTable\Extensions\Collection|\N1ebieski\IDir\Models\Category\Dir\Category[] $categories
+ * @property-read int|null $categories_count
+ * @property-read \Franzose\ClosureTable\Extensions\Collection|\N1ebieski\ICore\Models\Comment\Comment[] $comments
+ * @property-read int|null $comments_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|Field[] $fields
+ * @property-read int|null $fields_count
+ * @property-read array $attributes_as_array
+ * @property-read string $content_as_html
+ * @property-read string $created_at_diff
+ * @property-read string $less_content_html
+ * @property-read string $link_as_html
+ * @property-read string $link
+ * @property-read string $poli_self
+ * @property-read string $privileged_to_diff
+ * @property-read string $short_content
+ * @property-read string $sum_rating
+ * @property-read array $tag_array
+ * @property-read array $tag_array_normalized
+ * @property-read string $tag_list
+ * @property-read string $tag_list_normalized
+ * @property-read string $thumbnail_url
+ * @property-read string $title_as_link
+ * @property-read string $updated_at_diff
+ * @property-read string $url_as_link
+ * @property-read \N1ebieski\IDir\Models\Map\Map|null $map
+ * @property-read \Illuminate\Database\Eloquent\Collection|\N1ebieski\IDir\Models\Payment\Dir\Payment[] $payments
+ * @property-read int|null $payments_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\N1ebieski\IDir\Models\Rating\Dir\Rating[] $ratings
+ * @property-read int|null $ratings_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\N1ebieski\IDir\Models\Region\Region[] $regions
+ * @property-read int|null $regions_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\N1ebieski\ICore\Models\Report\Report[] $reports
+ * @property-read int|null $reports_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\N1ebieski\IDir\Models\Stat\Dir\Stat[] $stats
+ * @property-read int|null $stats_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\N1ebieski\ICore\Models\Tag\Tag[] $tags
+ * @property-read int|null $tags_count
+ * @property-read \N1ebieski\IDir\Models\User|null $user
+ * @method static Builder|Dir active()
+ * @method static Builder|Dir activeHasLinkPriviligeByComponent(array $component)
+ * @method static Builder|Dir backlinkInactive()
+ * @method static \N1ebieski\IDir\Database\Factories\Dir\DirFactory factory(...$parameters)
+ * @method static Builder|Dir filterAuthor(?\N1ebieski\ICore\Models\User $author = null)
+ * @method static Builder|Dir filterCategory(?\N1ebieski\ICore\Models\Category\Category $category = null)
+ * @method static Builder|Dir filterExcept(?array $except = null)
+ * @method static Builder|Dir filterGroup(?\N1ebieski\IDir\Models\Group $group = null)
+ * @method static Builder|Dir filterOrderBy(?string $orderby = null)
+ * @method static Builder|Dir filterOrderBySearch(?string $search = null)
+ * @method static \Illuminate\Contracts\Pagination\LengthAwarePaginator filterPaginate(?int $paginate = null)
+ * @method static Builder|Dir filterRegion(?\N1ebieski\IDir\Models\Region\Region $region = null)
+ * @method static Builder|Dir filterReport(?int $report = null)
+ * @method static Builder|Dir filterSearch(?string $search = null)
+ * @method static Builder|Dir filterStatus(?int $status = null)
+ * @method static Builder|Dir filterType(?string $type = null)
+ * @method static Builder|Dir filterVisible(?int $visible = null)
+ * @method static Builder|Dir findSimilarSlugs(string $attribute, array $config, string $slug)
+ * @method static Builder|Dir inactive()
+ * @method static Builder|Dir isNotTagged()
+ * @method static Builder|Dir isTagged()
+ * @method static Builder|Dir newModelQuery()
+ * @method static Builder|Dir newQuery()
+ * @method static Builder|Dir orderBySearch(string $term)
+ * @method static Builder|Dir pending()
+ * @method static Builder|Dir query()
+ * @method static Builder|Dir search(string $term)
+ * @method static Builder|Dir whereContent($value)
+ * @method static Builder|Dir whereContentHtml($value)
+ * @method static Builder|Dir whereCreatedAt($value)
+ * @method static Builder|Dir whereGroupId($value)
+ * @method static Builder|Dir whereId($value)
+ * @method static Builder|Dir whereNotes($value)
+ * @method static Builder|Dir wherePrivilegedAt($value)
+ * @method static Builder|Dir wherePrivilegedTo($value)
+ * @method static Builder|Dir whereSlug($value)
+ * @method static Builder|Dir whereStatus($value)
+ * @method static Builder|Dir whereTitle($value)
+ * @method static Builder|Dir whereUpdatedAt($value)
+ * @method static Builder|Dir whereUrl($value)
+ * @method static Builder|Dir whereUserId($value)
+ * @method static Builder|Dir withAllPublicRels()
+ * @method static Builder|Dir withAllRels()
+ * @method static Builder|Dir withAllTags($tags)
+ * @method static Builder|Dir withAnyTags($tags)
+ * @method static Builder|Dir withCountStats(string $stat)
+ * @method static Builder|Dir withSumRating()
+ * @method static Builder|Dir withUniqueSlugConstraints(\Illuminate\Database\Eloquent\Model $model, string $attribute, array $config, string $slug)
+ * @method static Builder|Dir withoutAllTags($tags, bool $includeUntagged = false)
+ * @method static Builder|Dir withoutAnyTags($tags, bool $includeUntagged = false)
+ * @mixin \Eloquent
  */
 class Dir extends Model
 {
@@ -59,7 +180,7 @@ class Dir extends Model
     /**
      * The attributes that are mass assignable.
      *
-     * @var array
+     * @var array<string>
      */
     protected $fillable = [
         'title',
@@ -611,8 +732,9 @@ class Dir extends Model
      */
     public function getLessContentHtmlAttribute(): string
     {
+        // @phpstan-ignore-next-line
         return $this->short_content . '... <a href="' . URL::route('web.dir.show', [$this->slug])
-        . '">' . Lang::get('idir::dirs.more') . '</a>';
+            . '">' . Lang::get('idir::dirs.more') . '</a>';
     }
 
     /**
@@ -684,10 +806,9 @@ class Dir extends Model
     }
 
     /**
-     * Undocumented function
      *
-     * @param GroupId $id
-     * @return boolean
+     * @param int $id
+     * @return bool
      */
     public function isPayment(int $id): bool
     {

@@ -1,5 +1,21 @@
 <?php
 
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is licenced under the Software License Agreement
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://intelekt.net.pl/pages/regulamin
+ *
+ * With the purchase or the installation of the software in your application
+ * you accept the licence agreement.
+ *
+ * @author    Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ * @copyright Since 2019 INTELEKT - Usługi Komputerowe Mariusz Wysokiński
+ * @license   https://intelekt.net.pl/pages/regulamin
+ */
+
 namespace N1ebieski\IDir\Listeners\Dir;
 
 use N1ebieski\IDir\Models\Payment\Dir\Payment;
@@ -10,7 +26,7 @@ class Checkout
     /**
      * Undocumented variable
      *
-     * @var object
+     * @var DirEventInterface
      */
     protected $event;
 
@@ -40,9 +56,10 @@ class Checkout
         $event->dir->loadCheckoutPayments();
 
         $event->dir->payments->each(function (Payment $payment) use ($event) {
-            if (optional($payment->order)->group_id === $event->dir->group_id) {
+            // @phpstan-ignore-next-line
+            if ($payment->order?->group_id === $event->dir->group_id) {
                 $event->dir->makeService()->updatePrivileged($payment->order->days);
-                $payment->makeRepo()->finished();
+                $payment->makeService()->finished();
             }
         });
     }

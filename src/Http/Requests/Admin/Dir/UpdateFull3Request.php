@@ -1,5 +1,21 @@
 <?php
 
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is licenced under the Software License Agreement
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://intelekt.net.pl/pages/regulamin
+ *
+ * With the purchase or the installation of the software in your application
+ * you accept the licence agreement.
+ *
+ * @author    Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ * @copyright Since 2019 INTELEKT - Usługi Komputerowe Mariusz Wysokiński
+ * @license   https://intelekt.net.pl/pages/regulamin
+ */
+
 namespace N1ebieski\IDir\Http\Requests\Admin\Dir;
 
 use Illuminate\Support\Str;
@@ -59,6 +75,9 @@ class UpdateFull3Request extends UpdateFull2Request
      */
     public function rules()
     {
+        /** @var Link */
+        $link = Link::find($this->input('backlink'));
+
         return array_merge(
             parent::rules(),
             [
@@ -98,7 +117,7 @@ class UpdateFull3Request extends UpdateFull2Request
                         : 'regex:/^(https|http):\/\/([\da-z\.-]+)(\.[a-z]{2,6})/',
                     $this->group->backlink->isActive() && $this->has('backlink') ?
                         App::make('N1ebieski\\IDir\\Rules\\BacklinkRule', [
-                            'link' => Link::find($this->input('backlink'))->url
+                            'link' => $link->url
                         ]) : null,
                     'no_js_validation'
                 ]
@@ -172,6 +191,7 @@ class UpdateFull3Request extends UpdateFull2Request
     public function messages()
     {
         return [
+            // @phpstan-ignore-next-line
             'backlink_url.regex' => __('validation.regex') . ' ' . Lang::get('idir::validation.backlink_url')
         ];
     }

@@ -1,7 +1,24 @@
 <?php
 
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is licenced under the Software License Agreement
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://intelekt.net.pl/pages/regulamin
+ *
+ * With the purchase or the installation of the software in your application
+ * you accept the licence agreement.
+ *
+ * @author    Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ * @copyright Since 2019 INTELEKT - Usługi Komputerowe Mariusz Wysokiński
+ * @license   https://intelekt.net.pl/pages/regulamin
+ */
+
 namespace N1ebieski\IDir\Rules\Codes;
 
+use LogicException;
 use Illuminate\Http\Request;
 use N1ebieski\IDir\Models\Price;
 use N1ebieski\IDir\Rules\Codes\CodesRule;
@@ -11,18 +28,6 @@ use N1ebieski\IDir\Http\Clients\Payment\Interfaces\Codes\SmsClientInterface;
 class SMSRule extends CodesRule
 {
     /**
-     * [private description]
-     * @var Price
-     */
-    protected $price;
-
-    /**
-     * [private description]
-     * @var SmsClientInterface
-     */
-    protected $client;
-
-    /**
      * Undocumented function
      *
      * @param Price $price
@@ -30,22 +35,26 @@ class SMSRule extends CodesRule
      * @param Lang $lang
      * @param SmsClientInterface $client
      */
-    public function __construct(Price $price, Request $request, Lang $lang, SmsClientInterface $client)
-    {
-        parent::__construct($request, $lang);
+    public function __construct(
+        Price $price,
+        protected Request $request,
+        protected Lang $lang,
+        protected SmsClientInterface $client
+    ) {
+        /** @var Price */
+        $price = $price->findOrFail($this->request->input('payment_code_sms'));
 
-        $this->client = $client;
-
-        $this->price = $price->find($this->request->input('payment_code_sms'));
+        parent::__construct($price, $request, $lang);
     }
 
     /**
-     * [validate description]
-     * @param  [type] $attribute  [description]
-     * @param  [type] $value      [description]
-     * @param  [type] $parameters [description]
-     * @param  [type] $validator  [description]
-     * @return [type]             [description]
+     *
+     * @param mixed $attribute
+     * @param mixed $value
+     * @param mixed $parameters
+     * @param mixed $validator
+     * @return bool
+     * @throws LogicException
      */
     public function validate($attribute, $value, $parameters, $validator)
     {

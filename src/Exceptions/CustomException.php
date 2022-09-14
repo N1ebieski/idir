@@ -1,5 +1,21 @@
 <?php
 
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is licenced under the Software License Agreement
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://intelekt.net.pl/pages/regulamin
+ *
+ * With the purchase or the installation of the software in your application
+ * you accept the licence agreement.
+ *
+ * @author    Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ * @copyright Since 2019 INTELEKT - Usługi Komputerowe Mariusz Wysokiński
+ * @license   https://intelekt.net.pl/pages/regulamin
+ */
+
 namespace N1ebieski\IDir\Exceptions;
 
 use Exception;
@@ -29,7 +45,7 @@ class CustomException extends Exception
     /**
      * Report the exception.
      *
-     * @return void
+     * @return bool|void
      */
     public function report()
     {
@@ -37,9 +53,9 @@ class CustomException extends Exception
     }
 
     /**
-     * Render the exception into an HTTP response.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param Request $request
+     * @return bool|void
      */
     public function render(Request $request)
     {

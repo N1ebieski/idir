@@ -1,5 +1,21 @@
 <?php
 
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is licenced under the Software License Agreement
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://intelekt.net.pl/pages/regulamin
+ *
+ * With the purchase or the installation of the software in your application
+ * you accept the licence agreement.
+ *
+ * @author    Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ * @copyright Since 2019 INTELEKT - Usługi Komputerowe Mariusz Wysokiński
+ * @license   https://intelekt.net.pl/pages/regulamin
+ */
+
 namespace N1ebieski\IDir\Repositories\Dir;
 
 use Closure;
@@ -7,49 +23,37 @@ use Carbon\Carbon;
 use N1ebieski\IDir\Models\Dir;
 use N1ebieski\IDir\Models\User;
 use Illuminate\Support\Facades\DB;
+use N1ebieski\IDir\Models\Tag\Dir\Tag;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Query\JoinClause;
+use Illuminate\Contracts\Auth\Guard as Auth;
 use Illuminate\Database\Eloquent\Collection;
+use N1ebieski\IDir\Models\Field\Group\Field;
 use N1ebieski\IDir\Models\Rating\Dir\Rating;
-use Illuminate\Contracts\Auth\Factory as Auth;
+use N1ebieski\IDir\Models\Report\Dir\Report;
+use N1ebieski\IDir\Models\Comment\Dir\Comment;
 use Illuminate\Contracts\Config\Repository as Config;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use N1ebieski\IDir\ValueObjects\Dir\Status as DirStatus;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use N1ebieski\IDir\ValueObjects\Payment\Status as PaymentStatus;
-use N1ebieski\ICore\ValueObjects\Comment\Status as CommentStatus;
 
 class DirRepo
 {
-    /**
-     * [private description]
-     * @var Dir
-     */
-    protected $dir;
-
-    /**
-     * Undocumented variable
-     *
-     * @var Config
-     */
-    protected $config;
-
-    /**
-     * Undocumented variable
-     *
-     * @var Auth
-     */
-    protected $auth;
-
     /**
      * [__construct description]
      * @param Dir $dir [description]
      * @param Config   $config   [description]
      * @param Auth $auth
      */
-    public function __construct(Dir $dir, Config $config, Auth $auth)
-    {
-        $this->dir = $dir;
-
-        $this->config = $config;
-        $this->auth = $auth;
+    public function __construct(
+        protected Dir $dir,
+        protected Config $config,
+        protected Auth $auth
+    ) {
+        //
     }
 
     /**
@@ -59,24 +63,21 @@ class DirRepo
      */
     public function paginateByFilter(array $filter): LengthAwarePaginator
     {
-        return $this->dir->selectRaw("`{$this->dir->getTable()}`.*")
-            ->withCount('reports')
-            ->withAllRels()
+        return $this->dir->newQuery()
+            ->selectRaw("`{$this->dir->getTable()}`.*")
             ->filterAuthor($filter['author'])
             ->filterExcept($filter['except'])
-            ->when($filter['search'] !== null, function ($query) use ($filter) {
-                $query->filterSearch($filter['search'])
-                    ->when(optional($this->auth->user())->can('admin.dirs.view'), function ($query) {
-                        $query->when(array_key_exists('payment', $this->dir->search), function ($query) {
-                            /**
-                             * @var \N1ebieski\IDir\Models\Payment\Dir\Payment
-                             */
+            ->when(!is_null($filter['search']), function (Builder|Dir $query) use ($filter) {
+                return $query->filterSearch($filter['search'])
+                    ->when($this->auth->user()?->can('admin.dirs.view'), function (Builder $query) {
+                        return $query->when(array_key_exists('payment', $this->dir->search), function (Builder $query) {
+                            /** @var \N1ebieski\IDir\Models\Payment\Dir\Payment */
                             $payment = $this->dir->payments()->make();
 
                             $columns = implode(',', $payment->searchable);
 
-                            $query->leftJoin('payments', function ($query) use ($payment) {
-                                $query->on('payments.model_id', '=', 'dirs.id')
+                            return $query->leftJoin('payments', function (JoinClause $query) {
+                                return $query->on('payments.model_id', '=', 'dirs.id')
                                     ->where([
                                         ['payments.model_type', $this->dir->getMorphClass()],
                                         ['payments.status', PaymentStatus::FINISHED]
@@ -87,43 +88,45 @@ class DirRepo
                             ])
                             ->groupBy('dirs.id');
                         })
-                        ->when(array_key_exists('user', $this->dir->search), function ($query) {
+                        ->when(array_key_exists('user', $this->dir->search), function (Builder $query) {
                             $user = $this->dir->user()->make();
 
                             $columns = implode(',', $user->searchable);
 
-                            $query->leftJoin('users', function ($query) {
-                                $query->on('users.id', '=', 'dirs.user_id');
+                            return $query->leftJoin('users', function (JoinClause $query) {
+                                return $query->on('users.id', '=', 'dirs.user_id');
                             })
                             ->whereRaw("MATCH ({$columns}) AGAINST (? IN BOOLEAN MODE)", [
                                 $this->dir->search['user']
                             ]);
                         });
                     })
-                    ->where(function ($query) {
+                    ->where(function (Builder $query) {
                         foreach (['id', 'url'] as $attr) {
-                            $query->when(array_key_exists($attr, $this->dir->search), function ($query) use ($attr) {
-                                $query->where("{$this->dir->getTable()}.{$attr}", $this->dir->search[$attr]);
+                            return $query->when(array_key_exists($attr, $this->dir->search), function (Builder $query) use ($attr) {
+                                return $query->where("{$this->dir->getTable()}.{$attr}", $this->dir->search[$attr]);
                             });
                         }
                     });
             })
             ->when(
-                $filter['status'] === null && !optional($this->auth->user())->can('admin.dirs.view'),
-                function ($query) {
-                    $query->active();
+                is_null($filter['status']) && !$this->auth->user()?->can('admin.dirs.view'),
+                function (Builder|Dir $query) {
+                    return $query->active();
                 },
-                function ($query) use ($filter) {
-                    $query->filterStatus($filter['status']);
+                function (Builder|Dir $query) use ($filter) {
+                    return $query->filterStatus($filter['status']);
                 }
             )
             ->filterGroup($filter['group'])
             ->filterCategory($filter['category'])
             ->filterReport($filter['report'])
-            ->when($filter['orderby'] === null, function ($query) use ($filter) {
+            ->when(is_null($filter['orderby']), function (Builder|Dir $query) use ($filter) {
                 $query->filterOrderBySearch($filter['search']);
             })
             ->filterOrderBy($filter['orderby'])
+            ->withCount('reports')
+            ->withAllRels()
             ->filterPaginate($filter['paginate']);
     }
 
@@ -134,59 +137,12 @@ class DirRepo
      */
     public function paginateForWebByFilter(array $filter): LengthAwarePaginator
     {
-        return $this->dir
-            ->withAllPublicRels()
+        // @phpstan-ignore-next-line
+        return $this->dir->newQuery()
             ->active()
             ->filterOrderBy($filter['orderby'])
+            ->withAllPublicRels()
             ->filterPaginate($this->config->get('database.paginate'));
-    }
-
-    /**
-     * [deactivateByBacklink description]
-     * @return bool [description]
-     */
-    public function deactivateByBacklink(): bool
-    {
-        return $this->dir->update(['status' => DirStatus::BACKLINK_INACTIVE]);
-    }
-
-    /**
-     * [deactivateByStatus description]
-     * @return bool [description]
-     */
-    public function deactivateByStatus(): bool
-    {
-        return $this->dir->update(['status' => DirStatus::STATUS_INACTIVE]);
-    }
-
-    /**
-     * [deactivateByPayment description]
-     * @return bool [description]
-     */
-    public function deactivateByPayment(): bool
-    {
-        return $this->dir->update(['status' => DirStatus::PAYMENT_INACTIVE]);
-    }
-
-    /**
-     * [activate description]
-     * @return bool [description]
-     */
-    public function activate(): bool
-    {
-        return $this->dir->update(['status' => DirStatus::ACTIVE]);
-    }
-
-    /**
-     * [nullPrivileged description]
-     * @return bool [description]
-     */
-    public function nullablePrivileged(): bool
-    {
-        return $this->dir->update([
-            'privileged_at' => null,
-            'privileged_to' => null
-        ]);
     }
 
     /**
@@ -195,8 +151,10 @@ class DirRepo
      */
     public function countReported(): int
     {
-        return $this->dir->reports()
-            ->make()
+        /** @var Report */
+        $report = $this->dir->reports()->make();
+
+        return $report->newQuery()
             ->where('model_type', $this->dir->getMorphClass())
             ->distinct()
             ->count('model_id');
@@ -210,10 +168,12 @@ class DirRepo
      */
     public function paginateByTagAndFilter(string $tag, array $filter): LengthAwarePaginator
     {
-        return $this->dir->withAllTags($tag)
-            ->withAllPublicRels()
+        // @phpstan-ignore-next-line
+        return $this->dir->newQuery()
             ->active()
             ->filterOrderBy($filter['orderby'])
+            ->withAllTags($tag)
+            ->withAllPublicRels()
             ->filterPaginate($this->config->get('database.paginate'));
     }
 
@@ -225,10 +185,13 @@ class DirRepo
      */
     public function paginateBySearchAndFilter(string $name, array $filter): LengthAwarePaginator
     {
-        return $this->dir->selectRaw('`dirs`.*, `privileges`.`name`')
-            ->withAllPublicRels()
-            ->leftJoin('groups_privileges', function ($query) {
-                $query->on('dirs.group_id', '=', 'groups_privileges.group_id')
+        /** @var Tag */
+        $tag = $this->dir->tags()->make();
+
+        return $this->dir->newQuery()
+            ->selectRaw('`dirs`.*, `privileges`.`name`')
+            ->leftJoin('groups_privileges', function (JoinClause $query) {
+                return $query->on('dirs.group_id', '=', 'groups_privileges.group_id')
                     ->join('privileges', 'groups_privileges.privilege_id', '=', 'privileges.id')
                     ->where('privileges.name', 'highest position in search results');
             })
@@ -236,32 +199,36 @@ class DirRepo
             // po fulltext LUB po ids zawierających okreslony tag,
             // a mysql może wykorzystać tylko 1 indeks
             ->from(
-                $this->dir->selectRaw("`{$this->dir->getTable()}`.*")
+                $this->dir->newQuery()
+                    ->selectRaw("`{$this->dir->getTable()}`.*")
                     ->search($name)
-                    ->when($tag = $this->dir->tags()->make()->findByName($name), function ($query) use ($tag) {
-                        $query->unionAll(
-                            $this->dir->selectRaw('`dirs`.*, 0 as `url_relevance`, 0 as `title_relevance`, 0 as `content_relevance`')
-                                ->join('tags_models', function ($query) use ($tag) {
-                                    $query->on('dirs.id', '=', 'tags_models.model_id')
+                    ->when($tag = $tag->findByName($name), function (Builder $query) use ($tag) {
+                        return $query->unionAll(
+                            $this->dir->newQuery()
+                                ->selectRaw('`dirs`.*, 0 as `url_relevance`, 0 as `title_relevance`, 0 as `content_relevance`')
+                                ->join('tags_models', function (JoinClause $query) use ($tag) {
+                                    return $query->on('dirs.id', '=', 'tags_models.model_id')
                                         ->where('tags_models.model_type', $this->dir->getMorphClass())
                                         ->where('tags_models.tag_id', $tag->tag_id);
                                 })
                                 ->groupBy('dirs.id')
+                                ->getQuery()
                         );
                     }),
                 'dirs'
             )
-            ->groupBy('dirs.id')
             ->active()
-            ->when($filter['orderby'] === null, function ($query) use ($name) {
-                $query->orderBy('privileges.name', 'desc')
+            ->groupBy('dirs.id')
+            ->when(is_null($filter['orderby']), function (Builder|Dir $query) use ($name) {
+                return $query->orderBy('privileges.name', 'desc')
                     ->orderBySearch($name)
                     ->latest();
             })
-            ->when($filter['orderby'] !== null, function ($query) use ($filter, $name) {
-                $query->filterOrderBy($filter['orderby'])
+            ->when(!is_null($filter['orderby']), function (Builder|Dir $query) use ($filter, $name) {
+                return $query->filterOrderBy($filter['orderby'])
                     ->orderBySearch($name);
             })
+            ->withAllPublicRels()
             ->filterPaginate($this->config->get('database.paginate'));
     }
 
@@ -273,24 +240,25 @@ class DirRepo
      */
     public function getAdvertisingPrivilegedByComponent(array $component): Collection
     {
-        return $this->dir->active()
-            ->join('groups_privileges', function ($query) {
-                $query->on('dirs.group_id', '=', 'groups_privileges.group_id')
+        return $this->dir->newQuery()
+            ->active()
+            ->join('groups_privileges', function (JoinClause $query) {
+                return $query->on('dirs.group_id', '=', 'groups_privileges.group_id')
                     ->join('privileges', 'groups_privileges.privilege_id', '=', 'privileges.id')
                     ->where('privileges.name', 'place in the advertising component');
             })
-            ->withAllPublicRels()
-            ->when($component['limit'] !== null, function ($query) use ($component) {
-                $query->limit($component['limit'])
+            ->when(!is_null($component['limit']), function (Builder $query) use ($component) {
+                return $query->limit($component['limit'])
                     ->inRandomOrder();
             })
+            ->withAllPublicRels()
             ->get()
-            ->map(function ($item) use ($component) {
+            ->map(function (Dir $dir) use ($component) {
                 if ($component['max_content'] !== null) {
-                    $item->content = mb_substr($item->content, 0, $component['max_content']);
+                    $dir->content = mb_substr($dir->content, 0, $component['max_content']);
                 }
 
-                return $item;
+                return $dir;
             });
     }
 
@@ -301,7 +269,7 @@ class DirRepo
      */
     public function firstBySlug(string $slug): ?Dir
     {
-        return $this->dir->where('slug', $slug)->first();
+        return $this->dir->newQuery()->where('slug', $slug)->first();
     }
 
     /**
@@ -321,9 +289,10 @@ class DirRepo
      */
     public function getRelated(int $limit = 5): Collection
     {
-        return $this->dir->selectRaw('`dirs`.*')
-            ->join('categories_models', function ($query) {
-                $query->on('dirs.id', '=', 'categories_models.model_id')
+        return $this->dir->newQuery()
+            ->selectRaw('`dirs`.*')
+            ->join('categories_models', function (JoinClause $query) {
+                return $query->on('dirs.id', '=', 'categories_models.model_id')
                     ->where('categories_models.model_type', $this->dir->getMorphClass())
                     ->whereIn(
                         'categories_models.category_id',
@@ -345,13 +314,15 @@ class DirRepo
      */
     public function paginateCommentsByFilter(array $filter): LengthAwarePaginator
     {
-        return $this->dir->comments()->where([
-                ['comments.parent_id', null],
-                ['comments.status', CommentStatus::ACTIVE]
-            ])
-            ->withAllRels($filter['orderby'])
+        /** @var MorphMany|Comment */
+        $comments = $this->dir->comments();
+
+        // @phpstan-ignore-next-line
+        return $comments->active()
+            ->root()
             ->filterExcept($filter['except'])
             ->filterCommentsOrderBy($filter['orderby'])
+            ->withAllRels($filter['orderby'])
             ->filterPaginate($this->config->get('database.paginate'));
     }
 
@@ -364,9 +335,10 @@ class DirRepo
      */
     public function getLatestForHome(): Collection
     {
-        $privileged = $this->dir->selectRaw('`dirs`.*')
-            ->join('groups_privileges', function ($query) {
-                $query->on('dirs.group_id', '=', 'groups_privileges.group_id')
+        $privileged = $this->dir->newQuery()
+            ->selectRaw('`dirs`.*')
+            ->join('groups_privileges', function (JoinClause $query) {
+                return $query->on('dirs.group_id', '=', 'groups_privileges.group_id')
                     ->join('privileges', 'groups_privileges.privilege_id', '=', 'privileges.id')
                     ->where('privileges.name', 'highest position on homepage');
             })
@@ -375,7 +347,7 @@ class DirRepo
             ->limit($this->config->get('idir.home.max_privileged'))
             ->get();
 
-        $dirs = $this->dir
+        $dirs = $this->dir->newQuery()
             ->whereNotIn('id', $privileged->pluck('id')->toArray())
             ->active()
             ->latest()
@@ -388,7 +360,7 @@ class DirRepo
                 'categories',
                 'group',
                 'group.privileges',
-                'group.fields' => function ($query) {
+                'group.fields' => function (MorphToMany|Builder|Field $query) {
                     return $query->public();
                 },
                 'tags',
@@ -405,10 +377,11 @@ class DirRepo
      */
     public function getLatestForModeratorsByLimit(int $limit): Collection
     {
-        return $this->dir->withAllPublicRels()
+        return $this->dir->newQuery()
             ->whereIn('status', [DirStatus::INACTIVE, DirStatus::ACTIVE])
             ->latest()
             ->limit($limit)
+            ->withAllPublicRels()
             ->get();
     }
 
@@ -420,17 +393,18 @@ class DirRepo
      */
     public function getLatestForModeratorsByCreatedAt(string $timestamp): Collection
     {
-        return $this->dir->withAllPublicRels()
+        return $this->dir->newQuery()
             ->whereIn('status', [DirStatus::INACTIVE, DirStatus::ACTIVE])
-            ->where(function ($query) use ($timestamp) {
-                $query->whereDate('created_at', '>', Carbon::parse($timestamp)->format('Y-m-d'))
-                    ->orWhere(function ($query) use ($timestamp) {
-                        $query->whereDate('created_at', '=', Carbon::parse($timestamp)->format('Y-m-d'))
+            ->where(function (Builder $query) use ($timestamp) {
+                return $query->whereDate('created_at', '>', Carbon::parse($timestamp)->format('Y-m-d'))
+                    ->orWhere(function (Builder $query) use ($timestamp) {
+                        return $query->whereDate('created_at', '=', Carbon::parse($timestamp)->format('Y-m-d'))
                             ->whereTime('created_at', '>', Carbon::parse($timestamp)->format('H:i:s'));
                     });
             })
             ->latest()
             ->limit(25)
+            ->withAllPublicRels()
             ->get();
     }
 
@@ -443,18 +417,19 @@ class DirRepo
      */
     public function chunkAvailableHasPaidRequirementByPrivilegedTo(Closure $closure, string $timestamp): bool
     {
-        return $this->dir->active()
-            ->whereHas('group', function ($query) {
-                $query->whereHas('prices');
+        return $this->dir->newQuery()
+            ->active()
+            ->whereHas('group', function (BelongsTo $query) {
+                return $query->whereHas('prices');
             })
-            ->where(function ($query) use ($timestamp) {
-                $query->whereDate(
+            ->where(function (Builder $query) use ($timestamp) {
+                return $query->whereDate(
                     'privileged_to',
                     '<=',
                     Carbon::parse($timestamp)->format('Y-m-d')
                 )
-                ->orWhere(function ($query) {
-                    $query->whereNull('privileged_at')
+                ->orWhere(function (Builder $query) {
+                    return $query->whereNull('privileged_at')
                         ->whereNull('privileged_to');
                 });
             })
@@ -469,9 +444,7 @@ class DirRepo
      */
     public function getPayments(): Collection
     {
-        return $this->dir->payments()
-            ->orderBy('created_at', 'desc')
-            ->get();
+        return $this->dir->payments()->orderBy('created_at', 'desc')->get();
     }
 
     /**
@@ -481,9 +454,7 @@ class DirRepo
      */
     public function getReportsWithUser(): Collection
     {
-        return $this->dir->reports()
-            ->with('user')
-            ->get();
+        return $this->dir->reports()->with('user')->get();
     }
 
     /**
@@ -494,9 +465,10 @@ class DirRepo
      */
     public function chunkActiveWithModelsCount(Closure $closure): bool
     {
-        return $this->dir->active()
-            ->withCount(['comments AS models_count' => function ($query) {
-                $query->root()->active();
+        return $this->dir->newQuery()
+            ->active()
+            ->withCount(['comments AS models_count' => function (MorphMany|Builder|Comment $query) {
+                return $query->root()->active();
             }])
             ->chunk(1000, $closure);
     }
@@ -508,9 +480,10 @@ class DirRepo
      */
     public function getFriendsPrivileged(): Collection
     {
-        return $this->dir->active()
-            ->join('groups_privileges', function ($query) {
-                $query->on('dirs.group_id', '=', 'groups_privileges.group_id')
+        return $this->dir->newQuery()
+            ->active()
+            ->join('groups_privileges', function (JoinClause $query) {
+                return $query->on('dirs.group_id', '=', 'groups_privileges.group_id')
                     ->join('privileges', 'groups_privileges.privilege_id', '=', 'privileges.id')
                     ->where('privileges.name', 'additional link on the friends subpage');
             })
@@ -525,7 +498,8 @@ class DirRepo
      */
     public function countByStatus(): Collection
     {
-        return $this->dir->selectRaw("`status`, COUNT(`id`) AS `count`")
+        return $this->dir->newQuery()
+            ->selectRaw("`status`, COUNT(`id`) AS `count`")
             ->groupBy('status')
             ->get();
     }
@@ -537,7 +511,8 @@ class DirRepo
      */
     public function countByGroup(): Collection
     {
-        return $this->dir->selectRaw("`group_id`, COUNT(`id`) AS `count`")
+        return $this->dir->newQuery()
+            ->selectRaw("`group_id`, COUNT(`id`) AS `count`")
             ->groupBy('group_id')
             ->get();
     }
@@ -550,9 +525,7 @@ class DirRepo
     public function getLastActivity(): ?string
     {
         return optional(
-            $this->dir->active()
-            ->orderBy('updated_at', 'desc')
-            ->first('updated_at')
+            $this->dir->newQuery()->active()->orderBy('updated_at', 'desc')->first('updated_at')
         )
         ->updated_at;
     }
@@ -565,21 +538,22 @@ class DirRepo
      */
     public function getByComponent(array $component): Collection
     {
-        return $this->dir->active()
-            ->withAllPublicRels()
-            ->when($component['orderby'] === 'rand', function ($query) {
-                $query->inRandomOrder();
-            }, function ($query) use ($component) {
-                $query->filterOrderBy($component['orderby']);
+        return $this->dir->newQuery()
+            ->active()
+            ->when($component['orderby'] === 'rand', function (Builder $query) {
+                return $query->inRandomOrder();
+            }, function (Builder|Dir $query) use ($component) {
+                return $query->filterOrderBy($component['orderby']);
             })
             ->limit($component['limit'])
+            ->withAllPublicRels()
             ->get()
-            ->map(function ($item) use ($component) {
+            ->map(function (Dir $dir) use ($component) {
                 if ($component['max_content'] !== null) {
-                    $item->content = mb_substr($item->content, 0, $component['max_content']);
+                    $dir->content = mb_substr($dir->content, 0, $component['max_content']);
                 }
 
-                return $item;
+                return $dir;
             });
     }
 
@@ -590,27 +564,24 @@ class DirRepo
      */
     public function countByDateAndGroup(): Collection
     {
-        /**
-         * @var \N1ebieski\IDir\Models\Payment\Dir\Payment
-         */
+        /** @var \N1ebieski\IDir\Models\Payment\Dir\Payment */
         $payment = $this->dir->payments()->make();
 
-        /**
-         * @var \N1ebieski\IDir\Models\Price
-         */
+        /** @var \N1ebieski\IDir\Models\Price */
         $price = $this->dir->group()->make()->prices()->make();
 
-        return $this->dir->selectRaw("YEAR(`d`.`created_at`) `year`, MONTH(`d`.`created_at`) `month`, IFNULL(`p2`.`group_id`, `d`.`group_id`) AS `first_group_id`, COUNT(*) AS `count`")
-            ->leftJoin("{$payment->getTable()} AS p1", function ($query) use ($payment) {
-                $query->on("p1.model_id", '=', "d.id")
+        return $this->dir->newQuery()
+            ->selectRaw("YEAR(`d`.`created_at`) `year`, MONTH(`d`.`created_at`) `month`, IFNULL(`p2`.`group_id`, `d`.`group_id`) AS `first_group_id`, COUNT(*) AS `count`")
+            ->leftJoin("{$payment->getTable()} AS p1", function (JoinClause $query) {
+                return $query->on("p1.model_id", '=', "d.id")
                     ->on(
                         'p1.created_at',
                         '=',
                         DB::raw('(SELECT MIN(`created_at`) FROM `payments` WHERE `model_id` = `p1`.`model_id` AND `model_type` = "' . $this->dir->getMorphClass() . '" AND `status` = ' . PaymentStatus::FINISHED . ')')
                     );
             })
-            ->leftJoin("{$price->getTable()} AS p2", function ($query) use ($price) {
-                $query->on('p2.id', '=', 'p1.order_id')
+            ->leftJoin("{$price->getTable()} AS p2", function (JoinClause $query) use ($price) {
+                return $query->on('p2.id', '=', 'p1.order_id')
                     ->where('p1.order_type', $price->getMorphClass());
             })
             ->from("{$this->dir->getTable()} AS d")

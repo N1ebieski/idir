@@ -1,46 +1,52 @@
 <?php
 
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is licenced under the Software License Agreement
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://intelekt.net.pl/pages/regulamin
+ *
+ * With the purchase or the installation of the software in your application
+ * you accept the licence agreement.
+ *
+ * @author    Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ * @copyright Since 2019 INTELEKT - Usługi Komputerowe Mariusz Wysokiński
+ * @license   https://intelekt.net.pl/pages/regulamin
+ */
+
 namespace N1ebieski\IDir\Rules\Codes;
 
 use Illuminate\Http\Request;
 use N1ebieski\IDir\Models\Code;
+use N1ebieski\IDir\Models\Price;
 use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Contracts\Translation\Translator as Lang;
 
-class CodesRule implements Rule
+abstract class CodesRule implements Rule
 {
-    /**
-     * [private description]
-     * @var Request
-     */
-    protected $request;
-
-    /**
-     * Undocumented variable
-     *
-     * @var Lang
-     */
-    protected $lang;
-
     /**
      * Undocumented function
      *
      * @param Request $request
      * @param Lang $lang
      */
-    public function __construct(Request $request, Lang $lang)
-    {
-        $this->request = $request;
-        $this->lang = $lang;
+    public function __construct(
+        protected Price $price,
+        protected Request $request,
+        protected Lang $lang
+    ) {
+        //
     }
 
     /**
-     * [validate description]
-     * @param  [type] $attribute  [description]
-     * @param  [type] $value      [description]
-     * @param  [type] $parameters [description]
-     * @param  [type] $validator  [description]
-     * @return [type]             [description]
+     *
+     * @param mixed $attribute
+     * @param mixed $value
+     * @param mixed $parameters
+     * @param mixed $validator
+     * @return bool
      */
     public function validate($attribute, $value, $parameters, $validator)
     {

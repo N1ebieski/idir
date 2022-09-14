@@ -1,7 +1,24 @@
 <?php
 
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is licenced under the Software License Agreement
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://intelekt.net.pl/pages/regulamin
+ *
+ * With the purchase or the installation of the software in your application
+ * you accept the licence agreement.
+ *
+ * @author    Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ * @copyright Since 2019 INTELEKT - Usługi Komputerowe Mariusz Wysokiński
+ * @license   https://intelekt.net.pl/pages/regulamin
+ */
+
 namespace N1ebieski\IDir\Services\Code;
 
+use Throwable;
 use Illuminate\Support\Carbon;
 use N1ebieski\IDir\Models\Code;
 use Illuminate\Database\DatabaseManager as DB;
@@ -9,38 +26,18 @@ use Illuminate\Database\DatabaseManager as DB;
 class CodeService
 {
     /**
-     * [private description]
-     * @var Code
-     */
-    protected $code;
-
-    /**
-     * Undocumented variable
-     *
-     * @var Carbon
-     */
-    protected $carbon;
-
-    /**
-     * Undocumented variable
-     *
-     * @var DB
-     */
-    protected $db;
-
-    /**
      * Undocumented function
      *
      * @param Code $code
      * @param Carbon $carbon
      * @param DB $db
      */
-    public function __construct(Code $code, Carbon $carbon, DB $db)
-    {
-        $this->code = $code;
-
-        $this->carbon = $carbon;
-        $this->db = $db;
+    public function __construct(
+        protected Code $code,
+        protected Carbon $carbon,
+        protected DB $db
+    ) {
+        //
     }
 
     /**
@@ -56,10 +53,13 @@ class CodeService
                 return;
             }
 
-            $this->clear();
+            $this->clear($attributes['price']);
 
-            if (isset($attributes['codes'])) {
-                $this->createGlobal($attributes['codes']);
+            if (array_key_exists('codes', $attributes)) {
+                $this->createGlobal([
+                    'price' => $attributes['price'],
+                    'codes' => $attributes['codes']
+                ]);
             }
         });
     }
@@ -71,11 +71,13 @@ class CodeService
     public function createGlobal(array $attributes): void
     {
         $this->db->transaction(function () use ($attributes) {
-            foreach ($attributes as $attribute) {
+            $codes = [];
+
+            foreach ($attributes['codes'] as $attribute) {
                 // Create attributes manually, no within model because multiple
                 // models may be huge performance impact
                 $codes[] = [
-                    'price_id' => $this->code->price->id,
+                    'price_id' => $attributes['price'],
                     'code' => $attribute['code'],
                     'quantity' => $attribute['quantity'],
                     'created_at' => $this->carbon->now(),
@@ -83,18 +85,20 @@ class CodeService
                 ];
             }
 
-            $this->code->insertOrIgnore($codes);
+            $this->code->newQuery()->insertOrIgnore($codes);
         });
     }
 
     /**
-     * [clear description]
-     * @return int [description]
+     *
+     * @param int $priceId
+     * @return int
+     * @throws Throwable
      */
-    public function clear(): int
+    public function clear(int $priceId): int
     {
-        return $this->db->transaction(function () {
-            return $this->code->where('price_id', $this->code->price->id)->delete();
+        return $this->db->transaction(function () use ($priceId) {
+            return $this->code->where('price_id', $priceId)->delete();
         });
     }
 
@@ -106,6 +110,6 @@ class CodeService
      */
     protected function isSync(array $attributes): bool
     {
-        return isset($attributes['sync']) || empty($attributes);
+        return isset($attributes['sync']);
     }
 }

@@ -1,10 +1,27 @@
 <?php
 
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is licenced under the Software License Agreement
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://intelekt.net.pl/pages/regulamin
+ *
+ * With the purchase or the installation of the software in your application
+ * you accept the licence agreement.
+ *
+ * @author    Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ * @copyright Since 2019 INTELEKT - Usługi Komputerowe Mariusz Wysokiński
+ * @license   https://intelekt.net.pl/pages/regulamin
+ */
+
 namespace N1ebieski\IDir\Listeners\Dir;
 
 use Illuminate\Contracts\Mail\Mailer;
 use N1ebieski\IDir\Mail\Dir\CompletedMail;
 use Illuminate\Contracts\Foundation\Application as App;
+use N1ebieski\IDir\Events\Interfaces\Dir\DirEventInterface;
 use Illuminate\Contracts\Debug\ExceptionHandler as Exception;
 
 class CompletedNotification
@@ -12,30 +29,9 @@ class CompletedNotification
     /**
      * Undocumented variable
      *
-     * @var object
+     * @var DirEventInterface
      */
     protected $event;
-
-    /**
-     * Undocumented variable
-     *
-     * @var Mailer
-     */
-    protected $mailer;
-
-    /**
-     * Undocumented variable
-     *
-     * @var App
-     */
-    protected $app;
-
-    /**
-     * Undocumented variable
-     *
-     * @var Exception
-     */
-    protected $exception;
 
     /**
      * Undocumented function
@@ -44,11 +40,12 @@ class CompletedNotification
      * @param App $app
      * @param Exception $exception
      */
-    public function __construct(Mailer $mailer, App $app, Exception $exception)
-    {
-        $this->mailer = $mailer;
-        $this->app = $app;
-        $this->exception = $exception;
+    public function __construct(
+        protected Mailer $mailer,
+        protected App $app,
+        protected Exception $exception
+    ) {
+        //
     }
 
     /**
@@ -64,10 +61,10 @@ class CompletedNotification
     /**
      * Handle the event.
      *
-     * @param  object  $event
+     * @param  DirEventInterface  $event
      * @return void
      */
-    public function handle($event)
+    public function handle(DirEventInterface $event)
     {
         $this->event = $event;
 

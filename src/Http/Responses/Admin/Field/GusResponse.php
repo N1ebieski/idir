@@ -1,5 +1,21 @@
 <?php
 
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is licenced under the Software License Agreement
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://intelekt.net.pl/pages/regulamin
+ *
+ * With the purchase or the installation of the software in your application
+ * you accept the licence agreement.
+ *
+ * @author    Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ * @copyright Since 2019 INTELEKT - Usługi Komputerowe Mariusz Wysokiński
+ * @license   https://intelekt.net.pl/pages/regulamin
+ */
+
 namespace N1ebieski\IDir\Http\Responses\Admin\Field;
 
 use Illuminate\Http\JsonResponse;
@@ -13,25 +29,6 @@ use N1ebieski\IDir\Http\Responses\Admin\Field\JsonResponseFactory;
 class GusResponse implements JsonResponseFactory
 {
     /**
-     * [private description]
-     * @var Response
-     */
-    protected $response;
-
-    /**
-     * [protected description]
-     * @var Translator
-     */
-    protected $lang;
-
-    /**
-     * Undocumented variable
-     *
-     * @var FieldData
-     */
-    protected $fieldData;
-
-    /**
      * Undocumented function
      *
      * @param Response $response
@@ -39,14 +36,11 @@ class GusResponse implements JsonResponseFactory
      * @param FieldData $fieldData
      */
     public function __construct(
-        Response $response,
-        Translator $lang,
-        FieldData $fieldData
+        protected Response $response,
+        protected Translator $lang,
+        protected FieldData $fieldData
     ) {
-        $this->response = $response;
-        $this->lang = $lang;
-
-        $this->fieldData = $fieldData;
+        //
     }
 
     /**

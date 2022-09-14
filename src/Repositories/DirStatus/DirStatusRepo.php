@@ -1,58 +1,44 @@
 <?php
 
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is licenced under the Software License Agreement
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://intelekt.net.pl/pages/regulamin
+ *
+ * With the purchase or the installation of the software in your application
+ * you accept the licence agreement.
+ *
+ * @author    Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ * @copyright Since 2019 INTELEKT - Usługi Komputerowe Mariusz Wysokiński
+ * @license   https://intelekt.net.pl/pages/regulamin
+ */
+
 namespace N1ebieski\IDir\Repositories\DirStatus;
 
 use Closure;
 use Carbon\Carbon;
+use N1ebieski\IDir\Models\Dir;
 use N1ebieski\IDir\Models\DirStatus;
+use Illuminate\Database\Eloquent\Builder;
 use N1ebieski\IDir\ValueObjects\Dir\Status;
 use Illuminate\Contracts\Config\Repository as Config;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class DirStatusRepo
 {
-    /**
-     * [private description]
-     * @var DirStatus
-     */
-    protected $dirStatus;
-
     /**
      * [__construct description]
      * @param DirStatus $dirStatus [description]
      * @param Config   $config   [description]
      */
-    public function __construct(DirStatus $dirStatus, Config $config)
-    {
-        $this->dirStatus = $dirStatus;
-
-        $this->config = $config;
-    }
-
-    /**
-     * [attemptNow description]
-     * @return bool [description]
-     */
-    public function attemptedNow(): bool
-    {
-        return $this->dirStatus->update(['attempted_at' => Carbon::now()]);
-    }
-
-    /**
-     * [resetAttempts description]
-     * @return bool [description]
-     */
-    public function resetAttempts(): bool
-    {
-        return $this->dirStatus->update(['attempts' => 0]);
-    }
-
-    /**
-     * [incrementAttempts description]
-     * @return int [description]
-     */
-    public function incrementAttempts(): int
-    {
-        return $this->dirStatus->increment('attempts');
+    public function __construct(
+        protected DirStatus $dirStatus,
+        protected Config $config
+    ) {
+        //
     }
 
     /**
@@ -64,19 +50,19 @@ class DirStatusRepo
      */
     public function chunkAvailableHasUrlByAttemptedAt(Closure $callback, string $timestamp): bool
     {
-        return $this->dirStatus
-            ->whereHas('dir', function ($query) {
-                $query->whereIn('status', [Status::ACTIVE, Status::STATUS_INACTIVE])
+        return $this->dirStatus->newQuery()
+            ->whereHas('dir', function (BelongsTo|Builder|Dir $query) {
+                return $query->whereIn('status', [Status::ACTIVE, Status::STATUS_INACTIVE])
                     ->whereNotNull('url');
             })
-            ->where(function ($query) use ($timestamp) {
-                $query->whereDate(
+            ->where(function (Builder $query) use ($timestamp) {
+                return $query->whereDate(
                     'attempted_at',
                     '<',
                     Carbon::parse($timestamp)->format('Y-m-d')
                 )
-                ->orWhere(function ($query) use ($timestamp) {
-                    $query->whereDate(
+                ->orWhere(function (Builder $query) use ($timestamp) {
+                    return $query->whereDate(
                         'attempted_at',
                         '=',
                         Carbon::parse($timestamp)->format('Y-m-d')

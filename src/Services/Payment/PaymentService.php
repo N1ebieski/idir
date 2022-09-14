@@ -116,4 +116,26 @@ class PaymentService implements CreateInterface, StatusUpdateInterface
             ]);
         });
     }
+
+    /**
+     * [completed description]
+     * @return bool [description]
+     */
+    public function finished(): bool
+    {
+        return $this->db->transaction(function () {
+            return $this->payment->update(['status' => Status::FINISHED]);
+        });
+    }
+
+    /**
+     * [paid description]
+     * @return bool [description]
+     */
+    public function paid(): bool
+    {
+        return $this->db->transaction(function () {        
+            return $this->payment->update(['status' => Status::UNFINISHED]);
+        });
+    }    
 }

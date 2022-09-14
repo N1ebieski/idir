@@ -1,5 +1,21 @@
 <?php
 
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is licenced under the Software License Agreement
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://intelekt.net.pl/pages/regulamin
+ *
+ * With the purchase or the installation of the software in your application
+ * you accept the licence agreement.
+ *
+ * @author    Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ * @copyright Since 2019 INTELEKT - Usługi Komputerowe Mariusz Wysokiński
+ * @license   https://intelekt.net.pl/pages/regulamin
+ */
+
 namespace N1ebieski\IDir\Models\Traits;
 
 use N1ebieski\IDir\Models\Group;
@@ -19,7 +35,7 @@ trait HasFilterable
      */
     public function scopeFilterVisible(Builder $query, int $visible = null): ?Builder
     {
-        return $query->when($visible !== null, function ($query) use ($visible) {
+        return $query->when(!is_null($visible), function (Builder $query) use ($visible) {
             return $query->where("{$this->getTable()}.visible", $visible);
         });
     }
@@ -32,9 +48,9 @@ trait HasFilterable
      */
     public function scopeFilterRegion(Builder $query, Region $region = null): ?Builder
     {
-        return $query->when($region !== null, function ($query) use ($region) {
-            return $query->whereHas('regions', function ($query) use ($region) {
-                $query->where('id', $region->id);
+        return $query->when(!is_null($region), function (Builder $query) use ($region) {
+            return $query->whereHas('regions', function (Builder $query) use ($region) {
+                return $query->where('id', $region->id);
             });
         });
     }
@@ -47,8 +63,8 @@ trait HasFilterable
      */
     public function scopeFilterGroup(Builder $query, Group $group = null): ?Builder
     {
-        return $query->when($group !== null, function ($query) use ($group) {
-            $query->where("{$this->getTable()}.group_id", $group->id);
+        return $query->when(!is_null($group), function (Builder $query) use ($group) {
+            return $query->where("{$this->getTable()}.group_id", $group->id);
         });
     }
 
@@ -60,7 +76,7 @@ trait HasFilterable
      */
     public function scopeFilterType(Builder $query, string $type = null): ?Builder
     {
-        return $query->when($type !== null, function ($query) use ($type) {
+        return $query->when(!is_null($type), function (Builder $query) use ($type) {
             return $query->where("{$this->getTable()}.type", $type);
         });
     }

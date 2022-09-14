@@ -1,5 +1,21 @@
 <?php
 
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is licenced under the Software License Agreement
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://intelekt.net.pl/pages/regulamin
+ *
+ * With the purchase or the installation of the software in your application
+ * you accept the licence agreement.
+ *
+ * @author    Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ * @copyright Since 2019 INTELEKT - Usługi Komputerowe Mariusz Wysokiński
+ * @license   https://intelekt.net.pl/pages/regulamin
+ */
+
 namespace N1ebieski\IDir\Rules;
 
 use Illuminate\Database\Query\Builder;
@@ -12,68 +28,36 @@ class UniqueUrlRule implements Rule
     /**
      * Undocumented variable
      *
-     * @var DB
-     */
-    protected $db;
-
-    /**
-     * Undocumented variable
-     *
-     * @var Lang
-     */
-    protected $lang;
-
-    /**
-     * [private description]
-     * @var string
-     */
-    protected $table;
-
-    /**
-     * [protected description]
-     * @var string
-     */
-    protected $column;
-
-    /**
-     * Undocumented variable
-     *
-     * @var int
-     */
-    protected $ignore;
-
-    /**
-     * Undocumented variable
-     *
      * @var array
      */
     protected $begins = ['http://', 'http://www.', 'https://', 'https://www.'];
 
     /**
-     * Undocumented function
      *
      * @param DB $db
+     * @param Lang $lang
      * @param string $table
      * @param string $column
-     * @param integer $ignore
+     * @param null|int $ignore
+     * @return void
      */
-    public function __construct(DB $db, Lang $lang, string $table, string $column, int $ignore = null)
-    {
-        $this->db = $db;
-        $this->lang = $lang;
-
-        $this->table = $table;
-        $this->column = $column;
-        $this->ignore = $ignore;
+    public function __construct(
+        protected DB $db,
+        protected Lang $lang,
+        protected string $table,
+        protected string $column,
+        protected ?int $ignore = null
+    ) {
+        //
     }
 
     /**
-     * [validate description]
-     * @param  [type] $attribute  [description]
-     * @param  [type] $value      [description]
-     * @param  [type] $parameters [description]
-     * @param  [type] $validator  [description]
-     * @return [type]             [description]
+     *
+     * @param mixed $attribute
+     * @param mixed $value
+     * @param mixed $parameters
+     * @param mixed $validator
+     * @return bool
      */
     public function validate($attribute, $value, $parameters, $validator)
     {
@@ -89,7 +73,7 @@ class UniqueUrlRule implements Rule
      */
     public function passes($attribute, $value)
     {
-        $url = str_replace('www.', '', parse_url($value, PHP_URL_HOST));
+        $url = str_replace('www.', '', parse_url($value, PHP_URL_HOST) ?: '');
 
         return $this->db->table($this->table)
             ->where(function (Builder $query) use ($url) {

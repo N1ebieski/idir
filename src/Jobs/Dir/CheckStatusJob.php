@@ -1,5 +1,21 @@
 <?php
 
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is licenced under the Software License Agreement
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://intelekt.net.pl/pages/regulamin
+ *
+ * With the purchase or the installation of the software in your application
+ * you accept the licence agreement.
+ *
+ * @author    Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ * @copyright Since 2019 INTELEKT - Usługi Komputerowe Mariusz Wysokiński
+ * @license   https://intelekt.net.pl/pages/regulamin
+ */
+
 namespace N1ebieski\IDir\Jobs\Dir;
 
 use Throwable;
@@ -12,10 +28,10 @@ use Psr\Http\Message\ResponseInterface;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use N1ebieski\IDir\Repositories\Dir\DirRepo;
+use N1ebieski\IDir\Services\Dir\DirService;
 use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Contracts\Config\Repository as Config;
-use N1ebieski\IDir\Repositories\DirStatus\DirStatusRepo;
+use N1ebieski\IDir\Services\DirStatus\DirStatusService;
 use N1ebieski\IDir\Http\Clients\DirStatus\DirStatusClient;
 
 class CheckStatusJob implements ShouldQueue
@@ -47,21 +63,15 @@ class CheckStatusJob implements ShouldQueue
 
     /**
      * [protected description]
-     * @var DirStatus
+     * @var DirStatusService
      */
-    protected $dirStatus;
+    protected $dirStatusService;
 
     /**
      * [protected description]
-     * @var DirStatusRepo
+     * @var DirService
      */
-    protected $dirStatusRepo;
-
-    /**
-     * [protected description]
-     * @var DirRepo
-     */
-    protected $dirRepo;
+    protected $dirService;
 
     /**
      * Undocumented variable
@@ -90,21 +100,21 @@ class CheckStatusJob implements ShouldQueue
      * @param DirStatus $dirStatus
      * @return void
      */
-    public function __construct(DirStatus $dirStatus)
+    public function __construct(protected DirStatus $dirStatus)
     {
-        $this->dirStatus = $dirStatus;
+        //
     }
 
     /**
      * Undocumented function
      *
-     * @return string
+     * @return string|null
      */
-    public function getLastUrlFromRedirect(): string
+    public function getLastUrlFromRedirect(): ?string
     {
         $redirects = $this->response->getHeader(\GuzzleHttp\RedirectMiddleware::HISTORY_HEADER);
 
-        return end($redirects);
+        return end($redirects) ?: null;
     }
 
     /**
@@ -173,7 +183,8 @@ class CheckStatusJob implements ShouldQueue
             count($this->config->get('idir.dir.status.parked_domains')) > 0
             && $redirect = $this->getLastUrlFromRedirect()
         ) {
-            return preg_match('/(' . $this->getParkedDomainsAsString() . ')/', $redirect);
+            return preg_match('/(' . $this->getParkedDomainsAsString() . ')/', $redirect) ?
+                true : false;
         }
 
         return false;
@@ -196,9 +207,9 @@ class CheckStatusJob implements ShouldQueue
      */
     protected function executeValidStatus(): void
     {
-        $this->dirStatusRepo->resetAttempts();
+        $this->dirStatusService->resetAttempts();
 
-        $this->dirRepo->activate();
+        $this->dirService->activate();
     }
 
     /**
@@ -208,10 +219,10 @@ class CheckStatusJob implements ShouldQueue
      */
     protected function executeInvalidStatus(): void
     {
-        $this->dirStatusRepo->incrementAttempts();
+        $this->dirStatusService->incrementAttempts();
 
         if ($this->isMaxAttempt()) {
-            $this->dirRepo->deactivateByStatus();
+            $this->dirService->deactivateByStatus();
         }
     }
 
@@ -229,18 +240,16 @@ class CheckStatusJob implements ShouldQueue
         Config $config,
         Str $str
     ): void {
-        $this->dirStatusRepo = $this->dirStatus->makeRepo();
-        $this->dirRepo = $this->dirStatus->dir->makeRepo();
+        $this->dirStatusService = $this->dirStatus->makeService();
+        $this->dirService = $this->dirStatus->dir->makeService();
 
         $this->client = $client;
         $this->carbon = $carbon;
         $this->str = $str;
         $this->config = $config;
 
-        $this->parked_domains = $config->get('idir.dir.status.parked_domains');
-
         if ($this->isAttempt()) {
-            $this->dirStatusRepo->attemptedNow();
+            $this->dirStatusService->attemptedNow();
 
             if ($this->validateStatus()) {
                 $this->executeValidStatus();

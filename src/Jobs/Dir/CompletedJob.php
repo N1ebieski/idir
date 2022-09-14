@@ -1,5 +1,21 @@
 <?php
 
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is licenced under the Software License Agreement
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://intelekt.net.pl/pages/regulamin
+ *
+ * With the purchase or the installation of the software in your application
+ * you accept the licence agreement.
+ *
+ * @author    Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ * @copyright Since 2019 INTELEKT - Usługi Komputerowe Mariusz Wysokiński
+ * @license   https://intelekt.net.pl/pages/regulamin
+ */
+
 namespace N1ebieski\IDir\Jobs\Dir;
 
 use Throwable;
@@ -10,7 +26,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use N1ebieski\IDir\Repositories\Dir\DirRepo;
+use N1ebieski\IDir\Services\Dir\DirService;
 use N1ebieski\IDir\Events\Job\Dir\CompletedEvent;
 use Illuminate\Contracts\Events\Dispatcher as Event;
 use Illuminate\Contracts\Foundation\Application as App;
@@ -31,15 +47,9 @@ class CompletedJob implements ShouldQueue
 
     /**
      * [protected description]
-     * @var Dir
+     * @var DirService
      */
-    protected $dir;
-
-    /**
-     * [protected description]
-     * @var DirRepo
-     */
-    protected $dirRepo;
+    protected $dirService;
 
     /**
      * Undocumented variable
@@ -68,9 +78,9 @@ class CompletedJob implements ShouldQueue
      * @param Dir $dir
      * @return void
      */
-    public function __construct(Dir $dir)
+    public function __construct(protected Dir $dir)
     {
-        $this->dir = $dir;
+        //
     }
 
     /**
@@ -102,7 +112,7 @@ class CompletedJob implements ShouldQueue
         Carbon $carbon,
         Event $event
     ): void {
-        $this->dirRepo = $this->dir->makeRepo();
+        $this->dirService = $this->dir->makeService();
 
         $this->app = $app;
         $this->carbon = $carbon;
@@ -125,7 +135,7 @@ class CompletedJob implements ShouldQueue
      */
     protected function executeResult(): void
     {
-        $this->dirRepo->nullablePrivileged();
+        $this->dirService->nullablePrivileged();
 
         if ($this->dir->group->alt_id === null) {
             $this->executeDeactivation();
@@ -143,7 +153,7 @@ class CompletedJob implements ShouldQueue
      */
     protected function executeDeactivation(): void
     {
-        $this->dirRepo->deactivateByPayment();
+        $this->dirService->deactivateByPayment();
     }
 
     /**

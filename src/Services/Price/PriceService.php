@@ -1,89 +1,98 @@
 <?php
 
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is licenced under the Software License Agreement
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://intelekt.net.pl/pages/regulamin
+ *
+ * With the purchase or the installation of the software in your application
+ * you accept the licence agreement.
+ *
+ * @author    Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ * @copyright Since 2019 INTELEKT - Usługi Komputerowe Mariusz Wysokiński
+ * @license   https://intelekt.net.pl/pages/regulamin
+ */
+
 namespace N1ebieski\IDir\Services\Price;
 
+use Throwable;
+use N1ebieski\IDir\Models\Code;
 use N1ebieski\IDir\Models\Price;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\DatabaseManager as DB;
-use N1ebieski\ICore\Services\Interfaces\CreateInterface;
-use N1ebieski\ICore\Services\Interfaces\DeleteInterface;
-use N1ebieski\ICore\Services\Interfaces\UpdateInterface;
 
-class PriceService implements CreateInterface, UpdateInterface, DeleteInterface
+class PriceService
 {
-    /**
-     * Model
-     * @var Price
-     */
-    protected $price;
-
-    /**
-     * Undocumented variable
-     *
-     * @var DB
-     */
-    protected $db;
-
     /**
      * Undocumented function
      *
      * @param Price $price
      * @param DB $db
      */
-    public function __construct(Price $price, DB $db)
-    {
-        $this->price = $price;
-
-        $this->db = $db;
+    public function __construct(
+        protected Price $price,
+        protected DB $db
+    ) {
+        //
     }
 
     /**
-     * [create description]
-     * @param  array $attributes [description]
-     * @return Model             [description]
+     *
+     * @param array $attributes
+     * @return Price
+     * @throws Throwable
      */
-    public function create(array $attributes): Model
-    {
-        return $this->db->transaction(function () use ($attributes) {
-            $price = $this->price->make($attributes);
-
-            $price->group()->associate($attributes['group']);
-
-            $price->save();
-
-            if (array_key_exists('codes', $attributes)) {
-                $this->price->codes()->make()
-                    ->setRelations(['price' => $price])
-                    ->makeService()
-                    ->sync($attributes['codes'] ?? []);
-            }
-
-            return $price;
-        });
-    }
-
-    /**
-     * [update description]
-     * @param  array $attributes [description]
-     * @return bool              [description]
-     */
-    public function update(array $attributes): bool
+    public function create(array $attributes): Price
     {
         return $this->db->transaction(function () use ($attributes) {
             $this->price->fill($attributes);
 
+            $this->price->group()->associate($attributes['group']);
+
+            $this->price->save();
+
             if (array_key_exists('codes', $attributes)) {
-                $this->price->codes()->make()
-                    ->setRelations(['price' => $this->price])
-                    ->makeService()
-                    ->sync($attributes['codes'] ?? []);
+                /** @var Code */
+                $code = $this->price->codes()->make();
+
+                $code->makeService()->sync(array_merge([
+                    'price' => $this->price->id
+                ], $attributes['codes']));
             }
+
+            return $this->price;
+        });
+    }
+
+    /**
+     *
+     * @param array $attributes
+     * @return Price
+     * @throws Throwable
+     */
+    public function update(array $attributes): Price
+    {
+        return $this->db->transaction(function () use ($attributes) {
+            $this->price->fill($attributes);
 
             if (array_key_exists('group', $attributes)) {
                 $this->price->group()->associate($attributes['group']);
             }
 
-            return $this->price->save();
+            $this->price->save();
+
+            if (array_key_exists('codes', $attributes)) {
+                /** @var Code */
+                $code = $this->price->codes()->make();
+
+                $code->makeService()->sync(array_merge([
+                    'price' => $this->price->id
+                ], $attributes['codes']));
+            }
+
+            return $this->price;
         });
     }
 

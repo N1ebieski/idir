@@ -1,5 +1,21 @@
 <?php
 
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is licenced under the Software License Agreement
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://intelekt.net.pl/pages/regulamin
+ *
+ * With the purchase or the installation of the software in your application
+ * you accept the licence agreement.
+ *
+ * @author    Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ * @copyright Since 2019 INTELEKT - Usługi Komputerowe Mariusz Wysokiński
+ * @license   https://intelekt.net.pl/pages/regulamin
+ */
+
 namespace N1ebieski\IDir\Models;
 
 use Carbon\Carbon;
@@ -28,11 +44,79 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use N1ebieski\IDir\Database\Factories\Group\GroupFactory;
 
 /**
+ * N1ebieski\IDir\Models\Group
+ *
  * @property Slug $slug
  * @property Visible $visible
  * @property ApplyStatus $apply_status
  * @property Url $url
  * @property Backlink $backlink
+ * @property string $color
+ * @property int $id
+ * @property int|null $alt_id
+ * @property string $name
+ * @property string|null $desc
+ * @property string|null $border
+ * @property int $max_cats
+ * @property int|null $max_models
+ * @property int|null $max_models_daily
+ * @property int $position
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read Group|null $alt
+ * @property-read \Illuminate\Database\Eloquent\Collection|\N1ebieski\IDir\Models\Dir[] $dirs
+ * @property-read int|null $dirs_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\N1ebieski\IDir\Models\Dir[] $dirsToday
+ * @property-read int|null $dirs_today_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\N1ebieski\IDir\Models\Field\Group\Field[] $fields
+ * @property-read int|null $fields_count
+ * @property-read string $created_at_diff
+ * @property-read string $updated_at_diff
+ * @property-read \Illuminate\Database\Eloquent\Collection|\N1ebieski\IDir\Models\Price[] $prices
+ * @property-read int|null $prices_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\N1ebieski\IDir\Models\Privilege[] $privileges
+ * @property-read int|null $privileges_count
+ * @method static Builder|Group exceptDefault()
+ * @method static \N1ebieski\IDir\Database\Factories\Group\GroupFactory factory(...$parameters)
+ * @method static Builder|Group filterAuthor(?\N1ebieski\ICore\Models\User $author = null)
+ * @method static Builder|Group filterCategory(?\N1ebieski\ICore\Models\Category\Category $category = null)
+ * @method static Builder|Group filterExcept(?array $except = null)
+ * @method static Builder|Group filterGroup(?\N1ebieski\IDir\Models\Group $group = null)
+ * @method static Builder|Group filterOrderBy(?string $orderby = null)
+ * @method static Builder|Group filterOrderBySearch(?string $search = null)
+ * @method static \Illuminate\Contracts\Pagination\LengthAwarePaginator filterPaginate(?int $paginate = null)
+ * @method static Builder|Group filterRegion(?\N1ebieski\IDir\Models\Region\Region $region = null)
+ * @method static Builder|Group filterReport(?int $report = null)
+ * @method static Builder|Group filterSearch(?string $search = null)
+ * @method static Builder|Group filterStatus(?int $status = null)
+ * @method static Builder|Group filterType(?string $type = null)
+ * @method static Builder|Group filterVisible(?int $visible = null)
+ * @method static Builder|Group findSimilarSlugs(string $attribute, array $config, string $slug)
+ * @method static Builder|Group newModelQuery()
+ * @method static Builder|Group newQuery()
+ * @method static Builder|Group obligatoryBacklink()
+ * @method static Builder|Group orderBySearch(string $term)
+ * @method static Builder|Group public()
+ * @method static Builder|Group query()
+ * @method static Builder|Group search(string $term)
+ * @method static Builder|Group whereAltId($value)
+ * @method static Builder|Group whereApplyStatus($value)
+ * @method static Builder|Group whereBacklink($value)
+ * @method static Builder|Group whereBorder($value)
+ * @method static Builder|Group whereCreatedAt($value)
+ * @method static Builder|Group whereDesc($value)
+ * @method static Builder|Group whereId($value)
+ * @method static Builder|Group whereMaxCats($value)
+ * @method static Builder|Group whereMaxModels($value)
+ * @method static Builder|Group whereMaxModelsDaily($value)
+ * @method static Builder|Group whereName($value)
+ * @method static Builder|Group wherePosition($value)
+ * @method static Builder|Group whereSlug($value)
+ * @method static Builder|Group whereUpdatedAt($value)
+ * @method static Builder|Group whereUrl($value)
+ * @method static Builder|Group whereVisible($value)
+ * @method static Builder|Group withUniqueSlugConstraints(\Illuminate\Database\Eloquent\Model $model, string $attribute, array $config, string $slug)
+ * @mixin \Eloquent
  */
 class Group extends Model
 {
@@ -48,7 +132,7 @@ class Group extends Model
     /**
      * The attributes that are mass assignable.
      *
-     * @var array
+     * @var array<string>
      */
     protected $fillable = [
         'name',
@@ -140,10 +224,10 @@ class Group extends Model
     }
 
     /**
-     * [siblings description]
-     * @return [type] [description]
+     *
+     * @return self
      */
-    public function siblings()
+    public function siblings(): self
     {
         return $this;
     }
@@ -231,10 +315,8 @@ class Group extends Model
     // Checkers
 
     /**
-     * Undocumented function
      *
-     * @param string $output
-     * @return boolean
+     * @return bool
      */
     public function hasEditorPrivilege(): bool
     {

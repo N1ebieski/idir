@@ -1,91 +1,36 @@
 <?php
 
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is licenced under the Software License Agreement
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://intelekt.net.pl/pages/regulamin
+ *
+ * With the purchase or the installation of the software in your application
+ * you accept the licence agreement.
+ *
+ * @author    Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ * @copyright Since 2019 INTELEKT - Usługi Komputerowe Mariusz Wysokiński
+ * @license   https://intelekt.net.pl/pages/regulamin
+ */
+
 namespace N1ebieski\IDir\Services\Dir;
 
 use Throwable;
 use Illuminate\Support\Carbon;
 use N1ebieski\IDir\Models\Dir;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Contracts\Session\Session;
+use N1ebieski\IDir\Models\Field\Dir\Field;
 use N1ebieski\IDir\ValueObjects\Dir\Status;
 use Illuminate\Contracts\Auth\Guard as Auth;
 use Illuminate\Database\DatabaseManager as DB;
 use N1ebieski\IDir\Services\User\AutoUserFactory;
-use Illuminate\Contracts\Container\Container as App;
 use N1ebieski\IDir\Services\Payment\Dir\PaymentFactory;
-use N1ebieski\ICore\Services\Interfaces\CreateInterface;
-use N1ebieski\ICore\Services\Interfaces\DeleteInterface;
-use N1ebieski\ICore\Services\Interfaces\UpdateInterface;
-use N1ebieski\ICore\Services\Interfaces\FullUpdateInterface;
-use N1ebieski\ICore\Services\Interfaces\GlobalDeleteInterface;
-use N1ebieski\ICore\Services\Interfaces\StatusUpdateInterface;
 
-/**
- *
- * @author Mariusz Wysokiński <kontakt@intelekt.net.pl>
- */
-class DirService implements
-    CreateInterface,
-    UpdateInterface,
-    StatusUpdateInterface,
-    FullUpdateInterface,
-    DeleteInterface,
-    GlobalDeleteInterface
+class DirService
 {
-    /**
-     * Model
-     * @var Dir
-     */
-    protected $dir;
-
-    /**
-     * Undocumented variable
-     *
-     * @var PaymentFactory
-     */
-    protected $paymentFactory;
-
-    /**
-     * Undocumented variable
-     *
-     * @var AutoUserFactory
-     */
-    protected $userFactory;
-
-    /**
-     * [private description]
-     * @var Session
-     */
-    protected $session;
-
-    /**
-     * Undocumented variable
-     *
-     * @var Carbon
-     */
-    protected $carbon;
-
-    /**
-     * Undocumented variable
-     *
-     * @var Auth
-     */
-    protected $auth;
-
-    /**
-     * Undocumented variable
-     *
-     * @var DB
-     */
-    protected $db;
-
-    /**
-     * Undocumented variable
-     *
-     * @var App
-     */
-    protected $app;
-
     /**
      * Undocumented function
      *
@@ -98,23 +43,15 @@ class DirService implements
      * @param DB $db
      */
     public function __construct(
-        Dir $dir,
-        PaymentFactory $paymentFactory,
-        AutoUserFactory $userFactory,
-        Session $session,
-        Carbon $carbon,
-        Auth $auth,
-        DB $db
+        protected Dir $dir,
+        protected PaymentFactory $paymentFactory,
+        protected AutoUserFactory $userFactory,
+        protected Session $session,
+        protected Carbon $carbon,
+        protected Auth $auth,
+        protected DB $db
     ) {
-        $this->dir = $dir;
-
-        $this->paymentFactory = $paymentFactory;
-        $this->userFactory = $userFactory;
-
-        $this->session = $session;
-        $this->carbon = $carbon;
-        $this->auth = $auth;
-        $this->db = $db;
+        //
     }
 
     /**
@@ -138,11 +75,13 @@ class DirService implements
      */
     public function createSession(array $attributes): void
     {
+        /** @var Field */
+        $field = $this->dir->fields()->make();
+
         $this->session->put($this->sessionName(), array_merge(
             $attributes,
             [
-                'field' => $this->dir->fields()->make()
-                    ->setRelations(['morph' => $this->dir])
+                'field' => $field->setRelations(['morph' => $this->dir])
                     ->makeService()
                     ->prepareValues($attributes['field'] ?? [])
             ]
@@ -169,11 +108,12 @@ class DirService implements
     }
 
     /**
-     * [create description]
-     * @param  array $attributes [description]
-     * @return Model             [description]
+     *
+     * @param array $attributes
+     * @return Dir
+     * @throws Throwable
      */
-    public function create(array $attributes): Model
+    public function create(array $attributes): Dir
     {
         return $this->db->transaction(function () use ($attributes) {
             $this->dir->fill($attributes);
@@ -371,6 +311,64 @@ class DirService implements
     {
         return $this->db->transaction(function () use ($status) {
             return $this->dir->update(['status' => $status]);
+        });
+    }
+
+    /**
+     * [nullPrivileged description]
+     * @return bool [description]
+     */
+    public function nullablePrivileged(): bool
+    {
+        return $this->db->transaction(function () {
+            return $this->dir->update([
+                'privileged_at' => null,
+                'privileged_to' => null
+            ]);
+        });
+    }
+
+    /**
+     * [deactivateByBacklink description]
+     * @return bool [description]
+     */
+    public function deactivateByBacklink(): bool
+    {
+        return $this->db->transaction(function () {
+            return $this->dir->update(['status' => Status::BACKLINK_INACTIVE]);
+        });
+    }
+
+    /**
+     * [deactivateByStatus description]
+     * @return bool [description]
+     */
+    public function deactivateByStatus(): bool
+    {
+        return $this->db->transaction(function () {
+            return $this->dir->update(['status' => Status::STATUS_INACTIVE]);
+        });
+    }
+
+    /**
+     * [deactivateByPayment description]
+     * @return bool [description]
+     */
+    public function deactivateByPayment(): bool
+    {
+        return $this->db->transaction(function () {
+            return $this->dir->update(['status' => Status::PAYMENT_INACTIVE]);
+        });
+    }
+
+    /**
+     * [activate description]
+     * @return bool [description]
+     */
+    public function activate(): bool
+    {
+        return $this->db->transaction(function () {
+            return $this->dir->update(['status' => Status::ACTIVE]);
         });
     }
 

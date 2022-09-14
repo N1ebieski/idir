@@ -1,5 +1,21 @@
 <?php
 
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is licenced under the Software License Agreement
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://intelekt.net.pl/pages/regulamin
+ *
+ * With the purchase or the installation of the software in your application
+ * you accept the licence agreement.
+ *
+ * @author    Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ * @copyright Since 2019 INTELEKT - Usługi Komputerowe Mariusz Wysokiński
+ * @license   https://intelekt.net.pl/pages/regulamin
+ */
+
 namespace N1ebieski\IDir\Http\Requests\Api\Dir;
 
 use Illuminate\Support\Str;
@@ -187,6 +203,9 @@ class UpdateRequest extends FormRequest
      */
     public function rules()
     {
+        /** @var Link */
+        $link = Link::find($this->input('backlink'));
+
         return array_merge(
             [
                 'title' => 'bail|string|between:3,' . Config::get('idir.dir.max_title'),
@@ -272,7 +291,7 @@ class UpdateRequest extends FormRequest
                         : 'regex:/^(https|http):\/\/([\da-z\.-]+)(\.[a-z]{2,6})/',
                     $this->group->backlink->isActive() && $this->has('backlink') ?
                         App::make('N1ebieski\\IDir\\Rules\\BacklinkRule', [
-                            'link' => Link::find($this->input('backlink'))->url
+                            'link' => $link->url
                         ]) : null
                 ]
             ],
@@ -353,6 +372,7 @@ class UpdateRequest extends FormRequest
                 'words' => str_replace('|', ', ', $this->bans_words)
             ]),
             'url.not_regex' => 'This address url is banned.',
+            // @phpstan-ignore-next-line
             'backlink_url.regex' => Lang::get('validation.regex') . ' ' . Lang::get('idir::validation.backlink_url')
         ];
     }

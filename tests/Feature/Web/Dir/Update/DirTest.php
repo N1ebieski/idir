@@ -57,25 +57,15 @@ class DirTest extends TestCase
         foreach (FieldType::getAvailable() as $type) {
             $field = Field::makeFactory()->public()->hasAttached($group, [], 'morphs')->{$type}()->create();
 
-            switch ($field->type) {
-                case FieldType::INPUT:
-                case FieldType::TEXTAREA:
-                    $fields['field'][$field->id] = 'Cupidatat magna enim officia non sunt esse qui Lorem quis.';
-                    break;
+            $fields['field'][$field->id] = match ($field->type) {
+                FieldType::INPUT, FieldType::TEXTAREA => 'Cupidatat magna enim officia non sunt esse qui Lorem quis.',
 
-                case FieldType::SELECT:
-                    $fields['field'][$field->id] = $field->options->options[0];
-                    break;
+                FieldType::SELECT => $field->options->options[0],
 
-                case FieldType::MULTISELECT:
-                case FieldType::CHECKBOX:
-                    $fields['field'][$field->id] = array_slice($field->options->options, 0, 2);
-                    break;
+                FieldType::MULTISELECT, FieldType::CHECKBOX => array_slice($field->options->options, 0, 2),
 
-                case FieldType::IMAGE:
-                    $fields['field'][$field->id] = UploadedFile::fake()->image('avatar.jpg', 500, 200)->size(1000);
-                    break;
-            }
+                FieldType::IMAGE => UploadedFile::fake()->image('avatar.jpg', 500, 200)->size(1000)
+            };
         }
 
         return $fields;

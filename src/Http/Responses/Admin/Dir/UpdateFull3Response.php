@@ -1,5 +1,21 @@
 <?php
 
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is licenced under the Software License Agreement
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://intelekt.net.pl/pages/regulamin
+ *
+ * With the purchase or the installation of the software in your application
+ * you accept the licence agreement.
+ *
+ * @author    Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ * @copyright Since 2019 INTELEKT - Usługi Komputerowe Mariusz Wysokiński
+ * @license   https://intelekt.net.pl/pages/regulamin
+ */
+
 namespace N1ebieski\IDir\Http\Responses\Admin\Dir;
 
 use N1ebieski\IDir\Models\Dir;
@@ -14,32 +30,6 @@ use N1ebieski\IDir\Http\Responses\Admin\Dir\RedirectResponseFactory;
 class UpdateFull3Response implements RedirectResponseFactory
 {
     /**
-     * [private description]
-     * @var ResponseFactory
-     */
-    protected $response;
-
-    /**
-     * [private description]
-     * @var Config
-     */
-    protected $config;
-
-    /**
-     * Undocumented variable
-     *
-     * @var Lang
-     */
-    protected $lang;
-
-    /**
-     * Undocumented variable
-     *
-     * @var URL
-     */
-    protected $url;
-
-    /**
      * Undocumented function
      *
      * @param ResponseFactory $response
@@ -47,12 +37,13 @@ class UpdateFull3Response implements RedirectResponseFactory
      * @param Lang $lang
      * @param URL $url
      */
-    public function __construct(ResponseFactory $response, Config $config, Lang $lang, URL $url)
-    {
-        $this->response = $response;
-        $this->config = $config;
-        $this->lang = $lang;
-        $this->url = $url;
+    public function __construct(
+        protected ResponseFactory $response,
+        protected Config $config,
+        protected Lang $lang,
+        protected URL $url
+    ) {
+        //
     }
 
     /**
@@ -63,18 +54,22 @@ class UpdateFull3Response implements RedirectResponseFactory
      */
     public function makeResponse(Dir $dir): RedirectResponse
     {
-        switch ($dir->status->getValue()) {
-            case Status::INACTIVE:
-                return $this->response->redirectToRoute('admin.dir.index')
-                    ->with('success', $this->lang->get('idir::dirs.success.update.' . Status::INACTIVE));
-            case Status::ACTIVE:
-                return $this->response->redirectToRoute('admin.dir.index')
-                    ->with('success', $this->lang->get('idir::dirs.success.update.' . Status::ACTIVE));
-            case Status::PAYMENT_INACTIVE:
-                return $this->response->redirectToRoute('admin.payment.dir.show', [
+        /** @var int */
+        $status = $dir->status->getValue();
+
+        return match ($dir->status->getValue()) {
+            Status::INACTIVE => $this->response->redirectToRoute('admin.dir.index')
+                ->with('success', $this->lang->get('idir::dirs.success.update.' . Status::INACTIVE)),
+
+            Status::ACTIVE => $this->response->redirectToRoute('admin.dir.index')
+                ->with('success', $this->lang->get('idir::dirs.success.update.' . Status::ACTIVE)),
+
+            Status::PAYMENT_INACTIVE => $this->response->redirectToRoute('admin.payment.dir.show', [
                     $dir->payment->uuid,
                     $dir->payment->driver
-                ]);
-        }
+                ]),
+
+            default => throw new \Exception("No response was found for the status '{$status}'")
+        };
     }
 }

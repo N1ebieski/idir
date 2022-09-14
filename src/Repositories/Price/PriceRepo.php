@@ -1,37 +1,51 @@
 <?php
 
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is licenced under the Software License Agreement
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://intelekt.net.pl/pages/regulamin
+ *
+ * With the purchase or the installation of the software in your application
+ * you accept the licence agreement.
+ *
+ * @author    Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ * @copyright Since 2019 INTELEKT - Usługi Komputerowe Mariusz Wysokiński
+ * @license   https://intelekt.net.pl/pages/regulamin
+ */
+
 namespace N1ebieski\IDir\Repositories\Price;
 
+use InvalidArgumentException;
 use N1ebieski\IDir\Models\Code;
 use N1ebieski\IDir\Models\Price;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class PriceRepo
 {
     /**
-     * [private description]
-     * @var Price
-     */
-    protected $price;
-
-    /**
      * [__construct description]
      * @param Price $price [description]
      */
-    public function __construct(Price $price)
+    public function __construct(protected Price $price)
     {
-        $this->price = $price;
+        //
     }
 
     /**
-     * [paginate description]
-     * @param  array        $filter [description]
-     * @return LengthAwarePaginator [description]
+     *
+     * @param array $filter
+     * @return LengthAwarePaginator
+     * @throws InvalidArgumentException
      */
     public function paginateByFilter(array $filter): LengthAwarePaginator
     {
-        return $this->price->select('prices.*', 'groups.position')
+        // @phpstan-ignore-next-line
+        return $this->price->newQuery()
+            ->select('prices.*', 'groups.position')
             ->leftJoin('groups', 'prices.group_id', '=', 'groups.id')
             ->filterExcept($filter['except'])
             ->filterGroup($filter['group'])
@@ -50,7 +64,7 @@ class PriceRepo
      */
     public function getByIds(array $ids): Collection
     {
-        return $this->price->whereIn('id', array_filter($ids))->get();
+        return $this->price->newQuery()->whereIn('id', array_filter($ids))->get();
     }
 
     /**

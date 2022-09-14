@@ -1,5 +1,21 @@
 <?php
 
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is licenced under the Software License Agreement
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://intelekt.net.pl/pages/regulamin
+ *
+ * With the purchase or the installation of the software in your application
+ * you accept the licence agreement.
+ *
+ * @author    Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ * @copyright Since 2019 INTELEKT - Usługi Komputerowe Mariusz Wysokiński
+ * @license   https://intelekt.net.pl/pages/regulamin
+ */
+
 namespace N1ebieski\IDir\Http\Responses\Data\Chart\Dir;
 
 use Illuminate\Support\Str;
@@ -9,20 +25,6 @@ use N1ebieski\ICore\Http\Responses\Data\Chart\DataInterface;
 
 class TimelineData implements DataInterface
 {
-    /**
-     * Undocumented variable
-     *
-     * @var Group
-     */
-    protected $group;
-
-    /**
-     * Undocumented variable
-     *
-     * @var Str
-     */
-    protected $str;
-
     /**
      * Undocumented function
      *
@@ -43,11 +45,11 @@ class TimelineData implements DataInterface
      * @param Group $group
      * @param Str $str
      */
-    public function __construct(Group $group, Str $str)
-    {
-        $this->group = $group;
-
-        $this->str = $str;
+    public function __construct(
+        protected Group $group,
+        protected Str $str
+    ) {
+        //
     }
 
     /**
@@ -60,8 +62,8 @@ class TimelineData implements DataInterface
         $data = [];
 
         $groups = $this->group->all()
-            ->map(function ($group, $key) {
-                $group->color = $this->colors[$key] ?? $this->str->randomColor($group->id);
+            ->map(function (Group $group, int $key) {
+                $group->color = $this->colors[$key] ?? $this->str->randomColor((string)$group->id);
 
                 return $group;
             });
@@ -74,10 +76,10 @@ class TimelineData implements DataInterface
                 'month' => $item->month,
                 'group' => [
                     'id' => $item->first_group_id,
-                    'name' => optional($group)->name ?? 'Undefined',
+                    'name' => $group?->name ?? 'Undefined',
                 ],
                 'count' => $item->count,
-                'color' => optional($group)->color ?? $this->str->randomColor('Undefined')
+                'color' => $group?->color ?? $this->str->randomColor('Undefined')
             ];
         });
 

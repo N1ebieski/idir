@@ -1,25 +1,36 @@
 <?php
 
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is licenced under the Software License Agreement
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://intelekt.net.pl/pages/regulamin
+ *
+ * With the purchase or the installation of the software in your application
+ * you accept the licence agreement.
+ *
+ * @author    Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ * @copyright Since 2019 INTELEKT - Usługi Komputerowe Mariusz Wysokiński
+ * @license   https://intelekt.net.pl/pages/regulamin
+ */
+
 namespace N1ebieski\IDir\Repositories\Field;
 
 use N1ebieski\IDir\Models\Field\Field;
-use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class FieldRepo
 {
     /**
-     * [private description]
-     * @var Field
-     */
-    protected $field;
-
-    /**
      * [__construct description]
      * @param Field    $field    [description]
      */
-    public function __construct(Field $field)
+    public function __construct(protected Field $field)
     {
-        $this->field = $field;
+        //
     }
 
     /**
@@ -29,14 +40,15 @@ class FieldRepo
      */
     public function paginateByFilter(array $filter): LengthAwarePaginator
     {
-        return $this->field->selectRaw("`{$this->field->getTable()}`.*")
+        return $this->field->newQuery()
+            ->selectRaw("`{$this->field->getTable()}`.*")
             ->poliType()
             ->filterExcept($filter['except'])
             ->filterSearch($filter['search'])
             ->filterVisible($filter['visible'])
             ->filterType($filter['type'])
             ->filterMorph($filter['morph'])
-            ->when($filter['orderby'] === null, function ($query) use ($filter) {
+            ->when(is_null($filter['orderby']), function (Builder|Field $query) use ($filter) {
                 $query->filterOrderBySearch($filter['search']);
             })
             ->filterOrderBy($filter['orderby'] ?? 'position|asc')
@@ -49,9 +61,6 @@ class FieldRepo
      */
     public function getSiblingsAsArray(): array
     {
-        return $this->field->siblings()
-            ->get(['id', 'position'])
-            ->pluck('position', 'id')
-            ->toArray();
+        return $this->field->siblings()->pluck('position', 'id')->toArray();
     }
 }

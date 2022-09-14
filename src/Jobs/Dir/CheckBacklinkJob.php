@@ -1,5 +1,21 @@
 <?php
 
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is licenced under the Software License Agreement
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://intelekt.net.pl/pages/regulamin
+ *
+ * With the purchase or the installation of the software in your application
+ * you accept the licence agreement.
+ *
+ * @author    Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ * @copyright Since 2019 INTELEKT - Usługi Komputerowe Mariusz Wysokiński
+ * @license   https://intelekt.net.pl/pages/regulamin
+ */
+
 namespace N1ebieski\IDir\Jobs\Dir;
 
 use Throwable;
@@ -10,12 +26,12 @@ use N1ebieski\IDir\Models\DirBacklink;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use N1ebieski\IDir\Repositories\Dir\DirRepo;
+use N1ebieski\IDir\Services\Dir\DirService;
 use Illuminate\Contracts\Events\Dispatcher as Event;
 use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Contracts\Foundation\Application as App;
 use Illuminate\Contracts\Validation\Factory as Validator;
-use N1ebieski\IDir\Repositories\DirBacklink\DirBacklinkRepo;
+use N1ebieski\IDir\Services\DirBacklink\DirBacklinkService;
 use N1ebieski\IDir\Events\Job\DirBacklink\InvalidBacklinkEvent;
 
 class CheckBacklinkJob implements ShouldQueue
@@ -34,21 +50,15 @@ class CheckBacklinkJob implements ShouldQueue
 
     /**
      * [protected description]
-     * @var DirBacklink
+     * @var DirBacklinkService
      */
-    protected $dirBacklink;
+    protected $dirBacklinkService;
 
     /**
      * [protected description]
-     * @var DirBacklinkRepo
+     * @var DirService
      */
-    protected $dirBacklinkRepo;
-
-    /**
-     * [protected description]
-     * @var DirRepo
-     */
-    protected $dirRepo;
+    protected $dirService;
 
     /**
      * Undocumented variable
@@ -91,9 +101,9 @@ class CheckBacklinkJob implements ShouldQueue
      * @param DirBacklink $dirBacklink
      * @return void
      */
-    public function __construct(DirBacklink $dirBacklink)
+    public function __construct(protected DirBacklink $dirBacklink)
     {
-        $this->dirBacklink = $dirBacklink;
+        //
     }
 
     /**
@@ -140,9 +150,9 @@ class CheckBacklinkJob implements ShouldQueue
      */
     protected function executeValidBacklink(): void
     {
-        $this->dirBacklinkRepo->resetAttempts();
+        $this->dirBacklinkService->resetAttempts();
 
-        $this->dirRepo->activate();
+        $this->dirService->activate();
     }
 
     /**
@@ -152,10 +162,10 @@ class CheckBacklinkJob implements ShouldQueue
      */
     protected function executeInvalidBacklink(): void
     {
-        $this->dirBacklinkRepo->incrementAttempts();
+        $this->dirBacklinkService->incrementAttempts();
 
         if ($this->isMaxAttempt()) {
-            $this->dirRepo->deactivateByBacklink();
+            $this->dirService->deactivateByBacklink();
         }
     }
 
@@ -176,8 +186,8 @@ class CheckBacklinkJob implements ShouldQueue
         App $app,
         Carbon $carbon
     ): void {
-        $this->dirBacklinkRepo = $this->dirBacklink->makeRepo();
-        $this->dirRepo = $this->dirBacklink->dir->makeRepo();
+        $this->dirBacklinkService = $this->dirBacklink->makeService();
+        $this->dirService = $this->dirBacklink->dir->makeService();
 
         $this->validator = $validator;
         $this->app = $app;
@@ -185,7 +195,7 @@ class CheckBacklinkJob implements ShouldQueue
         $this->config = $config;
 
         if ($this->isAttempt()) {
-            $this->dirBacklinkRepo->attemptedNow();
+            $this->dirBacklinkService->attemptedNow();
 
             if ($this->validateBacklink()) {
                 $this->executeValidBacklink();

@@ -1,11 +1,27 @@
 <?php
 
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is licenced under the Software License Agreement
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://intelekt.net.pl/pages/regulamin
+ *
+ * With the purchase or the installation of the software in your application
+ * you accept the licence agreement.
+ *
+ * @author    Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ * @copyright Since 2019 INTELEKT - Usługi Komputerowe Mariusz Wysokiński
+ * @license   https://intelekt.net.pl/pages/regulamin
+ */
+
 namespace N1ebieski\IDir\Http\Clients\Payment\PayPal\Express;
 
-use N1ebieski\IDir\Http\Clients\Payment\PayPal\PayPalListener;
 use Illuminate\Contracts\Container\Container as App;
 use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Contracts\Container\BindingResolutionException;
+use N1ebieski\IDir\Http\Clients\Payment\PayPal\PayPalListener;
 use N1ebieski\IDir\Http\Clients\Payment\PayPal\Express\Requests\CompleteRequest;
 use N1ebieski\IDir\Http\Clients\Payment\PayPal\Express\Requests\PurchaseRequest;
 use N1ebieski\IDir\Http\Clients\Payment\PayPal\Express\Requests\AuthorizeRequest;
@@ -17,32 +33,8 @@ use N1ebieski\IDir\Http\Clients\Payment\Interfaces\Transfer\Responses\CompleteRe
 use N1ebieski\IDir\Http\Clients\Payment\Interfaces\Transfer\Responses\PurchaseResponseInterface;
 use N1ebieski\IDir\Http\Clients\Payment\Interfaces\Transfer\Responses\AuthorizeResponseInterface;
 
-/**
- *
- * @author Mariusz Wysokiński <kontakt@intelekt.net.pl>
- */
 class ExpressClient implements TransferClientInterface
 {
-    /**
-     * Undocumented variable
-     *
-     * @var App
-     */
-    protected $app;
-
-    /**
-     *
-     * @var Config
-     */
-    protected $config;
-
-    /**
-     * Undocumented variable
-     *
-     * @var PayPalListener
-     */
-    protected $listener;
-
     /**
      *
      * @param App $app
@@ -50,14 +42,11 @@ class ExpressClient implements TransferClientInterface
      * @return void
      */
     public function __construct(
-        App $app,
-        Config $config,
-        PayPalListener $listener
+        protected App $app,
+        protected Config $config,
+        protected PayPalListener $listener
     ) {
-        $this->app = $app;
-        $this->config = $config;
-
-        $this->listener = $listener;
+        //
     }
 
     /**

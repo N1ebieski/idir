@@ -1,31 +1,42 @@
 <?php
 
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is licenced under the Software License Agreement
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://intelekt.net.pl/pages/regulamin
+ *
+ * With the purchase or the installation of the software in your application
+ * you accept the licence agreement.
+ *
+ * @author    Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ * @copyright Since 2019 INTELEKT - Usługi Komputerowe Mariusz Wysokiński
+ * @license   https://intelekt.net.pl/pages/regulamin
+ */
+
 namespace N1ebieski\IDir\Events\Admin\DirStatus;
 
 use N1ebieski\IDir\Models\DirStatus;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
+use N1ebieski\IDir\Events\Interfaces\DirStatus\DirStatusEventInterface;
 
-class DelayEvent
+class DelayEvent implements DirStatusEventInterface
 {
     use Dispatchable;
     use InteractsWithSockets;
     use SerializesModels;
 
     /**
-     * [public description]
-     * @var DirStatus
-     */
-    public $dirStatus;
-
-    /**
      * Undocumented function
      *
      * @param DirStatus $dirStatus
      */
-    public function __construct(DirStatus $dirStatus)
+    public function __construct(public DirStatus $dirStatus)
     {
-        $this->dirStatus = $dirStatus;
+        //
     }
 }

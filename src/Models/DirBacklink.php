@@ -1,5 +1,21 @@
 <?php
 
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is licenced under the Software License Agreement
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://intelekt.net.pl/pages/regulamin
+ *
+ * With the purchase or the installation of the software in your application
+ * you accept the licence agreement.
+ *
+ * @author    Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ * @copyright Since 2019 INTELEKT - Usługi Komputerowe Mariusz Wysokiński
+ * @license   https://intelekt.net.pl/pages/regulamin
+ */
+
 namespace N1ebieski\IDir\Models;
 
 use Illuminate\Support\Facades\App;
@@ -10,6 +26,33 @@ use N1ebieski\IDir\Services\DirBacklink\DirBacklinkService;
 use N1ebieski\IDir\Repositories\DirBacklink\DirBacklinkRepo;
 use N1ebieski\IDir\Database\Factories\DirBacklink\DirBacklinkFactory;
 
+/**
+ * N1ebieski\IDir\Models\DirBacklink
+ *
+ * @property int $id
+ * @property int $dir_id
+ * @property int $link_id
+ * @property string $url
+ * @property int $attempts
+ * @property \Illuminate\Support\Carbon|null $attempted_at
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \N1ebieski\IDir\Models\Dir $dir
+ * @property-read \N1ebieski\ICore\Models\Link $link
+ * @method static \N1ebieski\IDir\Database\Factories\DirBacklink\DirBacklinkFactory factory(...$parameters)
+ * @method static \Illuminate\Database\Eloquent\Builder|DirBacklink newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|DirBacklink newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|DirBacklink query()
+ * @method static \Illuminate\Database\Eloquent\Builder|DirBacklink whereAttemptedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|DirBacklink whereAttempts($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|DirBacklink whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|DirBacklink whereDirId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|DirBacklink whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|DirBacklink whereLinkId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|DirBacklink whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|DirBacklink whereUrl($value)
+ * @mixin \Eloquent
+ */
 class DirBacklink extends Model
 {
     use HasFactory;
@@ -19,7 +62,7 @@ class DirBacklink extends Model
     /**
     * The attributes that are mass assignable.
     *
-    * @var array
+    * @var array<string>
     */
     protected $fillable = ['url', 'attempts', 'attempted_at'];
 

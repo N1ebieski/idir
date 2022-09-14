@@ -1,10 +1,27 @@
 <?php
 
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is licenced under the Software License Agreement
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://intelekt.net.pl/pages/regulamin
+ *
+ * With the purchase or the installation of the software in your application
+ * you accept the licence agreement.
+ *
+ * @author    Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ * @copyright Since 2019 INTELEKT - Usługi Komputerowe Mariusz Wysokiński
+ * @license   https://intelekt.net.pl/pages/regulamin
+ */
+
 namespace N1ebieski\IDir\Http\Resources\Group;
 
 use N1ebieski\IDir\Models\Group;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Lang;
+use N1ebieski\IDir\Models\Field\Group\Field;
 use Illuminate\Http\Resources\Json\JsonResource;
 use N1ebieski\IDir\Http\Resources\Field\FieldResource;
 use N1ebieski\IDir\Http\Resources\Price\PriceResource;
@@ -12,6 +29,7 @@ use N1ebieski\IDir\Http\Resources\Privilege\PrivilegeResource;
 
 /**
  * @mixin Group
+ * @property int|null $depth
  */
 class GroupResource extends JsonResource
 {
@@ -93,10 +111,11 @@ class GroupResource extends JsonResource
                             function () {
                                 return [
                                     'fields' => App::make(FieldResource::class)
-                                        ->collection($this->fields->map(function ($item) {
-                                            $item->setAttribute('depth', $item->depth);
+                                        ->collection($this->fields->map(function (Field $field) {
+                                            // @phpstan-ignore-next-line
+                                            $field->setAttribute('depth', $field->depth);
 
-                                            return $item;
+                                            return $field;
                                         }))
                                 ];
                             }

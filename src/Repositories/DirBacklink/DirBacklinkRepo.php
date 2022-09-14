@@ -1,58 +1,45 @@
 <?php
 
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is licenced under the Software License Agreement
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://intelekt.net.pl/pages/regulamin
+ *
+ * With the purchase or the installation of the software in your application
+ * you accept the licence agreement.
+ *
+ * @author    Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ * @copyright Since 2019 INTELEKT - Usługi Komputerowe Mariusz Wysokiński
+ * @license   https://intelekt.net.pl/pages/regulamin
+ */
+
 namespace N1ebieski\IDir\Repositories\DirBacklink;
 
 use Closure;
 use Carbon\Carbon;
+use N1ebieski\IDir\Models\Dir;
+use N1ebieski\IDir\Models\Group;
 use N1ebieski\IDir\Models\DirBacklink;
+use Illuminate\Database\Eloquent\Builder;
 use N1ebieski\IDir\ValueObjects\Dir\Status;
 use Illuminate\Contracts\Config\Repository as Config;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class DirBacklinkRepo
 {
-    /**
-     * [private description]
-     * @var DirBacklink
-     */
-    protected $dirBacklink;
-
     /**
      * [__construct description]
      * @param DirBacklink $dirBacklink [description]
      * @param Config   $config   [description]
      */
-    public function __construct(DirBacklink $dirBacklink, Config $config)
-    {
-        $this->dirBacklink = $dirBacklink;
-
-        $this->config = $config;
-    }
-
-    /**
-     * [attemptNow description]
-     * @return bool [description]
-     */
-    public function attemptedNow(): bool
-    {
-        return $this->dirBacklink->update(['attempted_at' => Carbon::now()]);
-    }
-
-    /**
-     * [resetAttempts description]
-     * @return bool [description]
-     */
-    public function resetAttempts(): bool
-    {
-        return $this->dirBacklink->update(['attempts' => 0]);
-    }
-
-    /**
-     * [incrementAttempts description]
-     * @return int [description]
-     */
-    public function incrementAttempts(): int
-    {
-        return $this->dirBacklink->increment('attempts');
+    public function __construct(
+        protected DirBacklink $dirBacklink,
+        protected Config $config
+    ) {
+        //
     }
 
     /**
@@ -66,21 +53,21 @@ class DirBacklinkRepo
         Closure $closure,
         string $timestamp
     ): bool {
-        return $this->dirBacklink
-            ->whereHas('dir', function ($query) {
-                $query->whereIn('status', [Status::ACTIVE, Status::BACKLINK_INACTIVE])
-                    ->whereHas('group', function ($query) {
-                        $query->obligatoryBacklink();
+        return $this->dirBacklink->newQuery()
+            ->whereHas('dir', function (BelongsTo|Builder|Dir $query) {
+                return $query->whereIn('status', [Status::ACTIVE, Status::BACKLINK_INACTIVE])
+                    ->whereHas('group', function (BelongsTo|Builder|Group $query) {
+                        return $query->obligatoryBacklink();
                     });
             })
-            ->where(function ($query) use ($timestamp) {
-                $query->whereDate(
+            ->where(function (Builder $query) use ($timestamp) {
+                return $query->whereDate(
                     'attempted_at',
                     '<',
                     Carbon::parse($timestamp)->format('Y-m-d')
                 )
-                ->orWhere(function ($query) use ($timestamp) {
-                    $query->whereDate(
+                ->orWhere(function (Builder $query) use ($timestamp) {
+                    return $query->whereDate(
                         'attempted_at',
                         '=',
                         Carbon::parse($timestamp)->format('Y-m-d')

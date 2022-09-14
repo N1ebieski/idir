@@ -1,50 +1,71 @@
 <?php
 
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is licenced under the Software License Agreement
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://intelekt.net.pl/pages/regulamin
+ *
+ * With the purchase or the installation of the software in your application
+ * you accept the licence agreement.
+ *
+ * @author    Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ * @copyright Since 2019 INTELEKT - Usługi Komputerowe Mariusz Wysokiński
+ * @license   https://intelekt.net.pl/pages/regulamin
+ */
+
 namespace N1ebieski\IDir\Mail\Contact\Dir;
 
 use Illuminate\Http\Request;
+use Illuminate\Bus\Queueable;
+use Illuminate\Mail\Mailable;
 use N1ebieski\IDir\Models\Dir;
-use N1ebieski\ICore\Mail\Contact\Mail as BaseMail;
+use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Contracts\Routing\UrlGenerator as URL;
 use Illuminate\Contracts\Translation\Translator as Lang;
 
-class Mail extends BaseMail
+class Mail extends Mailable
 {
-    /**
-     * [protected description]
-     * @var Dir
-     */
-    protected $dir;
+    use Queueable;
+    use SerializesModels;
 
     /**
-     * Undocumented variable
      *
-     * @var string
-     */
-    protected $email;
-
-    /**
-     * Undocumented function
-     *
-     * @param Request $request
      * @param Dir $dir
+     * @param Request $request
      * @param Lang $lang
      * @param URL $url
      * @param Config $config
+     * @return void
      */
     public function __construct(
-        Request $request,
-        Dir $dir,
-        Lang $lang,
-        URL $url,
-        Config $config
+        protected Dir $dir,
+        protected Request $request,
+        protected Lang $lang,
+        protected URL $url,
+        protected Config $config
     ) {
-        parent::__construct($request, $lang, $url, $config);
+        //
+    }
 
-        $this->dir = $dir;
-
-        $this->email = $this->dir->user->email;
+    /**
+     * Build the message.
+     *
+     * @return $this
+     */
+    public function build()
+    {
+        return $this->subject($this->request->input('title'))
+            ->replyTo($this->dir->user->email)
+            ->to($this->config->get('mail.from.address'))
+            ->markdown('icore::mails.contact')
+            ->with([
+                'subcopy' => $this->subcopy(),
+                'content' => $this->request->input('content')
+            ]);
     }
 
     /**

@@ -1,5 +1,21 @@
 <?php
 
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is licenced under the Software License Agreement
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://intelekt.net.pl/pages/regulamin
+ *
+ * With the purchase or the installation of the software in your application
+ * you accept the licence agreement.
+ *
+ * @author    Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ * @copyright Since 2019 INTELEKT - Usługi Komputerowe Mariusz Wysokiński
+ * @license   https://intelekt.net.pl/pages/regulamin
+ */
+
 namespace N1ebieski\IDir\Http\Responses\Data\Chart\Dir;
 
 use Illuminate\Support\Str;
@@ -11,34 +27,6 @@ use N1ebieski\ICore\Http\Responses\Data\Chart\DataInterface;
 
 class GroupData implements DataInterface
 {
-    /**
-     * Undocumented variable
-     *
-     * @var Group
-     */
-    protected $group;
-
-    /**
-     * Undocumented variable
-     *
-     * @var Lang
-     */
-    protected $lang;
-
-    /**
-     * Undocumented variable
-     *
-     * @var URL
-     */
-    protected $url;
-
-    /**
-     * Undocumented variable
-     *
-     * @var Str
-     */
-    protected $str;
-
     /**
      * Undocumented function
      *
@@ -62,16 +50,12 @@ class GroupData implements DataInterface
      * @param Str $str
      */
     public function __construct(
-        Group $group,
-        Lang $lang,
-        URL $url,
-        Str $str
+        protected Group $group,
+        protected Lang $lang,
+        protected URL $url,
+        protected Str $str
     ) {
-        $this->group = $group;
-
-        $this->lang = $lang;
-        $this->url = $url;
-        $this->str = $str;
+        //
     }
 
     /**
@@ -84,8 +68,8 @@ class GroupData implements DataInterface
         $data = [];
 
         $groups = $this->group->all()
-            ->map(function ($group, $key) {
-                $group->color = $this->colors[$key] ?? $this->str->randomColor($group->id);
+            ->map(function (Group $group, int $key) {
+                $group->color = $this->colors[$key] ?? $this->str->randomColor((string)$group->id);
 
                 return $group;
             });

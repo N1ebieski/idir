@@ -70,6 +70,39 @@ class DirBacklinkService implements CreateInterface
     }
 
     /**
+     * [attemptNow description]
+     * @return bool [description]
+     */
+    public function attemptedNow(): bool
+    {
+        return $this->db->transaction(function () {
+            return $this->dirBacklink->update(['attempted_at' => Carbon::now()]);
+        });
+    }
+
+    /**
+     * [resetAttempts description]
+     * @return bool [description]
+     */
+    public function resetAttempts(): bool
+    {
+        return $this->db->transaction(function () {
+            return $this->dirBacklink->update(['attempts' => 0]);
+        });
+    }
+
+    /**
+     * [incrementAttempts description]
+     * @return int [description]
+     */
+    public function incrementAttempts(): int
+    {
+        return $this->db->transaction(function () {
+            return $this->dirBacklink->increment('attempts');
+        });
+    }
+
+    /**
      * [sync description]
      * @param  array  $attributes [description]
      * @return Model|null             [description]

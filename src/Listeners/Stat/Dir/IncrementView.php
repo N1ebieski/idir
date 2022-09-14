@@ -1,44 +1,48 @@
 <?php
 
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is licenced under the Software License Agreement
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://intelekt.net.pl/pages/regulamin
+ *
+ * With the purchase or the installation of the software in your application
+ * you accept the licence agreement.
+ *
+ * @author    Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ * @copyright Since 2019 INTELEKT - Usługi Komputerowe Mariusz Wysokiński
+ * @license   https://intelekt.net.pl/pages/regulamin
+ */
+
 namespace N1ebieski\IDir\Listeners\Stat\Dir;
 
 use N1ebieski\ICore\Utils\MigrationUtil;
 use N1ebieski\IDir\Models\Stat\Dir\Stat;
 use N1ebieski\ICore\ValueObjects\Stat\Slug;
+use N1ebieski\IDir\Events\Interfaces\Dir\DirEventInterface;
 
 class IncrementView
 {
     /**
      * Undocumented variable
      *
-     * @var object
+     * @var DirEventInterface
      */
     protected $event;
 
     /**
-     * Undocumented variable
      *
-     * @var Stat
+     * @param Stat $stat
+     * @param MigrationUtil $migrationUtil
+     * @return void
      */
-    protected $stat;
-
-    /**
-     * Undocumented variable
-     *
-     * @var MigrationUtil
-     */
-    protected $migrationUtil;
-
-    /**
-     * Undocumented function
-     *
-     * @param MigrationUtil $util
-     */
-    public function __construct(Stat $stat, MigrationUtil $migrationUtil)
-    {
-        $this->stat = $stat;
-
-        $this->migrationUtil = $migrationUtil;
+    public function __construct(
+        protected Stat $stat,
+        protected MigrationUtil $migrationUtil
+    ) {
+        //
     }
 
     /**
@@ -54,10 +58,10 @@ class IncrementView
     /**
      * Handle the event.
      *
-     * @param  object  $event
+     * @param  DirEventInterface  $event
      * @return void
      */
-    public function handle($event): void
+    public function handle(DirEventInterface $event): void
     {
         $this->event = $event;
 

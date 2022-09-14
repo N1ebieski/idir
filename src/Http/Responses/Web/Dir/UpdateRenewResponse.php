@@ -1,5 +1,21 @@
 <?php
 
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is licenced under the Software License Agreement
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://intelekt.net.pl/pages/regulamin
+ *
+ * With the purchase or the installation of the software in your application
+ * you accept the licence agreement.
+ *
+ * @author    Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ * @copyright Since 2019 INTELEKT - Usługi Komputerowe Mariusz Wysokiński
+ * @license   https://intelekt.net.pl/pages/regulamin
+ */
+
 namespace N1ebieski\IDir\Http\Responses\Web\Dir;
 
 use Illuminate\Http\Request;
@@ -16,38 +32,6 @@ use N1ebieski\IDir\Http\Responses\Web\Dir\RedirectResponseFactory;
 class UpdateRenewResponse implements RedirectResponseFactory
 {
     /**
-     * [protected description]
-     * @var Request
-     */
-    protected $request;
-
-    /**
-     * [private description]
-     * @var ResponseFactory
-     */
-    protected $response;
-
-    /**
-     * [private description]
-     * @var Config
-     */
-    protected $config;
-
-    /**
-     * Undocumented variable
-     *
-     * @var Lang
-     */
-    protected $lang;
-
-    /**
-     * Undocumented variable
-     *
-     * @var URL
-     */
-    protected $url;
-
-    /**
      * Undocumented function
      *
      * @param Request $request
@@ -57,17 +41,13 @@ class UpdateRenewResponse implements RedirectResponseFactory
      * @param URL $url
      */
     public function __construct(
-        Request $request,
-        ResponseFactory $response,
-        Config $config,
-        Lang $lang,
-        URL $url
+        protected Request $request,
+        protected ResponseFactory $response,
+        protected Config $config,
+        protected Lang $lang,
+        protected URL $url
     ) {
-        $this->request = $request;
-        $this->response = $response;
-        $this->config = $config;
-        $this->lang = $lang;
-        $this->url = $url;
+        //
     }
 
     /**
@@ -85,13 +65,12 @@ class UpdateRenewResponse implements RedirectResponseFactory
             ]);
         }
 
-        switch ($dir->status->getValue()) {
-            case Status::ACTIVE:
-                return $this->response->redirectToRoute('web.profile.dirs')
-                    ->with('success', $this->lang->get('idir::dirs.success.update_renew.' . Status::ACTIVE));
-            default:
-                return $this->response->redirectToRoute('web.profile.dirs')
-                    ->with('success', $this->lang->get('idir::dirs.success.update_renew.' . Status::INACTIVE));
-        }
+        return match ($dir->status->getValue()) {
+            Status::ACTIVE => $this->response->redirectToRoute('web.profile.dirs')
+                ->with('success', $this->lang->get('idir::dirs.success.update_renew.' . Status::ACTIVE)),
+
+            default => $this->response->redirectToRoute('web.profile.dirs')
+                ->with('success', $this->lang->get('idir::dirs.success.update_renew.' . Status::INACTIVE))
+        };
     }
 }

@@ -1,10 +1,27 @@
 <?php
 
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is licenced under the Software License Agreement
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://intelekt.net.pl/pages/regulamin
+ *
+ * With the purchase or the installation of the software in your application
+ * you accept the licence agreement.
+ *
+ * @author    Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ * @copyright Since 2019 INTELEKT - Usługi Komputerowe Mariusz Wysokiński
+ * @license   https://intelekt.net.pl/pages/regulamin
+ */
+
 namespace N1ebieski\IDir\Http\Requests\Api\Payment\PayPal;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Foundation\Http\FormRequest;
+use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use N1ebieski\IDir\Http\Requests\Api\Payment\Interfaces\VerifyRequestInterface;
 
 class VerifyRequest extends FormRequest implements VerifyRequestInterface
@@ -20,10 +37,11 @@ class VerifyRequest extends FormRequest implements VerifyRequestInterface
     }
 
     /**
-     * [prepareForValidation description]
-     * @return [type] [description]
+     *
+     * @return void
+     * @throws BadRequestException
      */
-    public function prepareForValidation()
+    public function prepareForValidation(): void
     {
         $this->merge([
             'uuid' => $this->input('invoice')

@@ -1,5 +1,21 @@
 <?php
 
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is licenced under the Software License Agreement
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://intelekt.net.pl/pages/regulamin
+ *
+ * With the purchase or the installation of the software in your application
+ * you accept the licence agreement.
+ *
+ * @author    Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ * @copyright Since 2019 INTELEKT - Usługi Komputerowe Mariusz Wysokiński
+ * @license   https://intelekt.net.pl/pages/regulamin
+ */
+
 namespace N1ebieski\IDir\Listeners\Dir;
 
 use N1ebieski\IDir\Models\Dir;
@@ -7,9 +23,11 @@ use N1ebieski\IDir\Models\User;
 use Illuminate\Contracts\Mail\Mailer;
 use N1ebieski\IDir\Mail\Dir\ModeratorMail;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Contracts\Cache\Factory as Cache;
+use Illuminate\Contracts\Cache\Repository as Cache;
 use Illuminate\Contracts\Config\Repository as Config;
+use Illuminate\Contracts\Cache\Factory as CacheFactory;
 use Illuminate\Contracts\Foundation\Application as App;
+use N1ebieski\IDir\Events\Interfaces\Dir\DirEventInterface;
 use Illuminate\Contracts\Debug\ExceptionHandler as Exception;
 
 class SendModeratorNotification
@@ -17,58 +35,15 @@ class SendModeratorNotification
     /**
      * Undocumented variable
      *
-     * @var object
+     * @var DirEventInterface
      */
     protected $event;
 
     /**
-     * Undocumented variable
-     *
-     * @var User
-     */
-    protected $user;
-
-    /**
-     * Undocumented variable
-     *
-     * @var Dir
-     */
-    protected $dir;
-
-    /**
-     * Undocumented variable
-     *
-     * @var Mailer
-     */
-    protected $mailer;
-
-    /**
-     * Undocumented variable
-     *
-     * @var App
-     */
-    protected $app;
-
-    /**
-     * Undocumented variable
-     *
-     * @var Exception
-     */
-    protected $exception;
-
-    /**
-     * Undocumented variable
      *
      * @var Cache
      */
     protected $cache;
-
-    /**
-     * Undocumented variable
-     *
-     * @var Config
-     */
-    protected $config;
 
     /**
      * Undocumented variable
@@ -78,41 +53,27 @@ class SendModeratorNotification
     protected $dirs;
 
     /**
-     * Undocumented variable
-     *
-     * @var int
-     */
-    protected $counter;
-
-    /**
      * Undocumented function
      *
      * @param User $user
      * @param Dir $dir
      * @param Mailer $mailer
      * @param App $app
-     * @param Cache $cache
+     * @param CacheFactory $cache
      * @param Config $config
      * @param Exception $exception
      */
     public function __construct(
-        User $user,
-        Dir $dir,
-        Mailer $mailer,
-        App $app,
-        Cache $cache,
-        Config $config,
-        Exception $exception
+        protected User $user,
+        protected Dir $dir,
+        protected Mailer $mailer,
+        protected App $app,
+        protected Config $config,
+        protected Exception $exception,
+        CacheFactory $cache
     ) {
-        $this->user = $user;
-        $this->dir = $dir;
-
-        $this->app = $app;
-        $this->mailer = $mailer;
+        // @phpstan-ignore-next-line
         $this->cache = $cache->store($config->has('cache.stores.system') ? 'system' : null);
-        $this->exception = $exception;
-
-        $this->counter = (int)$config->get('idir.dir.notification.dirs');
     }
 
     /**
@@ -125,13 +86,25 @@ class SendModeratorNotification
     }
 
     /**
+     *
+     * @param Collection $dirs
+     * @return self
+     */
+    protected function setLatestDirsForModerators(Collection $dirs): self
+    {
+        $this->dirs = $dirs;
+
+        return $this;
+    }
+
+    /**
      * Undocumented function
      *
      * @return boolean
      */
     protected function isNotificationTurnOn(): bool
     {
-        return $this->counter > 0;
+        return $this->config->get('idir.dir.notification.dirs') > 0;
     }
 
     /**
@@ -141,17 +114,18 @@ class SendModeratorNotification
      */
     protected function isTimeToSend(): bool
     {
-        return $this->cache->get('dir.notification.dirs') >= $this->counter;
+        return $this->cache->get('dir.notification.dirs') >= $this->config->get('idir.dir.notification.dirs');
     }
 
     /**
      * Undocumented function
      *
-     * @return boolean
+     * @return void
      */
-    protected function incrementCounter(): bool
+    protected function incrementCounter(): void
     {
-        return $this->cache->has('dir.notification.dirs') ?
+        // @phpstan-ignore-next-line
+        $this->cache->has('dir.notification.dirs') ?
             $this->cache->increment('dir.notification.dirs')
             : $this->cache->forever('dir.notification.dirs', 1);
     }
@@ -169,10 +143,10 @@ class SendModeratorNotification
     /**
      * Handle the event.
      *
-     * @param  object  $event
+     * @param  DirEventInterface  $event
      * @return void
      */
-    public function handle($event)
+    public function handle(DirEventInterface $event)
     {
         $this->event = $event;
 
@@ -183,7 +157,11 @@ class SendModeratorNotification
         $this->incrementCounter();
 
         if ($this->isTimeToSend()) {
-            $this->makeLatestDirsForModerators();
+            $this->setLatestDirsForModerators(
+                $this->dir->makeRepo()->getLatestForModeratorsByLimit(
+                    $this->config->get('idir.dir.notification.dirs')
+                )
+            );
 
             if ($this->dirs->isNotEmpty()) {
                 $this->user->makeRepo()->getModeratorsByNotificationDirsPermission()
@@ -194,19 +172,6 @@ class SendModeratorNotification
                 $this->forgetCounter();
             }
         }
-    }
-
-    /**
-     * Undocumented function
-     *
-     * @return Collection
-     */
-    protected function makeLatestDirsForModerators(): Collection
-    {
-        return $this->dirs = $this->dir->makeRepo()
-            ->getLatestForModeratorsByLimit(
-                $this->counter
-            );
     }
 
     /**

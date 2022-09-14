@@ -1,39 +1,45 @@
 <?php
 
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is licenced under the Software License Agreement
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://intelekt.net.pl/pages/regulamin
+ *
+ * With the purchase or the installation of the software in your application
+ * you accept the licence agreement.
+ *
+ * @author    Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ * @copyright Since 2019 INTELEKT - Usługi Komputerowe Mariusz Wysokiński
+ * @license   https://intelekt.net.pl/pages/regulamin
+ */
+
 namespace N1ebieski\IDir\Repositories\Group;
 
 use N1ebieski\IDir\Models\Group;
+use N1ebieski\IDir\Models\Field\Field;
+use Illuminate\Database\Eloquent\Builder;
 use N1ebieski\IDir\ValueObjects\Group\Slug;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Contracts\Auth\Factory as Auth;
-use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class GroupRepo
 {
-    /**
-     * [private description]
-     * @var Group
-     */
-    protected $group;
-
-    /**
-     * Undocumented variable
-     *
-     * @var Auth
-     */
-    protected $auth;
-
     /**
      * Undocumented function
      *
      * @param Group $group
      * @param Auth $auth
      */
-    public function __construct(Group $group, Auth $auth)
-    {
-        $this->group = $group;
-
-        $this->auth = $auth;
+    public function __construct(
+        protected Group $group,
+        protected Auth $auth
+    ) {
+        //
     }
 
     /**
@@ -43,19 +49,20 @@ class GroupRepo
      */
     public function paginateByFilter(array $filter): LengthAwarePaginator
     {
-        return $this->group->selectRaw("`{$this->group->getTable()}`.*")
+        return $this->group->newQuery()
+            ->selectRaw("`{$this->group->getTable()}`.*")
             ->filterSearch($filter['search'])
             ->filterExcept($filter['except'])
             ->when(
-                $filter['visible'] === null && !optional($this->auth->user())->can('admin.groups.view'),
-                function ($query) {
-                    $query->public();
+                is_null($filter['visible']) && !$this->auth->user()?->can('admin.groups.view'),
+                function (Builder|Group $query) {
+                    return $query->public();
                 },
-                function ($query) use ($filter) {
-                    $query->filterVisible($filter['visible']);
+                function (Builder|Group $query) use ($filter) {
+                    return $query->filterVisible($filter['visible']);
                 }
             )
-            ->when($filter['orderby'] === null, function ($query) use ($filter) {
+            ->when(is_null($filter['orderby']), function (Builder|Group $query) use ($filter) {
                 $query->filterOrderBySearch($filter['search']);
             })
             ->filterOrderBy($filter['orderby'] ?? 'position|asc')
@@ -70,10 +77,7 @@ class GroupRepo
      */
     public function getSiblingsAsArray(): array
     {
-        return $this->group->siblings()
-            ->get(['id', 'position'])
-            ->pluck('position', 'id')
-            ->toArray();
+        return $this->group->siblings()->pluck('position', 'id')->toArray();
     }
 
     /**
@@ -82,10 +86,11 @@ class GroupRepo
      */
     public function getPublicWithRels(): Collection
     {
-        return $this->group->public()
+        return $this->group->newQuery()
+            ->public()
+            ->orderBy('position', 'asc')
             ->with(['privileges', 'prices'])
             ->withCount(['dirs', 'dirsToday'])
-            ->orderBy('position', 'asc')
             ->get();
     }
 
@@ -95,10 +100,10 @@ class GroupRepo
      */
     public function getWithRels(): Collection
     {
-        return $this->group
+        return $this->group->newQuery()
+            ->orderBy('position', 'asc')
             ->with(['privileges', 'prices'])
             ->withCount(['dirs', 'dirsToday'])
-            ->orderBy('position', 'asc')
             ->get();
     }
 
@@ -109,7 +114,8 @@ class GroupRepo
      */
     public function getExceptDefault(): Collection
     {
-        return $this->group->exceptDefault()
+        return $this->group->newQuery()
+            ->exceptDefault()
             ->orderBy('position', 'asc')
             ->get();
     }
@@ -134,11 +140,11 @@ class GroupRepo
      */
     public function firstWithRelsById(int $id): ?Group
     {
-        return $this->group->where('id', $id)
-            ->with(['fields' => function ($query) {
+        return $this->group->newQuery()
+            ->where('id', $id)
+            ->with(['fields' => function (MorphToMany|Builder|Field $query) {
                 return $query->public();
             }])
-            // ->withCount(['dirs', 'dirsToday'])
             ->first();
     }
 
@@ -149,8 +155,7 @@ class GroupRepo
      */
     public function getPublic(): Collection
     {
-        return $this->group->public()
-            ->orderBy('position', 'asc')->get();
+        return $this->group->newQuery()->public()->orderBy('position', 'asc')->get();
     }
 
     /**
@@ -160,8 +165,8 @@ class GroupRepo
      */
     public function getWithField(int $id): Collection
     {
-        return $this->group->with([
-            'fields' => function ($query) use ($id) {
+        return $this->group->newQuery()
+            ->with(['fields' => function (MorphToMany|Builder|Field $query) use ($id) {
                 $query->where('field_id', $id);
             }])
             ->orderBy('position', 'asc')
@@ -175,7 +180,8 @@ class GroupRepo
      */
     public function getExceptSelf(): Collection
     {
-        return $this->group->where('id', '!=', $this->group->id)
+        return $this->group->newQuery()
+            ->where('id', '!=', $this->group->id)
             ->orderBy('position', 'asc')
             ->get();
     }
@@ -187,7 +193,8 @@ class GroupRepo
      */
     public function getDoesntHavePricesExceptSelf(): Collection
     {
-        return $this->group->whereDoesntHave('prices')
+        return $this->group->newQuery()
+            ->whereDoesntHave('prices')
             ->where('id', '!=', $this->group->id)
             ->orderBy('position', 'asc')
             ->get();
@@ -201,6 +208,6 @@ class GroupRepo
      */
     public function firstBySlug(Slug $slug): ?Group
     {
-        return $this->group->where('slug', $slug->getValue())->first();
+        return $this->group->newQuery()->where('slug', $slug->getValue())->first();
     }
 }

@@ -1,5 +1,21 @@
 <?php
 
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is licenced under the Software License Agreement
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://intelekt.net.pl/pages/regulamin
+ *
+ * With the purchase or the installation of the software in your application
+ * you accept the licence agreement.
+ *
+ * @author    Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ * @copyright Since 2019 INTELEKT - Usługi Komputerowe Mariusz Wysokiński
+ * @license   https://intelekt.net.pl/pages/regulamin
+ */
+
 namespace N1ebieski\IDir\Http\Clients\Payment\Cashbill\Transfer\Requests;
 
 use GuzzleHttp\ClientInterface;
@@ -30,13 +46,6 @@ class PurchaseRequest extends Request
     ];
 
     /**
-     * Undocumented variable
-     *
-     * @var Config
-     */
-    protected $config;
-
-    /**
      * Undocumented function
      *
      * @param array $parameters
@@ -46,10 +55,8 @@ class PurchaseRequest extends Request
     public function __construct(
         array $parameters,
         ClientInterface $client,
-        Config $config
+        protected Config $config
     ) {
-        $this->config = $config;
-
         parent::__construct($parameters, $client);
 
         $this->setSign();
@@ -61,9 +68,9 @@ class PurchaseRequest extends Request
      * @param string $amount
      * @return self
      */
-    protected function setAmount(string $amount)
+    protected function setAmount(string $amount): self
     {
-        $this->parameters['amount'] = number_format($amount, 2, '.', '');
+        $this->parameters['amount'] = number_format((float)$amount, 2, '.', '');
 
         return $this;
     }
@@ -74,7 +81,7 @@ class PurchaseRequest extends Request
      * @param string $desc
      * @return self
      */
-    protected function setDesc(string $desc)
+    protected function setDesc(string $desc): self
     {
         $this->parameters['desc'] = $desc;
 
@@ -82,12 +89,11 @@ class PurchaseRequest extends Request
     }
 
     /**
-     * Undocumented function
      *
-     * @param string $desc
-     * @return self
+     * @param string $uuid
+     * @return PurchaseRequest
      */
-    protected function setUuid(string $uuid)
+    protected function setUuid(string $uuid): self
     {
         $userdata = isset($this->parameters['userdata']) ?
             json_decode($this->parameters['userdata'], true) : [];
@@ -100,12 +106,11 @@ class PurchaseRequest extends Request
     }
 
     /**
-     * Undocumented function
      *
-     * @param string $desc
-     * @return self
+     * @param string $redirect
+     * @return PurchaseRequest
      */
-    protected function setRedirect(string $redirect)
+    protected function setRedirect(string $redirect): self
     {
         $userdata = isset($this->parameters['userdata']) ?
             json_decode($this->parameters['userdata'], true) : [];
@@ -121,10 +126,11 @@ class PurchaseRequest extends Request
      *
      * @return self
      */
-    protected function setSign()
+    protected function setSign(): self
     {
-        $this->parameters['sign'] = md5($this->service . '|' . $this->amount . '|' . $this->currency . '|'
-            . $this->desc . '|' . $this->lang . '|' . $this->userdata . '||||||||||||' . $this->key);
+        $this->parameters['sign'] = md5($this->get('service') . '|' . $this->get('amount') . '|'
+            . $this->get('currency') . '|' . $this->get('desc') . '|' . $this->get('lang') . '|'
+            . $this->get('userdata') . '||||||||||||' . $this->get('key'));
 
         return $this;
     }
@@ -142,13 +148,13 @@ class PurchaseRequest extends Request
                 $this->config->get("services.cashbill.transfer.url"),
                 array_merge($this->options, [
                     'form_params' => [
-                        'service' => $this->service,
-                        'amount' => $this->amount,
-                        'currency' => $this->currency,
-                        'lang' => $this->lang,
-                        'desc' => $this->desc,
-                        'userdata' => $this->userdata,
-                        'sign' => $this->sign
+                        'service' => $this->get('service'),
+                        'amount' => $this->get('amount'),
+                        'currency' => $this->get('currency'),
+                        'lang' => $this->get('lang'),
+                        'desc' => $this->get('desc'),
+                        'userdata' => $this->get('userdata'),
+                        'sign' => $this->get('sign')
                     ]
                 ])
             );

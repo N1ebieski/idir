@@ -1,25 +1,34 @@
 <?php
 
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is licenced under the Software License Agreement
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://intelekt.net.pl/pages/regulamin
+ *
+ * With the purchase or the installation of the software in your application
+ * you accept the licence agreement.
+ *
+ * @author    Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ * @copyright Since 2019 INTELEKT - Usługi Komputerowe Mariusz Wysokiński
+ * @license   https://intelekt.net.pl/pages/regulamin
+ */
+
 namespace N1ebieski\IDir\Repositories\Payment;
 
 use N1ebieski\IDir\Models\Payment\Payment;
-use N1ebieski\IDir\ValueObjects\Payment\Status;
 
 class PaymentRepo
 {
     /**
-     * [private description]
-     * @var Payment
-     */
-    protected $payment;
-
-    /**
      * [__construct description]
      * @param Payment $payment [description]
      */
-    public function __construct(Payment $payment)
+    public function __construct(protected Payment $payment)
     {
-        $this->payment = $payment;
+        //
     }
 
     /**
@@ -29,7 +38,8 @@ class PaymentRepo
      */
     public function firstByUuid(string $uuid): ?Payment
     {
-        return $this->payment->where('uuid', $uuid)
+        return $this->payment->newQuery()
+            ->where('uuid', $uuid)
             ->poliType()
             ->with(['morph', 'orderMorph'])
             ->first();
@@ -42,28 +52,11 @@ class PaymentRepo
      */
     public function firstPendingByUuid(string $uuid): ?Payment
     {
-        return $this->payment->where('uuid', $uuid)
+        return $this->payment->newQuery()
+            ->where('uuid', $uuid)
             ->pending()
             ->poliType()
             ->with(['morph', 'orderMorph'])
             ->first();
-    }
-
-    /**
-     * [completed description]
-     * @return bool [description]
-     */
-    public function finished(): bool
-    {
-        return $this->payment->update(['status' => Status::FINISHED]);
-    }
-
-    /**
-     * [paid description]
-     * @return bool [description]
-     */
-    public function paid(): bool
-    {
-        return $this->payment->update(['status' => Status::UNFINISHED]);
     }
 }
