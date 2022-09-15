@@ -1,5 +1,21 @@
 <?php
 
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is licenced under the Software License Agreement
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://intelekt.net.pl/pages/regulamin
+ *
+ * With the purchase or the installation of the software in your application
+ * you accept the licence agreement.
+ *
+ * @author    Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ * @copyright Since 2019 INTELEKT - Usługi Komputerowe Mariusz Wysokiński
+ * @license   https://intelekt.net.pl/pages/regulamin
+ */
+
 namespace N1ebieski\IDir\Utils\Thumbnail;
 
 use Illuminate\Support\Carbon;
@@ -10,52 +26,10 @@ use N1ebieski\IDir\Http\Clients\Thumbnail\Provider\ThumbnailClient;
 class Thumbnail
 {
     /**
-     * Undocumented variable
-     *
-     * @var ThumbnailClient
-     */
-    public $client;
-
-    /**
-     * Undocumented variable
-     *
-     * @var Storage
-     */
-    protected $storage;
-
-    /**
-     * Undocumented variable
-     *
-     * @var Carbon
-     */
-    protected $carbon;
-
-    /**
-     * Undocumented variable
-     *
-     * @var Config
-     */
-    protected $config;
-
-    /**
-     * Undocumented variable
-     *
-     * @var string
-     */
-    protected $url;
-
-    /**
      * [protected description]
      * @var string
      */
     protected $path = 'vendor/idir/thumbnails';
-
-    /**
-     * Undocumented variable
-     *
-     * @var string
-     */
-    protected $disk;
 
     /**
      * Undocumented function
@@ -68,31 +42,25 @@ class Thumbnail
      * @param string $disk
      */
     public function __construct(
-        ThumbnailClient $client,
-        Storage $storage,
-        Carbon $carbon,
-        Config $config,
-        string $url,
-        string $disk = 'public'
+        protected ThumbnailClient $client,
+        protected Storage $storage,
+        protected Carbon $carbon,
+        protected Config $config,
+        protected string $url,
+        protected string $disk = 'public'
     ) {
-        $this->client = $client;
-        $this->storage = $storage;
-        $this->carbon = $carbon;
-        $this->config = $config;
-
-        $this->url = $url;
-        $this->disk = $disk;
+        //
     }
 
     /**
      * Undocumented function
      *
      * @param string $url
-     * @return static
+     * @return self
      */
-    public function make(string $url)
+    public function make(string $url): self
     {
-        return new static($this->client, $this->storage, $this->carbon, $this->config, $url, $this->disk);
+        return new self($this->client, $this->storage, $this->carbon, $this->config, $url, $this->disk);
     }
 
     /**
@@ -102,15 +70,14 @@ class Thumbnail
      */
     protected function getHost(): string
     {
-        return parse_url($this->url, PHP_URL_HOST);
+        return parse_url($this->url, PHP_URL_HOST) ?: '';
     }
 
     /**
-     * Undocumented function
      *
-     * @return void
+     * @return string
      */
-    protected function getFilePath()
+    protected function getFilePath(): string
     {
         $hash = md5($this->getHost());
         $path = implode('/', array_slice(str_split($hash), 0, 3));
@@ -125,6 +92,7 @@ class Thumbnail
      */
     public function getLastModified(): string
     {
+        /** @var string */
         return $this->storage->disk($this->disk)->lastModified($this->getFilePath());
     }
 
@@ -153,6 +121,7 @@ class Thumbnail
      */
     protected function isTimeToReload(): bool
     {
+        /** @var string */
         $modified_at = $this->storage->disk($this->disk)->lastModified($this->getFilePath());
 
         return $this->carbon->parse($modified_at)

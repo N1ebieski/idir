@@ -1,7 +1,24 @@
 <?php
 
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is licenced under the Software License Agreement
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://intelekt.net.pl/pages/regulamin
+ *
+ * With the purchase or the installation of the software in your application
+ * you accept the licence agreement.
+ *
+ * @author    Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ * @copyright Since 2019 INTELEKT - Usługi Komputerowe Mariusz Wysokiński
+ * @license   https://intelekt.net.pl/pages/regulamin
+ */
+
 namespace N1ebieski\IDir\Database\Seeders\SEOKatalog;
 
+use InvalidArgumentException;
 use Illuminate\Database\Seeder;
 use N1ebieski\IDir\Models\User;
 use N1ebieski\IDir\Models\Group;
@@ -14,20 +31,6 @@ use N1ebieski\IDir\Database\Seeders\Traits\HasImportable;
 class SEOKatalogSeeder extends Seeder
 {
     use HasImportable;
-
-    /**
-     * Undocumented variable
-     *
-     * @var Cache
-     */
-    protected $cache;
-
-    /**
-     * Undocumented variable
-     *
-     * @var Queue
-     */
-    protected $queue;
 
     /**
      * Undocumented variable
@@ -58,19 +61,20 @@ class SEOKatalogSeeder extends Seeder
     public $userLastId;
 
     /**
-     * Undocumented function
      *
      * @param Cache $cache
+     * @param Queue $queue
+     * @return void
+     * @throws InvalidArgumentException
      */
-    public function __construct(Cache $cache, Queue $queue)
-    {
-        $this->cache = $cache;
-        $this->queue = $queue;
-
-        $this->groupLastId = $this->groupLastId();
-        $this->fieldLastId = $this->fieldLastId();
+    public function __construct(
+        protected Cache $cache,
+        protected Queue $queue
+    ) {
+        $this->groupLastId = $this->getGroupLastId();
+        $this->fieldLastId = $this->getFieldLastId();
         $this->subLastId = $this->subLastId();
-        $this->userLastId = $this->userLastId();
+        $this->userLastId = $this->getUserLastId();
 
         DB::disableQueryLog();
     }
@@ -80,11 +84,12 @@ class SEOKatalogSeeder extends Seeder
      *
      * @return integer
      */
-    protected function userLastId(): int
+    protected function getUserLastId(): int
     {
         return (
             User::orderBy('id', 'desc')->first()->id
             -
+            // @phpstan-ignore-next-line
             DB::connection('import')->table('users')->orderBy('id', 'desc')->first()->id
         );
     }
@@ -96,6 +101,7 @@ class SEOKatalogSeeder extends Seeder
      */
     protected function subLastId(): int
     {
+        // @phpstan-ignore-next-line
         return DB::connection('import')->table('subcategories')->orderBy('id', 'desc')->first('id')->id;
     }
 
@@ -104,7 +110,7 @@ class SEOKatalogSeeder extends Seeder
      *
      * @return integer
      */
-    protected function fieldLastId(): int
+    protected function getFieldLastId(): int
     {
         return (
             (Field::orderBy('id', 'desc')->first()->id ?? 0)
@@ -118,11 +124,12 @@ class SEOKatalogSeeder extends Seeder
      *
      * @return integer
      */
-    protected function groupLastId(): int
+    protected function getGroupLastId(): int
     {
         return (
             Group::orderBy('id', 'desc')->first()->id
             -
+            // @phpstan-ignore-next-line
             DB::connection('import')->table('groups')->orderBy('id', 'desc')->first()->id
         );
     }
@@ -143,11 +150,16 @@ class SEOKatalogSeeder extends Seeder
         $this->call(FieldsSeeder::class);
         $this->call(LinksSeeder::class);
         $this->call(UsersSeeder::class);
+
         $this->import();
+
         $this->call(DirsSeeder::class);
+
         $this->import();
+
         $this->call(BansSeeder::class);
         $this->call(CommentsSeeder::class);
+
         $this->import();
     }
 }

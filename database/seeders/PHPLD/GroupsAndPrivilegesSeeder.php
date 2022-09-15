@@ -1,11 +1,26 @@
 <?php
 
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is licenced under the Software License Agreement
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://intelekt.net.pl/pages/regulamin
+ *
+ * With the purchase or the installation of the software in your application
+ * you accept the licence agreement.
+ *
+ * @author    Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ * @copyright Since 2019 INTELEKT - Usługi Komputerowe Mariusz Wysokiński
+ * @license   https://intelekt.net.pl/pages/regulamin
+ */
+
 namespace N1ebieski\IDir\Database\Seeders\PHPLD;
 
 use N1ebieski\IDir\Models\Group;
 use Illuminate\Support\Facades\DB;
 use N1ebieski\IDir\Models\Privilege;
-use N1ebieski\IDir\ValueObjects\Group\Id;
 use N1ebieski\IDir\ValueObjects\Group\Url;
 use N1ebieski\IDir\ValueObjects\Group\Slug;
 use N1ebieski\IDir\ValueObjects\Group\Visible;
@@ -30,7 +45,7 @@ class GroupsAndPrivilegesSeeder extends PHPLDSeeder
             ->get()
             ->each(function ($item) use ($privileges) {
                 DB::transaction(function () use ($item, $privileges) {
-                    $group = Group::make();
+                    $group = new Group();
 
                     $group->id = $this->groupLastId + $item->ID;
                     $group->name = $item->NAME;
@@ -42,13 +57,13 @@ class GroupsAndPrivilegesSeeder extends PHPLDSeeder
                     $group->max_models = null;
                     $group->max_models_daily = null;
                     $group->visible = $item->STATUS === 0 ?
-                        Visible::INACTIVE
-                        : Visible::ACTIVE;
+                        Visible::inactive()
+                        : Visible::active();
                     $group->apply_status = $item->REQUIRE_APPROVAL === 1 ?
-                        ApplyStatus::INACTIVE
-                        : ApplyStatus::ACTIVE;
-                    $group->url = Url::ACTIVE;
-                    $group->backlink = Backlink::INACTIVE;
+                        ApplyStatus::inactive()
+                        : ApplyStatus::active();
+                    $group->url = Url::active();
+                    $group->backlink = Backlink::inactive();
 
                     $group->save();
 
@@ -84,7 +99,7 @@ class GroupsAndPrivilegesSeeder extends PHPLDSeeder
      *
      * @return integer
      */
-    protected function groupLastId(): int
+    protected function getGroupLastId(): int
     {
         return Group::orderBy('id', 'desc')->first()->id;
     }

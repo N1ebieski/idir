@@ -1,5 +1,21 @@
 <?php
 
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is licenced under the Software License Agreement
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://intelekt.net.pl/pages/regulamin
+ *
+ * With the purchase or the installation of the software in your application
+ * you accept the licence agreement.
+ *
+ * @author    Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ * @copyright Since 2019 INTELEKT - Usługi Komputerowe Mariusz Wysokiński
+ * @license   https://intelekt.net.pl/pages/regulamin
+ */
+
 namespace N1ebieski\IDir\View\ViewModels\Web\Dir;
 
 use Illuminate\Http\Request;
@@ -13,27 +29,6 @@ use N1ebieski\IDir\Models\Category\Dir\Category;
 
 class Create3ViewModel extends ViewModel
 {
-    /**
-     * [$category description]
-     *
-     * @var Category
-     */
-    protected $category;
-
-    /**
-     * [$link description]
-     *
-     * @var Link
-     */
-    protected $link;
-
-    /**
-     * [$group description]
-     *
-     * @var Group
-     */
-    public $group;
-
     /**
      * [$categoriesSelection description]
      *
@@ -57,16 +52,12 @@ class Create3ViewModel extends ViewModel
      * @param   Request   $request   [$request description]
      */
     public function __construct(
-        Group $group,
-        Category $category,
-        Link $link,
-        Request $request
+        public Group $group,
+        protected Category $category,
+        protected Link $link,
+        protected Request $request
     ) {
-        $this->group = $group;
-        $this->category = $category;
-        $this->link = $link;
-
-        $this->request = $request;
+        //
     }
 
     /**
@@ -152,6 +143,7 @@ class Create3ViewModel extends ViewModel
         $linkId = $this->request->old('backlink');
 
         if ($linkId !== null) {
+            /** @var Link|null */
             return $this->link->find($linkId);
         }
 

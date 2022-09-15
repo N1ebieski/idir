@@ -1,5 +1,21 @@
 <?php
 
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is licenced under the Software License Agreement
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://intelekt.net.pl/pages/regulamin
+ *
+ * With the purchase or the installation of the software in your application
+ * you accept the licence agreement.
+ *
+ * @author    Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ * @copyright Since 2019 INTELEKT - Usługi Komputerowe Mariusz Wysokiński
+ * @license   https://intelekt.net.pl/pages/regulamin
+ */
+
 namespace N1ebieski\IDir\View\ViewModels\Admin\Group;
 
 use Illuminate\Http\Request;
@@ -13,41 +29,6 @@ use Illuminate\Support\Collection as Collect;
 class CreateViewModel extends ViewModel
 {
     /**
-     * Undocumented variable
-     *
-     * @var Group
-     */
-    protected $group;
-
-    /**
-     * Undocumented variable
-     *
-     * @var Privilege
-     */
-    protected $privilege;
-
-    /**
-     * Undocumented variable
-     *
-     * @var Price
-     */
-    protected $price;
-
-    /**
-     * Undocumented variable
-     *
-     * @var Request
-     */
-    protected $request;
-
-    /**
-     * Undocumented variable
-     *
-     * @var Collect
-     */
-    protected $collect;
-
-    /**
      * Undocumented function
      *
      * @param Group $group
@@ -57,18 +38,13 @@ class CreateViewModel extends ViewModel
      * @param Collect $collect
      */
     public function __construct(
-        Group $group,
-        Privilege $privilege,
-        Price $price,
-        Request $request,
-        Collect $collect
+        protected Group $group,
+        protected Privilege $privilege,
+        protected Price $price,
+        protected Request $request,
+        protected Collect $collect
     ) {
-        $this->group = $group;
-        $this->privilege = $privilege;
-        $this->price = $price;
-
-        $this->request = $request;
-        $this->collect = $collect;
+        //
     }
 
     /**

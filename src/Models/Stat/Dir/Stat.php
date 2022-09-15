@@ -28,6 +28,7 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
  * @property \N1ebieski\ICore\ValueObjects\Stat\Slug $slug
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read object<value> $pivot
  * @property-read string $created_at_diff
  * @property-read string $model_type
  * @property-read string $poli

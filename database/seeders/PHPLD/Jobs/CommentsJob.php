@@ -1,5 +1,21 @@
 <?php
 
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is licenced under the Software License Agreement
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://intelekt.net.pl/pages/regulamin
+ *
+ * With the purchase or the installation of the software in your application
+ * you accept the licence agreement.
+ *
+ * @author    Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ * @copyright Since 2019 INTELEKT - Usługi Komputerowe Mariusz Wysokiński
+ * @license   https://intelekt.net.pl/pages/regulamin
+ */
+
 namespace N1ebieski\IDir\Database\Seeders\PHPLD\Jobs;
 
 use Exception;
@@ -23,20 +39,6 @@ class CommentsJob implements ShouldQueue
     use SerializesModels;
 
     /**
-     * Undocumented variable
-     *
-     * @var Collection
-     */
-    protected $items;
-
-    /**
-     * Undocumented variable
-     *
-     * @var int
-     */
-    protected $userLastId;
-
-    /**
      * The number of times the job may be attempted.
      *
      * @var int
@@ -49,11 +51,11 @@ class CommentsJob implements ShouldQueue
      * @param Collection $items
      * @param integer $userLastId
      */
-    public function __construct(Collection $items, int $userLastId)
-    {
-        $this->items = $items;
-
-        $this->userLastId = $userLastId;
+    public function __construct(
+        protected Collection $items,
+        protected int $userLastId
+    ) {
+        //
     }
 
     /**
@@ -69,13 +71,13 @@ class CommentsJob implements ShouldQueue
             }
 
             DB::transaction(function () use ($item) {
-                $comment = Comment::make();
+                $comment = new Comment();
 
-                $comment->content_html = $this->contentHtml($item->COMMENT);
-                $comment->content = $this->contentHtml($item->COMMENT);
+                $comment->content_html = $this->getContentHtml($item->COMMENT);
+                $comment->content = $this->getContentHtml($item->COMMENT);
                 $comment->status = $item->STATUS === 2 ?
-                    Status::ACTIVE
-                    : Status::INACTIVE;
+                    Status::active()
+                    : Status::inactive();
                 $comment->created_at = $item->DATE_ADDED;
                 $comment->updated_at = $item->DATE_ADDED;
 
@@ -103,12 +105,11 @@ class CommentsJob implements ShouldQueue
     }
 
     /**
-     * Undocumented function
      *
-     * @param object $item
-     * @return boolean
+     * @param mixed $item
+     * @return bool
      */
-    protected function verify(object $item): bool
+    protected function verify($item): bool
     {
         return Comment::where('id', $item->ID)->first() === null
             && !empty($item->ITEM_ID)
@@ -121,7 +122,7 @@ class CommentsJob implements ShouldQueue
      * @param string $content
      * @return string
      */
-    protected function contentHtml(string $content): string
+    protected function getContentHtml(string $content): string
     {
         return strip_tags(htmlspecialchars_decode(utf8_decode($content)));
     }

@@ -1,5 +1,21 @@
 <?php
 
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is licenced under the Software License Agreement
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://intelekt.net.pl/pages/regulamin
+ *
+ * With the purchase or the installation of the software in your application
+ * you accept the licence agreement.
+ *
+ * @author    Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ * @copyright Since 2019 INTELEKT - Usługi Komputerowe Mariusz Wysokiński
+ * @license   https://intelekt.net.pl/pages/regulamin
+ */
+
 namespace N1ebieski\IDir\View\ViewModels\Admin\Dir;
 
 use Illuminate\Http\Request;
@@ -12,47 +28,20 @@ use Illuminate\Contracts\Config\Repository as Config;
 class Create2ViewModel extends ViewModel
 {
     /**
-     * [$category description]
      *
-     * @var Category
-     */
-    protected $category;
-
-    /**
-     * [$group description]
-     *
-     * @var Group
-     */
-    public $group;
-
-    /**
-     * [$config description]
-     *
-     * @var Config
-     */
-    protected $config;
-
-    /**
-     * [__construct description]
-     *
-     * @param   Group     $group     [$post description]
-     * @param   Category  $category  [$category description]
-     * @param   Config    $config    [$config description]
-     * @param   Request   $request   [$request description]
-     *
-     * @return  [type]               [return description]
+     * @param Group $group
+     * @param Category $category
+     * @param Config $config
+     * @param Request $request
+     * @return void
      */
     public function __construct(
-        Group $group,
-        Category $category,
-        Config $config,
-        Request $request
+        public Group $group,
+        protected Category $category,
+        protected Config $config,
+        protected Request $request
     ) {
-        $this->group = $group;
-        $this->category = $category;
-
-        $this->config = $config;
-        $this->request = $request;
+        //
     }
 
     /**

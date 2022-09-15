@@ -1,11 +1,28 @@
 <?php
 
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is licenced under the Software License Agreement
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://intelekt.net.pl/pages/regulamin
+ *
+ * With the purchase or the installation of the software in your application
+ * you accept the licence agreement.
+ *
+ * @author    Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ * @copyright Since 2019 INTELEKT - Usługi Komputerowe Mariusz Wysokiński
+ * @license   https://intelekt.net.pl/pages/regulamin
+ */
+
 namespace N1ebieski\IDir\Database\Seeders\SEOKatalog\Jobs;
 
 use Exception;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Illuminate\Bus\Queueable;
+use InvalidArgumentException;
 use N1ebieski\IDir\Models\Dir;
 use N1ebieski\IDir\Models\Link;
 use N1ebieski\IDir\Models\User;
@@ -41,41 +58,6 @@ class DirsJob implements ShouldQueue
     protected const MAX_TAGS = 50000;
 
     /**
-     * Undocumented variable
-     *
-     * @var Collection
-     */
-    protected $items;
-
-    /**
-     * Undocumented variable
-     *
-     * @var int
-     */
-    protected $userLastId;
-
-    /**
-     * Undocumented variable
-     *
-     * @var int
-     */
-    protected $groupLastId;
-
-    /**
-     * Undocumented variable
-     *
-     * @var int
-     */
-    protected $fieldLastId;
-
-    /**
-     * Undocumented variable
-     *
-     * @var Dir
-     */
-    protected $dir;
-
-    /**
      * The number of times the job may be attempted.
      *
      * @var int
@@ -91,16 +73,12 @@ class DirsJob implements ShouldQueue
      * @param integer $fieldLastId
      */
     public function __construct(
-        Collection $items,
-        int $userLastId,
-        int $groupLastId,
-        int $fieldLastId
+        protected Collection $items,
+        protected int $userLastId,
+        protected int $groupLastId,
+        protected int $fieldLastId
     ) {
-        $this->items = $items;
-
-        $this->userLastId = $userLastId;
-        $this->groupLastId = $groupLastId;
-        $this->fieldLastId = $fieldLastId;
+        //
     }
 
     /**
@@ -138,34 +116,40 @@ class DirsJob implements ShouldQueue
             }
 
             DB::transaction(function () use ($item, $relations, $groups, $fields, $defaultStats, $defaultRegions, $defaultFields, $countTags) {
-                $dir = Dir::make();
+                $dir = new Dir();
 
                 $dir->id = $item->id;
                 $dir->title = htmlspecialchars_decode($item->title);
-                $dir->content_html = $this->contentHtml($item->description);
-                $dir->content = $this->contentHtml($item->description);
+                $dir->content_html = $this->getContentHtml($item->description);
+                $dir->content = $this->getContentHtml($item->description);
 
                 try {
-                    $dir->url = new Url($this->url($item->url));
+                    $dir->url = $this->getUrl($item->url);
                 } catch (\InvalidArgumentException $e) {
                     return;
                 }
 
                 $dir->status = $item->active;
+                // @phpstan-ignore-next-line
                 $dir->privileged_at = $item->date_mod !== 0 ?
                     Carbon::createFromTimestamp($item->date_mod)
                     : null;
-                $dir->privileged_to = $this->privilegedTo(
+                // @phpstan-ignore-next-line
+                $dir->privileged_to = $this->getPrivilegedTo(
                     $item->date_mod,
                     ($groups->where('id', $item->group)->first()->days ?? 0)
                 );
+                // @phpstan-ignore-next-line
                 $dir->created_at = Carbon::createFromTimestamp($item->date);
+                // @phpstan-ignore-next-line
                 $dir->updated_at = Carbon::createFromTimestamp($item->date);
+
+                $group = new Group();
 
                 $dir->group()->associate(
                     !empty($item->group) && Group::find($this->groupLastId + $item->group) !== null ?
                         $this->groupLastId + $item->group
-                        : Group::make()->makeCache()->rememberBySlug(Slug::default())
+                        : $group->makeCache()->rememberBySlug(Slug::default())
                 );
 
                 $dir->user()->associate(
@@ -185,7 +169,7 @@ class DirsJob implements ShouldQueue
                     ]
                 ]);
 
-                if ($countTags < static::MAX_TAGS) {
+                if ($countTags < self::MAX_TAGS) {
                     $keywords = Config::get('icore.tag.normalizer') !== null ?
                         Config::get('icore.tag.normalizer')($item->keywords)
                         : $item->keywords;
@@ -204,18 +188,18 @@ class DirsJob implements ShouldQueue
                     ]);
                 }
 
-                if (!empty($item->backlink_link)) {
+                if (!empty($item->backlink_link) && !empty($item->backlink)) {
                     $backlink = Link::where([
-                        ['url', $this->url($item->backlink)],
+                        ['url', $this->getRealUrlAsString($item->backlink)],
                         ['type', Type::BACKLINK]
                     ])->first();
 
                     if (is_int(optional($backlink)->id)) {
-                        $dirBacklink = DirBacklink::make();
+                        $dirBacklink = new DirBacklink();
 
                         $dirBacklink->link()->associate($backlink->id);
                         $dirBacklink->dir()->associate($dir->id);
-                        $dirBacklink->url = $this->url($item->backlink_link);
+                        $dirBacklink->url = $this->getRealUrlAsString($item->backlink_link);
                         $dirBacklink->save();
                     }
                 }
@@ -271,13 +255,14 @@ class DirsJob implements ShouldQueue
                                     $id = $this->fieldLastId + $field->id;
                             }
 
+                            // @phpstan-ignore-next-line
                             $ids[$id] = [
                                 'value' => json_encode($value)
                             ];
                         }
                     }
 
-                    $dir->fields()->attach($ids ?? []);
+                    $dir->fields()->attach($ids);
                 }
 
                 $dir->categories()->attach(
@@ -299,26 +284,35 @@ class DirsJob implements ShouldQueue
     }
 
     /**
-     * Undocumented function
      *
-     * @param object $item
-     * @return boolean
+     * @param mixed $item
+     * @return bool
+     * @throws InvalidArgumentException
      */
-    protected function verify(object $item): bool
+    protected function verify($item): bool
     {
         return Dir::where('id', $item->id)
-            ->orWhere('url', $this->url($item->url))->first() === null;
+            ->orWhere('url', $this->getRealUrlAsString($item->url))->first() === null;
     }
 
     /**
-     * Undocumented function
      *
      * @param string $url
      * @return string
      */
-    protected function url(string $url): string
+    protected function getRealUrlAsString(string $url): string
     {
         return trim(strtolower(Str::contains($url, 'https://') ? $url : 'http://' . $url));
+    }
+
+    /**
+     *
+     * @param string $url
+     * @return Url
+     */
+    protected function getUrl(string $url): Url
+    {
+        return new Url($this->getRealUrlAsString($url));
     }
 
     /**
@@ -327,7 +321,7 @@ class DirsJob implements ShouldQueue
      * @param string $desc
      * @return string
      */
-    protected function contentHtml(string $desc): string
+    protected function getContentHtml(string $desc): string
     {
         $desc = preg_replace('#\[([a-z0-9=]+)\]<br />(.*?)\[/([a-z]+)\]#si', '[\\1]\\2[/\\3]', $desc);
         $desc = str_replace(array('<br /><br />[list', '<br />[list'), array('[list', '[list'), $desc);
@@ -360,7 +354,7 @@ class DirsJob implements ShouldQueue
      * @param integer $days
      * @return string|null
      */
-    protected function privilegedTo(int $date, int $days): ?string
+    protected function getPrivilegedTo(int $date, int $days): ?string
     {
         if ($date !== 0 && $days > 0) {
             return Carbon::createFromTimestamp($date)->addDays($days);

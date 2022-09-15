@@ -1,10 +1,28 @@
 <?php
 
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is licenced under the Software License Agreement
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://intelekt.net.pl/pages/regulamin
+ *
+ * With the purchase or the installation of the software in your application
+ * you accept the licence agreement.
+ *
+ * @author    Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ * @copyright Since 2019 INTELEKT - Usługi Komputerowe Mariusz Wysokiński
+ * @license   https://intelekt.net.pl/pages/regulamin
+ */
+
 namespace N1ebieski\IDir\Database\Seeders\SEOKatalog;
 
+use InvalidArgumentException;
 use Illuminate\Support\Facades\DB;
 use N1ebieski\IDir\ValueObjects\Field\Type;
 use N1ebieski\IDir\Models\Field\Group\Field;
+use N1ebieski\IDir\ValueObjects\Field\Options;
 use N1ebieski\IDir\ValueObjects\Field\Visible;
 use N1ebieski\IDir\Database\Seeders\SEOKatalog\SEOKatalogSeeder;
 
@@ -27,27 +45,27 @@ class FieldsSeeder extends SEOKatalogSeeder
                         return;
                     }
 
-                    $field = Field::make();
+                    $field = new Field();
 
                     $field->id = $this->fieldLastId + $item->id;
                     $field->title = $item->title;
                     $field->desc = strlen($item->description) > 0 ?
                         $item->description
                         : null;
-                    $field->type = $this->type($item->type);
+                    $field->type = $this->getType($item->type);
                     $field->visible = $item->type_f === 0 ?
-                        Visible::ACTIVE
-                        : Visible::INACTIVE;
-                    $field->options = $this->options($item);
+                        Visible::active()
+                        : Visible::inactive();
+                    $field->options = $this->getOptions($item);
 
                     $field->save();
 
                     $field->morphs()->attach(
                         $item->groups === 'all' ?
-                        $field->morphs()->make()->get('id')->pluck('id')->toArray()
+                        $field->morphs()->make()->pluck('id')->toArray()
                         : collect(array_filter(explode(',', $item->groups)))
                             ->map(function ($item) {
-                                return $this->groupLastId + $item;
+                                return $this->groupLastId + (int)$item;
                             })
                     );
                 });
@@ -59,44 +77,36 @@ class FieldsSeeder extends SEOKatalogSeeder
      *
      * @return integer
      */
-    protected function fieldLastId(): int
+    protected function getFieldLastId(): int
     {
         return Field::orderBy('id', 'desc')->first()->id ?? 0;
     }
 
     /**
-     * Undocumented function
      *
-     * @param integer $type
-     * @return string
+     * @param int $type
+     * @return Type
+     * @throws InvalidArgumentException
      */
-    protected function type(int $type): string
+    protected function getType(int $type): Type
     {
-        switch ($type) {
-            case 1:
-                return Type::INPUT;
+        return new Type(match ($type) {
+            1 => Type::INPUT,
+            2 => Type::TEXTAREA,
+            3 => Type::SELECT,
+            4 => Type::CHECKBOX,
+            5 => Type::IMAGE,
 
-            case 2:
-                return Type::TEXTAREA;
-
-            case 3:
-                return Type::SELECT;
-
-            case 4:
-                return Type::CHECKBOX;
-
-            case 5:
-                return Type::IMAGE;
-        }
+            default => throw new \InvalidArgumentException("The type '{$type}' not found")
+        });
     }
 
     /**
-     * Undocumented function
      *
-     * @param object $item
-     * @return array
+     * @param mixed $item
+     * @return Options
      */
-    protected function options(object $item): array
+    protected function getOptions($item): Options
     {
         if ($item->min >= 0) {
             $options['min'] = $item->min;
@@ -124,6 +134,6 @@ class FieldsSeeder extends SEOKatalogSeeder
             $options['size'] = $item->size;
         }
 
-        return $options;
+        return new Options((object)$options);
     }
 }

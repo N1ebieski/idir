@@ -1,5 +1,21 @@
 <?php
 
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is licenced under the Software License Agreement
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://intelekt.net.pl/pages/regulamin
+ *
+ * With the purchase or the installation of the software in your application
+ * you accept the licence agreement.
+ *
+ * @author    Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ * @copyright Since 2019 INTELEKT - Usługi Komputerowe Mariusz Wysokiński
+ * @license   https://intelekt.net.pl/pages/regulamin
+ */
+
 namespace N1ebieski\IDir\View\ViewModels\Admin\Dir;
 
 use Illuminate\Http\Request;
@@ -15,41 +31,6 @@ use N1ebieski\IDir\Models\Category\Dir\Category;
 
 class EditFull3ViewModel extends ViewModel
 {
-    /**
-     * Undocumented variable
-     *
-     * @var Dir
-     */
-    public $dir;
-
-    /**
-     * [$group description]
-     *
-     * @var Group
-     */
-    public $group;
-
-    /**
-     * [$category description]
-     *
-     * @var Category
-     */
-    protected $category;
-
-    /**
-     * [$link description]
-     *
-     * @var Link
-     */
-    protected $link;
-
-    /**
-     * Undocumented variable
-     *
-     * @var User
-     */
-    protected $user;
-
     /**
      * [$categoriesSelection description]
      *
@@ -75,20 +56,14 @@ class EditFull3ViewModel extends ViewModel
      * @param Request $request
      */
     public function __construct(
-        Dir $dir,
-        Group $group,
-        Category $category,
-        Link $link,
-        User $user,
-        Request $request
+        public Dir $dir,
+        public Group $group,
+        protected Category $category,
+        protected Link $link,
+        protected User $user,
+        protected Request $request
     ) {
-        $this->dir = $dir;
-        $this->group = $group;
-        $this->category = $category;
-        $this->link = $link;
-        $this->user = $user;
-
-        $this->request = $request;
+        //
     }
 
     /**
@@ -171,9 +146,11 @@ class EditFull3ViewModel extends ViewModel
      */
     public function backlinkSelection(): ?Link
     {
+        // @phpstan-ignore-next-line
         $linkId = $this->request->old('backlink', $this->dir->backlink->link_id ?? null);
 
         if ($linkId !== null) {
+            /** @var Link|null */
             return $this->link->find($linkId);
         }
 
@@ -202,6 +179,7 @@ class EditFull3ViewModel extends ViewModel
         $userId = $this->request->old('user');
 
         if ($userId !== null) {
+            /** @var User|null */
             return $this->user->find($userId);
         }
 

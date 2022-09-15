@@ -1,10 +1,27 @@
 <?php
 
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is licenced under the Software License Agreement
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://intelekt.net.pl/pages/regulamin
+ *
+ * With the purchase or the installation of the software in your application
+ * you accept the licence agreement.
+ *
+ * @author    Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ * @copyright Since 2019 INTELEKT - Usługi Komputerowe Mariusz Wysokiński
+ * @license   https://intelekt.net.pl/pages/regulamin
+ */
+
 namespace N1ebieski\IDir\Database\Seeders\PHPLD\Jobs;
 
 use Exception;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
+use InvalidArgumentException;
 use N1ebieski\IDir\Models\Dir;
 use N1ebieski\IDir\Models\User;
 use N1ebieski\IDir\Models\Group;
@@ -15,10 +32,12 @@ use N1ebieski\ICore\Models\Stat\Stat;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Queue\InteractsWithQueue;
+use N1ebieski\IDir\ValueObjects\Dir\Url;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use N1ebieski\IDir\ValueObjects\Dir\Status;
 use N1ebieski\IDir\ValueObjects\Group\Slug;
+use Carbon\Exceptions\InvalidFormatException;
 use N1ebieski\IDir\Models\Category\Dir\Category;
 
 class DirsJob implements ShouldQueue
@@ -36,41 +55,6 @@ class DirsJob implements ShouldQueue
     protected const MAX_TAGS = 50000;
 
     /**
-     * Undocumented variable
-     *
-     * @var Collection
-     */
-    protected $items;
-
-    /**
-     * Undocumented variable
-     *
-     * @var int
-     */
-    protected $userLastId;
-
-    /**
-     * Undocumented variable
-     *
-     * @var int
-     */
-    protected $groupLastId;
-
-    /**
-     * Undocumented variable
-     *
-     * @var int
-     */
-    protected $fieldLastId;
-
-    /**
-     * Undocumented variable
-     *
-     * @var Dir
-     */
-    protected $dir;
-
-    /**
      * The number of times the job may be attempted.
      *
      * @var int
@@ -86,16 +70,12 @@ class DirsJob implements ShouldQueue
      * @param integer $fieldLastId
      */
     public function __construct(
-        Collection $items,
-        int $userLastId,
-        int $groupLastId,
-        int $fieldLastId
+        protected Collection $items,
+        protected int $userLastId,
+        protected int $groupLastId,
+        protected int $fieldLastId
     ) {
-        $this->items = $items;
-
-        $this->userLastId = $userLastId;
-        $this->groupLastId = $groupLastId;
-        $this->fieldLastId = $fieldLastId;
+        //
     }
 
     /**
@@ -116,31 +96,35 @@ class DirsJob implements ShouldQueue
             }
 
             DB::transaction(function () use ($item, $fields, $defaultStats, $countTags) {
-                $dir = Dir::make();
+                $dir = new Dir();
 
                 $dir->id = $item->ID;
                 $dir->title = strip_tags(utf8_decode($item->TITLE));
                 $dir->content_html = utf8_decode($item->DESCRIPTION);
                 $dir->content = utf8_decode($item->DESCRIPTION);
                 $dir->status = $item->STATUS === 2 ?
-                    Status::ACTIVE
-                    : Status::INACTIVE;
+                    Status::active()
+                    : Status::inactive();
 
                 try {
-                    $dir->url = new Url($this->url(mb_strtolower($item->URL)));
+                    $dir->url = $this->getUrl($item->URL);
                 } catch (\InvalidArgumentException $e) {
                     return;
                 }
 
-                $dir->privileged_at = $this->privilegedAt($item);
-                $dir->privileged_to = $this->privilegedTo($item);
+                // @phpstan-ignore-next-line
+                $dir->privileged_at = $this->getPrivilegedAt($item);
+                // @phpstan-ignore-next-line
+                $dir->privileged_to = $this->getPrivilegedTo($item);
                 $dir->created_at = $item->DATE_ADDED;
                 $dir->updated_at = $item->DATE_MODIFIED;
+
+                $group = new Group();
 
                 $dir->group()->associate(
                     !empty($item->LINK_TYPE) && Group::find($this->groupLastId + $item->LINK_TYPE) !== null ?
                         $this->groupLastId + $item->LINK_TYPE
-                        : Group::make()->makeCache()->rememberBySlug(Slug::default())
+                        : $group->makeCache()->rememberBySlug(Slug::default())
                 );
 
                 $dir->user()->associate(
@@ -157,7 +141,7 @@ class DirsJob implements ShouldQueue
                     ]
                 ]);
 
-                if ($countTags < $this->MAX_TAGS) {
+                if ($countTags < self::MAX_TAGS) {
                     $keywords = Config::get('icore.tag.normalizer') !== null ?
                         Config::get('icore.tag.normalizer')(utf8_decode($item->META_KEYWORDS))
                         : utf8_decode($item->META_KEYWORDS);
@@ -200,7 +184,7 @@ class DirsJob implements ShouldQueue
                         }
                     }
 
-                    $dir->fields()->attach($ids ?? []);
+                    $dir->fields()->attach($ids);
                 }
 
                 if (Category::find($item->CATEGORY_ID) !== null) {
@@ -222,24 +206,34 @@ class DirsJob implements ShouldQueue
     }
 
     /**
-     * Undocumented function
      *
-     * @param object $item
-     * @return boolean
+     * @param mixed $item
+     * @return bool
+     * @throws InvalidArgumentException
      */
-    protected function verify(object $item): bool
+    protected function verify($item): bool
     {
         return Dir::where('id', $item->ID)
             ->orWhere('url', mb_strtolower($item->URL))->first() === null;
     }
 
     /**
-     * Undocumented function
      *
-     * @param object $item
-     * @return string|null
+     * @param string $url
+     * @return Url
      */
-    protected function privilegedAt(object $item): ?string
+    protected function getUrl(string $url): Url
+    {
+        return new Url(trim(mb_strtolower($url)));
+    }
+
+    /**
+     *
+     * @param mixed $item
+     * @return null|string
+     * @throws InvalidFormatException
+     */
+    protected function getPrivilegedAt($item): ?string
     {
         if ($item->FEATURED === 1) {
             if ($item->EXPIRY_DATE !== null && $item->EXPIRY_DATE !== '0000-00-00 00:00:00') {
@@ -253,12 +247,11 @@ class DirsJob implements ShouldQueue
     }
 
     /**
-     * Undocumented function
      *
-     * @param object $item
-     * @return string|null
+     * @param mixed $item
+     * @return null|string
      */
-    protected function privilegedTo(object $item): ?string
+    protected function getPrivilegedTo($item): ?string
     {
         if ($item->FEATURED === 1 && $item->EXPIRY_DATE !== null && $item->EXPIRY_DATE !== '0000-00-00 00:00:00') {
             return $item->EXPIRY_DATE;

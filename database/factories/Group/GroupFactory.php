@@ -1,10 +1,25 @@
 <?php
 
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is licenced under the Software License Agreement
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://intelekt.net.pl/pages/regulamin
+ *
+ * With the purchase or the installation of the software in your application
+ * you accept the licence agreement.
+ *
+ * @author    Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ * @copyright Since 2019 INTELEKT - Usługi Komputerowe Mariusz Wysokiński
+ * @license   https://intelekt.net.pl/pages/regulamin
+ */
+
 namespace N1ebieski\IDir\Database\Factories\Group;
 
 use N1ebieski\IDir\Models\Group;
 use N1ebieski\IDir\Models\Privilege;
-use N1ebieski\IDir\ValueObjects\Group\Id;
 use N1ebieski\IDir\ValueObjects\Group\Url;
 use N1ebieski\IDir\ValueObjects\Group\Slug;
 use N1ebieski\IDir\ValueObjects\Group\Visible;
@@ -17,7 +32,7 @@ class GroupFactory extends Factory
     /**
      * The name of the factory's corresponding model.
      *
-     * @var string
+     * @var class-string<Group>
      */
     protected $model = Group::class;
 
@@ -63,8 +78,10 @@ class GroupFactory extends Factory
     public function applyAltGroup()
     {
         return $this->state(function () {
+            $group = new Group();
+
             return [
-                'alt_id' => Group::make()->makeCache()->rememberBySlug(Slug::default())->id
+                'alt_id' => $group->makeCache()->rememberBySlug(Slug::default())->id
             ];
         });
     }

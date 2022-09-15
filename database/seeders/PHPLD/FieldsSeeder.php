@@ -18,9 +18,12 @@
 
 namespace N1ebieski\IDir\Database\Seeders\PHPLD;
 
+use Exception;
+use InvalidArgumentException;
 use Illuminate\Support\Facades\DB;
 use N1ebieski\IDir\ValueObjects\Field\Type;
 use N1ebieski\IDir\Models\Field\Group\Field;
+use N1ebieski\IDir\ValueObjects\Field\Options;
 use N1ebieski\IDir\ValueObjects\Field\Visible;
 use N1ebieski\IDir\ValueObjects\Field\Required;
 use N1ebieski\IDir\Database\Seeders\PHPLD\PHPLDSeeder;
@@ -48,18 +51,18 @@ class FieldsSeeder extends PHPLDSeeder
                         return;
                     }
 
-                    $field = Field::make();
+                    $field = new Field();
 
                     $field->id = $this->fieldLastId + $item->ID;
                     $field->title = $item->NAME;
                     $field->desc = strlen($item->DESCRIPTION) > 0 ?
                         strip_tags($item->DESCRIPTION)
                         : null;
-                    $field->type = $this->type($item->TYPE);
+                    $field->type = $this->getType($item->TYPE);
                     $field->visible = $item->STATUS === 0 ?
-                        Visible::INACTIVE
-                        : Visible::ACTIVE;
-                    $field->options = $this->options($item);
+                        Visible::inactive()
+                        : Visible::active();
+                    $field->options = $this->getOptions($item);
 
                     $field->save();
 
@@ -78,34 +81,35 @@ class FieldsSeeder extends PHPLDSeeder
      *
      * @return integer
      */
-    protected function fieldLastId(): int
+    protected function getFieldLastId(): int
     {
         return Field::orderBy('id', 'desc')->first()->id ?? 0;
     }
 
     /**
-     * Undocumented function
      *
      * @param string $type
-     * @return string
+     * @return Type
+     * @throws InvalidArgumentException
      */
-    protected function type(string $type): string
+    protected function getType(string $type): Type
     {
-        return match ($type) {
+        return new Type(match ($type) {
             'STR' => Type::INPUT,
             'TXT' => Type::TEXTAREA,
             'DROPDOWN' => Type::SELECT,
-            'IMAGEGROUP' => Type::IMAGE
-        };
+            'IMAGEGROUP' => Type::IMAGE,
+
+            default => throw new \InvalidArgumentException("The type '{$type}' not found")
+        });
     }
 
     /**
-     * Undocumented function
      *
-     * @param object $item
-     * @return array
+     * @param mixed $item
+     * @return Options
      */
-    protected function options(object $item): array
+    protected function getOptions($item): Options
     {
         if ($item->TYPE === 'STR') {
             $options['min'] = 3;
@@ -132,6 +136,6 @@ class FieldsSeeder extends PHPLDSeeder
             $options['size'] = 2048;
         }
 
-        return $options;
+        return new Options((object)$options);
     }
 }

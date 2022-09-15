@@ -1,5 +1,21 @@
 <?php
 
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is licenced under the Software License Agreement
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://intelekt.net.pl/pages/regulamin
+ *
+ * With the purchase or the installation of the software in your application
+ * you accept the licence agreement.
+ *
+ * @author    Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ * @copyright Since 2019 INTELEKT - Usługi Komputerowe Mariusz Wysokiński
+ * @license   https://intelekt.net.pl/pages/regulamin
+ */
+
 namespace N1ebieski\IDir\Database\Seeders\SEOKatalog;
 
 use N1ebieski\IDir\Models\Group;
@@ -27,7 +43,7 @@ class GroupsAndPrivilegesSeeder extends SEOKatalogSeeder
             ->get()
             ->each(function ($item) use ($privileges) {
                 DB::transaction(function () use ($item, $privileges) {
-                    $group = Group::make();
+                    $group = new Group();
 
                     $group->id = $this->groupLastId + $item->id;
                     $group->name = $item->title;
@@ -43,11 +59,11 @@ class GroupsAndPrivilegesSeeder extends SEOKatalogSeeder
                         $item->max
                         : null;
                     $group->visible = $item->type;
-                    $group->apply_status = ApplyStatus::INACTIVE;
-                    $group->url = Url::ACTIVE;
+                    $group->apply_status = ApplyStatus::inactive();
+                    $group->url = Url::active();
                     $group->backlink = $item->backlink === 0 ?
-                        Backlink::INACTIVE
-                        : ($item->backlink === 2 ? Backlink::OPTIONAL : Backlink::ACTIVE);
+                        Backlink::inactive()
+                        : ($item->backlink === 2 ? Backlink::optional() : Backlink::active());
 
                     $group->save();
 
@@ -99,7 +115,7 @@ class GroupsAndPrivilegesSeeder extends SEOKatalogSeeder
      *
      * @return integer
      */
-    protected function groupLastId(): int
+    protected function getGroupLastId(): int
     {
         return Group::orderBy('id', 'desc')->first()->id;
     }

@@ -1,5 +1,21 @@
 <?php
 
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is licenced under the Software License Agreement
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://intelekt.net.pl/pages/regulamin
+ *
+ * With the purchase or the installation of the software in your application
+ * you accept the licence agreement.
+ *
+ * @author    Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ * @copyright Since 2019 INTELEKT - Usługi Komputerowe Mariusz Wysokiński
+ * @license   https://intelekt.net.pl/pages/regulamin
+ */
+
 namespace N1ebieski\IDir\View\ViewModels\Admin\Dir;
 
 use Illuminate\Http\Request;
@@ -13,34 +29,6 @@ use Illuminate\Contracts\Config\Repository as Config;
 class EditFull2ViewModel extends ViewModel
 {
     /**
-     * [$dir description]
-     *
-     * @var Dir
-     */
-    public $dir;
-
-    /**
-     * [$group description]
-     *
-     * @var Group
-     */
-    public $group;
-
-    /**
-     * [$category description]
-     *
-     * @var Category
-     */
-    protected $category;
-
-    /**
-     * [$config description]
-     *
-     * @var Config
-     */
-    protected $config;
-
-    /**
      * Undocumented function
      *
      * @param Dir $dir
@@ -50,18 +38,13 @@ class EditFull2ViewModel extends ViewModel
      * @param Request $request
      */
     public function __construct(
-        Dir $dir,
-        Group $group,
-        Category $category,
-        Config $config,
-        Request $request
+        public Dir $dir,
+        public Group $group,
+        protected Category $category,
+        protected Config $config,
+        protected Request $request
     ) {
-        $this->dir = $dir;
-        $this->group = $group;
-        $this->category = $category;
-
-        $this->config = $config;
-        $this->request = $request;
+        //
     }
 
     /**

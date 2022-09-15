@@ -1,5 +1,21 @@
 <?php
 
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is licenced under the Software License Agreement
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://intelekt.net.pl/pages/regulamin
+ *
+ * With the purchase or the installation of the software in your application
+ * you accept the licence agreement.
+ *
+ * @author    Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ * @copyright Since 2019 INTELEKT - Usługi Komputerowe Mariusz Wysokiński
+ * @license   https://intelekt.net.pl/pages/regulamin
+ */
+
 namespace N1ebieski\IDir\Database\Seeders\SEOKatalog;
 
 use N1ebieski\IDir\Models\User;
@@ -26,7 +42,7 @@ class BansSeeder extends SEOKatalogSeeder
                     DB::transaction(function () use ($item) {
                         if (!empty($item->url)) {
                             BanValue::create([
-                                'value' => $this->url($item->url),
+                                'value' => $this->getUrl($item->url),
                                 'type' => Type::URL
                             ]);
                         }
@@ -40,7 +56,9 @@ class BansSeeder extends SEOKatalogSeeder
 
                         if (is_int($item->user) && $item->user !== 0) {
                             if ($user = User::find($this->userLastId + $item->user)) {
-                                BanModel::make()->morph()->associate($user)->save();
+                                $banModel = new BanModel();
+
+                                $banModel->morph()->associate($user)->save();
                             }
                         }
                     });
@@ -54,7 +72,7 @@ class BansSeeder extends SEOKatalogSeeder
      * @param string $url
      * @return string
      */
-    protected function url(string $url): string
+    protected function getUrl(string $url): string
     {
         return strpos($url, 'https://') ? $url : 'http://' . $url;
     }

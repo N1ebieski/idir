@@ -127,9 +127,7 @@ class DirController
      */
     public function store2(Group $group, Dir $dir, Store2Load $load, Store2Request $request): RedirectResponse
     {
-        $dir->setRelations(['group' => $group])
-            ->makeService()
-            ->createOrUpdateSession($request->validated());
+        $dir->makeService()->createOrUpdateSession($request->validated());
 
         return Response::redirectToRoute('admin.dir.create_3', [$group->id]);
     }
@@ -148,9 +146,7 @@ class DirController
         Create3Load $load,
         Create3Request $request
     ): HttpResponse {
-        $dir->setRelations(['group' => $group])
-            ->makeService()
-            ->createOrUpdateSession($request->validated());
+        $dir->makeService()->createOrUpdateSession($request->validated());
 
         return Response::view('idir::admin.dir.create.3', App::make(Create3ViewModel::class, [
             'group' => $group
@@ -236,9 +232,7 @@ class DirController
         UpdateFull2Load $load,
         UpdateFull2Request $request
     ): RedirectResponse {
-        $dir->setRelations(['group' => $group])
-            ->makeService()
-            ->createOrUpdateSession($request->validated());
+        $dir->makeService()->createOrUpdateSession($request->validated());
 
         return Response::redirectToRoute('admin.dir.edit_full_3', [$dir->id, $group->id]);
     }
@@ -257,9 +251,7 @@ class DirController
         EditFull3Load $load,
         EditFull3Request $request
     ): HttpResponse {
-        $dir->setRelations(['group' => $group])
-            ->makeService()
-            ->createOrUpdateSession($request->validated());
+        $dir->makeService()->createOrUpdateSession($request->validated());
 
         return Response::view('idir::admin.dir.edit_full.3', App::make(EditFull3ViewModel::class, [
             'dir' => $dir,
@@ -321,9 +313,7 @@ class DirController
      */
     public function update(Dir $dir, UpdateRequest $request): JsonResponse
     {
-        $dir->setRelations(['group' => $dir->group])
-            ->makeService()
-            ->update($request->validated());
+        $dir->makeService()->update($request->validated());
 
         return Response::json([
             'view' => View::make('idir::admin.dir.partials.dir', [

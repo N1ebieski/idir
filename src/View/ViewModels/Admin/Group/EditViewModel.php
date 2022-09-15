@@ -13,41 +13,6 @@ use Illuminate\Support\Collection as Collect;
 class EditViewModel extends ViewModel
 {
     /**
-     * Undocumented variable
-     *
-     * @var Group
-     */
-    public $group;
-
-    /**
-     * Undocumented variable
-     *
-     * @var Privilege
-     */
-    protected $privilege;
-
-    /**
-     * Undocumented variable
-     *
-     * @var Price
-     */
-    protected $price;
-
-    /**
-     * Undocumented variable
-     *
-     * @var Request
-     */
-    protected $request;
-
-    /**
-     * Undocumented variable
-     *
-     * @var Collect
-     */
-    protected $collect;
-
-    /**
      * Undocumented function
      *
      * @param Group $group
@@ -57,18 +22,13 @@ class EditViewModel extends ViewModel
      * @param Collect $collect
      */
     public function __construct(
-        Group $group,
-        Privilege $privilege,
-        Price $price,
-        Request $request,
-        Collect $collect
+        public Group $group,
+        protected Privilege $privilege,
+        protected Price $price,
+        protected Request $request,
+        protected Collect $collect
     ) {
-        $this->group = $group;
-        $this->privilege = $privilege;
-        $this->price = $price;
-
-        $this->request = $request;
-        $this->collect = $collect;
+        //
     }
 
     /**

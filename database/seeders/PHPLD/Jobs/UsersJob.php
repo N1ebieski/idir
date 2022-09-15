@@ -1,5 +1,21 @@
 <?php
 
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is licenced under the Software License Agreement
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://intelekt.net.pl/pages/regulamin
+ *
+ * With the purchase or the installation of the software in your application
+ * you accept the licence agreement.
+ *
+ * @author    Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ * @copyright Since 2019 INTELEKT - Usługi Komputerowe Mariusz Wysokiński
+ * @license   https://intelekt.net.pl/pages/regulamin
+ */
+
 namespace N1ebieski\IDir\Database\Seeders\PHPLD\Jobs;
 
 use Exception;
@@ -12,6 +28,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use N1ebieski\ICore\ValueObjects\User\Status;
 
 class UsersJob implements ShouldQueue
 {
@@ -21,20 +38,6 @@ class UsersJob implements ShouldQueue
     use SerializesModels;
 
     /**
-     * Undocumented variable
-     *
-     * @var Collection
-     */
-    protected $items;
-
-    /**
-     * Undocumented variable
-     *
-     * @var int
-     */
-    protected $userLastId;
-
-    /**
      * The number of times the job may be attempted.
      *
      * @var int
@@ -42,15 +45,16 @@ class UsersJob implements ShouldQueue
     public $tries = 10;
 
     /**
-     * Undocumented function
      *
-     * @param Collection $item
+     * @param Collection $items
+     * @param int $userLastId
+     * @return void
      */
-    public function __construct(Collection $items, int $userLastId)
-    {
-        $this->items = $items;
-
-        $this->userLastId = $userLastId;
+    public function __construct(
+        protected Collection $items,
+        protected int $userLastId
+    ) {
+        //
     }
 
     /**
@@ -66,7 +70,7 @@ class UsersJob implements ShouldQueue
             }
 
             DB::transaction(function () use ($item) {
-                $user = User::make();
+                $user = new User();
 
                 $user->id = $this->userLastId + $item->ID;
                 $user->email = $item->EMAIL;
@@ -75,8 +79,8 @@ class UsersJob implements ShouldQueue
                     : 'user-' . Str::uuid();
                 $user->password = Str::random(12);
                 $user->status = $item->ACTIVE === 0 ?
-                    User::INACTIVE
-                    : User::ACTIVE;
+                    Status::inactive()
+                    : Status::active();
                 $user->created_at = $item->REGISTRATION_DATE;
                 $user->updated_at = $item->REGISTRATION_DATE;
 
@@ -101,10 +105,10 @@ class UsersJob implements ShouldQueue
     /**
      * Undocumented function
      *
-     * @param object $item
+     * @param mixed $item
      * @return boolean
      */
-    protected function verify(object $item): bool
+    protected function verify($item): bool
     {
         return User::where('id', $this->userLastId + $item->ID)
             ->orWhere('email', $item->EMAIL)->first() === null;

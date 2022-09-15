@@ -328,7 +328,7 @@ class DirService
 
     /**
      *
-     * @param array $status
+     * @param int $status
      * @return bool
      * @throws Throwable
      */

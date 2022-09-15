@@ -1,5 +1,21 @@
 <?php
 
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is licenced under the Software License Agreement
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://intelekt.net.pl/pages/regulamin
+ *
+ * With the purchase or the installation of the software in your application
+ * you accept the licence agreement.
+ *
+ * @author    Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ * @copyright Since 2019 INTELEKT - Usługi Komputerowe Mariusz Wysokiński
+ * @license   https://intelekt.net.pl/pages/regulamin
+ */
+
 namespace N1ebieski\IDir\View\ViewModels\Web\Dir;
 
 use Illuminate\Http\Request;
@@ -10,38 +26,10 @@ use N1ebieski\IDir\Models\Stat\Dir\Stat;
 use N1ebieski\ICore\ValueObjects\Stat\Slug;
 use Illuminate\Database\Eloquent\Collection;
 use N1ebieski\IDir\Models\Comment\Dir\Comment;
-use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class ShowViewModel extends ViewModel
 {
-    /**
-     * Undocumented variable
-     *
-     * @var Dir
-     */
-    public $dir;
-
-    /**
-     * Undocumented variable
-     *
-     * @var Comment
-     */
-    protected $comment;
-
-    /**
-     * Undocumented variable
-     *
-     * @var Filter
-     */
-    protected $filter;
-
-    /**
-     * Undocumented variable
-     *
-     * @var Request
-     */
-    protected $request;
-
     /**
      * Undocumented function
      *
@@ -51,16 +39,12 @@ class ShowViewModel extends ViewModel
      * @param Request $request
      */
     public function __construct(
-        Dir $dir,
-        Comment $comment,
-        Filter $filter,
-        Request $request
+        public Dir $dir,
+        protected Comment $comment,
+        protected Filter $filter,
+        protected Request $request
     ) {
-        $this->dir = $dir;
-        $this->comment = $comment;
-
-        $this->filter = $filter;
-        $this->request = $request;
+        //
     }
 
     /**
