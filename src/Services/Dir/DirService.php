@@ -320,7 +320,9 @@ class DirService
                 ]);
             }
 
-            return $this->dir->save();
+            $this->dir->save();
+
+            return $this->dir;
         });
     }
 
