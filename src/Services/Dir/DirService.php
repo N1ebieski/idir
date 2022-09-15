@@ -130,7 +130,7 @@ class DirService
                     $attributes['payment_type'] ?? $group->apply_status->getValue()
                 );
             } catch (\InvalidArgumentException $e) {
-                $this->dir->status = $this->dir->group->apply_status->getValue();
+                $this->dir->status = $group->apply_status->getValue();
             }
 
             $this->dir->user()->associate(
@@ -524,6 +524,6 @@ class DirService
      */
     public function sessionName(): string
     {
-        return is_int($this->dir->id) ? 'dirId.' . $this->dir->id : 'dir';
+        return $this->dir->exists ? 'dirId.' . $this->dir->id : 'dir';
     }
 }

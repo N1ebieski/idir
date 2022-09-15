@@ -47,6 +47,9 @@ class UsersSeeder extends SEOKatalogSeeder
      */
     protected function getUserLastId(): int
     {
-        return User::orderBy('id', 'desc')->first()->id;
+        /** @var User */
+        $user = User::orderBy('id', 'desc')->first();
+
+        return $user->id;
     }
 }

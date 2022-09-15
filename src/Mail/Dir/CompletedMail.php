@@ -21,6 +21,8 @@ namespace N1ebieski\IDir\Mail\Dir;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use N1ebieski\IDir\Models\Dir;
+use N1ebieski\IDir\Models\User;
+use N1ebieski\IDir\Models\Group;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Translation\Translator as Lang;
 
@@ -49,8 +51,11 @@ class CompletedMail extends Mailable
      */
     public function build()
     {
+        /** @var User */
+        $user = $this->dir->user;
+
         return $this->subject($this->lang->get('idir::dirs.mail.completed.title'))
-            ->to($this->dir->user->email)
+            ->to($user->email)
             ->with([
                 'result' => $this->result()
             ])
@@ -64,12 +69,16 @@ class CompletedMail extends Mailable
      */
     protected function result(): string
     {
-        if ($this->dir->group->alt_id === null) {
+        /** @var Group */
+        $group = $this->dir->group;
+
+        if ($group->alt_id === null) {
             return $this->lang->get('idir::dirs.mail.completed.deactivation');
         }
 
         return $this->lang->get('idir::dirs.mail.completed.alt', [
-            'alt_group' => $this->dir->group->alt->name
+            // @phpstan-ignore-next-line
+            'alt_group' => $group->alt->name
         ]);
     }
 }

@@ -1,5 +1,21 @@
 <?php
 
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is licenced under the Software License Agreement
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://intelekt.net.pl/pages/regulamin
+ *
+ * With the purchase or the installation of the software in your application
+ * you accept the licence agreement.
+ *
+ * @author    Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ * @copyright Since 2019 INTELEKT - Usługi Komputerowe Mariusz Wysokiński
+ * @license   https://intelekt.net.pl/pages/regulamin
+ */
+
 namespace N1ebieski\IDir\Tests\Feature\Api\Payment\Dir;
 
 use Tests\TestCase;
@@ -43,18 +59,23 @@ class PaymentTest extends TestCase
         return $provider;
     }
 
-    public function testPaymentVerifyInactive()
+    public function testPaymentVerifyInactive(): void
     {
+        /** @var Group */
         $group = Group::makeFactory()->public()->applyInactive()->create();
 
+        /** @var Price */
         $price = Price::makeFactory()->transfer()->for($group)->create();
 
+        /** @var Dir */
         $dir = Dir::makeFactory()->withUser()->pending()->for($group)->create();
 
+        /** @var Payment */
         $payment = Payment::makeFactory()->pending()->for($dir, 'morph')->for($price, 'orderMorph')->create();
 
         $response = $this->post(route('api.payment.dir.verify'), $this->providerSetup($payment->load('orderMorph')));
 
+        dd($response->getContent());
         $response->assertSeeText('OK');
 
         $this->assertDatabaseHas('payments', [
@@ -71,14 +92,18 @@ class PaymentTest extends TestCase
         ]);
     }
 
-    public function testPaymentVerifyActive()
+    public function testPaymentVerifyActive(): void
     {
+        /** @var Group */
         $group = Group::makeFactory()->public()->applyActive()->create();
 
+        /** @var Price */
         $price = Price::makeFactory()->transfer()->for($group)->create();
 
+        /** @var Dir */
         $dir = Dir::makeFactory()->withUser()->pending()->for($group)->create();
 
+        /** @var Payment */
         $payment = Payment::makeFactory()->pending()->for($dir, 'morph')->for($price, 'orderMorph')->create();
 
         $response = $this->post(route('api.payment.dir.verify'), $this->providerSetup($payment->load('orderMorph')));
@@ -99,14 +124,18 @@ class PaymentTest extends TestCase
         ]);
     }
 
-    public function testPaymentVerifyStatusError()
+    public function testPaymentVerifyStatusError(): void
     {
+        /** @var Group */
         $group = Group::makeFactory()->public()->applyActive()->create();
 
+        /** @var Price */
         $price = Price::makeFactory()->transfer()->for($group)->create();
 
+        /** @var Dir */
         $dir = Dir::makeFactory()->withUser()->pending()->for($group)->create();
 
+        /** @var Payment */
         $payment = Payment::makeFactory()->pending()->for($dir, 'morph')->for($price, 'orderMorph')->create();
 
         $providerSetup = $this->providerSetup($payment->load('orderMorph'));
@@ -114,21 +143,26 @@ class PaymentTest extends TestCase
 
         $response = $this->post(route('api.payment.dir.verify'), $providerSetup);
 
+        /** @var Payment */
         $payment = $payment->find($payment->uuid);
 
-        $this->assertTrue(Str::contains($payment->logs, 'Invalid status'));
+        $this->assertTrue(is_string($payment->logs) && Str::contains($payment->logs, 'Invalid status'));
 
         $response->assertOk();
     }
 
-    public function testPaymentVerifyAmountError()
+    public function testPaymentVerifyAmountError(): void
     {
+        /** @var Group */
         $group = Group::makeFactory()->public()->applyActive()->create();
 
+        /** @var Price */
         $price = Price::makeFactory()->transfer()->for($group)->create();
 
+        /** @var Dir */
         $dir = Dir::makeFactory()->withUser()->pending()->for($group)->create();
 
+        /** @var Payment */
         $payment = Payment::makeFactory()->pending()->for($dir, 'morph')->for($price, 'orderMorph')->create();
 
         $providerSetup = $this->providerSetup($payment->load('orderMorph'));
@@ -136,21 +170,26 @@ class PaymentTest extends TestCase
 
         $response = $this->post(route('api.payment.dir.verify'), $providerSetup);
 
+        /** @var Payment */
         $payment = $payment->find($payment->uuid);
 
-        $this->assertTrue(Str::contains($payment->logs, 'Invalid amount'));
+        $this->assertTrue(is_string($payment->logs) && Str::contains($payment->logs, 'Invalid amount'));
 
         $response->assertOk();
     }
 
-    public function testPaymentVerifySignError()
+    public function testPaymentVerifySignError(): void
     {
+        /** @var Group */
         $group = Group::makeFactory()->public()->applyActive()->create();
 
+        /** @var Price */
         $price = Price::makeFactory()->transfer()->for($group)->create();
 
+        /** @var Dir */
         $dir = Dir::makeFactory()->withUser()->pending()->for($group)->create();
 
+        /** @var Payment */
         $payment = Payment::makeFactory()->pending()->for($dir, 'morph')->for($price, 'orderMorph')->create();
 
         $providerSetup = $this->providerSetup($payment->load('orderMorph'));
@@ -158,9 +197,10 @@ class PaymentTest extends TestCase
 
         $response = $this->post(route('api.payment.dir.verify'), $providerSetup);
 
+        /** @var Payment */
         $payment = $payment->find($payment->uuid);
 
-        $this->assertTrue(Str::contains($payment->logs, 'Invalid sign'));
+        $this->assertTrue(is_string($payment->logs) && Str::contains($payment->logs, 'Invalid sign'));
 
         $response->assertOk();
     }

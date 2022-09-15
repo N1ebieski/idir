@@ -40,7 +40,7 @@ class DirStatusController
     {
         $dirStatus->makeService()->delay($request->input('delay'));
 
-        $dirStatus->dir->makeRepo()->activate();
+        $dirStatus->dir->makeService()->activate();
 
         Event::dispatch(App::make(DirStatusDelayEvent::class, ['dirStatus' => $dirStatus]));
 

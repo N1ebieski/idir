@@ -1,8 +1,25 @@
 <?php
 
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is licenced under the Software License Agreement
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://intelekt.net.pl/pages/regulamin
+ *
+ * With the purchase or the installation of the software in your application
+ * you accept the licence agreement.
+ *
+ * @author    Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ * @copyright Since 2019 INTELEKT - Usługi Komputerowe Mariusz Wysokiński
+ * @license   https://intelekt.net.pl/pages/regulamin
+ */
+
 namespace N1ebieski\IDir\Tests\Feature\Api\Dir\Create;
 
 use Tests\TestCase;
+use Mockery\MockInterface;
 use Illuminate\Support\Str;
 use Laravel\Sanctum\Sanctum;
 use N1ebieski\IDir\Models\Dir;
@@ -20,6 +37,7 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Storage;
 use N1ebieski\IDir\Mail\Dir\ModeratorMail;
 use N1ebieski\IDir\ValueObjects\Dir\Status;
+use Illuminate\Database\Eloquent\Collection;
 use N1ebieski\IDir\Models\Field\Group\Field;
 use Illuminate\Http\Response as HttpResponse;
 use N1ebieski\IDir\Models\Payment\Dir\Payment;
@@ -41,6 +59,7 @@ class DirTest extends TestCase
      */
     protected function setUpDir(): array
     {
+        /** @var Category */
         $category = Category::makeFactory()->active()->create();
 
         return [
@@ -59,35 +78,33 @@ class DirTest extends TestCase
      */
     protected function setUpFields(Group $group): array
     {
+        $fields = [];
+
         foreach (FieldType::getAvailable() as $type) {
+            /** @var Field */
             $field = Field::makeFactory()->public()->hasAttached($group, [], 'morphs')->{$type}()->create();
 
-            switch ($field->type) {
-                case FieldType::INPUT:
-                case FieldType::TEXTAREA:
-                    $fields['field'][$field->id] = 'Cupidatat magna enim officia non sunt esse qui Lorem quis.';
-                    break;
+            $fields['field'][$field->id] = match ($field->type->getValue()) {
+                FieldType::INPUT, FieldType::TEXTAREA => 'Cupidatat magna enim officia non sunt esse qui Lorem quis.',
 
-                case FieldType::SELECT:
-                    $fields['field'][$field->id] = $field->options->options[0];
-                    break;
+                // @phpstan-ignore-next-line
+                FieldType::SELECT => $field->options->options[0],
 
-                case FieldType::MULTISELECT:
-                case FieldType::CHECKBOX:
-                    $fields['field'][$field->id] = array_slice($field->options->options, 0, 2);
-                    break;
+                // @phpstan-ignore-next-line
+                FieldType::MULTISELECT, FieldType::CHECKBOX => array_slice($field->options->options, 0, 2),
 
-                case FieldType::IMAGE:
-                    $fields['field'][$field->id] = UploadedFile::fake()->image('avatar.jpg', 500, 200)->size(1000);
-                    break;
-            }
+                FieldType::IMAGE => UploadedFile::fake()->image('avatar.jpg', 500, 200)->size(1000),
+
+                default => throw new \InvalidArgumentException("The Type '{$field->type}' not found")
+            };
         }
 
         return $fields;
     }
 
-    public function testApiDirStoreNoExistGroup()
+    public function testApiDirStoreNoExistGroup(): void
     {
+        /** @var User */
         $user = User::makeFactory()->user()->create();
 
         Sanctum::actingAs($user);
@@ -97,10 +114,12 @@ class DirTest extends TestCase
         $response->assertStatus(HttpResponse::HTTP_NOT_FOUND);
     }
 
-    public function testApiDirStorePrivateGroup()
+    public function testApiDirStorePrivateGroup(): void
     {
+        /** @var User */
         $user = User::makeFactory()->user()->create();
 
+        /** @var Group */
         $group = Group::makeFactory()->private()->create();
 
         Sanctum::actingAs($user);
@@ -110,12 +129,14 @@ class DirTest extends TestCase
         $response->assertStatus(HttpResponse::HTTP_FORBIDDEN);
     }
 
-    public function testApiDirStoreValidationFail()
+    public function testApiDirStoreValidationFail(): void
     {
+        /** @var User */
         $user = User::makeFactory()->user()->create();
 
         Sanctum::actingAs($user);
 
+        /** @var Group */
         $group = Group::makeFactory()->public()->requiredUrl()->create();
 
         $response = $this->postJson(route('api.dir.store', [$group->id]));
@@ -124,12 +145,14 @@ class DirTest extends TestCase
         $response->assertJsonValidationErrors(['title', 'categories', 'content_html', 'url']);
     }
 
-    public function testApiDirStoreValidationUrlFail()
+    public function testApiDirStoreValidationUrlFail(): void
     {
+        /** @var User */
         $user = User::makeFactory()->user()->create();
 
         Sanctum::actingAs($user);
 
+        /** @var Group */
         $group = Group::makeFactory()->public()->requiredUrl()->create();
 
         $response = $this->postJson(route('api.dir.store', [$group->id]), [
@@ -140,14 +163,17 @@ class DirTest extends TestCase
         $response->assertJsonValidationErrors(['url']);
     }
 
-    public function testApiDirStoreValidationCategoriesFail()
+    public function testApiDirStoreValidationCategoriesFail(): void
     {
+        /** @var User */
         $user = User::makeFactory()->user()->create();
 
         Sanctum::actingAs($user);
 
+        /** @var Group */
         $group = Group::makeFactory()->public()->maxCats()->create();
 
+        /** @var Collection<Category> */
         $categories = Category::makeFactory()->count(3)->active()->create();
 
         $response = $this->postJson(route('api.dir.store', [$group->id]), [
@@ -158,15 +184,20 @@ class DirTest extends TestCase
         $response->assertJsonValidationErrors(['categories']);
     }
 
-    public function testApiDirStoreValidationFieldsFail()
+    public function testApiDirStoreValidationFieldsFail(): void
     {
+        /** @var User */
         $user = User::makeFactory()->user()->create();
 
         Sanctum::actingAs($user);
 
+        /** @var Group */
         $group = Group::makeFactory()->public()->maxCats()->create();
 
+        $fields = [];
+
         foreach (FieldType::getAvailable() as $type) {
+            /** @var Field*/
             $field = Field::makeFactory()->public()->hasAttached($group, [], 'morphs')->{$type}()->create();
 
             $fields[] = "field.{$field->id}";
@@ -175,18 +206,21 @@ class DirTest extends TestCase
         $response = $this->postJson(route('api.dir.store', [$group->id]));
 
         $response->assertStatus(HttpResponse::HTTP_UNPROCESSABLE_ENTITY);
+
         $response->assertJsonValidationErrors($fields);
     }
 
-    public function testApiDirStoreValidationBacklinkFail()
+    public function testApiDirStoreValidationBacklinkFail(): void
     {
+        /** @var User */
         $user = User::makeFactory()->user()->create();
 
         Sanctum::actingAs($user);
 
+        /** @var Group */
         $group = Group::makeFactory()->public()->requiredBacklink()->create();
 
-        $link = Link::makeFactory()->backlink()->create();
+        Link::makeFactory()->backlink()->create();
 
         $response = $this->postJson(route('api.dir.store', [$group->id]));
 
@@ -194,27 +228,32 @@ class DirTest extends TestCase
         $response->assertJsonValidationErrors(['backlink', 'backlink_url']);
     }
 
-    public function testApiDirStoreAsGuestValidationEmailFail()
+    public function testApiDirStoreAsGuestValidationEmailFail(): void
     {
+        /** @var Group */
         $group = Group::makeFactory()->public()->requiredUrl()->create();
 
         $response = $this->postJson(route('api.dir.store', [$group->id]), $this->setUpDir());
 
         $response->assertStatus(HttpResponse::HTTP_UNPROCESSABLE_ENTITY);
+
         $response->assertJsonValidationErrors(['email']);
     }
 
-    public function testApiDirStoreInResource()
+    public function testApiDirStoreInResource(): void
     {
+        /** @var User */
         $user = User::makeFactory()->user()->create();
 
         Sanctum::actingAs($user);
 
+        /** @var Group */
         $group = Group::makeFactory()->public()->requiredUrl()->additionalOptionsForEditingContent()->create();
 
         $response = $this->postJson(route('api.dir.store', [$group->id]), $this->setUpDir());
 
         $response->assertStatus(HttpResponse::HTTP_CREATED);
+
         $response->assertJsonFragment([
             'title' => $this->setUpDir()['title'],
             'content_html' => "<p>{$this->setUpDir()['content_html']}</p>",
@@ -222,22 +261,26 @@ class DirTest extends TestCase
         ]);
     }
 
-    public function testApiDirStoreValidationBacklinkPass()
+    public function testApiDirStoreValidationBacklinkPass(): void
     {
+        /** @var User */
         $user = User::makeFactory()->user()->create();
 
         Sanctum::actingAs($user);
 
+        /** @var Group */
         $group = Group::makeFactory()->public()->requiredBacklink()->create();
 
+        /** @var Link */
         $link = Link::makeFactory()->backlink()->create();
 
         $backlinkUrl = 'https://idir.test/page-with-backlink';
 
-        $this->mock(GuzzleClient::class, function ($mock) use ($link, $backlinkUrl) {
-            $mock->shouldReceive('request')->with('GET', $backlinkUrl, ['verify' => false])->andReturn(
-                new GuzzleResponse(HttpResponse::HTTP_OK, [], '<a href="' . $link->url . '">backlink</a>')
-            );
+        $this->mock(GuzzleClient::class, function (MockInterface $mock) use ($link, $backlinkUrl) {
+            $mock->shouldReceive('request')->once()->with('GET', $backlinkUrl, ['verify' => false])
+                ->andReturn(
+                    new GuzzleResponse(HttpResponse::HTTP_OK, [], '<a href="' . $link->url . '">backlink</a>')
+                );
         });
 
         $response = $this->postJson(route('api.dir.store', [$group->id]), $this->setUpDir() + [
@@ -247,6 +290,7 @@ class DirTest extends TestCase
 
         $response->assertStatus(HttpResponse::HTTP_CREATED);
 
+        /** @var Dir */
         $dir = Dir::first();
 
         $this->assertTrue($dir->exists());
@@ -258,14 +302,16 @@ class DirTest extends TestCase
         ]);
     }
 
-    public function testApiDirStoreFieldsInDatabase()
+    public function testApiDirStoreFieldsInDatabase(): void
     {
+        /** @var User */
         $user = User::makeFactory()->user()->create();
 
         Sanctum::actingAs($user);
 
         Storage::fake('public');
 
+        /** @var Group */
         $group = Group::makeFactory()->public()->applyActive()->requiredUrl()->create();
 
         $setUpDir = $this->setUpDir();
@@ -274,6 +320,7 @@ class DirTest extends TestCase
 
         $response->assertStatus(HttpResponse::HTTP_CREATED);
 
+        /** @var Dir */
         $dir = Dir::orderBy('id', 'desc')->first();
 
         $this->assertTrue($dir->exists());
@@ -295,33 +342,38 @@ class DirTest extends TestCase
         ]);
     }
 
-    public function testApiDirStoreValidationPaymentFail()
+    public function testApiDirStoreValidationPaymentFail(): void
     {
+        /** @var User */
         $user = User::makeFactory()->user()->create();
 
         Sanctum::actingAs($user);
 
+        /** @var Group */
         $group = Group::makeFactory()->public()->create();
 
-        $price = Price::makeFactory()->transfer()->for($group)->create();
+        Price::makeFactory()->transfer()->for($group)->create();
 
         $response = $this->postJson(route('api.dir.store', [$group->id]), [
             'payment_type' => PriceType::TRANSFER
         ]);
 
         $response->assertStatus(HttpResponse::HTTP_UNPROCESSABLE_ENTITY);
+
         $response->assertJsonValidationErrors(['payment_transfer']);
     }
 
-    public function testApiDirStoreValidationNoExistPaymentFail()
+    public function testApiDirStoreValidationNoExistPaymentFail(): void
     {
+        /** @var User */
         $user = User::makeFactory()->user()->create();
 
         Sanctum::actingAs($user);
 
+        /** @var Group */
         $group = Group::makeFactory()->public()->create();
 
-        $price = Price::makeFactory()->transfer()->for($group)->create();
+        Price::makeFactory()->transfer()->for($group)->create();
 
         $response = $this->postJson(route('api.dir.store', [$group->id]), [
             'payment_type' => PriceType::TRANSFER,
@@ -329,17 +381,21 @@ class DirTest extends TestCase
         ]);
 
         $response->assertStatus(HttpResponse::HTTP_UNPROCESSABLE_ENTITY);
+
         $response->assertJsonValidationErrors(['payment_transfer']);
     }
 
-    public function testApiDirStorePaymentInDatabase()
+    public function testApiDirStorePaymentInDatabase(): void
     {
+        /** @var User */
         $user = User::makeFactory()->user()->create();
 
         Sanctum::actingAs($user);
 
+        /** @var Group */
         $group = Group::makeFactory()->public()->applyInactive()->create();
 
+        /** @var Price */
         $price = Price::makeFactory()->transfer()->for($group)->create();
 
         $setUpDir = $this->setUpDir();
@@ -349,6 +405,7 @@ class DirTest extends TestCase
             'payment_transfer' => $price->id
         ] + $setUpDir);
 
+        /** @var Dir */
         $dir = Dir::orderBy('id', 'desc')->first();
 
         $this->assertDatabaseHas('dirs', [
@@ -364,15 +421,18 @@ class DirTest extends TestCase
             'status' => PaymentStatus::PENDING
         ]);
 
+        /** @var Payment */
         $payment = Payment::orderBy('created_at', 'desc')->first();
 
         $response->assertJsonFragment(['uuid' => $payment->uuid]);
     }
 
-    public function testApiDirStorePaymentAsGuestInDatabase()
+    public function testApiDirStorePaymentAsGuestInDatabase(): void
     {
+        /** @var Group */
         $group = Group::makeFactory()->public()->applyInactive()->create();
 
+        /** @var Price */
         $price = Price::makeFactory()->transfer()->for($group)->create();
 
         $setUpDir = $this->setUpDir();
@@ -383,7 +443,10 @@ class DirTest extends TestCase
             'payment_transfer' => $price->id
         ] + $setUpDir);
 
+        /** @var User */
         $user = User::orderBy('id', 'desc')->first();
+
+        /** @var Dir */
         $dir = Dir::orderBy('id', 'desc')->first();
 
         $this->assertDatabaseHas('dirs', [
@@ -399,13 +462,15 @@ class DirTest extends TestCase
             'status' => PaymentStatus::PENDING
         ]);
 
+        /** @var Payment */
         $payment = Payment::orderBy('created_at', 'desc')->first();
 
         $response->assertJsonFragment(['uuid' => $payment->uuid]);
     }
 
-    public function testApiDirStoreAsGuestInDatabase()
+    public function testApiDirStoreAsGuestInDatabase(): void
     {
+        /** @var Group */
         $group = Group::makeFactory()->public()->applyInactive()->create();
 
         $response = $this->postJson(route('api.dir.store', [$group->id]), [
@@ -414,8 +479,10 @@ class DirTest extends TestCase
 
         $response->assertStatus(HttpResponse::HTTP_CREATED);
 
+        /** @var Dir */
         $dir = Dir::orderBy('id', 'desc')->first();
 
+        /** @var User */
         $user = User::orderBy('id', 'desc')->first();
 
         $this->assertDatabaseHas('dirs', [
@@ -427,14 +494,17 @@ class DirTest extends TestCase
         $this->assertTrue($user->email === 'kontakt@intelekt.net.pl');
     }
 
-    public function testApiDirStoreValidationPaymentCodeSmsFail()
+    public function testApiDirStoreValidationPaymentCodeSmsFail(): void
     {
+        /** @var User */
         $user = User::makeFactory()->user()->create();
 
         Sanctum::actingAs($user);
 
+        /** @var Group */
         $group = Group::makeFactory()->public()->create();
 
+        /** @var Price */
         $price = Price::makeFactory()->codeSms()->for($group)->create();
 
         $response = $this->postJson(route('api.dir.store', [$group->id]), [
@@ -443,28 +513,32 @@ class DirTest extends TestCase
         ] + $this->setUpDir());
 
         $response->assertStatus(HttpResponse::HTTP_UNPROCESSABLE_ENTITY);
+
         $response->assertJsonValidationErrors(['code_sms']);
     }
 
-    public function testApiDirStoreValidationPaymentAutoCodeSmsPass()
+    public function testApiDirStoreValidationPaymentAutoCodeSmsPass(): void
     {
+        /** @var User */
         $user = User::makeFactory()->user()->create();
 
         Sanctum::actingAs($user);
 
+        /** @var Group */
         $group = Group::makeFactory()->public()->applyActive()->create();
 
+        /** @var Price */
         $price = Price::makeFactory()->codeSms()->for($group)->create();
 
-        $this->mock(GuzzleClient::class, function ($mock) use ($price) {
-            $mock->shouldReceive('request')->andReturn(
+        $this->mock(GuzzleClient::class, function (MockInterface $mock) use ($price) {
+            $mock->shouldReceive('request')->once()->andReturn(
                 new GuzzleResponse(HttpResponse::HTTP_OK, [], json_encode([
                     'active' => true,
                     'number' => (string)$price->number,
                     'activeFrom' => null,
                     'codeValidityTime' => 0,
                     'timeRemaining' => 0
-                ]))
+                ]) ?: '')
             );
         });
 
@@ -476,6 +550,7 @@ class DirTest extends TestCase
 
         $response->assertStatus(HttpResponse::HTTP_CREATED);
 
+        /** @var Dir */
         $dir = Dir::orderBy('id', 'desc')->first();
 
         $this->assertDatabaseHas('payments', [
@@ -488,21 +563,24 @@ class DirTest extends TestCase
         $this->assertTrue($dir->privileged_at !== null);
     }
 
-    public function testApiDirStoreValidationPaymentAutoCodeSmsError()
+    public function testApiDirStoreValidationPaymentAutoCodeSmsError(): void
     {
+        /** @var User */
         $user = User::makeFactory()->user()->create();
 
         Sanctum::actingAs($user);
 
+        /** @var Group */
         $group = Group::makeFactory()->public()->applyActive()->create();
 
+        /** @var Price */
         $price = Price::makeFactory()->codeSms()->for($group)->create();
 
-        $this->mock(GuzzleClient::class, function ($mock) use ($price) {
-            $mock->shouldReceive('request')->andReturn(
+        $this->mock(GuzzleClient::class, function (MockInterface $mock) {
+            $mock->shouldReceive('request')->once()->andReturn(
                 new GuzzleResponse(HttpResponse::HTTP_NOT_FOUND, [], json_encode([
                     'error' => 'Something wrong'
-                ]))
+                ]) ?: '')
             );
         });
 
@@ -513,17 +591,21 @@ class DirTest extends TestCase
         ] + $this->setUpDir());
 
         $response->assertStatus(HttpResponse::HTTP_UNPROCESSABLE_ENTITY);
+
         $response->assertJsonValidationErrors(['code_sms']);
     }
 
-    public function testApiDirStoreValidationPaymentCodeTransferFail()
+    public function testApiDirStoreValidationPaymentCodeTransferFail(): void
     {
+        /** @var User */
         $user = User::makeFactory()->user()->create();
 
         Sanctum::actingAs($user);
 
+        /** @var Group */
         $group = Group::makeFactory()->public()->create();
 
+        /** @var Price */
         $price = Price::makeFactory()->codeTransfer()->for($group)->create();
 
         $response = $this->postJson(route('api.dir.store', [$group->id]), [
@@ -532,21 +614,25 @@ class DirTest extends TestCase
         ] + $this->setUpDir());
 
         $response->assertStatus(HttpResponse::HTTP_UNPROCESSABLE_ENTITY);
+
         $response->assertJsonValidationErrors(['code_transfer']);
     }
 
-    public function testApiDirStoreValidationPaymentAutoCodeTransferPass()
+    public function testApiDirStoreValidationPaymentAutoCodeTransferPass(): void
     {
+        /** @var User */
         $user = User::makeFactory()->user()->create();
 
         Sanctum::actingAs($user);
 
+        /** @var Group */
         $group = Group::makeFactory()->public()->applyInactive()->create();
 
+        /** @var Price */
         $price = Price::makeFactory()->codeTransfer()->for($group)->create();
 
-        $this->mock(GuzzleClient::class, function ($mock) {
-            $mock->shouldReceive('request')->andReturn(
+        $this->mock(GuzzleClient::class, function (MockInterface $mock) {
+            $mock->shouldReceive('request')->once()->andReturn(
                 new GuzzleResponse(HttpResponse::HTTP_OK, [], "OK\n23782738273")
             );
         });
@@ -559,6 +645,7 @@ class DirTest extends TestCase
 
         $response->assertStatus(HttpResponse::HTTP_CREATED);
 
+        /** @var Dir */
         $dir = Dir::orderBy('id', 'desc')->first();
 
         $this->assertDatabaseHas('payments', [
@@ -571,18 +658,21 @@ class DirTest extends TestCase
         $this->assertTrue($dir->privileged_at === null && $dir->status->isInactive());
     }
 
-    public function testApiDirStoreValidationPaymentAutoCodeTransferError()
+    public function testApiDirStoreValidationPaymentAutoCodeTransferError(): void
     {
+        /** @var User */
         $user = User::makeFactory()->user()->create();
 
         Sanctum::actingAs($user);
 
+        /** @var Group */
         $group = Group::makeFactory()->public()->applyInactive()->create();
 
+        /** @var Price */
         $price = Price::makeFactory()->codeTransfer()->for($group)->create();
 
-        $this->mock(GuzzleClient::class, function ($mock) {
-            $mock->shouldReceive('request')->andReturn(
+        $this->mock(GuzzleClient::class, function (MockInterface $mock) {
+            $mock->shouldReceive('request')->once()->andReturn(
                 new GuzzleResponse(HttpResponse::HTTP_OK, [], "ERROR")
             );
         });
@@ -594,19 +684,24 @@ class DirTest extends TestCase
         ] + $this->setUpDir());
 
         $response->assertStatus(HttpResponse::HTTP_UNPROCESSABLE_ENTITY);
+
         $response->assertJsonValidationErrors(['code_transfer']);
     }
 
-    public function testApiDirStoreValidationPaymentLocalCodeTransferPass()
+    public function testApiDirStoreValidationPaymentLocalCodeTransferPass(): void
     {
+        /** @var User */
         $user = User::makeFactory()->user()->create();
 
         Sanctum::actingAs($user);
 
+        /** @var Group */
         $group = Group::makeFactory()->public()->applyInactive()->create();
 
+        /** @var Price */
         $price = Price::makeFactory()->codeTransfer()->for($group)->create();
 
+        /** @var Code */
         $code = Code::makeFactory()->one()->for($price)->create();
 
         $this->assertDatabaseHas('codes', [
@@ -629,6 +724,7 @@ class DirTest extends TestCase
             'quantity' => $code->quantity
         ]);
 
+        /** @var Dir */
         $dir = Dir::orderBy('id', 'desc')->first();
 
         $this->assertDatabaseHas('payments', [
@@ -641,16 +737,20 @@ class DirTest extends TestCase
         $this->assertTrue($dir->privileged_at === null && $dir->status->isInactive());
     }
 
-    public function testApiDirStoreValidationPaymentLocalCodeSmsPass()
+    public function testApiDirStoreValidationPaymentLocalCodeSmsPass(): void
     {
+        /** @var User */
         $user = User::makeFactory()->user()->create();
 
         Sanctum::actingAs($user);
 
+        /** @var Group */
         $group = Group::makeFactory()->public()->applyActive()->create();
 
+        /** @var Price */
         $price = Price::makeFactory()->codeSms()->for($group)->create();
 
+        /** @var Code */
         $code = Code::makeFactory()->two()->for($price)->create();
 
         $this->assertDatabaseHas('codes', [
@@ -673,6 +773,7 @@ class DirTest extends TestCase
             'quantity' => $code->quantity - 1
         ]);
 
+        /** @var Dir */
         $dir = Dir::orderBy('id', 'desc')->first();
 
         $this->assertDatabaseHas('payments', [
@@ -685,14 +786,17 @@ class DirTest extends TestCase
         $this->assertTrue($dir->privileged_at !== null && $dir->status->isActive());
     }
 
-    public function testApiDirStoreModeratorNotificationDirs()
+    public function testApiDirStoreModeratorNotificationDirs(): void
     {
+        /** @var User */
         $user = User::makeFactory()->user()->create();
 
+        /** @var User */
         $admin = User::makeFactory()->admin()->create();
 
         Sanctum::actingAs($user);
 
+        /** @var Group */
         $group = Group::makeFactory()->public()->withoutUrl()->applyInactive()->create();
 
         Config::set('idir.dir.notification.hours', 0);
@@ -706,6 +810,7 @@ class DirTest extends TestCase
 
         $response->assertStatus(HttpResponse::HTTP_CREATED);
 
+        /** @var Dir */
         $dir = Dir::orderBy('id', 'desc')->first();
 
         $this->assertDatabaseHas('dirs', [
@@ -715,7 +820,7 @@ class DirTest extends TestCase
             'privileged_to' => null
         ]);
 
-        Mail::assertQueued(ModeratorMail::class, function ($mail) use ($admin) {
+        Mail::assertQueued(ModeratorMail::class, function (ModeratorMail $mail) use ($admin) {
             $mail->build(
                 App::make(Dir::class),
                 App::make(\Illuminate\Contracts\Translation\Translator::class)
@@ -725,14 +830,17 @@ class DirTest extends TestCase
         });
     }
 
-    public function testApiDirStoreModeratorNotificationHours()
+    public function testApiDirStoreModeratorNotificationHours(): void
     {
+        /** @var User */
         $user = User::makeFactory()->user()->create();
 
+        /** @var User */
         $admin = User::makeFactory()->admin()->create();
 
         Sanctum::actingAs($user);
 
+        /** @var Group */
         $group = Group::makeFactory()->public()->withoutUrl()->applyInactive()->create();
 
         Config::set('idir.dir.notification.dirs', 0);
@@ -746,6 +854,7 @@ class DirTest extends TestCase
 
         $response->assertStatus(HttpResponse::HTTP_CREATED);
 
+        /** @var Dir */
         $dir = Dir::orderBy('id', 'desc')->first();
 
         $this->assertDatabaseHas('dirs', [
@@ -758,7 +867,7 @@ class DirTest extends TestCase
         $schedule = App::make(ModeratorNotificationCron::class);
         $schedule();
 
-        Mail::assertQueued(ModeratorMail::class, function ($mail) use ($admin) {
+        Mail::assertQueued(ModeratorMail::class, function (ModeratorMail $mail) use ($admin) {
             $mail->build(
                 App::make(Dir::class),
                 App::make(\Illuminate\Contracts\Translation\Translator::class)

@@ -75,8 +75,11 @@ class PHPLDSeeder extends Seeder
      */
     protected function getUserLastId(): int
     {
+        /** @var User */
+        $user = User::orderBy('id', 'desc')->first();
+
         return (
-            User::orderBy('id', 'desc')->first()->id
+            $user->id
             -
             // @phpstan-ignore-next-line
             DB::connection('import')->table('user')->orderBy('ID', 'desc')->first()->ID
@@ -104,8 +107,11 @@ class PHPLDSeeder extends Seeder
      */
     protected function getGroupLastId(): int
     {
+        /** @var Group */
+        $group = Group::orderBy('id', 'desc')->first();
+
         return (
-            Group::orderBy('id', 'desc')->first()->id
+            $group->id
             -
             // @phpstan-ignore-next-line
             DB::connection('import')->table('link_type')->orderBy('ID', 'desc')->first()->ID

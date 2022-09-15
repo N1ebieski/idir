@@ -26,7 +26,6 @@ use N1ebieski\IDir\Models\DirBacklink;
 use Illuminate\Database\Eloquent\Builder;
 use N1ebieski\IDir\ValueObjects\Dir\Status;
 use Illuminate\Contracts\Config\Repository as Config;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class DirBacklinkRepo
 {
@@ -54,9 +53,9 @@ class DirBacklinkRepo
         string $timestamp
     ): bool {
         return $this->dirBacklink->newQuery()
-            ->whereHas('dir', function (BelongsTo|Builder|Dir $query) {
+            ->whereHas('dir', function (Builder|Dir $query) {
                 return $query->whereIn('status', [Status::ACTIVE, Status::BACKLINK_INACTIVE])
-                    ->whereHas('group', function (BelongsTo|Builder|Group $query) {
+                    ->whereHas('group', function (Builder|Group $query) {
                         return $query->obligatoryBacklink();
                     });
             })

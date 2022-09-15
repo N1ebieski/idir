@@ -21,6 +21,7 @@ namespace N1ebieski\IDir\Mail\Dir;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use N1ebieski\IDir\Models\Dir;
+use N1ebieski\IDir\Models\User;
 use Illuminate\Queue\SerializesModels;
 use N1ebieski\IDir\ValueObjects\Dir\Status;
 use Illuminate\Contracts\Translation\Translator as Lang;
@@ -52,8 +53,11 @@ class IncorrectMail extends Mailable
      */
     public function build(): self
     {
+        /** @var User */
+        $user = $this->dir->user;
+
         return $this->subject($this->lang->get('idir::dirs.success.update_status.' . Status::INCORRECT_INACTIVE))
-            ->to($this->dir->user->email)
+            ->to($user->email)
             ->markdown('idir::mails.dir.incorrect');
     }
 }

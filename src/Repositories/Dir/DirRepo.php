@@ -33,7 +33,6 @@ use N1ebieski\IDir\Models\Rating\Dir\Rating;
 use N1ebieski\IDir\Models\Report\Dir\Report;
 use N1ebieski\IDir\Models\Comment\Dir\Comment;
 use Illuminate\Contracts\Config\Repository as Config;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use N1ebieski\IDir\ValueObjects\Dir\Status as DirStatus;
@@ -209,6 +208,7 @@ class DirRepo
                                 ->join('tags_models', function (JoinClause $query) use ($tag) {
                                     return $query->on('dirs.id', '=', 'tags_models.model_id')
                                         ->where('tags_models.model_type', $this->dir->getMorphClass())
+                                        // @phpstan-ignore-next-line
                                         ->where('tags_models.tag_id', $tag->tag_id);
                                 })
                                 ->groupBy('dirs.id')
@@ -419,7 +419,7 @@ class DirRepo
     {
         return $this->dir->newQuery()
             ->active()
-            ->whereHas('group', function (BelongsTo $query) {
+            ->whereHas('group', function (Builder $query) {
                 return $query->whereHas('prices');
             })
             ->where(function (Builder $query) use ($timestamp) {

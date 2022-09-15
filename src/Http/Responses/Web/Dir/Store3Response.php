@@ -65,8 +65,8 @@ class Store3Response implements RedirectResponseFactory
                 ->with('success', $this->lang->get('idir::dirs.success.store.' . Status::ACTIVE)),
 
             Status::PAYMENT_INACTIVE => $this->response->redirectToRoute('web.payment.dir.show', [
-                    $dir->payment->uuid,
-                    $dir->payment->driver
+                    $dir->payment->uuid, // @phpstan-ignore-line
+                    $dir->payment->driver // @phpstan-ignore-line
                 ]),
 
             default => throw new \Exception("No response was found for the status '{$status}'")

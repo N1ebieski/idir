@@ -40,7 +40,7 @@ class DirBacklinkController
     {
         $dirBacklink->makeService()->delay($request->input('delay'));
 
-        $dirBacklink->dir->makeRepo()->activate();
+        $dirBacklink->dir->makeService()->activate();
 
         Event::dispatch(App::make(DirBacklinkDelayEvent::class, ['dirBacklink' => $dirBacklink]));
 

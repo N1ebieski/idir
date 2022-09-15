@@ -157,6 +157,7 @@ class Field extends BaseFieldModel
     {
         return $query->when(!is_null($morph), function (Builder $query) use ($morph) {
             return $query->whereHas('morphs', function (Builder $query) use ($morph) {
+                // @phpstan-ignore-next-line
                 return $query->where('model_id', $morph->id);
             });
         });

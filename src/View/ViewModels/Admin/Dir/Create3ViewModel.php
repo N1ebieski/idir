@@ -94,6 +94,7 @@ class Create3ViewModel extends ViewModel
     public function paymentType(): ?string
     {
         if (!$this->request->old('payment_type') && $this->group->prices->isNotEmpty()) {
+            // @phpstan-ignore-next-line
             return $this->group->prices
                 ->sortBy(function ($item) {
                     return array_search($item->type, Type::getAvailable());

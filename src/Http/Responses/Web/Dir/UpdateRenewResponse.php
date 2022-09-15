@@ -60,8 +60,8 @@ class UpdateRenewResponse implements RedirectResponseFactory
     {
         if (in_array($this->request->input('payment_type'), [Type::TRANSFER, Type::PAYPAL_EXPRESS])) {
             return $this->response->redirectToRoute('web.payment.dir.show', [
-                $dir->payment->uuid,
-                $dir->payment->driver
+                $dir->payment->uuid, // @phpstan-ignore-line
+                $dir->payment->driver // @phpstan-ignore-line
             ]);
         }
 

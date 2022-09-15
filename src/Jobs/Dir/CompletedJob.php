@@ -167,9 +167,10 @@ class CompletedJob implements ShouldQueue
         /** @var Group */
         $group = $this->dir->group()->make();
 
-        $this->dir->makeService()->moveToAltGroup(
-            $group->find($this->dir->group->alt_id)
-        );
+        /** @var Group */
+        $group = $group->find($this->dir->group->alt_id);
+
+        $this->dir->makeService()->moveToAltGroup($group);
     }
 
     /**

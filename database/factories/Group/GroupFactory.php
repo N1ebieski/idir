@@ -80,8 +80,11 @@ class GroupFactory extends Factory
         return $this->state(function () {
             $group = new Group();
 
+            /** @var Group */
+            $group = $group->makeCache()->rememberBySlug(Slug::default());
+
             return [
-                'alt_id' => $group->makeCache()->rememberBySlug(Slug::default())->id
+                'alt_id' => $group->id
             ];
         });
     }
@@ -233,8 +236,9 @@ class GroupFactory extends Factory
      */
     public function additionalOptionsForEditingContent()
     {
-        return $this->hasAttached(
-            Privilege::where('name', 'additional options for editing content')->first()
-        );
+        /** @var Privilege */
+        $privilege = Privilege::where('name', 'additional options for editing content')->first();
+
+        return $this->hasAttached($privilege);
     }
 }

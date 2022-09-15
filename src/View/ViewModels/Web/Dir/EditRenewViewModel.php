@@ -50,6 +50,7 @@ class EditRenewViewModel extends ViewModel
     public function paymentType(): ?string
     {
         if (!$this->request->old('payment_type') && $this->dir->group->prices->isNotEmpty()) {
+            // @phpstan-ignore-next-line
             return $this->dir->group->prices
                 ->sortBy(function ($item) {
                     return array_search($item->type, Type::getAvailable());

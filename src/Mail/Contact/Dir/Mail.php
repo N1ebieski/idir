@@ -22,6 +22,7 @@ use Illuminate\Http\Request;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use N1ebieski\IDir\Models\Dir;
+use N1ebieski\IDir\Models\User;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Contracts\Routing\UrlGenerator as URL;
@@ -58,8 +59,11 @@ class Mail extends Mailable
      */
     public function build()
     {
+        /** @var User */
+        $user = $this->dir->user;
+
         return $this->subject($this->request->input('title'))
-            ->replyTo($this->dir->user->email)
+            ->replyTo($user->email)
             ->to($this->config->get('mail.from.address'))
             ->markdown('icore::mails.contact')
             ->with([

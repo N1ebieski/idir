@@ -70,39 +70,66 @@ class GroupsAndPrivilegesSeeder extends SEOKatalogSeeder
                     $privIds = array();
 
                     if ($item->home === 1) {
-                        $privIds[] = $privileges->where('name', 'highest position on homepage')->first()->id;
+                        /** @var Privilege */
+                        $privilege = $privileges->where('name', 'highest position on homepage')->first();
+
+                        $privIds[] = $privilege->id;
                     }
 
                     if ($item->my_cat === 1 || $item->my_sub === 1) {
-                        $privIds[] = $privileges->where('name', 'highest position in their categories')->first()->id;
+                        /** @var Privilege */
+                        $privilege = $privileges->where('name', 'highest position in their categories')->first();
+
+                        $privIds[] = $privilege->id;
                     }
 
                     if ($item->all_cat === 1 || $item->all_sub === 1) {
-                        $privIds[] = $privileges->where('name', 'highest position in ancestor categories')->first()->id;
+                        /** @var Privilege */
+                        $privilege = $privileges->where('name', 'highest position in ancestor categories')->first();
+
+                        $privIds[] = $privilege->id;
                     }
 
                     if ($item->friend === 1) {
-                        $privIds[] = $privileges->where('name', 'additional link on the friends subpage')->first()->id;
+                        /** @var Privilege */
+                        $privilege = $privileges->where('name', 'additional link on the friends subpage')->first();
+
+                        $privIds[] = $privilege->id;
                     }
 
                     if ($item->my_search === 1) {
-                        $privIds[] = $privileges->where('name', 'highest position in search results')->first()->id;
+                        /** @var Privilege */
+                        $privilege = $privileges->where('name', 'highest position in search results')->first();
+
+                        $privIds[] = $privilege->id;
                     }
 
                     if ($item->sites_link === 1) {
-                        $privIds[] = $privileges->where('name', 'direct link on listings')->first()->id;
+                        /** @var Privilege */
+                        $privilege = $privileges->where('name', 'direct link on listings')->first();
+
+                        $privIds[] = $privilege->id;
                     }
 
                     if ($item->nofollow === 1) {
-                        $privIds[] = $privileges->where('name', 'direct link nofollow')->first()->id;
+                        /** @var Privilege */
+                        $privilege = $privileges->where('name', 'direct link nofollow')->first();
+
+                        $privIds[] = $privilege->id;
                     }
 
                     if ($item->link_box === 1) {
-                        $privIds[] = $privileges->where('name', 'place in the links component')->first()->id;
+                        /** @var Privilege */
+                        $privilege = $privileges->where('name', 'place in the links component')->first();
+
+                        $privIds[] = $privilege->id;
                     }
 
                     if ($item->premium_box === 1) {
-                        $privIds[] = $privileges->where('name', 'place in the advertising component')->first()->id;
+                        /** @var Privilege */
+                        $privilege = $privileges->where('name', 'place in the advertising component')->first();
+
+                        $privIds[] = $privilege->id;
                     }
 
                     $group->privileges()->attach($privIds);
@@ -117,6 +144,9 @@ class GroupsAndPrivilegesSeeder extends SEOKatalogSeeder
      */
     protected function getGroupLastId(): int
     {
-        return Group::orderBy('id', 'desc')->first()->id;
+        /** @var Group */
+        $group = Group::orderBy('id', 'desc')->first();
+
+        return $group->id;
     }
 }

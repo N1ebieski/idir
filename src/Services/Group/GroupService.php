@@ -104,13 +104,16 @@ class GroupService
     public function delete(): bool
     {
         return $this->db->transaction(function () {
+            /** @var Group */
+            $defaultGroup = $this->group->makeCache()->rememberBySlug(Slug::default());
+
             // If you delete a group, you have to change the alternative of other groups to Default
             $this->group->where('alt_id', $this->group->id)->update([
-                'alt_id' => $this->group->makeCache()->rememberBySlug(Slug::default())->id
+                'alt_id' => $defaultGroup->id
             ]);
 
             $this->group->dirs()->update([
-                'group_id' => $this->group->makeCache()->rememberBySlug(Slug::default())->id,
+                'group_id' => $defaultGroup->id,
                 'privileged_at' => null,
                 'privileged_to' => null
             ]);

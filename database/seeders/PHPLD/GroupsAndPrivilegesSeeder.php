@@ -39,17 +39,21 @@ class GroupsAndPrivilegesSeeder extends PHPLDSeeder
     {
         $privileges = Privilege::all();
 
+        /** @var Group */
+        // @phpstan-ignore-next-line
+        $defaultGroup = Group::make()->makeCache()->rememberBySlug(Slug::default());
+
         DB::connection('import')->table('link_type')
             ->orderBy('ORDER_ID', 'asc')
             ->orderBy('ID', 'asc')
             ->get()
-            ->each(function ($item) use ($privileges) {
-                DB::transaction(function () use ($item, $privileges) {
+            ->each(function ($item) use ($privileges, $defaultGroup) {
+                DB::transaction(function () use ($item, $privileges, $defaultGroup) {
                     $group = new Group();
 
                     $group->id = $this->groupLastId + $item->ID;
                     $group->name = $item->NAME;
-                    $group->alt_id = $group->makeCache()->rememberBySlug(Slug::default())->id;
+                    $group->alt_id = $defaultGroup->id;
                     $group->desc = strlen($item->DESCRIPTION) > 0 ?
                         strip_tags($item->DESCRIPTION)
                         : null;
@@ -70,23 +74,38 @@ class GroupsAndPrivilegesSeeder extends PHPLDSeeder
                     $privIds = array();
 
                     if ($item->FEATURED === 1) {
-                        $privIds[] = $privileges->where('name', 'highest position in their categories')->first()->id;
+                        /** @var Privilege */
+                        $privilege = $privileges->where('name', 'highest position in their categories')->first();
+
+                        $privIds[] = $privilege->id;
                     }
 
                     if ($item->FEATURED === 1) {
-                        $privIds[] = $privileges->where('name', 'highest position in ancestor categories')->first()->id;
+                        /** @var Privilege */
+                        $privilege = $privileges->where('name', 'highest position in ancestor categories')->first();
+
+                        $privIds[] = $privilege->id;
                     }
 
                     if ($item->FEATURED === 1) {
-                        $privIds[] = $privileges->where('name', 'highest position in search results')->first()->id;
+                        /** @var Privilege */
+                        $privilege = $privileges->where('name', 'highest position in search results')->first();
+
+                        $privIds[] = $privilege->id;
                     }
 
                     if ($item->NOFOLLOW === 1) {
-                        $privIds[] = $privileges->where('name', 'direct link nofollow')->first()->id;
+                        /** @var Privilege */
+                        $privilege = $privileges->where('name', 'direct link nofollow')->first();
+
+                        $privIds[] = $privilege->id;
                     }
 
                     if ($item->FEATURED === 1) {
-                        $privIds[] = $privileges->where('name', 'place in the advertising component')->first()->id;
+                        /** @var Privilege */
+                        $privilege = $privileges->where('name', 'place in the advertising component')->first();
+
+                        $privIds[] = $privilege->id;
                     }
 
                     $group->privileges()->attach($privIds);
@@ -101,6 +120,9 @@ class GroupsAndPrivilegesSeeder extends PHPLDSeeder
      */
     protected function getGroupLastId(): int
     {
-        return Group::orderBy('id', 'desc')->first()->id;
+        /** @var Group */
+        $group = Group::orderBy('id', 'desc')->first();
+
+        return $group->id;
     }
 }

@@ -50,6 +50,7 @@ trait HasFilterable
     {
         return $query->when(!is_null($region), function (Builder $query) use ($region) {
             return $query->whereHas('regions', function (Builder $query) use ($region) {
+                // @phpstan-ignore-next-line
                 return $query->where('id', $region->id);
             });
         });
@@ -64,6 +65,7 @@ trait HasFilterable
     public function scopeFilterGroup(Builder $query, Group $group = null): ?Builder
     {
         return $query->when(!is_null($group), function (Builder $query) use ($group) {
+            // @phpstan-ignore-next-line
             return $query->where("{$this->getTable()}.group_id", $group->id);
         });
     }

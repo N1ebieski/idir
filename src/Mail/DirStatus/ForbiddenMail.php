@@ -20,6 +20,7 @@ namespace N1ebieski\IDir\Mail\DirStatus;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
+use N1ebieski\IDir\Models\User;
 use N1ebieski\IDir\Models\DirStatus;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Translation\Translator as Lang;
@@ -51,8 +52,11 @@ class ForbiddenMail extends Mailable
     {
         $this->dirStatus->load(['dir', 'dir.user', 'dir.group']);
 
+        /** @var User */
+        $user = $this->dirStatus->dir->user;
+
         return $this->subject($this->lang->get('idir::status.mail.forbidden.title'))
-            ->to($this->dirStatus->dir->user->email)
+            ->to($user->email)
             ->with([
                 'greeting' => $this->greeting()
             ])
@@ -66,6 +70,9 @@ class ForbiddenMail extends Mailable
      */
     protected function greeting(): string
     {
-        return $this->lang->get('icore::auth.hello') . ' ' . $this->dirStatus->dir->user->name . '!';
+        /** @var User */
+        $user = $this->dirStatus->dir->user;
+
+        return $this->lang->get('icore::auth.hello') . ' ' . $user->name . '!';
     }
 }

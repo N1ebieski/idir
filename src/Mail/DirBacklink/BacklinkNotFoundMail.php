@@ -20,6 +20,7 @@ namespace N1ebieski\IDir\Mail\DirBacklink;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
+use N1ebieski\IDir\Models\User;
 use Illuminate\Queue\SerializesModels;
 use N1ebieski\IDir\Models\DirBacklink;
 use Illuminate\Contracts\Translation\Translator as Lang;
@@ -51,8 +52,11 @@ class BacklinkNotFoundMail extends Mailable
     {
         $this->dirBacklink->load(['link', 'dir', 'dir.user']);
 
+        /** @var User */
+        $user = $this->dirBacklink->dir->user;
+
         return $this->subject($this->lang->get('idir::backlinks.not_found'))
-            ->to($this->dirBacklink->dir->user->email)
+            ->to($user->email)
             ->markdown('idir::mails.backlink.not_found');
     }
 }

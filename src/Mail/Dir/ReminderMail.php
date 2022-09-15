@@ -21,6 +21,8 @@ namespace N1ebieski\IDir\Mail\Dir;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use N1ebieski\IDir\Models\Dir;
+use N1ebieski\IDir\Models\User;
+use N1ebieski\IDir\Models\Group;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Translation\Translator as Lang;
 
@@ -45,12 +47,15 @@ class ReminderMail extends Mailable
     /**
      * Undocumented function
      *
-     * @return void
+     * @return self
      */
-    public function build()
+    public function build(): self
     {
+        /** @var User */
+        $user = $this->dir->user;
+
         return $this->subject($this->lang->get('idir::dirs.mail.reminder.title'))
-            ->to($this->dir->user->email)
+            ->to($user->email)
             ->with([
                 'result' => $this->result()
             ])
@@ -64,7 +69,10 @@ class ReminderMail extends Mailable
      */
     protected function result(): string
     {
-        if ($this->dir->group->alt_id === null) {
+        /** @var Group */
+        $group = $this->dir->group;
+
+        if ($group->alt_id === null) {
             return $this->lang->get('idir::dirs.mail.reminder.deactivation', [
                 'days' => $this->dir->privileged_to_diff
             ]);
@@ -72,7 +80,8 @@ class ReminderMail extends Mailable
 
         return $this->lang->get('idir::dirs.mail.reminder.alt', [
             'days' => $this->dir->privileged_to_diff,
-            'alt_group' => $this->dir->group->alt->name
+            // @phpstan-ignore-next-line
+            'alt_group' => $group->alt->name
         ]);
     }
 }

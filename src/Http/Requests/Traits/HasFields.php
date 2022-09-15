@@ -100,7 +100,7 @@ trait HasFields
                     $field->id => new UploadedFile(
                         $path,
                         $this->input("field.{$field->id}"),
-                        mime_content_type($path),
+                        mime_content_type($path) ?: null,
                         null,
                         true
                     )

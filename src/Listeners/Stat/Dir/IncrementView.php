@@ -69,9 +69,10 @@ class IncrementView
             return;
         }
 
-        $this->stat->makeCache()
-            ->rememberBySlug(Slug::VIEW)
-            ->setRelations(['morph' => $this->event->dir])
+        /** @var Stat */
+        $stat = $this->stat->makeCache()->rememberBySlug(Slug::VIEW);
+
+        $stat->setRelations(['morph' => $this->event->dir])
             ->makeService()
             ->increment();
     }

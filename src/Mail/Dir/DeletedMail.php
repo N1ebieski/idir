@@ -21,6 +21,7 @@ namespace N1ebieski\IDir\Mail\Dir;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use N1ebieski\IDir\Models\Dir;
+use N1ebieski\IDir\Models\User;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Translation\Translator as Lang;
 
@@ -51,8 +52,11 @@ class DeletedMail extends Mailable
      */
     public function build(): self
     {
+        /** @var User */
+        $user = $this->dir->user;
+
         return $this->subject($this->lang->get('idir::dirs.success.destroy'))
-            ->to($this->dir->user->email)
+            ->to($user->email)
             ->markdown('idir::mails.dir.delete');
     }
 }

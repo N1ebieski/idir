@@ -208,7 +208,10 @@ class DirFactory extends Factory
     {
         $group = new Group();
 
-        return $this->for($group->makeCache()->rememberBySlug(Slug::default()));
+        /** @var Group */
+        $group = $group->makeCache()->rememberBySlug(Slug::default());
+
+        return $this->for($group);
     }
 
     /**

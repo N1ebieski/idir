@@ -30,6 +30,7 @@ use Illuminate\Database\Eloquent\Model;
 use Cviebrock\EloquentTaggable\Taggable;
 use N1ebieski\ICore\Utils\MigrationUtil;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Query\JoinClause;
 use Cviebrock\EloquentSluggable\Sluggable;
 use N1ebieski\IDir\Models\Field\Dir\Field;
 use N1ebieski\IDir\Services\Dir\DirService;
@@ -52,8 +53,8 @@ use N1ebieski\IDir\ValueObjects\Dir\Status as DirStatus;
 use N1ebieski\IDir\ValueObjects\Dir\Comment as DirComment;
 use N1ebieski\IDir\Models\Field\Interfaces\MapValueInterface;
 use N1ebieski\IDir\Models\Field\Interfaces\ImageValueInterface;
-use N1ebieski\IDir\Models\Field\Interfaces\RegionsValueInterface;
 use N1ebieski\IDir\ValueObjects\Payment\Status as PaymentStatus;
+use N1ebieski\IDir\Models\Field\Interfaces\RegionsValueInterface;
 
 /**
  * N1ebieski\IDir\Models\Dir
@@ -556,13 +557,13 @@ class Dir extends Model implements
     public function scopeActiveHasLinkPriviligeByComponent(Builder $query, array $component): Builder
     {
         return $query->selectRaw('id, url, title AS name, NULL')
-            ->whereHas('group', function ($query) {
-                $query->whereHas('privileges', function ($query) {
-                    $query->where('name', 'place in the links component');
+            ->whereHas('group', function (Builder $query) {
+                return $query->whereHas('privileges', function (Builder $query) {
+                    return $query->where('name', 'place in the links component');
                 });
             })
-            ->join('categories_models', function ($query) use ($component) {
-                $query->on('dirs.id', '=', 'categories_models.model_id')
+            ->join('categories_models', function (JoinClause $query) use ($component) {
+                return $query->on('dirs.id', '=', 'categories_models.model_id')
                     ->whereIn('categories_models.category_id', $component['cats'])
                     ->where('categories_models.model_type', $this->getMorphClass());
             })

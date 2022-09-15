@@ -1,5 +1,21 @@
 <?php
 
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is licenced under the Software License Agreement
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://intelekt.net.pl/pages/regulamin
+ *
+ * With the purchase or the installation of the software in your application
+ * you accept the licence agreement.
+ *
+ * @author    Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ * @copyright Since 2019 INTELEKT - Usługi Komputerowe Mariusz Wysokiński
+ * @license   https://intelekt.net.pl/pages/regulamin
+ */
+
 use Illuminate\Support\Facades\Route;
 use N1ebieski\IDir\Http\Controllers\Web\DirController;
 
@@ -33,44 +49,44 @@ Route::group(['middleware' => ['icore.ban.user', 'icore.ban.ip']], function () {
 
     Route::group(['middleware' => ['auth']], function () {
         Route::delete('dirs/{dir}', [DirController::class, 'destroy'])
-            ->middleware(['permission:web.dirs.delete', 'can:delete,dir'])
             ->name('dir.destroy')
-            ->where('dir', '[0-9]+');
+            ->where('dir', '[0-9]+')
+            ->middleware(['permission:web.dirs.delete', 'can:delete,dir']);
 
         Route::get('dirs/{dir}/edit/1', [DirController::class, 'edit1'])
-            ->middleware(['permission:web.dirs.edit', 'can:edit,dir'])
             ->name('dir.edit_1')
-            ->where('dir', '[0-9]+');
+            ->where('dir', '[0-9]+')
+            ->middleware(['permission:web.dirs.edit', 'can:edit,dir']);
 
         Route::get('dirs/{dir}/group/{group}/edit/2', [DirController::class, 'edit2'])
-            ->middleware(['permission:web.dirs.edit', 'can:edit,dir'])
             ->name('dir.edit_2')
             ->where('group', '[0-9]+')
-            ->where('dir', '[0-9]+');
+            ->where('dir', '[0-9]+')
+            ->middleware(['permission:web.dirs.edit', 'can:edit,dir']);
         Route::put('dirs/{dir}/group/{group}/2', [DirController::class, 'update2'])
-            ->middleware(['permission:web.dirs.edit', 'can:edit,dir'])
             ->name('dir.update_2')
             ->where('group', '[0-9]+')
-            ->where('dir', '[0-9]+');
+            ->where('dir', '[0-9]+')
+            ->middleware(['permission:web.dirs.edit', 'can:edit,dir']);
 
         Route::get('dirs/{dir}/group/{group}/edit/3', [DirController::class, 'edit3'])
-            ->middleware(['permission:web.dirs.edit', 'can:edit,dir'])
             ->name('dir.edit_3')
             ->where('group', '[0-9]+')
-            ->where('dir', '[0-9]+');
+            ->where('dir', '[0-9]+')
+            ->middleware(['permission:web.dirs.edit', 'can:edit,dir']);
         Route::put('dirs/{dir}/group/{group}/3', [DirController::class, 'update3'])
-            ->middleware(['permission:web.dirs.edit', 'can:edit,dir'])
             ->name('dir.update_3')
             ->where('group', '[0-9]+')
-            ->where('dir', '[0-9]+');
+            ->where('dir', '[0-9]+')
+            ->middleware(['permission:web.dirs.edit', 'can:edit,dir']);
 
         Route::get('dirs/{dir}/edit/renew', [DirController::class, 'editRenew'])
-            ->middleware(['permission:web.dirs.edit', 'can:edit,dir'])
             ->name('dir.edit_renew')
-            ->where('dir', '[0-9]+');
+            ->where('dir', '[0-9]+')
+            ->middleware(['permission:web.dirs.edit', 'can:edit,dir']);
         Route::patch('dirs/{dir}/renew', [DirController::class, 'updateRenew'])
-            ->middleware(['permission:web.dirs.edit', 'can:edit,dir'])
             ->name('dir.update_renew')
-            ->where('dir', '[0-9]+');
+            ->where('dir', '[0-9]+')
+            ->middleware(['permission:web.dirs.edit', 'can:edit,dir']);
     });
 });

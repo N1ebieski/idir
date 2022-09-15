@@ -1,8 +1,25 @@
 <?php
 
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is licenced under the Software License Agreement
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://intelekt.net.pl/pages/regulamin
+ *
+ * With the purchase or the installation of the software in your application
+ * you accept the licence agreement.
+ *
+ * @author    Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ * @copyright Since 2019 INTELEKT - Usługi Komputerowe Mariusz Wysokiński
+ * @license   https://intelekt.net.pl/pages/regulamin
+ */
+
 namespace N1ebieski\IDir\Tests\Feature\Api\Dir\Update;
 
 use Tests\TestCase;
+use Mockery\MockInterface;
 use Illuminate\Support\Str;
 use Laravel\Sanctum\Sanctum;
 use N1ebieski\IDir\Models\Dir;
@@ -16,6 +33,7 @@ use N1ebieski\IDir\Models\DirBacklink;
 use N1ebieski\IDir\ValueObjects\Dir\Status;
 use N1ebieski\IDir\ValueObjects\Group\Slug;
 use N1ebieski\IDir\ValueObjects\Price\Type;
+use Illuminate\Database\Eloquent\Collection;
 use N1ebieski\IDir\Models\Field\Group\Field;
 use Illuminate\Http\Response as HttpResponse;
 use N1ebieski\IDir\Models\Payment\Dir\Payment;
@@ -35,6 +53,7 @@ class DirTest extends TestCase
      */
     protected function setUpDir(): array
     {
+        /** @var Category */
         $category = Category::makeFactory()->active()->create();
 
         return [
@@ -53,73 +72,95 @@ class DirTest extends TestCase
      */
     protected function setUpFields(Group $group): array
     {
+        $fields = [];
+
         foreach (FieldType::getAvailable() as $type) {
+            /** @var Field */
             $field = Field::makeFactory()->public()->hasAttached($group, [], 'morphs')->{$type}()->create();
 
-            $fields['field'][$field->id] = match ($field->type) {
+            $fields['field'][$field->id] = match ($field->type->getValue()) {
                 FieldType::INPUT, FieldType::TEXTAREA => 'Cupidatat magna enim officia non sunt esse qui Lorem quis.',
 
-                FieldType::SELECT => $fields['field'][$field->id] = $field->options->options[0],
+                // @phpstan-ignore-next-line
+                FieldType::SELECT => $field->options->options[0],
 
+                // @phpstan-ignore-next-line
                 FieldType::MULTISELECT, FieldType::CHECKBOX => array_slice($field->options->options, 0, 2),
 
-                FieldType::IMAGE => UploadedFile::fake()->image('avatar.jpg', 500, 200)->size(1000)
+                FieldType::IMAGE => UploadedFile::fake()->image('avatar.jpg', 500, 200)->size(1000),
+
+                default => throw new \InvalidArgumentException("The Type '{$field->type}' not found")
             };
         }
 
         return $fields;
     }
 
-    public function testApiDirUpdateAsGuest()
+    public function testApiDirUpdateAsGuest(): void
     {
+        /** @var Group */
+        // @phpstan-ignore-next-line
+        $defaultGroup = Group::make()->makeCache()->rememberBySlug(Slug::default());
+
         $response = $this->putJson(route('api.dir.update', [
             rand(1, 1000),
-            Group::make()->makeCache()->rememberBySlug(Slug::default())->id
+            $defaultGroup->id
         ]));
 
         $response->assertStatus(HttpResponse::HTTP_UNAUTHORIZED);
     }
 
-    public function testApiDirUpdateAsUserWithoutPermission()
+    public function testApiDirUpdateAsUserWithoutPermission(): void
     {
+        /** @var User */
         $user = User::makeFactory()->user()->create();
 
         Sanctum::actingAs($user);
 
+        /** @var Group */
         $group = Group::makeFactory()->public()->create();
 
+        /** @var Dir */
         $dir = Dir::makeFactory()->for($group)->for($user)->create();
 
         $response = $this->putJson(route('api.dir.update', [$dir->id, $group->id]));
 
         $response->assertStatus(HttpResponse::HTTP_FORBIDDEN);
+
         $response->assertJson(['message' => 'User does not have the right permissions.']);
     }
 
-    public function testApiDirUpdateAsUserWithoutAbility()
+    public function testApiDirUpdateAsUserWithoutAbility(): void
     {
+        /** @var User */
         $user = User::makeFactory()->user()->api()->create();
 
         Sanctum::actingAs($user);
 
+        /** @var Group */
         $group = Group::makeFactory()->public()->create();
 
+        /** @var Dir */
         $dir = Dir::makeFactory()->for($group)->for($user)->create();
 
         $response = $this->putJson(route('api.dir.update', [$dir->id, $group->id]));
 
         $response->assertStatus(HttpResponse::HTTP_FORBIDDEN);
+
         $response->assertJson(['message' => 'Invalid ability provided.']);
     }
 
-    public function testApiDirUpdateForeignDir()
+    public function testApiDirUpdateForeignDir(): void
     {
+        /** @var User */
         $user = User::makeFactory()->user()->api()->create();
 
         Sanctum::actingAs($user, ['api.dirs.edit']);
 
+        /** @var Group */
         $group = Group::makeFactory()->public()->create();
 
+        /** @var Dir */
         $dir = Dir::makeFactory()->withUser()->for($group)->create();
 
         $response = $this->putJson(route('api.dir.update', [$dir->id, $dir->group->id]));
@@ -127,28 +168,36 @@ class DirTest extends TestCase
         $response->assertStatus(HttpResponse::HTTP_FORBIDDEN);
     }
 
-    public function testApiDirUpdateNoExistDir()
+    public function testApiDirUpdateNoExistDir(): void
     {
+        /** @var User */
         $user = User::makeFactory()->user()->api()->create();
 
         Sanctum::actingAs($user, ['api.dirs.edit']);
 
+        /** @var Group */
+        // @phpstan-ignore-next-line
+        $defaultGroup = Group::make()->makeCache()->rememberBySlug(Slug::default());
+
         $response = $this->putJson(route('api.dir.update', [
             rand(1, 1000),
-            Group::make()->makeCache()->rememberBySlug(Slug::default())->id
+            $defaultGroup->id
         ]));
 
         $response->assertStatus(HttpResponse::HTTP_NOT_FOUND);
     }
 
-    public function testApiDirUpdateNoExistGroup()
+    public function testApiDirUpdateNoExistGroup(): void
     {
+        /** @var User */
         $user = User::makeFactory()->user()->api()->create();
 
         Sanctum::actingAs($user, ['api.dirs.edit']);
 
+        /** @var Group */
         $group = Group::makeFactory()->public()->create();
 
+        /** @var Dir */
         $dir = Dir::makeFactory()->for($group)->for($user)->create();
 
         $response = $this->putJson(route('api.dir.update', [$dir->id, rand(2, 1000)]));
@@ -156,16 +205,20 @@ class DirTest extends TestCase
         $response->assertStatus(HttpResponse::HTTP_NOT_FOUND);
     }
 
-    public function testApiDirUpdatePrivateGroup()
+    public function testApiDirUpdatePrivateGroup(): void
     {
+        /** @var User */
         $user = User::makeFactory()->user()->api()->create();
 
         Sanctum::actingAs($user, ['api.dirs.edit']);
 
+        /** @var Group */
         $privateGroup = Group::makeFactory()->private()->create();
 
+        /** @var Group */
         $publicGroup = Group::makeFactory()->public()->create();
 
+        /** @var Dir */
         $dir = Dir::makeFactory()->for($publicGroup)->for($user)->create();
 
         $response = $this->putJson(route('api.dir.update', [$dir->id, $privateGroup->id]));
@@ -173,18 +226,22 @@ class DirTest extends TestCase
         $response->assertStatus(HttpResponse::HTTP_FORBIDDEN);
     }
 
-    public function testApiDirUpdateMaxModelsNewGroup()
+    public function testApiDirUpdateMaxModelsNewGroup(): void
     {
+        /** @var User */
         $user = User::makeFactory()->user()->api()->create();
 
         Sanctum::actingAs($user, ['api.dirs.edit']);
 
+        /** @var Group */
         $newGroup = Group::makeFactory()->public()->maxModels()->create();
 
-        $dirInNewGroup = Dir::makeFactory()->withUser()->for($newGroup)->create();
+        Dir::makeFactory()->withUser()->for($newGroup)->create();
 
+        /** @var Group */
         $oldGroup = Group::makeFactory()->public()->create();
 
+        /** @var Dir */
         $dirInOldGroup = Dir::makeFactory()->for($oldGroup)->for($user)->create();
 
         $response = $this->putJson(route('api.dir.update', [$dirInOldGroup->id, $newGroup->id]));
@@ -192,14 +249,17 @@ class DirTest extends TestCase
         $response->assertStatus(HttpResponse::HTTP_FORBIDDEN);
     }
 
-    public function testApiDirUpdateMaxModelsOldGroup()
+    public function testApiDirUpdateMaxModelsOldGroup(): void
     {
+        /** @var User */
         $user = User::makeFactory()->user()->api()->create();
 
         Sanctum::actingAs($user, ['api.dirs.edit']);
 
+        /** @var Group */
         $group = Group::makeFactory()->public()->maxModels()->create();
 
+        /** @var Dir */
         $dir = Dir::makeFactory()->for($group)->for($user)->create();
 
         $response = $this->putJson(route('api.dir.update', [$dir->id, $group->id]));
@@ -207,16 +267,20 @@ class DirTest extends TestCase
         $response->assertStatus(HttpResponse::HTTP_OK);
     }
 
-    public function testApiDirUpdateValidationFail()
+    public function testApiDirUpdateValidationFail(): void
     {
+        /** @var User */
         $user = User::makeFactory()->user()->api()->create();
 
         Sanctum::actingAs($user, ['api.dirs.edit']);
 
+        /** @var Group */
         $newGroup = Group::makeFactory()->public()->requiredUrl()->create();
 
+        /** @var Group */
         $oldGroup = Group::makeFactory()->public()->create();
 
+        /** @var Dir */
         $dir = Dir::makeFactory()->withoutUrl()->for($oldGroup)->for($user)->create();
 
         $response = $this->putJson(route('api.dir.update', [$dir->id, $newGroup->id]), [
@@ -227,19 +291,24 @@ class DirTest extends TestCase
         ]);
 
         $response->assertStatus(HttpResponse::HTTP_UNPROCESSABLE_ENTITY);
+
         $response->assertJsonValidationErrors(['title', 'categories', 'content_html', 'url']);
     }
 
-    public function testApiDirUpdateValidationUrlFail()
+    public function testApiDirUpdateValidationUrlFail(): void
     {
+        /** @var User */
         $user = User::makeFactory()->user()->api()->create();
 
         Sanctum::actingAs($user, ['api.dirs.edit']);
 
+        /** @var Group */
         $newGroup = Group::makeFactory()->public()->requiredUrl()->create();
 
+        /** @var Group */
         $oldGroup = Group::makeFactory()->public()->create();
 
+        /** @var Dir */
         $dir = Dir::makeFactory()->withoutUrl()->for($oldGroup)->for($user)->create();
 
         $response = $this->putJson(route('api.dir.update', [$dir->id, $newGroup->id]), [
@@ -247,21 +316,27 @@ class DirTest extends TestCase
         ]);
 
         $response->assertStatus(HttpResponse::HTTP_UNPROCESSABLE_ENTITY);
+
         $response->assertJsonValidationErrors(['url']);
     }
 
-    public function testApiDirUpdateValidationCategoriesFail()
+    public function testApiDirUpdateValidationCategoriesFail(): void
     {
+        /** @var User */
         $user = User::makeFactory()->user()->api()->create();
 
         Sanctum::actingAs($user, ['api.dirs.edit']);
 
+        /** @var Group */
         $newGroup = Group::makeFactory()->public()->maxCats()->create();
 
+        /** @var Collection<Category> */
         $categories = Category::makeFactory()->count(3)->active()->create();
 
+        /** @var Group */
         $oldGroup = Group::makeFactory()->public()->create();
 
+        /** @var Dir */
         $dir = Dir::makeFactory()->for($oldGroup)->for($user)->create();
 
         $response = $this->putJson(route('api.dir.update', [$dir->id, $newGroup->id]), [
@@ -269,22 +344,30 @@ class DirTest extends TestCase
         ]);
 
         $response->assertStatus(HttpResponse::HTTP_UNPROCESSABLE_ENTITY);
+
         $response->assertJsonValidationErrors(['categories']);
     }
 
-    public function testApiDirUpdateValidationFieldsFail()
+    public function testApiDirUpdateValidationFieldsFail(): void
     {
+        /** @var User */
         $user = User::makeFactory()->user()->api()->create();
 
         Sanctum::actingAs($user, ['api.dirs.edit']);
 
+        /** @var Group */
         $newGroup = Group::makeFactory()->public()->maxCats()->create();
 
+        /** @var Group */
         $oldGroup = Group::makeFactory()->public()->create();
 
+        /** @var Dir */
         $dir = Dir::makeFactory()->for($oldGroup)->for($user)->create();
 
+        $fields = [];
+
         foreach (FieldType::getAvailable() as $type) {
+            /** @var Field */
             $field = Field::makeFactory()->public()->hasAttached($newGroup, [], 'morphs')->{$type}()->create();
 
             $fields[] = "field.{$field->id}";
@@ -293,44 +376,55 @@ class DirTest extends TestCase
         $response = $this->putJson(route('api.dir.update', [$dir->id, $newGroup->id]));
 
         $response->assertStatus(HttpResponse::HTTP_UNPROCESSABLE_ENTITY);
+
         $response->assertJsonValidationErrors($fields);
     }
 
-    public function testApiDirUpdateValidationBacklinkFail()
+    public function testApiDirUpdateValidationBacklinkFail(): void
     {
+        /** @var User */
         $user = User::makeFactory()->user()->api()->create();
 
         Sanctum::actingAs($user, ['api.dirs.edit']);
 
+        /** @var Group */
         $newGroup = Group::makeFactory()->public()->requiredBacklink()->create();
 
+        /** @var Group */
         $oldGroup = Group::makeFactory()->public()->create();
 
+        /** @var Dir */
         $dir = Dir::makeFactory()->for($oldGroup)->for($user)->create();
 
-        $link = Link::makeFactory()->backlink()->create();
+        Link::makeFactory()->backlink()->create();
 
         $response = $this->putJson(route('api.dir.update', [$dir->id, $newGroup->id]));
 
         $response->assertStatus(HttpResponse::HTTP_UNPROCESSABLE_ENTITY);
+
         $response->assertJsonValidationErrors(['backlink', 'backlink_url']);
     }
 
-    public function testApiDirUpdateInResource()
+    public function testApiDirUpdateInResource(): void
     {
+        /** @var User */
         $user = User::makeFactory()->user()->api()->create();
 
         Sanctum::actingAs($user, ['api.dirs.edit']);
 
+        /** @var Group */
         $newGroup = Group::makeFactory()->public()->requiredUrl()->additionalOptionsForEditingContent()->create();
 
+        /** @var Group */
         $oldGroup = Group::makeFactory()->public()->create();
 
+        /** @var Dir */
         $dir = Dir::makeFactory()->withoutUrl()->for($oldGroup)->for($user)->create();
 
         $response = $this->putJson(route('api.dir.update', [$dir->id, $newGroup->id]), $this->setUpDir());
 
         $response->assertStatus(HttpResponse::HTTP_OK);
+
         $response->assertJsonFragment([
             'title' => $this->setUpDir()['title'],
             'content_html' => "<p>{$this->setUpDir()['content_html']}</p>",
@@ -338,16 +432,20 @@ class DirTest extends TestCase
         ]);
     }
 
-    public function testApiDirUpdateUserAsUserInDatabase()
+    public function testApiDirUpdateUserAsUserInDatabase(): void
     {
+        /** @var User */
         $user = User::makeFactory()->user()->api()->create();
 
         Sanctum::actingAs($user, ['api.dirs.edit']);
 
+        /** @var Group */
         $group = Group::makeFactory()->public()->withoutUrl()->create();
 
+        /** @var User */
         $newUser = User::makeFactory()->user()->create();
 
+        /** @var Dir */
         $dir = Dir::makeFactory()->withoutUrl()->withCategory()->for($group)->for($user)->create();
 
         $response = $this->putJson(route('api.dir.update', [$dir->id, $group->id]), [
@@ -362,16 +460,20 @@ class DirTest extends TestCase
         ]);
     }
 
-    public function testApiDirUpdateUserAsAdminInDatabase()
+    public function testApiDirUpdateUserAsAdminInDatabase(): void
     {
+        /** @var User */
         $user = User::makeFactory()->user()->api()->admin()->create();
 
         Sanctum::actingAs($user, ['api.dirs.edit']);
 
+        /** @var Group */
         $group = Group::makeFactory()->public()->withoutUrl()->create();
 
+        /** @var User */
         $newUser = User::makeFactory()->user()->create();
 
+        /** @var Dir */
         $dir = Dir::makeFactory()->withoutUrl()->withCategory()->for($group)->for($user)->create();
 
         $response = $this->putJson(route('api.dir.update', [$dir->id, $group->id]), [
@@ -386,28 +488,34 @@ class DirTest extends TestCase
         ]);
     }
 
-    public function testApiDirUpdateBacklinkInDatabase()
+    public function testApiDirUpdateBacklinkInDatabase(): void
     {
+        /** @var User */
         $user = User::makeFactory()->user()->api()->create();
 
         Sanctum::actingAs($user, ['api.dirs.edit']);
 
+        /** @var Group */
         $newGroup = Group::makeFactory()->public()->requiredBacklink()->create();
 
+        /** @var Group */
         $oldGroup = Group::makeFactory()->public()->create();
 
+        /** @var Dir */
         $dir = Dir::makeFactory()->for($oldGroup)->for($user)->create([
             'url' => 'https://idir.test'
         ]);
 
+        /** @var Link */
         $link = Link::makeFactory()->backlink()->create();
 
         $backlinkUrl = 'https://idir.test/page-with-backlink';
 
-        $this->mock(GuzzleClient::class, function ($mock) use ($link, $backlinkUrl) {
-            $mock->shouldReceive('request')->with('GET', $backlinkUrl, ['verify' => false])->andReturn(
-                new GuzzleResponse(HttpResponse::HTTP_OK, [], '<a href="' . $link->url . '">backlink</a>')
-            );
+        $this->mock(GuzzleClient::class, function (MockInterface $mock) use ($link, $backlinkUrl) {
+            $mock->shouldReceive('request')->once()->with('GET', $backlinkUrl, ['verify' => false])
+                ->andReturn(
+                    new GuzzleResponse(HttpResponse::HTTP_OK, [], '<a href="' . $link->url . '">backlink</a>')
+                );
         });
 
         $response = $this->putJson(route('api.dir.update', [$dir->id, $newGroup->id]), [
@@ -415,11 +523,13 @@ class DirTest extends TestCase
             'backlink_url' => $backlinkUrl
         ]);
 
+        /** @var Dir */
         $dir = Dir::orderBy('id', 'desc')->first();
 
         $response->assertStatus(HttpResponse::HTTP_OK);
 
         $this->assertTrue($dir->exists());
+
         $this->assertDatabaseHas('dirs_backlinks', [
             'dir_id' => $dir->id,
             'link_id' => $link->id,
@@ -427,21 +537,25 @@ class DirTest extends TestCase
         ]);
     }
 
-    public function testApiDirUpdateExistBacklinkInDatabase()
+    public function testApiDirUpdateExistBacklinkInDatabase(): void
     {
+        /** @var User */
         $user = User::makeFactory()->user()->api()->create();
 
         Sanctum::actingAs($user, ['api.dirs.edit']);
 
+        /** @var Group */
         $group = Group::makeFactory()->public()->requiredBacklink()->create();
 
+        /** @var Dir */
         $dir = Dir::makeFactory()->for($group)->for($user)->create([
             'url' => 'https://idir.test'
         ]);
 
+        /** @var Link */
         $link = Link::makeFactory()->backlink()->create();
 
-        $backlink = DirBacklink::makeFactory()->for($dir)->for($link)->create([
+        DirBacklink::makeFactory()->for($dir)->for($link)->create([
             'url' => 'https://idir.test/page-with-backlink'
         ]);
 
@@ -454,16 +568,20 @@ class DirTest extends TestCase
         ]);
     }
 
-    public function testApiDirUpdateFieldsInDatabase()
+    public function testApiDirUpdateFieldsInDatabase(): void
     {
+        /** @var User */
         $user = User::makeFactory()->user()->api()->create();
 
         Sanctum::actingAs($user, ['api.dirs.edit']);
 
+        /** @var Group */
         $newGroup = Group::makeFactory()->public()->applyActive()->requiredUrl()->create();
 
+        /** @var Group */
         $oldGroup = Group::makeFactory()->public()->create();
 
+        /** @var Dir */
         $dir = Dir::makeFactory()->withCategory()->for($oldGroup)->for($user)->create();
 
         $response = $this->putJson(
@@ -471,6 +589,7 @@ class DirTest extends TestCase
             ($setUpDir = $this->setUpDir()) + $this->setUpFields($newGroup)
         );
 
+        /** @var Dir */
         $dir = Dir::orderBy('id', 'desc')->first();
 
         $response->assertStatus(HttpResponse::HTTP_OK);
@@ -494,24 +613,30 @@ class DirTest extends TestCase
         ]);
     }
 
-    public function testApiDirUpdateExistFieldsInDatabase()
+    public function testApiDirUpdateExistFieldsInDatabase(): void
     {
+        /** @var User */
         $user = User::makeFactory()->user()->api()->create();
 
         Sanctum::actingAs($user, ['api.dirs.edit']);
 
+        /** @var Group */
         $group = Group::makeFactory()->public()->create();
 
         foreach ([FieldType::INPUT, FieldType::TEXTAREA] as $type) {
             $fields[] = Field::makeFactory()->public()->hasAttached($group, [], 'morphs')->{$type}()->create();
         }
 
+        /** @var Dir */
         $dir = Dir::makeFactory()->withCategory()->for($group)->for($user)
-            ->hasAttached($fields, ['value' => json_encode('Commodo laborum irure mollit laborum occaecat adipisicing dolore.')])
+            ->hasAttached(collect($fields), [
+                'value' => json_encode('Commodo laborum irure mollit laborum occaecat adipisicing dolore.')
+            ])
             ->create();
 
         $response = $this->putJson(route('api.dir.update', [$dir->id, $group->id]), $this->setUpDir());
 
+        /** @var Dir */
         $dir = Dir::orderBy('id', 'desc')->first();
 
         $response->assertStatus(HttpResponse::HTTP_OK);
@@ -524,18 +649,22 @@ class DirTest extends TestCase
         ]);
     }
 
-    public function testApiDirUpdateValidationPaymentFail()
+    public function testApiDirUpdateValidationPaymentFail(): void
     {
+        /** @var User */
         $user = User::makeFactory()->user()->api()->create();
 
         Sanctum::actingAs($user, ['api.dirs.edit']);
 
+        /** @var Group */
         $newGroup = Group::makeFactory()->public()->create();
 
-        $price = Price::makeFactory()->transfer()->for($newGroup)->create();
+        Price::makeFactory()->transfer()->for($newGroup)->create();
 
+        /** @var Group */
         $oldGroup = Group::makeFactory()->public()->create();
 
+        /** @var Dir */
         $dir = Dir::makeFactory()->withCategory()->for($oldGroup)->for($user)->create();
 
         $response = $this->putJson(route('api.dir.update', [$dir->id, $newGroup->id]), [
@@ -543,21 +672,26 @@ class DirTest extends TestCase
         ]);
 
         $response->assertStatus(HttpResponse::HTTP_UNPROCESSABLE_ENTITY);
+
         $response->assertJsonValidationErrors(['payment_transfer']);
     }
 
-    public function testApiDirUpdateValidationNoExistPaymentFail()
+    public function testApiDirUpdateValidationNoExistPaymentFail(): void
     {
+        /** @var User */
         $user = User::makeFactory()->user()->api()->create();
 
         Sanctum::actingAs($user, ['api.dirs.edit']);
 
+        /** @var Group */
         $newGroup = Group::makeFactory()->public()->create();
 
-        $price = Price::makeFactory()->transfer()->for($newGroup)->create();
+        Price::makeFactory()->transfer()->for($newGroup)->create();
 
+        /** @var Group */
         $oldGroup = Group::makeFactory()->public()->create();
 
+        /** @var Dir */
         $dir = Dir::makeFactory()->withCategory()->for($oldGroup)->for($user)->create();
 
         $response = $this->putJson(route('api.dir.update', [$dir->id, $newGroup->id]), [
@@ -566,21 +700,27 @@ class DirTest extends TestCase
         ]);
 
         $response->assertStatus(HttpResponse::HTTP_UNPROCESSABLE_ENTITY);
+
         $response->assertJsonValidationErrors(['payment_transfer']);
     }
 
-    public function testApiDirUpdateNewGroupPaymentInDatabase()
+    public function testApiDirUpdateNewGroupPaymentInDatabase(): void
     {
+        /** @var User */
         $user = User::makeFactory()->user()->api()->create();
 
         Sanctum::actingAs($user, ['api.dirs.edit']);
 
+        /** @var Group */
         $newGroup = Group::makeFactory()->public()->applyInactive()->create();
 
+        /** @var Price */
         $price = Price::makeFactory()->transfer()->for($newGroup)->create();
 
+        /** @var Group */
         $oldGroup = Group::makeFactory()->public()->create();
 
+        /** @var Dir */
         $dir = Dir::makeFactory()->withCategory()->for($oldGroup)->for($user)->create();
 
         $response = $this->putJson(route('api.dir.update', [$dir->id, $newGroup->id]), [
@@ -590,6 +730,7 @@ class DirTest extends TestCase
 
         $response->assertStatus(HttpResponse::HTTP_OK);
 
+        /** @var Dir */
         $dir = Dir::orderBy('id', 'desc')->first();
 
         $this->assertDatabaseHas('dirs', [
@@ -604,27 +745,33 @@ class DirTest extends TestCase
             'status' => PaymentStatus::PENDING
         ]);
 
+        /** @var Payment */
         $payment = Payment::orderBy('created_at', 'desc')->first();
 
         $response->assertJsonFragment(['uuid' => $payment->uuid]);
     }
 
-    public function testApiDirUpdateOldGroupWithoutPaymentInDatabase()
+    public function testApiDirUpdateOldGroupWithoutPaymentInDatabase(): void
     {
+        /** @var User */
         $user = User::makeFactory()->user()->api()->create();
 
         Sanctum::actingAs($user, ['api.dirs.edit']);
 
+        /** @var Group */
         $group = Group::makeFactory()->public()->applyInactive()->create();
 
+        /** @var Price */
         $price = Price::makeFactory()->transfer()->for($group)->create();
 
+        /** @var Dir */
         $dir = Dir::makeFactory()->withCategory()->for($group)->for($user)->create();
 
         $response = $this->putJson(route('api.dir.update', [$dir->id, $group->id]), $this->setUpDir());
 
         $response->assertStatus(HttpResponse::HTTP_OK);
 
+        /** @var Dir */
         $dir = Dir::orderBy('id', 'desc')->first();
 
         $this->assertDatabaseHas('dirs', [
@@ -641,47 +788,56 @@ class DirTest extends TestCase
         ]);
     }
 
-    public function testApiDirUpdatePendingValidationPaymentFail()
+    public function testApiDirUpdatePendingValidationPaymentFail(): void
     {
+        /** @var User */
         $user = User::makeFactory()->user()->api()->create();
 
         Sanctum::actingAs($user, ['api.dirs.edit']);
 
+        /** @var Group */
         $group = Group::makeFactory()->public()->applyInactive()->create();
 
-        $price = Price::makeFactory()->transfer()->for($group)->create();
+        Price::makeFactory()->transfer()->for($group)->create();
 
+        /** @var Dir */
         $dir = Dir::makeFactory()->pending()->withCategory()->for($group)->for($user)->create();
 
         $response = $this->putJson(route('api.dir.update', [$dir->id, $group->id]), $this->setUpDir());
 
         $response->assertStatus(HttpResponse::HTTP_UNPROCESSABLE_ENTITY);
+
         $response->assertJsonValidationErrors(['payment_type']);
     }
 
-    public function testApiDirUpdateValidationPaymentAutoCodeSmsPass()
+    public function testApiDirUpdateValidationPaymentAutoCodeSmsPass(): void
     {
+        /** @var User */
         $user = User::makeFactory()->user()->api()->create();
 
         Sanctum::actingAs($user, ['api.dirs.edit']);
 
+        /** @var Group */
         $newGroup = Group::makeFactory()->public()->applyActive()->create();
 
+        /** @var Price */
         $price = Price::makeFactory()->codeSms()->seasonal()->for($newGroup)->create();
 
+        /** @var Group */
         $oldGroup = Group::makeFactory()->public()->create();
 
+        /** @var Dir */
         $dir = Dir::makeFactory()->withCategory()->for($oldGroup)->for($user)->create();
 
-        $this->mock(GuzzleClient::class, function ($mock) use ($price) {
-            $mock->shouldReceive('request')->andReturn(
+        $this->mock(GuzzleClient::class, function (MockInterface $mock) use ($price) {
+            $mock->shouldReceive('request')->once()->andReturn(
                 new GuzzleResponse(HttpResponse::HTTP_OK, [], json_encode([
                     'active' => true,
                     'number' => (string)$price->number,
                     'activeFrom' => null,
                     'codeValidityTime' => 0,
                     'timeRemaining' => 0
-                ]))
+                ]) ?: '')
             );
         });
 

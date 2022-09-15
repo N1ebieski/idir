@@ -42,6 +42,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use N1ebieski\ICore\ValueObjects\Link\Type;
 use N1ebieski\IDir\ValueObjects\Group\Slug;
+use N1ebieski\ICore\ValueObjects\Stat\Slug as StatSlug;
 
 class DirsJob implements ShouldQueue
 {
@@ -92,10 +93,17 @@ class DirsJob implements ShouldQueue
         $fields = DB::connection('import')->table('forms')->get();
 
         $defaultRegions = Region::all();
+
         $defaultFields = [];
+
+        /** @var Field $defaultFields['map'] */
         $defaultFields['map'] = Field::where('type', 'map')->first(['id']);
+
+        /** @var Field $defaultFields['regions'] */
         $defaultFields['regions'] = Field::where('type', 'regions')->first(['id']);
+
         $defaultStats = Stat::all();
+
         $countTags = Tag::count();
 
         $relations = DB::connection('import')
@@ -160,11 +168,17 @@ class DirsJob implements ShouldQueue
 
                 $dir->save();
 
+                /** @var Stat */
+                $statClick = $defaultStats->firstWhere('slug', StatSlug::CLICK);
+
+                /** @var Stat */
+                $statView = $defaultStats->firstWhere('slug', StatSlug::VIEW);
+
                 $dir->stats()->attach([
-                    $defaultStats->firstWhere('slug', 'click')->id => [
+                    $statClick->id => [
                         'value' => $item->clicks
                     ],
-                    $defaultStats->firstWhere('slug', 'view')->id => [
+                    $statView->id => [
                         'value' => $item->views
                     ]
                 ]);
@@ -189,6 +203,7 @@ class DirsJob implements ShouldQueue
                 }
 
                 if (!empty($item->backlink_link) && !empty($item->backlink)) {
+                    /** @var Link */
                     $backlink = Link::where([
                         ['url', $this->getRealUrlAsString($item->backlink)],
                         ['type', Type::BACKLINK]
@@ -323,23 +338,44 @@ class DirsJob implements ShouldQueue
      */
     protected function getContentHtml(string $desc): string
     {
+        /** @var string */
         $desc = preg_replace('#\[([a-z0-9=]+)\]<br />(.*?)\[/([a-z]+)\]#si', '[\\1]\\2[/\\3]', $desc);
+
         $desc = str_replace(array('<br /><br />[list', '<br />[list'), array('[list', '[list'), $desc);
         $desc = str_replace(array('[/list]<br /><br />', '[/list]<br />'), array('[/list]', '[/list]'), $desc);
 
+        /** @var string */
         $desc = preg_replace('#\[url=(.*?)\](.*?)\[/url\]#si', '<a href="\\1" target="_blank" rel="noopener">\\2</a>', $desc);
+
+        /** @var string */
         $desc = preg_replace('#\[b\](.*?)\[/b\]#si', '<strong>\\1</strong>', $desc);
+
+        /** @var string */
         $desc = preg_replace('#\[i\](.*?)\[/i\]#si', '<i>\\1</i>', $desc);
+
+        /** @var string */
         $desc = preg_replace('#\[u\](.*?)\[/u\]#si', '<u>\\1</u>', $desc);
+
+        /** @var string */
         $desc = preg_replace(
             '#(\[quote\]|\[quote\]<br />)(.*?)(\[/quote\]<br />|\[/quote\])#si',
             '<blockquote>\\1</blockquote>',
             $desc
         );
+
+        /** @var string */
         $desc = preg_replace('#\[img\](.*?)\[/img\]#si', '<img src="\\1" />', $desc);
+
+        /** @var string */
         $desc = preg_replace('#\[size=(.*?)\](.*?)\[/size\]#si', '<span style="font-size:\\1%;">\\2</span>', $desc);
+
+        /** @var string */
         $desc = preg_replace('#\[list=(.*?)\](.*?)\[/list\]#si', '<ol start="\\1">\\2</ol>', $desc);
+
+        /** @var string */
         $desc = preg_replace('#\[list\](.*?)\[/list\]#si', '<ul>\\1</ul>', $desc);
+
+        /** @var string */
         $desc = preg_replace('#\[\*\](.*?)<br \/>#si', '<li>\\1</li>', $desc);
 
         $desc = str_replace(["<br />", "<br>", "<br/>"], "\r\n", $desc);

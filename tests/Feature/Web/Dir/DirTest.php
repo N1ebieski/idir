@@ -1,9 +1,26 @@
 <?php
 
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is licenced under the Software License Agreement
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://intelekt.net.pl/pages/regulamin
+ *
+ * With the purchase or the installation of the software in your application
+ * you accept the licence agreement.
+ *
+ * @author    Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ * @copyright Since 2019 INTELEKT - Usługi Komputerowe Mariusz Wysokiński
+ * @license   https://intelekt.net.pl/pages/regulamin
+ */
+
 namespace N1ebieski\IDir\Tests\Feature\Web\Dir;
 
 use Carbon\Carbon;
 use Tests\TestCase;
+use Mockery\MockInterface;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Request;
 use N1ebieski\IDir\Models\Dir;
@@ -24,6 +41,7 @@ use N1ebieski\IDir\Crons\Dir\ReminderCron;
 use N1ebieski\IDir\Mail\Dir\CompletedMail;
 use N1ebieski\IDir\Crons\Dir\CompletedCron;
 use N1ebieski\IDir\ValueObjects\Dir\Status;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Response as HttpResponse;
 use GuzzleHttp\Middleware as GuzzleMiddleware;
 use GuzzleHttp\Psr7\Response as GuzzleResponse;
@@ -35,12 +53,14 @@ class DirTest extends TestCase
 {
     use DatabaseTransactions;
 
-    public function testReminderQueueJob()
+    public function testReminderQueueJob(): void
     {
+        /** @var Group */
         $group = Group::makeFactory()->applyAltDeactivation()->create();
 
-        $price = Price::makeFactory()->seasonal()->for($group)->create();
+        Price::makeFactory()->seasonal()->for($group)->create();
 
+        /** @var Dir */
         $dir = Dir::makeFactory()->withUser()->paidSeasonal()->active()->for($group)->create([
             'privileged_to' => Carbon::now()->subDays(14)
         ]);
@@ -52,19 +72,21 @@ class DirTest extends TestCase
         $schedule = app()->make(ReminderCron::class);
         $schedule();
 
-        Mail::assertSent(ReminderMail::class, function ($mail) use ($dir) {
+        Mail::assertSent(ReminderMail::class, function (ReminderMail $mail) use ($dir) {
             $mail->build();
 
             return $mail->hasTo($dir->user->email);
         });
     }
 
-    public function testCompletedDeactivationQueueJob()
+    public function testCompletedDeactivationQueueJob(): void
     {
+        /** @var Group */
         $group = Group::makeFactory()->applyAltDeactivation()->create();
 
-        $price = Price::makeFactory()->seasonal()->for($group)->create();
+        Price::makeFactory()->seasonal()->for($group)->create();
 
+        /** @var Dir */
         $dir = Dir::makeFactory()->withUser()->paidSeasonal()->active()->for($group)->create([
             'privileged_to' => Carbon::now()->subDays(14)
         ]);
@@ -82,7 +104,7 @@ class DirTest extends TestCase
         $schedule = app()->make(CompletedCron::class);
         $schedule();
 
-        Mail::assertSent(CompletedMail::class, function ($mail) use ($dir) {
+        Mail::assertSent(CompletedMail::class, function (CompletedMail $mail) use ($dir) {
             $mail->build();
 
             return $mail->hasTo($dir->user->email);
@@ -97,12 +119,14 @@ class DirTest extends TestCase
         ]);
     }
 
-    public function testCompletedAltGroupQueueJob()
+    public function testCompletedAltGroupQueueJob(): void
     {
+        /** @var Group */
         $group = Group::makeFactory()->applyAltGroup()->create();
 
-        $price = Price::makeFactory()->seasonal()->for($group)->create();
+        Price::makeFactory()->seasonal()->for($group)->create();
 
+        /** @var Dir */
         $dir = Dir::makeFactory()->withUser()->paidSeasonal()->active()->for($group)->create([
             'privileged_at' => null,
             'privileged_to' => null
@@ -121,7 +145,7 @@ class DirTest extends TestCase
         $schedule = app()->make(CompletedCron::class);
         $schedule();
 
-        Mail::assertSent(CompletedMail::class, function ($mail) use ($dir) {
+        Mail::assertSent(CompletedMail::class, function (CompletedMail $mail) use ($dir) {
             $mail->build();
 
             return $mail->hasTo($dir->user->email);
@@ -136,16 +160,19 @@ class DirTest extends TestCase
         ]);
     }
 
-    public function testCompletedAltGroupRemoveCatsQueueJob()
+    public function testCompletedAltGroupRemoveCatsQueueJob(): void
     {
+        /** @var Group */
         $group = Group::makeFactory()->applyAltGroup()->create([
             'max_cats' => 5
         ]);
 
-        $price = Price::makeFactory()->seasonal()->for($group)->create();
+        Price::makeFactory()->seasonal()->for($group)->create();
 
+        /** @var Collection<Category> */
         $categories = Category::makeFactory()->count(5)->active()->create();
 
+        /** @var Dir */
         $dir = Dir::makeFactory()->withUser()->paidSeasonal()->active()->for($group)
             ->hasAttached($categories->pluck('id')->toArray(), [], 'categories')
             ->create([
@@ -168,7 +195,7 @@ class DirTest extends TestCase
         $schedule = app()->make(CompletedCron::class);
         $schedule();
 
-        Mail::assertSent(CompletedMail::class, function ($mail) use ($dir) {
+        Mail::assertSent(CompletedMail::class, function (CompletedMail $mail) use ($dir) {
             $mail->build();
 
             return $mail->hasTo($dir->user->email);
@@ -187,12 +214,14 @@ class DirTest extends TestCase
         ]);
     }
 
-    public function testCompletedAltGroupInfinitePrivilegedToQueueJobFail()
+    public function testCompletedAltGroupInfinitePrivilegedToQueueJobFail(): void
     {
+        /** @var Group */
         $group = Group::makeFactory()->applyAltGroup()->create();
 
-        $price = Price::makeFactory()->seasonal()->for($group)->create();
+        Price::makeFactory()->seasonal()->for($group)->create();
 
+        /** @var Dir */
         $dir = Dir::makeFactory()->withUser()->paidSeasonal()->active()->for($group)->create([
             'privileged_to' => null
         ]);
@@ -211,7 +240,7 @@ class DirTest extends TestCase
         $schedule = app()->make(CompletedCron::class);
         $schedule();
 
-        Mail::assertNotSent(CompletedMail::class, function ($mail) use ($dir) {
+        Mail::assertNotSent(CompletedMail::class, function (CompletedMail $mail) use ($dir) {
             $mail->build();
 
             return $mail->hasTo($dir->user->email);
@@ -226,14 +255,18 @@ class DirTest extends TestCase
         ]);
     }
 
-    public function testDeactivateByBacklinkQueueJob()
+    public function testDeactivateByBacklinkQueueJob(): void
     {
+        /** @var Group */
         $group = Group::makeFactory()->requiredBacklink()->create();
 
+        /** @var Link */
         $link = Link::makeFactory()->backlink()->create();
 
+        /** @var Dir */
         $dir = Dir::makeFactory()->withUser()->active()->for($group)->create();
 
+        /** @var DirBacklink */
         $dirBacklink = DirBacklink::makeFactory()->for($link)->for($dir)->create(['url' => 'http://dadadad.pl']);
 
         $this->assertDatabaseHas('dirs', [
@@ -244,10 +277,12 @@ class DirTest extends TestCase
 
         Config::set('idir.dir.backlink.max_attempts', 1);
 
-        $this->mock(GuzzleClient::class, function ($mock) use ($link) {
-            $mock->shouldReceive('request')->with('GET', 'http://dadadad.pl', ['verify' => false])->andReturn(
-                new GuzzleResponse(HttpResponse::HTTP_OK, [], 'dadasdasd sdsajdhjashdj')
-            );
+        $this->mock(GuzzleClient::class, function (MockInterface $mock) use ($link) {
+            $mock->shouldReceive('request')->once()
+                ->with('GET', 'http://dadadad.pl', ['verify' => false])
+                ->andReturn(
+                    new GuzzleResponse(HttpResponse::HTTP_OK, [], 'dadasdasd sdsajdhjashdj')
+                );
         });
 
         Mail::fake();
@@ -255,7 +290,7 @@ class DirTest extends TestCase
         $schedule = app()->make(BacklinkCron::class);
         $schedule();
 
-        Mail::assertSent(BacklinkNotFoundMail::class, function ($mail) use ($dir) {
+        Mail::assertSent(BacklinkNotFoundMail::class, function (BacklinkNotFoundMail $mail) use ($dir) {
             $mail->build();
 
             return $mail->hasTo($dir->user->email);
@@ -273,14 +308,18 @@ class DirTest extends TestCase
         ]);
     }
 
-    public function testActivateByBacklinkQueueJob()
+    public function testActivateByBacklinkQueueJob(): void
     {
+        /** @var Group */
         $group = Group::makeFactory()->requiredBacklink()->create();
 
+        /** @var Link */
         $link = Link::makeFactory()->backlink()->create();
 
+        /** @var Dir */
         $dir = Dir::makeFactory()->withUser()->backlinkInactive()->for($group)->create();
 
+        /** @var DirBacklink */
         $dirBacklink = DirBacklink::makeFactory()->for($link)->for($dir)->create([
             'url' => 'http://dadadad.pl',
             'attempts' => 5
@@ -294,10 +333,12 @@ class DirTest extends TestCase
 
         Config::set('idir.dir.backlink.max_attempts', 1);
 
-        $this->mock(GuzzleClient::class, function ($mock) use ($link) {
-            $mock->shouldReceive('request')->with('GET', 'http://dadadad.pl', ['verify' => false])->andReturn(
-                new GuzzleResponse(HttpResponse::HTTP_OK, [], '<a href="' . $link->url . '">dadasdasd</a>')
-            );
+        $this->mock(GuzzleClient::class, function (MockInterface $mock) use ($link) {
+            $mock->shouldReceive('request')->once()
+                ->with('GET', 'http://dadadad.pl', ['verify' => false])
+                ->andReturn(
+                    new GuzzleResponse(HttpResponse::HTTP_OK, [], '<a href="' . $link->url . '">dadasdasd</a>')
+                );
         });
 
         Mail::fake();
@@ -305,7 +346,7 @@ class DirTest extends TestCase
         $schedule = app()->make(BacklinkCron::class);
         $schedule();
 
-        Mail::assertNotSent(BacklinkNotFoundMail::class, function ($mail) use ($dir) {
+        Mail::assertNotSent(BacklinkNotFoundMail::class, function (BacklinkNotFoundMail $mail) use ($dir) {
             $mail->build();
 
             return $mail->hasTo($dir->user->email);
@@ -323,10 +364,12 @@ class DirTest extends TestCase
         ]);
     }
 
-    public function testStatusKnownParkedDomainQueueJob()
+    public function testStatusKnownParkedDomainQueueJob(): void
     {
+        /** @var Group */
         $group = Group::makeFactory()->requiredUrl()->create();
 
+        /** @var Dir */
         $dir = Dir::makeFactory()->withUser()->active()->for($group)->create([
             'url' => 'https://parked-domain.pl'
         ]);
@@ -336,7 +379,7 @@ class DirTest extends TestCase
             'status' => Status::ACTIVE
         ]);
 
-        $dirStatus = DirStatus::makeFactory()->for($dir)->create();
+        DirStatus::makeFactory()->for($dir)->create();
 
         Config::set('idir.dir.status.max_attempts', 1);
         Config::set('idir.dir.status.parked_domains', [
@@ -374,10 +417,12 @@ class DirTest extends TestCase
         ]);
     }
 
-    public function testStatusUnknownParkedDomainQueueJob()
+    public function testStatusUnknownParkedDomainQueueJob(): void
     {
+        /** @var Group */
         $group = Group::makeFactory()->requiredUrl()->create();
 
+        /** @var Dir */
         $dir = Dir::makeFactory()->withUser()->active()->for($group)->create([
             'url' => 'https://parked-domain.pl'
         ]);
@@ -387,7 +432,7 @@ class DirTest extends TestCase
             'status' => Status::ACTIVE
         ]);
 
-        $dirStatus = DirStatus::makeFactory()->for($dir)->create();
+        DirStatus::makeFactory()->for($dir)->create();
 
         Config::set('idir.dir.status.max_attempts', 1);
         Config::set('idir.dir.status.parked_domains', []);
@@ -422,10 +467,12 @@ class DirTest extends TestCase
         ]);
     }
 
-    public function testStatusQueueJobNotFoundFailed()
+    public function testStatusQueueJobNotFoundFailed(): void
     {
+        /** @var Group */
         $group = Group::makeFactory()->requiredUrl()->create();
 
+        /** @var Dir */
         $dir = Dir::makeFactory()->withUser()->active()->for($group)->create([
             'url' => 'https://domain.pl'
         ]);
@@ -435,7 +482,7 @@ class DirTest extends TestCase
             'status' => Status::ACTIVE
         ]);
 
-        $dirStatus = DirStatus::makeFactory()->for($dir)->create();
+        DirStatus::makeFactory()->for($dir)->create();
 
         Config::set('idir.dir.status.max_attempts', 1);
 
@@ -462,10 +509,12 @@ class DirTest extends TestCase
         ]);
     }
 
-    public function testStatusQueueJobExceptionFailed()
+    public function testStatusQueueJobExceptionFailed(): void
     {
+        /** @var Group */
         $group = Group::makeFactory()->requiredUrl()->create();
 
+        /** @var Dir */
         $dir = Dir::makeFactory()->withUser()->active()->for($group)->create([
             'url' => 'https://domain.pl'
         ]);
@@ -475,7 +524,7 @@ class DirTest extends TestCase
             'status' => Status::ACTIVE
         ]);
 
-        $dirStatus = DirStatus::makeFactory()->for($dir)->create();
+        DirStatus::makeFactory()->for($dir)->create();
 
         Config::set('idir.dir.status.max_attempts', 1);
 
@@ -502,10 +551,12 @@ class DirTest extends TestCase
         ]);
     }
 
-    public function testStatusQueueJobPass()
+    public function testStatusQueueJobPass(): void
     {
+        /** @var Group */
         $group = Group::makeFactory()->requiredUrl()->create();
 
+        /** @var Dir */
         $dir = Dir::makeFactory()->withUser()->statusInactive()->for($group)->create([
             'url' => 'https://domain.pl'
         ]);
@@ -515,7 +566,7 @@ class DirTest extends TestCase
             'status' => Status::STATUS_INACTIVE
         ]);
 
-        $dirStatus = DirStatus::makeFactory()->for($dir)->create([
+        DirStatus::makeFactory()->for($dir)->create([
             'attempts' => 10
         ]);
 

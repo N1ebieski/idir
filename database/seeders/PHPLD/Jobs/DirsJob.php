@@ -39,6 +39,7 @@ use N1ebieski\IDir\ValueObjects\Dir\Status;
 use N1ebieski\IDir\ValueObjects\Group\Slug;
 use Carbon\Exceptions\InvalidFormatException;
 use N1ebieski\IDir\Models\Category\Dir\Category;
+use N1ebieski\ICore\ValueObjects\Stat\Slug as StatSlug;
 
 class DirsJob implements ShouldQueue
 {
@@ -135,8 +136,11 @@ class DirsJob implements ShouldQueue
 
                 $dir->save();
 
+                /** @var Stat */
+                $stat = $defaultStats->firstWhere('slug', StatSlug::VIEW);
+
                 $dir->stats()->attach([
-                    $defaultStats->firstWhere('slug', 'view')->id => [
+                    $stat->id => [
                         'value' => $item->HITS
                     ]
                 ]);

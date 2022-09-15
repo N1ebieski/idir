@@ -56,7 +56,8 @@ class LinkRepo extends BaseLinkRepo
                 });
             })
             ->orderBy('position', 'asc')
-            ->when(!is_null($component['cats']), function (Builder $query) use ($dirs) {
+            ->when(!is_null($component['cats']) && !is_null($dirs), function (Builder $query) use ($dirs) {
+                // @phpstan-ignore-next-line
                 $query->union($dirs->getQuery());
             })
             ->limit($component['limit'])

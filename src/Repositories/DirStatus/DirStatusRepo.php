@@ -25,7 +25,6 @@ use N1ebieski\IDir\Models\DirStatus;
 use Illuminate\Database\Eloquent\Builder;
 use N1ebieski\IDir\ValueObjects\Dir\Status;
 use Illuminate\Contracts\Config\Repository as Config;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class DirStatusRepo
 {
@@ -51,7 +50,7 @@ class DirStatusRepo
     public function chunkAvailableHasUrlByAttemptedAt(Closure $callback, string $timestamp): bool
     {
         return $this->dirStatus->newQuery()
-            ->whereHas('dir', function (BelongsTo|Builder|Dir $query) {
+            ->whereHas('dir', function (Builder|Dir $query) {
                 return $query->whereIn('status', [Status::ACTIVE, Status::STATUS_INACTIVE])
                     ->whereNotNull('url');
             })
