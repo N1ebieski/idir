@@ -16,30 +16,21 @@
  * @license   https://intelekt.net.pl/pages/regulamin
  */
 
-namespace N1ebieski\IDir\Loads\Web\Dir;
+namespace N1ebieski\IDir\Models\Field\Interfaces;
 
-use Illuminate\Http\Request;
-use N1ebieski\IDir\Models\Group;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
-class Create3Load
+/**
+ * @property int|null $id
+ * @property-read \Illuminate\Database\Eloquent\Collection|Field[] $fields
+ *
+ */
+interface ImageValueInterface
 {
     /**
-     * [__construct description]
-     * @param Request $request [description]
+     * Undocumented function
+     *
+     * @return MorphToMany
      */
-    public function __construct(Request $request)
-    {
-        /** @var Group */
-        $group = $request->route('group');
-
-        $group->loadCount(['dirs', 'dirsToday'])
-            ->load([
-                'privileges',
-                'fields' => function (MorphToMany|Builder $query) {
-                    $query->orderBy('position', 'asc');
-                }
-            ]);
-    }
+    public function fields(): MorphToMany;
 }

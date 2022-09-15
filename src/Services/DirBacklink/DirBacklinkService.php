@@ -1,40 +1,31 @@
 <?php
 
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is licenced under the Software License Agreement
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://intelekt.net.pl/pages/regulamin
+ *
+ * With the purchase or the installation of the software in your application
+ * you accept the licence agreement.
+ *
+ * @author    Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ * @copyright Since 2019 INTELEKT - Usługi Komputerowe Mariusz Wysokiński
+ * @license   https://intelekt.net.pl/pages/regulamin
+ */
+
 namespace N1ebieski\IDir\Services\DirBacklink;
 
 use Throwable;
 use Carbon\Carbon;
+use N1ebieski\IDir\Models\Dir;
 use N1ebieski\IDir\Models\DirBacklink;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\DatabaseManager as DB;
-use N1ebieski\ICore\Services\Interfaces\CreateInterface;
 
-/**
- *
- * @author Mariusz Wysokiński <kontakt@intelekt.net.pl>
- */
-class DirBacklinkService implements CreateInterface
+class DirBacklinkService
 {
-    /**
-     * [private description]
-     * @var DirBacklink
-     */
-    protected $dirBacklink;
-
-    /**
-     * Undocumented variable
-     *
-     * @var Carbon
-     */
-    protected $carbon;
-
-    /**
-     * Undocumented variable
-     *
-     * @var DB
-     */
-    protected $db;
-
     /**
      * Undocumented function
      *
@@ -42,26 +33,29 @@ class DirBacklinkService implements CreateInterface
      * @param Carbon $carbon
      * @param DB $db
      */
-    public function __construct(DirBacklink $dirBacklink, Carbon $carbon, DB $db)
-    {
-        $this->dirBacklink = $dirBacklink;
-
-        $this->carbon = $carbon;
-        $this->db = $db;
+    public function __construct(
+        protected DirBacklink $dirBacklink,
+        protected Carbon $carbon,
+        protected DB $db
+    ) {
+        //
     }
 
     /**
-     * [create description]
-     * @param  array $attributes [description]
-     * @return Model             [description]
+     *
+     * @param array $attributes
+     * @return DirBacklink
+     * @throws Throwable
      */
-    public function create(array $attributes): Model
+    public function create(array $attributes): DirBacklink
     {
         return $this->db->transaction(function () use ($attributes) {
             if ($this->isBacklink($attributes)) {
-                $this->dirBacklink->dir()->associate($this->dirBacklink->dir);
+                $this->dirBacklink->dir()->associate($attributes['dir']);
                 $this->dirBacklink->link()->associate($attributes['backlink']);
+
                 $this->dirBacklink->url = $attributes['backlink_url'];
+
                 $this->dirBacklink->save();
             }
 
@@ -103,14 +97,15 @@ class DirBacklinkService implements CreateInterface
     }
 
     /**
-     * [sync description]
-     * @param  array  $attributes [description]
-     * @return Model|null             [description]
+     *
+     * @param array $attributes
+     * @return null|DirBacklink
+     * @throws Throwable
      */
-    public function sync(array $attributes): ?Model
+    public function sync(array $attributes): ?DirBacklink
     {
         if (!$this->isBacklink($attributes)) {
-            $this->clear();
+            $this->clear($attributes['dir']);
 
             return null;
         }
@@ -120,20 +115,22 @@ class DirBacklinkService implements CreateInterface
         }
 
         return $this->db->transaction(function () use ($attributes) {
-            $this->clear();
+            $this->clear($attributes['dir']);
 
             return $this->create($attributes);
         });
     }
 
     /**
-     * [clear description]
-     * @return int [description]
+     *
+     * @param Dir $dir
+     * @return int
+     * @throws Throwable
      */
-    public function clear(): int
+    public function clear(Dir $dir): int
     {
-        return $this->db->transaction(function () {
-            return $this->dirBacklink->where('dir_id', $this->dirBacklink->dir->id)->delete();
+        return $this->db->transaction(function () use ($dir) {
+            return $this->dirBacklink->where('dir_id', $dir->id)->delete();
         });
     }
 

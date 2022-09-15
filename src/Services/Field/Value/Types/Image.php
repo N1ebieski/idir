@@ -1,5 +1,21 @@
 <?php
 
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is licenced under the Software License Agreement
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://intelekt.net.pl/pages/regulamin
+ *
+ * With the purchase or the installation of the software in your application
+ * you accept the licence agreement.
+ *
+ * @author    Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ * @copyright Since 2019 INTELEKT - Usługi Komputerowe Mariusz Wysokiński
+ * @license   https://intelekt.net.pl/pages/regulamin
+ */
+
 namespace N1ebieski\IDir\Services\Field\Value\Types;
 
 use Illuminate\Http\UploadedFile;
@@ -11,20 +27,16 @@ use N1ebieski\IDir\Services\Field\Value\Types\Interfaces\FileInterface;
 class Image extends Value implements FileInterface
 {
     /**
-     * Undocumented variable
-     *
-     * @var File
-     */
-    protected $file;
-
-    /**
      * Undocumented function
      *
      * @param Field $field
      * @param DB $db
      */
-    public function __construct(Field $field, DB $db, File $file)
-    {
+    public function __construct(
+        Field $field,
+        DB $db,
+        protected File $file
+    ) {
         parent::__construct($field, $db);
 
         $this->file = $file;
@@ -39,6 +51,7 @@ class Image extends Value implements FileInterface
     public function prepare($value): string
     {
         if ($value instanceof UploadedFile) {
+            // @phpstan-ignore-next-line
             return $this->file->makeFromFile($value)->prepare([
                 is_int($this->field->morph->id) ? $this->path() : null
             ]);

@@ -1,5 +1,21 @@
 <?php
 
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is licenced under the Software License Agreement
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://intelekt.net.pl/pages/regulamin
+ *
+ * With the purchase or the installation of the software in your application
+ * you accept the licence agreement.
+ *
+ * @author    Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ * @copyright Since 2019 INTELEKT - Usługi Komputerowe Mariusz Wysokiński
+ * @license   https://intelekt.net.pl/pages/regulamin
+ */
+
 namespace N1ebieski\IDir\Services\Payment\Dir;
 
 use N1ebieski\IDir\Models\Dir;
@@ -12,29 +28,16 @@ use Illuminate\Database\Eloquent\JsonEncodingException;
 class PaymentFactory
 {
     /**
-     * Undocumented variable
-     *
-     * @var Payment
-     */
-    protected $payment;
-
-    /**
-     * Undocumented variable
-     *
-     * @var Price
-     */
-    protected $price;
-
-    /**
      * Undocumented function
      *
      * @param Payment $payment
      * @param Price $price
      */
-    public function __construct(Payment $payment, Price $price)
-    {
-        $this->payment = $payment;
-        $this->price = $price;
+    public function __construct(
+        protected Payment $payment,
+        protected Price $price
+    ) {
+        //
     }
 
     /**
@@ -48,18 +51,16 @@ class PaymentFactory
      */
     public function makePayment(Dir $dir, int $priceId): Payment
     {
-        /**
-         * @var Price
-         */
+        /** @var Price */
         $price = $this->price->find($priceId);
 
-        return $this->payment->setRelations([
-                'morph' => $dir,
-                'order' => $price
-            ])
-            ->makeService()
-            ->create([
-                'payment_type' => $price->type->getValue()
-            ]);
+        /** @var Payment */
+        $payment = $this->payment->makeService()->create([
+            'morph' => $dir,
+            'order' => $price,
+            'payment_type' => $price->type->getValue()
+        ]);
+
+        return $payment;
     }
 }

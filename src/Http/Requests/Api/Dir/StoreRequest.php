@@ -27,6 +27,7 @@ use Mews\Purifier\Facades\Purifier;
 use N1ebieski\IDir\Models\BanValue;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\ValidatedInput;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Collection as Collect;
@@ -402,10 +403,12 @@ class StoreRequest extends FormRequest
     }
 
     /**
+     * Get a validated input container for the validated input.
      *
-     * @return array
+     * @param  array|null  $keys
+     * @return \Illuminate\Support\ValidatedInput|array
      */
-    public function validated(): array
+    public function safe(array $keys = null)
     {
         if ($this->has('payment_type')) {
             $types = [];
@@ -414,13 +417,13 @@ class StoreRequest extends FormRequest
                 $types[] = "payment_{$type}";
             }
 
-            return Collect::make($this->safe()->except($types))
-                ->merge([
-                    'price' => $this->safe()->collect()->get("payment_{$this->safe()->payment_type}")
-                ])
-                ->toArray();
+            $safe = new ValidatedInput(parent::safe($keys)->except($types));
+
+            return $safe->merge([
+                'price' => $this->input("payment_{$this->input('payment_type')}")
+            ]);
         }
 
-        return parent::validated();
+        return parent::safe($keys);
     }
 }

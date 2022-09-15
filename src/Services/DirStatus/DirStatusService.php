@@ -1,40 +1,31 @@
 <?php
 
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is licenced under the Software License Agreement
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://intelekt.net.pl/pages/regulamin
+ *
+ * With the purchase or the installation of the software in your application
+ * you accept the licence agreement.
+ *
+ * @author    Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ * @copyright Since 2019 INTELEKT - Usługi Komputerowe Mariusz Wysokiński
+ * @license   https://intelekt.net.pl/pages/regulamin
+ */
+
 namespace N1ebieski\IDir\Services\DirStatus;
 
 use Throwable;
 use Carbon\Carbon;
+use N1ebieski\IDir\Models\Dir;
 use N1ebieski\IDir\Models\DirStatus;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\DatabaseManager as DB;
-use N1ebieski\ICore\Services\Interfaces\CreateInterface;
 
-/**
- *
- * @author Mariusz Wysokiński <kontakt@intelekt.net.pl>
- */
-class DirStatusService implements CreateInterface
+class DirStatusService
 {
-    /**
-     * [private description]
-     * @var DirStatus
-     */
-    protected $dirStatus;
-
-    /**
-     * Undocumented variable
-     *
-     * @var Carbon
-     */
-    protected $carbon;
-
-    /**
-     * Undocumented variable
-     *
-     * @var DB
-     */
-    protected $db;
-
     /**
      * Undocumented function
      *
@@ -42,24 +33,26 @@ class DirStatusService implements CreateInterface
      * @param Carbon $carbon
      * @param DB $db
      */
-    public function __construct(DirStatus $dirStatus, Carbon $carbon, DB $db)
-    {
-        $this->dirStatus = $dirStatus;
-
-        $this->carbon = $carbon;
-        $this->db = $db;
+    public function __construct(
+        protected DirStatus $dirStatus,
+        protected Carbon $carbon,
+        protected DB $db
+    ) {
+        //
     }
 
     /**
-     * [create description]
-     * @param  array $attributes [description]
-     * @return Model             [description]
+     *
+     * @param array $attributes
+     * @return DirStatus
+     * @throws Throwable
      */
-    public function create(array $attributes): Model
+    public function create(array $attributes): DirStatus
     {
         return $this->db->transaction(function () use ($attributes) {
             if ($this->isUrl($attributes)) {
-                $this->dirStatus->dir()->associate($this->dirStatus->dir);
+                $this->dirStatus->dir()->associate($attributes['dir']);
+
                 $this->dirStatus->save();
             }
 
@@ -84,7 +77,7 @@ class DirStatusService implements CreateInterface
      */
     public function resetAttempts(): bool
     {
-        return $this->db->transaction(function () {        
+        return $this->db->transaction(function () {
             return $this->dirStatus->update(['attempts' => 0]);
         });
     }
@@ -101,14 +94,15 @@ class DirStatusService implements CreateInterface
     }
 
     /**
-     * [sync description]
-     * @param  array  $attributes [description]
-     * @return Model|null             [description]
+     *
+     * @param array $attributes
+     * @return null|DirStatus
+     * @throws Throwable
      */
-    public function sync(array $attributes): ?Model
+    public function sync(array $attributes): ?DirStatus
     {
         if (!$this->isUrl($attributes)) {
-            $this->clear();
+            $this->clear($attributes['dir']);
 
             return null;
         }
@@ -118,20 +112,22 @@ class DirStatusService implements CreateInterface
         }
 
         return $this->db->transaction(function () use ($attributes) {
-            $this->clear();
+            $this->clear($attributes['dir']);
 
             return $this->create($attributes);
         });
     }
 
     /**
-     * [clear description]
-     * @return int [description]
+     *
+     * @param Dir $dir
+     * @return int
+     * @throws Throwable
      */
-    public function clear(): int
+    public function clear(Dir $dir): int
     {
-        return $this->db->transaction(function () {
-            return $this->dirStatus->where('dir_id', $this->dirStatus->dir->id)->delete();
+        return $this->db->transaction(function () use ($dir) {
+            return $this->dirStatus->where('dir_id', $dir->id)->delete();
         });
     }
 

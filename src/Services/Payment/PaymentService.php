@@ -1,50 +1,33 @@
 <?php
 
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is licenced under the Software License Agreement
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://intelekt.net.pl/pages/regulamin
+ *
+ * With the purchase or the installation of the software in your application
+ * you accept the licence agreement.
+ *
+ * @author    Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ * @copyright Since 2019 INTELEKT - Usługi Komputerowe Mariusz Wysokiński
+ * @license   https://intelekt.net.pl/pages/regulamin
+ */
+
 namespace N1ebieski\IDir\Services\Payment;
 
 use Throwable;
 use Illuminate\Support\Carbon;
-use Illuminate\Database\Eloquent\Model;
 use N1ebieski\IDir\Models\Payment\Payment;
 use Illuminate\Database\DatabaseManager as DB;
 use N1ebieski\IDir\ValueObjects\Payment\Status;
 use Illuminate\Contracts\Config\Repository as Config;
-use N1ebieski\ICore\Services\Interfaces\CreateInterface;
 use Illuminate\Database\Eloquent\MassAssignmentException;
-use N1ebieski\ICore\Services\Interfaces\StatusUpdateInterface;
 
-/**
- *
- * @author Mariusz Wysokiński <kontakt@intelekt.net.pl>
- */
-class PaymentService implements CreateInterface, StatusUpdateInterface
+class PaymentService
 {
-    /**
-     * Model
-     * @var Payment
-     */
-    protected $payment;
-
-    /**
-     * Undocumented variable
-     *
-     * @var Carbon
-     */
-    protected $carbon;
-
-    /**
-     * Undocumented variable
-     *
-     * @var Config
-     */
-    protected $config;
-
-    /**
-     *
-     * @var DB
-     */
-    protected $db;
-
     /**
      *
      * @param Payment $payment
@@ -53,21 +36,22 @@ class PaymentService implements CreateInterface, StatusUpdateInterface
      * @param DB $db
      * @return void
      */
-    public function __construct(Payment $payment, Carbon $carbon, Config $config, DB $db)
-    {
-        $this->payment = $payment;
-
-        $this->carbon = $carbon;
-        $this->config = $config;
-        $this->db = $db;
+    public function __construct(
+        protected Payment $payment,
+        protected Carbon $carbon,
+        protected Config $config,
+        protected DB $db
+    ) {
+        //
     }
 
     /**
-     * [create description]
-     * @param  array $attributes [description]
-     * @return Model             [description]
+     *
+     * @param array $attributes
+     * @return Payment
+     * @throws Throwable
      */
-    public function create(array $attributes): Model
+    public function create(array $attributes): Payment
     {
         return $this->db->transaction(function () use ($attributes) {
             try {
@@ -75,13 +59,13 @@ class PaymentService implements CreateInterface, StatusUpdateInterface
                     $attributes['payment_type'] ?? Status::UNFINISHED
                 );
             } catch (\InvalidArgumentException $e) {
-                $this->payment->status = Status::UNFINISHED;
+                $this->payment->status = Status::unfinished();
             }
 
             $this->payment->driver = $this->config->get("idir.payment.{$attributes['payment_type']}.driver");
 
-            $this->payment->morph()->associate($this->payment->morph);
-            $this->payment->orderMorph()->associate($this->payment->order);
+            $this->payment->morph()->associate($attributes['morph']);
+            $this->payment->orderMorph()->associate($attributes['order']);
 
             $this->payment->save();
 
@@ -134,8 +118,8 @@ class PaymentService implements CreateInterface, StatusUpdateInterface
      */
     public function paid(): bool
     {
-        return $this->db->transaction(function () {        
+        return $this->db->transaction(function () {
             return $this->payment->update(['status' => Status::UNFINISHED]);
         });
-    }    
+    }
 }

@@ -22,6 +22,7 @@ use Throwable;
 use Illuminate\Bus\Queueable;
 use Illuminate\Support\Carbon;
 use N1ebieski\IDir\Models\Dir;
+use N1ebieski\IDir\Models\Group;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -163,11 +164,12 @@ class CompletedJob implements ShouldQueue
      */
     protected function executeAltGroup(): void
     {
-        $this->dir->setRelations([
-                'group' => $this->dir->group()->make()->find($this->dir->group->alt_id)
-            ])
-            ->makeService()
-            ->moveToAltGroup();
+        /** @var Group */
+        $group = $this->dir->group()->make();
+
+        $this->dir->makeService()->moveToAltGroup(
+            $group->find($this->dir->group->alt_id)
+        );
     }
 
     /**

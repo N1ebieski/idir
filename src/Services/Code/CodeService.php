@@ -21,6 +21,7 @@ namespace N1ebieski\IDir\Services\Code;
 use Throwable;
 use Illuminate\Support\Carbon;
 use N1ebieski\IDir\Models\Code;
+use N1ebieski\IDir\Models\Price;
 use Illuminate\Database\DatabaseManager as DB;
 
 class CodeService
@@ -73,11 +74,14 @@ class CodeService
         $this->db->transaction(function () use ($attributes) {
             $codes = [];
 
+            /** @var Price */
+            $price = $attributes['price'];
+
             foreach ($attributes['codes'] as $attribute) {
                 // Create attributes manually, no within model because multiple
                 // models may be huge performance impact
                 $codes[] = [
-                    'price_id' => $attributes['price'],
+                    'price_id' => $price->id,
                     'code' => $attribute['code'],
                     'quantity' => $attribute['quantity'],
                     'created_at' => $this->carbon->now(),
@@ -91,14 +95,14 @@ class CodeService
 
     /**
      *
-     * @param int $priceId
+     * @param Price $price
      * @return int
      * @throws Throwable
      */
-    public function clear(int $priceId): int
+    public function clear(Price $price): int
     {
-        return $this->db->transaction(function () use ($priceId) {
-            return $this->code->where('price_id', $priceId)->delete();
+        return $this->db->transaction(function () use ($price) {
+            return $this->code->where('price_id', $price->id)->delete();
         });
     }
 

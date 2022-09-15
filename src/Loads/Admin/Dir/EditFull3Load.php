@@ -22,6 +22,7 @@ use Illuminate\Http\Request;
 use N1ebieski\IDir\Models\Dir;
 use N1ebieski\IDir\Models\Group;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 class EditFull3Load
 {
@@ -37,7 +38,7 @@ class EditFull3Load
         $group->loadCount(['dirs', 'dirsToday'])
             ->load([
                 'privileges',
-                'fields' => function (Builder $query) {
+                'fields' => function (MorphToMany|Builder $query) {
                     $query->orderBy('position', 'asc');
                 }
             ]);

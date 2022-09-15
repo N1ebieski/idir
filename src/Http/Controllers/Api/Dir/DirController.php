@@ -202,9 +202,12 @@ class DirController
         StoreRequest $request,
         StoreCodeRequest $requestPayment
     ): JsonResponse {
-        $dir = $dir->setRelations(['group' => $group])
-            ->makeService()
-            ->create($request->validated());
+        $dir = $dir->makeService()->create(
+            $request->safe()->merge([
+                'user' => $request->user(),
+                'group' => $group
+            ])->toArray()
+        );
 
         if ($dir->payment instanceof Payment) {
             Event::dispatch(App::make(PaymentStoreEvent::class, ['payment' => $dir->payment]));
@@ -281,9 +284,9 @@ class DirController
         UpdateRequest $request,
         UpdateCodeRequest $requestPayment
     ): JsonResponse {
-        $dir->setRelations(['group' => $group])
-            ->makeService()
-            ->updateFull($request->validated());
+        $dir->makeService()->updateFull(
+            $request->safe()->merge(['group' => $group])->toArray()
+        );
 
         if ($dir->payment instanceof Payment) {
             Event::dispatch(App::make(PaymentStoreEvent::class, ['payment' => $dir->payment]));

@@ -1,48 +1,32 @@
 <?php
 
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is licenced under the Software License Agreement
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://intelekt.net.pl/pages/regulamin
+ *
+ * With the purchase or the installation of the software in your application
+ * you accept the licence agreement.
+ *
+ * @author    Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ * @copyright Since 2019 INTELEKT - Usługi Komputerowe Mariusz Wysokiński
+ * @license   https://intelekt.net.pl/pages/regulamin
+ */
+
 namespace N1ebieski\IDir\Services\Group;
 
 use Throwable;
 use N1ebieski\IDir\Models\Group;
-use Illuminate\Database\Eloquent\Model;
 use N1ebieski\IDir\ValueObjects\Group\Slug;
 use Illuminate\Support\Collection as Collect;
 use Illuminate\Database\DatabaseManager as DB;
-use N1ebieski\ICore\Services\Interfaces\CreateInterface;
-use N1ebieski\ICore\Services\Interfaces\DeleteInterface;
-use N1ebieski\ICore\Services\Interfaces\UpdateInterface;
 use N1ebieski\IDir\ValueObjects\Dir\Status as DirStatus;
-use N1ebieski\ICore\Services\Interfaces\PositionUpdateInterface;
 
-/**
- *
- * @author Mariusz Wysokiński <kontakt@intelekt.net.pl>
- */
-class GroupService implements
-    CreateInterface,
-    UpdateInterface,
-    PositionUpdateInterface,
-    DeleteInterface
+class GroupService
 {
-    /**
-     * Model
-     * @var Group
-     */
-    protected $group;
-
-    /**
-     * Undocumented variable
-     *
-     * @var DB
-     */
-    protected $db;
-
-    /**
-     * [private description]
-     * @var Collect
-     */
-    protected $collect;
-
     /**
      * Undocumented function
      *
@@ -50,25 +34,25 @@ class GroupService implements
      * @param Collect $collect
      * @param DB $db
      */
-    public function __construct(Group $group, Collect $collect, DB $db)
-    {
-        $this->group = $group;
-
-        $this->collect = $collect;
-        $this->db = $db;
+    public function __construct(
+        protected Group $group,
+        protected Collect $collect,
+        protected DB $db
+    ) {
+        //
     }
 
     /**
-     * [create description]
-     * @param  array $attributes [description]
-     * @return Model             [description]
+     *
+     * @param array $attributes
+     * @return Group
+     * @throws Throwable
      */
-    public function create(array $attributes): Model
+    public function create(array $attributes): Group
     {
         return $this->db->transaction(function () use ($attributes) {
-            $this->group->fill(
-                $this->collect->make($attributes)->except(['priv'])->toArray()
-            );
+            $this->group->fill($attributes);
+
             $this->group->save();
 
             if (array_key_exists('priv', $attributes)) {
@@ -80,22 +64,23 @@ class GroupService implements
     }
 
     /**
-     * [update description]
-     * @param  array $attributes [description]
-     * @return bool              [description]
+     *
+     * @param array $attributes
+     * @return Group
+     * @throws Throwable
      */
-    public function update(array $attributes): bool
+    public function update(array $attributes): Group
     {
         return $this->db->transaction(function () use ($attributes) {
-            $this->group->fill(
-                $this->collect->make($attributes)->except(['priv'])->toArray()
-            );
+            $this->group->fill($attributes);
 
             if (array_key_exists('priv', $attributes)) {
                 $this->group->privileges()->sync(array_filter($attributes['priv'] ?? []));
             }
 
-            return $this->group->save();
+            $this->group->save();
+
+            return $this->group;
         });
     }
 

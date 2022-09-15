@@ -32,6 +32,7 @@ use N1ebieski\ICore\Models\Traits\HasPolymorphic;
 use N1ebieski\ICore\Models\Traits\HasPositionable;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use N1ebieski\ICore\Models\Traits\HasFullTextSearchable;
 use N1ebieski\IDir\Database\Factories\Field\FieldFactory;
 
@@ -48,6 +49,9 @@ use N1ebieski\IDir\Database\Factories\Field\FieldFactory;
  * @property int $position
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \N1ebieski\IDir\Models\Field\Interfaces\RegionsValueInterface&\N1ebieski\IDir\Models\Field\Interfaces\ImageValueInterface&\N1ebieski\IDir\Models\Field\Interfaces\MapValueInterface $morph
+ * @property-read string $path
+ * @property-read object<value> $pivot
  * @property-read string $created_at_diff
  * @property-read mixed $decode_value
  * @property-read string $poli
@@ -87,6 +91,7 @@ use N1ebieski\IDir\Database\Factories\Field\FieldFactory;
  * @method static Builder|Field whereType($value)
  * @method static Builder|Field whereUpdatedAt($value)
  * @method static Builder|Field whereVisible($value)
+ * @method MorphToMany morphs()
  * @mixin \Eloquent
  */
 class Field extends Model

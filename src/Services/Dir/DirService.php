@@ -21,10 +21,12 @@ namespace N1ebieski\IDir\Services\Dir;
 use Throwable;
 use Illuminate\Support\Carbon;
 use N1ebieski\IDir\Models\Dir;
+use N1ebieski\IDir\Models\Group;
+use N1ebieski\IDir\Models\DirStatus;
+use N1ebieski\IDir\Models\DirBacklink;
 use Illuminate\Contracts\Session\Session;
 use N1ebieski\IDir\Models\Field\Dir\Field;
 use N1ebieski\IDir\ValueObjects\Dir\Status;
-use Illuminate\Contracts\Auth\Guard as Auth;
 use Illuminate\Database\DatabaseManager as DB;
 use N1ebieski\IDir\Services\User\AutoUserFactory;
 use N1ebieski\IDir\Services\Payment\Dir\PaymentFactory;
@@ -39,7 +41,6 @@ class DirService
      * @param AutoUserFactory $userFactory
      * @param Session $session
      * @param Carbon $carbon
-     * @param Auth $auth
      * @param DB $db
      */
     public function __construct(
@@ -48,7 +49,6 @@ class DirService
         protected AutoUserFactory $userFactory,
         protected Session $session,
         protected Carbon $carbon,
-        protected Auth $auth,
         protected DB $db
     ) {
         //
@@ -95,12 +95,14 @@ class DirService
      */
     public function updateSession(array $attributes): void
     {
+        /** @var Field */
+        $field = $this->dir->fields()->make();
+
         $this->session->put($this->sessionName(), array_merge(
             $this->session->get($this->sessionName()),
             $attributes,
             [
-                'field' => $this->dir->fields()->make()
-                    ->setRelations(['morph' => $this->dir])
+                'field' => $field->setRelations(['morph' => $this->dir])
                     ->makeService()
                     ->prepareValues($attributes['field'] ?? [])
             ],
@@ -120,46 +122,53 @@ class DirService
 
             $this->dir->content = $attributes['content_html'];
 
+            /** @var Group */
+            $group = $attributes['group'];
+
             try {
                 $this->dir->status = Status::fromString(
-                    $attributes['payment_type'] ?? $this->dir->group->apply_status->getValue()
+                    $attributes['payment_type'] ?? $group->apply_status->getValue()
                 );
             } catch (\InvalidArgumentException $e) {
                 $this->dir->status = $this->dir->group->apply_status->getValue();
             }
 
             $this->dir->user()->associate(
-                $this->auth->user() ?? $this->userFactory->makeUser($attributes['email'])
+                $attributes['user'] ?? $this->userFactory->makeUser($attributes['email'])
             );
 
-            $this->dir->group()->associate($this->dir->group);
+            $this->dir->group()->associate($group);
 
             $this->dir->save();
 
             if (array_key_exists('field', $attributes)) {
-                $this->dir->fields()->make()
-                    ->setRelations(['morph' => $this->dir])
+                /** @var Field */
+                $field = $this->dir->fields()->make();
+
+                $field->setRelations(['morph' => $this->dir])
                     ->makeService()
                     ->createValues($attributes['field'] ?? []);
             }
 
             if (array_key_exists('backlink', $attributes) && array_key_exists('backlink_url', $attributes)) {
-                $this->dir->backlink()->make()
-                    ->setRelations(['dir' => $this->dir])
-                    ->makeService()
-                    ->create([
-                        'backlink' => $attributes['backlink'],
-                        'backlink_url' => $attributes['backlink_url']
-                    ]);
+                /** @var DirBacklink */
+                $dirBacklink = $this->dir->backlink()->make();
+
+                $dirBacklink->makeService()->create([
+                    'dir' => $this->dir,
+                    'backlink' => $attributes['backlink'],
+                    'backlink_url' => $attributes['backlink_url']
+                ]);
             }
 
             if (array_key_exists('url', $attributes)) {
-                $this->dir->status()->make()
-                    ->setRelations(['dir' => $this->dir])
-                    ->makeService()
-                    ->create([
-                        'url' => $attributes['url']
-                    ]);
+                /** @var DirStatus */
+                $dirStatus = $this->dir->status()->make();
+
+                $dirStatus->makeService()->create([
+                    'dir' => $this->dir,
+                    'url' => $attributes['url']
+                ]);
             }
 
             if (array_key_exists('categories', $attributes)) {
@@ -184,25 +193,29 @@ class DirService
     }
 
     /**
-     * [update description]
-     * @param  array $attributes [description]
-     * @return bool              [description]
+     *
+     * @param array $attributes
+     * @return Dir
+     * @throws Throwable
      */
-    public function update(array $attributes): bool
+    public function update(array $attributes): Dir
     {
         return $this->db->transaction(function () use ($attributes) {
             if (array_key_exists('url', $attributes)) {
-                $this->dir->status()->make()
-                    ->setRelations(['dir' => $this->dir])
-                    ->makeService()
-                    ->sync([
-                        'url' => $attributes['url']
-                    ]);
+                /** @var DirStatus */
+                $dirStatus = $this->dir->status()->make();
+
+                $dirStatus->makeService()->sync([
+                    'dir' => $this->dir,
+                    'url' => $attributes['url']
+                ]);
             }
 
             if (array_key_exists('field', $attributes)) {
-                $this->dir->fields()->make()
-                    ->setRelations(['morph' => $this->dir])
+                /** @var Field */
+                $field = $this->dir->fields()->make();
+
+                $field->setRelations(['morph' => $this->dir])
                     ->makeService()
                     ->updateValues($attributes['field'] ?? []);
             }
@@ -219,42 +232,49 @@ class DirService
                 $this->dir->retag($attributes['tags'] ?? []);
             }
 
-            return $this->dir->save();
+            $this->dir->save();
+
+            return $this->dir;
         });
     }
 
     /**
-     * [updateFull description]
-     * @param  array $attributes [description]
-     * @return bool              [description]
+     *
+     * @param array $attributes
+     * @return Dir
+     * @throws Throwable
      */
-    public function updateFull(array $attributes): bool
+    public function updateFull(array $attributes): Dir
     {
         return $this->db->transaction(function () use ($attributes) {
             if (array_key_exists('field', $attributes)) {
-                $this->dir->fields()->make()
-                    ->setRelations(['morph' => $this->dir])
+                /** @var Field */
+                $field = $this->dir->fields()->make();
+
+                $field->setRelations(['morph' => $this->dir])
                     ->makeService()
                     ->updateValues($attributes['field'] ?? []);
             }
 
             if (array_key_exists('backlink', $attributes) && array_key_exists('backlink_url', $attributes)) {
-                $this->dir->backlink()->make()
-                    ->setRelations(['dir' => $this->dir])
-                    ->makeService()
-                    ->sync([
-                        'backlink' => $attributes['backlink'],
-                        'backlink_url' => $attributes['backlink_url']
-                    ]);
+                /** @var DirBacklink */
+                $dirBacklink = $this->dir->backlink()->make();
+
+                $dirBacklink->makeService()->sync([
+                    'dir' => $this->dir,
+                    'backlink' => $attributes['backlink'],
+                    'backlink_url' => $attributes['backlink_url']
+                ]);
             }
 
             if (array_key_exists('url', $attributes)) {
-                $this->dir->status()->make()
-                    ->setRelations(['dir' => $this->dir])
-                    ->makeService()
-                    ->sync([
-                        'url' => $attributes['url']
-                    ]);
+                /** @var DirStatus */
+                $dirStatus = $this->dir->status()->make();
+
+                $dirStatus->makeService()->sync([
+                    'dir' => $this->dir,
+                    'url' => $attributes['url']
+                ]);
             }
 
             $this->dir->fill($attributes);
@@ -263,17 +283,20 @@ class DirService
                 $this->dir->content = $attributes['content_html'];
             }
 
+            /** @var Group */
+            $group = $attributes['group'];
+
             try {
                 $this->dir->status = Status::fromString(
-                    $attributes['payment_type'] ?? $this->dir->group->apply_status->getValue()
+                    $attributes['payment_type'] ?? $group->apply_status->getValue()
                 );
             } catch (\InvalidArgumentException $e) {
-                $this->dir->status = $this->dir->group->apply_status->getValue();
+                $this->dir->status = $group->apply_status->getValue();
             }
 
-            if ($this->dir->group_id !== $this->dir->group->id) {
-                $this->dir->group()->associate($this->dir->group);
-                $this->dir->makeRepo()->nullablePrivileged();
+            if ($this->dir->group_id !== $group->id) {
+                $this->dir->group()->associate($group);
+                $this->dir->makeService()->nullablePrivileged();
             }
 
             if (array_key_exists('user', $attributes)) {
@@ -373,21 +396,22 @@ class DirService
     }
 
     /**
-     * Undocumented function
      *
-     * @return boolean
+     * @param Group $group
+     * @return bool
+     * @throws Throwable
      */
-    public function moveToAltGroup(): bool
+    public function moveToAltGroup(Group $group): bool
     {
-        return $this->db->transaction(function () {
+        return $this->db->transaction(function () use ($group) {
             $this->dir->categories()->sync(
                 $this->dir->categories
                     ->pluck('id')
-                    ->take($this->dir->group->max_cats)
+                    ->take($group->max_cats)
                     ->toArray()
             );
 
-            return $this->dir->group()->associate($this->dir->group)->save();
+            return $this->dir->group()->associate($group)->save();
         });
     }
 

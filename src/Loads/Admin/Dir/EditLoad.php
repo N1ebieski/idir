@@ -22,6 +22,7 @@ use Illuminate\Http\Request;
 use N1ebieski\IDir\Models\Dir;
 use Illuminate\Database\Eloquent\Builder;
 use N1ebieski\IDir\Models\Category\Dir\Category;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 class EditLoad
 {
@@ -37,11 +38,11 @@ class EditLoad
         $dir->load([
             'group',
             'group.privileges',
-            'group.fields' => function (Builder $query) {
+            'group.fields' => function (MorphToMany|Builder $query) {
                 $query->orderBy('position', 'asc');
             },
             'regions',
-            'categories' => function (Builder|Category $query) {
+            'categories' => function (MorphToMany|Builder|Category $query) {
                 $query->withAncestorsExceptSelf();
             },
             'tags'

@@ -50,6 +50,9 @@ use N1ebieski\ICore\ValueObjects\Stat\Slug as StatSlug;
 use N1ebieski\ICore\Models\Traits\HasFullTextSearchable;
 use N1ebieski\IDir\ValueObjects\Dir\Status as DirStatus;
 use N1ebieski\IDir\ValueObjects\Dir\Comment as DirComment;
+use N1ebieski\IDir\Models\Field\Interfaces\MapValueInterface;
+use N1ebieski\IDir\Models\Field\Interfaces\ImageValueInterface;
+use N1ebieski\IDir\Models\Field\Interfaces\RegionsValueInterface;
 use N1ebieski\IDir\ValueObjects\Payment\Status as PaymentStatus;
 
 /**
@@ -163,7 +166,10 @@ use N1ebieski\IDir\ValueObjects\Payment\Status as PaymentStatus;
  * @method static Builder|Dir withoutAnyTags($tags, bool $includeUntagged = false)
  * @mixin \Eloquent
  */
-class Dir extends Model
+class Dir extends Model implements
+    RegionsValueInterface,
+    ImageValueInterface,
+    MapValueInterface
 {
     use Sluggable;
     use Taggable;

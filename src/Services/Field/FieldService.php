@@ -1,48 +1,35 @@
 <?php
 
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is licenced under the Software License Agreement
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://intelekt.net.pl/pages/regulamin
+ *
+ * With the purchase or the installation of the software in your application
+ * you accept the licence agreement.
+ *
+ * @author    Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ * @copyright Since 2019 INTELEKT - Usługi Komputerowe Mariusz Wysokiński
+ * @license   https://intelekt.net.pl/pages/regulamin
+ */
+
 namespace N1ebieski\IDir\Services\Field;
 
 use Throwable;
 use N1ebieski\IDir\Models\Field\Field;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection as Collect;
 use Illuminate\Database\DatabaseManager as DB;
-use N1ebieski\IDir\Services\Field\Value\Types\Value;
 use N1ebieski\IDir\Services\Field\Value\ValueFactory;
-use N1ebieski\ICore\Services\Interfaces\CreateInterface;
-use N1ebieski\ICore\Services\Interfaces\UpdateInterface;
 use N1ebieski\IDir\Exceptions\Field\ValueNotFoundException;
-use N1ebieski\ICore\Services\Interfaces\PositionUpdateInterface;
+use Illuminate\Contracts\Container\BindingResolutionException;
+use N1ebieski\IDir\Services\Field\Value\Types\Interfaces\FileInterface;
+use N1ebieski\IDir\Services\Field\Value\Types\Interfaces\ArrayInterface;
 
-class FieldService implements CreateInterface, UpdateInterface, PositionUpdateInterface
+class FieldService
 {
-    /**
-     * Model
-     * @var Field
-     */
-    protected $field;
-
-    /**
-     * Undocumented variable
-     *
-     * @var ValueFactory
-     */
-    protected $valueFactory;
-
-    /**
-     * Undocumented variable
-     *
-     * @var DB
-     */
-    protected $db;
-
-    /**
-     * Undocumented variable
-     *
-     * @var Collect
-     */
-    protected $collect;
-
     /**
      * Undocumented function
      *
@@ -52,17 +39,12 @@ class FieldService implements CreateInterface, UpdateInterface, PositionUpdateIn
      * @param Collect $collect
      */
     public function __construct(
-        Field $field,
-        ValueFactory $valueFactory,
-        DB $db,
-        Collect $collect
+        protected Field $field,
+        protected ValueFactory $valueFactory,
+        protected DB $db,
+        protected Collect $collect
     ) {
-        $this->field = $field;
-
-        $this->valueFactory = $valueFactory;
-
-        $this->db = $db;
-        $this->collect = $collect;
+        //
     }
 
     /**
@@ -152,7 +134,7 @@ class FieldService implements CreateInterface, UpdateInterface, PositionUpdateIn
                     $i++;
                 } else {
                     try {
-                        $this->makeValue($field)->delete($attributes[$field->id]);
+                        $this->makeValue($field)->delete();
                     } catch (ValueNotFoundException $e) {
                         //
                     }
@@ -177,10 +159,10 @@ class FieldService implements CreateInterface, UpdateInterface, PositionUpdateIn
     /**
      *
      * @param array $attributes
-     * @return Model
+     * @return Field
      * @throws Throwable
      */
-    public function create(array $attributes): Model
+    public function create(array $attributes): Field
     {
         return $this->db->transaction(function () use ($attributes) {
             $field = $this->field->fill($attributes);
@@ -196,11 +178,12 @@ class FieldService implements CreateInterface, UpdateInterface, PositionUpdateIn
     }
 
     /**
-     * [update description]
-     * @param  array $attributes [description]
-     * @return bool              [description]
+     *
+     * @param array $attributes
+     * @return Field
+     * @throws Throwable
      */
-    public function update(array $attributes): bool
+    public function update(array $attributes): Field
     {
         return $this->db->transaction(function () use ($attributes) {
             $this->field->fill(
@@ -243,7 +226,9 @@ class FieldService implements CreateInterface, UpdateInterface, PositionUpdateIn
                 $this->field->morphs()->sync($attributes['morphs'] ?? []);
             }
 
-            return $this->field->save();
+            $this->field->save();
+
+            return $this->field;
         });
     }
 
@@ -261,12 +246,13 @@ class FieldService implements CreateInterface, UpdateInterface, PositionUpdateIn
     }
 
     /**
-     * Undocumented function
      *
      * @param Field $field
-     * @return Value
+     * @return ArrayInterface|FileInterface
+     * @throws BindingResolutionException
+     * @throws ValueNotFoundException
      */
-    protected function makeValue(Field $field): Value
+    protected function makeValue(Field $field): ArrayInterface|FileInterface
     {
         return $this->valueFactory->makeValue(
             (clone $this->field)->setRawAttributes($field->getAttributes())

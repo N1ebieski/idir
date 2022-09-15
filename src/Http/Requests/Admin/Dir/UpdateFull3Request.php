@@ -24,7 +24,7 @@ use N1ebieski\ICore\Models\Link;
 use N1ebieski\IDir\Models\Group;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Lang;
-use Illuminate\Support\Collection as Collect;
+use Illuminate\Support\ValidatedInput;
 use N1ebieski\ICore\ValueObjects\Link\Type as LinkType;
 use N1ebieski\IDir\ValueObjects\Price\Type as PriceType;
 use N1ebieski\IDir\Http\Requests\Admin\Dir\UpdateFull2Request;
@@ -197,10 +197,12 @@ class UpdateFull3Request extends UpdateFull2Request
     }
 
     /**
+     * Get a validated input container for the validated input.
      *
-     * @return array
+     * @param  array|null  $keys
+     * @return \Illuminate\Support\ValidatedInput|array
      */
-    public function validated(): array
+    public function safe(array $keys = null)
     {
         if ($this->has('payment_type')) {
             $types = [];
@@ -209,13 +211,13 @@ class UpdateFull3Request extends UpdateFull2Request
                 $types[] = "payment_{$type}";
             }
 
-            return Collect::make($this->safe()->except($types))
-                ->merge([
-                    'price' => $this->safe()->collect()->get("payment_{$this->safe()->payment_type}")
-                ])
-                ->toArray();
+            $safe = new ValidatedInput(parent::safe($keys)->except($types));
+
+            return $safe->merge([
+                'price' => $this->input("payment_{$this->input('payment_type')}")
+            ]);
         }
 
-        return parent::validated();
+        return parent::safe($keys);
     }
 }

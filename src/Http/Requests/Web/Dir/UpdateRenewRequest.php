@@ -112,7 +112,7 @@ class UpdateRenewRequest extends FormRequest
     public function validated(): array
     {
         return Collect::make([
-            'price' => $this->safe()->collect()->get("payment_{$this->safe()->payment_type}")
+            'price' => $this->input("payment_{$this->input('payment_type')}")
         ])
         ->toArray();
     }

@@ -58,7 +58,7 @@ class PriceService
                 $code = $this->price->codes()->make();
 
                 $code->makeService()->sync(array_merge([
-                    'price' => $this->price->id
+                    'price' => $this->price
                 ], $attributes['codes']));
             }
 
@@ -88,7 +88,7 @@ class PriceService
                 $code = $this->price->codes()->make();
 
                 $code->makeService()->sync(array_merge([
-                    'price' => $this->price->id
+                    'price' => $this->price
                 ], $attributes['codes']));
             }
 
