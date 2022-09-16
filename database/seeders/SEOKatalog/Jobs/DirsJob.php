@@ -306,8 +306,7 @@ class DirsJob implements ShouldQueue
      */
     protected function verify($item): bool
     {
-        return Dir::where('id', $item->id)
-            ->orWhere('url', $this->getRealUrlAsString($item->url))->first() === null;
+        return is_null(Dir::where('id', $item->id)->orWhere('url', $this->getRealUrlAsString($item->url))->first());
     }
 
     /**

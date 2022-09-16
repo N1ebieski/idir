@@ -18,6 +18,7 @@
 
 namespace N1ebieski\IDir\Http\Controllers\Api\Payment\Dir;
 
+use Throwable;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\URL;
@@ -26,10 +27,13 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Event;
 use N1ebieski\IDir\Models\Payment\Dir\Payment;
+use N1ebieski\IDir\Exceptions\Payment\Exception;
 use N1ebieski\IDir\Loads\Api\Payment\Dir\ShowLoad;
 use N1ebieski\IDir\Loads\Api\Payment\Dir\VerifyLoad;
 use N1ebieski\IDir\Events\Api\Payment\Dir\VerifyAttemptEvent;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use N1ebieski\IDir\Http\Resources\Payment\Dir\PaymentResource;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use N1ebieski\IDir\Events\Api\Payment\Dir\VerifySuccessfulEvent;
 use N1ebieski\IDir\Http\Controllers\Api\Payment\Dir\Polymorphic;
 use N1ebieski\IDir\Http\Requests\Api\Payment\Interfaces\VerifyRequestInterface;
@@ -73,16 +77,19 @@ class PaymentController extends Controller implements Polymorphic
      * @apiResourceAdditional url="https://paytest.cashbill.pl/pl/payment/eydJpZCI6IlRFU1RfNmV6OWZ6dXpvIiwicGMiOiIiLCJ0b2tlbiI6ImJiNjQ3ZGFhOTQ3NDU1NzM0OGRhMzhkYjEyMTE0YTI5MTA0NDhkMGUifQ--"
      *
      * @param Payment $payment
-     * @param string $driver
      * @param ShowLoad $load
      * @param TransferClientInterface $client
+     * @param string|null $driver
      * @return JsonResponse
+     * @throws Exception
+     * @throws RouteNotFoundException
+     * @throws BindingResolutionException
      */
     public function show(
         Payment $payment,
-        string $driver = null,
         ShowLoad $load,
-        TransferClientInterface $client
+        TransferClientInterface $client,
+        string $driver = null
     ): JsonResponse {
         try {
             $response = $client->purchase([
@@ -115,19 +122,20 @@ class PaymentController extends Controller implements Polymorphic
     }
 
     /**
-     * @hideFromAPIDocumentation
      *
-     * @param string $driver
      * @param VerifyRequestInterface $request
      * @param VerifyLoad $load
      * @param TransferClientInterface $client
+     * @param string|null $driver
      * @return string
+     * @throws Throwable
+     * @throws BindingResolutionException
      */
     public function verify(
-        string $driver = null,
         VerifyRequestInterface $request,
         VerifyLoad $load,
-        TransferClientInterface $client
+        TransferClientInterface $client,
+        string $driver = null
     ): string {
         try {
             Event::dispatch(App::make(VerifyAttemptEvent::class, ['payment' => $load->getPayment()]));

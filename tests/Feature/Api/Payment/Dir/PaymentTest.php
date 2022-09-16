@@ -75,7 +75,6 @@ class PaymentTest extends TestCase
 
         $response = $this->post(route('api.payment.dir.verify'), $this->providerSetup($payment->load('orderMorph')));
 
-        dd($response->getContent());
         $response->assertSeeText('OK');
 
         $this->assertDatabaseHas('payments', [

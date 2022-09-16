@@ -28,19 +28,18 @@ use N1ebieski\IDir\Http\Clients\Payment\Interfaces\Transfer\TransferClientInterf
 interface Polymorphic
 {
     /**
-     * Undocumented function
      *
      * @param Payment $payment
-     * @param string $driver
      * @param ShowLoad $load
      * @param TransferClientInterface $client
+     * @param string|null $driver
      * @return RedirectResponse
      */
     public function show(
         Payment $payment,
-        string $driver = null,
         ShowLoad $load,
-        TransferClientInterface $client
+        TransferClientInterface $client,
+        string $driver = null
     ): RedirectResponse;
 
     /**

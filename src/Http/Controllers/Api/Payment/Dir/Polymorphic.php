@@ -28,34 +28,32 @@ use N1ebieski\IDir\Http\Clients\Payment\Interfaces\Transfer\TransferClientInterf
 interface Polymorphic
 {
     /**
-     * Show payment
      *
      * @param Payment $payment
-     * @param string $driver
      * @param ShowLoad $load
      * @param TransferClientInterface $client
+     * @param string|null $driver
      * @return JsonResponse
      */
     public function show(
         Payment $payment,
-        string $driver = null,
         ShowLoad $load,
-        TransferClientInterface $client
+        TransferClientInterface $client,
+        string $driver = null
     ): JsonResponse;
 
     /**
-     * Undocumented function
      *
-     * @param string $driver
      * @param VerifyRequestInterface $request
      * @param VerifyLoad $load
      * @param TransferClientInterface $client
+     * @param string|null $driver
      * @return string
      */
     public function verify(
-        string $driver = null,
         VerifyRequestInterface $request,
         VerifyLoad $load,
-        TransferClientInterface $client
+        TransferClientInterface $client,
+        string $driver = null
     ): string;
 }

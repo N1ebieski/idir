@@ -1,5 +1,21 @@
 <?php
 
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is licenced under the Software License Agreement
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://intelekt.net.pl/pages/regulamin
+ *
+ * With the purchase or the installation of the software in your application
+ * you accept the licence agreement.
+ *
+ * @author    Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ * @copyright Since 2019 INTELEKT - Usługi Komputerowe Mariusz Wysokiński
+ * @license   https://intelekt.net.pl/pages/regulamin
+ */
+
 namespace N1ebieski\IDir\Tests\Feature\Web\Field;
 
 use Tests\TestCase;
@@ -12,8 +28,9 @@ class FieldTest extends TestCase
 {
     use DatabaseTransactions;
 
-    public function testFieldGusNotFound()
+    public function testFieldGusNotFound(): void
     {
+        /** @var User */
         $user = User::makeFactory()->user()->create();
 
         Auth::login($user);
@@ -24,11 +41,13 @@ class FieldTest extends TestCase
         ]);
 
         $response->assertStatus(HttpResponse::HTTP_NOT_FOUND);
+
         $response->assertJsonValidationErrors(['gus']);
     }
 
-    public function testFieldGusNotValid()
+    public function testFieldGusNotValid(): void
     {
+        /** @var User */
         $user = User::makeFactory()->user()->create();
 
         Auth::login($user);
@@ -39,11 +58,13 @@ class FieldTest extends TestCase
         ]);
 
         $response->assertStatus(HttpResponse::HTTP_FOUND);
+
         $response->assertSessionHasErrors(['number']);
     }
 
-    public function testFieldGusValid()
+    public function testFieldGusValid(): void
     {
+        /** @var User */
         $user = User::makeFactory()->user()->create();
 
         Auth::login($user);
@@ -54,6 +75,7 @@ class FieldTest extends TestCase
         ]);
 
         $response->assertOk();
+
         $response->assertJsonFragment([
             'field.2' => 'ul. Platynowa 15/22, 80-041 Gdańsk'
         ]);

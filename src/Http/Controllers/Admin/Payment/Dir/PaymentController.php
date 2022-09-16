@@ -26,26 +26,29 @@ use Illuminate\Support\Facades\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Response;
 use N1ebieski\IDir\Models\Payment\Dir\Payment;
+use N1ebieski\IDir\Exceptions\Payment\Exception;
 use N1ebieski\IDir\Loads\Admin\Payment\Dir\ShowLoad;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use N1ebieski\IDir\Http\Controllers\Admin\Payment\Dir\Polymorphic;
 use N1ebieski\IDir\Http\Clients\Payment\Interfaces\Transfer\TransferClientInterface;
 
 class PaymentController implements Polymorphic
 {
     /**
-     * Undocumented function
      *
      * @param Payment $payment
-     * @param string $driver
      * @param ShowLoad $load
      * @param TransferClientInterface $client
+     * @param string|null $driver
      * @return RedirectResponse
+     * @throws Exception
+     * @throws RouteNotFoundException
      */
     public function show(
         Payment $payment,
-        string $driver = null,
         ShowLoad $load,
-        TransferClientInterface $client
+        TransferClientInterface $client,
+        string $driver = null
     ): RedirectResponse {
         try {
             $response = $client->purchase([

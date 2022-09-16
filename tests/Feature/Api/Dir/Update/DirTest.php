@@ -831,13 +831,14 @@ class DirTest extends TestCase
 
         $this->mock(GuzzleClient::class, function (MockInterface $mock) use ($price) {
             $mock->shouldReceive('request')->once()->andReturn(
+                // @phpstan-ignore-next-line
                 new GuzzleResponse(HttpResponse::HTTP_OK, [], json_encode([
                     'active' => true,
                     'number' => (string)$price->number,
                     'activeFrom' => null,
                     'codeValidityTime' => 0,
                     'timeRemaining' => 0
-                ]) ?: '')
+                ]))
             );
         });
 

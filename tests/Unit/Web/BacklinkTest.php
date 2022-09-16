@@ -1,11 +1,28 @@
 <?php
 
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is licenced under the Software License Agreement
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://intelekt.net.pl/pages/regulamin
+ *
+ * With the purchase or the installation of the software in your application
+ * you accept the licence agreement.
+ *
+ * @author    Mariusz Wysokiński <kontakt@intelekt.net.pl>
+ * @copyright Since 2019 INTELEKT - Usługi Komputerowe Mariusz Wysokiński
+ * @license   https://intelekt.net.pl/pages/regulamin
+ */
+
 namespace N1ebieski\IDir\Tests\Unit\Web;
 
 use Tests\TestCase;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Client as GuzzleClient;
+use N1ebieski\IDir\Rules\BacklinkRule;
 use Illuminate\Http\Response as HttpResponse;
 use GuzzleHttp\Psr7\Response as GuzzleResponse;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -21,7 +38,7 @@ class BacklinkTest extends TestCase
      */
     protected $url = 'http://asdasjdkasjdkas.pl';
 
-    public function testRuleBacklinkNofollowFail()
+    public function testRuleBacklinkNofollowFail(): void
     {
         $mock = new MockHandler([
             new GuzzleResponse(HttpResponse::HTTP_OK, [], 'dadasd <a rel="nofollow" href="' . $this->url . '">dadasdasd</a> asdasdasd')
@@ -34,16 +51,17 @@ class BacklinkTest extends TestCase
             return new ShowRequest($with['url'], $client);
         });
 
-        $rule = $this->app->make(\N1ebieski\IDir\Rules\BacklinkRule::class, [
+        /** @var BacklinkRule */
+        $rule = $this->app->make(BacklinkRule::class, [
             'link' => $this->url
         ]);
 
-        $response = $rule->passes(null, 'http://wewewew.pl');
+        $response = $rule->passes('backlink_url', 'http://wewewew.pl');
 
-        $this->assertTrue($response === 0);
+        $this->assertFalse($response);
     }
 
-    public function testRuleBacklinkPass()
+    public function testRuleBacklinkPass(): void
     {
         $mock = new MockHandler([
             new GuzzleResponse(HttpResponse::HTTP_OK, [], 'sdadas<a href="' . $this->url . '">dadasdasd</a> sdasdasd')
@@ -56,12 +74,13 @@ class BacklinkTest extends TestCase
             return new ShowRequest($with['url'], $client);
         });
 
-        $rule = $this->app->make(\N1ebieski\IDir\Rules\BacklinkRule::class, [
+        /** @var BacklinkRule */
+        $rule = $this->app->make(BacklinkRule::class, [
             'link' => $this->url
         ]);
 
-        $response = $rule->passes(null, 'http://wewewew.pl');
+        $response = $rule->passes('backlink_url', 'http://wewewew.pl');
 
-        $this->assertTrue($response === 1);
+        $this->assertTrue($response);
     }
 }

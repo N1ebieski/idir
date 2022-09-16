@@ -26,7 +26,6 @@ use N1ebieski\IDir\Models\Group;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\ValidatedInput;
-use Illuminate\Support\Collection as Collect;
 use N1ebieski\ICore\Http\Requests\Traits\HasCaptcha;
 use N1ebieski\ICore\ValueObjects\Link\Type as LinkType;
 use N1ebieski\IDir\Http\Requests\Web\Dir\Update2Request;
@@ -123,7 +122,7 @@ class Update3Request extends Update2Request
                     $this->input('url') !== null ?
                         'regex:/^' . Str::escaped($this->input('url')) . '/'
                         : 'regex:/^(https|http):\/\/([\da-z\.-]+)(\.[a-z]{2,6})/',
-                    $this->group->backlink === 2 && $this->has('backlink') ?
+                    $this->group->backlink->isActive() && $this->has('backlink') ?
                         App::make('N1ebieski\\IDir\\Rules\\BacklinkRule', [
                             'link' => $link->url
                         ]) : null,
