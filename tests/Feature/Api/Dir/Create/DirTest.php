@@ -28,7 +28,6 @@ use N1ebieski\IDir\Models\Link;
 use N1ebieski\IDir\Models\User;
 use N1ebieski\IDir\Models\Group;
 use N1ebieski\IDir\Models\Price;
-use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Mail;
 use GuzzleHttp\Client as GuzzleClient;
@@ -42,7 +41,9 @@ use N1ebieski\IDir\Models\Field\Group\Field;
 use Illuminate\Http\Response as HttpResponse;
 use N1ebieski\IDir\Models\Payment\Dir\Payment;
 use GuzzleHttp\Psr7\Response as GuzzleResponse;
+use N1ebieski\IDir\Tests\Feature\Traits\HasDir;
 use N1ebieski\IDir\Models\Category\Dir\Category;
+use N1ebieski\IDir\Tests\Feature\Traits\HasFields;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use N1ebieski\IDir\Crons\Dir\ModeratorNotificationCron;
 use N1ebieski\IDir\ValueObjects\Field\Type as FieldType;
@@ -51,56 +52,9 @@ use N1ebieski\IDir\ValueObjects\Payment\Status as PaymentStatus;
 
 class DirTest extends TestCase
 {
+    use HasDir;
+    use HasFields;
     use DatabaseTransactions;
-
-    /**
-     * [setUpDir description]
-     * @return array [description]
-     */
-    protected function setUpDir(): array
-    {
-        /** @var Category */
-        $category = Category::makeFactory()->active()->create();
-
-        return [
-            'title' => 'Dolore deserunt et ex cupidatat.',
-            'tags' => ['cupidatat', 'nulla quis', 'magna'],
-            'content_html' => 'Aute ipsum laboris ullamco incididunt amet mollit reprehenderit est duis est. Qui fugiat id eu ex eu ex. Magna enim ipsum amet excepteur excepteur qui ad commodo laborum labore velit Lorem sint. Ad nisi dolore commodo non Lorem duis sint quis. Eiusmod sunt eiusmod est deserunt eiusmod reprehenderit est tempor commodo laboris.',
-            'categories' => [$category->id],
-            'url' => 'https://idir.test'
-        ];
-    }
-
-    /**
-     * [setUpFields description]
-     * @param  Group $group [description]
-     * @return array        [description]
-     */
-    protected function setUpFields(Group $group): array
-    {
-        $fields = [];
-
-        foreach (FieldType::getAvailable() as $type) {
-            /** @var Field */
-            $field = Field::makeFactory()->public()->hasAttached($group, [], 'morphs')->{$type}()->create();
-
-            $fields['field'][$field->id] = match ($field->type->getValue()) {
-                FieldType::INPUT, FieldType::TEXTAREA => 'Cupidatat magna enim officia non sunt esse qui Lorem quis.',
-
-                // @phpstan-ignore-next-line
-                FieldType::SELECT => $field->options->options[0],
-
-                // @phpstan-ignore-next-line
-                FieldType::MULTISELECT, FieldType::CHECKBOX => array_slice($field->options->options, 0, 2),
-
-                FieldType::IMAGE => UploadedFile::fake()->image('avatar.jpg', 500, 200)->size(1000),
-
-                default => throw new \InvalidArgumentException("The Type '{$field->type}' not found")
-            };
-        }
-
-        return $fields;
-    }
 
     public function testApiDirStoreNoExistGroup(): void
     {

@@ -115,7 +115,10 @@ class EditRenewViewModel extends ViewModel
                 ->keyBy('id')
                 ->map(function (Field $item) {
                     if ($item->type->isMap()) {
-                        return collect($item->decode_value)->map(function ($item) {
+                        /** @var array */
+                        $coords = $item->decode_value;
+
+                        return collect($coords)->map(function ($item) {
                             $item = (array)$item;
 
                             return $item;

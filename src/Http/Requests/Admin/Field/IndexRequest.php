@@ -21,6 +21,8 @@ namespace N1ebieski\IDir\Http\Requests\Admin\Field;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Foundation\Http\FormRequest;
+use N1ebieski\IDir\ValueObjects\Field\Type;
+use N1ebieski\IDir\ValueObjects\Field\Visible;
 
 class IndexRequest extends FormRequest
 {
@@ -48,8 +50,20 @@ class IndexRequest extends FormRequest
             'filter.except' => 'bail|filled|array',
             'filter.except.*' => 'bail|integer',
             'filter.search' => 'bail|nullable|string|min:3|max:255',
-            'filter.visible' => 'bail|nullable|integer|in:0,1|no_js_validation',
-            'filter.type' => 'bail|nullable|string|in:input,textarea,select,multiselect,checkbox,image|no_js_validation',
+            'filter.visible' => [
+                'bail',
+                'nullable',
+                'integer',
+                Rule::in([Visible::INACTIVE, Visible::ACTIVE]),
+                'no_js_validation'
+            ],
+            'filter.type' => [
+                'bail',
+                'nullable',
+                'string',
+                Rule::in(Type::getAvailable()),
+                'no_js_validation'
+            ],
             'filter.orderby' => [
                 'bail',
                 'nullable',

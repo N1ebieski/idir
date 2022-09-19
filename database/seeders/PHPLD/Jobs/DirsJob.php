@@ -153,7 +153,7 @@ class DirsJob implements ShouldQueue
                     $dir->tag(
                         collect(explode(',', $keywords))
                             ->filter(function ($item) {
-                                return !is_null($item) && strlen($item) <= 30;
+                                return strlen($item) <= 30;
                             })
                     );
                 }

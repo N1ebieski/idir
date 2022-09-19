@@ -19,7 +19,7 @@
 namespace N1ebieski\IDir\Loads\Admin\Dir;
 
 use Illuminate\Http\Request;
-use N1ebieski\IDir\Models\Group;
+use N1ebieski\IDir\Models\Dir;
 
 class DestroyLoad
 {
@@ -29,9 +29,9 @@ class DestroyLoad
      */
     public function __construct(Request $request)
     {
-        /** @var Group */
-        $group = $request->route('group');
+        /** @var Dir */
+        $dir = $request->route('dir');
 
-        $group->load(['group', 'group.privileges']);
+        $dir->load(['group', 'group.privileges']);
     }
 }

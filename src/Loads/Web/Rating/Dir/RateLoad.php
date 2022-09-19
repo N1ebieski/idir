@@ -20,6 +20,7 @@ namespace N1ebieski\IDir\Loads\Web\Rating\Dir;
 
 use Illuminate\Http\Request;
 use N1ebieski\IDir\Models\Dir;
+use N1ebieski\IDir\Models\User;
 use N1ebieski\IDir\Models\Rating\Dir\Rating;
 
 class RateLoad
@@ -35,8 +36,11 @@ class RateLoad
         /** @var Dir */
         $dir = $request->route('dir');
 
+        /** @var User */
+        $user = $request->user();
+
         /** @var Rating|null */
-        $dirRating = $dir->makeRepo()->firstRatingByUser($request->user());
+        $dirRating = $dir->makeRepo()->firstRatingByUser($user);
 
         $this->rating = $dirRating ?? $rating;
     }

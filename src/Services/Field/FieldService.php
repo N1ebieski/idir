@@ -187,7 +187,7 @@ class FieldService
     {
         return $this->db->transaction(function () use ($attributes) {
             $this->field->fill(
-                $this->collect->make($attributes)->except('options')->toArray()
+                $this->collect->make($attributes)->except(['options'])->toArray()
             );
 
             if (array_key_exists('options', $attributes)) {

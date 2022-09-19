@@ -56,6 +56,12 @@ class Type extends ValueObject
      * [public description]
      * @var string
      */
+    public const SWITCH = 'switch';
+
+    /**
+     * [public description]
+     * @var string
+     */
     public const IMAGE = 'image';
 
     /**
@@ -102,6 +108,7 @@ class Type extends ValueObject
             self::SELECT,
             self::MULTISELECT,
             self::CHECKBOX,
+            self::SWITCH,
             self::IMAGE,
             self::REGIONS,
             self::MAP,
@@ -126,6 +133,7 @@ class Type extends ValueObject
             self::SELECT,
             self::MULTISELECT,
             self::CHECKBOX,
+            self::SWITCH,
             self::IMAGE
         ];
     }
@@ -192,6 +200,16 @@ class Type extends ValueObject
     public function isCheckbox(): bool
     {
         return $this->value === self::CHECKBOX;
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @return boolean
+     */
+    public function isSwitch(): bool
+    {
+        return $this->value === self::SWITCH;
     }
 
     /**

@@ -165,6 +165,10 @@ trait HasFields
                     }
                     break;
 
+                case Type::SWITCH:
+                    $rules["field.{$field->id}"][] = 'boolean';
+                    break;
+
                 case Type::IMAGE:
                     $rules["field.{$field->id}"][] = 'image';
                     $rules["field.{$field->id}"][] = 'mimes:jpeg,png,jpg';

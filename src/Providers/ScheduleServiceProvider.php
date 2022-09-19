@@ -38,35 +38,30 @@ class ScheduleServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->app->booted(function () {
-            $this->schedule = $this->app->make(Schedule::class);
+        $this->schedule = $this->app->make(Schedule::class);
 
+        $this->app->booted(function () {
             $this->schedule->call($this->app->make(\N1ebieski\IDir\Crons\Dir\BacklinkCron::class))
                 ->name('BacklinkCron')
-                ->daily()
-                ->runInBackground();
+                ->daily();
 
             $this->schedule->call($this->app->make(\N1ebieski\IDir\Crons\Dir\CompletedCron::class))
                 ->name('CompletedCron')
-                ->daily()
-                ->runInBackground();
+                ->daily();
 
             $this->callReminderSchedule();
 
             $this->schedule->call($this->app->make(\N1ebieski\IDir\Crons\Dir\StatusCron::class))
                 ->name('StatusCron')
-                ->daily()
-                ->runInBackground();
+                ->daily();
 
             $this->schedule->call($this->app->make(\N1ebieski\IDir\Crons\Dir\ModeratorNotificationCron::class))
                 ->name('ModeratorNotificationCron')
-                ->hourly()
-                ->runInBackground();
+                ->hourly();
 
             $this->schedule->call($this->app->make(\N1ebieski\IDir\Crons\Sitemap\SitemapCron::class))
                 ->name('SitemapCron')
-                ->daily()
-                ->runInBackground();
+                ->daily();
         });
     }
 
@@ -85,7 +80,6 @@ class ScheduleServiceProvider extends ServiceProvider
 
         $this->schedule->call($this->app->make(\N1ebieski\IDir\Crons\Dir\ReminderCron::class))
             ->name('ReminderCron')
-            ->cron("5 0 */{$days} * *")
-            ->runInBackground();
+            ->cron("5 0 */{$days} * *");
     }
 }

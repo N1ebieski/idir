@@ -25,6 +25,7 @@ use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Request;
 use N1ebieski\IDir\Models\Dir;
 use N1ebieski\IDir\Models\Link;
+use N1ebieski\IDir\Models\User;
 use N1ebieski\IDir\Models\Group;
 use N1ebieski\IDir\Models\Price;
 use GuzzleHttp\Handler\MockHandler;
@@ -75,7 +76,10 @@ class DirTest extends TestCase
         Mail::assertSent(ReminderMail::class, function (ReminderMail $mail) use ($dir) {
             $mail->build();
 
-            return $mail->hasTo($dir->user->email);
+            /** @var User */
+            $user = $dir->user;
+
+            return $mail->hasTo($user->email);
         });
     }
 
@@ -107,7 +111,10 @@ class DirTest extends TestCase
         Mail::assertSent(CompletedMail::class, function (CompletedMail $mail) use ($dir) {
             $mail->build();
 
-            return $mail->hasTo($dir->user->email);
+            /** @var User */
+            $user = $dir->user;
+
+            return $mail->hasTo($user->email);
         });
 
         $this->assertDatabaseHas('dirs', [
@@ -148,7 +155,10 @@ class DirTest extends TestCase
         Mail::assertSent(CompletedMail::class, function (CompletedMail $mail) use ($dir) {
             $mail->build();
 
-            return $mail->hasTo($dir->user->email);
+            /** @var User */
+            $user = $dir->user;
+
+            return $mail->hasTo($user->email);
         });
 
         $this->assertDatabaseHas('dirs', [
@@ -174,7 +184,7 @@ class DirTest extends TestCase
 
         /** @var Dir */
         $dir = Dir::makeFactory()->withUser()->paidSeasonal()->active()->for($group)
-            ->hasAttached($categories->pluck('id')->toArray(), [], 'categories')
+            ->hasAttached($categories, [], 'categories')
             ->create([
                 'privileged_at' => null,
                 'privileged_to' => null
@@ -198,7 +208,10 @@ class DirTest extends TestCase
         Mail::assertSent(CompletedMail::class, function (CompletedMail $mail) use ($dir) {
             $mail->build();
 
-            return $mail->hasTo($dir->user->email);
+            /** @var User */
+            $user = $dir->user;
+
+            return $mail->hasTo($user->email);
         });
 
         $dir->refresh();
@@ -243,7 +256,10 @@ class DirTest extends TestCase
         Mail::assertNotSent(CompletedMail::class, function (CompletedMail $mail) use ($dir) {
             $mail->build();
 
-            return $mail->hasTo($dir->user->email);
+            /** @var User */
+            $user = $dir->user;
+
+            return $mail->hasTo($user->email);
         });
 
         $this->assertDatabaseMissing('dirs', [
@@ -277,7 +293,7 @@ class DirTest extends TestCase
 
         Config::set('idir.dir.backlink.max_attempts', 1);
 
-        $this->mock(GuzzleClient::class, function (MockInterface $mock) use ($link) {
+        $this->mock(GuzzleClient::class, function (MockInterface $mock) {
             $mock->shouldReceive('request')->once()
                 ->with('GET', 'http://dadadad.pl', ['verify' => false])
                 ->andReturn(
@@ -293,7 +309,10 @@ class DirTest extends TestCase
         Mail::assertSent(BacklinkNotFoundMail::class, function (BacklinkNotFoundMail $mail) use ($dir) {
             $mail->build();
 
-            return $mail->hasTo($dir->user->email);
+            /** @var User */
+            $user = $dir->user;
+
+            return $mail->hasTo($user->email);
         });
 
         $this->assertDatabaseHas('dirs', [
@@ -349,7 +368,10 @@ class DirTest extends TestCase
         Mail::assertNotSent(BacklinkNotFoundMail::class, function (BacklinkNotFoundMail $mail) use ($dir) {
             $mail->build();
 
-            return $mail->hasTo($dir->user->email);
+            /** @var User */
+            $user = $dir->user;
+
+            return $mail->hasTo($user->email);
         });
 
         $this->assertDatabaseHas('dirs', [

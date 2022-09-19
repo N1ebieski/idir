@@ -44,9 +44,9 @@ class VisibleCast implements CastsAttributes
      * @param  string  $key
      * @param  mixed  $value
      * @param  array  $attributes
-     * @return Visible
+     * @return int
      */
-    public function set($model, string $key, $value, array $attributes): Visible
+    public function set($model, string $key, $value, array $attributes): int
     {
         if (is_string($value)) {
             $value = Visible::fromString($value);
@@ -60,6 +60,6 @@ class VisibleCast implements CastsAttributes
             throw new \InvalidArgumentException('The given value is not a Visible instance');
         }
 
-        return $value;
+        return $value->getValue();
     }
 }

@@ -52,7 +52,7 @@
             ></textarea>
         </div>
         <div class="form-group">
-            <div class="custom-control custom-checkbox">
+            <div class="custom-control custom-switch">
                 <input 
                     type="checkbox" 
                     class="custom-control-input" 

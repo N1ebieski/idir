@@ -165,6 +165,7 @@ use N1ebieski\IDir\Models\Field\Interfaces\RegionsValueInterface;
  * @method static Builder|Dir withUniqueSlugConstraints(\Illuminate\Database\Eloquent\Model $model, string $attribute, array $config, string $slug)
  * @method static Builder|Dir withoutAllTags($tags, bool $includeUntagged = false)
  * @method static Builder|Dir withoutAnyTags($tags, bool $includeUntagged = false)
+ * @method Builder|Dir when((\Closure($this): TWhenParameter)|TWhenParameter|null $value, (callable($this, TWhenParameter): TWhenReturnType)|null  $callback, (callable($this, TWhenParameter): TWhenReturnType)|null  $default)
  * @mixin \Eloquent
  */
 class Dir extends Model implements
@@ -226,7 +227,7 @@ class Dir extends Model implements
     /**
      * The attributes that should be cast to native types.
      *
-     * @var array
+     * @var array<string, string>
      */
     protected $casts = [
         'id' => 'integer',
@@ -754,7 +755,10 @@ class Dir extends Model implements
             + ['field' => $this->fields->keyBy('id')
                 ->map(function (Field $item) {
                     if ($item->type->isMap()) {
-                        return Collect::make($item->decode_value)->map(function ($item) {
+                        /** @var array */
+                        $coords = $item->decode_value;
+
+                        return Collect::make($coords)->map(function ($item) {
                             $item = (array)$item;
 
                             return $item;

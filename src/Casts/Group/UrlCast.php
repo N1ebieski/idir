@@ -44,9 +44,9 @@ class UrlCast implements CastsAttributes
      * @param  string  $key
      * @param  mixed  $value
      * @param  array  $attributes
-     * @return Url
+     * @return int
      */
-    public function set($model, string $key, $value, array $attributes): Url
+    public function set($model, string $key, $value, array $attributes): int
     {
         if (is_string($value)) {
             $value = Url::fromString($value);
@@ -60,6 +60,6 @@ class UrlCast implements CastsAttributes
             throw new \InvalidArgumentException('The given value is not a Url instance');
         }
 
-        return $value;
+        return $value->getValue();
     }
 }

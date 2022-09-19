@@ -32,7 +32,6 @@ use N1ebieski\ICore\Models\Traits\HasPolymorphic;
 use N1ebieski\ICore\Models\Traits\HasPositionable;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use N1ebieski\ICore\Models\Traits\HasFullTextSearchable;
 use N1ebieski\IDir\Database\Factories\Field\FieldFactory;
 
@@ -91,7 +90,7 @@ use N1ebieski\IDir\Database\Factories\Field\FieldFactory;
  * @method static Builder|Field whereType($value)
  * @method static Builder|Field whereUpdatedAt($value)
  * @method static Builder|Field whereVisible($value)
- * @method MorphToMany morphs()
+ * @method static \Illuminate\Database\Eloquent\Relations\MorphToMany|Builder morphs()
  * @mixin \Eloquent
  */
 class Field extends Model
@@ -129,7 +128,7 @@ class Field extends Model
     /**
      * The attributes that should be cast to native types.
      *
-     * @var array
+     * @var array<string, string>
      */
     protected $casts = [
         'id' => 'integer',

@@ -30,6 +30,31 @@ class Schema1000 implements SchemaInterface
     public $pattern = [
         [
             'paths' => [
+                'resources/views/vendor/idir/web/dir/show.blade.php',
+                'resources/views/vendor/idir/web/dir/partials/summary.blade.php'
+            ],
+            'actions' => [
+                [
+                    'type' => 'replace',
+                    'search' => '/\{\{ \$field->title \}\}:/',
+                    'to' => '{{ $field->title }}@if (!$field->type->isSwitch()):@endif'
+                ]
+            ]
+        ],
+        [
+            'paths' => [
+                'resources/views/vendor/idir/web/contact/dir/show.blade.php'
+            ],
+            'actions' => [
+                [
+                    'type' => 'replace',
+                    'search' => '/custom-checkbox/',
+                    'to' => 'custom-switch'
+                ]
+            ]
+        ],
+        [
+            'paths' => [
                 'resources/views/vendor/idir/web/dir/show.blade.php'
             ],
             'actions' => [

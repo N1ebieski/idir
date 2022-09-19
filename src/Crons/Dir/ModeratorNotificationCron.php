@@ -64,7 +64,6 @@ class ModeratorNotificationCron
         protected App $app,
         CacheFactory $cache
     ) {
-        // @phpstan-ignore-next-line
         $this->cache = $cache->store($config->has('cache.stores.system') ? 'system' : null);
     }
 

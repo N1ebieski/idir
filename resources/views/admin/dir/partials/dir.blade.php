@@ -75,30 +75,32 @@
                 @foreach ($dir->group->fields as $field)
                 @if ($value = optional($dir->fields->where('id', $field->id)->first())->decode_value)
                 <li class="text-break" style="word-break:break-word">
-                    {{ $field->title }}: 
                     <span>
-                    @switch($field->type)
-                        @case(Field\Type::INPUT)
-                        @case(Field\Type::TEXTAREA)
-                        @case(Field\Type::SELECT)
+                        {{ $field->title }}@if (!$field->type->isSwitch()):@endif
+                    </span>
+                    <span>
+                    @switch ($field->type)
+                        @case (Field\Type::INPUT)
+                        @case (Field\Type::TEXTAREA)
+                        @case (Field\Type::SELECT)
                             {{ $value }}
                             @break
 
-                        @case(Field\Type::MULTISELECT)
-                        @case(Field\Type::CHECKBOX)
+                        @case (Field\Type::MULTISELECT)
+                        @case (Field\Type::CHECKBOX)
                             {{ implode(', ', $value) }}
                             @break
 
-                        @case(Field\Type::REGIONS)
+                        @case (Field\Type::REGIONS)
                             {{ implode(', ', $dir->regions->pluck('name')->toArray()) }}
                             @break
 
-                        @case(Field\Type::IMAGE)
+                        @case (Field\Type::IMAGE)
                             <br>
                             <img class="img-fluid" src="{{ app('filesystem')->url($value) }}">
                             @break
 
-                        @case(Field\Type::MAP)
+                        @case (Field\Type::MAP)
                             {{ $value[0]->lat }} : {{ $value[0]->long }}
                             @break
                     @endswitch

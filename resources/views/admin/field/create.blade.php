@@ -130,6 +130,13 @@
                 </div>
                 <div 
                     class="tab-pane fade" 
+                    id="nav-switch-create" 
+                    role="tabpanel" 
+                    aria-labelledby="nav-switch-tab"
+                >
+                </div>                
+                <div 
+                    class="tab-pane fade" 
                     id="nav-image-create" 
                     role="tabpanel" 
                     aria-labelledby="nav-image-tab"

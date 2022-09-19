@@ -20,7 +20,6 @@ namespace N1ebieski\IDir\Repositories\Category;
 
 use N1ebieski\IDir\Models\Dir;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Database\Eloquent\Collection;
@@ -42,8 +41,7 @@ class CategoryRepo extends BaseCategoryRepo
     {
         return $this->category->newQuery()
             ->when($component['count'] === true, function (Builder $query) {
-                /** @var Model */
-                // @phpstan-ignore-next-line
+                /** @var mixed */
                 $morph = $this->category->morphs()->make();
 
                 $morphs = $this->category->newQuery()
@@ -57,7 +55,6 @@ class CategoryRepo extends BaseCategoryRepo
                     ->leftJoin($morph->getTable(), function (JoinClause $query) use ($morph) {
                         return $query->on('categories_models.model_id', '=', "{$morph->getTable()}.id")
                             ->where('categories_models.model_type', $morph->getMorphClass())
-                            // @phpstan-ignore-next-line
                             ->where("{$morph->getTable()}.status", $morph->status::ACTIVE);
                     })
                     ->groupBy("{$morph->getTable()}.id", 'categories.id');
@@ -85,8 +82,7 @@ class CategoryRepo extends BaseCategoryRepo
     {
         return $this->category->newQuery()
             ->when($component['category_count'] === true, function (Builder $query) {
-                /** @var Model */
-                // @phpstan-ignore-next-line
+                /** @var mixed */
                 $morph = $this->category->morphs()->make();
 
                 $morphs = $this->category->newQuery()
@@ -100,7 +96,6 @@ class CategoryRepo extends BaseCategoryRepo
                     ->leftJoin($morph->getTable(), function (JoinClause $query) use ($morph) {
                         return $query->on('categories_models.model_id', '=', "{$morph->getTable()}.id")
                             ->where('categories_models.model_type', $morph->getMorphClass())
-                            // @phpstan-ignore-next-line
                             ->where("{$morph->getTable()}.status", $morph->status::ACTIVE);
                     })
                     ->groupBy("{$morph->getTable()}.id", 'categories.id');
@@ -151,7 +146,6 @@ class CategoryRepo extends BaseCategoryRepo
     public function paginateDirsByFilter(array $filter): LengthAwarePaginator
     {
         /** @var Dir */
-        // @phpstan-ignore-next-line
         $dir = $this->category->morphs()->make();
 
         return $dir->newQuery()

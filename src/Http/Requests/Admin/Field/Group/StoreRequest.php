@@ -41,21 +41,26 @@ class StoreRequest extends BaseStoreRequest
     }
 
     /**
-     * Get the validated data from the request.
      *
-     * @return array
+     * @param string|null $key
+     * @param mixed $default
+     * @return mixed
      */
-    public function validated()
+    public function validated($key = null, $default = null)
     {
-        return Collect::make(
-            $this->safe()->only(['title', 'type', 'visible', 'desc', 'morphs'])
-        )
-        ->merge([
-            'options' => array_merge(
-                $this->safe()->collect()->get(optional($this->safe())->type, []),
-                $this->safe()->only('required')
+        if (is_null($key)) {
+            return Collect::make(
+                $this->safe()->only(['title', 'type', 'visible', 'desc', 'morphs'])
             )
-        ])
-        ->toArray();
+            ->merge([
+                'options' => array_merge(
+                    $this->safe()->collect()->get(optional($this->safe())->type, []),
+                    $this->safe()->only('required')
+                )
+            ])
+            ->toArray();
+        }
+
+        return parent::validated($key, $default);
     }
 }

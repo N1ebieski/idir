@@ -44,9 +44,9 @@ class ApplyStatusCast implements CastsAttributes
      * @param  string  $key
      * @param  mixed  $value
      * @param  array  $attributes
-     * @return ApplyStatus
+     * @return int
      */
-    public function set($model, string $key, $value, array $attributes): ApplyStatus
+    public function set($model, string $key, $value, array $attributes): int
     {
         if (is_string($value)) {
             $value = ApplyStatus::fromString($value);
@@ -60,6 +60,6 @@ class ApplyStatusCast implements CastsAttributes
             throw new \InvalidArgumentException('The given value is not a ApplyStatus instance');
         }
 
-        return $value;
+        return $value->getValue();
     }
 }

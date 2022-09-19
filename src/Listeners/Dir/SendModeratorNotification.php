@@ -72,7 +72,6 @@ class SendModeratorNotification
         protected Exception $exception,
         CacheFactory $cache
     ) {
-        // @phpstan-ignore-next-line
         $this->cache = $cache->store($config->has('cache.stores.system') ? 'system' : null);
     }
 
@@ -124,7 +123,6 @@ class SendModeratorNotification
      */
     protected function incrementCounter(): void
     {
-        // @phpstan-ignore-next-line
         $this->cache->has('dir.notification.dirs') ?
             $this->cache->increment('dir.notification.dirs')
             : $this->cache->forever('dir.notification.dirs', 1);

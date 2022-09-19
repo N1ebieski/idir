@@ -107,13 +107,19 @@ class UpdateRenewRequest extends FormRequest
 
     /**
      *
-     * @return array
+     * @param string|null $key
+     * @param mixed $default
+     * @return mixed
      */
-    public function validated(): array
+    public function validated($key = null, $default = null)
     {
-        return Collect::make([
-            'price' => $this->input("payment_{$this->input('payment_type')}")
-        ])
-        ->toArray();
+        if (is_null($key)) {
+            return Collect::make([
+                'price' => $this->input("payment_{$this->input('payment_type')}")
+            ])
+            ->toArray();
+        }
+
+        return parent::validated($key, $default);
     }
 }

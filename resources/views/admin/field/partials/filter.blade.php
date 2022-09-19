@@ -26,7 +26,7 @@
                     class="badge badge-primary filter-option" 
                     data-name="filter[visible]"
                 >
-                    <span>{{ trans('idir::groups.visible.label') }}: {{ trans('idir::fields.visible_'.$filter['visible']) }}</span>
+                    <span>{{ trans('idir::groups.visible.label') }}: {{ trans('idir::fields.visible.'.$filter['visible']) }}</span>
                     <span aria-hidden="true">&times;</span>
                 </a>
             </span>

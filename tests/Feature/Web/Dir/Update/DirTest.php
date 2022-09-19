@@ -25,7 +25,6 @@ use N1ebieski\IDir\Models\Link;
 use N1ebieski\IDir\Models\User;
 use N1ebieski\IDir\Models\Group;
 use N1ebieski\IDir\Models\Price;
-use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
 use GuzzleHttp\Client as GuzzleClient;
 use Illuminate\Support\Facades\Config;
@@ -36,66 +35,18 @@ use N1ebieski\IDir\Models\Field\Group\Field;
 use Illuminate\Http\Response as HttpResponse;
 use N1ebieski\IDir\Models\Payment\Dir\Payment;
 use GuzzleHttp\Psr7\Response as GuzzleResponse;
+use N1ebieski\IDir\Tests\Feature\Traits\HasDir;
 use N1ebieski\IDir\Models\Category\Dir\Category;
+use N1ebieski\IDir\Tests\Feature\Traits\HasFields;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use N1ebieski\IDir\ValueObjects\Field\Type as FieldType;
 use N1ebieski\IDir\ValueObjects\Payment\Status as PaymentStatus;
 
 class DirTest extends TestCase
 {
+    use HasDir;
+    use HasFields;
     use DatabaseTransactions;
-
-    /**
-     * [setUpDir description]
-     * @return array [description]
-     */
-    protected function setUpDir(): array
-    {
-        /** @var Category */
-        $category = Category::makeFactory()->active()->create();
-
-        return [
-            'title' => 'dasdasdasd',
-            'tags' => ['dasdasd', 'dasdasdas', 'dasdasdas'],
-            'content_html' => 'dasdasdhasj hsjd <b>sdasdasd</b> asdasdasd
-            dshajdashjd hasjdasjdhasjdhja dhsajdhasjdhasjdhjasdhajsd asdasdjsakdjsak
-            dsadjaksdjaskdjaskd sdasasd asdasdasdasdd sadasjdjashd jashdjasdhjas hjsa
-            djashdjashdjashdjashd jashdjashdjsa dfdsfsdfsdfsfsdf sad87238728372837827',
-            'categories' => [$category->id],
-            'url' => 'http://dasdasdasdas.pl'
-        ];
-    }
-
-    /**
-     * [setUpFields description]
-     * @param  Group $group [description]
-     * @return array        [description]
-     */
-    protected function setUpFields(Group $group): array
-    {
-        $fields = [];
-
-        foreach (FieldType::getAvailable() as $type) {
-            /** @var Field */
-            $field = Field::makeFactory()->public()->hasAttached($group, [], 'morphs')->{$type}()->create();
-
-            $fields['field'][$field->id] = match ($field->type->getValue()) {
-                FieldType::INPUT, FieldType::TEXTAREA => 'Cupidatat magna enim officia non sunt esse qui Lorem quis.',
-
-                // @phpstan-ignore-next-line
-                FieldType::SELECT => $field->options->options[0],
-
-                // @phpstan-ignore-next-line
-                FieldType::MULTISELECT, FieldType::CHECKBOX => array_slice($field->options->options, 0, 2),
-
-                FieldType::IMAGE => UploadedFile::fake()->image('avatar.jpg', 500, 200)->size(1000),
-
-                default => throw new \InvalidArgumentException("The Type '{$field->type}' not found")
-            };
-        }
-
-        return $fields;
-    }
 
     public function testDirEdit1AsGuest(): void
     {
@@ -452,7 +403,7 @@ class DirTest extends TestCase
 
         $response->assertRedirect(route('web.dir.edit_3', [$dir->id, $groupWithUrl->id]));
 
-        $response->assertSessionHas("dirId.{$dir->id}.title", 'dasdasdasd');
+        $response->assertSessionHas("dirId.{$dir->id}.title", $this->setUpDir()['title']);
     }
 
     public function testDirEdit3AsGuest(): void

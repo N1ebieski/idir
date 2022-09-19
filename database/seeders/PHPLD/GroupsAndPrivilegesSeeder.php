@@ -40,7 +40,6 @@ class GroupsAndPrivilegesSeeder extends PHPLDSeeder
         $privileges = Privilege::all();
 
         /** @var Group */
-        // @phpstan-ignore-next-line
         $defaultGroup = Group::make()->makeCache()->rememberBySlug(Slug::default());
 
         DB::connection('import')->table('link_type')

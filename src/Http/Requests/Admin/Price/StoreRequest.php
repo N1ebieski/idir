@@ -128,14 +128,19 @@ class StoreRequest extends FormRequest
     }
 
     /**
-     * Get the validated data from the request.
      *
-     * @return array
+     * @param string|null $key
+     * @param mixed $default
+     * @return mixed
      */
-    public function validated()
+    public function validated($key = null, $default = null)
     {
-        return Collect::make($this->safe()->except(Type::getAvailable()))
-            ->merge($this->safe()->collect()->get(optional($this->safe())->type, []))
-            ->toArray();
+        if (is_null($key)) {
+            return Collect::make($this->safe()->except(Type::getAvailable()))
+                ->merge($this->safe()->collect()->get(optional($this->safe())->type, []))
+                ->toArray();
+        }
+
+        return parent::validated($key, $default);
     }
 }

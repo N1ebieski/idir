@@ -59,7 +59,10 @@
     @foreach ($group->fields as $field)
         @if (isset($value['field'][$field->id]) && !empty($value['field'][$field->id]))
             <p>
-                {{ $field->title }}:<br>
+                <span>
+                    {{ $field->title }}@if (!$field->type->isSwitch()):@endif
+                </span>
+                <br>
                 <span>
                 @switch($field->type)
                     @case(Field\Type::INPUT)

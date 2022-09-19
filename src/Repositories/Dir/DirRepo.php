@@ -31,6 +31,7 @@ use Illuminate\Database\Eloquent\Collection;
 use N1ebieski\IDir\Models\Field\Group\Field;
 use N1ebieski\IDir\Models\Rating\Dir\Rating;
 use N1ebieski\IDir\Models\Report\Dir\Report;
+use Illuminate\Support\Collection as Collect;
 use N1ebieski\IDir\Models\Comment\Dir\Comment;
 use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
@@ -171,7 +172,7 @@ class DirRepo
         return $this->dir->newQuery()
             ->active()
             ->filterOrderBy($filter['orderby'])
-            ->withAllTags($tag)
+            ->withAnyTags($tag)
             ->withAllPublicRels()
             ->filterPaginate($this->config->get('database.paginate'));
     }
@@ -187,6 +188,7 @@ class DirRepo
         /** @var Tag */
         $tag = $this->dir->tags()->make();
 
+        // @phpstan-ignore-next-line
         return $this->dir->newQuery()
             ->selectRaw('`dirs`.*, `privileges`.`name`')
             ->leftJoin('groups_privileges', function (JoinClause $query) {
@@ -214,7 +216,7 @@ class DirRepo
                                 ->groupBy('dirs.id')
                                 ->getQuery()
                         );
-                    }),
+                    })->getQuery(),
                 'dirs'
             )
             ->active()
@@ -223,8 +225,7 @@ class DirRepo
                 return $query->orderBy('privileges.name', 'desc')
                     ->orderBySearch($name)
                     ->latest();
-            })
-            ->when(!is_null($filter['orderby']), function (Builder|Dir $query) use ($filter, $name) {
+            }, function (Builder|Dir $query) use ($filter, $name) {
                 return $query->filterOrderBy($filter['orderby'])
                     ->orderBySearch($name);
             })
@@ -531,12 +532,11 @@ class DirRepo
     }
 
     /**
-     * Undocumented function
      *
      * @param array $component
-     * @return Collection
+     * @return Collect
      */
-    public function getByComponent(array $component): Collection
+    public function getByComponent(array $component): Collect
     {
         return $this->dir->newQuery()
             ->active()

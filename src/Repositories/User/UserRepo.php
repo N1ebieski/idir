@@ -45,6 +45,7 @@ class UserRepo extends BaseUserRepo
         /** @var HasMany|Dir */
         $dirs = $this->user->dirs();
 
+        // @phpstan-ignore-next-line
         return $dirs->selectRaw("`{$dir->getTable()}`.*")
             ->filterExcept($filter['except'])
             ->filterSearch($filter['search'])

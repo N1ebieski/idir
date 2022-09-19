@@ -18,6 +18,7 @@
 
 namespace N1ebieski\IDir\Http\Controllers\Api\Auth;
 
+use N1ebieski\IDir\Models\User;
 use N1ebieski\IDir\Models\Group;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\App;
@@ -81,8 +82,11 @@ class UserController
      */
     public function dirs(DirsRequest $request, DirsFilter $filter): JsonResponse
     {
+        /** @var User */
+        $user = $request->user();
+
         return App::make(DirResource::class)
-            ->collection($request->user()->makeRepo()->paginateDirsByFilter($filter->all()))
+            ->collection($user->makeRepo()->paginateDirsByFilter($filter->all()))
             ->additional(['meta' => [
                 'filter' => Collect::make($filter->all())
                     ->replace([

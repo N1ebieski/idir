@@ -207,7 +207,7 @@
                 @if ($value = optional($dir->fields->where('id', $field->id)->first())->decode_value)
                 <div class="list-group-item">
                     <div class="float-left mr-2">
-                        {{ $field->title }}:
+                        {{ $field->title }}@if (!$field->type->isSwitch()):@endif
                     </div>
                     <div class="float-right">
                     @switch ($field->type)

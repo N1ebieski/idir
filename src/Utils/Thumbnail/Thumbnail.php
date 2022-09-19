@@ -142,9 +142,9 @@ class Thumbnail
     /**
      * Undocumented function
      *
-     * @return string
+     * @return string|null
      */
-    public function generate(): string
+    public function generate(): ?string
     {
         if ($this->isReload()) {
             $this->storage->disk($this->disk)->put(

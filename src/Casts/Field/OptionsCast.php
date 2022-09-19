@@ -44,9 +44,9 @@ class OptionsCast implements CastsAttributes
      * @param  string  $key
      * @param  mixed  $value
      * @param  array  $attributes
-     * @return Options
+     * @return string
      */
-    public function set($model, string $key, $value, array $attributes): Options
+    public function set($model, string $key, $value, array $attributes): string
     {
         if (is_array($value)) {
             $value = new Options((object)$value);
@@ -56,6 +56,6 @@ class OptionsCast implements CastsAttributes
             throw new \InvalidArgumentException('The given value is not a Options instance');
         }
 
-        return $value;
+        return (string)$value;
     }
 }

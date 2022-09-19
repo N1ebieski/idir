@@ -50,9 +50,9 @@ class FieldFactory extends Factory
     /**
      * Undocumented function
      *
-     * @return static
+     * @return self
      */
-    public function public()
+    public function public(): self
     {
         return $this->state(function () {
             return [
@@ -64,9 +64,9 @@ class FieldFactory extends Factory
     /**
      * Undocumented function
      *
-     * @return static
+     * @return self
      */
-    public function private()
+    public function private(): self
     {
         return $this->state(function () {
             return [
@@ -78,9 +78,9 @@ class FieldFactory extends Factory
     /**
      * Undocumented function
      *
-     * @return static
+     * @return self
      */
-    public function input()
+    public function input(): self
     {
         return $this->state(function () {
             return [
@@ -97,9 +97,9 @@ class FieldFactory extends Factory
     /**
     * Undocumented function
     *
-    * @return static
+    * @return self
     */
-    public function textarea()
+    public function textarea(): self
     {
         return $this->state(function () {
             return [
@@ -116,9 +116,9 @@ class FieldFactory extends Factory
     /**
     * Undocumented function
     *
-    * @return static
+    * @return self
     */
-    public function select()
+    public function select(): self
     {
         return $this->state(function () {
             return [
@@ -134,9 +134,9 @@ class FieldFactory extends Factory
     /**
     * Undocumented function
     *
-    * @return static
+    * @return self
     */
-    public function multiselect()
+    public function multiselect(): self
     {
         return $this->state(function () {
             return [
@@ -152,9 +152,9 @@ class FieldFactory extends Factory
     /**
     * Undocumented function
     *
-    * @return static
+    * @return self
     */
-    public function checkbox()
+    public function checkbox(): self
     {
         return $this->state(function () {
             return [
@@ -167,12 +167,24 @@ class FieldFactory extends Factory
         });
     }
 
+    public function switch(): self
+    {
+        return $this->state(function () {
+            return [
+                'type' => Type::SWITCH,
+                'options' => [
+                    'required' => Required::ACTIVE
+                ]
+            ];
+        });
+    }
+
     /**
     * Undocumented function
     *
-    * @return static
+    * @return self
     */
-    public function image()
+    public function image(): self
     {
         return $this->state(function () {
             return [

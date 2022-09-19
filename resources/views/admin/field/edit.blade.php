@@ -138,6 +138,13 @@
                         @slot('value', $field->options->getOptionsAsString() ?? null)
                     @endcomponent
                 </div>
+                <div  
+                    class="tab-pane fade {{ $field->type->isSwitch() ? 'show active' : null }}" 
+                    id="nav-switch-edit" 
+                    role="tabpanel" 
+                    aria-labelledby="nav-switch-tab"
+                >
+                </div>          
                 <div 
                     class="tab-pane fade {{ $field->type->isImage() ? 'show active' : null }}"
                     id="nav-image-edit" 
