@@ -1,4 +1,4 @@
-@render('idir::category.dir.categoryComponent')
-@render('idir::tag.dir.tagComponent', [
-    'limit' => 25
-])
+<x-idir::category.dir.category-component />
+<x-idir::tag.dir.tag-component
+    limit="25"
+/>

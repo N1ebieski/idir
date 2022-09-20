@@ -23,6 +23,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use N1ebieski\IDir\ValueObjects\Payment\Status;
 use N1ebieski\ICore\Models\Traits\HasCarbonable;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use N1ebieski\ICore\Models\Traits\HasPolymorphic;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use N1ebieski\IDir\Services\Payment\PaymentService;
@@ -187,16 +188,17 @@ class Payment extends Model
         return $this->morphTo('order', 'order_type', 'order_id');
     }
 
-    // Accessors
+    // Attributes
 
     /**
-     * Undocumented function
      *
-     * @return string
+     * @return Attribute
      */
-    public function getLogsAsHtmlAttribute(): string
+    public function logsAsHtml(): Attribute
     {
-        return nl2br(e($this->logs));
+        return App::make(\N1ebieski\IDir\Attributes\Payment\LogsAsHtml::class, [
+            'payment' => $this
+        ])();
     }
 
     // Scopes

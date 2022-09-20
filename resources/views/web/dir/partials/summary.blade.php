@@ -86,11 +86,9 @@
                         @break;
 
                     @case(Field\Type::MAP)
-                        @render('idir::map.dir.mapComponent', [
-                            'coords_marker' => [
-                                [$value['field'][$field->id][0]['lat'], $value['field'][$field->id][0]['long']]
-                            ]
-                        ])
+                        <x-idir::map.dir.map-component
+                            :coords_marker="[[$value['field'][$field->id][0]['lat'], $value['field'][$field->id][0]['long']]]"
+                        />
                         @break;                        
 
                     @case(Field\Type::IMAGE)

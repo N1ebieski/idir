@@ -74,9 +74,9 @@
                 </div>
                 @if (!is_null($dir->group->fields->firstWhere('type', 'map')))
                 <div class="mb-3">
-                    @render('idir::map.dir.mapComponent', [
-                        'dir' => $dir
-                    ])
+                    <x-idir::map.dir.map-component
+                        :dir="$dir"
+                    />
                 </div>
                 @endif
                 @if ($related->isNotEmpty())

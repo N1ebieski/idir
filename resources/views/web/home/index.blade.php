@@ -39,18 +39,18 @@
                 </div>
             </form>
             <div class="text-white d-block mt-5">
-                @render('idir::tag.dir.tagComponent', [
-                    'limit' => 25,
-                    'colors' => ['text-white']
-                ])
+                <x-idir::tag.dir.tag-component
+                    limit="25"
+                    :colors="['text-white']"
+                />
             </div>
         </div>
     </div>
 </div>
 <div class="container">
-    @render('idir::dir.carouselComponent', [
-        'max_content' => 500
-    ])
+    <x-idir::dir.carousel-component
+        max_content="500"
+    />
     <div class="row mt-3">
         @if ($dirs->isNotEmpty())
         <div class="col-md-8 order-sm-1 order-md-2">
@@ -61,12 +61,12 @@
             </div>
         </div>
         <div class="col-md-4 order-sm-2 order-md-1">
-            @render('idir::category.dir.categoryComponent')
-            @render('idir::comment.dir.commentComponent')
+            <x-idir::category.dir.category-component />
+            <x-idir::comment.dir.comment-component />
         </div>
         @endif
     </div>
-    @render('idir::category.dir.gridComponent')
+    <x-idir::category.dir.gridComponent />
 </div>
 @include('icore::web.partials.toasts')
 @endsection

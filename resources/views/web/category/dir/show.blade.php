@@ -82,8 +82,8 @@
             @include('idir::web.category.dir.partials.sidebar')
         </div>
     </div>
-    @render('idir::category.dir.gridComponent', [
-        'parent' => $category->id
-    ])
+    <x-idir::category.dir.grid-component
+        :parent="$category->id"
+    />
 </div>
 @endsection

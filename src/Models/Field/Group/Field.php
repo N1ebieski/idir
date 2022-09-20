@@ -20,6 +20,7 @@ namespace N1ebieski\IDir\Models\Field\Group;
 
 use N1ebieski\IDir\Models\Group;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use N1ebieski\IDir\Models\Field\Field as BaseFieldModel;
 use N1ebieski\IDir\Database\Factories\Field\Group\FieldFactory;
@@ -82,7 +83,7 @@ use N1ebieski\IDir\Database\Factories\Field\Group\FieldFactory;
  */
 class Field extends BaseFieldModel
 {
-    // Configuration
+    // Configurations
 
     /**
      * The model's default values for attributes.
@@ -113,26 +114,6 @@ class Field extends BaseFieldModel
         return \N1ebieski\IDir\Database\Factories\Field\Group\FieldFactory::new();
     }
 
-    // Accessors
-
-    /**
-     * [getPoliAttribute description]
-     * @return string [description]
-     */
-    public function getPoliAttribute(): string
-    {
-        return 'group';
-    }
-
-    /**
-     * [getModelTypeAttribute description]
-     * @return string [description]
-     */
-    public function getModelTypeAttribute()
-    {
-        return \N1ebieski\IDir\Models\Group::class;
-    }
-
     // Relations
 
     /**
@@ -143,6 +124,26 @@ class Field extends BaseFieldModel
     public function morphs(): MorphToMany
     {
         return $this->morphedByMany(\N1ebieski\IDir\Models\Group::class, 'model', 'fields_models');
+    }
+
+    // Attributes
+
+    /**
+     *
+     * @return Attribute
+     */
+    public function poli(): Attribute
+    {
+        return new Attribute(fn (): string => 'group');
+    }
+
+    /**
+     *
+     * @return Attribute
+     */
+    public function modelType(): Attribute
+    {
+        return new Attribute(fn (): string => \N1ebieski\IDir\Models\Group::class);
     }
 
     // Scopes

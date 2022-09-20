@@ -50,7 +50,7 @@
                 @if ($group->prices->isNotEmpty())
                     @include('idir::web.dir.partials.payment')
                 @else
-                    @render('icore::captchaComponent')
+                    <x-icore::captcha-component />
                 @endif
 
                 <div class="d-flex mb-3">

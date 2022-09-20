@@ -18,12 +18,8 @@
 
 namespace N1ebieski\IDir\Models;
 
-use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\URL;
-use Mews\Purifier\Facades\Purifier;
-use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Config;
 use N1ebieski\IDir\Cache\Dir\DirCache;
 use Illuminate\Database\Eloquent\Model;
@@ -35,9 +31,9 @@ use Cviebrock\EloquentSluggable\Sluggable;
 use N1ebieski\IDir\Models\Field\Dir\Field;
 use N1ebieski\IDir\Services\Dir\DirService;
 use N1ebieski\IDir\Repositories\Dir\DirRepo;
-use Illuminate\Support\Collection as Collect;
 use N1ebieski\IDir\Models\Traits\HasFilterable;
 use N1ebieski\ICore\Models\Traits\HasCarbonable;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Fico7489\Laravel\Pivot\Traits\PivotEventTrait;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
@@ -47,11 +43,11 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 use N1ebieski\IDir\Database\Factories\Dir\DirFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
-use N1ebieski\ICore\ValueObjects\Stat\Slug as StatSlug;
 use N1ebieski\ICore\Models\Traits\HasFullTextSearchable;
 use N1ebieski\IDir\ValueObjects\Dir\Status as DirStatus;
 use N1ebieski\IDir\ValueObjects\Dir\Comment as DirComment;
 use N1ebieski\IDir\Models\Field\Interfaces\MapValueInterface;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use N1ebieski\IDir\Models\Field\Interfaces\ImageValueInterface;
 use N1ebieski\IDir\ValueObjects\Payment\Status as PaymentStatus;
 use N1ebieski\IDir\Models\Field\Interfaces\RegionsValueInterface;
@@ -572,226 +568,168 @@ class Dir extends Model implements
             ->active();
     }
 
-    // Accessors
+    // Attributes
 
     /**
-     * Undocumented function
      *
-     * @return string
+     * @return Attribute
      */
-    public function getSumRatingAttribute(): string
+    public function poliSelf(): Attribute
     {
-        if (!isset($this->attributes['sum_rating'])) {
-            $ratings = $this->getRelation('ratings');
-
-            $sum_rating = $ratings->count() > 0 ? $ratings->sum('rating') / $ratings->count() : 0;
-
-            return number_format($sum_rating, 2, '.', '');
-        }
-
-        return $this->attributes['sum_rating'];
-    }
-
-    /**
-     * [getPoliAttribute description]
-     * @return string [description]
-     */
-    public function getPoliSelfAttribute(): string
-    {
-        return 'dir';
-    }
-
-    /**
-     * Undocumented function
-     *
-    * @return string
-     */
-    public function getThumbnailUrlAttribute(): string
-    {
-        if (
-            ($cache['url'] = Config::get('idir.dir.thumbnail.cache.url'))
-            && ($cache['key'] = Config::get('idir.dir.thumbnail.key'))
-        ) {
-            return $this->makeCache()->rememberThumbnailUrl();
-        }
-
-        return Config::get('idir.dir.thumbnail.url') . $this->url;
-    }
-
-    /**
-     * [getPrivilegedToDiffAttribute description]
-     * @return string [description]
-     */
-    public function getPrivilegedToDiffAttribute(): string
-    {
-        return Carbon::parse($this->privileged_to)->diffForHumans(['parts' => 2]);
-    }
-
-    /**
-     * Short content used in the listing
-     * @return string [description]
-     */
-    public function getShortContentAttribute(): string
-    {
-        return mb_substr(
-            e($this->content, false),
-            0,
-            Config::get('idir.dir.short_content')
-        );
-    }
-
-    /**
-     * [getTitleAsLinkAttribute description]
-     * @return string [description]
-     */
-    public function getTitleAsLinkAttribute(): string
-    {
-        if ($this->url->isUrl()) {
-            $link = '<a rel="noopener';
-
-            if ($this->group->hasNoFollowPrivilege()) {
-                $link .= ' nofollow';
-            }
-
-            $link .= '" target="_blank" title="' . e($this->title) . '" ';
-
-            if (App::make(MigrationUtil::class)->contains('create_stats_table')) {
-                $link .= 'class="click-stat" data-route="' . URL::route('web.stat.dir.click', [StatSlug::CLICK, $this->slug]) . '" ';
-            }
-
-            $link .= 'href="' . e($this->url) . '">' . e($this->title) . '</a>';
-        }
-
-        return $link ?? e($this->title);
-    }
-
-    /**
-     * Undocumented function
-     *
-     * @return string
-     */
-    public function getUrlAsLinkAttribute(): ?string
-    {
-        if ($this->url->isUrl()) {
-            $link = '<a rel="noopener';
-
-            if ($this->getRelation('group')->hasNoFollowPrivilege()) {
-                $link .= ' nofollow';
-            }
-
-            $link .= '" target="_blank" title="' . e($this->title) . '" ';
-
-            if (App::make(MigrationUtil::class)->contains('create_stats_table')) {
-                $link .= 'class="click-stat" data-route="' . URL::route('web.stat.dir.click', [StatSlug::CLICK, $this->slug]) . '" ';
-            }
-
-            $link .= 'href="' . e($this->url) . '">' . e($this->url->getHost()) . '</a>';
-        }
-
-        return $link ?? null;
-    }
-
-    /**
-     * Undocumented function
-     *
-     * @return string
-     */
-    public function getLinkAttribute(): string
-    {
-        if ($this->isUrl()) {
-            if ($this->getRelation('group')->hasDirectLinkPrivilege()) {
-                return $this->title_as_link;
-            }
-        }
-
-        return $this->link_as_html;
-    }
-
-    /**
-     * [getContentHtmlAttribute description]
-     * @return string [description]
-     */
-    public function getContentHtmlAttribute(): string
-    {
-        if ($this->getRelation('group')->hasEditorPrivilege()) {
-            return Purifier::clean($this->attributes['content_html'], 'dir');
-        }
-
-        return strip_tags($this->attributes['content_html']);
-    }
-
-    /**
-     * Undocumented function
-     *
-     * @return string
-     */
-    public function getContentAsHtmlAttribute(): string
-    {
-        if (!$this->getRelation('group')->hasEditorPrivilege()) {
-            return nl2br(e($this->content_html, false));
-        }
-
-        return $this->content_html;
-    }
-
-    /**
-     * Content to the point of more link
-     * @return string [description]
-     */
-    public function getLessContentHtmlAttribute(): string
-    {
-        // @phpstan-ignore-next-line
-        return $this->short_content . '... <a href="' . URL::route('web.dir.show', [$this->slug])
-            . '">' . Lang::get('idir::dirs.more') . '</a>';
-    }
-
-    /**
-     * [getAttributesAttribute description]
-     * @return array [description]
-     */
-    public function getAttributesAsArrayAttribute(): array
-    {
-        return $this->attributesToArray()
-            + ['field' => $this->fields->keyBy('id')
-                ->map(function (Field $item) {
-                    if ($item->type->isMap()) {
-                        /** @var array */
-                        $coords = $item->decode_value;
-
-                        return Collect::make($coords)->map(function ($item) {
-                            $item = (array)$item;
-
-                            return $item;
-                        })->toArray();
-                    }
-
-                    return $item->decode_value;
-                })
-                ->toArray()]
-            + ['categories' => $this->categories->pluck('id')->toArray()]
-            + ['tags' => $this->tags->pluck('name')->toArray()];
-    }
-
-    /**
-     * [getBacklinkAsHtmlAttribute description]
-     * @return string [description]
-     */
-    public function getLinkAsHtmlAttribute(): string
-    {
-        $output = '<a href="' . route('web.dir.show', [$this->slug]) . '" title="' . e($this->title) . '">';
-        $output .= e($this->title);
-        $output .= '</a>';
-
-        return $output;
+        return new Attribute(fn (): string => 'dir');
     }
 
     /**
      *
-     * @return DirComment
+     * @return Attribute
+     * @throws BindingResolutionException
      */
-    public function getCommentAttribute(): DirComment
+    public function sumRating(): Attribute
     {
-        return DirComment::active();
+        return App::make(\N1ebieski\IDir\Attributes\Dir\SumRating::class, [
+            'dir' => $this
+        ])();
+    }
+
+    /**
+     *
+     * @return Attribute
+     * @throws BindingResolutionException
+     */
+    public function thumbnailUrl(): Attribute
+    {
+        return App::make(\N1ebieski\IDir\Attributes\Dir\ThumbnailUrl::class, [
+            'dir' => $this
+        ])();
+    }
+
+    /**
+     *
+     * @return Attribute
+     * @throws BindingResolutionException
+     */
+    public function privilegedToDiff(): Attribute
+    {
+        return App::make(\N1ebieski\IDir\Attributes\Dir\PrivilegedToDiff::class, [
+            'dir' => $this
+        ])();
+    }
+
+    /**
+     *
+     * @return Attribute
+     * @throws BindingResolutionException
+     */
+    public function shortContent(): Attribute
+    {
+        return App::make(\N1ebieski\IDir\Attributes\Dir\ShortContent::class, [
+            'dir' => $this
+        ])();
+    }
+
+    /**
+     *
+     * @return Attribute
+     * @throws BindingResolutionException
+     */
+    public function titleAsLink(): Attribute
+    {
+        return App::make(\N1ebieski\IDir\Attributes\Dir\TitleAsLink::class, [
+            'dir' => $this
+        ])();
+    }
+
+    /**
+     *
+     * @return Attribute
+     * @throws BindingResolutionException
+     */
+    public function urlAsLink(): Attribute
+    {
+        return App::make(\N1ebieski\IDir\Attributes\Dir\UrlAsLink::class, [
+            'dir' => $this
+        ])();
+    }
+
+    /**
+     *
+     * @return Attribute
+     * @throws BindingResolutionException
+     */
+    public function link(): Attribute
+    {
+        return App::make(\N1ebieski\IDir\Attributes\Dir\Link::class, [
+            'dir' => $this
+        ])();
+    }
+
+    /**
+     *
+     * @return Attribute
+     * @throws BindingResolutionException
+     */
+    public function contentHtml(): Attribute
+    {
+        return App::make(\N1ebieski\IDir\Attributes\Dir\ContentHtml::class, [
+            'dir' => $this
+        ])();
+    }
+
+    /**
+     *
+     * @return Attribute
+     * @throws BindingResolutionException
+     */
+    public function contentAsHtml(): Attribute
+    {
+        return App::make(\N1ebieski\IDir\Attributes\Dir\ContentAsHtml::class, [
+            'dir' => $this
+        ])();
+    }
+
+    /**
+     *
+     * @return Attribute
+     * @throws BindingResolutionException
+     */
+    public function lessContentHtml(): Attribute
+    {
+        return App::make(\N1ebieski\IDir\Attributes\Dir\LessContentHtml::class, [
+            'dir' => $this
+        ])();
+    }
+
+    /**
+     *
+     * @return Attribute
+     * @throws BindingResolutionException
+     */
+    public function attributesAsArray(): Attribute
+    {
+        return App::make(\N1ebieski\IDir\Attributes\Dir\AttributesAsArray::class, [
+            'dir' => $this
+        ])();
+    }
+
+    /**
+     *
+     * @return Attribute
+     * @throws BindingResolutionException
+     */
+    public function linkAsHtml(): Attribute
+    {
+        return App::make(\N1ebieski\IDir\Attributes\Dir\LinkAsHtml::class, [
+            'dir' => $this
+        ])();
+    }
+
+    /**
+     *
+     * @return Attribute
+     */
+    public function comment(): Attribute
+    {
+        return new Attribute(fn (): DirComment => DirComment::active());
     }
 
     // Checkers

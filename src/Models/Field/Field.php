@@ -28,6 +28,7 @@ use N1ebieski\IDir\Models\Traits\HasFilterable;
 use N1ebieski\IDir\Services\Field\FieldService;
 use N1ebieski\ICore\Models\Traits\HasCarbonable;
 use N1ebieski\IDir\Repositories\Field\FieldRepo;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use N1ebieski\ICore\Models\Traits\HasPolymorphic;
 use N1ebieski\ICore\Models\Traits\HasPositionable;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -174,15 +175,15 @@ class Field extends Model
         return $query->where('visible', Visible::ACTIVE);
     }
 
-    // Accessors
+    // Attributes
 
     /**
-     * [getDecodeValueAttribute description]
-     * @return mixed [description]
+     *
+     * @return Attribute
      */
-    public function getDecodeValueAttribute()
+    public function decodeValue(): Attribute
     {
-        return json_decode($this->pivot->value);
+        return new Attribute(fn (): mixed => json_decode($this->pivot->value));
     }
 
     // Factories

@@ -20,6 +20,7 @@ namespace N1ebieski\IDir\Models\Payment\Dir;
 
 use N1ebieski\IDir\Models\Dir;
 use N1ebieski\IDir\Models\Price;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use N1ebieski\IDir\Models\Payment\Payment as BasePayment;
 use N1ebieski\IDir\Database\Factories\Payment\Dir\PaymentFactory;
@@ -111,35 +112,33 @@ class Payment extends BasePayment
         );
     }
 
-    // Accessors
+    // Attributes
 
     /**
-     * Undocumented function
      *
-     * @return string
+     * @return Attribute
      */
-    public function getModelTypeAttribute(): string
+    public function poli(): Attribute
     {
-        return \N1ebieski\IDir\Models\Dir::class;
+        return new Attribute(fn (): string => 'dir');
     }
 
     /**
-     * Undocumented function
      *
-     * @return string
+     * @return Attribute
      */
-    public function getOrderModelTypeAttribute(): string
+    public function modelType(): Attribute
     {
-        return \N1ebieski\IDir\Models\Price::class;
+        return new Attribute(fn (): string => \N1ebieski\IDir\Models\Dir::class);
     }
 
     /**
-     * [getPoliAttribute description]
-     * @return string [description]
+     *
+     * @return Attribute
      */
-    public function getPoliAttribute(): string
+    public function orderModelType(): Attribute
     {
-        return 'dir';
+        return new Attribute(fn (): string => \N1ebieski\IDir\Models\Price::class);
     }
 
     // Factories

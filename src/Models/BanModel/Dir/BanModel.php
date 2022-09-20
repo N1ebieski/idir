@@ -18,7 +18,9 @@
 
 namespace N1ebieski\IDir\Models\BanModel\Dir;
 
+use Illuminate\Support\Facades\App;
 use Illuminate\Database\Query\JoinClause;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use N1ebieski\ICore\Models\Traits\HasFullTextSearchable;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use N1ebieski\ICore\Models\BanModel\BanModel as BaseBanModel;
@@ -91,12 +93,12 @@ class BanModel extends BaseBanModel
     // Accessors
 
     /**
-     * [getPoliAttribute description]
-     * @return string [description]
+     *
+     * @return Attribute
      */
-    public function getPoliAttribute(): string
+    public function poli(): Attribute
     {
-        return 'user';
+        return new Attribute(fn (): string => 'user');
     }
 
     // Repositories

@@ -18,6 +18,7 @@
 
 namespace N1ebieski\IDir\Models\Rating\Dir;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use N1ebieski\ICore\Models\Rating\Rating as BaseRating;
 
 /**
@@ -50,14 +51,14 @@ use N1ebieski\ICore\Models\Rating\Rating as BaseRating;
  */
 class Rating extends BaseRating
 {
-    // Accessors
+    // Attributes
 
     /**
-     * [getPoliAttribute description]
-     * @return string [description]
+     *
+     * @return Attribute
      */
-    public function getPoliAttribute(): string
+    public function poli(): Attribute
     {
-        return 'dir';
+        return new Attribute(fn (): string => 'dir');
     }
 }

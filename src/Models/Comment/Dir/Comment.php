@@ -18,6 +18,7 @@
 
 namespace N1ebieski\IDir\Models\Comment\Dir;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use N1ebieski\ICore\Models\Comment\Comment as BaseComment;
 
 /**
@@ -141,25 +142,7 @@ use N1ebieski\ICore\Models\Comment\Comment as BaseComment;
  */
 class Comment extends BaseComment
 {
-    // Accessors
-
-    /**
-     * [getPoliAttribute description]
-     * @return string [description]
-     */
-    public function getPoliAttribute(): string
-    {
-        return 'dir';
-    }
-
-    /**
-     * [getModelTypeAttribute description]
-     * @return string [description]
-     */
-    public function getModelTypeAttribute()
-    {
-        return \N1ebieski\IDir\Models\Dir::class;
-    }
+    // Configurations
 
     /**
      * Get the class name for polymorphic relations.
@@ -169,5 +152,25 @@ class Comment extends BaseComment
     public function getMorphClass()
     {
         return \N1ebieski\ICore\Models\Comment\Comment::class;
+    }
+
+    // Accessors
+
+    /**
+     *
+     * @return Attribute
+     */
+    public function poli(): Attribute
+    {
+        return new Attribute(fn (): string => 'dir');
+    }
+
+    /**
+     *
+     * @return Attribute
+     */
+    public function modelType(): Attribute
+    {
+        return new Attribute(fn (): string => \N1ebieski\IDir\Models\Dir::class);
     }
 }

@@ -19,6 +19,7 @@
 namespace N1ebieski\IDir\Models\Tag\Dir;
 
 use Illuminate\Support\Facades\Config;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use N1ebieski\ICore\Models\Tag\Tag as BaseTagModel;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
@@ -78,24 +79,23 @@ class Tag extends BaseTagModel
         return $this->morphedByMany(\N1ebieski\IDir\Models\Dir::class, 'taggable', $table, 'tag_id');
     }
 
-    // Accessors
+    // Attributes
 
     /**
-     * Undocumented function
      *
-     * @return string
+     * @return Attribute
      */
-    public function getModelTypeAttribute(): string
+    public function poli(): Attribute
     {
-        return \N1ebieski\IDir\Models\Dir::class;
+        return new Attribute(fn (): string => 'dir');
     }
 
     /**
-     * [getPoliAttribute description]
-     * @return string [description]
+     *
+     * @return Attribute
      */
-    public function getPoliAttribute(): string
+    public function modelType(): Attribute
     {
-        return 'dir';
+        return new Attribute(fn (): string => \N1ebieski\IDir\Models\Dir::class);
     }
 }

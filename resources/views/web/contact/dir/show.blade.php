@@ -64,10 +64,10 @@
                     <small>{{ trans('icore::policy.agreement.contact') }}</small>
                 </label>
             </div>
-        </div>        
-        @render('icore::captchaComponent', [
-            'id' => 1000
-        ])     
+        </div>
+        <x-icore::captcha-component    
+            id="1000"
+        />    
     </form>
 </div>
 @endslot

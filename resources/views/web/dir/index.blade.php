@@ -17,9 +17,9 @@
 
 @section('content')
 <div class="container">
-    @render('idir::dir.carouselComponent', [
-        'max_content' => 500
-    ])
+    <x-idir::dir.carousel-component
+        max_content="500"
+    />
     <div class="row mt-3">
         <div class="col-md-8 order-sm-1 order-md-2">
             <div id="filter-content">

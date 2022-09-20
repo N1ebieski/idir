@@ -18,6 +18,7 @@
 
 namespace N1ebieski\IDir\Models\Field\Dir;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use N1ebieski\IDir\Models\Field\Field as BaseFieldModel;
 
 /**
@@ -84,26 +85,6 @@ class Field extends BaseFieldModel
      */
     public $path = 'vendor/idir/dirs/fields';
 
-    // Accessors
-
-    /**
-     * [getPoliAttribute description]
-     * @return string [description]
-     */
-    public function getPoliAttribute(): string
-    {
-        return 'dir';
-    }
-
-    /**
-     * [getModelTypeAttribute description]
-     * @return string [description]
-     */
-    public function getModelTypeAttribute()
-    {
-        return \N1ebieski\IDir\Models\Dir::class;
-    }
-
     /**
      * Get the class name for polymorphic relations.
      *
@@ -112,5 +93,25 @@ class Field extends BaseFieldModel
     public function getMorphClass()
     {
         return \N1ebieski\IDir\Models\Field\Field::class;
+    }
+
+    // Attributes
+
+    /**
+     *
+     * @return Attribute
+     */
+    public function poli(): Attribute
+    {
+        return new Attribute(fn (): string => 'dir');
+    }
+
+    /**
+     *
+     * @return Attribute
+     */
+    public function modelType(): Attribute
+    {
+        return new Attribute(fn (): string => \N1ebieski\IDir\Models\Dir::class);
     }
 }

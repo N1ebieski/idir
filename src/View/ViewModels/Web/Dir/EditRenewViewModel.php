@@ -25,7 +25,6 @@ use Spatie\ViewModels\ViewModel;
 use N1ebieski\IDir\Models\Field\Dir\Field;
 use N1ebieski\IDir\ValueObjects\Price\Type;
 use Illuminate\Database\Eloquent\Collection;
-use N1ebieski\IDir\Models\Category\Dir\Category;
 
 class EditRenewViewModel extends ViewModel
 {

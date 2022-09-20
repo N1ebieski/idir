@@ -1,7 +1,7 @@
-@render('idir::region.category.regionComponent', [
-    'region' => $region, 
-    'category' => $category
-])
+<x-idir::region.category.region-component
+    :region="$region"
+    :category="$category"
+/>
 <h3 class="h5">
     {{ trans('icore::categories.categories.label') }}
 </h3>
@@ -31,7 +31,7 @@
         ])
     @endif
 </div>
-@render('idir::tag.dir.tagComponent', [
-    'limit' => 25, 
-    'cats' => $catsAsArray['self'] ?? null
-])
+<x-idir::tag.dir.tag-component
+    limit="25"
+    :cats="$catsAsArray['self'] ?? null"
+/>

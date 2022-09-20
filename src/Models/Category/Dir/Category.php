@@ -20,6 +20,7 @@ namespace N1ebieski\IDir\Models\Category\Dir;
 
 use N1ebieski\IDir\Models\Dir;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use N1ebieski\ICore\ValueObjects\Category\Status;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
@@ -183,15 +184,15 @@ class Category extends BaseCategory
         return $this->morphedByMany(\N1ebieski\IDir\Models\Dir::class, 'model', 'categories_models', 'category_id');
     }
 
-    // Accessors
+    // Attributes
 
     /**
-     * [getPoliAttribute description]
-     * @return string [description]
+     *
+     * @return Attribute
      */
-    public function getPoliAttribute(): string
+    public function poli(): Attribute
     {
-        return 'dir';
+        return new Attribute(fn (): string => 'dir');
     }
 
     // Loads

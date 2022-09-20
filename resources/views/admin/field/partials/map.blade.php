@@ -38,10 +38,10 @@ $value = old("field.{$field->id}", $value ?? null);
         </span>       
     </label>
     <div id="field.{{ $field->id }}">
-        @render('idir::map.dir.mapComponent', [
-            'selector' => 'map-select',
-            'zoom' => 8
-        ])
+        <x-idir::map.dir.map-component
+            zoom="8"
+            selector="map-select"
+        />
         <div id="marker0">
             <div>
                 <input 

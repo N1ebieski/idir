@@ -18,6 +18,7 @@
 
 namespace N1ebieski\IDir\Models\Stat\Dir;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use N1ebieski\ICore\Models\Stat\Stat as BaseStatModel;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
@@ -48,25 +49,7 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
  */
 class Stat extends BaseStatModel
 {
-    // Accessors
-
-    /**
-     * [getPoliAttribute description]
-     * @return string [description]
-     */
-    public function getPoliAttribute(): string
-    {
-        return 'dir';
-    }
-
-    /**
-     * [getModelTypeAttribute description]
-     * @return string [description]
-     */
-    public function getModelTypeAttribute(): string
-    {
-        return \N1ebieski\IDir\Models\Dir::class;
-    }
+    // Configuration
 
     /**
      * Get the class name for polymorphic relations.
@@ -76,6 +59,26 @@ class Stat extends BaseStatModel
     public function getMorphClass()
     {
         return \N1ebieski\ICore\Models\Stat\Stat::class;
+    }
+
+    // Attributes
+
+    /**
+     *
+     * @return Attribute
+     */
+    public function poli(): Attribute
+    {
+        return new Attribute(fn (): string => 'dir');
+    }
+
+    /**
+     *
+     * @return Attribute
+     */
+    public function modelType(): Attribute
+    {
+        return new Attribute(fn (): string => \N1ebieski\IDir\Models\Dir::class);
     }
 
     // Relations

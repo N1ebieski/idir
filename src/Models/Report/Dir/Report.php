@@ -18,6 +18,7 @@
 
 namespace N1ebieski\IDir\Models\Report\Dir;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use N1ebieski\ICore\Models\Report\Report as BaseReport;
 
 /**
@@ -52,14 +53,14 @@ use N1ebieski\ICore\Models\Report\Report as BaseReport;
  */
 class Report extends BaseReport
 {
-    // Accessors
+    // Attributes
 
     /**
-     * [getPoliAttribute description]
-     * @return string [description]
+     *
+     * @return Attribute
      */
-    public function getPoliAttribute(): string
+    public function poli(): Attribute
     {
-        return 'dir';
+        return new Attribute(fn (): string => 'dir');
     }
 }
