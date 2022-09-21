@@ -1,13 +1,13 @@
 {
     "/js/vendor/idir/vendor/vendor.js": "/js/vendor/idir/vendor/vendor.js?id=be3d3a153c0a1a44e960b8934ffc8f87",
-    "/js/vendor/idir/web/web.js": "/js/vendor/idir/web/web.js?id=4fd4384a498969eaca3572e796da7f19",
+    "/js/vendor/idir/web/web.js": "/js/vendor/idir/web/web.js?id=56311c773c4c6de7b015938a935e337c",
     "/js/vendor/idir/admin/admin.js": "/js/vendor/idir/admin/admin.js?id=85f8ac2e89f6d3e12b4864d233641e7a",
-    "/css/vendor/idir/vendor/vendor.css": "/css/vendor/idir/vendor/vendor.css?id=3c8ae839615847902a3be3d43723086c",
+    "/css/vendor/idir/vendor/vendor.css": "/css/vendor/idir/vendor/vendor.css?id=c2d7f0b68ca26cd1f82dcf938ae0652b",
     "/css/vendor/idir/web/web-dark.css": "/css/vendor/idir/web/web-dark.css?id=ee373716bc96caaa68620052fc9b224c",
     "/css/vendor/idir/web/web.css": "/css/vendor/idir/web/web.css?id=fd3378601c4c6ba261e4b91c8f44460f",
-    "/css/vendor/idir/admin/admin-dark.css": "/css/vendor/idir/admin/admin-dark.css?id=dde507d4d9db738fc75caa021932b677",
-    "/css/vendor/idir/admin/admin.css": "/css/vendor/idir/admin/admin.css?id=58e9a6d7fbf27e0264697a763d81149a",
-    "/js/vendor/icore/web/recaptcha_invisible.js": "/js/vendor/icore/web/recaptcha_invisible.js?id=09f40f6350f2d50e7481817b0c15cc14",
-    "/js/vendor/idir/web/scripts.js": "/js/vendor/idir/web/scripts.js?id=25262724cdf39975f2fee74a49b74a10",
-    "/js/vendor/idir/admin/scripts.js": "/js/vendor/idir/admin/scripts.js?id=b9539678985fcf6a1f95ecb603ab8816"
+    "/css/vendor/idir/admin/admin-dark.css": "/css/vendor/idir/admin/admin-dark.css?id=264d92b59cbef55963c01a6275a922de",
+    "/css/vendor/idir/admin/admin.css": "/css/vendor/idir/admin/admin.css?id=f1a766f5d9cb09bc5f92328f5b7164af",
+    "/js/vendor/icore/web/recaptcha_invisible.js": "/js/vendor/icore/web/recaptcha_invisible.js?id=7a92fca1ee5b29a122367aac9381f6b3",
+    "/js/vendor/idir/web/scripts.js": "/js/vendor/idir/web/scripts.js?id=dc1858d04f706549cedde2a73d0c0984",
+    "/js/vendor/idir/admin/scripts.js": "/js/vendor/idir/admin/scripts.js?id=61e2ea0b1acdbb35721839c9eb79f4ed"
 }

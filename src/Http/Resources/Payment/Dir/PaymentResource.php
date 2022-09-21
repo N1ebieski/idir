@@ -44,6 +44,16 @@ class PaymentResource extends JsonResource
     /**
      * Transform the resource into an array.
      *
+     * @responseField uuid string
+     * @responseField driver string
+     * @responseField logs string (available only for admin.dirs.view).
+     * @responseField status object
+     * @responseField created_at string
+     * @responseField updated_at string
+     * @responseField morph object Contains relationship Dir.
+     * @responseField order object Contains relationship Price.
+     * @responseField url string Link to the driver's payment page (for transfer type payment).
+     * 
      * @param  \Illuminate\Http\Request  $request
      * @return array
      */

@@ -87,30 +87,6 @@ class DirController
      * @bodyParam filter.author int (available only for admin.dirs.view) ID of User relationship. No-example
      * @bodyParam filter.report int (available only for admin.dirs.view) Must be one of 1 or 0. No-example
      *
-     * @responseField id int
-     * @responseField slug string
-     * @responseField title string
-     * @responseField short_content string A shortened version of the post without HTML formatting.
-     * @responseField content string Post without HTML formatting.
-     * @responseField content_html string Post with HTML formatting.
-     * @responseField less_content_html string Post with HTML formatting with "show more" button.
-     * @responseField notes string (available only for admin.dirs.view or owner) Additional infos for moderator.
-     * @responseField url string
-     * @responseField thumbnail_url string
-     * @responseField sum_rating string Average rating for an entry.
-     * @responseField status object (available only for api.dirs.view or owner)
-     * @responseField privileged_at string (available only for api.dirs.view or owner) Start date of premium time.
-     * @responseField priveleged_to string (available only for api.dirs.view or owner) End date of premium time. If null and <code>privileged_at</code> not null then premium time is unlimited.
-     * @responseField created_at string
-     * @responseField updated_at string
-     * @responseField group object (available only for api.dirs.view or owner) Contains relationship Group.
-     * @responseField user object (available only for admin.dirs.view or owner) Contains relationship User.
-     * @responseField categories object[] Contains relationship Categories.
-     * @responseField tags object[] Contains relationship Tags.
-     * @responseField fields object[] Contains relationship custom Fields.
-     * @responseField links object Contains links to resources on the website and in the administration panel.
-     * @responseField meta object Paging, filtering and sorting information.
-     *
      * @apiResourceCollection N1ebieski\IDir\Http\Resources\Dir\DirResource
      * @apiResourceModel N1ebieski\IDir\Models\Dir states=titleSentence,contentText,withUser,pending,withCategory,withDefaultGroup with=ratings,categories,group,user
      *
@@ -146,7 +122,7 @@ class DirController
      *
      * <aside class="notice">If the user is authenticated the entry is added to his/her account, if not, an account is created for the email address provided.</aside>
      *
-     * @urlParam group integer required The group ID. Example: 1
+     * @urlParam group_id integer required The ID of the group. Example: 1
      *
      * @bodyParam field object[] Array containing additional form fields if the group allows it. No-example
      * @bodyParam url string Unique website url with http/https protocol. Example: https://demo.idir.intelekt.net.pl
@@ -160,30 +136,6 @@ class DirController
      * @bodyParam payment_code_transfer integer ID of the selected Price if payment_type is <code>code_transfer</code>. No-example
      * @bodyParam code_transfer string Received code if payment_type is <code>code_transfer</code>. No-example
      * @bodyParam payment_paypal_express integer ID of the selected Price if payment_type is <code>paypal_express</code>. No-example
-     *
-     * @responseField id int
-     * @responseField slug string
-     * @responseField title string
-     * @responseField short_content string A shortened version of the post without HTML formatting.
-     * @responseField content string Post without HTML formatting.
-     * @responseField content_html string Post with HTML formatting.
-     * @responseField less_content_html string Post with HTML formatting with "show more" button.
-     * @responseField notes string (available only for admin.dirs.view or owner) Additional infos for moderator.
-     * @responseField url string
-     * @responseField thumbnail_url string
-     * @responseField sum_rating string Average rating for an entry.
-     * @responseField status object (available only for api.dirs.view or owner)
-     * @responseField privileged_at string (available only for api.dirs.view or owner) Start date of premium time.
-     * @responseField priveleged_to string (available only for api.dirs.view or owner) End date of premium time. If null and <code>privileged_at</code> not null then premium time is unlimited.
-     * @responseField created_at string
-     * @responseField updated_at string
-     * @responseField group object (available only for api.dirs.view or owner) Contains relationship Group.
-     * @responseField user object (available only for admin.dirs.view or owner) Contains relationship User.
-     * @responseField categories object[] Contains relationship Categories.
-     * @responseField tags object[] Contains relationship Tags.
-     * @responseField payment object (available only for owner) Contains relationship Payment.
-     * @responseField fields object[] Contains relationship custom Fields.
-     * @responseField links object Contains links to resources on the website and in the administration panel.
      *
      * @apiResource 201 N1ebieski\IDir\Http\Resources\Dir\DirResource
      * @apiResourceModel N1ebieski\IDir\Models\Dir states=titleSentence,contentText,withUser,pending,withCategory,withDefaultGroup with=ratings,categories,group,user
@@ -227,8 +179,8 @@ class DirController
      *
      * @authenticated
      *
-     * @urlParam dir integer required The dir ID. No-example
-     * @urlParam group integer required The group ID. If same as current and has active premium time then no new payment is required. Example: 1
+     * @urlParam dir_id integer required The ID of the dir. No-example
+     * @urlParam group_id integer required The ID of the group. If same as current and has active premium time then no new payment is required. Example: 1
      *
      * @bodyParam field object[] Array containing additional form fields if the group allows it. No-example
      * @bodyParam url string Unique website url with http/https protocol. Example: https://demo.idir.intelekt.net.pl
@@ -242,30 +194,6 @@ class DirController
      * @bodyParam payment_code_transfer integer ID of the selected Price if payment_type is <code>code_transfer</code>. No-example
      * @bodyParam code_transfer string Received code if payment_type is <code>code_transfer</code>. No-example
      * @bodyParam payment_paypal_express integer ID of the selected Price if payment_type is <code>paypal_express</code>. No-example
-     *
-     * @responseField id int
-     * @responseField slug string
-     * @responseField title string
-     * @responseField short_content string A shortened version of the post without HTML formatting.
-     * @responseField content string Post without HTML formatting.
-     * @responseField content_html string Post with HTML formatting.
-     * @responseField less_content_html string Post with HTML formatting with "show more" button.
-     * @responseField notes string (available only for admin.dirs.view or owner) Additional infos for moderator.
-     * @responseField url string
-     * @responseField thumbnail_url string
-     * @responseField sum_rating string Average rating for an entry.
-     * @responseField status object (available only for api.dirs.view or owner)
-     * @responseField privileged_at string (available only for api.dirs.view or owner) Start date of premium time.
-     * @responseField priveleged_to string (available only for api.dirs.view or owner) End date of premium time. If null and <code>privileged_at</code> not null then premium time is unlimited.
-     * @responseField created_at string
-     * @responseField updated_at string
-     * @responseField group object (available only for api.dirs.view or owner) Contains relationship Group.
-     * @responseField user object (available only for admin.dirs.view or owner) Contains relationship User.
-     * @responseField categories object[] Contains relationship Categories.
-     * @responseField tags object[] Contains relationship Tags.
-     * @responseField payment object (available only for owner) Contains relationship Payment.
-     * @responseField fields object[] Contains relationship custom Fields.
-     * @responseField links object Contains links to resources on the website and in the administration panel.
      *
      * @apiResource N1ebieski\IDir\Http\Resources\Dir\DirResource
      * @apiResourceModel N1ebieski\IDir\Models\Dir states=titleSentence,contentText,withUser,pending,withCategory,withDefaultGroup with=ratings,categories,group,user
@@ -304,31 +232,7 @@ class DirController
      *
      * @authenticated
      *
-     * @urlParam dir integer required The dir ID. No-example
-     *
-     * @responseField id int
-     * @responseField slug string
-     * @responseField title string
-     * @responseField short_content string A shortened version of the post without HTML formatting.
-     * @responseField content string Post without HTML formatting.
-     * @responseField content_html string Post with HTML formatting.
-     * @responseField less_content_html string Post with HTML formatting with "show more" button.
-     * @responseField notes string (available only for admin.dirs.view or owner) Additional infos for moderator.
-     * @responseField url string
-     * @responseField thumbnail_url string
-     * @responseField sum_rating string Average rating for an entry.
-     * @responseField status object (available only for api.dirs.view or owner)
-     * @responseField privileged_at string (available only for api.dirs.view or owner) Start date of premium time.
-     * @responseField priveleged_to string (available only for api.dirs.view or owner) End date of premium time. If null and <code>privileged_at</code> not null then premium time is unlimited.
-     * @responseField created_at string
-     * @responseField updated_at string
-     * @responseField group object (available only for api.dirs.view or owner) Contains relationship Group.
-     * @responseField user object (available only for admin.dirs.view or owner) Contains relationship User.
-     * @responseField categories object[] Contains relationship Categories.
-     * @responseField tags object[] Contains relationship Tags.
-     * @responseField payment object (available only for owner) Contains relationship Payment.
-     * @responseField fields object[] Contains relationship custom Fields.
-     * @responseField links object Contains links to resources on the website and in the administration panel.
+     * @urlParam dir_id integer required The ID of the dir. No-example
      *
      * @apiResource N1ebieski\IDir\Http\Resources\Dir\DirResource
      * @apiResourceModel N1ebieski\IDir\Models\Dir states=titleSentence,contentText,withUser,pending,withCategory,withDefaultGroup with=ratings,categories,group,user
@@ -359,7 +263,7 @@ class DirController
      *
      * @authenticated
      *
-     * @urlParam dir integer required The dir ID. No-example
+     * @urlParam dir_id integer required The ID of the dir. No-example
      *
      * @bodyParam reason string (available only for admin.dirs.delete). No-example
      *

@@ -62,16 +62,6 @@ class PaymentController extends Controller implements Polymorphic
      * @urlParam payment_dir_pending string required The payment UUID. No-example
      * @urlParam driver string The payment driver. No-example
      *
-     * @responseField uuid string
-     * @responseField driver string
-     * @responseField logs string (available only for admin.dirs.view).
-     * @responseField status object
-     * @responseField created_at string
-     * @responseField updated_at string
-     * @responseField morph object Contains relationship Dir.
-     * @responseField order object Contains relationship Price.
-     * @responseField url string Link to the driver's payment page (for transfer type payment).
-     *
      * @apiResource N1ebieski\IDir\Http\Resources\Payment\Dir\PaymentResource
      * @apiResourceModel N1ebieski\IDir\Models\Payment\Dir\Payment states=pending,withMorph,withOrder with=morph,morph.group,morph.ratings,morph.user,orderMorph
      * @apiResourceAdditional url="https://paytest.cashbill.pl/pl/payment/eydJpZCI6IlRFU1RfNmV6OWZ6dXpvIiwicGMiOiIiLCJ0b2tlbiI6ImJiNjQ3ZGFhOTQ3NDU1NzM0OGRhMzhkYjEyMTE0YTI5MTA0NDhkMGUifQ--"
@@ -122,6 +112,7 @@ class PaymentController extends Controller implements Polymorphic
     }
 
     /**
+     * @hideFromAPIDocumentation
      *
      * @param VerifyRequestInterface $request
      * @param VerifyLoad $load
