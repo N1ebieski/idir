@@ -20,12 +20,15 @@ namespace N1ebieski\IDir\Http\Requests\Web\Report\Dir;
 
 use N1ebieski\IDir\Models\Dir;
 use Illuminate\Foundation\Http\FormRequest;
+use N1ebieski\ICore\Http\Requests\Traits\HasCaptcha;
 
 /**
  * @property Dir $dir
  */
 class StoreRequest extends FormRequest
 {
+    use HasCaptcha;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -43,8 +46,8 @@ class StoreRequest extends FormRequest
      */
     public function rules()
     {
-        return [
+        return array_merge([
             'content' => 'required|string|min:3|max:255'
-        ];
+        ], $this->prepareCaptchaRules());
     }
 }

@@ -136,7 +136,7 @@ EOD
             'actions' => [
                 [
                     'type' => 'replaceMatches',
-                    'search' => '/@auth(\s*?<a[^>]*data-route="{{\s*route\(\'web\.report\.dir\.create\',\s*\[\$dir->id\]\)\s*}}")/',
+                    'search' => '/@auth(\s*?<a[^>]*?data-route="{{\s*route\(\'web\.report\.dir\.create\',\s*\[\$dir->id\]\)\s*}}")/',
                     'to' => '$1'
                 ],
                 [
