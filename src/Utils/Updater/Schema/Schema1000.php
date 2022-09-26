@@ -128,6 +128,47 @@ EOD
 EOD
                 ]
             ]
+        ],
+        [
+            'paths' => [
+                'resources/views/vendor/idir/web/dir/show.blade.php'
+            ],
+            'actions' => [
+                [
+                    'type' => 'replaceMatches',
+                    'search' => '/@auth(\s*?<a[^>]*data-route="{{\s*route\(\'web\.report\.dir\.create\',\s*\[\$dir->id\]\)\s*}}")/',
+                    'to' => '$1'
+                ],
+                [
+                    'type' => 'remove',
+                    'search' => '/@else\s*?<a[^>]*?{{\s*trans\(\'icore::reports\.log_to_report\'\)\s*}}[\s\S]*?<\/a>\s*?@endauth/'
+                ],
+                [
+                    'type' => 'replaceMatches',
+                    'search' => '/@auth([^>]*?@slot\(\'modal_id\',\s*\'(?:create-report-modal|createReportModal)\'\))/',
+                    'to' => '$1'
+                ],
+                [
+                    'type' => 'beforeFirst',
+                    'search' => '/@component\(\'icore::web\.partials\.modal\'\)\s*@slot\(\'modal_id\',\s*\'(?:contact-modal|contactModal)\'\)/',
+                    'to' => '@auth'
+                ]
+            ]
+        ],
+        [
+            'paths' => [
+                'routes/vendor/idir/web/reports.php'
+            ],
+            'actions' => [
+                [
+                    'type' => 'remove',
+                    'search' => '/Route::group\(\[\'middleware\'\s*=>\s*\'auth\'\],\s*function\s*\(\)\s*{/',
+                ],
+                [
+                    'type' => 'remove',
+                    'search' => '/}\);/',
+                ]
+            ]
         ]
     ];
 }

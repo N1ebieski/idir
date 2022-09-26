@@ -300,7 +300,6 @@
                 @endcan
                 @endcan
                 <div class="list-group-item">
-                @auth
                     <a 
                         href="#" 
                         data-route="{{ route('web.report.dir.create', [$dir->id]) }}"
@@ -312,15 +311,6 @@
                         <i class="fas fa-fw fa-exclamation-triangle"></i>
                         <span>{{ trans('icore::reports.route.create') }}</span>
                     </a>
-                @else
-                    <a 
-                        href="{{ route('login') }}" 
-                        title="{{ trans('icore::reports.log_to_report') }}"
-                    >
-                        <i class="fas fa-fw fa-exclamation-triangle"></i>
-                        <span> {{ trans('icore::reports.log_to_report') }}</span>
-                    </a>
-                @endauth
                 </div>
             </div>
         </div>
@@ -343,7 +333,6 @@
 @endslot
 @endcomponent
 
-@auth
 @component('icore::web.partials.modal')
 @slot('modal_id', 'create-report-modal')
 @slot('modal_title')
@@ -352,6 +341,7 @@
 @endslot
 @endcomponent
 
+@auth
 @component('icore::web.partials.modal')
 @slot('modal_id', 'contact-modal')
 @slot('modal_size', 'modal-lg')
