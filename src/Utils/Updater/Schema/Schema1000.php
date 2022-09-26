@@ -64,6 +64,70 @@ class Schema1000 implements SchemaInterface
                     'to' => '->render()->render();'
                 ]
             ]
+        ],
+        [
+            'paths' => [
+                'resources/views/vendor/idir/web/dir/show.blade.php'
+            ],
+            'actions' => [
+                [
+                    'type' => 'beforeFirst',
+                    'search' => '/<h1.*?>/',
+                    'to' => '<div class="d-flex justify-content-between">'
+                ],
+                [
+                    'type' => 'afterFirst',
+                    'search' => '/<\/h1>/',
+                    'to' => <<<EOD
+                    @can ('admin.dirs.view')
+                    <div>
+                        <a
+                            href="{{ route('admin.dir.index', ['filter[search]' => 'id:"' . \$dir->id . '"']) }}"
+                            target="_blank"
+                            rel="noopener"
+                            title="{{ trans('icore::dirs.route.index') }}"
+                            class="badge badge-primary"
+                        >
+                            {{ trans('icore::default.admin') }}
+                        </a>
+                    </div>
+                    @endcan
+                </div>                  
+EOD
+                ]
+            ]
+        ],
+        [
+            'paths' => [
+                'resources/views/vendor/idir/web/dir/partials/dir.blade.php'
+            ],
+            'actions' => [
+                [
+                    'type' => 'beforeFirst',
+                    'search' => '/<h2.*?>/',
+                    'to' => '<div class="d-flex justify-content-between">'
+                ],
+                [
+                    'type' => 'afterFirst',
+                    'search' => '/<\/h2>/',
+                    'to' => <<<EOD
+                    @can ('admin.dirs.view')
+                    <div>
+                        <a
+                            href="{{ route('admin.dir.index', ['filter[search]' => 'id:"' . \$dir->id . '"']) }}"
+                            target="_blank"
+                            rel="noopener"
+                            title="{{ trans('icore::dirs.route.index') }}"
+                            class="badge badge-primary"
+                        >
+                            {{ trans('icore::default.admin') }}
+                        </a>
+                    </div>
+                    @endcan
+                </div>                   
+EOD
+                ]
+            ]
         ]
     ];
 }

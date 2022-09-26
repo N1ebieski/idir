@@ -1,7 +1,22 @@
 <div class="mb-5 {{ $dir->group->border ?? null }}">
-    <h2 class="h5 border-bottom pb-2">
-        {!! $dir->link !!}
-    </h2>
+    <div class="d-flex justify-content-between">
+        <h2 class="h5 border-bottom pb-2">
+            {!! $dir->link !!}
+        </h2>
+        @can ('admin.dirs.view')
+        <div>
+            <a
+                href="{{ route('admin.dir.index', ['filter[search]' => 'id:"' . $dir->id . '"']) }}"
+                target="_blank"
+                rel="noopener"
+                title="{{ trans('icore::dirs.route.index') }}"
+                class="badge badge-primary"
+            >
+                {{ trans('icore::default.admin') }}
+            </a>
+        </div>
+        @endcan
+    </div>
     <div class="d-flex mb-2">
         <small class="mr-auto">
             {{ trans('icore::default.created_at_diff') }}: {{ $dir->created_at_diff }}

@@ -38,25 +38,42 @@
             @endcan
             <ul class="list-unstyled mb-0 pb-0">
                 <li>
-                    {!! $dir->title_as_link !!}
-                    @if (!isset($filter['status']))
-                    <span class="badge badge-{{ $dir->status->isActive() ? 'success' : 'warning' }}">
-                        {{ trans("idir::dirs.status.{$dir->status}") }}
-                    </span>
-                    @endif
-                    @if ($dir->reports_count > 0)
-                    <span>
-                        <a 
-                            href="#" 
-                            class="badge badge-danger show" 
-                            data-toggle="modal"
-                            data-route="{{ route('admin.report.dir.show', [$dir->id]) }}"
-                            data-target="#show-report-dir-modal"
-                        >
-                            {{ trans('icore::reports.route.show') }}: {{ $dir->reports_count }}
-                        </a>
-                    </span>
-                    @endif
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <span>{!! $dir->title_as_link !!}</span>
+                            @if (!isset($filter['status']))
+                            <span class="badge badge-{{ $dir->status->isActive() ? 'success' : 'warning' }}">
+                                {{ trans("idir::dirs.status.{$dir->status}") }}
+                            </span>
+                            @endif
+                            @if ($dir->reports_count > 0)
+                            <span>
+                                <a 
+                                    href="#" 
+                                    class="badge badge-danger show" 
+                                    data-toggle="modal"
+                                    data-route="{{ route('admin.report.dir.show', [$dir->id]) }}"
+                                    data-target="#show-report-dir-modal"
+                                >
+                                    {{ trans('icore::reports.route.show') }}: {{ $dir->reports_count }}
+                                </a>
+                            </span>
+                            @endif
+                        </div>
+                        @if ($dir->status->isActive())
+                        <div>
+                            <a
+                                href="{{ route('web.dir.show', [$dir->slug]) }}"
+                                target="_blank"
+                                rel="noopener"
+                                title="{{ $dir->title }}"
+                                class="badge badge-primary"
+                            >
+                                {{ trans('icore::default.web') }}
+                            </a>
+                        </div>
+                        @endif                        
+                    </div>
                 </li>
                 <li class="text-break" style="word-break:break-word">
                     <span id="content.{{ $dir->id }}">
