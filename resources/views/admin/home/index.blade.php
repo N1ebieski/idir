@@ -54,7 +54,7 @@
     </div>
     <div class="col-lg-6 mt-5 mt-lg-0">
         @if (is_null($posts))
-        <div class="alert alert-warning alert-time" role="alert">
+        <div class="alert alert-warning" role="alert">
             {{ trans('icore::home.warning.no_posts') }}
         </div>        
         @elseif ($posts->isNotEmpty())
