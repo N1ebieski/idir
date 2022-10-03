@@ -20,6 +20,7 @@ namespace N1ebieski\IDir\Http\Controllers\Admin\Field\Group;
 
 use N1ebieski\IDir\Models\Group;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Response;
@@ -81,7 +82,13 @@ class FieldController extends BaseFieldController implements Polymorphic
 
         $request->session()->flash('success', trans('idir::fields.success.store'));
 
-        return Response::json([]);
+        return Response::json([
+            'redirect' => URL::route("admin.field.group.index", [
+                'filter' => [
+                    'search' => "id:\"{$field->id}\""
+                ]
+            ])
+        ]);
     }
 
     /**

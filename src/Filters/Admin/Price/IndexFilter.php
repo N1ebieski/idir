@@ -34,4 +34,5 @@ class IndexFilter extends Filter
     use HasType;
     use HasOrderBy;
     use HasPaginate;
+    use HasSearch;
 }

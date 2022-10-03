@@ -77,7 +77,11 @@ class GroupController
     {
         $group->makeService()->create($request->all());
 
-        return Response::redirectToRoute("admin.group.index")
+        return Response::redirectToRoute("admin.group.index", [
+                'filter' => [
+                    'search' => "id:\"{$group->id}\""
+                ]
+            ])
             ->with('success', Lang::get('idir::groups.success.store'));
     }
 
@@ -90,12 +94,9 @@ class GroupController
      */
     public function edit(Group $group, EditRequest $request): HttpResponse
     {
-        return Response::view(
-            'idir::admin.group.edit',
-            App::make(EditViewModel::class, [
-                'group' => $group
-            ])
-        );
+        return Response::view('idir::admin.group.edit', App::make(EditViewModel::class, [
+            'group' => $group
+        ]));
     }
 
     /**

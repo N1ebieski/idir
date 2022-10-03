@@ -58,10 +58,18 @@ class UpdateFull3Response implements RedirectResponseFactory
         $status = $dir->status->getValue();
 
         return match ($dir->status->getValue()) {
-            Status::INACTIVE => $this->response->redirectToRoute('admin.dir.index')
+            Status::INACTIVE => $this->response->redirectToRoute('admin.dir.index', [
+                    'filter' => [
+                        'search' => 'id:"' . $dir->id . '"'
+                    ]
+                ])
                 ->with('success', $this->lang->get('idir::dirs.success.update.' . Status::INACTIVE)),
 
-            Status::ACTIVE => $this->response->redirectToRoute('admin.dir.index')
+            Status::ACTIVE => $this->response->redirectToRoute('admin.dir.index', [
+                    'filter' => [
+                        'search' => 'id:"' . $dir->id . '"'
+                    ]
+                ])
                 ->with('success', $this->lang->get('idir::dirs.success.update.' . Status::ACTIVE)),
 
             Status::PAYMENT_INACTIVE => $this->response->redirectToRoute('admin.payment.dir.show', [

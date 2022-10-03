@@ -29,7 +29,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->app->bind(\N1ebieski\ICore\Models\BanValue::class, \N1ebieski\IDir\Models\BanValue::class);
     }
 
     /**

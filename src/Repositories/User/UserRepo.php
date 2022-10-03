@@ -48,7 +48,19 @@ class UserRepo extends BaseUserRepo
         // @phpstan-ignore-next-line
         return $dirs->selectRaw("`{$dir->getTable()}`.*")
             ->filterExcept($filter['except'])
-            ->filterSearch($filter['search'])
+            ->when(!is_null($filter['search']), function (Builder|Dir $query) use ($filter) {
+                return $query->filterSearch($filter['search'])
+                    ->where(function (Builder $query) {
+                        /** @var Dir */
+                        $dir = $query->getModel();
+
+                        foreach (['id'] as $attr) {
+                            return $query->when(array_key_exists($attr, $dir->search), function (Builder $query) use ($attr, $dir) {
+                                return $query->where("{$dir->getTable()}.{$attr}", $dir->search[$attr]);
+                            });
+                        }
+                    });
+            })
             ->filterStatus($filter['status'])
             ->filterGroup($filter['group'])
             ->when(is_null($filter['orderby']), function (Builder|Dir $query) use ($filter) {

@@ -58,10 +58,18 @@ class Update3Response implements RedirectResponseFactory
         $status = $dir->status->getValue();
 
         return match ($status) {
-            Status::INACTIVE => $this->response->redirectToRoute('web.profile.dirs')
+            Status::INACTIVE => $this->response->redirectToRoute('web.profile.dirs', [
+                    'filter' => [
+                        'search' => 'id:"' . $dir->id . '"'
+                    ]
+                ])
                 ->with('success', $this->lang->get('idir::dirs.success.update.' . Status::INACTIVE)),
 
-            Status::ACTIVE => $this->response->redirectToRoute('web.profile.dirs')
+            Status::ACTIVE => $this->response->redirectToRoute('web.profile.dirs', [
+                    'filter' => [
+                        'search' => 'id:"' . $dir->id . '"'
+                    ]
+                ])
                 ->with('success', $this->lang->get('idir::dirs.success.update.' . Status::ACTIVE)),
 
             Status::PAYMENT_INACTIVE => $this->response->redirectToRoute('web.payment.dir.show', [

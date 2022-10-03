@@ -30,6 +30,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use N1ebieski\ICore\Models\Traits\HasFullTextSearchable;
 use N1ebieski\IDir\Database\Factories\Price\PriceFactory;
 use Illuminate\Contracts\Container\BindingResolutionException;
 
@@ -91,6 +92,7 @@ class Price extends Model
     use HasFilterable;
     use HasCarbonable;
     use HasFactory;
+    use HasFullTextSearchable;
 
     // Configuration
 
@@ -108,6 +110,13 @@ class Price extends Model
         'token',
         'number'
     ];
+
+    /**
+     * The columns of the full text index
+     *
+     * @var array
+     */
+    protected $searchable = [];
 
     /**
      * The attributes that should be hidden for arrays.

@@ -21,6 +21,7 @@ namespace N1ebieski\IDir\Http\Controllers\Admin\Price;
 use N1ebieski\IDir\Models\Group;
 use N1ebieski\IDir\Models\Price;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Response;
@@ -85,7 +86,14 @@ class PriceController
 
         $request->session()->flash('success', trans('idir::prices.success.store'));
 
-        return Response::json([]);
+        return Response::json([
+            'redirect' => URL::route("admin.price.index", [
+                'filter' => [
+                    'group' => $request->input('group'),
+                    'search' => "id:\"{$price->id}\""
+                ]
+            ])
+        ]);
     }
 
     /**

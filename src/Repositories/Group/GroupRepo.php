@@ -51,8 +51,18 @@ class GroupRepo
     {
         return $this->group->newQuery()
             ->selectRaw("`{$this->group->getTable()}`.*")
-            ->filterSearch($filter['search'])
-            ->filterExcept($filter['except'])
+            ->when(!is_null($filter['search']), function (Builder|Group $query) use ($filter) {
+                return $query->filterSearch($filter['search'])
+                    ->when($this->auth->user()?->can('admin.groups.view'), function (Builder $query) {
+                        return $query->where(function (Builder $query) {
+                            foreach (['id'] as $attr) {
+                                return $query->when(array_key_exists($attr, $this->group->search), function (Builder $query) use ($attr) {
+                                    return $query->where("{$this->group->getTable()}.{$attr}", $this->group->search[$attr]);
+                                });
+                            }
+                        });
+                    });
+            })
             ->when(
                 is_null($filter['visible']) && !$this->auth->user()?->can('admin.groups.view'),
                 function (Builder|Group $query) {
@@ -65,6 +75,7 @@ class GroupRepo
             ->when(is_null($filter['orderby']), function (Builder|Group $query) use ($filter) {
                 $query->filterOrderBySearch($filter['search']);
             })
+            ->filterExcept($filter['except'])
             ->filterOrderBy($filter['orderby'] ?? 'position|asc')
             ->withCount('prices')
             ->with(['prices', 'privileges', 'fields'])

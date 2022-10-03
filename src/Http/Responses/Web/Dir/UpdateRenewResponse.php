@@ -66,10 +66,18 @@ class UpdateRenewResponse implements RedirectResponseFactory
         }
 
         return match ($dir->status->getValue()) {
-            Status::ACTIVE => $this->response->redirectToRoute('web.profile.dirs')
+            Status::ACTIVE => $this->response->redirectToRoute('web.profile.dirs', [
+                    'filter' => [
+                        'search' => 'id:"' . $dir->id . '"'
+                    ]
+                ])
                 ->with('success', $this->lang->get('idir::dirs.success.update_renew.' . Status::ACTIVE)),
 
-            default => $this->response->redirectToRoute('web.profile.dirs')
+            default => $this->response->redirectToRoute('web.profile.dirs', [
+                    'filter' => [
+                        'search' => 'id:"' . $dir->id . '"'
+                    ]
+                ])
                 ->with('success', $this->lang->get('idir::dirs.success.update_renew.' . Status::INACTIVE))
         };
     }

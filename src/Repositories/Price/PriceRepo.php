@@ -21,17 +21,23 @@ namespace N1ebieski\IDir\Repositories\Price;
 use InvalidArgumentException;
 use N1ebieski\IDir\Models\Code;
 use N1ebieski\IDir\Models\Price;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Contracts\Auth\Factory as Auth;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class PriceRepo
 {
     /**
-     * [__construct description]
-     * @param Price $price [description]
+     *
+     * @param Price $price
+     * @param Auth $auth
+     * @return void
      */
-    public function __construct(protected Price $price)
-    {
+    public function __construct(
+        protected Price $price,
+        protected Auth $auth
+    ) {
         //
     }
 
@@ -47,6 +53,18 @@ class PriceRepo
         return $this->price->newQuery()
             ->select('prices.*', 'groups.position')
             ->leftJoin('groups', 'prices.group_id', '=', 'groups.id')
+            ->when(!is_null($filter['search']), function (Builder|Price $query) use ($filter) {
+                return $query->filterSearch($filter['search'])
+                    ->when($this->auth->user()?->can('admin.prices.view'), function (Builder $query) {
+                        return $query->where(function (Builder $query) {
+                            foreach (['id'] as $attr) {
+                                return $query->when(array_key_exists($attr, $this->price->search), function (Builder $query) use ($attr) {
+                                    return $query->where("{$this->price->getTable()}.{$attr}", $this->price->search[$attr]);
+                                });
+                            }
+                        });
+                    });
+            })
             ->filterExcept($filter['except'])
             ->filterGroup($filter['group'])
             ->filterType($filter['type'])
