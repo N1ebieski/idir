@@ -35,13 +35,13 @@ class DirBuilder extends Builder
      *
      * @var string
      */
-    protected $route = 'web.dir.show';
+    public $route = 'web.dir.show';
 
     /**
-     * [protected description]
+     * [public description]
      * @var string
      */
-    protected $path = 'vendor/idir/sitemap/dirs';
+    public $path = 'vendor/idir/sitemap/dirs';
 
     /**
      * Undocumented variable
@@ -88,6 +88,9 @@ class DirBuilder extends Builder
      */
     public function chunkCollection(Closure $closure): bool
     {
-        return $this->dir->makeRepo()->chunkActiveWithModelsCount($closure);
+        return $this->dir->makeRepo()->chunkActiveWithModelsCount(
+            $this->config->get('icore.sitemap.limit'),
+            $closure
+        );
     }
 }

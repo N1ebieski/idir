@@ -44,8 +44,7 @@ class DirFactory extends Factory
      */
     public function definition(): array
     {
-        /** @var array */
-        $url = parse_url($this->faker->url);
+        $url = $this->faker->randomElement(['http', 'https']) . '://' . $this->faker->unique()->slug() . '.pl';
         $content = Str::random(350);
 
         return [
@@ -53,7 +52,7 @@ class DirFactory extends Factory
             'title' => Str::random(rand(10, 30)),
             'content_html' => $content,
             'content' => $content,
-            'url' => $url['scheme'] . "://" . $url['host'],
+            'url' => $url,
             'status' => rand(Status::INACTIVE, Status::ACTIVE)
         ];
     }

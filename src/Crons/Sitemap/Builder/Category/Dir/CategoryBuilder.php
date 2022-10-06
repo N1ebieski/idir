@@ -35,13 +35,13 @@ class CategoryBuilder extends Builder
      *
      * @var string
      */
-    protected $route = 'web.category.dir.show';
+    public $route = 'web.category.dir.show';
 
     /**
-     * [protected description]
+     * [public description]
      * @var string
      */
-    protected $path = 'vendor/idir/sitemap/categories/dirs';
+    public $path = 'vendor/idir/sitemap/categories/dirs';
 
     /**
      * Undocumented variable
@@ -88,6 +88,9 @@ class CategoryBuilder extends Builder
      */
     public function chunkCollection(Closure $closure): bool
     {
-        return $this->category->makeRepo()->chunkActiveWithModelsCount($closure);
+        return $this->category->makeRepo()->chunkActiveWithModelsCount(
+            $this->config->get('icore.sitemap.limit'),
+            $closure
+        );
     }
 }

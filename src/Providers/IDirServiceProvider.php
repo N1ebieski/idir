@@ -38,6 +38,7 @@ class IDirServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(__DIR__ .  '/../../config/idir.php', 'idir');
 
+        // @phpstan-ignore-next-line
         $this->app->register(LicenseServiceProvider::class);
         $this->app->register(AppServiceProvider::class);
         $this->app->register(RouteServiceProvider::class);

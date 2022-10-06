@@ -20,6 +20,7 @@ namespace N1ebieski\IDir\Repositories\Dir;
 
 use Closure;
 use Carbon\Carbon;
+use InvalidArgumentException;
 use N1ebieski\IDir\Models\Dir;
 use N1ebieski\IDir\Models\User;
 use Illuminate\Support\Facades\DB;
@@ -459,19 +460,20 @@ class DirRepo
     }
 
     /**
-     * Undocumented function
      *
+     * @param int $chunk
      * @param Closure $closure
-     * @return boolean
+     * @return bool
+     * @throws InvalidArgumentException
      */
-    public function chunkActiveWithModelsCount(Closure $closure): bool
+    public function chunkActiveWithModelsCount(int $chunk, Closure $closure): bool
     {
         return $this->dir->newQuery()
             ->active()
             ->withCount(['comments AS models_count' => function (MorphMany|Builder|Comment $query) {
                 return $query->root()->active();
             }])
-            ->chunk(1000, $closure);
+            ->chunk($chunk, $closure);
     }
 
     /**

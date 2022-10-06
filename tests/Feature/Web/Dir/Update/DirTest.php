@@ -795,7 +795,11 @@ class DirTest extends TestCase
             'model_type' => $dir->getMorphClass()
         ]);
 
-        $response->assertRedirect(route('web.profile.dirs'));
+        $response->assertRedirect(route('web.profile.dirs', [
+            'filter' => [
+                'search' => "id:\"{$dir->id}\""
+            ]
+        ]));
     }
 
     public function testDirUpdate3ValidationPaymentFail(): void
@@ -946,7 +950,11 @@ class DirTest extends TestCase
 
         $response->assertSessionDoesntHaveErrors('payment_transfer');
 
-        $response->assertRedirect(route('web.profile.dirs'));
+        $response->assertRedirect(route('web.profile.dirs', [
+            'filter' => [
+                'search' => "id:\"{$dir->id}\""
+            ]
+        ]));
     }
 
     public function testPendingDirUpdate3OldGroupPaymentFail(): void
@@ -1026,6 +1034,10 @@ class DirTest extends TestCase
 
         $response->assertSessionDoesntHaveErrors('code_sms');
 
-        $response->assertRedirect(route('web.profile.dirs'));
+        $response->assertRedirect(route('web.profile.dirs', [
+            'filter' => [
+                'search' => "id:\"{$dir->id}\""
+            ]
+        ]));
     }
 }

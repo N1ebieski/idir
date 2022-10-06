@@ -23,8 +23,8 @@ use N1ebieski\ICore\Crons\Sitemap\Builder\SitemapBuilder as BaseSitemapBuilder;
 class SitemapBuilder extends BaseSitemapBuilder
 {
     /**
-     * [protected description]
+     * [public description]
      * @var string
      */
-    protected $path = 'vendor/idir/sitemap';
+    public $path = 'vendor/idir/sitemap';
 }
