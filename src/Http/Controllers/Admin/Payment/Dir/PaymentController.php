@@ -64,7 +64,11 @@ class PaymentController implements Polymorphic
                         : mb_strtolower(Lang::get('idir::prices.unlimited'))
                 ]),
                 'uuid' => $payment->uuid,
-                'redirect' => URL::route('admin.dir.index'),
+                'redirect' => URL::route('admin.dir.index', [
+                    'filter' => [
+                        'search' => "id:\"{$payment->morph->id}\""
+                    ]
+                ]),
                 'notifyUrl' => URL::route('api.payment.dir.verify', [$driver]),
                 'returnUrl' => URL::route('web.payment.dir.complete', [$driver]),
                 'cancelUrl' => URL::route('web.payment.dir.complete', [$driver])

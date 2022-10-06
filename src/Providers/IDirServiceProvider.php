@@ -38,6 +38,8 @@ class IDirServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(__DIR__ .  '/../../config/idir.php', 'idir');
 
+        $this->loadTranslationsFrom(__DIR__ . '/../../resources/lang', 'idir');
+
         // @phpstan-ignore-next-line
         $this->app->register(LicenseServiceProvider::class);
         $this->app->register(AppServiceProvider::class);
@@ -83,8 +85,6 @@ class IDirServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->loadViewsFrom(__DIR__ . '/../../resources/views', 'idir');
-
-        $this->loadTranslationsFrom(__DIR__ . '/../../resources/lang', 'idir');
 
         $this->publishes([
             __DIR__ . '/../../config/idir.php' => config_path('idir.php'),

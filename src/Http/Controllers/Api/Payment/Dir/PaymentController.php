@@ -96,7 +96,11 @@ class PaymentController extends Controller implements Polymorphic
                 ]),
                 'uuid' => $payment->uuid,
                 'redirect' => Auth::check() ?
-                    URL::route('web.profile.dirs')
+                    URL::route('web.profile.dirs', [
+                        'filter' => [
+                            'search' => "id:\"{$payment->morph->id}\""
+                        ]
+                    ])
                     : URL::route('web.dir.create_1'),
                 'notifyUrl' => URL::route('api.payment.dir.verify', [$driver]),
                 'returnUrl' => URL::route('web.payment.dir.complete', [$driver]),

@@ -65,8 +65,8 @@ class TokenController
      *
      * @unauthenticated
      *
-     * @bodyParam email string Example: kontakt@demo.idir.intelekt.net.pl
-     * @bodyParam password string Example: demo1234
+     * @bodyParam email string required Example: kontakt@demo.idir.intelekt.net.pl
+     * @bodyParam password string required Example: demo1234
      * @bodyParam remember boolean Example: true
      *
      * @response 201 scenario=success {
