@@ -28,15 +28,15 @@ return [
 
     'routes' => [
         'web' => [
-            'prefix' => null,
+            'prefix' => env('IDIR_ROUTES_WEB_PREFIX', null),
             'enabled' => true
         ],
         'admin' => [
-            'prefix' => 'admin',
+            'prefix' => env('IDIR_ROUTES_ADMIN_PREFIX', 'admin'),
             'enabled' => true
         ],
         'api' => [
-            'prefix' => 'api',
+            'prefix' => env('IDIR_ROUTES_API_PREFIX', 'api'),
             'enabled' => true
         ]
     ],
