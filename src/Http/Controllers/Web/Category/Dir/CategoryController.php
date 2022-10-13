@@ -18,6 +18,8 @@
 
 namespace N1ebieski\IDir\Http\Controllers\Web\Category\Dir;
 
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Response;
 use N1ebieski\IDir\Models\Region\Region;
 use Illuminate\Http\Response as HttpResponse;
@@ -25,6 +27,7 @@ use N1ebieski\IDir\Models\Category\Dir\Category;
 use N1ebieski\IDir\Filters\Web\Category\Dir\ShowFilter;
 use N1ebieski\IDir\Http\Requests\Web\Category\ShowRequest;
 use N1ebieski\IDir\Http\Controllers\Web\Category\Dir\Polymorphic;
+use N1ebieski\IDir\Events\Web\Category\Dir\ShowEvent as CategoryShowEvent;
 
 class CategoryController implements Polymorphic
 {
@@ -39,8 +42,12 @@ class CategoryController implements Polymorphic
      */
     public function show(Category $category, Region $region, ShowRequest $request, ShowFilter $filter): HttpResponse
     {
+        $dirs = $category->makeCache()->rememberDirsByFilter($filter->all());
+
+        Event::dispatch(App::make(CategoryShowEvent::class, ['dirs' => $dirs]));
+
         return Response::view('idir::web.category.dir.show', [
-            'dirs' => $category->makeCache()->rememberDirsByFilter($filter->all()),
+            'dirs' => $dirs,
             'region' => $region,
             'filter' => $filter->all(),
             'category' => $category->makeCache()->rememberLoadNestedWithMorphsCountByFilter($filter->all()),

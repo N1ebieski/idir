@@ -19,6 +19,7 @@
 namespace N1ebieski\IDir\Http\Requests\Admin\Group;
 
 use Illuminate\Validation\Rule;
+use N1ebieski\IDir\Models\Group;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
@@ -49,7 +50,7 @@ class UpdateRequest extends FormRequest
                 'bail',
                 'nullable',
                 'integer',
-                Rule::exists('groups', 'id')->whereNot('id', $this->group->id)
+                Rule::exists('groups', 'id')->whereNot('id', (string)$this->group->id)
                     ->where(function ($query) {
                         $query->whereNotExists(function ($query) {
                             $query->from('prices')

@@ -174,11 +174,17 @@ class DirsJob implements ShouldQueue
                 /** @var Stat */
                 $statView = $defaultStats->firstWhere('slug', StatSlug::VIEW);
 
+                /** @var Stat */
+                $statVisit = $defaultStats->firstWhere('slug', StatSlug::VISIT);
+
                 $dir->stats()->attach([
                     $statClick->id => [
                         'value' => $item->clicks
                     ],
                     $statView->id => [
+                        'value' => $item->views
+                    ],
+                    $statVisit->id => [
                         'value' => $item->views
                     ]
                 ]);

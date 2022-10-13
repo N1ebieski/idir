@@ -44,6 +44,7 @@ use N1ebieski\IDir\Http\Requests\Api\Dir\StoreCodeRequest;
 use N1ebieski\IDir\Http\Requests\Api\Dir\UpdateCodeRequest;
 use N1ebieski\ICore\Http\Resources\Category\CategoryResource;
 use N1ebieski\IDir\Http\Requests\Api\Dir\UpdateStatusRequest;
+use N1ebieski\IDir\Events\Api\Dir\IndexEvent as DirIndexEvent;
 use N1ebieski\IDir\Events\Api\Dir\StoreEvent as DirStoreEvent;
 use N1ebieski\IDir\Events\Api\Dir\UpdateEvent as DirUpdateEvent;
 use N1ebieski\IDir\Events\Api\Dir\DestroyEvent as DirDestroyEvent;
@@ -97,8 +98,12 @@ class DirController
      */
     public function index(Dir $dir, IndexRequest $request, IndexFilter $filter): JsonResponse
     {
+        $dirs = $dir->makeCache()->rememberByFilter($filter->all());
+
+        Event::dispatch(App::make(DirIndexEvent::class, ['dirs' => $dirs]));
+
         return App::make(DirResource::class)
-            ->collection($dir->makeCache()->rememberByFilter($filter->all()))
+            ->collection($dirs)
             ->additional(['meta' => [
                 'filter' => Collect::make($filter->all())
                     ->replace([

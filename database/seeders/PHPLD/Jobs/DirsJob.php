@@ -137,10 +137,16 @@ class DirsJob implements ShouldQueue
                 $dir->save();
 
                 /** @var Stat */
-                $stat = $defaultStats->firstWhere('slug', StatSlug::VIEW);
+                $statView = $defaultStats->firstWhere('slug', StatSlug::VIEW);
+
+                /** @var Stat */
+                $statVisit = $defaultStats->firstWhere('slug', StatSlug::VISIT);
 
                 $dir->stats()->attach([
-                    $stat->id => [
+                    $statView->id => [
+                        'value' => $item->HITS
+                    ],
+                    $statVisit->id => [
                         'value' => $item->HITS
                     ]
                 ]);

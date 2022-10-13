@@ -71,9 +71,11 @@ use N1ebieski\IDir\Http\Requests\Web\Dir\UpdateRenewRequest;
 use N1ebieski\IDir\View\ViewModels\Web\Dir\Create1ViewModel;
 use N1ebieski\IDir\View\ViewModels\Web\Dir\Create2ViewModel;
 use N1ebieski\IDir\View\ViewModels\Web\Dir\Create3ViewModel;
+use N1ebieski\IDir\Events\Web\Dir\IndexEvent as DirIndexEvent;
 use N1ebieski\IDir\Events\Web\Dir\StoreEvent as DirStoreEvent;
 use N1ebieski\IDir\Http\Responses\Web\Dir\UpdateRenewResponse;
 use N1ebieski\IDir\View\ViewModels\Web\Dir\EditRenewViewModel;
+use N1ebieski\IDir\Events\Web\Dir\SearchEvent as DirSearchEvent;
 use N1ebieski\IDir\Events\Web\Dir\UpdateEvent as DirUpdateEvent;
 use N1ebieski\IDir\Http\Requests\Web\Dir\UpdateRenewCodeRequest;
 use N1ebieski\IDir\Events\Web\Dir\DestroyEvent as DirDestroyEvent;
@@ -91,8 +93,12 @@ class DirController
      */
     public function index(Dir $dir, IndexRequest $request, IndexFilter $filter): HttpResponse
     {
+        $dirs = $dir->makeCache()->rememberForWebByFilter($filter->all());
+
+        Event::dispatch(App::make(DirIndexEvent::class, ['dirs' => $dirs]));
+
         return Response::view('idir::web.dir.index', [
-            'dirs' => $dir->makeCache()->rememberForWebByFilter($filter->all()),
+            'dirs' => $dirs,
             'filter' => $filter->all()
         ]);
     }
@@ -105,11 +111,15 @@ class DirController
      */
     public function search(Dir $dir, SearchRequest $request, SearchFilter $filter): HttpResponse
     {
+        $dirs = $dir->makeRepo()->paginateBySearchAndFilter(
+            $request->input('search'),
+            $filter->all()
+        );
+
+        Event::dispatch(App::make(DirSearchEvent::class, ['dirs' => $dirs]));
+
         return Response::view('idir::web.dir.search', [
-            'dirs' => $dir->makeRepo()->paginateBySearchAndFilter(
-                $request->input('search'),
-                $filter->all()
-            ),
+            'dirs' => $dirs,
             'filter' => $filter->all(),
             'search' => $request->input('search')
         ]);

@@ -22,6 +22,7 @@ use Illuminate\Http\Request;
 use N1ebieski\IDir\Models\Dir;
 use Spatie\ViewModels\ViewModel;
 use N1ebieski\ICore\Filters\Filter;
+use N1ebieski\ICore\Utils\MigrationUtil;
 use N1ebieski\IDir\Models\Stat\Dir\Stat;
 use N1ebieski\ICore\ValueObjects\Stat\Slug;
 use Illuminate\Database\Eloquent\Collection;
@@ -31,18 +32,20 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 class ShowViewModel extends ViewModel
 {
     /**
-     * Undocumented function
      *
      * @param Dir $dir
      * @param Comment $comment
      * @param Filter $filter
      * @param Request $request
+     * @param MigrationUtil $migrationUtil
+     * @return void
      */
     public function __construct(
         public Dir $dir,
         protected Comment $comment,
         protected Filter $filter,
-        protected Request $request
+        protected Request $request,
+        protected MigrationUtil $migrationUtil
     ) {
         //
     }
@@ -113,7 +116,7 @@ class ShowViewModel extends ViewModel
     public function statCtr(): float
     {
         $click = $this->statBySlug(Slug::CLICK);
-        $view = $this->statBySlug(Slug::VIEW);
+        $view = $this->statBySlug($this->getSlug());
 
         if (!$click || !$view) {
             return (float)0;
@@ -124,6 +127,19 @@ class ShowViewModel extends ViewModel
         }
 
         return round(($click->pivot->value / $view->pivot->value) * 100, 2);
+    }
+
+    /**
+     *
+     * @return string
+     */
+    protected function getSlug(): string
+    {
+        if ($this->migrationUtil->contains('copy_view_to_visit_in_stats_table')) {
+            return Slug::VISIT;
+        }
+
+        return Slug::VIEW;
     }
 
     /**

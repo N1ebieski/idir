@@ -59,7 +59,7 @@ class EventServiceProvider extends ServiceProvider
             \N1ebieski\IDir\Listeners\Dir\SendActivationNotification::class
         ],
         \N1ebieski\IDir\Events\Web\Dir\ShowEvent::class => [
-            \N1ebieski\IDir\Listeners\Stat\Dir\IncrementView::class
+            \N1ebieski\IDir\Listeners\Stat\Dir\IncrementVisit::class
         ],
         \N1ebieski\IDir\Events\Web\Dir\DestroyEvent::class => [
             \N1ebieski\IDir\Listeners\Dir\SendDeletedNotification::class
@@ -113,6 +113,15 @@ class EventServiceProvider extends ServiceProvider
             \N1ebieski\IDir\Listeners\Dir\MarkAsPaid::class,
             \N1ebieski\IDir\Listeners\Payment\CreateLogs::class
         ]
+    ];
+
+    /**
+     * The subscriber classes to register.
+     *
+     * @var array
+     */
+    protected $subscribe = [
+        \N1ebieski\IDir\Listeners\Stat\Dir\IncrementView::class,
     ];
 
     /**

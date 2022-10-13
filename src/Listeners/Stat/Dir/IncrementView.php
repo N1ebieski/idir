@@ -18,10 +18,13 @@
 
 namespace N1ebieski\IDir\Listeners\Stat\Dir;
 
+use N1ebieski\IDir\Models\Dir;
+use Illuminate\Events\Dispatcher;
 use N1ebieski\ICore\Utils\MigrationUtil;
 use N1ebieski\IDir\Models\Stat\Dir\Stat;
 use N1ebieski\ICore\ValueObjects\Stat\Slug;
 use N1ebieski\IDir\Events\Interfaces\Dir\DirEventInterface;
+use N1ebieski\IDir\Events\Interfaces\Dir\DirCollectionEventInterface;
 
 class IncrementView
 {
@@ -34,25 +37,33 @@ class IncrementView
 
     /**
      *
+     * @var Stat
+     */
+    protected $stat;
+
+    /**
+     *
      * @param Stat $stat
      * @param MigrationUtil $migrationUtil
      * @return void
      */
     public function __construct(
-        protected Stat $stat,
+        Stat $stat,
         protected MigrationUtil $migrationUtil
     ) {
-        //
+        // @phpstan-ignore-next-line
+        $this->stat = $stat->makeCache()->rememberBySlug(Slug::VIEW);
     }
 
     /**
      *
+     * @param Dir $dir
      * @return bool
      */
-    public function verify(): bool
+    public function verify(Dir $dir): bool
     {
-        return $this->event->dir->status->isActive()
-            && $this->migrationUtil->contains('create_stats_table');
+        return $dir->status->isActive()
+            && $this->migrationUtil->contains('copy_view_to_visit_in_stats_table');
     }
 
     /**
@@ -61,19 +72,60 @@ class IncrementView
      * @param  DirEventInterface  $event
      * @return void
      */
-    public function handle(DirEventInterface $event): void
+    public function handleSingle($event): void
     {
-        $this->event = $event;
-
-        if (!$this->verify()) {
+        if (!$this->verify($event->dir)) {
             return;
         }
 
-        /** @var Stat */
-        $stat = $this->stat->makeCache()->rememberBySlug(Slug::VIEW);
-
-        $stat->setRelations(['morph' => $this->event->dir])
+        $this->stat->setRelations(['morph' => $event->dir])
             ->makeService()
             ->increment();
+    }
+
+    /**
+     * Handle the event.
+     *
+     * @param  DirCollectionEventInterface  $event
+     * @return void
+     */
+    public function handleGlobal($event): void
+    {
+        /** @var array */
+        $ids = $event->dirs->filter(fn (Dir $dir) => $this->verify($dir))
+            ->pluck('id')
+            ->toArray();
+
+        if (count($ids) > 0) {
+            $this->stat->makeService()->incrementGlobal($ids);
+        }
+    }
+
+    /**
+     * Register the listeners for the subscriber.
+     *
+     * @param  Dispatcher  $events
+     * @return void
+     */
+    public function subscribe(Dispatcher $events): void
+    {
+        $events->listen(
+            [
+                \N1ebieski\IDir\Events\Web\Dir\ShowEvent::class
+            ],
+            [$this::class, 'handleSingle']
+        );
+
+        $events->listen(
+            [
+                \N1ebieski\IDir\Events\Web\Home\IndexEvent::class,
+                \N1ebieski\IDir\Events\Web\Dir\IndexEvent::class,
+                \N1ebieski\IDir\Events\Web\Dir\SearchEvent::class,
+                \N1ebieski\IDir\Events\Web\Category\Dir\ShowEvent::class,
+                \N1ebieski\IDir\Events\Web\Tag\Dir\ShowEvent::class,
+                \N1ebieski\IDir\Events\Api\Dir\IndexEvent::class
+            ],
+            [$this::class, 'handleGlobal']
+        );
     }
 }

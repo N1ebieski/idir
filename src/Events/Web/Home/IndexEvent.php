@@ -16,31 +16,28 @@
  * @license   https://intelekt.net.pl/pages/regulamin
  */
 
-namespace N1ebieski\IDir\Http\Controllers\Web;
+namespace N1ebieski\IDir\Events\Web\Home;
 
-use App;
 use N1ebieski\IDir\Models\Dir;
-use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Facades\Response;
-use Illuminate\Http\Response as HttpResponse;
-use N1ebieski\IDir\Events\Web\Home\IndexEvent as HomeIndexEvent;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Foundation\Events\Dispatchable;
+use Illuminate\Broadcasting\InteractsWithSockets;
+use N1ebieski\IDir\Events\Interfaces\Dir\DirCollectionEventInterface;
 
-class HomeController
+class IndexEvent implements DirCollectionEventInterface
 {
+    use Dispatchable;
+    use InteractsWithSockets;
+    use SerializesModels;
+
     /**
-     * Undocumented function
      *
-     * @param Dir $dir
-     * @return HttpResponse
+     * @param Collection<Dir> $dirs
+     * @return void
      */
-    public function index(Dir $dir): HttpResponse
+    public function __construct(public Collection $dirs)
     {
-        $dirs = $dir->makeCache()->rememberLatestForHome();
-
-        Event::dispatch(App::make(HomeIndexEvent::class, ['dirs' => $dirs]));
-
-        return Response::view('idir::web.home.index', [
-            'dirs' => $dirs
-        ]);
+        //
     }
 }
