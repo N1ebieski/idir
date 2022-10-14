@@ -31,13 +31,6 @@ use N1ebieski\IDir\Events\Interfaces\Dir\DirCollectionEventInterface;
 class IncrementView
 {
     /**
-     * Undocumented variable
-     *
-     * @var DirEventInterface
-     */
-    protected $event;
-
-    /**
      *
      * @var Stat
      */
