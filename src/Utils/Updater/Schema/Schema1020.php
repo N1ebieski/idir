@@ -34,7 +34,7 @@ class Schema1020 implements SchemaInterface
             ],
             'actions' => [
                 [
-                    'type' => 'afterFirst',
+                    'type' => 'beforeFirst',
                     'search' => '/@if\s*\(app\(\'router\'\)->has\(\'web\.dir\.create_1\'\)\)/',
                     'to' => <<<EOD
                 <li class="nav-item mx-md-1 dropdown">
