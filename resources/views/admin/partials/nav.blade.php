@@ -9,7 +9,7 @@
     </a>
     <a href="/" class="navbar-brand">
         <img 
-            src="{{ asset('svg/vendor/idir/logo.svg') }}" 
+            src="{{ asset('images/vendor/idir/logo.svg') }}" 
             class="pb-1 pr-1 logo" 
             alt="{{ config('app.name_short') }}" 
             title="{{ config('app.name') }}"

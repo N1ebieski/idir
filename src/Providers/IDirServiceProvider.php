@@ -27,7 +27,7 @@ class IDirServiceProvider extends ServiceProvider
      * [public description]
      * @var string
      */
-    public const VERSION = "10.1.0-rc.2";
+    public const VERSION = "10.2.0";
 
     /**
      * Register services.
@@ -136,7 +136,6 @@ class IDirServiceProvider extends ServiceProvider
 
         $this->publishes([
             __DIR__ . '/../../public/images' => public_path('images/vendor/idir'),
-            __DIR__ . '/../../public/svg' => public_path('svg/vendor/idir')
         ], 'idir.public.images');
 
         $this->publishes([

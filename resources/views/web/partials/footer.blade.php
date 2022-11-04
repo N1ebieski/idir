@@ -90,29 +90,6 @@
                     v{{ config('idir.version') }}</a> by Mariusz Wysokiński
                 </small>
             </div>
-            <div 
-                class="btn-group my-auto" 
-                id="theme-toggle" 
-                role="group"
-                aria-label="{{ trans('icore::default.theme_toggle') }}"
-            >
-                <button 
-                    type="button" 
-                    class="btn btn-sm btn-light border" 
-                    style="width:80px;"
-                    {{ $isTheme(['', null], 'disabled') }}
-                >
-                    {{ trans('icore::default.light') }}
-                </button>
-                <button 
-                    type="button" 
-                    class="btn btn-sm btn-dark border" 
-                    style="width:80px;"
-                    {{ $isTheme('dark', 'disabled') }}
-                >
-                    {{ trans('icore::default.dark') }}
-                </button>
-            </div>
         </div>
     </div>
 </footer>

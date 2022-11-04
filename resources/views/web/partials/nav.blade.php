@@ -2,7 +2,7 @@
 <div id="navbar-logo" class="flex-grow-1 mr-2">
     <a href="/" class="navbar-brand" title="{{ config('app.name') }}">
         <img 
-            src="{{ asset('svg/vendor/idir/logo.svg') }}" 
+            src="{{ asset('images/vendor/idir/logo.svg') }}" 
             class="pb-1 logo"
             alt="{{ config('app.name_short') }}" 
             title="{{ config('app.name') }}"
@@ -21,7 +21,7 @@
 @endsection
 
 @section('search-toggler')
-<a href="#" class="nav-link search-toggler" role="button">
+<a href="#" class="nav-link search-toggler" style="margin-top:2px;" role="button">
     <i class="fa fa-lg fa-search"></i>
 </a>
 @endsection
@@ -91,8 +91,11 @@
                     @yield('search-toggler')
                 </li>
                 @endif
+                <li class="nav-item mx-md-1 dropdown">
+                    <x-icore::theme-component />
+                </li>
                 @if (app('router')->has('web.dir.create_1'))
-                <li class="nav-item mr-sm-0 mr-md-2 mb-2 mb-md-0">
+                <li class="nav-item mr-sm-0 mr-md-2 my-2 my-md-0">
                     <a 
                         class="nav-link btn btn-sm btn-primary text-white"
                         href="{{ route('web.dir.create_1') }}" 
