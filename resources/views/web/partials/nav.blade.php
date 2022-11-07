@@ -91,11 +91,8 @@
                     @yield('search-toggler')
                 </li>
                 @endif
-                <li class="nav-item mx-md-1 dropdown">
-                    <x-icore::theme-component />
-                </li>
                 @if (app('router')->has('web.dir.create_1'))
-                <li class="nav-item mr-sm-0 mr-md-2 my-2 my-md-0">
+                <li class="nav-item mr-sm-0 mr-md-1 my-2 my-md-0">
                     <a 
                         class="nav-link btn btn-sm btn-primary text-white"
                         href="{{ route('web.dir.create_1') }}" 
@@ -105,6 +102,11 @@
                     </a>
                 </li>
                 @endif
+                @if (count(config('icore.multi_themes')) > 1)
+                <li class="nav-item dropdown">
+                    <x-icore::multi-theme-component />
+                </li>
+                @endif                
                 <li class="nav-item dropdown {{ $isRouteContains('profile') }}">
                     @auth
                     <a 
@@ -157,7 +159,7 @@
                     </div>
                     @else
                     <a 
-                        class="nav-link btn btn-sm btn-outline-primary text-nowrap text-center text-primary" 
+                        class="nav-link btn btn-sm btn-outline-primary text-nowrap text-center text-primary ml-md-1" 
                         href="{{ route('login') }}" 
                         role="button" 
                         title="{{ trans('icore::auth.route.login') }}"
