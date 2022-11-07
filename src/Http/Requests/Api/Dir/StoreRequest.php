@@ -86,8 +86,7 @@ class StoreRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->group
-            && $this->group->isAvailable()
+        return $this->group->isAvailable()
             && ($this->group->visible->isActive() || optional($this->user())->can('admin.dirs.create'));
     }
 

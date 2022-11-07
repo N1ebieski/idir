@@ -89,9 +89,7 @@ class UpdateRequest extends FormRequest
      */
     public function authorize()
     {
-        $check = $this->group && (
-            $this->group->visible->isActive() || optional($this->user())->can('admin.dirs.edit')
-        );
+        $check = $this->group->visible->isActive() || optional($this->user())->can('admin.dirs.edit');
 
         return $this->group->id === $this->dir->group->id ?
             $check : $check && $this->group->isAvailable();
