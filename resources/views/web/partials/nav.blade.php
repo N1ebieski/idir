@@ -113,20 +113,20 @@
                         class="nav-link text-nowrap" 
                         href="#" 
                         role="button" 
-                        id="navbar-dropdown-men-profile"
+                        id="navbar-dropdown-menu-profile"
                         data-toggle="dropdown" 
                         aria-haspopup="true" 
                         aria-expanded="false"
                     >
                         <i class="fas fa-fw fa-lg fa-users-cog"></i>
-                        <span class="d-md-none d-lg-inline">{{ auth()->user()->short_name }}</span>
+                        <span class="d-inline d-md-none">{{ auth()->user()->short_name }}</span>
                     </a>
                     <div 
                         class="dropdown-menu dropdown-menu-right" 
-                        aria-labelledby="navbar-dropdown-men-profile"
+                        aria-labelledby="navbar-dropdown-menu-profile"
                     >
                         <h6 class="dropdown-header">
-                            {{ trans('icore::auth.hello')}}, {{ auth()->user()->name }}
+                            {{ trans('icore::auth.hello')}}, {{ auth()->user()->name }}!
                         </h6>
                         <a 
                             class="dropdown-item {{ $isUrl(route('web.profile.edit')) }}" 

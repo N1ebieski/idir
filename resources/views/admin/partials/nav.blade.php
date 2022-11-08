@@ -14,7 +14,7 @@
             alt="{{ config('app.name_short') }}" 
             title="{{ config('app.name') }}"
         >
-        <span>{{ config('app.name_short') }}</span>
+        <span class="d-none d-md-inline">{{ config('app.name_short') }}</span>
     </a>
     <ul class="navbar-nav ml-auto">
         @if (count(config('icore.multi_themes')) > 1)
@@ -29,7 +29,6 @@
                 aria-expanded="false"
             >
                 <span class="fas fa-lg fa-icore-{{ $currentTheme }}"></span>
-                <span class="d-inline d-md-none">{{ trans('icore::default.' . $currentTheme) }}</span>
             </a>
             <div 
                 class="dropdown-menu dropdown-menu-right"
@@ -58,20 +57,19 @@
                 class="nav-link text-nowrap" 
                 href="#" 
                 role="button" 
-                id="navbar-dropdown-menu-link"
+                id="navbar-dropdown-menu-profile"
                 data-toggle="dropdown" 
                 aria-haspopup="true" 
                 aria-expanded="false"
             >
                 <i class="fas fa-lg fa-users-cog"></i>
-                <span class="d-none d-sm-inline">{{ auth()->user()->short_name }}</span>
             </a>
             <div 
                 class="dropdown-menu dropdown-menu-right" 
-                aria-labelledby="navbar-dropdown-menu-link"
+                aria-labelledby="navbar-dropdown-menu-profile"
             >
                 <h6 class="dropdown-header">
-                    {{ trans('icore::auth.hello')}}, {{ auth()->user()->name }}
+                    {{ trans('icore::auth.hello')}}, {{ auth()->user()->name }}!
                 </h6>
                 <a 
                     class="dropdown-item {{ $isUrl(route('web.profile.edit')) }}" 
