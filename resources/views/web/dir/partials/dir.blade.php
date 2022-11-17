@@ -1,6 +1,6 @@
 <div class="mb-5 {{ $dir->group->border ?? null }}">
-    <div class="d-flex justify-content-between">
-        <h2 class="h5 border-bottom pb-2">
+    <div class="d-flex border-bottom mb-2 justify-content-between">
+        <h2 class="h5">
             {!! $dir->link !!}
         </h2>
         @can ('admin.dirs.view')

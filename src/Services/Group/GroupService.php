@@ -123,7 +123,9 @@ class GroupService
             // Manually remove relations, because the field model is polymorfic and foreign key doesn't work
             $this->group->fields()->detach();
 
-            return $this->group->delete();
+            $this->group->delete();
+
+            return true;
         });
     }
 }

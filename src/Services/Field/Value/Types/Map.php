@@ -18,6 +18,7 @@
 
 namespace N1ebieski\IDir\Services\Field\Value\Types;
 
+use Throwable;
 use N1ebieski\IDir\Services\Field\Value\Types\Value;
 use N1ebieski\IDir\Services\Field\Value\Types\Interfaces\ArrayInterface;
 
@@ -56,11 +57,11 @@ class Map extends Value implements ArrayInterface
     }
 
     /**
-     * Undocumented function
      *
-     * @return boolean
+     * @return int
+     * @throws Throwable
      */
-    public function delete(): bool
+    public function delete(): int
     {
         return $this->db->transaction(function () {
             return $this->field->morph->map()->delete();

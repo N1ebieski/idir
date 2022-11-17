@@ -104,7 +104,9 @@ class PriceService
     public function delete(): bool
     {
         return $this->db->transaction(function () {
-            return $this->price->delete();
+            $this->price->delete();
+
+            return true;
         });
     }
 }

@@ -466,7 +466,9 @@ class DirService
 
             $this->dir->detag();
 
-            return $this->dir->delete();
+            $this->dir->delete();
+
+            return true;
         });
     }
 

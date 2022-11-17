@@ -171,10 +171,11 @@ class DirRepo
     {
         // @phpstan-ignore-next-line
         return $this->dir->newQuery()
+            ->selectRaw('`dirs`.*')
             ->active()
-            ->filterOrderBy($filter['orderby'])
             ->withAnyTags($tag)
             ->withAllPublicRels()
+            ->filterOrderBy($filter['orderby'])
             ->filterPaginate($this->config->get('database.paginate'));
     }
 

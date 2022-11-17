@@ -44,9 +44,8 @@ interface ArrayInterface
     public function update(array $value): array;
 
     /**
-     * Undocumented function
      *
-     * @return boolean
+     * @return int
      */
-    public function delete(): bool;
+    public function delete(): int;
 }

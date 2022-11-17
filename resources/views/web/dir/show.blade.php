@@ -33,8 +33,8 @@
     <div class="row">
         <div class="col-md-8 order-2">
             <div class="mb-5">
-                <div class="d-flex justify-content-between">
-                    <h1 class="h4 border-bottom pb-2">
+                <div class="d-flex border-bottom mb-2 justify-content-between">
+                    <h1 class="h4">
                         {{ $dir->title }}
                     </h1>
                     @can ('admin.dirs.view')
