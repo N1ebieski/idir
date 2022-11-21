@@ -121,7 +121,7 @@ class Update3Request extends Update2Request
                         : 'nullable',
                     $this->input('url') !== null ?
                         'regex:/^' . Str::escaped($this->input('url')) . '/'
-                        : 'regex:/^(https|http):\/\/([\da-z\.-]+)(\.[a-z]{2,6})/',
+                        : 'regex:/^(https|http):\/\/([\da-z\.-]+)(\.[a-z]{2,7})/',
                     $this->group->backlink->isActive() && $this->has('backlink') ?
                         App::make('N1ebieski\\IDir\\Rules\\BacklinkRule', [
                             'link' => $link->url

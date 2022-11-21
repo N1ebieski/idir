@@ -236,7 +236,7 @@ class Store2Request extends FormRequest
                     'required'
                     : 'nullable',
                 'string',
-                'regex:/^(https|http):\/\/([\da-z\.-]+)(\.[a-z]{2,6})\/?$/',
+                'regex:/^(https|http):\/\/([\da-z\.-]+)(\.[a-z]{2,7})\/?$/',
                 !empty($this->bans_urls) ? 'not_regex:/(' . $this->bans_urls . ')/i' : null,
                 App::make(\N1ebieski\IDir\Rules\UniqueUrlRule::class, [
                     'table' => 'dirs',

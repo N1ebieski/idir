@@ -76,7 +76,7 @@ class CompleteRequest extends FormRequest implements CompleteRequestInterface
                 'bail',
                 'nullable',
                 'string',
-                'regex:/^(https|http):\/\/([\da-z\.-]+)(\.[a-z]{2,6})/'
+                'regex:/^(https|http):\/\/([\da-z\.-]+)(\.[a-z]{2,7})/'
             ]
         ];
     }

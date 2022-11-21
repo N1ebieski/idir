@@ -44,7 +44,7 @@ class Url extends ValueObject
      */
     protected function validate(string $value): void
     {
-        if (!preg_match('/^(https|http):\/\/([\da-z\.-]+)(\.[a-z]{2,6})(\/?$|\/.*)/', $value)) {
+        if (!preg_match('/^(https|http):\/\/([\d\p{L}\.-]+)(\.[a-z]{2,7})(\/?$|\/.*)/u', $value)) {
             throw new \InvalidArgumentException("The given value: '{$value}' must be valid url structure.");
         }
     }
