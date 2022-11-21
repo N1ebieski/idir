@@ -30,8 +30,6 @@ class Url extends ValueObject
     public function __construct(string $value = null)
     {
         if (is_string($value)) {
-            $value = idn_to_ascii($value);
-
             $this->validate($value);
         }
 
@@ -46,19 +44,9 @@ class Url extends ValueObject
      */
     protected function validate(string $value): void
     {
-        if (!preg_match('/^(https|http):\/\/([\da-z\.-]+)(\.[a-z]{2,7})(\/?$|\/.*)/', $value)) {
+        if (!preg_match('/^(https|http):\/\/([\d\p{Ll}\.-]+)(\.[a-z]{2,7})(\/?$|\/.*)/u', $value)) {
             throw new \InvalidArgumentException("The given value: '{$value}' must be valid url structure.");
         }
-    }
-
-    /**
-     * Get undocumented variable
-     *
-     * @return mixed
-     */
-    public function getValueAsUtf8()
-    {
-        return idn_to_utf8($this->getValue());
     }
 
     /**
@@ -72,12 +60,27 @@ class Url extends ValueObject
 
     /**
      *
+     * @return string
+     */
+    public function getValueAsAscii(): string
+    {
+        if ($this->isUrl()) {
+            $parts = parse_url($this->getValue());
+
+            return str_replace($parts['host'], idn_to_ascii($parts['host']), $this->getValue());
+        }
+
+        return null;
+    }
+
+    /**
+     *
      * @return null|string
      */
     public function getHost(): ?string
     {
         return $this->isUrl() ?
-            (parse_url($this->getValueAsUtf8(), PHP_URL_HOST) ?: '')
+            (parse_url($this->getValue(), PHP_URL_HOST) ?: '')
             : null;
     }
 }

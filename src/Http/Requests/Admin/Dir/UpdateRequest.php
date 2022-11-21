@@ -229,7 +229,7 @@ class UpdateRequest extends FormRequest
                     'required'
                     : 'nullable',
                 'string',
-                'regex:/^(https|http):\/\/([\da-z\.-]+)(\.[a-z]{2,7})\/?$/',
+                'regex:/^(https|http):\/\/([\d\p{Ll}\.-]+)(\.[a-z]{2,7})\/?$/u',
                 App::make(\N1ebieski\IDir\Rules\UniqueUrlRule::class, [
                     'table' => 'dirs',
                     'column' => 'url',
