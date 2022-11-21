@@ -56,9 +56,9 @@ class Url extends ValueObject
      *
      * @return mixed
      */
-    public function getValue()
+    public function getValueAsUtf8()
     {
-        return idn_to_utf8($this->value);
+        return idn_to_utf8($this->getValue());
     }
 
     /**
@@ -77,7 +77,7 @@ class Url extends ValueObject
     public function getHost(): ?string
     {
         return $this->isUrl() ?
-            (parse_url($this->getValue(), PHP_URL_HOST) ?: '')
+            (parse_url($this->getValueAsUtf8(), PHP_URL_HOST) ?: '')
             : null;
     }
 }
