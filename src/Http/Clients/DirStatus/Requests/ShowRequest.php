@@ -58,6 +58,17 @@ class ShowRequest
     }
 
     /**
+     *
+     * @return string
+     */
+    public function getUrlAsAscii(): string
+    {
+        $parts = parse_url($this->url);
+
+        return str_replace($parts['host'], idn_to_ascii($parts['host']), $this->url);
+    }
+
+    /**
      * Undocumented function
      *
      * @return ResponseInterface
@@ -68,7 +79,7 @@ class ShowRequest
         try {
             $response = $this->client->request(
                 $this->method,
-                $this->url,
+                $this->getUrlAsAscii(),
                 $this->options
             );
         } catch (\GuzzleHttp\Exception\GuzzleException $e) {
