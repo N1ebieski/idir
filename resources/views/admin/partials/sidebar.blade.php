@@ -64,11 +64,11 @@
             >
                 <i class="far fa-fw fa-folder-open"></i>
                 <span>{{ trans('idir::dirs.route.index') }}</span>
-                @if ($dirs_inactive_count > 0)
-                <span class="badge badge-warning"> {{ $dirs_inactive_count }}</span>
+                @if ($dirsInactiveCount > 0)
+                <span class="badge badge-warning"> {{ $dirsInactiveCount }}</span>
                 @endif
-                @if ($dirs_reported_count > 0)
-                <span class="badge badge-danger"> {{ $dirs_reported_count }}</span>
+                @if ($dirsReportedCount > 0)
+                <span class="badge badge-danger"> {{ $dirsReportedCount }}</span>
                 @endif
             </div>
             <div class="dropdown-menu" aria-labelledby="dir-dropdown">
@@ -79,23 +79,23 @@
                     style="cursor: pointer;"
                 >
                     <span>{{ trans('idir::dirs.route.index') }}</span>
-                    @if ($dirs_inactive_count > 0)
+                    @if ($dirsInactiveCount > 0)
                     <span>
                         <a 
                             href="{{ route('admin.dir.index', ['filter[status]' => Dir\Status::INACTIVE]) }}"
                             class="badge badge-warning"
                         >
-                            {{ $dirs_inactive_count }}
+                            {{ $dirsInactiveCount }}
                         </a>
                     </span>
                     @endif
-                    @if ($dirs_reported_count > 0)
+                    @if ($dirsReportedCount > 0)
                     <span>
                         <a 
                             href="{{ route('admin.dir.index', ['filter[report]' => Dir\Status::ACTIVE]) }}"
                             class="badge badge-danger"
                         >
-                            {{ $dirs_reported_count }}
+                            {{ $dirsReportedCount }}
                         </a>
                     </span>
                     @endif                    
@@ -130,11 +130,11 @@
             >
                 <i class="fas fa-fw fa-comments"></i>
                 <span> {{ trans('icore::comments.route.index') }} </span>
-                @if ($count = $comments_inactive_count->sum('count'))
+                @if ($count = $commentsInactiveCount->sum('count'))
                 <span class="badge badge-warning">{{ $count }}</span>
                 @endif
-                @if ($count = $comments_reported_count->sum('count'))
-                <span class="badge badge-danger">{{ $comments_reported_count->sum('count') }}</span>
+                @if ($count = $commentsReportedCount->sum('count'))
+                <span class="badge badge-danger">{{ $commentsReportedCount->sum('count') }}</span>
                 @endif
             </a>
             <div class="dropdown-menu" aria-labelledby="comment-dropdown">
@@ -148,7 +148,7 @@
                     style="cursor: pointer;"
                 >
                     <span>{{ trans("icore::comments.{$type}.{$type}") }}</span>
-                    @if ($count = $comments_inactive_count->where('model', $type)->first())
+                    @if ($count = $commentsInactiveCount->where('model', $type)->first())
                     <span>
                         <a 
                             href="{{ route("admin.comment.{$type}.index", ['filter[status]' => Comment\Status::INACTIVE]) }}"
@@ -158,7 +158,7 @@
                         </a>
                     </span>
                     @endif
-                    @if ($count = $comments_reported_count->where('model', $type)->first())
+                    @if ($count = $commentsReportedCount->where('model', $type)->first())
                     <span>
                         <a 
                             href="{{ route("admin.comment.{$type}.index", ['filter[report]' => Report\Reported::ACTIVE]) }}"

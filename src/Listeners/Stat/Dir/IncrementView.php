@@ -33,22 +33,15 @@ class IncrementView
 {
     /**
      *
-     * @var Stat
-     */
-    protected $stat;
-
-    /**
-     *
      * @param Stat $stat
      * @param MigrationUtil $migrationUtil
      * @return void
      */
     public function __construct(
-        Stat $stat,
+        protected Stat $stat,
         protected MigrationUtil $migrationUtil
     ) {
-        // @phpstan-ignore-next-line
-        $this->stat = $stat->makeCache()->rememberBySlug(Slug::VIEW);
+        //
     }
 
     /**
@@ -74,7 +67,10 @@ class IncrementView
             return;
         }
 
-        $this->stat->setRelations(['morph' => $event->dir])
+        /** @var Stat */
+        $stat = $this->stat->makeCache()->rememberBySlug(Slug::VIEW);
+
+        $stat->setRelations(['morph' => $event->dir])
             ->makeService()
             ->increment();
     }
@@ -96,7 +92,10 @@ class IncrementView
         ->filter(fn (Dir $dir) => $this->verify($dir));
 
         if ($morphs->isNotEmpty()) {
-            $this->stat->setRelations(['morphs' => $morphs])
+            /** @var Stat */
+            $stat = $this->stat->makeCache()->rememberBySlug(Slug::VIEW);
+
+            $stat->setRelations(['morphs' => $morphs])
                 ->makeService()
                 ->incrementGlobal();
         }
