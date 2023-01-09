@@ -13,8 +13,18 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <link rel="canonical" href="{{ $getUrl }}">
-    <link rel="icon" href="{{ asset('images/vendor/idir/logo.svg') }}" type="image/svg+xml">
-    <link rel="apple-touch-icon" href="{{ asset('images/vendor/idir/logo.png') }}">  
+
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('images/vendor/idir/icons/apple-touch-icon.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('images/vendor/idir/icons/favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="192x192" href="{{ asset('images/vendor/idir/icons/android-chrome-192x192.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('images/vendor/idir/icons/favicon-16x16.png') }}">
+    <link rel="manifest" href="{{ asset('images/vendor/idir/icons/site.webmanifest') }}">
+    <link rel="mask-icon" href="{{ asset('images/vendor/idir/icons/safari-pinned-tab.svg') }}" color="#5bbad5">
+    <link rel="shortcut icon" href="{{ asset('images/vendor/idir/icons/favicon.ico') }}">
+    <meta name="msapplication-TileColor" content="#2d89ef">
+    <meta name="msapplication-config" content="{{ asset('images/vendor/idir/icons/browserconfig.xml') }}">
+    <meta name="theme-color" content="#ffffff">
+
     <link href="{{ asset(mix('css/vendor/idir/vendor/vendor.css')) }}" rel="stylesheet">
     @stack('style')
     <link href="{{ asset(mix($getStylesheet('css/vendor/idir'))) }}" rel="stylesheet">
