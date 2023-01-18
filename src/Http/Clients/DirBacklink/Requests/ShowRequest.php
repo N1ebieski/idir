@@ -58,8 +58,10 @@ class ShowRequest
      */
     public function getUrlAsAscii(): string
     {
+        /** @var array */
         $parts = parse_url($this->url);
 
+        // @phpstan-ignore-next-line
         return str_replace($parts['host'], idn_to_ascii($parts['host']), $this->url);
     }
 

@@ -30,6 +30,7 @@ use Illuminate\Database\Query\JoinClause;
 use Cviebrock\EloquentSluggable\Sluggable;
 use N1ebieski\IDir\Models\Field\Dir\Field;
 use N1ebieski\IDir\Services\Dir\DirService;
+use N1ebieski\IDir\Models\Category\Category;
 use N1ebieski\IDir\Repositories\Dir\DirRepo;
 use N1ebieski\IDir\Models\Traits\HasFilterable;
 use N1ebieski\ICore\Models\Traits\HasCarbonable;
@@ -445,8 +446,8 @@ class Dir extends Model implements
         return $query->with([
             'group',
             'group.prices',
-            'group.fields' => function ($query) {
-                $query->orderBy('position', 'asc');
+            'group.fields' => function (MorphToMany|Builder $query) {
+                return $query->orderBy('position', 'asc');
             },
             'group.privileges',
             'fields',
@@ -475,7 +476,7 @@ class Dir extends Model implements
     {
         return $query->with([
             'group',
-            'group.fields' => function ($query) {
+            'group.fields' => function (MorphToMany|Builder $query) {
                 return $query->public();
             },
             'group.privileges',
@@ -499,8 +500,8 @@ class Dir extends Model implements
     public function scopeWithSumRating(Builder $query): Builder
     {
         return $query->withCount([
-            'ratings AS sum_rating' => function ($query) {
-                $query->select(DB::raw('COALESCE(SUM(`ratings`.`rating`)/COUNT(*), 0) as `sum_rating`'));
+            'ratings AS sum_rating' => function (MorphMany|Builder $query) {
+                return $query->select(DB::raw('COALESCE(SUM(`ratings`.`rating`)/COUNT(*), 0) as `sum_rating`'));
             }
         ]);
     }
@@ -668,6 +669,18 @@ class Dir extends Model implements
      * @return Attribute
      * @throws BindingResolutionException
      */
+    public function content(): Attribute
+    {
+        return App::make(\N1ebieski\IDir\Attributes\Dir\Content::class, [
+            'dir' => $this
+        ])();
+    }
+
+    /**
+     *
+     * @return Attribute
+     * @throws BindingResolutionException
+     */
     public function contentHtml(): Attribute
     {
         return App::make(\N1ebieski\IDir\Attributes\Dir\ContentHtml::class, [
@@ -782,7 +795,7 @@ class Dir extends Model implements
      */
     public function loadCheckoutPayments(): self
     {
-        return $this->load(['payments' => function ($query) {
+        return $this->load(['payments' => function (MorphMany|Builder $query) {
             $query->with('orderMorph')->where('status', PaymentStatus::UNFINISHED);
         }]);
     }
@@ -796,14 +809,13 @@ class Dir extends Model implements
     {
         return $this->load(array_filter([
                 'fields',
-                'categories' => function ($query) {
+                'categories' => function (MorphToMany|Builder|Category $query) {
                     return $query->withAncestorsExceptSelf();
                 },
                 'group',
                 'group.privileges',
-                'group.fields' => function ($query) {
-                    return $query->orderBy('position', 'asc')
-                        ->public();
+                'group.fields' => function (MorphToMany|Builder|Field $query) {
+                    return $query->orderBy('position', 'asc')->public();
                 },
                 'tags',
                 'regions',
@@ -827,7 +839,7 @@ class Dir extends Model implements
             'fields',
             'regions',
             'ratings',
-            'categories' => function ($query) {
+            'categories' => function (MorphToMany|Builder|Category $query) {
                 return $query->withAncestorsExceptSelf();
             },
             'tags',
@@ -836,17 +848,6 @@ class Dir extends Model implements
             App::make(MigrationUtil::class)->contains('create_stats_table') ?
                 'stats' : null
         ]));
-    }
-
-    // Mutators
-
-    /**
-     * [setContentAttribute description]
-     * @param string $value [description]
-     */
-    public function setContentAttribute(string $value): void
-    {
-        $this->attributes['content'] = !empty($value) ? strip_tags($value) : null;
     }
 
     // Factories

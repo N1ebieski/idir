@@ -60,13 +60,15 @@ class Url extends ValueObject
 
     /**
      *
-     * @return string
+     * @return string|null
      */
-    public function getValueAsAscii(): string
+    public function getValueAsAscii(): ?string
     {
         if ($this->isUrl()) {
+            /** @var array */
             $parts = parse_url($this->getValue());
 
+            // @phpstan-ignore-next-line
             return str_replace($parts['host'], idn_to_ascii($parts['host']), $this->getValue());
         }
 

@@ -20,6 +20,7 @@ namespace N1ebieski\IDir\Models;
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\App;
+use N1ebieski\IDir\Models\Field\Field;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Cviebrock\EloquentSluggable\Sluggable;
@@ -377,8 +378,8 @@ class Group extends Model
     public function loadPublicFields(): Group
     {
         return $this->load([
-            'fields' => function ($query) {
-                $query->public();
+            'fields' => function (MorphToMany|Builder|Field $query) {
+                return $query->public();
             }
         ]);
     }
