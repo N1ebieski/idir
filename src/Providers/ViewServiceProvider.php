@@ -44,34 +44,22 @@ class ViewServiceProvider extends ServiceProvider
         $bladeCompiler->componentNamespace('N1ebieski\\ICore\\View\\Components', 'icore');
         $bladeCompiler->componentNamespace('N1ebieski\\IDir\\View\\Components', 'idir');
 
-        /** @var \N1ebieski\ICore\View\Directives\RenderDirective */
-        $renderDirective = $this->app->make(\N1ebieski\ICore\View\Directives\RenderDirective::class, [
+        Blade::directive('render', $this->app->make(\N1ebieski\ICore\View\Directives\RenderDirective::class, [
             'bladeCompiler' => $bladeCompiler
-        ]);
-
-        Blade::directive('render', $renderDirective);
+        ]));
 
         // Composers
 
         $layout = Config::get('idir.layout');
 
-        /** @var \N1ebieski\IDir\View\Composers\Admin\SidebarComposer */
-        $sidebarComposer = $this->app->make(\N1ebieski\IDir\View\Composers\Admin\SidebarComposer::class);
-
-        View::composer($layout . '::admin.partials.sidebar', $sidebarComposer::class);
-
-        /** @var \N1ebieski\IDir\View\Composers\RegionsComposer */
-        $regionsComposer = $this->app->make(\N1ebieski\IDir\View\Composers\RegionsComposer::class);
+        View::composer($layout . '::admin.partials.sidebar', \N1ebieski\IDir\View\Composers\Admin\SidebarComposer::class);
 
         View::composer([
             $layout . '::web.field.partials.regions',
             $layout . '::admin.field.partials.regions',
             $layout . '::web.dir.partials.summary',
             $layout . '::admin.dir.partials.summary'
-        ], $regionsComposer::class);
-
-        /** @var \N1ebieski\IDir\View\Composers\DriverComposer */
-        $driverComposer = $this->app->make(\N1ebieski\IDir\View\Composers\DriverComposer::class);
+        ], \N1ebieski\IDir\View\Composers\RegionsComposer::class);
 
         View::composer([
             $layout . '::web.dir.partials.group',
@@ -79,6 +67,6 @@ class ViewServiceProvider extends ServiceProvider
             $layout . '::admin.dir.partials.group',
             $layout . '::admin.dir.partials.payment',
             $layout . '::admin.price.partials.price'
-        ], $driverComposer::class);
+        ], \N1ebieski\IDir\View\Composers\DriverComposer::class);
     }
 }
