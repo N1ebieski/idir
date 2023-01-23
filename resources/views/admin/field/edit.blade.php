@@ -17,7 +17,7 @@
 >
     <div class="form-group">
         <label for="title">
-            {{ trans('idir::fields.title') }}
+            {{ trans('idir::fields.title') }}:
         </label>
         <input 
             type="text" 

@@ -103,7 +103,7 @@
                 </div>
                 <div class="form-group col-xs-4 mr-2">
                     <label class="sr-only" for="filter-orderby">
-                        {{ trans('icore::filter.order') }}
+                        {{ trans('icore::filter.order') }}:
                     </label>
                     <select 
                         class="form-control custom-select filter" 
@@ -189,7 +189,7 @@
                 </div>
                 <div class="form-group col-xs-4">
                     <label class="sr-only" for="filter-paginate">
-                        {{ trans('icore::filter.paginate') }}
+                        {{ trans('icore::filter.paginate') }}:
                     </label>
                     <select 
                         class="form-control custom-select filter" 

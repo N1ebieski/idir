@@ -45,7 +45,7 @@
             >
                 <div class="form-group">
                     <label for="payment_transfer" class="sr-only"> 
-                        {{ trans('idir::dirs.payment_transfer') }}
+                        {{ trans('idir::dirs.payment_transfer') }}:
                     </label>
                     <select 
                         class="selectpicker select-picker {{ $isValid('payment_transfer') }}" 
@@ -108,7 +108,7 @@
             >
                 <div class="form-group">
                     <label for="payment_code_transfer" class="sr-only"> 
-                        {{ trans('idir::dirs.payment_code_transfer') }}
+                        {{ trans('idir::dirs.payment_code_transfer') }}:
                     </label>
                     <select 
                         class="selectpicker select-picker {{ $isValid('payment_code_transfer') }}" 
@@ -187,7 +187,7 @@
             >
                 <div class="form-group">
                     <label for="payment_code_sms" class="sr-only"> 
-                        {{ trans('idir::dirs.payment_code_sms') }}
+                        {{ trans('idir::dirs.payment_code_sms') }}:
                     </label>
                     <select 
                         class="selectpicker select-picker {{ $isValid('payment_code_sms') }}" 
@@ -270,7 +270,7 @@
             >
                 <div class="form-group">
                     <label for="payment_paypal_express" class="sr-only"> 
-                        {{ trans('idir::dirs.payment_paypal_express') }}
+                        {{ trans('idir::dirs.payment_paypal_express') }}:
                     </label>
                     <select 
                         class="selectpicker select-picker {{ $isValid('payment_paypal_express') }}" 

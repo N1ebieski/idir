@@ -1,6 +1,6 @@
 <div class="form-group">
     <label for="{{ $name[0] }}.{{ $name[1] }}">
-        {{ trans("idir::fields.{$name[1]}.label") }}
+        {{ trans("idir::fields.{$name[1]}.label") }}:
     </label>
     <input 
         type="text" 

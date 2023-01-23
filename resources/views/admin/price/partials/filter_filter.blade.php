@@ -11,7 +11,7 @@
 @if ($groups->isNotEmpty())
 <div class="form-group">
     <label for="filter-group">
-        {{ trans('icore::filter.filter') }} "{{ trans('idir::filter.group') }}"
+        {{ trans('icore::filter.filter') }} "{{ trans('idir::filter.group') }}":
     </label>
     <select 
         class="form-control custom-select" 
@@ -34,7 +34,7 @@
 @endif
 <div class="form-group">
     <label for="filter-type">
-        {{ trans('icore::filter.filter') }} "{{ trans('icore::filter.type') }}"
+        {{ trans('icore::filter.filter') }} "{{ trans('icore::filter.type') }}":
     </label>
     <select 
         class="form-control custom-select" 

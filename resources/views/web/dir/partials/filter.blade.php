@@ -5,7 +5,7 @@
     <div class="d-flex position-relative">
         <div class="form-group ml-auto">
             <label class="sr-only" for="filter-orderby">
-                {{ trans('icore::filter.order') }}
+                {{ trans('icore::filter.order') }}:
             </label>
             <select 
                 class="form-control custom-select filter" 
