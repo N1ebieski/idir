@@ -16,7 +16,7 @@
  * @license   https://intelekt.net.pl/pages/regulamin
  */
 
-namespace N1ebieski\IDir\Tests\Feature\Api\Dir\Delete;
+namespace N1ebieski\IDir\Tests\Feature\Api\Dir;
 
 use Tests\TestCase;
 use Laravel\Sanctum\Sanctum;
@@ -28,18 +28,18 @@ use N1ebieski\IDir\Mail\Dir\DeletedMail;
 use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
-class DirTest extends TestCase
+class DeleteDirTest extends TestCase
 {
     use DatabaseTransactions;
 
-    public function testApiDirDestroyAsGuest(): void
+    public function testDestroyAsGuest(): void
     {
         $response = $this->deleteJson(route('api.dir.destroy', [rand(1, 1000)]));
 
         $response->assertStatus(HttpResponse::HTTP_UNAUTHORIZED);
     }
 
-    public function testApiDirDestroyAsUserWithoutPermission(): void
+    public function testDestroyAsUserWithoutPermission(): void
     {
         /** @var User */
         $user = User::makeFactory()->user()->create();
@@ -59,7 +59,7 @@ class DirTest extends TestCase
         $response->assertJson(['message' => 'User does not have the right permissions.']);
     }
 
-    public function testApiDirDestroyAsUserWithoutAbility(): void
+    public function testDestroyAsUserWithoutAbility(): void
     {
         /** @var User */
         $user = User::makeFactory()->user()->api()->create();
@@ -79,7 +79,7 @@ class DirTest extends TestCase
         $response->assertJson(['message' => 'Invalid ability provided.']);
     }
 
-    public function testApiDirDestroyForeignDir(): void
+    public function testDestroyForeignDir(): void
     {
         /** @var User */
         $user = User::makeFactory()->user()->api()->create();
@@ -97,7 +97,7 @@ class DirTest extends TestCase
         $response->assertStatus(HttpResponse::HTTP_FORBIDDEN);
     }
 
-    public function testApiDirDestroyNoExistDir(): void
+    public function testDestroyNoExistDir(): void
     {
         /** @var User */
         $user = User::makeFactory()->user()->api()->create();
@@ -109,7 +109,7 @@ class DirTest extends TestCase
         $response->assertStatus(HttpResponse::HTTP_NOT_FOUND);
     }
 
-    public function testApiDirDestroyAsUserInDatabase(): void
+    public function testDestroyAsUserInDatabase(): void
     {
         /** @var User */
         $user = User::makeFactory()->user()->api()->create();
@@ -151,7 +151,7 @@ class DirTest extends TestCase
         ]);
     }
 
-    public function testApiDirDestroyAsAdminInDatabase(): void
+    public function testDestroyAsAdminInDatabase(): void
     {
         /** @var User */
         $user = User::makeFactory()->user()->api()->create();

@@ -21,18 +21,18 @@ namespace N1ebieski\IDir\Http\Controllers\Api;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Response;
-use N1ebieski\IDir\Utils\Thumbnail\Thumbnail;
 use N1ebieski\IDir\Http\Requests\Api\Thumbnail\ReloadRequest;
+use N1ebieski\IDir\Utils\Thumbnail\Interfaces\ThumbnailInterface;
 
 class ThumbnailController extends Controller
 {
     /**
-     * @hideFromAPIDocumentation
      *
      * @param ReloadRequest $request
+     * @param ThumbnailInterface $thumbnail
      * @return JsonResponse
      */
-    public function reload(ReloadRequest $request, Thumbnail $thumbnail): JsonResponse
+    public function reload(ReloadRequest $request, ThumbnailInterface $thumbnail): JsonResponse
     {
         $thumbnail->make($request->input('url'))->reload();
 

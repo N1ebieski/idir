@@ -33,387 +33,29 @@ use N1ebieski\IDir\ValueObjects\Price\Type;
 use Illuminate\Database\Eloquent\Collection;
 use N1ebieski\IDir\Models\Field\Group\Field;
 use Illuminate\Http\Response as HttpResponse;
+use N1ebieski\IDir\Testing\Traits\Dir\HasDir;
 use N1ebieski\IDir\Models\Payment\Dir\Payment;
 use GuzzleHttp\Psr7\Response as GuzzleResponse;
-use N1ebieski\IDir\Tests\Feature\Traits\HasDir;
 use N1ebieski\IDir\Models\Category\Dir\Category;
-use N1ebieski\IDir\Tests\Feature\Traits\HasFields;
+use N1ebieski\IDir\Testing\Traits\Field\HasFields;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use N1ebieski\IDir\ValueObjects\Field\Type as FieldType;
 use N1ebieski\IDir\ValueObjects\Payment\Status as PaymentStatus;
 
-class DirTest extends TestCase
+class Update3DirTest extends TestCase
 {
     use HasDir;
     use HasFields;
     use DatabaseTransactions;
 
-    public function testDirEdit1AsGuest(): void
-    {
-        $response = $this->get(route('web.dir.edit_1', [232]));
-
-        $response->assertRedirect(route('login'));
-    }
-
-    public function testNoexistDirEdit1(): void
-    {
-        /** @var User */
-        $user = User::makeFactory()->user()->create();
-
-        Auth::login($user);
-
-        $response = $this->get(route('web.dir.edit_1', [232]));
-
-        $response->assertStatus(HttpResponse::HTTP_NOT_FOUND);
-    }
-
-    public function testForeignDirEdit1(): void
-    {
-        /** @var User */
-        $user = User::makeFactory()->user()->create();
-
-        Auth::login($user);
-
-        /** @var Group */
-        $group = Group::makeFactory()->public()->create();
-
-        /** @var Dir */
-        $dir = Dir::makeFactory()->for($group)->withUser()->create();
-
-        $response = $this->get(route('web.dir.edit_1', [$dir->id]));
-
-        $response->assertStatus(HttpResponse::HTTP_FORBIDDEN);
-    }
-
-    public function testDirEdit1(): void
-    {
-        /** @var User */
-        $user = User::makeFactory()->user()->create();
-
-        /** @var Collection<Group>|array<Group> */
-        $publicGroups = Group::makeFactory()->count(3)->public()->create();
-
-        /** @var Group */
-        $privateGroup = Group::makeFactory()->private()->create([
-            'name' => 'Private Group'
-        ]);
-
-        /** @var Dir */
-        $dir = Dir::makeFactory()->for($user)->for($publicGroups[1])->create();
-
-        Auth::login($user);
-
-        $response = $this->get(route('web.dir.edit_1', [$dir->id]));
-
-        $response->assertOk()
-            ->assertViewIs('idir::web.dir.edit.1')
-            ->assertSee(route('web.dir.edit_2', [$dir->id, $publicGroups[1]->id]))
-            ->assertSee($publicGroups[1]->name)
-            ->assertDontSee($privateGroup->name);
-    }
-
-    public function testDirEdit2AsGuest(): void
-    {
-        $response = $this->get(route('web.dir.edit_2', [34, 23]));
-
-        $response->assertRedirect(route('login'));
-    }
-
-    public function testDirEdit2NoexistGroup(): void
-    {
-        /** @var User */
-        $user = User::makeFactory()->user()->create();
-
-        Auth::login($user);
-
-        /** @var Group */
-        $group = Group::makeFactory()->public()->create();
-
-        /** @var Dir */
-        $dir = Dir::makeFactory()->for($group)->for($user)->create();
-
-        $response = $this->get(route('web.dir.edit_2', [$dir->id, 23]));
-
-        $response->assertStatus(HttpResponse::HTTP_NOT_FOUND);
-    }
-
-    public function testDirEdit2NoexistDir(): void
-    {
-        /** @var User */
-        $user = User::makeFactory()->user()->create();
-
-        Auth::login($user);
-
-        /** @var Group */
-        $group = Group::makeFactory()->public()->create();
-
-        $response = $this->get(route('web.dir.edit_2', [34, $group->id]));
-
-        $response->assertStatus(HttpResponse::HTTP_NOT_FOUND);
-    }
-
-    public function testDirEdit2Foreign(): void
-    {
-        /** @var User */
-        $user = User::makeFactory()->user()->create();
-
-        Auth::login($user);
-
-        /** @var Group */
-        $group = Group::makeFactory()->public()->create();
-
-        /** @var Dir */
-        $dir = Dir::makeFactory()->withUser()->create();
-
-        $response = $this->get(route('web.dir.edit_2', [$dir->id, $group->id]));
-
-        $response->assertStatus(HttpResponse::HTTP_FORBIDDEN);
-    }
-
-    public function testDirEdit2PrivateGroup(): void
-    {
-        /** @var User */
-        $user = User::makeFactory()->user()->create();
-
-        Auth::login($user);
-
-        /** @var Group */
-        $privateGroup = Group::makeFactory()->private()->create();
-
-        /** @var Group */
-        $publicGroup = Group::makeFactory()->public()->create();
-
-        /** @var Dir */
-        $dir = Dir::makeFactory()->for($publicGroup)->for($user)->create();
-
-        $response = $this->get(route('web.dir.edit_2', [$dir->id, $privateGroup->id]));
-
-        $response->assertStatus(HttpResponse::HTTP_FORBIDDEN);
-    }
-
-    public function testDirEdit2MaxModelsNewGroup(): void
-    {
-        /** @var User */
-        $user = User::makeFactory()->user()->create();
-
-        /** @var Group */
-        $newGroup = Group::makeFactory()->public()->maxModels()->create();
-
-        /** @var Dir */
-        $dir = Dir::makeFactory()->withUser()->for($newGroup)->create();
-
-        /** @var Group */
-        $oldGroup = Group::makeFactory()->public()->create();
-
-        Dir::makeFactory()->for($oldGroup)->for($user)->create();
-
-        Auth::login($user);
-
-        $response = $this->get(route('web.dir.edit_2', [$dir->id, $newGroup->id]));
-
-        $response->assertStatus(HttpResponse::HTTP_FORBIDDEN);
-    }
-
-    public function testDirEdit2MaxModelsOldGroup(): void
-    {
-        /** @var User */
-        $user = User::makeFactory()->user()->create();
-
-        /** @var Group */
-        $group = Group::makeFactory()->public()->maxModels()->create();
-
-        /** @var Dir */
-        $dir = Dir::makeFactory()->for($group)->for($user)->create();
-
-        Auth::login($user);
-
-        $this->get(route('web.dir.edit_1', [$dir->id]));
-
-        $response2 = $this->get(route('web.dir.edit_2', [$dir->id, $group->id]));
-
-        $response2->assertOk()
-            ->assertViewIs('idir::web.dir.edit.2')
-            ->assertSee($dir->title);
-    }
-
-    public function testDirEdit2(): void
-    {
-        /** @var User */
-        $user = User::makeFactory()->user()->create();
-
-        Auth::login($user);
-
-        /** @var Group */
-        $group = Group::makeFactory()->public()->additionalOptionsForEditingContent()->create();
-
-        /** @var Dir */
-        $dir = Dir::makeFactory()->for($group)->for($user)->create();
-
-        $this->get(route('web.dir.edit_1', [$dir->id]));
-
-        $response2 = $this->get(route('web.dir.edit_2', [$dir->id, $group->id]));
-
-        $response2->assertOk()
-            ->assertViewIs('idir::web.dir.edit.2')
-            ->assertSee('trumbowyg')
-            ->assertSee(route('web.dir.update_2', [$dir->id, $group->id]));
-    }
-
-    public function testDirUpdate2AsGuest(): void
-    {
-        $response = $this->put(route('web.dir.update_2', [34, 23]));
-
-        $response->assertRedirect(route('login'));
-    }
-
-    public function testDirUpdate2NoexistGroup(): void
-    {
-        /** @var User */
-        $user = User::makeFactory()->user()->create();
-
-        Auth::login($user);
-
-        /** @var Group */
-        $group = Group::makeFactory()->public()->create();
-
-        /** @var Dir */
-        $dir = Dir::makeFactory()->for($group)->for($user)->create();
-
-        $response = $this->put(route('web.dir.update_2', [$dir->id, 23]));
-
-        $response->assertStatus(HttpResponse::HTTP_NOT_FOUND);
-    }
-
-    public function testDirUpdate2NoexistDir(): void
-    {
-        /** @var User */
-        $user = User::makeFactory()->user()->create();
-
-        Auth::login($user);
-
-        /** @var Group */
-        $group = Group::makeFactory()->public()->create();
-
-        $response = $this->put(route('web.dir.update_2', [34, $group->id]));
-
-        $response->assertStatus(HttpResponse::HTTP_NOT_FOUND);
-    }
-
-    public function testDirUpdate2Foreign(): void
-    {
-        /** @var User */
-        $user = User::makeFactory()->user()->create();
-
-        Auth::login($user);
-
-        /** @var Group */
-        $group = Group::makeFactory()->public()->create();
-
-        /** @var Dir */
-        $dir = Dir::makeFactory()->withUser()->create();
-
-        $response = $this->put(route('web.dir.update_2', [$dir->id, $group->id]));
-
-        $response->assertStatus(HttpResponse::HTTP_FORBIDDEN);
-    }
-
-    public function testDirUpdate2PrivateGroup(): void
-    {
-        /** @var User */
-        $user = User::makeFactory()->user()->create();
-
-        Auth::login($user);
-
-        /** @var Group */
-        $group = Group::makeFactory()->private()->create();
-
-        Group::makeFactory()->public()->create();
-
-        /** @var Dir */
-        $dir = Dir::makeFactory()->for($group)->for($user)->create();
-
-        $response = $this->put(route('web.dir.update_2', [$dir->id, $group->id]));
-
-        $response->assertStatus(HttpResponse::HTTP_FORBIDDEN);
-    }
-
-    public function testDirUpdate2ValidationFail(): void
-    {
-        /** @var User */
-        $user = User::makeFactory()->user()->create();
-
-        Auth::login($user);
-
-        /** @var Group */
-        $groupWithUrl = Group::makeFactory()->public()->requiredUrl()->create();
-
-        /** @var Group */
-        $group = Group::makeFactory()->public()->create();
-
-        /** @var Dir */
-        $dir = Dir::makeFactory()->withoutUrl()->for($group)->for($user)->create();
-
-        $this->get(route('web.dir.edit_1', [$dir->id]));
-
-        $response2 = $this->put(route('web.dir.update_2', [$dir->id, $groupWithUrl->id]));
-
-        $response2->assertSessionHasErrors(['url', 'categories']);
-    }
-
-    public function testDirUpdate2ValidationUrlFail(): void
-    {
-        /** @var User */
-        $user = User::makeFactory()->user()->create();
-
-        Auth::login($user);
-
-        /** @var Group */
-        $groupWithUrl = Group::makeFactory()->public()->requiredUrl()->create();
-
-        /** @var Group */
-        $group = Group::makeFactory()->public()->create();
-
-        /** @var Dir */
-        $dir = Dir::makeFactory()->withoutUrl()->for($group)->for($user)->create();
-
-        $response = $this->put(route('web.dir.update_2', [$dir->id, $groupWithUrl->id]), [
-            'url' => 'dadasdasdasdasdsa23232'
-        ]);
-
-        $response->assertSessionHasErrors(['url']);
-    }
-
-    public function testDirUpdate2(): void
-    {
-        /** @var User */
-        $user = User::makeFactory()->user()->create();
-
-        Auth::login($user);
-
-        /** @var Group */
-        $groupWithUrl = Group::makeFactory()->public()->requiredUrl()->additionalOptionsForEditingContent()->create();
-
-        /** @var Group */
-        $group = Group::makeFactory()->public()->create();
-
-        /** @var Dir */
-        $dir = Dir::makeFactory()->withoutUrl()->for($group)->for($user)->create();
-
-        $response = $this->put(route('web.dir.update_2', [$dir->id, $groupWithUrl->id]), $this->setUpDir());
-
-        $response->assertRedirect(route('web.dir.edit_3', [$dir->id, $groupWithUrl->id]));
-
-        $response->assertSessionHas("dirId.{$dir->id}.title", $this->setUpDir()['title']);
-    }
-
-    public function testDirEdit3AsGuest(): void
+    public function testEdit3AsGuest(): void
     {
         $response = $this->get(route('web.dir.edit_3', [34, 23]));
 
         $response->assertRedirect(route('login'));
     }
 
-    public function testDirEdit3NoexistGroup(): void
+    public function testEdit3NoExistGroup(): void
     {
         /** @var User */
         $user = User::makeFactory()->user()->create();
@@ -431,7 +73,7 @@ class DirTest extends TestCase
         $response->assertStatus(HttpResponse::HTTP_NOT_FOUND);
     }
 
-    public function testDirEdit3NoexistDir(): void
+    public function testEdit3NoExist(): void
     {
         /** @var User */
         $user = User::makeFactory()->user()->create();
@@ -446,7 +88,7 @@ class DirTest extends TestCase
         $response->assertStatus(HttpResponse::HTTP_NOT_FOUND);
     }
 
-    public function testDirEdit3Foreign(): void
+    public function testEdit3Foreign(): void
     {
         /** @var User */
         $user = User::makeFactory()->user()->create();
@@ -464,7 +106,7 @@ class DirTest extends TestCase
         $response->assertStatus(HttpResponse::HTTP_FORBIDDEN);
     }
 
-    public function testDirEdit3OldPaidGroup(): void
+    public function testEdit3OldPaidGroup(): void
     {
         /** @var User */
         $user = User::makeFactory()->user()->create();
@@ -488,7 +130,7 @@ class DirTest extends TestCase
             ->assertDontSee(Type::TRANSFER);
     }
 
-    public function testDirEdit3NewPaidGroup(): void
+    public function testEdit3NewPaidGroup(): void
     {
         /** @var User */
         $user = User::makeFactory()->user()->create();
@@ -515,14 +157,14 @@ class DirTest extends TestCase
             ->assertSee(Type::TRANSFER);
     }
 
-    public function testDirUpdate3AsGuest(): void
+    public function testUpdate3AsGuest(): void
     {
         $response = $this->put(route('web.dir.update_3', [34, 43]));
 
         $response->assertRedirect(route('login'));
     }
 
-    public function testDirUpdate3NoexistGroup(): void
+    public function testUpdate3NoExistGroup(): void
     {
         /** @var User */
         $user = User::makeFactory()->user()->create();
@@ -540,7 +182,7 @@ class DirTest extends TestCase
         $response->assertStatus(HttpResponse::HTTP_NOT_FOUND);
     }
 
-    public function testDirUpdate3NoexistDir(): void
+    public function testUpdate3NoExist(): void
     {
         /** @var User */
         $user = User::makeFactory()->user()->create();
@@ -555,7 +197,7 @@ class DirTest extends TestCase
         $response->assertStatus(HttpResponse::HTTP_NOT_FOUND);
     }
 
-    public function testDirUpdate3Foreign(): void
+    public function testUpdate3Foreign(): void
     {
         /** @var User */
         $user = User::makeFactory()->user()->create();
@@ -573,7 +215,7 @@ class DirTest extends TestCase
         $response->assertStatus(HttpResponse::HTTP_FORBIDDEN);
     }
 
-    public function testDirUpdate3PrivateGroup(): void
+    public function testUpdate3PrivateGroup(): void
     {
         /** @var User */
         $user = User::makeFactory()->user()->create();
@@ -594,7 +236,7 @@ class DirTest extends TestCase
         $response->assertStatus(HttpResponse::HTTP_FORBIDDEN);
     }
 
-    public function testDirUpdate3ValidationUrlFail(): void
+    public function testUpdate3ValidationUrlFail(): void
     {
         /** @var User */
         $user = User::makeFactory()->user()->create();
@@ -619,7 +261,7 @@ class DirTest extends TestCase
         $response->assertSessionHasErrors(['url']);
     }
 
-    public function testDirStoreSummaryValidationCategoriesFail(): void
+    public function testUpdate3ValidationCategoriesFail(): void
     {
         /** @var User */
         $user = User::makeFactory()->user()->create();
@@ -649,7 +291,7 @@ class DirTest extends TestCase
         $response->assertRedirect(route('web.dir.edit_3', [$dir->id, $newGroup->id]));
     }
 
-    public function testDirStoreSummaryValidationFieldsFail(): void
+    public function testUpdate3ValidationFieldsFail(): void
     {
         /** @var User */
         $user = User::makeFactory()->user()->create();
@@ -683,7 +325,7 @@ class DirTest extends TestCase
         $response->assertRedirect(route('web.dir.edit_3', [$dir->id, $newGroup->id]));
     }
 
-    public function testDirStoreSummaryValidationBacklinkFail(): void
+    public function testUpdate3ValidationBacklinkFail(): void
     {
         /** @var User */
         $user = User::makeFactory()->user()->create();
@@ -710,7 +352,7 @@ class DirTest extends TestCase
         $response->assertRedirect(route('web.dir.edit_3', [$dir->id, $newGroup->id]));
     }
 
-    public function testDirStoreSummaryValidationBacklinkPass(): void
+    public function testUpdate3ValidationBacklinkPass(): void
     {
         /** @var User */
         $user = User::makeFactory()->user()->create();
@@ -751,7 +393,7 @@ class DirTest extends TestCase
         $response->assertRedirect(route('web.dir.edit_3', [$dir->id, $newGroup->id]));
     }
 
-    public function testDirUpdate3Fields(): void
+    public function testUpdate3Fields(): void
     {
         /** @var User */
         $user = User::makeFactory()->user()->create();
@@ -802,7 +444,7 @@ class DirTest extends TestCase
         ]));
     }
 
-    public function testDirUpdate3ValidationPaymentFail(): void
+    public function testUpdate3ValidationPaymentFail(): void
     {
         /** @var User */
         $user = User::makeFactory()->user()->create();
@@ -831,7 +473,7 @@ class DirTest extends TestCase
         $response->assertRedirect(route('web.dir.edit_3', [$dir->id, $newGroup->id]));
     }
 
-    public function testDirUpdate3ValidationNoexistPaymentFail(): void
+    public function testUpdate3ValidationNoExistPaymentFail(): void
     {
         /** @var User */
         $user = User::makeFactory()->user()->create();
@@ -861,7 +503,7 @@ class DirTest extends TestCase
         $response->assertRedirect(route('web.dir.edit_3', [$dir->id, $newGroup->id]));
     }
 
-    public function testDirUpdate3NewGroupPayment(): void
+    public function testUpdate3NewGroupPayment(): void
     {
         /** @var User */
         $user = User::makeFactory()->user()->create();
@@ -913,7 +555,7 @@ class DirTest extends TestCase
         ]));
     }
 
-    public function testDirUpdate3OldGroupWithoutPayment(): void
+    public function testUpdate3OldGroupWithoutPayment(): void
     {
         /** @var User */
         $user = User::makeFactory()->user()->create();
@@ -957,7 +599,7 @@ class DirTest extends TestCase
         ]));
     }
 
-    public function testPendingDirUpdate3OldGroupPaymentFail(): void
+    public function testUpdate3PendingOldGroupPaymentFail(): void
     {
         /** @var User */
         $user = User::makeFactory()->user()->create();
@@ -981,7 +623,7 @@ class DirTest extends TestCase
         $response->assertRedirect(route('web.dir.edit_3', [$dir->id, $group->id]));
     }
 
-    public function testDirUpdate3ValidationPaymentAutoCodeSmsPass(): void
+    public function testUpdate3ValidationPaymentAutoCodeSmsPass(): void
     {
         /** @var User */
         $user = User::makeFactory()->user()->create();

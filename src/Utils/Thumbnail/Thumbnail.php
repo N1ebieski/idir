@@ -21,9 +21,10 @@ namespace N1ebieski\IDir\Utils\Thumbnail;
 use Illuminate\Support\Carbon;
 use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Contracts\Filesystem\Factory as Storage;
+use N1ebieski\IDir\Utils\Thumbnail\Interfaces\ThumbnailInterface;
 use N1ebieski\IDir\Http\Clients\Thumbnail\Provider\ThumbnailClient;
 
-class Thumbnail
+class Thumbnail implements ThumbnailInterface
 {
     /**
      * [protected description]

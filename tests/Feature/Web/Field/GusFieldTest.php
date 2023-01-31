@@ -24,11 +24,11 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
-class FieldTest extends TestCase
+class GusFieldTest extends TestCase
 {
     use DatabaseTransactions;
 
-    public function testFieldGusNotFound(): void
+    public function testGusNotFound(): void
     {
         /** @var User */
         $user = User::makeFactory()->user()->create();
@@ -45,7 +45,7 @@ class FieldTest extends TestCase
         $response->assertJsonValidationErrors(['gus']);
     }
 
-    public function testFieldGusNotValid(): void
+    public function testGusNotValid(): void
     {
         /** @var User */
         $user = User::makeFactory()->user()->create();
@@ -62,7 +62,7 @@ class FieldTest extends TestCase
         $response->assertSessionHasErrors(['number']);
     }
 
-    public function testFieldGusValid(): void
+    public function testGusValid(): void
     {
         /** @var User */
         $user = User::makeFactory()->user()->create();

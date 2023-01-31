@@ -16,7 +16,7 @@
  * @license   https://intelekt.net.pl/pages/regulamin
  */
 
-namespace N1ebieski\IDir\Tests\Feature\Api\Dir\Create;
+namespace N1ebieski\IDir\Tests\Feature\Api\Dir;
 
 use Tests\TestCase;
 use Mockery\MockInterface;
@@ -39,24 +39,24 @@ use N1ebieski\IDir\ValueObjects\Dir\Status;
 use Illuminate\Database\Eloquent\Collection;
 use N1ebieski\IDir\Models\Field\Group\Field;
 use Illuminate\Http\Response as HttpResponse;
+use N1ebieski\IDir\Testing\Traits\Dir\HasDir;
 use N1ebieski\IDir\Models\Payment\Dir\Payment;
 use GuzzleHttp\Psr7\Response as GuzzleResponse;
-use N1ebieski\IDir\Tests\Feature\Traits\HasDir;
 use N1ebieski\IDir\Models\Category\Dir\Category;
-use N1ebieski\IDir\Tests\Feature\Traits\HasFields;
+use N1ebieski\IDir\Testing\Traits\Field\HasFields;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use N1ebieski\IDir\Crons\Dir\ModeratorNotificationCron;
 use N1ebieski\IDir\ValueObjects\Field\Type as FieldType;
 use N1ebieski\IDir\ValueObjects\Price\Type as PriceType;
 use N1ebieski\IDir\ValueObjects\Payment\Status as PaymentStatus;
 
-class DirTest extends TestCase
+class CreateDirTest extends TestCase
 {
     use HasDir;
     use HasFields;
     use DatabaseTransactions;
 
-    public function testApiDirStoreNoExistGroup(): void
+    public function testStoreNoExistGroup(): void
     {
         /** @var User */
         $user = User::makeFactory()->user()->create();
@@ -68,7 +68,7 @@ class DirTest extends TestCase
         $response->assertStatus(HttpResponse::HTTP_NOT_FOUND);
     }
 
-    public function testApiDirStorePrivateGroup(): void
+    public function testStorePrivateGroup(): void
     {
         /** @var User */
         $user = User::makeFactory()->user()->create();
@@ -83,7 +83,7 @@ class DirTest extends TestCase
         $response->assertStatus(HttpResponse::HTTP_FORBIDDEN);
     }
 
-    public function testApiDirStoreValidationFail(): void
+    public function testStoreValidationFail(): void
     {
         /** @var User */
         $user = User::makeFactory()->user()->create();
@@ -99,7 +99,7 @@ class DirTest extends TestCase
         $response->assertJsonValidationErrors(['title', 'categories', 'content_html', 'url']);
     }
 
-    public function testApiDirStoreValidationUrlFail(): void
+    public function testStoreValidationUrlFail(): void
     {
         /** @var User */
         $user = User::makeFactory()->user()->create();
@@ -117,7 +117,7 @@ class DirTest extends TestCase
         $response->assertJsonValidationErrors(['url']);
     }
 
-    public function testApiDirStoreValidationCategoriesFail(): void
+    public function testStoreValidationCategoriesFail(): void
     {
         /** @var User */
         $user = User::makeFactory()->user()->create();
@@ -138,7 +138,7 @@ class DirTest extends TestCase
         $response->assertJsonValidationErrors(['categories']);
     }
 
-    public function testApiDirStoreValidationFieldsFail(): void
+    public function testStoreValidationFieldsFail(): void
     {
         /** @var User */
         $user = User::makeFactory()->user()->create();
@@ -164,7 +164,7 @@ class DirTest extends TestCase
         $response->assertJsonValidationErrors($fields);
     }
 
-    public function testApiDirStoreValidationBacklinkFail(): void
+    public function testStoreValidationBacklinkFail(): void
     {
         /** @var User */
         $user = User::makeFactory()->user()->create();
@@ -182,7 +182,7 @@ class DirTest extends TestCase
         $response->assertJsonValidationErrors(['backlink', 'backlink_url']);
     }
 
-    public function testApiDirStoreAsGuestValidationEmailFail(): void
+    public function testStoreAsGuestValidationEmailFail(): void
     {
         /** @var Group */
         $group = Group::makeFactory()->public()->requiredUrl()->create();
@@ -194,7 +194,7 @@ class DirTest extends TestCase
         $response->assertJsonValidationErrors(['email']);
     }
 
-    public function testApiDirStoreInResource(): void
+    public function testStoreInResource(): void
     {
         /** @var User */
         $user = User::makeFactory()->user()->create();
@@ -215,7 +215,7 @@ class DirTest extends TestCase
         ]);
     }
 
-    public function testApiDirStoreValidationBacklinkPass(): void
+    public function testStoreValidationBacklinkPass(): void
     {
         /** @var User */
         $user = User::makeFactory()->user()->create();
@@ -256,7 +256,7 @@ class DirTest extends TestCase
         ]);
     }
 
-    public function testApiDirStoreFieldsInDatabase(): void
+    public function testStoreFieldsInDatabase(): void
     {
         /** @var User */
         $user = User::makeFactory()->user()->create();
@@ -296,7 +296,7 @@ class DirTest extends TestCase
         ]);
     }
 
-    public function testApiDirStoreValidationPaymentFail(): void
+    public function testStoreValidationPaymentFail(): void
     {
         /** @var User */
         $user = User::makeFactory()->user()->create();
@@ -317,7 +317,7 @@ class DirTest extends TestCase
         $response->assertJsonValidationErrors(['payment_transfer']);
     }
 
-    public function testApiDirStoreValidationNoExistPaymentFail(): void
+    public function testStoreValidationNoExistPaymentFail(): void
     {
         /** @var User */
         $user = User::makeFactory()->user()->create();
@@ -339,7 +339,7 @@ class DirTest extends TestCase
         $response->assertJsonValidationErrors(['payment_transfer']);
     }
 
-    public function testApiDirStorePaymentInDatabase(): void
+    public function testStorePaymentInDatabase(): void
     {
         /** @var User */
         $user = User::makeFactory()->user()->create();
@@ -381,7 +381,7 @@ class DirTest extends TestCase
         $response->assertJsonFragment(['uuid' => $payment->uuid]);
     }
 
-    public function testApiDirStorePaymentAsGuestInDatabase(): void
+    public function testStorePaymentAsGuestInDatabase(): void
     {
         /** @var Group */
         $group = Group::makeFactory()->public()->applyInactive()->create();
@@ -422,7 +422,7 @@ class DirTest extends TestCase
         $response->assertJsonFragment(['uuid' => $payment->uuid]);
     }
 
-    public function testApiDirStoreAsGuestInDatabase(): void
+    public function testStoreAsGuestInDatabase(): void
     {
         /** @var Group */
         $group = Group::makeFactory()->public()->applyInactive()->create();
@@ -448,7 +448,7 @@ class DirTest extends TestCase
         $this->assertTrue($user->email === 'kontakt@intelekt.net.pl');
     }
 
-    public function testApiDirStoreValidationPaymentCodeSmsFail(): void
+    public function testStoreValidationPaymentCodeSmsFail(): void
     {
         /** @var User */
         $user = User::makeFactory()->user()->create();
@@ -471,7 +471,7 @@ class DirTest extends TestCase
         $response->assertJsonValidationErrors(['code_sms']);
     }
 
-    public function testApiDirStoreValidationPaymentAutoCodeSmsPass(): void
+    public function testStoreValidationPaymentAutoCodeSmsPass(): void
     {
         /** @var User */
         $user = User::makeFactory()->user()->create();
@@ -518,7 +518,7 @@ class DirTest extends TestCase
         $this->assertTrue($dir->privileged_at !== null);
     }
 
-    public function testApiDirStoreValidationPaymentAutoCodeSmsError(): void
+    public function testStoreValidationPaymentAutoCodeSmsError(): void
     {
         /** @var User */
         $user = User::makeFactory()->user()->create();
@@ -551,7 +551,7 @@ class DirTest extends TestCase
         $response->assertJsonValidationErrors(['code_sms']);
     }
 
-    public function testApiDirStoreValidationPaymentCodeTransferFail(): void
+    public function testStoreValidationPaymentCodeTransferFail(): void
     {
         /** @var User */
         $user = User::makeFactory()->user()->create();
@@ -574,7 +574,7 @@ class DirTest extends TestCase
         $response->assertJsonValidationErrors(['code_transfer']);
     }
 
-    public function testApiDirStoreValidationPaymentAutoCodeTransferPass(): void
+    public function testStoreValidationPaymentAutoCodeTransferPass(): void
     {
         /** @var User */
         $user = User::makeFactory()->user()->create();
@@ -614,7 +614,7 @@ class DirTest extends TestCase
         $this->assertTrue($dir->privileged_at === null && $dir->status->isInactive());
     }
 
-    public function testApiDirStoreValidationPaymentAutoCodeTransferError(): void
+    public function testStoreValidationPaymentAutoCodeTransferError(): void
     {
         /** @var User */
         $user = User::makeFactory()->user()->create();
@@ -644,7 +644,7 @@ class DirTest extends TestCase
         $response->assertJsonValidationErrors(['code_transfer']);
     }
 
-    public function testApiDirStoreValidationPaymentLocalCodeTransferPass(): void
+    public function testStoreValidationPaymentLocalCodeTransferPass(): void
     {
         /** @var User */
         $user = User::makeFactory()->user()->create();
@@ -693,7 +693,7 @@ class DirTest extends TestCase
         $this->assertTrue($dir->privileged_at === null && $dir->status->isInactive());
     }
 
-    public function testApiDirStoreValidationPaymentLocalCodeSmsPass(): void
+    public function testStoreValidationPaymentLocalCodeSmsPass(): void
     {
         /** @var User */
         $user = User::makeFactory()->user()->create();
@@ -742,7 +742,7 @@ class DirTest extends TestCase
         $this->assertTrue($dir->privileged_at !== null && $dir->status->isActive());
     }
 
-    public function testApiDirStoreModeratorNotificationDirs(): void
+    public function testStoreModeratorNotificationDirs(): void
     {
         /** @var User */
         $user = User::makeFactory()->user()->create();
@@ -786,7 +786,7 @@ class DirTest extends TestCase
         });
     }
 
-    public function testApiDirStoreModeratorNotificationHours(): void
+    public function testStoreModeratorNotificationHours(): void
     {
         /** @var User */
         $user = User::makeFactory()->user()->create();

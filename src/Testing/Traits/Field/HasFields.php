@@ -16,7 +16,7 @@
  * @license   https://intelekt.net.pl/pages/regulamin
  */
 
-namespace N1ebieski\IDir\Tests\Feature\Traits;
+namespace N1ebieski\IDir\Testing\Traits\Field;
 
 use N1ebieski\IDir\Models\Group;
 use Illuminate\Http\UploadedFile;
@@ -30,7 +30,7 @@ trait HasFields
      * @param  Group $group [description]
      * @return array        [description]
      */
-    protected function setUpFields(Group $group): array
+    private function setUpFields(Group $group): array
     {
         $fields = [];
 

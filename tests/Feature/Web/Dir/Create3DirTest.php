@@ -16,7 +16,7 @@
  * @license   https://intelekt.net.pl/pages/regulamin
  */
 
-namespace N1ebieski\IDir\Tests\Feature\Web\Dir\Create;
+namespace N1ebieski\IDir\Tests\Feature\Web\Dir;
 
 use Tests\TestCase;
 use Mockery\MockInterface;
@@ -40,202 +40,23 @@ use N1ebieski\IDir\ValueObjects\Price\Type;
 use Illuminate\Database\Eloquent\Collection;
 use N1ebieski\IDir\Models\Field\Group\Field;
 use Illuminate\Http\Response as HttpResponse;
+use N1ebieski\IDir\Testing\Traits\Dir\HasDir;
 use N1ebieski\IDir\Models\Payment\Dir\Payment;
 use GuzzleHttp\Psr7\Response as GuzzleResponse;
-use N1ebieski\IDir\Tests\Feature\Traits\HasDir;
 use N1ebieski\IDir\Models\Category\Dir\Category;
-use N1ebieski\IDir\Tests\Feature\Traits\HasFields;
+use N1ebieski\IDir\Testing\Traits\Field\HasFields;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use N1ebieski\IDir\Crons\Dir\ModeratorNotificationCron;
 use N1ebieski\IDir\ValueObjects\Field\Type as FieldType;
 use N1ebieski\IDir\ValueObjects\Payment\Status as PaymentStatus;
 
-class DirTest extends TestCase
+class Create3DirTest extends TestCase
 {
     use HasDir;
     use HasFields;
     use DatabaseTransactions;
 
-    public function testDirCreate1(): void
-    {
-        /** @var User */
-        $user = User::makeFactory()->user()->create();
-
-        /** @var Collection<Group>|array<Group> */
-        $publicGroups = Group::makeFactory()->count(3)->public()->create();
-
-        /** @var Group */
-        $privateGroup = Group::makeFactory()->private()->create([
-            'name' => 'Private Group'
-        ]);
-
-        Auth::login($user);
-
-        $response = $this->get(route('web.dir.create_1'));
-
-        $response->assertOk()
-            ->assertViewIs('idir::web.dir.create.1')
-            ->assertSee(route('web.dir.create_2', [$publicGroups[2]->id]))
-            ->assertSee($publicGroups[2]->name)
-            ->assertDontSee($privateGroup->name);
-    }
-
-    public function testDirCreate2NoexistGroup(): void
-    {
-        /** @var User */
-        $user = User::makeFactory()->user()->create();
-
-        Auth::login($user);
-
-        $response = $this->get(route('web.dir.create_2', [34]));
-
-        $response->assertStatus(HttpResponse::HTTP_NOT_FOUND);
-    }
-
-    public function testDirCreate2PrivateGroup(): void
-    {
-        /** @var User */
-        $user = User::makeFactory()->user()->create();
-
-        /** @var Group */
-        $group = Group::makeFactory()->private()->create();
-
-        Auth::login($user);
-
-        $response = $this->get(route('web.dir.create_2', [$group->id]));
-
-        $response->assertStatus(HttpResponse::HTTP_FORBIDDEN);
-    }
-
-    public function testDirCreate2MaxModelsGroup(): void
-    {
-        /** @var User */
-        $user = User::makeFactory()->user()->create();
-
-        /** @var Group */
-        $group = Group::makeFactory()->public()->maxModels()->create();
-
-        Dir::makeFactory()->withUser()->for($group)->create();
-
-        Auth::login($user);
-
-        $response = $this->get(route('web.dir.create_2', [$group->id]));
-
-        $response->assertStatus(HttpResponse::HTTP_FORBIDDEN);
-    }
-
-    public function testDirCreate2MaxModelsDailyGroup(): void
-    {
-        /** @var User */
-        $user = User::makeFactory()->user()->create();
-
-        /** @var Group */
-        $group = Group::makeFactory()->public()->maxModelsDaily()->create();
-
-        Dir::makeFactory()->withUser()->for($group)->create();
-
-        Auth::login($user);
-
-        $response = $this->get(route('web.dir.create_2', [$group->id]));
-
-        $response->assertStatus(HttpResponse::HTTP_FORBIDDEN);
-    }
-
-    public function testDirCreate2(): void
-    {
-        /** @var User */
-        $user = User::makeFactory()->user()->create();
-
-        Auth::login($user);
-
-        /** @var Group */
-        $group = Group::makeFactory()->public()->additionalOptionsForEditingContent()->create();
-
-        $response = $this->get(route('web.dir.create_2', [$group->id]));
-
-        $response->assertOk()
-            ->assertViewIs('idir::web.dir.create.2')
-            ->assertSee('trumbowyg')
-            ->assertSee(route('web.dir.store_2', [$group->id]));
-    }
-
-    public function testDirStore2NoexistGroup(): void
-    {
-        /** @var User */
-        $user = User::makeFactory()->user()->create();
-
-        Auth::login($user);
-
-        $response = $this->post(route('web.dir.store_2', [34]));
-
-        $response->assertStatus(HttpResponse::HTTP_NOT_FOUND);
-    }
-
-    public function testDirStore2PrivateGroup(): void
-    {
-        /** @var User */
-        $user = User::makeFactory()->user()->create();
-
-        /** @var Group */
-        $group = Group::makeFactory()->private()->create();
-
-        Auth::login($user);
-
-        $response = $this->post(route('web.dir.store_2', [$group->id]));
-
-        $response->assertStatus(HttpResponse::HTTP_FORBIDDEN);
-    }
-
-    public function testDirStore2ValidationFail(): void
-    {
-        /** @var User */
-        $user = User::makeFactory()->user()->create();
-
-        Auth::login($user);
-
-        /** @var Group */
-        $group = Group::makeFactory()->public()->requiredUrl()->create();
-
-        $response = $this->post(route('web.dir.store_2', [$group->id]));
-
-        $response->assertSessionHasErrors(['categories', 'title', 'content', 'url']);
-    }
-
-    public function testDirStore2ValidationUrlFail(): void
-    {
-        /** @var User */
-        $user = User::makeFactory()->user()->create();
-
-        Auth::login($user);
-
-        /** @var Group */
-        $group = Group::makeFactory()->public()->requiredUrl()->create();
-
-        $response = $this->post(route('web.dir.store_2', [$group->id]), [
-            'url' => 'dadasdasdasdasdsa23232'
-        ]);
-
-        $response->assertSessionHasErrors(['url']);
-    }
-
-    public function testDirStore2(): void
-    {
-        /** @var User */
-        $user = User::makeFactory()->user()->create();
-
-        Auth::login($user);
-
-        /** @var Group */
-        $group = Group::makeFactory()->public()->requiredUrl()->additionalOptionsForEditingContent()->create();
-
-        $response = $this->post(route('web.dir.store_2', [$group->id]), $this->setUpDir());
-
-        $response->assertRedirect(route('web.dir.create_3', [$group->id]));
-
-        $response->assertSessionHas('dir.title', $this->setUpDir()['title']);
-    }
-
-    public function testDirCreate3AsGuest(): void
+    public function testCreate3AsGuest(): void
     {
         /** @var Group */
         $group = Group::makeFactory()->public()->requiredUrl()->additionalOptionsForEditingContent()->create();
@@ -247,7 +68,7 @@ class DirTest extends TestCase
         $response2->assertSeeInOrder([Lang::get('idir::dirs.email.tooltip'), 'name="email"'], false);
     }
 
-    public function testDirCreate3AsLogged(): void
+    public function testCreate3AsLogged(): void
     {
         /** @var User */
         $user = User::makeFactory()->user()->create();
@@ -264,7 +85,7 @@ class DirTest extends TestCase
         $response2->assertDontSee(Lang::get('idir::dirs.email.tooltip'));
     }
 
-    public function testDirStore3AsGuestValidationEmailFail(): void
+    public function testStore3AsGuestValidationEmailFail(): void
     {
         /** @var Group */
         $group = Group::makeFactory()->public()->requiredUrl()->create();
@@ -276,7 +97,7 @@ class DirTest extends TestCase
         $response->assertRedirect(route('web.dir.create_3', [$group->id]));
     }
 
-    public function testDirStore3ValidationUrlFail(): void
+    public function testStore3ValidationUrlFail(): void
     {
         /** @var User */
         $user = User::makeFactory()->user()->create();
@@ -295,7 +116,7 @@ class DirTest extends TestCase
         $response->assertRedirect(route('web.dir.create_3', [$group->id]));
     }
 
-    public function testDirStore3ValidationCategoriesFail(): void
+    public function testStore3ValidationCategoriesFail(): void
     {
         /** @var User */
         $user = User::makeFactory()->user()->create();
@@ -317,7 +138,7 @@ class DirTest extends TestCase
         $response->assertRedirect(route('web.dir.create_3', [$group->id]));
     }
 
-    public function testDirStore3ValidationFieldsFail(): void
+    public function testStore3ValidationFieldsFail(): void
     {
         /** @var User */
         $user = User::makeFactory()->user()->create();
@@ -343,7 +164,7 @@ class DirTest extends TestCase
         $response->assertRedirect(route('web.dir.create_3', [$group->id]));
     }
 
-    public function testDirStore3ValidationBacklinkFail(): void
+    public function testStore3ValidationBacklinkFail(): void
     {
         /** @var User */
         $user = User::makeFactory()->user()->create();
@@ -362,7 +183,7 @@ class DirTest extends TestCase
         $response->assertRedirect(route('web.dir.create_3', [$group->id]));
     }
 
-    public function testDirStore3ValidationBacklinkPass(): void
+    public function testStore3ValidationBacklinkPass(): void
     {
         /** @var User */
         $user = User::makeFactory()->user()->create();
@@ -393,7 +214,7 @@ class DirTest extends TestCase
         $response->assertRedirect(route('web.dir.create_3', [$group->id]));
     }
 
-    public function testDirStore3Fields(): void
+    public function testStore3Fields(): void
     {
         /** @var User */
         $user = User::makeFactory()->user()->create();
@@ -434,7 +255,7 @@ class DirTest extends TestCase
         $response->assertRedirect(route('web.dir.show', [$dir->slug]));
     }
 
-    public function testDirStore3ValidationPaymentFail(): void
+    public function testStore3ValidationPaymentFail(): void
     {
         /** @var User */
         $user = User::makeFactory()->user()->create();
@@ -455,7 +276,7 @@ class DirTest extends TestCase
         $response->assertRedirect(route('web.dir.create_3', [$group->id]));
     }
 
-    public function testDirStore3ValidationNoexistPaymentFail(): void
+    public function testStore3ValidationNoexistPaymentFail(): void
     {
         /** @var User */
         $user = User::makeFactory()->user()->create();
@@ -477,7 +298,7 @@ class DirTest extends TestCase
         $response->assertRedirect(route('web.dir.create_3', [$group->id]));
     }
 
-    public function testDirStore3Payment(): void
+    public function testStore3Payment(): void
     {
         /** @var User */
         $user = User::makeFactory()->user()->create();
@@ -522,7 +343,7 @@ class DirTest extends TestCase
         ]));
     }
 
-    public function testDirStore3AsGuest(): void
+    public function testStore3AsGuest(): void
     {
         /** @var Group */
         $group = Group::makeFactory()->public()->applyInactive()->create();
@@ -548,7 +369,7 @@ class DirTest extends TestCase
         $response->assertRedirect(route('web.dir.create_1'));
     }
 
-    public function testDirStore3ValidationPaymentCodeSmsFail(): void
+    public function testStore3ValidationPaymentCodeSmsFail(): void
     {
         /** @var User */
         $user = User::makeFactory()->user()->create();
@@ -571,7 +392,7 @@ class DirTest extends TestCase
         $response->assertRedirect(route('web.dir.create_3', [$group->id]));
     }
 
-    public function testDirStore3ValidationPaymentAutoCodeSmsPass(): void
+    public function testStore3ValidationPaymentAutoCodeSmsPass(): void
     {
         /** @var User */
         $user = User::makeFactory()->user()->create();
@@ -620,7 +441,7 @@ class DirTest extends TestCase
         $response->assertRedirect(route('web.dir.show', [$dir->slug]));
     }
 
-    public function testDirStore3ValidationPaymentAutoCodeSmsError(): void
+    public function testStore3ValidationPaymentAutoCodeSmsError(): void
     {
         /** @var User */
         $user = User::makeFactory()->user()->create();
@@ -653,7 +474,7 @@ class DirTest extends TestCase
         $response->assertRedirect(route('web.dir.create_3', [$group->id]));
     }
 
-    public function testDirStore3ValidationPaymentCodeTransferFail(): void
+    public function testStore3ValidationPaymentCodeTransferFail(): void
     {
         /** @var User */
         $user = User::makeFactory()->user()->create();
@@ -676,7 +497,7 @@ class DirTest extends TestCase
         $response->assertRedirect(route('web.dir.create_3', [$group->id]));
     }
 
-    public function testDirStore3ValidationPaymentAutoCodeTransferPass(): void
+    public function testStore3ValidationPaymentAutoCodeTransferPass(): void
     {
         /** @var User */
         $user = User::makeFactory()->user()->create();
@@ -718,7 +539,7 @@ class DirTest extends TestCase
         $response->assertRedirect(route('web.dir.create_1'));
     }
 
-    public function testDirStore3ValidationPaymentAutoCodeTransferError(): void
+    public function testStore3ValidationPaymentAutoCodeTransferError(): void
     {
         /** @var User */
         $user = User::makeFactory()->user()->create();
@@ -748,7 +569,7 @@ class DirTest extends TestCase
         $response->assertRedirect(route('web.dir.create_3', [$group->id]));
     }
 
-    public function testDirStore3ValidationPaymentLocalCodeTransferPass(): void
+    public function testStore3ValidationPaymentLocalCodeTransferPass(): void
     {
         /** @var User */
         $user = User::makeFactory()->user()->create();
@@ -799,7 +620,7 @@ class DirTest extends TestCase
         $response->assertRedirect(route('web.dir.create_1'));
     }
 
-    public function testDirStore3ValidationPaymentLocalCodeSmsPass(): void
+    public function testStore3ValidationPaymentLocalCodeSmsPass(): void
     {
         /** @var User */
         $user = User::makeFactory()->user()->create();

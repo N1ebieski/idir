@@ -16,7 +16,7 @@
  * @license   https://intelekt.net.pl/pages/regulamin
  */
 
-namespace N1ebieski\IDir\Tests\Feature\Traits;
+namespace N1ebieski\IDir\Testing\Traits\Dir;
 
 use N1ebieski\IDir\Models\Category\Dir\Category;
 
@@ -26,7 +26,7 @@ trait HasDir
      * [setUpDir description]
      * @return array [description]
      */
-    protected function setUpDir(): array
+    private function setUpDir(): array
     {
         /** @var Category */
         $category = Category::makeFactory()->active()->create();

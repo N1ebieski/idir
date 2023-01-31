@@ -16,7 +16,7 @@
  * @license   https://intelekt.net.pl/pages/regulamin
  */
 
-namespace N1ebieski\IDir\Tests\Unit\Web;
+namespace N1ebieski\IDir\Tests\Integration\Backlink;
 
 use Tests\TestCase;
 use GuzzleHttp\HandlerStack;
@@ -28,7 +28,7 @@ use GuzzleHttp\Psr7\Response as GuzzleResponse;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use N1ebieski\IDir\Http\Clients\DirBacklink\Requests\ShowRequest;
 
-class BacklinkTest extends TestCase
+class BacklinkRuleTest extends TestCase
 {
     use DatabaseTransactions;
 
@@ -36,9 +36,32 @@ class BacklinkTest extends TestCase
      * [protected description]
      * @var string
      */
-    protected $url = 'http://asdasjdkasjdkas.pl';
+    private string $url = 'http://asdasjdkasjdkas.pl';
 
-    public function testRuleBacklinkNofollowFail(): void
+    public function testNoExists(): void
+    {
+        $mock = new MockHandler([
+            new GuzzleResponse(HttpResponse::HTTP_OK, [], 'dadasd asdasdasd')
+        ]);
+
+        $handler = HandlerStack::create($mock);
+        $client = new GuzzleClient(['handler' => $handler]);
+
+        $this->app->bind(ShowRequest::class, function ($app, $with) use ($client) {
+            return new ShowRequest($with['url'], $client);
+        });
+
+        /** @var BacklinkRule */
+        $rule = $this->app->make(BacklinkRule::class, [
+            'link' => $this->url
+        ]);
+
+        $response = $rule->passes('backlink_url', 'http://wewewew.pl');
+
+        $this->assertFalse($response);
+    }
+
+    public function testExistsNofollow(): void
     {
         $mock = new MockHandler([
             new GuzzleResponse(HttpResponse::HTTP_OK, [], 'dadasd <a rel="nofollow" href="' . $this->url . '">dadasdasd</a> asdasdasd')
@@ -61,7 +84,7 @@ class BacklinkTest extends TestCase
         $this->assertFalse($response);
     }
 
-    public function testRuleBacklinkPass(): void
+    public function testExists(): void
     {
         $mock = new MockHandler([
             new GuzzleResponse(HttpResponse::HTTP_OK, [], 'sdadas<a href="' . $this->url . '">dadasdasd</a> sdasdasd')

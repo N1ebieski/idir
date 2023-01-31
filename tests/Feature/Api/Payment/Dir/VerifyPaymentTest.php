@@ -27,39 +27,49 @@ use Illuminate\Support\Facades\Config;
 use N1ebieski\IDir\ValueObjects\Dir\Status;
 use N1ebieski\IDir\Models\Payment\Dir\Payment;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use N1ebieski\IDir\ValueObjects\Payment\Status as PaymentStatus;
 
-class PaymentTest extends TestCase
+class VerifyPaymentTest extends TestCase
 {
     use DatabaseTransactions;
 
     /**
-     * [PAYMENT_PROVIDER description]
-     * @var string
+     *
+     * @return array
      */
-    private const PAYMENT_PROVIDER = 'cashbill';
-
-    /**
-     * [providerSetup description]
-     * @param  Payment $payment [description]
-     * @return array            [description]
-     */
-    protected function providerSetup(Payment $payment): array
+    // @phpstan-ignore-next-line
+    private function providerProvider(): array
     {
-        $key = Config::get('services.' . self::PAYMENT_PROVIDER . '.transfer.key');
-
-        $provider['service'] = Config::get('services.' . self::PAYMENT_PROVIDER . '.transfer.service');
-        $provider['orderid'] = '2372832783';
-        $provider['amount'] = $payment->order->price;
-        $provider['userdata'] = json_encode(['uuid' => $payment->uuid, 'redirect' => route('web.profile.dirs')]);
-        $provider['status'] = 'ok';
-        $provider['sign'] = md5($provider['service'] . $provider['orderid'] . $provider['amount']
-        . $provider['userdata'] . $provider['status'] . $key);
-
-        return $provider;
+        return [['cashbill']];
     }
 
-    public function testPaymentVerifyInactive(): void
+    /**
+     *
+     * @param Payment $payment
+     * @param string $provider
+     * @return array
+     * @throws BindingResolutionException
+     */
+    private function setupProvider(Payment $payment, string $provider): array
+    {
+        $key = Config::get('services.' . $provider . '.transfer.key');
+
+        $setup['service'] = Config::get('services.' . $provider . '.transfer.service');
+        $setup['orderid'] = '2372832783';
+        $setup['amount'] = $payment->order->price;
+        $setup['userdata'] = json_encode(['uuid' => $payment->uuid, 'redirect' => route('web.profile.dirs')]);
+        $setup['status'] = 'ok';
+        $setup['sign'] = md5($setup['service'] . $setup['orderid'] . $setup['amount']
+        . $setup['userdata'] . $setup['status'] . $key);
+
+        return $setup;
+    }
+
+    /**
+     * @dataProvider providerProvider
+     */
+    public function testVerifyInactive(string $provider): void
     {
         /** @var Group */
         $group = Group::makeFactory()->public()->applyInactive()->create();
@@ -73,7 +83,10 @@ class PaymentTest extends TestCase
         /** @var Payment */
         $payment = Payment::makeFactory()->pending()->for($dir, 'morph')->for($price, 'orderMorph')->create();
 
-        $response = $this->post(route('api.payment.dir.verify'), $this->providerSetup($payment->load('orderMorph')));
+        $response = $this->post(
+            route('api.payment.dir.verify'),
+            $this->setupProvider($payment->load('orderMorph'), $provider)
+        );
 
         $response->assertSeeText('OK');
 
@@ -91,7 +104,10 @@ class PaymentTest extends TestCase
         ]);
     }
 
-    public function testPaymentVerifyActive(): void
+    /**
+     * @dataProvider providerProvider
+     */
+    public function testVerifyActive(string $provider): void
     {
         /** @var Group */
         $group = Group::makeFactory()->public()->applyActive()->create();
@@ -105,7 +121,10 @@ class PaymentTest extends TestCase
         /** @var Payment */
         $payment = Payment::makeFactory()->pending()->for($dir, 'morph')->for($price, 'orderMorph')->create();
 
-        $response = $this->post(route('api.payment.dir.verify'), $this->providerSetup($payment->load('orderMorph')));
+        $response = $this->post(
+            route('api.payment.dir.verify'),
+            $this->setupProvider($payment->load('orderMorph'), $provider)
+        );
 
         $response->assertSeeText('OK');
 
@@ -123,7 +142,10 @@ class PaymentTest extends TestCase
         ]);
     }
 
-    public function testPaymentVerifyStatusError(): void
+    /**
+     * @dataProvider providerProvider
+     */
+    public function testVerifyStatusError(string $provider): void
     {
         /** @var Group */
         $group = Group::makeFactory()->public()->applyActive()->create();
@@ -137,7 +159,7 @@ class PaymentTest extends TestCase
         /** @var Payment */
         $payment = Payment::makeFactory()->pending()->for($dir, 'morph')->for($price, 'orderMorph')->create();
 
-        $providerSetup = $this->providerSetup($payment->load('orderMorph'));
+        $providerSetup = $this->setupProvider($payment->load('orderMorph'), $provider);
         $providerSetup['status'] = 'err';
 
         $response = $this->post(route('api.payment.dir.verify'), $providerSetup);
@@ -150,7 +172,10 @@ class PaymentTest extends TestCase
         $response->assertOk();
     }
 
-    public function testPaymentVerifyAmountError(): void
+    /**
+     * @dataProvider providerProvider
+     */
+    public function testVerifyAmountError(string $provider): void
     {
         /** @var Group */
         $group = Group::makeFactory()->public()->applyActive()->create();
@@ -164,7 +189,7 @@ class PaymentTest extends TestCase
         /** @var Payment */
         $payment = Payment::makeFactory()->pending()->for($dir, 'morph')->for($price, 'orderMorph')->create();
 
-        $providerSetup = $this->providerSetup($payment->load('orderMorph'));
+        $providerSetup = $this->setupProvider($payment->load('orderMorph'), $provider);
         $providerSetup['amount'] = "999.99";
 
         $response = $this->post(route('api.payment.dir.verify'), $providerSetup);
@@ -177,7 +202,10 @@ class PaymentTest extends TestCase
         $response->assertOk();
     }
 
-    public function testPaymentVerifySignError(): void
+    /**
+     * @dataProvider providerProvider
+     */
+    public function testVerifySignError(string $provider): void
     {
         /** @var Group */
         $group = Group::makeFactory()->public()->applyActive()->create();
@@ -191,7 +219,7 @@ class PaymentTest extends TestCase
         /** @var Payment */
         $payment = Payment::makeFactory()->pending()->for($dir, 'morph')->for($price, 'orderMorph')->create();
 
-        $providerSetup = $this->providerSetup($payment->load('orderMorph'));
+        $providerSetup = $this->setupProvider($payment->load('orderMorph'), $provider);
         $providerSetup['sign'] = "dupa";
 
         $response = $this->post(route('api.payment.dir.verify'), $providerSetup);

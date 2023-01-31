@@ -16,7 +16,7 @@
  * @license   https://intelekt.net.pl/pages/regulamin
  */
 
-namespace N1ebieski\IDir\Tests\Feature\Web;
+namespace N1ebieski\IDir\Tests\Integration\Sitemap;
 
 use Closure;
 use XMLReader;
@@ -84,7 +84,7 @@ class SitemapTest extends TestCase
     /**
      * @dataProvider sitemapCronProvider
      */
-    public function testSitemapCron(string $namespace, Closure $seed, Closure $route): void
+    public function testCron(string $namespace, Closure $seed, Closure $route): void
     {
         /** @var mixed */
         $modelBuilder = App::make($namespace);

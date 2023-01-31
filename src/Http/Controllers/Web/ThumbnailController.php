@@ -19,14 +19,15 @@
 namespace N1ebieski\IDir\Http\Controllers\Web;
 
 use Carbon\Carbon;
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\App;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Http\Response as HttpResponse;
-use N1ebieski\IDir\Utils\Thumbnail\Thumbnail;
 use N1ebieski\IDir\Http\Requests\Web\Thumbnail\ShowRequest;
+use N1ebieski\IDir\Utils\Thumbnail\Interfaces\ThumbnailInterface;
 
 class ThumbnailController extends Controller
 {
@@ -34,13 +35,14 @@ class ThumbnailController extends Controller
      *
      * @param ShowRequest $request
      * @param Filesystem $filesystem
-     * @param Thumbnail $thumbnail
+     * @param ThumbnailInterface $thumbnail
      * @return HttpResponse
+     * @throws FileNotFoundException
      */
     public function show(
         ShowRequest $request,
         Filesystem $filesystem,
-        Thumbnail $thumbnail
+        ThumbnailInterface $thumbnail
     ): HttpResponse {
         $thumbnail = $thumbnail->make($request->input('url'));
 
