@@ -38,6 +38,7 @@ use N1ebieski\ICore\Models\Traits\HasPositionable;
 use N1ebieski\IDir\ValueObjects\Group\ApplyStatus;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use N1ebieski\IDir\Http\Resources\Group\GroupResource;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use N1ebieski\ICore\Models\Traits\HasFullTextSearchable;
 use N1ebieski\IDir\ValueObjects\Dir\Status as DirStatus;
@@ -422,5 +423,14 @@ class Group extends Model
     public static function makeFactory(...$parameters)
     {
         return static::factory($parameters);
+    }
+
+    /**
+     * [makeResource description]
+     * @return GroupResource [description]
+     */
+    public function makeResource()
+    {
+        return App::make(GroupResource::class, ['group' => $this]);
     }
 }

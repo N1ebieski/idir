@@ -37,6 +37,7 @@ use N1ebieski\ICore\Models\Traits\HasCarbonable;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Fico7489\Laravel\Pivot\Traits\PivotEventTrait;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use N1ebieski\IDir\Http\Resources\Dir\DirResource;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use N1ebieski\ICore\Models\Traits\HasStatFilterable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -888,5 +889,14 @@ class Dir extends Model implements
     public static function makeFactory(...$parameters)
     {
         return static::factory($parameters);
+    }
+
+    /**
+     * [makeResource description]
+     * @return DirResource [description]
+     */
+    public function makeResource()
+    {
+        return App::make(DirResource::class, ['dir' => $this]);
     }
 }

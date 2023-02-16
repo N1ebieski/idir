@@ -20,9 +20,7 @@ namespace N1ebieski\IDir\Http\Controllers\Api\Group;
 
 use N1ebieski\IDir\Models\Group;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\App;
 use N1ebieski\IDir\Filters\Api\Group\IndexFilter;
-use N1ebieski\IDir\Http\Resources\Group\GroupResource;
 use N1ebieski\IDir\Http\Requests\Api\Group\IndexRequest;
 
 /**
@@ -57,7 +55,7 @@ class GroupController
      */
     public function index(Group $group, IndexRequest $request, IndexFilter $filter): JsonResponse
     {
-        return App::make(GroupResource::class)
+        return $group->makeResource()
             ->collection($group->makeRepo()->paginateByFilter($filter->all()))
             ->additional(['meta' => ['filter' => $filter->all()]])
             ->response();

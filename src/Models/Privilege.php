@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Database\Eloquent\Model;
 use N1ebieski\IDir\Repositories\Privilege\PrivilegeRepo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use N1ebieski\IDir\Http\Resources\Privilege\PrivilegeResource;
 
 /**
  * N1ebieski\IDir\Models\Privilege
@@ -77,5 +78,14 @@ class Privilege extends Model
     public function makeRepo()
     {
         return App::make(PrivilegeRepo::class, ['privilege' => $this]);
+    }
+
+    /**
+     * [makeResource description]
+     * @return PrivilegeResource [description]
+     */
+    public function makeResource()
+    {
+        return App::make(PrivilegeResource::class, ['privilege' => $this]);
     }
 }

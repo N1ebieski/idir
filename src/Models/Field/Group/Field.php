@@ -19,10 +19,13 @@
 namespace N1ebieski\IDir\Models\Field\Group;
 
 use N1ebieski\IDir\Models\Group;
+use Illuminate\Support\Facades\App;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use N1ebieski\IDir\Http\Resources\Field\FieldResource;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use N1ebieski\IDir\Models\Field\Field as BaseFieldModel;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use N1ebieski\IDir\Database\Factories\Field\Group\FieldFactory;
 
 /**
@@ -175,5 +178,15 @@ class Field extends BaseFieldModel
     public static function makeFactory(...$parameters)
     {
         return static::factory($parameters);
+    }
+
+    /**
+     *
+     * @return FieldResource
+     * @throws BindingResolutionException
+     */
+    public function makeResource()
+    {
+        return App::make(FieldResource::class, ['field' => $this]);
     }
 }

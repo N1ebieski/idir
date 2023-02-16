@@ -19,13 +19,11 @@
 namespace N1ebieski\IDir\Http\Resources\Group;
 
 use N1ebieski\IDir\Models\Group;
-use Illuminate\Support\Facades\App;
+use N1ebieski\IDir\Models\Price;
 use Illuminate\Support\Facades\Lang;
+use N1ebieski\IDir\Models\Privilege;
 use N1ebieski\IDir\Models\Field\Group\Field;
 use Illuminate\Http\Resources\Json\JsonResource;
-use N1ebieski\IDir\Http\Resources\Field\FieldResource;
-use N1ebieski\IDir\Http\Resources\Price\PriceResource;
-use N1ebieski\IDir\Http\Resources\Privilege\PrivilegeResource;
 
 /**
  * @mixin Group
@@ -107,31 +105,40 @@ class GroupResource extends JsonResource
                         'alt' => $this->when(
                             $this->relationLoaded('alt'),
                             function () {
-                                return App::make(GroupResource::class, ['group' => $this->alt]);
+                                return $this->alt?->makeResource();
                             },
                             null
                         ),
                         $this->mergeWhen(
                             $this->relationLoaded('privileges'),
                             function () {
+                                /** @var Privilege */
+                                $privilege = $this->privileges()->make();
+
                                 return [
-                                    'privileges' => App::make(PrivilegeResource::class)->collection($this->privileges)
+                                    'privileges' => $privilege->makeResource()->collection($this->privileges)
                                 ];
                             }
                         ),
                         $this->mergeWhen(
                             $this->relationLoaded('prices'),
                             function () {
+                                /** @var Price */
+                                $price = $this->prices()->make();
+
                                 return [
-                                    'prices' => App::make(PriceResource::class)->collection($this->prices)
+                                    'prices' => $price->makeResource()->collection($this->prices)
                                 ];
                             }
                         ),
                         $this->mergeWhen(
                             $this->relationLoaded('fields'),
                             function () {
+                                /** @var Field */
+                                $field = $this->fields()->make();
+
                                 return [
-                                    'fields' => App::make(FieldResource::class)
+                                    'fields' => $field->makeResource()
                                         ->collection($this->fields->map(function (Field $field) {
                                             // @phpstan-ignore-next-line
                                             $field->setAttribute('depth', $field->depth);

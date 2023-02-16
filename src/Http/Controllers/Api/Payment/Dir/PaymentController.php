@@ -32,7 +32,6 @@ use N1ebieski\IDir\Loads\Api\Payment\Dir\ShowLoad;
 use N1ebieski\IDir\Loads\Api\Payment\Dir\VerifyLoad;
 use N1ebieski\IDir\Events\Api\Payment\Dir\VerifyAttemptEvent;
 use Illuminate\Contracts\Container\BindingResolutionException;
-use N1ebieski\IDir\Http\Resources\Payment\Dir\PaymentResource;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use N1ebieski\IDir\Events\Api\Payment\Dir\VerifySuccessfulEvent;
 use N1ebieski\IDir\Http\Controllers\Api\Payment\Dir\Polymorphic;
@@ -110,7 +109,7 @@ class PaymentController extends Controller implements Polymorphic
             throw $e->setPayment($payment);
         }
 
-        return App::make(PaymentResource::class, ['payment' => $payment])
+        return $payment->makeResource()
             ->additional(['url' => $response->getUrlToPayment()])
             ->response();
     }

@@ -21,18 +21,14 @@ namespace N1ebieski\IDir\Http\Resources\Dir;
 use N1ebieski\IDir\Models\Dir;
 use N1ebieski\ICore\Models\User;
 use N1ebieski\IDir\Models\Group;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Config;
-use N1ebieski\IDir\Models\Payment\Payment;
+use N1ebieski\IDir\Models\Tag\Dir\Tag;
+use N1ebieski\IDir\Models\Field\Dir\Field;
+use N1ebieski\IDir\Models\Payment\Dir\Payment;
 use Illuminate\Http\Resources\Json\JsonResource;
-use N1ebieski\ICore\Http\Resources\Tag\TagResource;
-use N1ebieski\ICore\Http\Resources\User\UserResource;
-use N1ebieski\IDir\Http\Resources\Group\GroupResource;
-use N1ebieski\IDir\Http\Resources\Field\Dir\FieldResource;
-use N1ebieski\ICore\Http\Resources\Category\CategoryResource;
-use N1ebieski\IDir\Http\Resources\Payment\Dir\PaymentResource;
+use N1ebieski\IDir\Models\Category\Dir\Category;
 
 /**
  * @mixin Dir
@@ -133,10 +129,13 @@ class DirResource extends JsonResource
                 $this->relationLoaded('group')
                 && (optional($request->user())->can('view', $this->resource) || optional($request->user())->can('api.dirs.view')),
                 function () {
+                    /** @var Group|null */
+                    // @phpstan-ignore-next-line
+                    $group = $this->group?->setAttribute('depth', 1);
+
                     return [
-                        'group' => $this->group instanceof Group ?
-                            App::make(GroupResource::class, ['group' => $this->group->setAttribute('depth', 1)])
-                            // @phpstan-ignore-next-line
+                        'group' => $group instanceof Group ?
+                            $group->makeResource()
                             : null
                     ];
                 }
@@ -144,9 +143,12 @@ class DirResource extends JsonResource
             $this->mergeWhen(
                 $this->relationLoaded('user') && optional($request->user())->can('view', $this->resource),
                 function () {
+                    /** @var User|null */
+                    $user = $this->user?->setAttribute('depth', 1);
+
                     return [
-                        'user' => $this->user instanceof User ?
-                            App::make(UserResource::class, ['user' => $this->user->setAttribute('depth', 1)])
+                        'user' => $user instanceof User ?
+                            $user->makeResource()
                             : null
                     ];
                 }
@@ -154,8 +156,11 @@ class DirResource extends JsonResource
             $this->mergeWhen(
                 $this->relationLoaded('categories'),
                 function () {
+                    /** @var Category */
+                    $category = $this->categories()->make();
+
                     return [
-                        'categories' => App::make(CategoryResource::class)
+                        'categories' => $category->makeResource()
                             ->collection($this->categories->map(function ($item) {
                                 $item->setAttribute('depth', 1);
 
@@ -167,8 +172,11 @@ class DirResource extends JsonResource
             $this->mergeWhen(
                 $this->relationLoaded('tags'),
                 function () {
+                    /** @var Tag */
+                    $tag = $this->tags()->make();
+
                     return [
-                        'tags' => App::make(TagResource::class)
+                        'tags' => $tag->makeResource()
                             ->collection($this->tags->map(function ($item) {
                                 $item->setAttribute('depth', 1);
 
@@ -180,9 +188,12 @@ class DirResource extends JsonResource
             $this->mergeWhen(
                 $this->relationLoaded('payment'),
                 function () {
+                    /** @var Payment|null */
+                    $payment = $this->payment?->setAttribute('depth', 1);
+
                     return [
-                        'payment' => $this->payment instanceof Payment ?
-                            App::make(PaymentResource::class, ['payment' => $this->payment->setAttribute('depth', 1)])
+                        'payment' => $payment instanceof Payment ?
+                            $payment->makeResource()
                             : null
                     ];
                 }
@@ -190,8 +201,11 @@ class DirResource extends JsonResource
             $this->mergeWhen(
                 $this->relationLoaded('fields'),
                 function () use ($request) {
+                    /** @var Field */
+                    $field = $this->fields()->make();
+
                     return [
-                        'fields' => App::make(FieldResource::class)
+                        'fields' => $field->makeResource()
                             ->collection(
                                 $this->fields->whereIn('id', $this->group->fields->pluck('id')->toArray())
                                     ->filter(function ($item) use ($request) {

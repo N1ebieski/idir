@@ -277,7 +277,7 @@ class DirController
         UpdateFull3CodeRequest $requestPayment,
         UpdateFull3Response $response
     ): RedirectResponse {
-        $dir->makeService()->updateFull(
+        $dir->makeService()->update(
             $request->safe()->merge(['group' => $group])->toArray()
         );
 

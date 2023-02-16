@@ -18,10 +18,9 @@
 
 namespace N1ebieski\IDir\Http\Resources\Price;
 
+use N1ebieski\IDir\Models\Group;
 use N1ebieski\IDir\Models\Price;
-use Illuminate\Support\Facades\App;
 use Illuminate\Http\Resources\Json\JsonResource;
-use N1ebieski\IDir\Http\Resources\Group\GroupResource;
 
 /**
  * @mixin Price
@@ -90,8 +89,11 @@ class PriceResource extends JsonResource
                         $this->mergeWhen(
                             $this->relationLoaded('group'),
                             function () {
+                                /** @var Group */
+                                $group = $this->group->setAttribute('depth', 1);
+
                                 return [
-                                    'group' => App::make(GroupResource::class, ['group' => $this->group->setAttribute('depth', 1)])
+                                    'group' => $group->makeResource()
                                 ];
                             }
                         )

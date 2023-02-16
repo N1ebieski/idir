@@ -170,7 +170,8 @@ class DirBacklinkService
      */
     protected function isSync(array $attributes): bool
     {
-        return optional($this->dirBacklink->dir->backlink)->link_id !== (int)$attributes['backlink']
-            || optional($this->dirBacklink->dir->backlink)->url !== $attributes['backlink_url'];
+        return $this->dirBacklink->dir->backlink?->link_id !== (int)$attributes['backlink']
+            // @phpstan-ignore-next-line
+            || $this->dirBacklink->dir->backlink?->url !== $attributes['backlink_url'];
     }
 }

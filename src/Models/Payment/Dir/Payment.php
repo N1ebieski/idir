@@ -20,9 +20,12 @@ namespace N1ebieski\IDir\Models\Payment\Dir;
 
 use N1ebieski\IDir\Models\Dir;
 use N1ebieski\IDir\Models\Price;
+use Illuminate\Support\Facades\App;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use N1ebieski\IDir\Models\Payment\Payment as BasePayment;
+use Illuminate\Contracts\Container\BindingResolutionException;
+use N1ebieski\IDir\Http\Resources\Payment\Dir\PaymentResource;
 use N1ebieski\IDir\Database\Factories\Payment\Dir\PaymentFactory;
 
 /**
@@ -152,5 +155,15 @@ class Payment extends BasePayment
     public static function makeFactory(...$parameters)
     {
         return static::factory($parameters);
+    }
+
+    /**
+     *
+     * @return PaymentResource
+     * @throws BindingResolutionException
+     */
+    public function makeResource()
+    {
+        return App::make(PaymentResource::class, ['payment' => $this]);
     }
 }

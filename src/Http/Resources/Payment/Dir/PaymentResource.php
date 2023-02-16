@@ -53,7 +53,7 @@ class PaymentResource extends JsonResource
      * @responseField morph object Contains relationship Dir.
      * @responseField order object Contains relationship Price.
      * @responseField url string Link to the driver's payment page (for transfer type payment).
-     * 
+     *
      * @param  \Illuminate\Http\Request  $request
      * @return array
      */

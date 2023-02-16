@@ -30,6 +30,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use N1ebieski\IDir\Http\Resources\Price\PriceResource;
 use N1ebieski\ICore\Models\Traits\HasFullTextSearchable;
 use N1ebieski\IDir\Database\Factories\Price\PriceFactory;
 use Illuminate\Contracts\Container\BindingResolutionException;
@@ -298,5 +299,14 @@ class Price extends Model
     public static function makeFactory(...$parameters)
     {
         return static::factory($parameters);
+    }
+
+    /**
+     * [makeResource description]
+     * @return PriceResource [description]
+     */
+    public function makeResource()
+    {
+        return App::make(PriceResource::class, ['price' => $this]);
     }
 }

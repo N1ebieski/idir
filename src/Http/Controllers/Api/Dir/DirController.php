@@ -33,16 +33,12 @@ use N1ebieski\ICore\Models\Category\Category;
 use N1ebieski\IDir\Loads\Api\Dir\DestroyLoad;
 use N1ebieski\IDir\Models\Payment\Dir\Payment;
 use N1ebieski\IDir\Filters\Api\Dir\IndexFilter;
-use N1ebieski\IDir\Http\Resources\Dir\DirResource;
-use N1ebieski\ICore\Http\Resources\User\UserResource;
 use N1ebieski\IDir\Http\Requests\Api\Dir\IndexRequest;
 use N1ebieski\IDir\Http\Requests\Api\Dir\StoreRequest;
-use N1ebieski\IDir\Http\Resources\Group\GroupResource;
 use N1ebieski\IDir\Http\Requests\Api\Dir\UpdateRequest;
 use N1ebieski\IDir\Http\Requests\Api\Dir\DestroyRequest;
 use N1ebieski\IDir\Http\Requests\Api\Dir\StoreCodeRequest;
 use N1ebieski\IDir\Http\Requests\Api\Dir\UpdateCodeRequest;
-use N1ebieski\ICore\Http\Resources\Category\CategoryResource;
 use N1ebieski\IDir\Http\Requests\Api\Dir\UpdateStatusRequest;
 use N1ebieski\IDir\Events\Api\Dir\IndexEvent as DirIndexEvent;
 use N1ebieski\IDir\Events\Api\Dir\StoreEvent as DirStoreEvent;
@@ -102,20 +98,29 @@ class DirController
 
         Event::dispatch(App::make(DirIndexEvent::class, ['dirs' => $dirs]));
 
-        return App::make(DirResource::class)
+        /** @var Category|null */
+        $category = $filter->get('category');
+
+        /** @var Group|null */
+        $group = $filter->get('group');
+
+        /** @var User|null */
+        $author = $filter->get('author');
+
+        return $dir->makeResource()
             ->collection($dirs)
             ->additional(['meta' => [
                 'filter' => Collect::make($filter->all())
                     ->replace([
-                        'category' => $filter->get('category') instanceof Category ?
-                            App::make(CategoryResource::class, ['category' => $filter->get('category')])
-                            : $filter->get('category'),
-                        'group' => $filter->get('group') instanceof Group ?
-                            App::make(GroupResource::class, ['group' => $filter->get('group')])
-                            : $filter->get('group'),
-                        'author' => $filter->get('author') instanceof User ?
-                            App::make(UserResource::class, ['user' => $filter->get('author')])
-                            : $filter->get('author')
+                        'category' => $category instanceof Category ?
+                            $category->makeResource()
+                            : $category,
+                        'group' => $group instanceof Group ?
+                            $group->makeResource()
+                            : $group,
+                        'author' => $author instanceof User ?
+                            $author->makeResource()
+                            : $author
                     ])
                     ->toArray()
             ]])
@@ -172,7 +177,9 @@ class DirController
 
         Event::dispatch(App::make(DirStoreEvent::class, ['dir' => $dir]));
 
-        return App::make(DirResource::class, ['dir' => $dir->loadAllRels()])
+        $dir->loadAllRels();
+
+        return $dir->makeResource()
             ->response()
             ->setStatusCode(HttpResponse::HTTP_CREATED);
     }
@@ -217,7 +224,7 @@ class DirController
         UpdateRequest $request,
         UpdateCodeRequest $requestPayment
     ): JsonResponse {
-        $dir->makeService()->updateFull(
+        $dir->makeService()->update(
             $request->safe()->merge(['group' => $group])->toArray()
         );
 
@@ -227,7 +234,9 @@ class DirController
 
         Event::dispatch(App::make(DirUpdateEvent::class, ['dir' => $dir]));
 
-        return App::make(DirResource::class, ['dir' => $dir->loadAllRels()])->response();
+        $dir->loadAllRels();
+
+        return $dir->makeResource()->response();
     }
 
     /**
@@ -258,7 +267,7 @@ class DirController
             ])
         );
 
-        return App::make(DirResource::class, ['dir' => $dir])->response();
+        return $dir->makeResource()->response();
     }
 
     /**

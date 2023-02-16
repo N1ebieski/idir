@@ -18,14 +18,12 @@
 
 namespace N1ebieski\IDir\Http\Controllers\Api\Auth;
 
+use N1ebieski\IDir\Models\Dir;
 use N1ebieski\IDir\Models\User;
 use N1ebieski\IDir\Models\Group;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Collection as Collect;
-use N1ebieski\IDir\Http\Resources\Dir\DirResource;
 use N1ebieski\IDir\Filters\Api\Auth\User\DirsFilter;
-use N1ebieski\IDir\Http\Resources\Group\GroupResource;
 use N1ebieski\IDir\Http\Requests\Api\Auth\User\DirsRequest;
 
 /**
@@ -61,14 +59,20 @@ class UserController
         /** @var User */
         $user = $request->user();
 
-        return App::make(DirResource::class)
+        /** @var Dir */
+        $dir = $user->dirs()->make();
+
+        /** @var Group|null */
+        $group = $filter->get('group');
+
+        return $dir->makeResource()
             ->collection($user->makeRepo()->paginateDirsByFilter($filter->all()))
             ->additional(['meta' => [
                 'filter' => Collect::make($filter->all())
                     ->replace([
-                        'group' => $filter->get('group') instanceof Group ?
-                            App::make(GroupResource::class, ['group' => $filter->get('group')])
-                            : $filter->get('group')
+                        'group' => $group instanceof Group ?
+                            $group->makeResource()
+                            : $group
                     ])
                     ->toArray()
             ]])

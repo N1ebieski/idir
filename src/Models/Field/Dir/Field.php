@@ -18,8 +18,11 @@
 
 namespace N1ebieski\IDir\Models\Field\Dir;
 
+use Illuminate\Support\Facades\App;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use N1ebieski\IDir\Models\Field\Field as BaseFieldModel;
+use N1ebieski\IDir\Http\Resources\Field\Dir\FieldResource;
+use Illuminate\Contracts\Container\BindingResolutionException;
 
 /**
  * N1ebieski\IDir\Models\Field\Dir\Field
@@ -113,5 +116,17 @@ class Field extends BaseFieldModel
     public function modelType(): Attribute
     {
         return new Attribute(fn (): string => \N1ebieski\IDir\Models\Dir::class);
+    }
+
+    // Factories
+
+    /**
+     *
+     * @return FieldResource
+     * @throws BindingResolutionException
+     */
+    public function makeResource()
+    {
+        return App::make(FieldResource::class, ['field' => $this]);
     }
 }

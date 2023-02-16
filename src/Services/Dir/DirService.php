@@ -150,7 +150,10 @@ class DirService
                     ->createValues($attributes['field'] ?? []);
             }
 
-            if (array_key_exists('backlink', $attributes) && array_key_exists('backlink_url', $attributes)) {
+            if (
+                array_key_exists('backlink', $attributes)
+                && array_key_exists('backlink_url', $attributes)
+            ) {
                 /** @var DirBacklink */
                 $dirBacklink = $this->dir->backlink()->make();
 
@@ -201,16 +204,6 @@ class DirService
     public function update(array $attributes): Dir
     {
         return $this->db->transaction(function () use ($attributes) {
-            if (array_key_exists('url', $attributes)) {
-                /** @var DirStatus */
-                $dirStatus = $this->dir->status()->make();
-
-                $dirStatus->makeService()->sync([
-                    'dir' => $this->dir,
-                    'url' => $attributes['url']
-                ]);
-            }
-
             if (array_key_exists('field', $attributes)) {
                 /** @var Field */
                 $field = $this->dir->fields()->make();
@@ -220,43 +213,10 @@ class DirService
                     ->updateValues($attributes['field'] ?? []);
             }
 
-            $this->dir->fill($attributes);
-
-            $this->dir->content = $attributes['content_html'];
-
-            if (array_key_exists('categories', $attributes)) {
-                $this->dir->categories()->sync($attributes['categories'] ?? []);
-            }
-
-            if (array_key_exists('tags', $attributes)) {
-                $this->dir->retag($attributes['tags'] ?? []);
-            }
-
-            $this->dir->save();
-
-            return $this->dir;
-        });
-    }
-
-    /**
-     *
-     * @param array $attributes
-     * @return Dir
-     * @throws Throwable
-     */
-    public function updateFull(array $attributes): Dir
-    {
-        return $this->db->transaction(function () use ($attributes) {
-            if (array_key_exists('field', $attributes)) {
-                /** @var Field */
-                $field = $this->dir->fields()->make();
-
-                $field->setRelations(['morph' => $this->dir])
-                    ->makeService()
-                    ->updateValues($attributes['field'] ?? []);
-            }
-
-            if (array_key_exists('backlink', $attributes) && array_key_exists('backlink_url', $attributes)) {
+            if (
+                array_key_exists('backlink', $attributes)
+                && array_key_exists('backlink_url', $attributes)
+            ) {
                 /** @var DirBacklink */
                 $dirBacklink = $this->dir->backlink()->make();
 
@@ -283,20 +243,22 @@ class DirService
                 $this->dir->content = $attributes['content_html'];
             }
 
-            /** @var Group */
-            $group = $attributes['group'];
+            if (array_key_exists('group', $attributes)) {
+                /** @var Group */
+                $group = $attributes['group'];
 
-            try {
-                $this->dir->status = Status::fromString(
-                    $attributes['payment_type'] ?? $group->apply_status->getValue()
-                );
-            } catch (\InvalidArgumentException $e) {
-                $this->dir->status = $group->apply_status->getValue();
-            }
+                try {
+                    $this->dir->status = Status::fromString(
+                        $attributes['payment_type'] ?? $group->apply_status->getValue()
+                    );
+                } catch (\InvalidArgumentException $e) {
+                    $this->dir->status = $group->apply_status->getValue();
+                }
 
-            if ($this->dir->group_id !== $group->id) {
-                $this->dir->group()->associate($group);
-                $this->dir->makeService()->nullablePrivileged();
+                if ($this->dir->group_id !== $group->id) {
+                    $this->dir->group()->associate($group);
+                    $this->dir->makeService()->nullablePrivileged();
+                }
             }
 
             if (array_key_exists('user', $attributes)) {
