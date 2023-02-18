@@ -128,7 +128,7 @@ class StoreRequest extends FormRequest
     protected function prepareContentHtmlAttribute(): void
     {
         if ($this->has('content_html') && is_string($this->input('content_html'))) {
-            if ($this->group->privileges->contains('name', 'additional options for editing content')) {
+            if ($this->group->hasEditorPrivilege()) {
                 $this->merge([
                     'content_html' => Purifier::clean($this->input('content_html'), 'dir')
                 ]);

@@ -70,7 +70,7 @@ class Create2ViewModel extends ViewModel
         $contentHtml = $this->request->old('content_html') ?? $this->request->session()->get('dir.content_html');
 
         if ($contentHtml) {
-            if (!$this->group->privileges->contains('name', 'additional options for editing content')) {
+            if (!$this->group->hasEditorPrivilege()) {
                 return strip_tags($contentHtml);
             }
         }

@@ -75,7 +75,7 @@ class Edit2ViewModel extends ViewModel
             $this->request->session()->get("dirId.{$this->dir->id}.content_html");
 
         if ($contentHtml) {
-            if (!$this->group->privileges->contains('name', 'additional options for editing content')) {
+            if (!$this->group->hasEditorPrivilege()) {
                 return strip_tags($contentHtml);
             }
         }
