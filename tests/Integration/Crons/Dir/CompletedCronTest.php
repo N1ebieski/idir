@@ -16,7 +16,7 @@
  * @license   https://intelekt.net.pl/pages/regulamin
  */
 
-namespace N1ebieski\IDir\Tests\Integration\Dir;
+namespace N1ebieski\IDir\Tests\Integration\Crons\Dir;
 
 use Carbon\Carbon;
 use Tests\TestCase;
@@ -32,7 +32,7 @@ use Illuminate\Database\Eloquent\Collection;
 use N1ebieski\IDir\Models\Category\Dir\Category;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
-class CompletedTest extends TestCase
+class CompletedCronTest extends TestCase
 {
     use DatabaseTransactions;
 

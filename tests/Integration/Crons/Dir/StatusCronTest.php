@@ -16,7 +16,7 @@
  * @license   https://intelekt.net.pl/pages/regulamin
  */
 
-namespace N1ebieski\IDir\Tests\Integration\Dir;
+namespace N1ebieski\IDir\Tests\Integration\Crons\Dir;
 
 use Tests\TestCase;
 use GuzzleHttp\HandlerStack;
@@ -35,7 +35,7 @@ use GuzzleHttp\Middleware as GuzzleMiddleware;
 use GuzzleHttp\Psr7\Response as GuzzleResponse;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
-class CheckStatusTest extends TestCase
+class StatusCronTest extends TestCase
 {
     use DatabaseTransactions;
 

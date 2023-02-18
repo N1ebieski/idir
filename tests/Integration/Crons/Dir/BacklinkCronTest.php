@@ -16,7 +16,7 @@
  * @license   https://intelekt.net.pl/pages/regulamin
  */
 
-namespace N1ebieski\IDir\Tests\Integration\Dir;
+namespace N1ebieski\IDir\Tests\Integration\Crons\Dir;
 
 use Tests\TestCase;
 use Mockery\MockInterface;
@@ -35,7 +35,7 @@ use GuzzleHttp\Psr7\Response as GuzzleResponse;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use N1ebieski\IDir\Mail\DirBacklink\BacklinkNotFoundMail;
 
-class CheckBacklinkTest extends TestCase
+class BacklinkCronTest extends TestCase
 {
     use DatabaseTransactions;
 

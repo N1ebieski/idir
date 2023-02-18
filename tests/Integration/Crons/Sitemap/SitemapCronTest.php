@@ -16,7 +16,7 @@
  * @license   https://intelekt.net.pl/pages/regulamin
  */
 
-namespace N1ebieski\IDir\Tests\Integration\Sitemap;
+namespace N1ebieski\IDir\Tests\Integration\Crons\Sitemap;
 
 use Closure;
 use XMLReader;
@@ -34,7 +34,7 @@ use N1ebieski\ICore\Crons\Sitemap\Builder\Builder;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Contracts\Container\BindingResolutionException;
 
-class SitemapTest extends TestCase
+class SitemapCronTest extends TestCase
 {
     use DatabaseTransactions;
 

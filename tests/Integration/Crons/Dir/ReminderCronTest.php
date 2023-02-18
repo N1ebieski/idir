@@ -16,7 +16,7 @@
  * @license   https://intelekt.net.pl/pages/regulamin
  */
 
-namespace N1ebieski\IDir\Tests\Integration\Dir;
+namespace N1ebieski\IDir\Tests\Integration\Crons\Dir;
 
 use Carbon\Carbon;
 use Tests\TestCase;
@@ -29,7 +29,7 @@ use N1ebieski\IDir\Mail\Dir\ReminderMail;
 use N1ebieski\IDir\Crons\Dir\ReminderCron;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
-class ReminderTest extends TestCase
+class ReminderCronTest extends TestCase
 {
     use DatabaseTransactions;
 

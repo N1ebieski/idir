@@ -16,7 +16,7 @@
  * @license   https://intelekt.net.pl/pages/regulamin
  */
 
-namespace N1ebieski\IDir\Tests\Integration\Backlink;
+namespace N1ebieski\IDir\Tests\Integration\Rules\Backlink;
 
 use Tests\TestCase;
 use GuzzleHttp\HandlerStack;
