@@ -43,6 +43,13 @@ class ContentHtml
         return new Attribute(
             get: function ($value): string {
                 if ($this->dir->getRelation('group')->hasEditorPrivilege()) {
+                    return $value;
+                }
+
+                return strip_tags($value);
+            },
+            set: function ($value): string {
+                if ($this->dir->getRelation('group')->hasEditorPrivilege()) {
                     return Purifier::clean($value, 'dir');
                 }
 
