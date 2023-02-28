@@ -18,10 +18,8 @@
 
 namespace N1ebieski\IDir\Http\Clients\Thumbnail\Provider\Requests;
 
-use GuzzleHttp\ClientInterface;
 use Psr\Http\Message\ResponseInterface;
-use N1ebieski\ICore\Http\Clients\Request;
-use Illuminate\Contracts\Config\Repository as Config;
+use N1ebieski\IDir\Http\Clients\Thumbnail\Provider\Requests\Request;
 
 class ReloadRequest extends Request
 {
@@ -31,30 +29,6 @@ class ReloadRequest extends Request
      * @var string
      */
     protected $method = 'GET';
-
-    /**
-     * Undocumented variable
-     *
-     * @var array
-     */
-    protected $options = [
-        'verify' => false
-    ];
-
-    /**
-     * Undocumented function
-     *
-     * @param array $parameters
-     * @param ClientInterface $client
-     * @param Config $config
-     */
-    public function __construct(
-        array $parameters,
-        ClientInterface $client,
-        protected Config $config
-    ) {
-        parent::__construct($parameters, $client);
-    }
 
     /**
      * Undocumented function
@@ -68,7 +42,7 @@ class ReloadRequest extends Request
             $response = $this->client->request(
                 $this->method,
                 $this->getThumbnailUrl(),
-                $this->options
+                $this->getOptions()
             );
         } catch (\GuzzleHttp\Exception\GuzzleException $e) {
             throw new \N1ebieski\IDir\Exceptions\Thumbnail\Exception(
