@@ -19,11 +19,21 @@
 namespace N1ebieski\IDir\Database\Seeders\PHPLD;
 
 use Illuminate\Support\Facades\DB;
+use Illuminate\Contracts\Config\Repository as Config;
 use N1ebieski\IDir\Database\Seeders\PHPLD\PHPLDSeeder;
 use N1ebieski\IDir\Database\Seeders\PHPLD\Jobs\CommentsJob;
 
 class CommentsSeeder extends PHPLDSeeder
 {
+    /**
+     *
+     * @param Config $config
+     * @return void
+     */
+    public function __construct(protected Config $config)
+    {
+    }
+
     /**
      * Run the database Seeders.
      *
@@ -34,7 +44,7 @@ class CommentsSeeder extends PHPLDSeeder
         DB::connection('import')
             ->table('comment')
             ->orderBy('ID')
-            ->chunk(1000, function ($items) {
+            ->chunk($this->config->get('idir.import.job_limit'), function ($items) {
                 $items->map(function ($item) {
                     $item->COMMENT = utf8_encode($item->COMMENT);
 

@@ -153,5 +153,10 @@ return [
             'rules_url' => 'https://www.paypal.com/pl/webapps/mpp/ua/useragreement-full?locale.x=pl_PL',
             'docs_url' => 'https://www.paypal.com/pl/webapps/mpp/ua/legalhub-full?locale.x=pl_PL'
         ]
+    ],
+
+    'import' => [
+        'php_path' => 'php',
+        'job_limit' => 1000
     ]
 ];

@@ -20,11 +20,21 @@ namespace N1ebieski\IDir\Database\Seeders\SEOKatalog;
 
 use N1ebieski\IDir\Models\User;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Contracts\Config\Repository as Config;
 use N1ebieski\IDir\Database\Seeders\SEOKatalog\Jobs\UsersJob;
 use N1ebieski\IDir\Database\Seeders\SEOKatalog\SEOKatalogSeeder;
 
 class UsersSeeder extends SEOKatalogSeeder
 {
+    /**
+     *
+     * @param Config $config
+     * @return void
+     */
+    public function __construct(protected Config $config)
+    {
+    }
+
     /**
      * Run the database Seeders.
      *
@@ -35,7 +45,7 @@ class UsersSeeder extends SEOKatalogSeeder
         DB::connection('import')
             ->table('users')
             ->orderBy('id', 'asc')
-            ->chunk(1000, function ($items) {
+            ->chunk($this->config->get('idir.import.job_limit'), function ($items) {
                 UsersJob::dispatch($items, $this->userLastId)->onQueue('import');
             });
     }

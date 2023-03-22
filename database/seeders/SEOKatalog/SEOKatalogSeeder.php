@@ -26,6 +26,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Contracts\Queue\Queue;
 use N1ebieski\IDir\Models\Field\Field;
 use Illuminate\Contracts\Cache\Factory as Cache;
+use Illuminate\Contracts\Config\Repository as Config;
 use N1ebieski\IDir\Database\Seeders\Traits\HasImportable;
 
 class SEOKatalogSeeder extends Seeder
@@ -64,12 +65,14 @@ class SEOKatalogSeeder extends Seeder
      *
      * @param Cache $cache
      * @param Queue $queue
+     * @param Config $config
      * @return void
      * @throws InvalidArgumentException
      */
     public function __construct(
         protected Cache $cache,
-        protected Queue $queue
+        protected Queue $queue,
+        protected Config $config
     ) {
         $this->groupLastId = $this->getGroupLastId();
         $this->fieldLastId = $this->getFieldLastId();

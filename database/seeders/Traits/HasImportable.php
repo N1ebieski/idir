@@ -59,7 +59,10 @@ trait HasImportable
         $cycle = 1;
 
         for ($i = 0; $i < $this->workers; $i++) {
-            $process[$i] = Process::fromShellCommandline('php artisan queue:work --daemon --stop-when-empty --queue=import --force --once');
+            $process[$i] = Process::fromShellCommandline(
+                "{$this->config->get('idir.import.php_path')} artisan queue:work --daemon --stop-when-empty --queue=import --force --once"
+            );
+            
             $process[$i]->setTimeout(null);
         }
 

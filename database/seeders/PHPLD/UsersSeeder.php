@@ -20,11 +20,21 @@ namespace N1ebieski\IDir\Database\Seeders\PHPLD;
 
 use N1ebieski\IDir\Models\User;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Contracts\Config\Repository as Config;
 use N1ebieski\IDir\Database\Seeders\PHPLD\PHPLDSeeder;
 use N1ebieski\IDir\Database\Seeders\PHPLD\Jobs\UsersJob;
 
 class UsersSeeder extends PHPLDSeeder
 {
+    /**
+     *
+     * @param Config $config
+     * @return void
+     */
+    public function __construct(protected Config $config)
+    {
+    }
+
     /**
      * Undocumented function
      *
@@ -48,7 +58,7 @@ class UsersSeeder extends PHPLDSeeder
         DB::connection('import')
             ->table('user')
             ->orderBy('ID', 'asc')
-            ->chunk(1000, function ($items) {
+            ->chunk($this->config->get('idir.import.job_limit'), function ($items) {
                 $items->map(function ($item) {
                     $item->adres = utf8_encode($item->adres);
                     $item->firma = utf8_encode($item->firma);

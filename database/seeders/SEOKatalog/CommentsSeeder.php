@@ -19,11 +19,21 @@
 namespace N1ebieski\IDir\Database\Seeders\SEOKatalog;
 
 use Illuminate\Support\Facades\DB;
+use Illuminate\Contracts\Config\Repository as Config;
 use N1ebieski\IDir\Database\Seeders\SEOKatalog\Jobs\CommentsJob;
 use N1ebieski\IDir\Database\Seeders\SEOKatalog\SEOKatalogSeeder;
 
 class CommentsSeeder extends SEOKatalogSeeder
 {
+    /**
+     *
+     * @param Config $config
+     * @return void
+     */
+    public function __construct(protected Config $config)
+    {
+    }
+
     /**
      * Run the database Seeders.
      *
@@ -34,7 +44,7 @@ class CommentsSeeder extends SEOKatalogSeeder
         DB::connection('import')
             ->table('comments')
             ->orderBy('id')
-            ->chunk(1000, function ($items) {
+            ->chunk($this->config->get('idir.import.job_limit'), function ($items) {
                 CommentsJob::dispatch($items, $this->userLastId)->onQueue('import');
             });
     }
