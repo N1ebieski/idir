@@ -19,21 +19,11 @@
 namespace N1ebieski\IDir\Database\Seeders\PHPLD;
 
 use Illuminate\Support\Facades\DB;
-use Illuminate\Contracts\Config\Repository as Config;
 use N1ebieski\IDir\Database\Seeders\PHPLD\PHPLDSeeder;
 use N1ebieski\IDir\Database\Seeders\PHPLD\Jobs\CommentsJob;
 
 class CommentsSeeder extends PHPLDSeeder
 {
-    /**
-     *
-     * @param Config $config
-     * @return void
-     */
-    public function __construct(protected Config $config)
-    {
-    }
-
     /**
      * Run the database Seeders.
      *

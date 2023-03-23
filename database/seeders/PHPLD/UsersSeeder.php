@@ -20,21 +20,11 @@ namespace N1ebieski\IDir\Database\Seeders\PHPLD;
 
 use N1ebieski\IDir\Models\User;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Contracts\Config\Repository as Config;
 use N1ebieski\IDir\Database\Seeders\PHPLD\PHPLDSeeder;
 use N1ebieski\IDir\Database\Seeders\PHPLD\Jobs\UsersJob;
 
 class UsersSeeder extends PHPLDSeeder
 {
-    /**
-     *
-     * @param Config $config
-     * @return void
-     */
-    public function __construct(protected Config $config)
-    {
-    }
-
     /**
      * Undocumented function
      *

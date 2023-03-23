@@ -19,21 +19,11 @@
 namespace N1ebieski\IDir\Database\Seeders\SEOKatalog;
 
 use Illuminate\Support\Facades\DB;
-use Illuminate\Contracts\Config\Repository as Config;
 use N1ebieski\IDir\Database\Seeders\SEOKatalog\Jobs\DirsJob;
 use N1ebieski\IDir\Database\Seeders\SEOKatalog\SEOKatalogSeeder;
 
 class DirsSeeder extends SEOKatalogSeeder
 {
-    /**
-     *
-     * @param Config $config
-     * @return void
-     */
-    public function __construct(protected Config $config)
-    {
-    }
-
     /**
      * Run the database Seeders.
      *
