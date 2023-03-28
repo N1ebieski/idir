@@ -62,6 +62,19 @@ class AuthorizeRequest extends Request
     }
 
     /**
+     * Undocumented function
+     *
+     * @param string $uuid
+     * @return self
+     */
+    protected function setUuid(string $uuid): self
+    {
+        unset($this->parameters['uuid']);
+
+        return $this;
+    }
+
+    /**
      *
      * @return void
      */

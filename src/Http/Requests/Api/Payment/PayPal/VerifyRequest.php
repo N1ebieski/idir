@@ -65,4 +65,29 @@ class VerifyRequest extends FormRequest implements VerifyRequestInterface
             'uuid' => 'bail|required|uuid'
         ];
     }
+
+    /**
+     * We have to override method because PayPal IPN needs exactly the same raw
+     * data to send back. Laravel's all() method returns converted data (for example
+     * middleware replace empty strings to null)
+     *
+     * @param array|mixed|null $keys
+     * @return array
+     */
+    public function all($keys = null)
+    {
+        $all = parent::all($keys);
+
+        $raws = explode('&', $this->getContent());
+
+        $data = [];
+
+        foreach ($raws as $raw) {
+            [$key, $value] = explode('=', $raw);
+
+            $data[$key] = urldecode($value);
+        }
+
+        return array_replace_recursive($all, $data);
+    }
 }
