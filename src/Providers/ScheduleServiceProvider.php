@@ -73,6 +73,7 @@ class ScheduleServiceProvider extends ServiceProvider
     protected function callReminderSchedule(Schedule $schedule): void
     {
         $resync = (int)Config::get('icore.schedule.resync');
+
         $days = Config::get('idir.dir.reminder.left_days');
 
         if ($days <= 0 || $days > 30) {
