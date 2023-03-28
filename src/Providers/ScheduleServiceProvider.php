@@ -54,7 +54,7 @@ class ScheduleServiceProvider extends ServiceProvider
 
                 $schedule->call($this->app->make(\N1ebieski\IDir\Crons\Dir\ModeratorNotificationCron::class))
                     ->name('ModeratorNotificationCron')
-                    ->hourlyAt($resync);
+                    ->hourlyAt((int)$resync);
 
                 $schedule->call($this->app->make(\N1ebieski\IDir\Crons\Sitemap\SitemapCron::class))
                     ->name('SitemapCron')
@@ -71,7 +71,7 @@ class ScheduleServiceProvider extends ServiceProvider
      */
     protected function callReminderSchedule(Schedule $schedule): void
     {
-        $resync = Config::get('icore.schedule.resync');
+        $resync = (int)Config::get('icore.schedule.resync');
         $days = Config::get('idir.dir.reminder.left_days');
 
         if ($days <= 0 || $days > 30) {
