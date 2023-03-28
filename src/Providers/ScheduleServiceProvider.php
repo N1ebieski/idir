@@ -36,27 +36,29 @@ class ScheduleServiceProvider extends ServiceProvider
             $this->app->booted(function () {
                 $schedule = $this->app->make(Schedule::class);
 
+                $resync = Config::get('icore.schedule.resync');
+
                 $schedule->call($this->app->make(\N1ebieski\IDir\Crons\Dir\BacklinkCron::class))
                     ->name('BacklinkCron')
-                    ->daily();
+                    ->dailyAt("00:{$resync}");
 
                 $schedule->call($this->app->make(\N1ebieski\IDir\Crons\Dir\CompletedCron::class))
                     ->name('CompletedCron')
-                    ->daily();
+                    ->dailyAt("00:{$resync}");
 
                 $this->callReminderSchedule($schedule);
 
                 $schedule->call($this->app->make(\N1ebieski\IDir\Crons\Dir\StatusCron::class))
                     ->name('StatusCron')
-                    ->daily();
+                    ->dailyAt("00:{$resync}");
 
                 $schedule->call($this->app->make(\N1ebieski\IDir\Crons\Dir\ModeratorNotificationCron::class))
                     ->name('ModeratorNotificationCron')
-                    ->hourly();
+                    ->hourlyAt($resync);
 
                 $schedule->call($this->app->make(\N1ebieski\IDir\Crons\Sitemap\SitemapCron::class))
                     ->name('SitemapCron')
-                    ->daily();
+                    ->daily("00:{$resync}");
             });
         }
     }
@@ -69,6 +71,7 @@ class ScheduleServiceProvider extends ServiceProvider
      */
     protected function callReminderSchedule(Schedule $schedule): void
     {
+        $resync = Config::get('icore.schedule.resync');
         $days = Config::get('idir.dir.reminder.left_days');
 
         if ($days <= 0 || $days > 30) {
@@ -77,6 +80,6 @@ class ScheduleServiceProvider extends ServiceProvider
 
         $schedule->call($this->app->make(\N1ebieski\IDir\Crons\Dir\ReminderCron::class))
             ->name('ReminderCron')
-            ->cron("5 0 */{$days} * *");
+            ->cron("{$resync} 0 */{$days} * *");
     }
 }
