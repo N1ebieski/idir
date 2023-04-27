@@ -581,7 +581,8 @@ class DirRepo
                         'p1.created_at',
                         '=',
                         DB::raw('(SELECT MIN(`created_at`) FROM `payments` WHERE `model_id` = `p1`.`model_id` AND `model_type` = "' . $this->dir->getMorphClass() . '" AND `status` = ' . PaymentStatus::FINISHED . ')')
-                    );
+                    )
+                    ->where('p1.model_type', $this->dir->getMorphClass());
             })
             ->leftJoin("{$price->getTable()} AS p2", function (JoinClause $query) use ($price) {
                 return $query->on('p2.id', '=', 'p1.order_id')
