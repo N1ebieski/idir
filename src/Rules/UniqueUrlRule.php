@@ -73,7 +73,7 @@ class UniqueUrlRule implements Rule
      */
     public function passes($attribute, $value)
     {
-        $url = str_replace('www.', '', parse_url($value, PHP_URL_HOST) ?: '');
+        $url = preg_replace('/^www\./', '', parse_url($value, PHP_URL_HOST) ?: '');
 
         return $this->db->table($this->table)
             ->where(function (Builder $query) use ($url) {
