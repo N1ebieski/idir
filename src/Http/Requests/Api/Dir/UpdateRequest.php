@@ -31,6 +31,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\ValidatedInput;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Database\Eloquent\Collection;
+use N1ebieski\ICore\Rules\AlphaNumSpacesDashRule;
 use N1ebieski\ICore\ValueObjects\Category\Status;
 use N1ebieski\IDir\Http\Requests\Traits\HasFields;
 use N1ebieski\ICore\Http\Requests\Traits\HasCaptcha;
@@ -216,7 +217,7 @@ class UpdateRequest extends FormRequest
                     'bail',
                     'min:3',
                     'max:' . Config::get('icore.tag.max_chars'),
-                    'alpha_num_spaces'
+                    App::make(AlphaNumSpacesDashRule::class)
                 ],
                 'categories' => [
                     'bail',

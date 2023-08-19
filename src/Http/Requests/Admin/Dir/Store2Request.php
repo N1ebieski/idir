@@ -27,6 +27,7 @@ use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Database\Eloquent\Collection;
+use N1ebieski\ICore\Rules\AlphaNumSpacesDashRule;
 use N1ebieski\ICore\ValueObjects\Category\Status;
 use N1ebieski\IDir\Http\Requests\Traits\HasFields;
 
@@ -189,7 +190,7 @@ class Store2Request extends FormRequest
                 'bail',
                 'min:3',
                 'max:' . Config::get('icore.tag.max_chars'),
-                'alpha_num_spaces'
+                App::make(AlphaNumSpacesDashRule::class)
             ],
             'categories' => [
                 'bail',
