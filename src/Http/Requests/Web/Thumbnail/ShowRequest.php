@@ -74,7 +74,7 @@ class ShowRequest extends FormRequest
                 'bail',
                 'required',
                 'string',
-                'regex:/^(https|http):\/\/([\d\p{Ll}\.-]+)(\.[a-z]{2,7})/u',
+                'regex:/^(https|http):\/\/([\d\p{Ll}\.-]+)(\.[a-zA-Z\d-]{2,})/u',
             ]
         ];
     }

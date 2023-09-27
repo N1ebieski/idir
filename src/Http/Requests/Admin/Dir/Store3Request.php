@@ -113,7 +113,7 @@ class Store3Request extends Store2Request
                         : 'nullable',
                     $this->input('url') !== null ?
                         'regex:/^' . Str::escaped($this->input('url')) . '/'
-                        : 'regex:/^(https|http):\/\/([\da-z\.-]+)(\.[a-z]{2,7})/',
+                        : 'regex:/^(https|http):\/\/([\da-z\.-]+)(\.[a-zA-Z\d-]{2,})/',
                     $this->group->backlink->isActive() && $this->has('backlink') ?
                         App::make('N1ebieski\\IDir\\Rules\\BacklinkRule', [
                             'link' => $link->url
