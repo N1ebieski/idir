@@ -36,7 +36,7 @@ class DirController
         return Response::redirectToRoute(
             'web.dir.show',
             [$dir->slug],
-            HttpResponse::HTTP_MOVED_PERMANENTLY
+            HttpResponse::HTTP_PERMANENTLY_REDIRECT
         );
     }
 }

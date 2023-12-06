@@ -40,7 +40,7 @@ class CategoryController
                 $category->slug,
                 'page' => $request->input('page')
             ],
-            HttpResponse::HTTP_MOVED_PERMANENTLY
+            HttpResponse::HTTP_PERMANENTLY_REDIRECT
         );
     }
 }

@@ -27,7 +27,7 @@ class IDirServiceProvider extends ServiceProvider
      * [public description]
      * @var string
      */
-    public const VERSION = "10.3.1";
+    public const VERSION = "10.3.2";
 
     /**
      * Register services.
