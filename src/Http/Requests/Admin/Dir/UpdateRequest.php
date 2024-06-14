@@ -230,6 +230,7 @@ class UpdateRequest extends FormRequest
                     'required'
                     : 'nullable',
                 'string',
+                Config::get('idir.dir.https_only') ? 'starts_with:https://' : null,
                 'regex:/^(https|http):\/\/([\d\p{Ll}\.-]+)(\.[a-zA-Z\d-]{2,})\/?$/u',
                 App::make(\N1ebieski\IDir\Rules\UniqueUrlRule::class, [
                     'table' => 'dirs',

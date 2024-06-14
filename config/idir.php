@@ -47,6 +47,7 @@ return [
         'min_content' => (int)env('IDIR_DIR_MIN_CONTENT', 255),
         'max_content' => (int)env('IDIR_DIR_MAX_CONTENT', 1000),
         'short_content' => (int)env('IDIR_DIR_SHORT_CONTENT', 500),
+        'https_only' => (bool)env('IDIR_DIR_HTTPS_ONLY', false),
 
         'title_normalizer' => null,
 

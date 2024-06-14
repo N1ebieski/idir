@@ -240,6 +240,7 @@ class Update2Request extends FormRequest
                 'bail',
                 $this->group->url->isActive() ? 'required' : 'nullable',
                 'string',
+                Config::get('idir.dir.https_only') ? 'starts_with:https://' : null,
                 'regex:/^(https|http):\/\/([\d\p{Ll}\.-]+)(\.[a-zA-Z\d-]{2,})\/?$/u',
                 !empty($this->bans_urls) ? 'not_regex:/(' . $this->bans_urls . ')/i' : null,
                 App::make(\N1ebieski\IDir\Rules\UniqueUrlRule::class, [
