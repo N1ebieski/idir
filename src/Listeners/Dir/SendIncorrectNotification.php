@@ -21,9 +21,9 @@ namespace N1ebieski\IDir\Listeners\Dir;
 use Illuminate\Contracts\Mail\Mailer;
 use N1ebieski\IDir\Mail\Dir\IncorrectMail;
 use Illuminate\Contracts\Foundation\Application as App;
-use N1ebieski\IDir\Events\Interfaces\Dir\ReasonEventInterface;
 use N1ebieski\IDir\Events\Interfaces\Dir\DirEventInterface;
 use Illuminate\Contracts\Debug\ExceptionHandler as Exception;
+use N1ebieski\IDir\Events\Interfaces\Dir\ReasonEventInterface;
 
 class SendIncorrectNotification
 {
@@ -70,11 +70,15 @@ class SendIncorrectNotification
     {
         $this->event = $event;
 
-        if (!$this->verify()) {
+        if (!$this->event->dir->status->isIncorrectInactive()) {
             return;
         }
 
         $this->updateNotes();
+
+        if (!$this->verify()) {
+            return;
+        }
 
         try {
             $this->mailer->send($this->app->make(IncorrectMail::class, [
