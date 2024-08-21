@@ -27,6 +27,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use N1ebieski\IDir\Services\Dir\DirService;
+use N1ebieski\IDir\ValueObjects\Dir\Status;
 use Illuminate\Contracts\Events\Dispatcher as Event;
 use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Contracts\Foundation\Application as App;
@@ -112,10 +113,16 @@ class CheckBacklinkJob implements ShouldQueue
      */
     protected function isAttempt(): bool
     {
-        return $this->dirBacklink->attempted_at === null ||
+        return (
+            $this->dirBacklink->attempted_at === null ||
             $this->carbon->parse($this->dirBacklink->attempted_at)->lessThanOrEqualTo(
                 $this->carbon->now()->subHours($this->config->get('idir.dir.backlink.check_hours'))
-            );
+            )
+        )
+        && in_array($this->dirBacklink->dir->status->getValue(), [
+            Status::ACTIVE,
+            Status::BACKLINK_INACTIVE
+        ]);
     }
 
     /**

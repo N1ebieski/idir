@@ -29,6 +29,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use N1ebieski\IDir\Services\Dir\DirService;
+use N1ebieski\IDir\ValueObjects\Dir\Status;
 use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Contracts\Config\Repository as Config;
 use N1ebieski\IDir\Services\DirStatus\DirStatusService;
@@ -133,10 +134,17 @@ class CheckStatusJob implements ShouldQueue
      */
     protected function isAttempt(): bool
     {
-        return $this->dirStatus->attempted_at === null ||
+        return (
+            $this->dirStatus->attempted_at === null ||
             $this->carbon->parse($this->dirStatus->attempted_at)->lessThanOrEqualTo(
                 $this->carbon->now()->subDays($this->config->get('idir.dir.status.check_days'))
-            );
+            )
+        )
+        && !is_null($this->dirStatus->dir->url)
+        && in_array($this->dirStatus->dir->status->getValue(), [
+            Status::ACTIVE,
+            Status::STATUS_INACTIVE
+        ]);
     }
 
     /**
