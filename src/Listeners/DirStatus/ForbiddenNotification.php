@@ -18,11 +18,12 @@
 
 namespace N1ebieski\IDir\Listeners\DirStatus;
 
-use Illuminate\Contracts\Mail\Mailer;
-use N1ebieski\IDir\Mail\DirStatus\ForbiddenMail;
-use Illuminate\Contracts\Foundation\Application as App;
+use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Contracts\Debug\ExceptionHandler as Exception;
+use Illuminate\Contracts\Foundation\Application as App;
+use Illuminate\Contracts\Mail\Mailer;
 use N1ebieski\IDir\Events\Interfaces\DirStatus\DirStatusEventInterface;
+use N1ebieski\IDir\Mail\DirStatus\ForbiddenMail;
 
 class ForbiddenNotification
 {
@@ -43,7 +44,8 @@ class ForbiddenNotification
     public function __construct(
         protected Mailer $mailer,
         protected App $app,
-        protected Exception $exception
+        protected Exception $exception,
+        protected Config $config
     ) {
         //
     }
@@ -55,7 +57,8 @@ class ForbiddenNotification
     public function verify(): bool
     {
         return optional($this->event->dirStatus->dir->user)->email
-            && optional($this->event->dirStatus->dir->user)->hasPermissionTo('web.dirs.notification');
+            && optional($this->event->dirStatus->dir->user)->hasPermissionTo('web.dirs.notification')
+            && $this->event->dirStatus->attempts === $this->config->get('idir.dir.status.max_attempts');
     }
 
     /**

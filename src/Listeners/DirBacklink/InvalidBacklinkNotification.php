@@ -18,11 +18,12 @@
 
 namespace N1ebieski\IDir\Listeners\DirBacklink;
 
-use Illuminate\Contracts\Mail\Mailer;
-use Illuminate\Contracts\Foundation\Application as App;
-use N1ebieski\IDir\Mail\DirBacklink\BacklinkNotFoundMail;
+use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Contracts\Debug\ExceptionHandler as Exception;
+use Illuminate\Contracts\Foundation\Application as App;
+use Illuminate\Contracts\Mail\Mailer;
 use N1ebieski\IDir\Events\Interfaces\DirBacklink\DirBacklinkEventInterface;
+use N1ebieski\IDir\Mail\DirBacklink\BacklinkNotFoundMail;
 
 class InvalidBacklinkNotification
 {
@@ -43,7 +44,8 @@ class InvalidBacklinkNotification
     public function __construct(
         protected Mailer $mailer,
         protected App $app,
-        protected Exception $exception
+        protected Exception $exception,
+        protected Config $config
     ) {
         //
     }
@@ -55,7 +57,8 @@ class InvalidBacklinkNotification
     public function verify(): bool
     {
         return optional($this->event->dirBacklink->dir->user)->email
-            && optional($this->event->dirBacklink->dir->user)->hasPermissionTo('web.dirs.notification');
+            && optional($this->event->dirBacklink->dir->user)->hasPermissionTo('web.dirs.notification')
+            && $this->event->dirBacklink->attempts === $this->config->get('idir.dir.backlink.max_attempts');
     }
 
     /**
