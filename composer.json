@@ -6,7 +6,7 @@
     "require": {
         "php": "^8.0",
         "n1ebieski/icore": "^8.0",
-        "gusapi/gusapi": "^5.1",
+        "gusapi/gusapi": "^6.0",
         "league/omnipay": "^3.0",
         "omnipay/paypal": "^3.0",
         "mike182uk/paypal-ipn-listener": "^9.0",
