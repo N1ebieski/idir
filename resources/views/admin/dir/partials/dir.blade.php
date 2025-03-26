@@ -211,6 +211,25 @@
                         </small>
                     </li>
                     @endif
+                    @if (!$dir->group->backlink->isInactive() && $dir->backlink)
+                    <li>
+                        <small>
+                            <span>
+                                {{ trans('idir::dirs.backlink_url') }}:
+                            </span>
+                            <span>
+                                <a 
+                                    href="{{ $dir->backlink->url }}"
+                                    title="{{ $dir->backlink->url }}"
+                                    target="_blank"
+                                    rel="noopener"
+                                >
+                                    {{ $dir->backlink->url }}
+                                </a>
+                            </span>
+                        </small>
+                    </li>
+                    @endif                    
                     @if ($dir->privileged_at !== null)
                     <li>
                         <small>
