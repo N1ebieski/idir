@@ -56,10 +56,12 @@ class GroupRepo
                     ->when($this->auth->user()?->can('admin.groups.view'), function (Builder $query) {
                         return $query->where(function (Builder $query) {
                             foreach (['id'] as $attr) {
-                                return $query->when(array_key_exists($attr, $this->group->search), function (Builder $query) use ($attr) {
+                                $query = $query->when(array_key_exists($attr, $this->group->search), function (Builder $query) use ($attr) {
                                     return $query->where("{$this->group->getTable()}.{$attr}", $this->group->search[$attr]);
                                 });
                             }
+
+                            return $query;
                         });
                     });
             })

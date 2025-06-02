@@ -104,10 +104,12 @@ class DirRepo
                     })
                     ->where(function (Builder $query) {
                         foreach (['id', 'url'] as $attr) {
-                            return $query->when(array_key_exists($attr, $this->dir->search), function (Builder $query) use ($attr) {
+                            $query = $query->when(array_key_exists($attr, $this->dir->search), function (Builder $query) use ($attr) {
                                 return $query->where("{$this->dir->getTable()}.{$attr}", $this->dir->search[$attr]);
                             });
                         }
+
+                        return $query;
                     });
             })
             ->when(

@@ -57,10 +57,12 @@ class FieldRepo
                     ->when($this->auth->user()?->can('admin.fields.view'), function (Builder $query) {
                         return $query->where(function (Builder $query) {
                             foreach (['id'] as $attr) {
-                                return $query->when(array_key_exists($attr, $this->field->search), function (Builder $query) use ($attr) {
+                                $query = $query->when(array_key_exists($attr, $this->field->search), function (Builder $query) use ($attr) {
                                     return $query->where("{$this->field->getTable()}.{$attr}", $this->field->search[$attr]);
                                 });
                             }
+
+                            return $query;
                         });
                     });
             })

@@ -55,10 +55,12 @@ class UserRepo extends BaseUserRepo
                         $dir = $query->getModel();
 
                         foreach (['id'] as $attr) {
-                            return $query->when(array_key_exists($attr, $dir->search), function (Builder $query) use ($attr, $dir) {
+                            $query = $query->when(array_key_exists($attr, $dir->search), function (Builder $query) use ($attr, $dir) {
                                 return $query->where("{$dir->getTable()}.{$attr}", $dir->search[$attr]);
                             });
                         }
+
+                        return $query;
                     });
             })
             ->filterStatus($filter['status'])

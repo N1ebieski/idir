@@ -18,6 +18,6 @@
 
 return [
     'route' => [
-        'edit_dir' => 'Directory entries',
+        'dirs' => 'Directory entries',
     ]
 ];
