@@ -19,17 +19,15 @@
 namespace N1ebieski\IDir\Events\Admin\Dir;
 
 use N1ebieski\IDir\Models\Dir;
-use Illuminate\Queue\SerializesModels;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use N1ebieski\IDir\Events\Interfaces\Dir\ReasonEventInterface;
 use N1ebieski\IDir\Events\Interfaces\Dir\DirEventInterface;
+use N1ebieski\IDir\Events\Interfaces\Dir\ReasonEventInterface;
 
 class DestroyEvent implements DirEventInterface, ReasonEventInterface
 {
     use Dispatchable;
     use InteractsWithSockets;
-    use SerializesModels;
 
     /**
      * [__construct description]
