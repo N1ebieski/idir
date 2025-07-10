@@ -51,8 +51,6 @@ class GenerateJob implements ShouldQueue, ShouldBeUnique
      */
     public $timeout = 120;
 
-    protected Storage $storage;
-
     public function __construct(
         public string $url,
         public string $disk,
@@ -83,7 +81,6 @@ class GenerateJob implements ShouldQueue, ShouldBeUnique
         try {
             $browsershot->url($this->url)
                 ->windowSize(1366, 1024)
-                ->waitUntilNetworkIdle()
                 ->setDelay(5000)
                 ->fit(\Spatie\Image\Manipulations::FIT_CONTAIN, 400, 300)
                 ->save($storage->disk($this->disk)->path($thumbnail->getFilePath()));

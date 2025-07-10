@@ -78,7 +78,9 @@ return [
         ],
 
         'thumbnail' => [
-            'driver' => env('IDIR_DIR_THUMBNAIL_DRIVER', 'pagepeeker'),
+            'driver' => \N1ebieski\IDir\ValueObjects\Thumbnail\Driver::from(
+                env('IDIR_DIR_THUMBNAIL_DRIVER', 'pagepeeker')
+            ),
 
             'url' => env('IDIR_DIR_THUMBNAIL_URL'),
             'reload_url' => env('IDIR_DIR_THUMBNAIL_RELOAD_URL'),
