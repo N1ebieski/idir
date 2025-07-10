@@ -16,7 +16,7 @@
  * @license   https://intelekt.net.pl/pages/regulamin
  */
 
-namespace N1ebieski\IDir\Translation;
+namespace N1ebieski\IDir\Overrides\Illuminate\Translation;
 
 use Illuminate\Translation\Translator as BaseTranslator;
 

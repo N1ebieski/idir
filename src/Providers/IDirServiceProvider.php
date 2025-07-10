@@ -41,7 +41,7 @@ class IDirServiceProvider extends ServiceProvider
         $this->loadTranslationsFrom(__DIR__ . '/../../resources/lang', 'idir');
 
         // @phpstan-ignore-next-line
-        $this->app->register(LicenseServiceProvider::class);
+        // $this->app->register(LicenseServiceProvider::class);
         $this->app->register(AppServiceProvider::class);
         $this->app->register(RouteServiceProvider::class);
         $this->app->register(AuthServiceProvider::class);

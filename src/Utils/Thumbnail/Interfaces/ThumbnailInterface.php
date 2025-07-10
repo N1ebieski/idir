@@ -45,9 +45,9 @@ interface ThumbnailInterface
     /**
      * Undocumented function
      *
-     * @return string|null
+     * @return bool|string|null
      */
-    public function generate(): ?string;
+    public function generate(): bool|string|null;
 
     /**
      * Undocumented function

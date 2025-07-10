@@ -38,7 +38,7 @@ class ThumbnailController implements Polymorphic
     {
         $client->reload(['url' => $dir->url->getValue()]);
 
-        sleep(10);
+        sleep(30);
 
         Cache::forget("dir.thumbnailUrl.{$dir->slug}");
 

@@ -16,33 +16,17 @@
  * @license   https://intelekt.net.pl/pages/regulamin
  */
 
-namespace N1ebieski\IDir\Providers;
+namespace N1ebieski\IDir\Overrides\Illuminate\Contracts\Bus;
 
-use Illuminate\Foundation\Application;
-use Illuminate\Support\ServiceProvider;
-
-/**
- * @property-read Application $app
- */
-class AppServiceProvider extends ServiceProvider
+interface Dispatcher
 {
     /**
-     * Register any application services.
+     * Temporary fix. @see https://github.com/laravel/framework/issues/45781
      *
-     * @return void
-     */
-    public function register()
-    {
-        //
-    }
-
-    /**
-     * Bootstrap any application services.
+     * Dispatch a command to its appropriate handler.
      *
-     * @return void
+     * @param  mixed  $command
+     * @return mixed
      */
-    public function boot()
-    {
-        //
-    }
+    public function dispatch($command);
 }
