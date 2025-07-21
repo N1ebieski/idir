@@ -82,6 +82,26 @@ return [
                 env('IDIR_DIR_THUMBNAIL_DRIVER', 'pagepeeker')
             ),
 
+            'local' => [
+                'window_size' => [
+                    'width' => (int)env('IDIR_DIR_THUMBNAIL_LOCAL_WINDOW_SIZE_WIDTH', 1366),
+                    'height' => (int)env('IDIR_DIR_THUMBNAIL_LOCAL_WINDOW_SIZE_HEIGHT', 1024)
+                ],
+                'image_size' => [
+                    'width' => (int)env('IDIR_DIR_THUMBNAIL_LOCAL_IMAGE_SIZE_WIDTH', 400),
+                    'height' => (int)env('IDIR_DIR_THUMBNAIL_LOCAL_IMAGE_SIZE_HEIGHT', 300)
+                ],
+                'delay' => (int)env('IDIR_DIR_THUMBNAIL_LOCAL_DELAY', 5),
+                'node_path' => env('IDIR_DIR_THUMBNAIL_LOCAL_NODE_PATH', null),
+                'node_module_path' => env('IDIR_DIR_THUMBNAIL_LOCAL_NODE_MODULE_PATH', null),
+                'npm_path' => env('IDIR_DIR_THUMBNAIL_LOCAL_NPM_PATH', null),
+                'chrome_path' => env('IDIR_DIR_THUMBNAIL_LOCAL_CHROME_PATH', null),
+                'user_agent' => [
+                    'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:140.0) Gecko/20100101 Firefox/140.0'
+                ],
+                'proxy_server' => env('IDIR_DIR_THUMBNAIL_LOCAL_PROXY_SERVER', null),
+            ],
+
             'url' => env('IDIR_DIR_THUMBNAIL_URL'),
             'reload_url' => env('IDIR_DIR_THUMBNAIL_RELOAD_URL'),
             'key' => env('IDIR_DIR_THUMBNAIL_KEY'), // 32 characters string

@@ -23,4 +23,17 @@ enum Driver: string
     case Local = 'local';
 
     case PagePeeker = 'pagepeeker';
+
+    public function getDelay(): int
+    {
+        return match ($this) {
+            self::Local => 60,
+            default => 10,
+        };
+    }
+
+    public function isEquals(self $value): bool
+    {
+        return $this->value === $value->value;
+    }
 }

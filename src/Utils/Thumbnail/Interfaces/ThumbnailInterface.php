@@ -35,6 +35,8 @@ interface ThumbnailInterface
      */
     public function getLastModified(): string;
 
+    public function getFilePath(): string;
+
     /**
      * Undocumented function
      *

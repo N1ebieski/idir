@@ -18,6 +18,7 @@
 
 namespace N1ebieski\IDir\Jobs\Thumbnail;
 
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Illuminate\Bus\Queueable;
 use Spatie\Browsershot\Browsershot;
@@ -28,7 +29,9 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use N1ebieski\IDir\Utils\Thumbnail\LocalThumbnail;
+use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Contracts\Filesystem\Factory as Storage;
+use N1ebieski\IDir\Utils\Thumbnail\Interfaces\ThumbnailInterface;
 
 class GenerateJob implements ShouldQueue, ShouldBeUnique
 {
@@ -70,20 +73,60 @@ class GenerateJob implements ShouldQueue, ShouldBeUnique
 
     public function handle(
         Browsershot $browsershot,
-        LocalThumbnail $thumbnail,
+        ThumbnailInterface $thumbnail,
         Filesystem $filesystem,
-        Storage $storage
+        Storage $storage,
+        Config $config
     ): void {
         $storage->disk($this->disk)->makeDirectory(
             Str::beforeLast($thumbnail->getFilePath(), '/')
         );
 
         try {
-            $browsershot->url($this->url)
-                ->windowSize(1366, 1024)
-                ->setDelay(5000)
-                ->fit(\Spatie\Image\Manipulations::FIT_CONTAIN, 400, 300)
-                ->save($storage->disk($this->disk)->path($thumbnail->getFilePath()));
+            $browsershot = $browsershot->url($this->url)
+                ->windowSize(
+                    $config->get('idir.dir.thumbnail.local.window_size.width'),
+                    $config->get('idir.dir.thumbnail.local.window_size.height')
+                )
+                ->dismissDialogs()
+                ->ignoreHttpsErrors()
+                ->setEnvironmentOptions([
+                    'LANG' => $config->get('app.locale'),
+                ])
+                ->setDelay($config->get('idir.dir.thumbnail.local.delay') * 1000)
+                ->userAgent(Arr::random($config->get('idir.dir.thumbnail.local.user_agent')))
+                ->fit(
+                    \Spatie\Image\Manipulations::FIT_CONTAIN,
+                    $config->get('idir.dir.thumbnail.local.image_size.width'),
+                    $config->get('idir.dir.thumbnail.local.image_size.height')
+                )
+                ->setScreenshotType('jpeg', 80);
+
+            if ($config->get('idir.dir.thumbnail.local.node_path')) {
+                $browsershot = $browsershot->setNodeBinary($config->get('idir.dir.thumbnail.local.node_path'));
+            }
+
+            if ($config->get('idir.dir.thumbnail.local.node_module_path')) {
+                $browsershot = $browsershot->setNodeModulePath($config->get('idir.dir.thumbnail.local.node_module_path'));
+            }
+
+            if ($config->get('idir.dir.thumbnail.local.npm_path')) {
+                $browsershot = $browsershot->setNpmBinary($config->get('idir.dir.thumbnail.local.npm_path'));
+            }
+
+            if ($config->get('idir.dir.thumbnail.local.chrome_path')) {
+                $browsershot = $browsershot->setChromePath($config->get('idir.dir.thumbnail.local.chrome_path'));
+            }
+
+            if ($config->get('idir.dir.thumbnail.local.proxy_server')) {
+                $browsershot = $browsershot->setProxyServer($config->get('idir.dir.thumbnail.local.proxy_server'));
+            }
+
+            /** @disregard */
+            /** @var string $path */
+            $path = $storage->disk($this->disk)->path($thumbnail->getFilePath());
+
+            $browsershot->save($path);
         } catch (\Exception $e) {
             $contents = $filesystem->get(public_path() . '/images/vendor/idir/thumbnail-default.png');
 

@@ -78,7 +78,7 @@ class Thumbnail implements ThumbnailInterface
      *
      * @return string
      */
-    protected function getFilePath(): string
+    public function getFilePath(): string
     {
         $hash = md5($this->getHost());
         $path = implode('/', array_slice(str_split($hash), 0, 3));
