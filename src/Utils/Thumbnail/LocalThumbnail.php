@@ -20,6 +20,7 @@ namespace N1ebieski\IDir\Utils\Thumbnail;
 
 use Illuminate\Support\Carbon;
 use N1ebieski\IDir\Jobs\Thumbnail\GenerateJob;
+use N1ebieski\IDir\Exceptions\Thumbnail\Exception;
 use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Contracts\Filesystem\Factory as Storage;
 use N1ebieski\IDir\Overrides\Illuminate\Contracts\Bus\Dispatcher;
@@ -39,7 +40,9 @@ class LocalThumbnail implements ThumbnailInterface
         protected string $url,
         protected string $disk = 'public',
     ) {
-        //
+        if (!$config->get('idir.dir.thumbnail.cache.url') || !$config->get('idir.dir.thumbnail.key')) {
+            throw new Exception('Thumbnail cache is required for local thumbnail.');
+        }
     }
 
     public function make(string $url): self
