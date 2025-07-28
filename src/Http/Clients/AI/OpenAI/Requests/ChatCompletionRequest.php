@@ -30,6 +30,7 @@ class ChatCompletionRequest extends Request
     protected string $uri = 'https://api.openai.com/v1/chat/completions';
 
     protected array $options = [
+        'timeout' => 60,
         'headers' => [
             'Accept' => 'application/json'
         ],
