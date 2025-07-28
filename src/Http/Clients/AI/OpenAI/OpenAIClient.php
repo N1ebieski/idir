@@ -18,16 +18,19 @@
 
 namespace N1ebieski\IDir\Http\Clients\AI\OpenAI;
 
+use N1ebieski\ICore\Http\Clients\Response;
 use Illuminate\Contracts\Container\Container as App;
+use N1ebieski\IDir\Http\Clients\AI\Interfaces\AIClientInterface;
 use N1ebieski\IDir\Http\Clients\AI\OpenAI\Requests\ChatCompletionRequest;
+use N1ebieski\IDir\Http\Clients\AI\OpenAI\Responses\ChatCompletionResponse;
 
-class OpenAIClient
+class OpenAIClient implements AIClientInterface
 {
     public function __construct(protected App $app)
     {
     }
 
-    public function chatCompletion(array $parameters)
+    public function chatCompletion(array $parameters): Response
     {
         /**
          * @var ChatCompletionRequest $request
@@ -36,6 +39,13 @@ class OpenAIClient
             'parameters' => $parameters
         ]);
 
-        return $request->makeRequest();
+        /**
+         * @var ChatCompletionResponse $response
+         */
+        $response = $this->app->make(ChatCompletionResponse::class, [
+            'parameters' => json_decode($request->makeRequest()->getBody())
+        ]);
+
+        return $response;
     }
 }
