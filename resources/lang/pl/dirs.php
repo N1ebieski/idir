@@ -165,5 +165,12 @@ return [
         'count_by_status' => 'Wykres ilości wpisów wg statusu',
         'count_by_group' => 'Wykres ilości wpisów wg grup',
         'count_by_date_and_group' => 'Wykres ilości wpisów wg grup na osi czasu'
-    ]
+    ],
+    'error' => [
+        'generate_content' => [
+            'dir_status' => 'Nie udało się pobrać zawartości strony. Upewnij się, że nie blokujesz bota o numerze IP: :ip',
+            'ai' => 'Nie udało się wygenerować treści dla wpisu. Być może provider jest przeciążony. Spróbuj ponownie później.'
+        ]
+    ],
+    'generate_content' => 'Generuj treść'
 ];

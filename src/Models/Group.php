@@ -322,9 +322,7 @@ class Group extends Model
      */
     public function hasEditorPrivilege(): bool
     {
-        return $this->privileges
-            ->contains('name', 'additional options for editing content') ?
-            true : false;
+        return $this->privileges->contains('name', 'additional options for editing content');
     }
 
     /**
@@ -334,9 +332,7 @@ class Group extends Model
      */
     public function hasDirectLinkPrivilege(): bool
     {
-        return $this->privileges
-            ->contains('name', 'direct link on listings') ?
-            true : false;
+        return $this->privileges->contains('name', 'direct link on listings');
     }
 
     /**
@@ -346,9 +342,12 @@ class Group extends Model
      */
     public function hasNoFollowPrivilege(): bool
     {
-        return $this->privileges
-            ->contains('name', 'direct link nofollow') ?
-            true : false;
+        return $this->privileges->contains('name', 'direct link nofollow');
+    }
+
+    public function hasGenerateContentPrivilege(): bool
+    {
+        return $this->privileges->contains('name', 'generate content by AI');
     }
 
     /**

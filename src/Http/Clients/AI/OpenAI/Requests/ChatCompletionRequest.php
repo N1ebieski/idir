@@ -59,7 +59,7 @@ class ChatCompletionRequest extends Request
                 ])
             );
         } catch (\GuzzleHttp\Exception\GuzzleException $e) {
-            throw new \N1ebieski\IDir\Exceptions\OpenAI\Exception(
+            throw new \N1ebieski\IDir\Exceptions\AI\OpenAI\Exception(
                 $e->getMessage(),
                 $e->getCode(),
                 $e

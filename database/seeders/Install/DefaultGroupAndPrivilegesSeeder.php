@@ -44,6 +44,7 @@ class DefaultGroupAndPrivilegesSeeder extends Seeder
         Privilege::firstOrCreate(['name' => 'place in the links component']);
         Privilege::firstOrCreate(['name' => 'place in the advertising component']);
         Privilege::firstOrCreate(['name' => 'additional options for editing content']);
+        Privilege::firstOrCreate(['name' => 'generate content by AI']);
 
         $nofollow = Privilege::firstOrCreate(['name' => 'direct link nofollow']);
 

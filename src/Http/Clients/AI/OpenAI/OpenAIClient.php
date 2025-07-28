@@ -18,11 +18,11 @@
 
 namespace N1ebieski\IDir\Http\Clients\AI\OpenAI;
 
-use N1ebieski\ICore\Http\Clients\Response;
 use Illuminate\Contracts\Container\Container as App;
 use N1ebieski\IDir\Http\Clients\AI\Interfaces\AIClientInterface;
 use N1ebieski\IDir\Http\Clients\AI\OpenAI\Requests\ChatCompletionRequest;
 use N1ebieski\IDir\Http\Clients\AI\OpenAI\Responses\ChatCompletionResponse;
+use N1ebieski\IDir\Http\Clients\AI\Interfaces\Responses\ChatCompletionResponseInterface;
 
 class OpenAIClient implements AIClientInterface
 {
@@ -30,7 +30,7 @@ class OpenAIClient implements AIClientInterface
     {
     }
 
-    public function chatCompletion(array $parameters): Response
+    public function chatCompletion(array $parameters): ChatCompletionResponseInterface
     {
         /**
          * @var ChatCompletionRequest $request

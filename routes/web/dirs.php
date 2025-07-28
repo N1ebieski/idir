@@ -29,6 +29,10 @@ Route::match(['post', 'get'], 'dirs/{dir_cache}', [DirController::class, 'show']
     ->name('dir.show')
     ->where('dir_cache', '[0-9A-Za-z,_-]+');
 
+Route::post('dirs/group/{group}/generate-content', [DirController::class, 'generateContent'])
+    ->where('group', '[0-9]+')
+    ->name('dir.generate_content');
+
 Route::group(['middleware' => ['icore.ban.user', 'icore.ban.ip']], function () {
     Route::get('dirs/create/1', [DirController::class, 'create1'])
         ->name('dir.create_1');

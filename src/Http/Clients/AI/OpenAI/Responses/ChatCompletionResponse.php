@@ -19,7 +19,17 @@
 namespace N1ebieski\IDir\Http\Clients\AI\OpenAI\Responses;
 
 use N1ebieski\ICore\Http\Clients\Response;
+use N1ebieski\IDir\Http\Clients\AI\Interfaces\Responses\ChatCompletionResponseInterface;
 
-class ChatCompletionResponse extends Response
+class ChatCompletionResponse extends Response implements ChatCompletionResponseInterface
 {
+    public function getData(): string
+    {
+        return $this->parameters->choices[0]->message->content;
+    }
+
+    public function getDataAsArray(): array
+    {
+        return json_decode($this->getData(), true);
+    }
 }

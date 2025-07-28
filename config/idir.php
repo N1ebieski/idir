@@ -117,8 +117,17 @@ return [
         'notification' => [
             'dirs' => (int)env('IDIR_DIR_NOTIFICATION_DIRS'),
             'hours' => (int)env('IDIR_DIR_NOTIFICATION_HOURS')
-        ]
+        ],
+    ],
 
+    'ai' => [
+        'driver' => \N1ebieski\IDir\ValueObjects\AI\Driver::from(
+            env('IDIR_AI_DRIVER', 'openai')
+        ),
+
+        'openai' => [
+            'model' => env('IDIR_AI_OPENAI_MODEL', 'gpt-4.1-mini'),
+        ]
     ],
 
     'field' => [

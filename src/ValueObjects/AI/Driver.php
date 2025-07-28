@@ -16,18 +16,21 @@
  * @license   https://intelekt.net.pl/pages/regulamin
  */
 
-namespace N1ebieski\IDir\Http\Responses\Web\Field;
+namespace N1ebieski\IDir\ValueObjects\AI;
 
-use Illuminate\Http\JsonResponse;
-use GusApi\SearchReport as GusReport;
+use Illuminate\Support\Facades\Config;
 
-interface JsonResponseFactory
+enum Driver: string
 {
-    /**
-     * Undocumented function
-     *
-     * @param GusReport|null $gusReport
-     * @return JsonResponse
-     */
-    public function makeResponse(?GusReport $gusReport = null): JsonResponse;
+    case OpenAI = 'openai';
+
+    public function getDefaultModel(): string
+    {
+        return Config::get('idir.ai.openai.model');
+    }
+
+    public function isEquals(self $value): bool
+    {
+        return $this->value === $value->value;
+    }
 }

@@ -18,9 +18,9 @@
 
 namespace N1ebieski\IDir\Http\Clients\AI\Interfaces;
 
-use N1ebieski\ICore\Http\Clients\Response;
+use N1ebieski\IDir\Http\Clients\AI\Interfaces\Responses\ChatCompletionResponseInterface;
 
 interface AIClientInterface
 {
-    public function chatCompletion(array $parameters): Response;
+    public function chatCompletion(array $parameters): ChatCompletionResponseInterface;
 }

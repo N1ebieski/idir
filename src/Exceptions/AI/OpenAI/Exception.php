@@ -16,18 +16,11 @@
  * @license   https://intelekt.net.pl/pages/regulamin
  */
 
-namespace N1ebieski\IDir\Http\Responses\Web\Field;
+namespace N1ebieski\IDir\Exceptions\AI\OpenAI;
 
-use Illuminate\Http\JsonResponse;
-use GusApi\SearchReport as GusReport;
+use N1ebieski\IDir\Exceptions\AI\Exception as BaseException;
 
-interface JsonResponseFactory
+class Exception extends BaseException
 {
-    /**
-     * Undocumented function
-     *
-     * @param GusReport|null $gusReport
-     * @return JsonResponse
-     */
-    public function makeResponse(?GusReport $gusReport = null): JsonResponse;
+    //
 }

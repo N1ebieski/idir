@@ -16,11 +16,11 @@
  * @license   https://intelekt.net.pl/pages/regulamin
  */
 
-namespace N1ebieski\IDir\Exceptions\OpenAI;
+namespace N1ebieski\IDir\Http\Clients\AI\Interfaces\Responses;
 
-use N1ebieski\IDir\Exceptions\CustomException;
-
-class Exception extends CustomException
+interface ChatCompletionResponseInterface
 {
-    //
+    public function getData(): string;
+
+    public function getDataAsArray(): array;
 }
