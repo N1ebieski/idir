@@ -25,11 +25,25 @@ class ChatCompletionResponse extends Response implements ChatCompletionResponseI
 {
     public function getData(): string
     {
+        if (empty($this->parameters->choices)) {
+            throw new \N1ebieski\IDir\Exceptions\AI\EmptyChoiceException();
+        }
+
+        if (empty($this->parameters->choices[0]->message->content)) {
+            throw new \N1ebieski\IDir\Exceptions\AI\EmptyMessageException();
+        }
+
         return $this->parameters->choices[0]->message->content;
     }
 
     public function getDataAsArray(): array
     {
-        return json_decode($this->getData(), true);
+        $json = json_decode($this->getData(), true);
+
+        if ($json === null) {
+            throw new \N1ebieski\IDir\Exceptions\AI\InvalidJsonException();
+        }
+
+        return $json;
     }
 }

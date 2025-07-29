@@ -16,11 +16,9 @@
  * @license   https://intelekt.net.pl/pages/regulamin
  */
 
-namespace N1ebieski\IDir\Exceptions\AI\OpenAI;
+namespace N1ebieski\IDir\Exceptions\AI;
 
-use N1ebieski\IDir\Exceptions\AI\Exception as BaseException;
-
-class Exception extends BaseException
+class EmptyMessageException extends Exception
 {
     //
 }

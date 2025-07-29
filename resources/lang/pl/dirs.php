@@ -169,6 +169,8 @@ return [
     'error' => [
         'generate_content' => [
             'dir_status' => 'Nie udało się pobrać zawartości strony. Upewnij się, że nie blokujesz bota o numerze IP: :ip',
+            'ai_empty' => 'Odpowiedź od providera jest pusta. Popraw tytuł wpisu i spróbuj ponownie.',
+            'ai_invalid' => 'Odpowiedź od providera jest nieprawidłowa. Popraw tytuł wpisu i spróbuj ponownie.',
             'ai' => 'Nie udało się wygenerować treści dla wpisu. Być może provider jest przeciążony. Spróbuj ponownie później.'
         ]
     ],

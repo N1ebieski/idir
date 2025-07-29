@@ -95,19 +95,30 @@ $(document).on(
                 }
             },
             error: function (response) {
-                if ('title' in response.responseJSON.errors) {
-                    $generateContent.form.find('#title').addClass('is-invalid');
-                    $generateContent.form.find('#title').parent().addError({
-                        id: 'title',
-                        message: response.responseJSON.errors.title
-                    });
+                if (response.responseJSON.errors) {
+                    if ('title' in response.responseJSON.errors) {
+                        $generateContent.form.find('#title').addClass('is-invalid');
+                        $generateContent.form.find('#title').parent().addError({
+                            id: 'title',
+                            message: response.responseJSON.errors.title
+                        });
+                    }
+
+                    if ('url' in response.responseJSON.errors) {
+                        $generateContent.input.addClass('is-invalid');
+                        $generateContent.input.parent().addError({
+                            id: 'url',
+                            message: response.responseJSON.errors.url
+                        });
+                    }
+
+                    return;
                 }
 
-                if ('url' in response.responseJSON.errors) {
-                    $generateContent.input.addClass('is-invalid');
-                    $generateContent.input.parent().addError({
-                        id: 'url',
-                        message: response.responseJSON.errors.url
+                if (response.responseJSON.message) {
+                    $('body').addToast({
+                        title: response.responseJSON.message,
+                        type: 'danger'
                     });
                 }
             }

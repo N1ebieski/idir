@@ -45,6 +45,7 @@ use N1ebieski\IDir\Filters\Web\Dir\ShowFilter;
 use N1ebieski\IDir\Models\Payment\Dir\Payment;
 use N1ebieski\IDir\Filters\Web\Dir\IndexFilter;
 use N1ebieski\IDir\Loads\Web\Dir\EditRenewLoad;
+use Illuminate\Contracts\Debug\ExceptionHandler;
 use N1ebieski\IDir\Filters\Web\Dir\SearchFilter;
 use N1ebieski\IDir\Models\Category\Dir\Category;
 use N1ebieski\IDir\Loads\Web\Dir\UpdateRenewLoad;
@@ -419,59 +420,72 @@ class DirController
         DirStatusClient $dirStatusClient,
         AIClientInterface $aiClient,
         Purifier $purifier,
+        ExceptionHandler $exceptionHandler,
         GenerateContentResponse $response
     ): JsonResponse {
-        // $categories = $category->query()->active()->get();
+        $categories = $category->query()->active()->get();
 
-        // try {
-        //     $dirStatusResponse = $dirStatusClient->show($request->input('url'));
-        // } catch (\N1ebieski\IDir\Exceptions\DirStatus\TransferException $e) {
+        try {
+            $dirStatusResponse = $dirStatusClient->show($request->input('url'));
+        } catch (\N1ebieski\IDir\Exceptions\DirStatus\TransferException $e) {
+            $exceptionHandler->report($e);
+
             return $response->makeDirStatusErrorResponse();
-        // }
+        }
 
-        // $contents = $purifier->clean($dirStatusResponse->getBody()->getContents(), 'html');
+        $contents = $purifier->clean($dirStatusResponse->getBody()->getContents(), 'html');
 
-        // $system = View::make('idir::prompts.dir.system', [
-        //     'group' => $group,
-        //     'minContent' => Config::get('idir.dir.min_content'),
-        //     'maxContent' => Config::get('idir.dir.max_content'),
-        //     'maxCategories' => $group->max_cats,
-        //     'categories' => $categories,
-        //     'maxTags' => Config::get('idir.dir.max_tags'),
-        //     'maxChars' => Config::get('icore.tag.max_chars')
-        // ])->render();
+        $system = View::make('idir::prompts.dir.system', [
+            'group' => $group,
+            'minContent' => Config::get('idir.dir.min_content'),
+            'maxContent' => Config::get('idir.dir.max_content'),
+            'maxCategories' => $group->max_cats,
+            'categories' => $categories,
+            'maxTags' => Config::get('idir.dir.max_tags'),
+            'maxChars' => Config::get('icore.tag.max_chars')
+        ])->render();
 
-        // $user = View::make('idir::prompts.dir.user', [
-        //     'lang' => Config::get('app.locale'),
-        //     'url' => $request->input('url'),
-        //     'contents' => $contents,
-        //     'title' => $request->input('title')
-        // ])->render();
+        $user = View::make('idir::prompts.dir.user', [
+            'lang' => Config::get('app.locale'),
+            'url' => $request->input('url'),
+            'contents' => $contents,
+            'title' => $request->input('title')
+        ])->render();
 
-        // /** @var \N1ebieski\IDir\ValueObjects\AI\Driver $driver */
-        // $driver = Config::get('idir.ai.driver');
+        /** @var \N1ebieski\IDir\ValueObjects\AI\Driver $driver */
+        $driver = Config::get('idir.ai.driver');
 
-        // try {
-        //     $aiResponse = $aiClient->chatCompletion([
-        //         'model' => $driver->getDefaultModel(),
-        //         'messages' => [
-        //             [
-        //                 'role' => 'system',
-        //                 'content' => $system
-        //             ],
-        //             [
-        //                 'role' => 'user',
-        //                 'content' => $user
-        //             ]
-        //         ],
-        //         'response_format' => [
-        //             'type' => 'json_object'
-        //         ]
-        //     ]);
-        // } catch (\N1ebieski\IDir\Exceptions\AI\Exception $e) {
-        //     return $response->makeAIErrorResponse();
-        // }
+        try {
+            $aiResponse = $aiClient->chatCompletion([
+                'model' => $driver->getDefaultModel(),
+                'messages' => [
+                    [
+                        'role' => 'system',
+                        'content' => $system
+                    ],
+                    [
+                        'role' => 'user',
+                        'content' => $user
+                    ]
+                ],
+                'response_format' => [
+                    'type' => 'json_object'
+                ]
+            ])->getDataAsArray();
+        } catch (\N1ebieski\IDir\Exceptions\AI\EmptyChoiceException | \N1ebieski\IDir\Exceptions\AI\EmptyMessageException $e) {
+            $exceptionHandler->report($e);
 
-        // return $response->makeResponse($aiResponse);
+            return $response->makeAIEmptyErrorResponse();
+        } catch (\N1ebieski\IDir\Exceptions\AI\InvalidJsonException $e) {
+            $exceptionHandler->report($e);
+
+            return $response->makeAIInvalidErrorResponse();
+        } catch (\N1ebieski\IDir\Exceptions\AI\Exception $e) {
+            $exceptionHandler->report($e);
+            
+            return $response->makeAIErrorResponse();
+        }
+
+        return $response->makeResponse($aiResponse);
     }
 }

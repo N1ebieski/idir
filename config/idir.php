@@ -118,6 +118,10 @@ return [
             'dirs' => (int)env('IDIR_DIR_NOTIFICATION_DIRS'),
             'hours' => (int)env('IDIR_DIR_NOTIFICATION_HOURS')
         ],
+
+        'generate_content' => [
+            'max_attempts' => (int)env('IDIR_DIR_GENERATE_CONTENT_MAX_ATTEMPTS', 5),
+        ]
     ],
 
     'ai' => [

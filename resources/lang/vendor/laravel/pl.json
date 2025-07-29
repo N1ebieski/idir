@@ -53,6 +53,8 @@
     "Whoops!": "Ups!",
     "You are logged in!": "Jesteś zalogowany!",
     "You are receiving this email because we received a password reset request for your account.": "Otrzymujesz ten email, ponieważ otrzymaliśmy prośbę o zresetowanie hasła dla Twojego konta.",
+    "Too many attempts. You may try again in :minutes minutes.": "Przekroczyłeś limit. Sprobuj ponownie za :minutes minut.",
+
     "additional link on the friends subpage": "dodatkowy link na podstronie przyjaciół",
     "additional options for editing content": "dodatkowe opcje edycji treści opisu",
     "direct link nofollow": "bezpośredni link do strony z atrybutem nofollow",
