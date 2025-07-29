@@ -2,7 +2,7 @@ Zajmujesz się pozycjonowaniem strony i chcesz ją dodać do katalogu stron. Uż
 
 1. Przeanalizowanie zawartości strony HTML.
 
-2. Napisanie zgodnego z tytułem opisu zawartości strony lub (jeśli to strona firmowa) oferty firmy na minimum {{ $minContent }} znaków do maksymalnie {{ $maxContent }} znaków. @if ($group->hasEditorPrivilege())Możesz stosować podstawowe tagi HTML takie jak: p, strong, em, ol, ul, li.@endif
+2. Napisanie zgodnego z tytułem opisu zawartości strony lub (jeśli to strona firmowa) oferty firmy na minimum {{ $minContent }} znaków do maksymalnie {{ $maxContent }} znaków. @if($group->hasEditorPrivilege())Możesz stosować podstawowe tagi HTML takie jak: p, strong, em, ol, ul, li.@endif
 
 3. Wybranie maksymalnie {{ $maxCategories }} numerów ID kategorii z listy dostępnych kategorii:
 

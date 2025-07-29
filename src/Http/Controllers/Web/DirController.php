@@ -23,7 +23,6 @@ use N1ebieski\IDir\Models\Dir;
 use N1ebieski\IDir\Models\Group;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Event;
@@ -84,9 +83,9 @@ use N1ebieski\IDir\Http\Responses\Web\Dir\UpdateRenewResponse;
 use N1ebieski\IDir\View\ViewModels\Web\Dir\EditRenewViewModel;
 use N1ebieski\IDir\Events\Web\Dir\SearchEvent as DirSearchEvent;
 use N1ebieski\IDir\Events\Web\Dir\UpdateEvent as DirUpdateEvent;
-use N1ebieski\IDir\Http\Clients\AI\Interfaces\AIClientInterface;
 use N1ebieski\IDir\Http\Requests\Web\Dir\GenerateContentRequest;
 use N1ebieski\IDir\Http\Requests\Web\Dir\UpdateRenewCodeRequest;
+use N1ebieski\ICore\Http\Clients\AI\Interfaces\AIClientInterface;
 use N1ebieski\IDir\Events\Web\Dir\DestroyEvent as DirDestroyEvent;
 use N1ebieski\IDir\Http\Responses\Web\Dir\GenerateContentResponse;
 use N1ebieski\IDir\Events\Web\Dir\UpdateRenewEvent as DirUpdateRenewEvent;
@@ -435,7 +434,7 @@ class DirController
 
         $contents = $purifier->clean($dirStatusResponse->getBody()->getContents(), 'html');
 
-        $system = View::make('idir::prompts.dir.system', [
+        $system = View::make('idir::prompts.dir.create.system', [
             'group' => $group,
             'minContent' => Config::get('idir.dir.min_content'),
             'maxContent' => Config::get('idir.dir.max_content'),
@@ -445,18 +444,18 @@ class DirController
             'maxChars' => Config::get('icore.tag.max_chars')
         ])->render();
 
-        $user = View::make('idir::prompts.dir.user', [
+        $user = View::make('idir::prompts.dir.create.user', [
             'lang' => Config::get('app.locale'),
             'url' => $request->input('url'),
             'contents' => $contents,
             'title' => $request->input('title')
         ])->render();
 
-        /** @var \N1ebieski\IDir\ValueObjects\AI\Driver $driver */
-        $driver = Config::get('idir.ai.driver');
+        /** @var \N1ebieski\ICore\ValueObjects\AI\Driver $driver */
+        $driver = Config::get('icore.ai.driver');
 
         try {
-            $aiResponse = $aiClient->chatCompletion([
+            $data = $aiClient->chatCompletion([
                 'model' => $driver->getDefaultModel(),
                 'messages' => [
                     [
@@ -472,20 +471,20 @@ class DirController
                     'type' => 'json_object'
                 ]
             ])->getDataAsArray();
-        } catch (\N1ebieski\IDir\Exceptions\AI\EmptyChoiceException | \N1ebieski\IDir\Exceptions\AI\EmptyMessageException $e) {
+        } catch (\N1ebieski\ICore\Exceptions\AI\EmptyChoiceException | \N1ebieski\ICore\Exceptions\AI\EmptyMessageException $e) {
             $exceptionHandler->report($e);
 
             return $response->makeAIEmptyErrorResponse();
-        } catch (\N1ebieski\IDir\Exceptions\AI\InvalidJsonException $e) {
+        } catch (\N1ebieski\ICore\Exceptions\AI\InvalidJsonException $e) {
             $exceptionHandler->report($e);
 
             return $response->makeAIInvalidErrorResponse();
-        } catch (\N1ebieski\IDir\Exceptions\AI\Exception $e) {
+        } catch (\N1ebieski\ICore\Exceptions\AI\Exception $e) {
             $exceptionHandler->report($e);
-            
+
             return $response->makeAIErrorResponse();
         }
 
-        return $response->makeResponse($aiResponse);
+        return $response->makeResponse($data);
     }
 }
