@@ -18,12 +18,15 @@
 
 namespace N1ebieski\IDir\Http\Controllers\Web;
 
+use Mews\Purifier\Purifier;
 use N1ebieski\IDir\Models\Dir;
 use N1ebieski\IDir\Models\Group;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Response;
 use N1ebieski\IDir\Loads\Web\Dir\ShowLoad;
 use N1ebieski\IDir\Loads\Web\Dir\Edit1Load;
@@ -42,6 +45,7 @@ use N1ebieski\IDir\Models\Payment\Dir\Payment;
 use N1ebieski\IDir\Filters\Web\Dir\IndexFilter;
 use N1ebieski\IDir\Loads\Web\Dir\EditRenewLoad;
 use N1ebieski\IDir\Filters\Web\Dir\SearchFilter;
+use N1ebieski\IDir\Models\Category\Dir\Category;
 use N1ebieski\IDir\Loads\Web\Dir\UpdateRenewLoad;
 use Illuminate\Database\ClassMorphViolationException;
 use N1ebieski\IDir\Http\Requests\Web\Dir\ShowRequest;
@@ -59,6 +63,7 @@ use N1ebieski\IDir\Http\Requests\Web\Dir\Update2Request;
 use N1ebieski\IDir\Http\Requests\Web\Dir\Update3Request;
 use N1ebieski\IDir\Http\Responses\Web\Dir\Store3Response;
 use N1ebieski\IDir\View\ViewModels\Web\Dir\ShowViewModel;
+use N1ebieski\IDir\Http\Clients\DirStatus\DirStatusClient;
 use N1ebieski\IDir\Http\Requests\Web\Dir\EditRenewRequest;
 use N1ebieski\IDir\Http\Responses\Web\Dir\Update3Response;
 use N1ebieski\IDir\View\ViewModels\Web\Dir\Edit1ViewModel;
@@ -77,8 +82,11 @@ use N1ebieski\IDir\Http\Responses\Web\Dir\UpdateRenewResponse;
 use N1ebieski\IDir\View\ViewModels\Web\Dir\EditRenewViewModel;
 use N1ebieski\IDir\Events\Web\Dir\SearchEvent as DirSearchEvent;
 use N1ebieski\IDir\Events\Web\Dir\UpdateEvent as DirUpdateEvent;
+use N1ebieski\IDir\Http\Requests\Web\Dir\GenerateContentRequest;
 use N1ebieski\IDir\Http\Requests\Web\Dir\UpdateRenewCodeRequest;
+use N1ebieski\ICore\Http\Clients\AI\Interfaces\AIClientInterface;
 use N1ebieski\IDir\Events\Web\Dir\DestroyEvent as DirDestroyEvent;
+use N1ebieski\IDir\Http\Responses\Web\Dir\GenerateContentResponse;
 use N1ebieski\IDir\Events\Web\Dir\UpdateRenewEvent as DirUpdateRenewEvent;
 use N1ebieski\IDir\Events\Web\Payment\Dir\StoreEvent as PaymentStoreEvent;
 
@@ -401,5 +409,68 @@ class DirController
         Event::dispatch(App::make(DirDestroyEvent::class, ['dir' => $dir]));
 
         return Response::json([]);
+    }
+
+    public function generateContent(
+        Group $group,
+        Category $category,
+        GenerateContentRequest $request,
+        DirStatusClient $dirStatusClient,
+        AIClientInterface $aiClient,
+        Purifier $purifier,
+        GenerateContentResponse $response
+    ): JsonResponse {
+        $categories = $category->query()->active()->get();
+
+        try {
+            $dirStatusResponse = $dirStatusClient->show($request->input('url'));
+        } catch (\N1ebieski\IDir\Exceptions\DirStatus\TransferException $e) {
+            return $response->makeErrorResponse($e);
+        }
+
+        $contents = $purifier->clean($dirStatusResponse->getBody()->getContents(), 'html');
+
+        $system = View::make('idir::prompts.dir.create.system', [
+            'group' => $group,
+            'minContent' => Config::get('idir.dir.min_content'),
+            'maxContent' => Config::get('idir.dir.max_content'),
+            'maxCategories' => $group->max_cats,
+            'categories' => $categories,
+            'maxTags' => Config::get('idir.dir.max_tags'),
+            'maxChars' => Config::get('icore.tag.max_chars')
+        ])->render();
+
+        $user = View::make('idir::prompts.dir.create.user', [
+            'lang' => Config::get('app.locale'),
+            'url' => $request->input('url'),
+            'contents' => $contents,
+            'title' => $request->input('title')
+        ])->render();
+
+        /** @var \N1ebieski\ICore\ValueObjects\AI\Driver $driver */
+        $driver = Config::get('icore.ai.driver');
+
+        try {
+            $aiResponse = $aiClient->chatCompletion([
+                'model' => $driver->getDefaultModel(),
+                'messages' => [
+                    [
+                        'role' => 'system',
+                        'content' => $system
+                    ],
+                    [
+                        'role' => 'user',
+                        'content' => $user
+                    ]
+                ],
+                'response_format' => [
+                    'type' => 'json_object'
+                ]
+            ]);
+        } catch (\N1ebieski\ICore\Exceptions\AI\Exception $e) {
+            return $response->makeErrorResponse($e);
+        }
+
+        return $response->makeResponse($aiResponse);
     }
 }

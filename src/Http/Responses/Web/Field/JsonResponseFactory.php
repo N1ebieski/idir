@@ -29,5 +29,5 @@ interface JsonResponseFactory
      * @param GusReport|null $gusReport
      * @return JsonResponse
      */
-    public function makeResponse(GusReport $gusReport = null): JsonResponse;
+    public function makeResponse(?GusReport $gusReport = null): JsonResponse;
 }

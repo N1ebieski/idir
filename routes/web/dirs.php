@@ -17,6 +17,7 @@
  */
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Config;
 use N1ebieski\IDir\Http\Controllers\Web\DirController;
 
 Route::match(['post', 'get'], 'dirs/index', [DirController::class, 'index'])
@@ -28,6 +29,11 @@ Route::match(['post', 'get'], 'dirs/search', [DirController::class, 'search'])
 Route::match(['post', 'get'], 'dirs/{dir_cache}', [DirController::class, 'show'])
     ->name('dir.show')
     ->where('dir_cache', '[0-9A-Za-z,_-]+');
+
+Route::post('dirs/group/{group}/generate-content', [DirController::class, 'generateContent'])
+    ->where('group', '[0-9]+')
+    ->name('dir.generate_content')
+    ->middleware('icore.rate.limiter.per.hour:' . Config::get('idir.dir.generate_content.max_attempts'));
 
 Route::group(['middleware' => ['icore.ban.user', 'icore.ban.ip']], function () {
     Route::get('dirs/create/1', [DirController::class, 'create1'])

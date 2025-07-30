@@ -58,6 +58,46 @@
                     >
                     @includeWhen($errors->has('title'), 'icore::web.partials.errors', ['name' => 'title'])
                 </div>
+                @if (!$group->url->isInactive())
+                <div class="form-group">
+                    <label for="url">
+                        <span>{{ trans('idir::dirs.url') }}:</span>
+                        @if ($group->url->isActive())
+                        <span>*</span>
+                        @endif
+                    </label>
+                    @if ($group->hasGenerateContentPrivilege())
+                    <div 
+                        data-route="{{ route('web.dir.generate_content', [$group->id]) }}"
+                        class="search position-relative"
+                        id="generate-content" 
+                    >
+                        <div class="input-group">
+                    @endif
+                            <input 
+                                type="text" 
+                                value="{{ old('url', session('dir.url')) }}" 
+                                name="url"
+                                id="url" 
+                                class="form-control {{ $isValid('url') }}" 
+                                placeholder="https://"
+                            >
+                    @if ($group->hasGenerateContentPrivilege())
+                            <span class="input-group-append">
+                                <button 
+                                    class="btn btn-outline-secondary border border-left-0"
+                                    type="button"
+                                >
+                                    <i class="fas fa-pencil-alt"></i>
+                                    <span class="d-none d-md-inline">{{ trans('idir::dirs.generate_content') }}</span>
+                                </button>
+                            </span> 
+                        </div>
+                    </div>
+                    @endif
+                    @includeWhen($errors->has('url'), 'icore::web.partials.errors', ['name' => 'url'])
+                </div>
+                @endif                
                 <div class="form-group">
                     <label 
                         class="d-flex justify-content-between" 
@@ -116,25 +156,6 @@
                     >
                     @includeWhen($errors->has('tags'), 'icore::web.partials.errors', ['name' => 'tags'])
                 </div>
-                @if (!$group->url->isInactive())
-                <div class="form-group">
-                    <label for="url">
-                        <span>{{ trans('idir::dirs.url') }}:</span>
-                        @if ($group->url->isActive())
-                        <span>*</span>
-                        @endif
-                    </label>
-                    <input 
-                        type="text" 
-                        value="{{ old('url', session('dir.url')) }}" 
-                        name="url"
-                        id="url" 
-                        class="form-control {{ $isValid('url') }}" 
-                        placeholder="https://"
-                    >
-                    @includeWhen($errors->has('url'), 'icore::web.partials.errors', ['name' => 'url'])
-                </div>
-                @endif
                 <div class="form-group">
                     <label for="category">
                         <span>{{ trans('icore::categories.categories.label') }}: *</span>
@@ -153,6 +174,7 @@
                         data-abs-max-options-length="10"
                         data-abs-text-attr="name"
                         data-abs-ajax-url="{{ route('api.category.dir.index') }}"
+                        data-optgroup-label="{{ trans('icore::default.current_option') }}"
                         data-style="border"
                         data-width="100%"
                         data-max-options="{{ $group->max_cats }}"
