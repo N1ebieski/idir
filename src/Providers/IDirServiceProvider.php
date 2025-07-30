@@ -122,7 +122,8 @@ class IDirServiceProvider extends ServiceProvider
 
         $this->publishes([
             __DIR__ . '/../../resources/views/web' => resource_path('views/vendor/idir/web'),
-            __DIR__ . '/../../resources/views/mails' => resource_path('views/vendor/idir/mails')
+            __DIR__ . '/../../resources/views/mails' => resource_path('views/vendor/idir/mails'),
+            __DIR__ . '/../../resources/views/mails' => resource_path('views/vendor/idir/prompts')
         ], 'idir.views.web');
 
         $this->publishes([
