@@ -18,13 +18,18 @@
 
 namespace N1ebieski\IDir\Http\Responses\Web\Dir;
 
+use Mews\Purifier\Purifier;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use N1ebieski\ICore\Exceptions\AI\Exception;
 use Illuminate\Http\Response as HttpResponse;
+use Illuminate\Contracts\Debug\ExceptionHandler;
 use Illuminate\Contracts\Translation\Translator;
 use N1ebieski\IDir\Models\Category\Dir\Category;
 use Illuminate\Contracts\Routing\ResponseFactory;
+use N1ebieski\IDir\Exceptions\DirStatus\TransferException;
 use N1ebieski\ICore\Http\Resources\Category\CategoryResource;
+use N1ebieski\ICore\Http\Clients\AI\Interfaces\Responses\ChatCompletionResponseInterface;
 
 class GenerateContentResponse
 {
@@ -33,12 +38,20 @@ class GenerateContentResponse
         protected Request $request,
         protected Category $category,
         protected Translator $lang,
+        protected ExceptionHandler $exceptionHandler,
+        protected Purifier $purifier
     ) {
         //
     }
 
-    public function makeResponse(array $data): JsonResponse
+    public function makeResponse(ChatCompletionResponseInterface $response): JsonResponse
     {
+        try {
+            $data = $response->getDataAsArray();
+        } catch (\N1ebieski\ICore\Exceptions\AI\Exception $e) {
+            return $this->makeErrorResponse($e);
+        }
+
         if (array_key_exists('categories', $data)) {
             $categories = $this->category
                 ->whereIn('id', $data['categories'])
@@ -49,36 +62,33 @@ class GenerateContentResponse
             $data['categories'] = CategoryResource::collection($categories);
         }
 
+        if (array_key_exists('content', $data)) {
+            $data['content'] = $this->purifier->clean($data['content'], 'dir');
+        }
+
         return $this->response->json(['data' => $data]);
     }
 
-    public function makeDirStatusErrorResponse(): JsonResponse
+    public function makeErrorResponse(Exception|TransferException $exception): JsonResponse
     {
-        return $this->response->json([
-            'message' => $this->lang->get('idir::dirs.error.generate_content.dir_status', [
-                'ip' => $this->request->server('SERVER_ADDR')
-            ])
-        ], HttpResponse::HTTP_BAD_GATEWAY);
-    }
+        $this->exceptionHandler->report($exception);
 
-    public function makeAIEmptyErrorResponse(): JsonResponse
-    {
         return $this->response->json([
-            'message' => $this->lang->get('idir::dirs.error.generate_content.ai_empty')
-        ], HttpResponse::HTTP_UNPROCESSABLE_ENTITY);
-    }
-
-    public function makeAIInvalidErrorResponse(): JsonResponse
-    {
-        return $this->response->json([
-            'message' => $this->lang->get('idir::dirs.error.generate_content.ai_invalid')
-        ], HttpResponse::HTTP_UNPROCESSABLE_ENTITY);
-    }
-
-    public function makeAIErrorResponse(): JsonResponse
-    {
-        return $this->response->json([
-            'message' => $this->lang->get('idir::dirs.error.generate_content.ai')
-        ], HttpResponse::HTTP_SERVICE_UNAVAILABLE);
+            'message' => match (get_class($exception)) {
+                \N1ebieski\IDir\Exceptions\DirStatus\TransferException::class => $this->lang->get('idir::dirs.error.generate_content.dir_status', [
+                    'ip' => $this->request->server('SERVER_ADDR')
+                ]),
+                \N1ebieski\ICore\Exceptions\AI\EmptyChoiceException::class,
+                \N1ebieski\ICore\Exceptions\AI\EmptyMessageException::class => $this->lang->get('idir::dirs.error.generate_content.ai_empty'),
+                \N1ebieski\ICore\Exceptions\AI\InvalidJsonException::class => $this->lang->get('idir::dirs.error.generate_content.ai_invalid'),
+                \N1ebieski\ICore\Exceptions\AI\Exception::class => $this->lang->get('idir::dirs.error.generate_content.ai')
+            }
+        ], match (get_class($exception)) {
+                \N1ebieski\IDir\Exceptions\DirStatus\TransferException::class => HttpResponse::HTTP_BAD_GATEWAY,
+                \N1ebieski\ICore\Exceptions\AI\EmptyChoiceException::class,
+                \N1ebieski\ICore\Exceptions\AI\EmptyMessageException::class => HttpResponse::HTTP_UNPROCESSABLE_ENTITY,
+                \N1ebieski\ICore\Exceptions\AI\InvalidJsonException::class => HttpResponse::HTTP_UNPROCESSABLE_ENTITY,
+                \N1ebieski\ICore\Exceptions\AI\Exception::class => HttpResponse::HTTP_SERVICE_UNAVAILABLE
+        });
     }
 }

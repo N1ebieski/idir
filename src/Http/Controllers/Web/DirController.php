@@ -44,7 +44,6 @@ use N1ebieski\IDir\Filters\Web\Dir\ShowFilter;
 use N1ebieski\IDir\Models\Payment\Dir\Payment;
 use N1ebieski\IDir\Filters\Web\Dir\IndexFilter;
 use N1ebieski\IDir\Loads\Web\Dir\EditRenewLoad;
-use Illuminate\Contracts\Debug\ExceptionHandler;
 use N1ebieski\IDir\Filters\Web\Dir\SearchFilter;
 use N1ebieski\IDir\Models\Category\Dir\Category;
 use N1ebieski\IDir\Loads\Web\Dir\UpdateRenewLoad;
@@ -419,7 +418,6 @@ class DirController
         DirStatusClient $dirStatusClient,
         AIClientInterface $aiClient,
         Purifier $purifier,
-        ExceptionHandler $exceptionHandler,
         GenerateContentResponse $response
     ): JsonResponse {
         $categories = $category->query()->active()->get();
@@ -427,9 +425,7 @@ class DirController
         try {
             $dirStatusResponse = $dirStatusClient->show($request->input('url'));
         } catch (\N1ebieski\IDir\Exceptions\DirStatus\TransferException $e) {
-            $exceptionHandler->report($e);
-
-            return $response->makeDirStatusErrorResponse();
+            return $response->makeErrorResponse($e);
         }
 
         $contents = $purifier->clean($dirStatusResponse->getBody()->getContents(), 'html');
@@ -455,7 +451,7 @@ class DirController
         $driver = Config::get('icore.ai.driver');
 
         try {
-            $data = $aiClient->chatCompletion([
+            $aiResponse = $aiClient->chatCompletion([
                 'model' => $driver->getDefaultModel(),
                 'messages' => [
                     [
@@ -470,21 +466,11 @@ class DirController
                 'response_format' => [
                     'type' => 'json_object'
                 ]
-            ])->getDataAsArray();
-        } catch (\N1ebieski\ICore\Exceptions\AI\EmptyChoiceException | \N1ebieski\ICore\Exceptions\AI\EmptyMessageException $e) {
-            $exceptionHandler->report($e);
-
-            return $response->makeAIEmptyErrorResponse();
-        } catch (\N1ebieski\ICore\Exceptions\AI\InvalidJsonException $e) {
-            $exceptionHandler->report($e);
-
-            return $response->makeAIInvalidErrorResponse();
+            ]);
         } catch (\N1ebieski\ICore\Exceptions\AI\Exception $e) {
-            $exceptionHandler->report($e);
-
-            return $response->makeAIErrorResponse();
+            return $response->makeErrorResponse($e);
         }
 
-        return $response->makeResponse($data);
+        return $response->makeResponse($aiResponse);
     }
 }
