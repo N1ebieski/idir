@@ -92,14 +92,6 @@ return [
                     'height' => (int)env('IDIR_DIR_THUMBNAIL_LOCAL_IMAGE_SIZE_HEIGHT', 300)
                 ],
                 'delay' => (int)env('IDIR_DIR_THUMBNAIL_LOCAL_DELAY', 5),
-                'node_path' => env('IDIR_DIR_THUMBNAIL_LOCAL_NODE_PATH', null),
-                'node_module_path' => env('IDIR_DIR_THUMBNAIL_LOCAL_NODE_MODULE_PATH', null),
-                'npm_path' => env('IDIR_DIR_THUMBNAIL_LOCAL_NPM_PATH', null),
-                'chrome_path' => env('IDIR_DIR_THUMBNAIL_LOCAL_CHROME_PATH', null),
-                'user_agent' => [
-                    'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:140.0) Gecko/20100101 Firefox/140.0'
-                ],
-                'proxy_server' => env('IDIR_DIR_THUMBNAIL_LOCAL_PROXY_SERVER', null),
             ],
 
             'url' => env('IDIR_DIR_THUMBNAIL_URL'),
@@ -186,5 +178,27 @@ return [
     'import' => [
         'php_path' => 'php',
         'job_limit' => 1000
+    ],
+
+    'puppeteer' => [
+        'node_path' => env('IDIR_PUPPETEER_NODE_PATH', null),
+        'node_module_path' => env('IDIR_PUPPETEER_NODE_MODULE_PATH', null),
+        'npm_path' => env('IDIR_PUPPETEER_NPM_PATH', null),
+        'chrome_path' => env('IDIR_PUPPETEER_CHROME_PATH', null),
+        'user_agents' => [
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:140.0) Gecko/20100101 Firefox/140.0'
+        ],
+        'proxy_servers' => [
+            //
+        ],
+    ],
+
+    'guzzle' => [
+        'user_agents' => [
+            //
+        ],
+        'proxy_servers' => [
+            //
+        ]
     ]
 ];

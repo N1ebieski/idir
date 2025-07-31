@@ -94,7 +94,7 @@ class GenerateJob implements ShouldQueue, ShouldBeUnique
                     'LANG' => $config->get('app.locale'),
                 ])
                 ->setDelay($config->get('idir.dir.thumbnail.local.delay') * 1000)
-                ->userAgent(Arr::random($config->get('idir.dir.thumbnail.local.user_agent')))
+                ->userAgent(Arr::random($config->get('idir.puppeteer.user_agents')))
                 ->fit(
                     \Spatie\Image\Manipulations::FIT_CONTAIN,
                     $config->get('idir.dir.thumbnail.local.image_size.width'),
@@ -102,24 +102,24 @@ class GenerateJob implements ShouldQueue, ShouldBeUnique
                 )
                 ->setScreenshotType('jpeg', 80);
 
-            if ($config->get('idir.dir.thumbnail.local.node_path')) {
-                $browsershot = $browsershot->setNodeBinary($config->get('idir.dir.thumbnail.local.node_path'));
+            if ($config->get('idir.puppeteer.node_path')) {
+                $browsershot = $browsershot->setNodeBinary($config->get('idir.puppeteer.node_path'));
             }
 
-            if ($config->get('idir.dir.thumbnail.local.node_module_path')) {
-                $browsershot = $browsershot->setNodeModulePath($config->get('idir.dir.thumbnail.local.node_module_path'));
+            if ($config->get('idir.puppeteer.node_module_path')) {
+                $browsershot = $browsershot->setNodeModulePath($config->get('idir.puppeteer.node_module_path'));
             }
 
-            if ($config->get('idir.dir.thumbnail.local.npm_path')) {
-                $browsershot = $browsershot->setNpmBinary($config->get('idir.dir.thumbnail.local.npm_path'));
+            if ($config->get('idir.puppeteer.npm_path')) {
+                $browsershot = $browsershot->setNpmBinary($config->get('idir.puppeteer.npm_path'));
             }
 
-            if ($config->get('idir.dir.thumbnail.local.chrome_path')) {
-                $browsershot = $browsershot->setChromePath($config->get('idir.dir.thumbnail.local.chrome_path'));
+            if ($config->get('idir.puppeteer.chrome_path')) {
+                $browsershot = $browsershot->setChromePath($config->get('idir.puppeteer.chrome_path'));
             }
 
-            if ($config->get('idir.dir.thumbnail.local.proxy_server')) {
-                $browsershot = $browsershot->setProxyServer($config->get('idir.dir.thumbnail.local.proxy_server'));
+            if ($config->get('idir.puppeteer.proxy_servers')) {
+                $browsershot = $browsershot->setProxyServer($config->get('idir.puppeteer.proxy_servers'));
             }
 
             /** @disregard */
