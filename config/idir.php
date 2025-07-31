@@ -79,7 +79,7 @@ return [
 
         'thumbnail' => [
             'driver' => \N1ebieski\IDir\ValueObjects\Thumbnail\Driver::from(
-                env('IDIR_DIR_THUMBNAIL_DRIVER', 'pagepeeker')
+                env('IDIR_DIR_THUMBNAIL_DRIVER', 'remote')
             ),
 
             'local' => [

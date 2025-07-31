@@ -22,7 +22,7 @@ enum Driver: string
 {
     case Local = 'local';
 
-    case PagePeeker = 'pagepeeker';
+    case Remote = 'remote';
 
     public function getDelay(): int
     {

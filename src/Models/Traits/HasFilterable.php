@@ -33,7 +33,7 @@ trait HasFilterable
      * @param  int|null  $visible [description]
      * @return Builder          [description]
      */
-    public function scopeFilterVisible(Builder $query, int $visible = null): Builder
+    public function scopeFilterVisible(Builder $query, ?int $visible = null): Builder
     {
         return $query->when(!is_null($visible), function (Builder $query) use ($visible) {
             return $query->where("{$this->getTable()}.visible", $visible);
@@ -46,7 +46,7 @@ trait HasFilterable
      * @param  Region|null  $region  [description]
      * @return Builder          [description]
      */
-    public function scopeFilterRegion(Builder $query, Region $region = null): Builder
+    public function scopeFilterRegion(Builder $query, ?Region $region = null): Builder
     {
         return $query->when(!is_null($region), function (Builder $query) use ($region) {
             return $query->whereHas('regions', function (Builder $query) use ($region) {
@@ -62,7 +62,7 @@ trait HasFilterable
      * @param  Group|null  $group  [description]
      * @return Builder         [description]
      */
-    public function scopeFilterGroup(Builder $query, Group $group = null): Builder
+    public function scopeFilterGroup(Builder $query, ?Group $group = null): Builder
     {
         return $query->when(!is_null($group), function (Builder $query) use ($group) {
             // @phpstan-ignore-next-line
@@ -76,7 +76,7 @@ trait HasFilterable
      * @param  string|null  $type  [description]
      * @return Builder         [description]
      */
-    public function scopeFilterType(Builder $query, string $type = null): Builder
+    public function scopeFilterType(Builder $query, ?string $type = null): Builder
     {
         return $query->when(!is_null($type), function (Builder $query) use ($type) {
             return $query->where("{$this->getTable()}.type", $type);
