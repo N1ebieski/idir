@@ -20,6 +20,7 @@ namespace N1ebieski\IDir\Http\Responses\Web\Dir;
 
 use Mews\Purifier\Purifier;
 use Illuminate\Http\Request;
+use N1ebieski\IDir\Models\Group;
 use Illuminate\Http\JsonResponse;
 use N1ebieski\ICore\Exceptions\AI\Exception;
 use Illuminate\Http\Response as HttpResponse;
@@ -44,7 +45,7 @@ class GenerateContentResponse
         //
     }
 
-    public function makeResponse(ChatCompletionResponseInterface $response): JsonResponse
+    public function makeResponse(ChatCompletionResponseInterface $response, Group $group): JsonResponse
     {
         try {
             $data = $response->getDataAsArray();
@@ -63,7 +64,9 @@ class GenerateContentResponse
         }
 
         if (array_key_exists('content', $data)) {
-            $data['content'] = $this->purifier->clean($data['content'], 'dir');
+            $data['content'] = $group->hasEditorPrivilege()
+                ? $this->purifier->clean($data['content'], 'dir')
+                : strip_tags($data['content']);
         }
 
         return $this->response->json(['data' => $data]);

@@ -196,10 +196,10 @@ PHP
                     'type' => 'beforeFirst',
                     'search' => '/\s*\'gus\'\s*=>\s*\[/',
                     'to' => <<<'PHP'
+
     'openai' => [
         'api_key' => env('OPENAI_API_KEY')
     ],
-
 PHP
                 ]
             ]

@@ -471,6 +471,6 @@ class DirController
             return $response->makeErrorResponse($e);
         }
 
-        return $response->makeResponse($aiResponse);
+        return $response->makeResponse($aiResponse, $group);
     }
 }
