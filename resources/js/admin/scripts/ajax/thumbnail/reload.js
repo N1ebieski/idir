@@ -31,12 +31,16 @@ $(document).on(
                 $element.prop('disabled', true);
                 $element.thumbnail.addLoader();
             },
-            complete: function () {
+            success: function (response) {
+                setTimeout(function () {
+                    $element.prop('disabled', false);
+                    $element.thumbnail.find('.loader-absolute').remove();
+                    $element.thumbnail.img.attr('src', response.thumbnail_url + '&reload=' + Math.random());
+                }, response.delay * 1000);
+            },
+            error: function () {
                 $element.prop('disabled', false);
                 $element.thumbnail.find('.loader-absolute').remove();
-            },
-            success: function (response) {
-                $element.thumbnail.img.attr('src', response.thumbnail_url + '&reload=' + Math.random());
             }
         });
     }

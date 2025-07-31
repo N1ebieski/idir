@@ -43,12 +43,11 @@ class ThumbnailController implements Polymorphic
         /** @var Driver $driver */
         $driver = Config::get('idir.dir.thumbnail.driver');
 
-        sleep($driver->getDelay());
-
         Cache::forget("dir.thumbnailUrl.{$dir->slug}");
 
         return Response::json([
-            'thumbnail_url' => $dir->thumbnail_url
+            'thumbnail_url' => $dir->thumbnail_url,
+            'delay' => $driver->getDelay()
         ]);
     }
 }
