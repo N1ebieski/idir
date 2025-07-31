@@ -38,12 +38,12 @@ class Schema1100 implements SchemaInterface
                         'move',
                         'afterFirst'
                     ],
-                    'search' => '/\@if\s*\(\s*\!\$group->url->isInactive\(\)\s*\)[\s\S]*?<div[\s\S]*?\/div>[\s\S]*?\@endif/',
-                    'to' => '/<div\s*class="form-group">[\s\S]*?<label\s*for="title"[\s\S]*?\[\'name\'\s*=>\s*\'title\'\]\)[\s\S]*?<\/div>/'
+                    'search' => '/\s*\@if\s*\(\s*\!\$group->url->isInactive\(\)\s*\)[\s\S]*?<div[\s\S]*?\/div>[\s\S]*?\@endif/',
+                    'to' => '/\s*<div\s*class="form-group">[\s\S]*?<label\s*for="title"[\s\S]*?\[\'name\'\s*=>\s*\'title\'\]\)[\s\S]*?<\/div>/'
                 ],
                 [
                     'type' => 'afterFirst',
-                    'search' => '/<label\s*for="url">[\s\S]*?<\/label>/',
+                    'search' => '/\s*<label\s*for="url">[\s\S]*?<\/label>/',
                     'to' => <<<'BLADE'
                     @if ($group->hasGenerateContentPrivilege())
                     <div 
@@ -57,7 +57,7 @@ BLADE
                 ],
                 [
                     'type' => 'beforeFirst',
-                    'search' => '/\@includeWhen\(\$errors->has\(\'url\'\)/',
+                    'search' => '/\s*\@includeWhen\(\$errors->has\(\'url\'\)/',
                     'to' => <<<'BLADE'
                     @if ($group->hasGenerateContentPrivilege())
                             <span class="input-group-append">
@@ -83,13 +83,17 @@ BLADE
             'actions' => [
                 [
                     'type' => 'beforeFirst',
-                    'search' => '/"additional link on the friends subpage":/',
-                    'to' => '"generate content by AI": "generowanie treści przez AI",'
+                    'search' => '/\s*"additional link on the friends subpage":/',
+                    'to' => <<<'JSON'
+    "generate content by AI": "generowanie treści przez AI",
+JSON
                 ],
                 [
                     'type' => 'beforeFirst',
-                    'search' => '/"generate content by AI":/',
-                    'to' => '"Too many attempts. You may try again in :minutes minutes.": "Przekroczyłeś limit. Sprobuj ponownie za :minutes minut.",'
+                    'search' => '/\s*"generate content by AI":/',
+                    'to' => <<<'JSON'
+    "Too many attempts. You may try again in :minutes minutes.": "Przekroczyłeś limit. Sprobuj ponownie za :minutes minut.",
+JSON
                 ],
             ]
         ],
@@ -105,8 +109,9 @@ BLADE
                 ],
                 [
                     'type' => 'afterFirst',
-                    'search' => '/->name\(\'dir\.show\'\)[\s\S]*?->where\(\'dir_cache\', \'\[0-9A-Za-z,_-\]\+\'\);/',
+                    'search' => '/\s*->name\(\'dir\.show\'\)[\s\S]*?->where\(\'dir_cache\', \'\[0-9A-Za-z,_-\]\+\'\);/',
                     'to' => <<<'PHP'
+
 Route::post('dirs/group/{group}/generate-content', [DirController::class, 'generateContent'])
     ->where('group', '[0-9]+')
     ->name('dir.generate_content')
@@ -130,7 +135,7 @@ PHP
                 ],
                 [
                     'type' => 'afterFirst',
-                    'search' => '/protected function schedule\(Schedule \$schedule\)[\s\S]*?{/',
+                    'search' => '/\s*protected function schedule\(Schedule \$schedule\)[\s\S]*?{/',
                     'to' => <<<'PHP'
         /** @var Driver $driver */
         $driver = Config::get('idir.dir.thumbnail.driver');
@@ -138,6 +143,7 @@ PHP
         if ($driver->isEquals(Driver::Local)) {
             $schedule->command('queue:work --queue=thumbnail --daemon --stop-when-empty --tries=3')->withoutOverlapping();
         }
+
 PHP
                 ]
             ]
@@ -149,7 +155,7 @@ PHP
             'actions' => [
                 [
                     'type' => 'beforeFirst',
-                    'search' => '/\'dir\'\s*=>\s*\[/',
+                    'search' => '/\s*\'dir\'\s*=>\s*\[/',
                     'to' => <<<'PHP'
         'html' => [
             'HTML.Doctype'             => 'HTML 4.01 Transitional',
@@ -162,18 +168,19 @@ PHP
                 ],
                 [
                     'type' => 'afterFirst',
-                    'search' => '/\'elements\'\s*=>\s*\[/',
+                    'search' => '/\s*\'elements\'\s*=>\s*\[/',
                     'to' => <<<'PHP'
                 ['title', 'Inline', 'Inline', 'Common'],
                 ['meta', 'Inline', 'Empty', 'Common', [
                     'name'    => 'Text',
                     'content' => 'Text',
                 ]],
+
 PHP
                 ],
                 [
                     'type' => 'afterFirst',
-                    'search' => '/\'custom_attributes\'\s*=>\s*\[/',
+                    'search' => '/\s*\'custom_attributes\'\s*=>\s*\[/',
                     'to' => <<<'PHP'
             ['meta', 'name', 'Enum#keywords,description', 'start'],
 PHP
@@ -187,11 +194,12 @@ PHP
             'actions' => [
                 [
                     'type' => 'beforeFirst',
-                    'search' => '/\'gus\'\s*=>\s*\[/',
+                    'search' => '/\s*\'gus\'\s*=>\s*\[/',
                     'to' => <<<'PHP'
     'openai' => [
         'api_key' => env('OPENAI_API_KEY')
     ],
+
 PHP
                 ]
             ]
