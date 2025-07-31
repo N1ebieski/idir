@@ -198,7 +198,6 @@ class Update3Request extends Update2Request
     public function messages()
     {
         return [
-            // @phpstan-ignore-next-line
             'backlink_url.regex' => __('validation.regex') . ' ' . Lang::get('idir::validation.backlink_url')
         ];
     }
@@ -209,7 +208,7 @@ class Update3Request extends Update2Request
      * @param  array|null  $keys
      * @return \Illuminate\Support\ValidatedInput|array
      */
-    public function safe(array $keys = null)
+    public function safe(?array $keys = null)
     {
         if ($this->has('payment_type')) {
             $types = [];

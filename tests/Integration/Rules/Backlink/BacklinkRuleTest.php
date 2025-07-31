@@ -48,7 +48,7 @@ class BacklinkRuleTest extends TestCase
         $client = new GuzzleClient(['handler' => $handler]);
 
         $this->app->bind(ShowRequest::class, function ($app, $with) use ($client) {
-            return new ShowRequest($with['url'], $client);
+            return new ShowRequest($with['url'], $client, $app->make('config'));
         });
 
         /** @var BacklinkRule */
@@ -71,7 +71,7 @@ class BacklinkRuleTest extends TestCase
         $client = new GuzzleClient(['handler' => $handler]);
 
         $this->app->bind(ShowRequest::class, function ($app, $with) use ($client) {
-            return new ShowRequest($with['url'], $client);
+            return new ShowRequest($with['url'], $client, $app->make('config'));
         });
 
         /** @var BacklinkRule */
@@ -94,7 +94,7 @@ class BacklinkRuleTest extends TestCase
         $client = new GuzzleClient(['handler' => $handler]);
 
         $this->app->bind(ShowRequest::class, function ($app, $with) use ($client) {
-            return new ShowRequest($with['url'], $client);
+            return new ShowRequest($with['url'], $client, $app->make('config'));
         });
 
         /** @var BacklinkRule */

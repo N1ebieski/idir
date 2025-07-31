@@ -76,7 +76,8 @@ class GroupData implements DataInterface
 
         $collection->sortBy('group_id')
             ->each(function ($item) use (&$data, $groups) {
-                /** @var Group */
+                /** @var object{group_id: int, count: int} $item */
+                /** @var Group $group */
                 $group = $groups->firstWhere('id', $item->group_id);
 
                 $data[] = [

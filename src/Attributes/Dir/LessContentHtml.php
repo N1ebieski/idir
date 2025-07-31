@@ -43,7 +43,6 @@ class LessContentHtml
     {
         return new Attribute(
             get: function (): string {
-                // @phpstan-ignore-next-line
                 return $this->dir->short_content
                     . '... <a href="' . URL::route('web.dir.show', [$this->dir->slug])
                     . '">' . Lang::get('idir::dirs.more') . '</a>';

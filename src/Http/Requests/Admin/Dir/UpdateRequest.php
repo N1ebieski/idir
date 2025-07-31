@@ -27,6 +27,7 @@ use N1ebieski\ICore\Models\BanValue;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Database\Eloquent\Collection;
+use N1ebieski\IDir\Models\Field\Group\Field;
 use N1ebieski\ICore\Rules\AlphaNumSpacesDashRule;
 use N1ebieski\ICore\ValueObjects\Category\Status;
 use N1ebieski\IDir\Http\Requests\Traits\HasFields;
@@ -58,7 +59,7 @@ class UpdateRequest extends FormRequest
 
     /**
      * [getFields description]
-     * @return Collection [description]
+     * @return Collection<int, Field> [description]
      */
     public function getFields(): Collection
     {

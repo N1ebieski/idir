@@ -29,7 +29,7 @@ use N1ebieski\ICore\Models\Token\PersonalAccessToken as BasePersonalAccessToken;
  * @property int|null $symlink_id
  * @property string $name
  * @property string $token
- * @property array|null $abilities
+ * @property array $abilities
  * @property \Illuminate\Support\Carbon|null $last_used_at
  * @property \Illuminate\Support\Carbon|null $expired_at
  * @property \Illuminate\Support\Carbon|null $created_at
@@ -92,6 +92,7 @@ class PersonalAccessToken extends BasePersonalAccessToken
      */
     public function __construct(array $attributes = [])
     {
+        //@phpstan-ignore-next-line
         static::$abilities = array_merge(parent::$abilities, static::$abilities);
 
         parent::__construct($attributes);

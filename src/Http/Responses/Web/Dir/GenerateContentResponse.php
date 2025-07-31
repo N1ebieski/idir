@@ -74,7 +74,7 @@ class GenerateContentResponse
         $this->exceptionHandler->report($exception);
 
         return $this->response->json([
-            'message' => match (get_class($exception)) {
+            'message' => match (get_class($exception)) { //@phpstan-ignore-line
                 \N1ebieski\IDir\Exceptions\DirStatus\TransferException::class => $this->lang->get('idir::dirs.error.generate_content.dir_status', [
                     'ip' => $this->request->server('SERVER_ADDR')
                 ]),
@@ -83,7 +83,7 @@ class GenerateContentResponse
                 \N1ebieski\ICore\Exceptions\AI\InvalidJsonException::class => $this->lang->get('idir::dirs.error.generate_content.ai_invalid'),
                 \N1ebieski\ICore\Exceptions\AI\Exception::class => $this->lang->get('idir::dirs.error.generate_content.ai')
             }
-        ], match (get_class($exception)) {
+        ], match (get_class($exception)) { //@phpstan-ignore-line
                 \N1ebieski\IDir\Exceptions\DirStatus\TransferException::class => HttpResponse::HTTP_BAD_GATEWAY,
                 \N1ebieski\ICore\Exceptions\AI\EmptyChoiceException::class,
                 \N1ebieski\ICore\Exceptions\AI\EmptyMessageException::class => HttpResponse::HTTP_UNPROCESSABLE_ENTITY,

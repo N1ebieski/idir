@@ -48,7 +48,7 @@ class PaymentController implements Polymorphic
         Payment $payment,
         ShowLoad $load,
         TransferClientInterface $client,
-        string $driver = null
+        ?string $driver = null
     ): RedirectResponse {
         try {
             $response = $client->purchase([
@@ -58,9 +58,7 @@ class PaymentController implements Polymorphic
                     'group' => $payment->order->group->name,
                     'days' => $days = $payment->order->days,
                     'limit' => $days !== null ?
-                        // @phpstan-ignore-next-line
                         mb_strtolower(Lang::get('idir::prices.days'))
-                        // @phpstan-ignore-next-line
                         : mb_strtolower(Lang::get('idir::prices.unlimited'))
                 ]),
                 'uuid' => $payment->uuid,

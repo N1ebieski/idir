@@ -23,10 +23,16 @@ use Illuminate\Http\UploadedFile;
 use N1ebieski\IDir\Models\Field\Field;
 use Illuminate\Support\Facades\Storage;
 use N1ebieski\IDir\ValueObjects\Field\Type;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Collection as Collect;
 
 trait HasFields
 {
+    /**
+     * @return Collection<int, Field>
+     */
+    abstract public function getFields(): Collection;
+
     /**
      * [prepareFieldsAttribute description]
      */

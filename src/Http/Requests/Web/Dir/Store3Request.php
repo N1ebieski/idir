@@ -201,7 +201,6 @@ class Store3Request extends Store2Request
     public function messages()
     {
         return [
-            // @phpstan-ignore-next-line
             'backlink_url.regex' => __('validation.regex') . ' ' . Lang::get('idir::validation.backlink_url'),
             'email.unique' => Lang::get('idir::validation.email', [
                 'login' => URL::route('login'),
@@ -216,7 +215,7 @@ class Store3Request extends Store2Request
      * @param  array|null  $keys
      * @return \Illuminate\Support\ValidatedInput|array
      */
-    public function safe(array $keys = null)
+    public function safe(?array $keys = null)
     {
         if ($this->has('payment_type')) {
             $types = [];

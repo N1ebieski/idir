@@ -64,6 +64,7 @@ class StatusData implements DataInterface
 
         $collection->sortBy('status')
             ->each(function ($item) use (&$data) {
+                /** @var object{status:Status, count:int} $item */
                 $data[] = [
                     'status' => [
                         'value' => $item->status->getValue(),

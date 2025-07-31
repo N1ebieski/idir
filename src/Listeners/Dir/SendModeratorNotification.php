@@ -163,7 +163,7 @@ class SendModeratorNotification
 
             if ($this->dirs->isNotEmpty()) {
                 $this->user->makeRepo()->getModeratorsByNotificationDirsPermission()
-                    ->each(function ($user) {
+                    ->each(function (User $user) {
                         $this->sendMailToModerator($user);
                     });
 

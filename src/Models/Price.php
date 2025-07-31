@@ -49,7 +49,7 @@ use Illuminate\Contracts\Container\BindingResolutionException;
  * @property int|null $number
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read Collect $codes
+ * @property-read Collect<int, Code> $codes
  * @property-read int|null $codes_count
  * @property-read string|null $codes_as_string
  * @property-read string $created_at_diff
@@ -100,7 +100,7 @@ class Price extends Model
     /**
      * The attributes that are mass assignable.
      *
-     * @var array<string>
+     * @var array<int, string>
      */
     protected $fillable = [
         'type',
@@ -146,7 +146,7 @@ class Price extends Model
     /**
      * The model's default values for attributes.
      *
-     * @var array
+     * @var array<string, mixed>
      */
     protected $attributes = [
         'discount_price' => null

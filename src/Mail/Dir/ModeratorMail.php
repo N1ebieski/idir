@@ -62,7 +62,7 @@ class ModeratorMail extends Mailable implements ShouldQueue
         return $this->subject($lang->get('idir::dirs.latest'))
             ->to($this->user->email)
             ->with([
-                'dirs' => $this->dirs->load(['group.prices', 'payments']),
+                'dirs' => $this->dirs?->load(['group.prices', 'payments']),
                 'dirs_inactive_count' => $dirRepo->countByStatus()
                     ->firstWhere('status', Status::INACTIVE)->count ?? 0,
                 'dirs_reported_count' => $dirRepo->countReported()

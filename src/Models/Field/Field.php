@@ -122,7 +122,7 @@ class Field extends Model
     /**
      * The attributes that are mass assignable.
      *
-     * @var array<string>
+     * @var array<int, string>
      */
     protected $fillable = ['title', 'desc', 'type', 'options', 'position', 'visible'];
 

@@ -69,6 +69,7 @@ class TimelineData implements DataInterface
             });
 
         $collection->each(function ($item) use (&$data, $groups) {
+            /** @var object{year:int, month:int, first_group_id:int, count:int} $item */
             $group = $groups->firstWhere('id', $item->first_group_id);
 
             $data[] = [

@@ -140,7 +140,7 @@ class CheckStatusJob implements ShouldQueue
                 $this->carbon->now()->subDays($this->config->get('idir.dir.status.check_days'))
             )
         )
-        && !is_null($this->dirStatus->dir->url)
+        && !is_null($this->dirStatus->dir->url) //@phpstan-ignore-line
         && in_array($this->dirStatus->dir->status->getValue(), [
             Status::ACTIVE,
             Status::STATUS_INACTIVE

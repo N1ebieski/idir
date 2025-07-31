@@ -29,6 +29,9 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use N1ebieski\ICore\Repositories\Category\CategoryRepo as BaseCategoryRepo;
 
+/**
+ * @property-read Category $category
+ */
 class CategoryRepo extends BaseCategoryRepo
 {
     /**

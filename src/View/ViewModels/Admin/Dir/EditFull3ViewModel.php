@@ -163,7 +163,7 @@ class EditFull3ViewModel extends ViewModel
      *
      * @param   string      $type  [$type description]
      *
-     * @return  Collection         [return description]
+     * @return  Collection<int, Price>         [return description]
      */
     public function pricesByType(string $type): Collection
     {

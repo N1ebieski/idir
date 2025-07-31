@@ -186,7 +186,7 @@ class Dir extends Model implements
     /**
      * The attributes that are mass assignable.
      *
-     * @var array<string>
+     * @var array<int, string>
      */
     protected $fillable = [
         'title',
@@ -213,7 +213,7 @@ class Dir extends Model implements
     /**
      * The model's default values for attributes.
      *
-     * @var array
+     * @var array<string, mixed>
      */
     protected $attributes = [
         'status' => DirStatus::INACTIVE,

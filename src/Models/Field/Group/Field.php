@@ -37,7 +37,7 @@ use N1ebieski\IDir\Database\Factories\Field\Group\FieldFactory;
  * @property string|null $desc
  * @property \N1ebieski\IDir\ValueObjects\Field\Type $type
  * @property \N1ebieski\IDir\ValueObjects\Field\Visible $visible
- * @property \N1ebieski\IDir\ValueObjects\Field\Options|null $options
+ * @property \N1ebieski\IDir\ValueObjects\Field\Options $options
  * @property int $position
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
@@ -91,7 +91,7 @@ class Field extends BaseFieldModel
     /**
      * The model's default values for attributes.
      *
-     * @var array
+     * @var array<string, mixed>
      */
     protected $attributes = [
         'model_type' => \N1ebieski\IDir\Models\Group::class

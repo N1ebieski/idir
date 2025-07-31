@@ -43,6 +43,7 @@ class QrAsImage
         return new Attribute(
             get: function (): ?string {
                 return $this->price->type->isCodeSms() ?
+                    //@phpstan-ignore-next-line
                     (string)QrCode::encoding('UTF-8')->generate("smsto:{$this->price->number}:{$this->price->code}")
                     : null;
             }

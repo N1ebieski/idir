@@ -30,6 +30,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\ValidatedInput;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Database\Eloquent\Collection;
+use N1ebieski\IDir\Models\Field\Group\Field;
 use Illuminate\Support\Collection as Collect;
 use N1ebieski\ICore\Rules\AlphaNumSpacesDashRule;
 use N1ebieski\ICore\ValueObjects\Category\Status;
@@ -73,7 +74,7 @@ class StoreRequest extends FormRequest
 
     /**
      * [getFields description]
-     * @return Collection [description]
+     * @return Collection<int, Field> [description]
      */
     public function getFields(): Collection
     {
@@ -350,9 +351,7 @@ class StoreRequest extends FormRequest
                 'words' => str_replace('|', ', ', $this->bans_words)
             ]),
             'url.not_regex' => 'This address url is banned.',
-            // @phpstan-ignore-next-line
             'backlink_url.regex' => Lang::get('validation.regex') . ' ' . Lang::get('idir::validation.backlink_url'),
-            // @phpstan-ignore-next-line
             'email.unique' => strip_tags(Lang::get('idir::validation.email'))
         ];
     }
@@ -408,7 +407,7 @@ class StoreRequest extends FormRequest
      * @param  array|null  $keys
      * @return \Illuminate\Support\ValidatedInput|array
      */
-    public function safe(array $keys = null)
+    public function safe(?array $keys = null)
     {
         if ($this->has('payment_type')) {
             $types = [];

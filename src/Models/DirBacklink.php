@@ -62,7 +62,7 @@ class DirBacklink extends Model
     /**
     * The attributes that are mass assignable.
     *
-    * @var array<string>
+    * @var array<int, string>
     */
     protected $fillable = ['url', 'attempts', 'attempted_at'];
 
@@ -76,7 +76,7 @@ class DirBacklink extends Model
     /**
      * The model's default values for attributes.
      *
-     * @var array
+     * @var array<string, mixed>
      */
     protected $attributes = [
         'attempts' => 0,

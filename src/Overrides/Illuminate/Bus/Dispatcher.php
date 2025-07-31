@@ -24,6 +24,7 @@ use N1ebieski\IDir\Overrides\Illuminate\Contracts\Bus\Dispatcher as ContractsDis
 
 final class Dispatcher implements ContractsDispatcher
 {
+    //@phpstan-ignore-next-line
     public function __construct(private readonly BaseDispatcher $dispatcher)
     {
     }
