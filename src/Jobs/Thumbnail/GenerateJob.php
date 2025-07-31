@@ -118,8 +118,8 @@ class GenerateJob implements ShouldQueue, ShouldBeUnique
                 $browsershot = $browsershot->setChromePath($config->get('idir.puppeteer.chrome_path'));
             }
 
-            if ($config->get('idir.puppeteer.proxy_servers')) {
-                $browsershot = $browsershot->setProxyServer($config->get('idir.puppeteer.proxy_servers'));
+            if (!empty($config->get('idir.puppeteer.proxy_servers'))) {
+                $browsershot = $browsershot->setProxyServer(Arr::random($config->get('idir.puppeteer.proxy_servers')));
             }
 
             /** @disregard */

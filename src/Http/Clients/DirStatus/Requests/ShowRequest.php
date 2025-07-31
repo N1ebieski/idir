@@ -18,8 +18,10 @@
 
 namespace N1ebieski\IDir\Http\Clients\DirStatus\Requests;
 
+use Illuminate\Support\Arr;
 use GuzzleHttp\ClientInterface;
 use Psr\Http\Message\ResponseInterface;
+use Illuminate\Contracts\Config\Repository as Config;
 
 class ShowRequest
 {
@@ -44,15 +46,10 @@ class ShowRequest
         'http_errors' => true
     ];
 
-    /**
-     * Undocumented function
-     *
-     * @param string $url
-     * @param ClientInterface $client
-     */
     public function __construct(
         protected string $url,
-        protected ClientInterface $client
+        protected ClientInterface $client,
+        protected Config $config
     ) {
         //
     }
@@ -78,6 +75,14 @@ class ShowRequest
      */
     public function makeRequest(): ResponseInterface
     {
+        if (!empty($this->config->get('idir.guzzle.user_agents'))) {
+            $this->options['headers']['User-Agent'] = Arr::random($this->config->get('idir.guzzle.user_agents'));
+        }
+
+        if (!empty($this->config->get('idir.guzzle.proxy_servers'))) {
+            $this->options['proxy'] = Arr::random($this->config->get('idir.guzzle.proxy_servers'));
+        }
+
         try {
             $response = $this->client->request(
                 $this->method,
