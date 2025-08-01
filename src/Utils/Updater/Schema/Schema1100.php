@@ -73,6 +73,13 @@ BLADE
                     </div>
                     @endif
 BLADE
+                ],
+                [
+                    'type' => 'afterFirst',
+                    'search' => '/\s*data-abs-ajax-url=".*"/',
+                    'to' => <<<'BLADE'
+                        data-optgroup-label="{{ trans('icore::default.current_option') }}"
+BLADE
                 ]
             ]
         ],
@@ -200,6 +207,20 @@ PHP
     'openai' => [
         'api_key' => env('OPENAI_API_KEY')
     ],
+PHP
+                ]
+            ]
+        ],
+        [
+            'paths' => [
+                'config/cache.php'
+            ],
+            'actions' => [
+                [
+                    'type' => 'afterFirst',
+                    'search' => '/\s*\'default\'\s*=>\s*env\(\'CACHE_DRIVER.*/',
+                    'to' => <<<'PHP'
+    'limiter' => 'system',
 PHP
                 ]
             ]
