@@ -113,6 +113,7 @@ return [
 
         'generate_content' => [
             'max_attempts' => (int)env('IDIR_DIR_GENERATE_CONTENT_MAX_ATTEMPTS', 5),
+            'limit' => (int)env('IDIR_DIR_GENERATE_CONTENT_LIMIT', 10000)
         ]
     ],
 

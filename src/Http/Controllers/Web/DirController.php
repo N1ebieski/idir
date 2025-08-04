@@ -18,6 +18,7 @@
 
 namespace N1ebieski\IDir\Http\Controllers\Web;
 
+use Illuminate\Support\Str;
 use Mews\Purifier\Purifier;
 use N1ebieski\IDir\Models\Dir;
 use N1ebieski\IDir\Models\Group;
@@ -428,7 +429,10 @@ class DirController
             return $response->makeErrorResponse($e);
         }
 
-        $contents = $purifier->clean($dirStatusResponse->getBody()->getContents(), 'html');
+        $contents = Str::limit(
+            $purifier->clean($dirStatusResponse->getBody()->getContents(), 'html'),
+            Config::get('idir.dir.generate_content.limit')
+        );
 
         $system = View::make('idir::prompts.dir.create.system', [
             'group' => $group,
