@@ -421,7 +421,7 @@ class DirController
         Purifier $purifier,
         GenerateContentResponse $response
     ): JsonResponse {
-        $categories = $category->query()->active()->get();
+        $categories = $category->query()->poli()->active()->get();
 
         try {
             $dirStatusResponse = $dirStatusClient->show($request->input('url'));
