@@ -421,7 +421,13 @@ class DirController
         Purifier $purifier,
         GenerateContentResponse $response
     ): JsonResponse {
-        $categories = $category->query()->poli()->active()->get();
+        $categories = $category->query()
+            ->poliType()
+            ->active()
+            ->orderBy('position', 'asc')
+            ->get()
+            ->toTree()
+            ->flattenRelation('children');
 
         try {
             $dirStatusResponse = $dirStatusClient->show($request->input('url'));
