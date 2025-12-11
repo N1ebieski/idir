@@ -198,6 +198,7 @@ class Update3Request extends Update2Request
     public function messages()
     {
         return [
+            ...parent::messages(),
             'backlink_url.regex' => __('validation.regex') . ' ' . Lang::get('idir::validation.backlink_url')
         ];
     }

@@ -201,6 +201,7 @@ class Store3Request extends Store2Request
     public function messages()
     {
         return [
+            ...parent::messages(),
             'backlink_url.regex' => __('validation.regex') . ' ' . Lang::get('idir::validation.backlink_url'),
             'email.unique' => Lang::get('idir::validation.email', [
                 'login' => URL::route('login'),
