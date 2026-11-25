@@ -19,8 +19,11 @@
 namespace N1ebieski\IDir\Attributes\Dir;
 
 use N1ebieski\IDir\Models\Dir;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use N1ebieski\IDir\ValueObjects\Thumbnail\Driver;
+use N1ebieski\IDir\Http\Clients\Thumbnail\PagePeekerV3\Requests\ShowRequest;
 
 class ThumbnailUrl
 {
@@ -44,6 +47,20 @@ class ThumbnailUrl
             get: function (): string {
                 if (Config::get('idir.dir.thumbnail.cache.url') && Config::get('idir.dir.thumbnail.key')) {
                     return $this->dir->makeCache()->rememberThumbnailUrl();
+                }
+
+                /** @var Driver $driver */
+                $driver = Config::get('idir.dir.thumbnail.driver');
+
+                if ($driver->isEquals(Driver::PagePeekerV3)) {
+                    /** @var ShowRequest $showRequest */
+                    $showRequest = App::make(ShowRequest::class, [
+                        'parameters' => [
+                            'url' => $this->dir->url
+                        ]
+                    ]);
+
+                    return $showRequest->getThumbnailUrl();
                 }
 
                 return Config::get('idir.dir.thumbnail.url') . $this->dir->url;

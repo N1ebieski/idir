@@ -24,6 +24,10 @@ enum Driver: string
 
     case Remote = 'remote';
 
+    case PagePeeker = 'pagepeeker';
+
+    case PagePeekerV3 = 'pagepeeker_v3';
+
     public function getDelay(): int
     {
         return match ($this) {

@@ -35,7 +35,7 @@ $(document).on(
                 setTimeout(function () {
                     $element.prop('disabled', false);
                     $element.thumbnail.find('.loader-absolute').remove();
-                    $element.thumbnail.img.attr('src', response.thumbnail_url + '&reload=' + Math.random());
+                    $element.thumbnail.img.attr('src', response.thumbnail_url + '#reload=' + Math.random());
                 }, response.delay * 1000);
             },
             error: function () {

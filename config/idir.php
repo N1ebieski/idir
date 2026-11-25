@@ -82,6 +82,12 @@ return [
                 env('IDIR_DIR_THUMBNAIL_DRIVER', 'remote')
             ),
 
+            'pagepeeker' => [
+                'width' => (int)env('IDIR_DIR_THUMBNAIL_PAGEPEEKER_WIDTH', 400),
+                'height' => (int)env('IDIR_DIR_THUMBNAIL_PAGEPEEKER_HEIGHT', 300),
+                'quality' => (int)env('IDIR_DIR_THUMBNAIL_PAGEPEEKER_QUALITY', 80)
+            ],
+
             'local' => [
                 'window_size' => [
                     'width' => (int)env('IDIR_DIR_THUMBNAIL_LOCAL_WINDOW_SIZE_WIDTH', 1366),

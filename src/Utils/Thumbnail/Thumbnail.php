@@ -22,7 +22,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Contracts\Filesystem\Factory as Storage;
 use N1ebieski\IDir\Utils\Thumbnail\Interfaces\ThumbnailInterface;
-use N1ebieski\IDir\Http\Clients\Thumbnail\Provider\ThumbnailClient;
+use N1ebieski\IDir\Http\Clients\Thumbnail\Interfaces\ThumbnailClientInterface;
 
 class Thumbnail implements ThumbnailInterface
 {
@@ -35,7 +35,7 @@ class Thumbnail implements ThumbnailInterface
     /**
      * Undocumented function
      *
-     * @param ThumbnailClient $client
+     * @param ThumbnailClientInterface $client
      * @param Storage $storage
      * @param Carbon $carbon
      * @param Config $config
@@ -43,7 +43,7 @@ class Thumbnail implements ThumbnailInterface
      * @param string $disk
      */
     public function __construct(
-        protected ThumbnailClient $client,
+        protected ThumbnailClientInterface $client,
         protected Storage $storage,
         protected Carbon $carbon,
         protected Config $config,

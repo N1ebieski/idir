@@ -22,8 +22,9 @@ use Psr\Http\Message\ResponseInterface;
 use Illuminate\Contracts\Container\Container as App;
 use N1ebieski\IDir\Http\Clients\Thumbnail\Provider\Requests\ShowRequest;
 use N1ebieski\IDir\Http\Clients\Thumbnail\Provider\Requests\ReloadRequest;
+use N1ebieski\IDir\Http\Clients\Thumbnail\Interfaces\ThumbnailClientInterface;
 
-class ThumbnailClient
+class ThumbnailClient implements ThumbnailClientInterface
 {
     /**
      * Undocumented function
@@ -59,7 +60,7 @@ class ThumbnailClient
      * @param array $parameters
      * @return ResponseInterface
      */
-    public function reload(array $parameters)
+    public function reload(array $parameters): ResponseInterface
     {
         /**
          * @var ReloadRequest
